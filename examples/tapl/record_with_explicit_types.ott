@@ -1,0 +1,66 @@
+% t involves a list type, T depends on t, and T also involves a list type
+% t and v have mutually recursive is_foo functions
+% there's a substitution 
+
+
+metavar termvar, x ::=
+  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}
+  {{ lex alphanum }} {{ tex \mathsf{[[termvar]]} }}
+
+
+grammar
+T {{ hol Typ }}, S, U :: Ty ::=                             {{ com types: }}
+  | { </ li : Ti // , // i IN 1 .. n /> } ::   :: Record      {{ com type of records }} 
+
+t :: Tm ::=                                        {{ com terms: }}
+  | x                             ::   :: Var       {{ com variable }}
+  | { </ li = ti : Ti // , // i IN 1 .. n /> } ::   :: Record      {{ com record }}
+  | t . l                                 ::   :: Proj        {{ com projection }}
+  | value v                               ::   :: Value  {{ com value }}
+
+v :: Va ::=                                        {{ com values: }}
+  | { </ li = vi : Ti // , // i IN 1 .. n /> } ::   :: Record      {{ com record value }}
+
+
+subrules
+ v <:: t
+
+substitutions
+ single t x :: sub
+
+defns 
+Jop :: '' ::= 
+
+defn 
+t --> t' :: :: red :: E_ {{ com Evaluation }} by
+
+---------------------------------- :: ProjRcd
+{ </li=vi:Ti//i IN 1..n/> }.lj --> vj
+
+t1 --> t1'
+-------------- :: Proj
+t1.l --> t1'.l
+
+t --> t'
+------------------------------------------------------------------------ :: Rcd
+{ </li=vi:Ti//i IN 1..m/>,l=t:T,</lj'=tj:Tj'//j IN 1..n/>} --> { </li=vi:Ti//i IN 1..m/>,l=t':T,</lj'=tj:Tj'//j IN 1..n/>}
+
+
+
+defns
+Jtype :: '' ::= 
+
+defn
+G |- t : T :: :: typing :: T_ {{ com Typing }} by
+
+</ G|-ti:Ti // i IN 1..n />
+----------------------------------------------------------- :: Rcd
+G|- { </ li=ti:Ti // i IN 1..n /> }:{ </ li:Ti // i IN 1..n /> }
+
+G|- t1:{ </ li:Ti // i IN 1..n /> }
+----------------------------------- :: Proj
+G|- t1.lj : Tj
+
+G|- v:T 
+------------ :: Value
+G|- value v : T

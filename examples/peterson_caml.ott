@@ -1,0 +1,334 @@
+metavar value_name, x ::=
+  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}
+  {{ lex alphanum }} 
+metavar ident ::=
+  {{ isa string }} {{ coq nat }} {{ hol string }}
+  {{ lex Alphanum }} 
+metavar string_literal ::=
+  {{ isa string }} {{ coq nat }} {{ hol string }}
+  {{ lex Alphanum }} 
+metavar integer_literal ::=
+  {{ isa int }} {{ coq nat }} {{ hol num }} 
+  {{ lex  numeral }}
+indexvar index, i, j, n, m ::=
+  {{ isa nat }} {{ coq nat }}  {{ hol num }}
+  {{ lex numeral }}
+% the lex specifications above are not accurate - negative numerals, especially, 
+% should be supported
+metavar location, l ::= {{ isa nat }} {{ coq positive }} {{ hol num }}
+
+
+grammar
+
+typeconstr_name :: TCN_ ::=
+  | unit                               ::   :: unit
+  | bool                               ::   :: bool
+  | int                                ::   :: int
+
+typeconstr :: TC_  ::= 
+  | typeconstr_name                    ::   :: name
+
+typvar :: TV_ ::=
+  | ' ident                             ::  :: ident
+
+typexpr, t :: TE_ ::=
+  | typvar                            ::   :: typvar
+  | typexpr -> typexpr'                ::   :: arrow
+  | typexpr ref                        ::   :: ref
+  | typeconstr                         ::   :: constr0
+  | ( typexpr )                        :: M :: paren {{ ich [[typexpr]] }}
+
+typscheme, ts :: TS_ ::=  
+  | ( typvar1 , .. , typvarn ) typexpr ::   :: ts  (+ bind typvar1 .. typvarn in typexpr +) 
+
+  | generalise ( G , t )               :: M :: ts3 
+    {{ isa (TS_ts (List.remdups (list_minus (ftv_typexpr [[t]]) (ftv_G [[G]]))) [[t]]) }}
+    {{ coq (TS_ts (remove_duplicates (make_list_typvar (list_minus eq_typvar (ftv_typexpr [[t]]) (ftv_G [[G]])))) [[t]]) }} 
+    {{ hol (TS_ts (remove_duplicates (list_minus (ftv_typexpr [[t]]) (ftv_G [[G]]))) [[t]]) }}
+
+%TODO: it might be nicer to have ftv remove duplicates, or indeed
+%return a set
+
+constant, c :: CONST_ ::=
+  | integer_literal                    ::   :: int
+  | false                              ::   :: false
+  | true                               ::   :: true
+  | ()                                 ::   :: unit
+  | (&&)                               ::   :: and
+  | not                                ::   :: not
+  | ref                                ::   :: ref
+  | (!)                                ::   :: deref
+  | (::=)                              ::   :: assign
+  | Thread.create                      ::   :: thread_create
+
+expr, e :: E_ ::=
+  | value_name                         ::   :: ident
+  | constant                           ::   :: constant
+  | expr expr'                         ::   :: apply
+  | function value_name -> expr        ::   :: function (+ bind value_name in expr +)
+  | let value_name = expr in expr'     ::   :: let      (+ bind value_name in expr' +)
+  | let rec value_name = value in expr' ::   :: letrec      (+ bind value_name in value +) (+ bind value_name in expr' +)
+
+  | if expr then expr' else expr''     ::   :: ifthenelse
+  | trace string_literal expr          ::   :: trace 
+  | l                                  ::   :: location
+  | ( expr )                           :: M :: paren {{ ich [[expr]] }}
+  | { e / x } e'                       :: M :: subst 
+    {{ ich (subst_expr [[v]] [[x]] [[e]]) }}
+
+value, v :: V_ ::=
+  | constant                           ::   :: constant
+  | function value_name -> expr        ::   :: function
+
+G {{ tex \Gamma }} :: G_ ::=
+  | empty                              ::   :: em
+  | G , value_name : typscheme         ::   :: vn
+
+store , s :: STORE_ ::=  {{ isa location ~=> expr }}
+   | empty                             :: :: empty  {{ isa empty }}
+   | store , location |-> v            :: :: cell   {{ isa  [[store]] ([[location]]|->[[v]]) }}
+
+process , p :: PROC_ ::= {{ isa expr multiset }}
+   | empty                             :: :: empty    {{ isa {#} }}
+   | p , e                             :: :: thread   {{ isa [[p]] + {# [[e]] #} }}
+
+
+
+formula :: formula_ ::=
+  | judgement                          ::   :: judgement
+  | not ( formula )                    ::   :: not  
+        {{ isa Not([[formula]]) }}
+        {{ coq not([[formula]]) }}
+        {{ hol ~([[formula]]) }}
+
+  | typscheme > t                      ::   :: gen 
+        {{ isa ? typvars . ? typexpr . ? s . 
+             [[typscheme]] = TS_ts typvars typexpr 
+             & typvars=List.map fst s 
+             & tsubst_typexpr s typexpr = [[t]] }}
+        {{ coq (exists tvs, exists txp, exists s, 
+             [[typscheme]] = TS_ts tvs txp 
+             /\ tvs = make_list_typvar
+                    (List.map (fun (x:typvar*typexpr) => match x with (x1,x2) => x1 end) 
+                              s)  
+             /\ tsubst_typexpr s txp = [[t]]) }}
+        {{ hol ? typvars typexpr s . 
+             ([[typscheme]] = TS_ts typvars typexpr )
+             /\ (typvars=MAP FST s )
+             /\ (tsubst_typexpr s typexpr = [[t]]) }}
+
+  | typscheme = typscheme'             ::   :: eqt 
+        {{ ich [[typscheme]]=[[typscheme']] }}
+  | value_name = value_name'           ::   :: eqv 
+        {{ ich [[value_name]]=[[value_name']] }}
+  | l first unused for s               ::   :: unused {{ isa ([[l]]=(LEAST l. ~l : dom [[s]] ))  }}
+  | s ( l ) = v                        ::   :: lookup {{ isa ([[s]]([[l]])=Some [[v]]) }}
+
+terminals :: terminals_ ::=
+  |  ->                                ::   :: arrow      {{ tex \rightarrow }}
+  |  function                          ::   :: function   {{ tex \textbf{function} }}
+  | |-                                 ::   :: turnstile  {{ tex \vdash }}
+  | |->                                ::   :: mapsto     {{ tex \mapsto }}
+  | -->                                ::   :: red        {{ tex \longrightarrow }}
+  | '{'                                ::   :: leftbrace  {{ tex \{ }}
+  | '}'                                ::   :: rightbrace {{ tex \} }}
+
+embed
+  {{ coq
+Fixpoint remove_duplicates (l:list_typvar) : list_typvar :=
+  match l with
+  | Nil_list_typvar => Nil_list_typvar
+  | Cons_list_typvar h t => 
+    if (list_mem eq_typvar h (unmake_list_typvar t))  
+    then remove_duplicates t
+    else Cons_list_typvar h (remove_duplicates t)
+end. }}
+
+  {{ hol
+val _ = Define `
+  (remove_duplicates [] = []) /\
+  (remove_duplicates (x::xs) = if (MEM x xs) then remove_duplicates xs 
+                               else x::(remove_duplicates xs))
+`; }}
+
+
+subrules
+  v <:: expr     
+
+substitutions
+  single   expr value_name :: subst  
+  multiple typexpr typvar  :: tsubst 
+
+freevars
+  typexpr typvar :: ftv
+  
+defns 
+Jtype :: '' ::= 
+
+defn 
+value_name : typscheme in G  :: :: VTSin :: VTSin_ by
+
+--------------------------------------------------- :: vn1
+value_name : typscheme in G, value_name:typscheme
+
+value_name : typscheme in G
+not(value_name = value_name')
+--------------------------------------------------- :: vn2
+value_name : typscheme in G, value_name':typscheme'
+
+
+
+defn
+|- constant : ts :: :: Jconstant :: constant_ by
+
+------------------------ :: int
+|- integer_literal : ()int          
+
+--------------- :: false
+|- false : ()bool                                             
+
+-------------- :: true
+|- true : ()bool                                              
+
+------------ :: unit
+|- () : ()unit
+
+---------------------------------- :: and
+|- (&&) : () bool -> ( bool -> bool )
+
+--------------------- :: not
+|- not : () bool -> bool
+
+
+--------------------- :: ref
+|- ref : (typvar) typvar -> (typvar ref)
+
+--------------------- :: deref
+|- (!) : (typvar) typvar ref -> typvar
+
+--------------------- :: assign
+|- (::=) : (typvar) typvar ref -> (typvar -> unit)
+
+--------------------- :: thread_create
+|- Thread.create : (typvar1,typvar2) (typvar1->typvar2)->(typvar1->unit)
+
+
+defn 
+G |- e : t :: :: Get :: Get_ by
+
+x:typscheme in G
+typscheme > t   
+---------------- :: value_name
+G |- x:t
+
+:Jconstant: |- constant : ts
+ts > t
+------------------------------ :: constant
+G |- constant : t
+
+G |- e : t1->t2
+G |- e' : t1 
+---------------- :: apply
+G |- e e' : t2
+
+G,x1: ( ) t1 |- e : t
+--------------------------- I :: lambda
+G |- function x1->e : t1->t
+
+G |- e : t
+G,x:typscheme |- e':t'
+typscheme = generalise(G,t) 
+--------------------------- :: let
+G |- let x=e in e' : t'
+
+G,x:typscheme |- v : t
+G,x:typscheme |- e':t'
+typscheme = generalise(G,t) 
+--------------------------- :: letrec
+G |- let rec x=v in e' : t'
+
+G |- e : bool
+G |- e' : t
+G |- e'' : t
+------------------------------ :: ifthenelse
+G |- if e then e' else e'' : t
+
+G |- e : t
+------------------------------ :: trace
+G |- trace string_literal e : t
+
+
+
+
+
+defns 
+Jop :: JO_ ::= 
+
+defn 
+s ; p --> s' ; p' :: :: red :: red_ by
+
+------------------------------- :: app
+s;p,(function x->e)  v --> s;p,{v/x}  e
+
+--------------------------- :: let
+s;p,let x = v in e -->  s;p,{v/x} e
+
+--------------------------- :: letrec
+s;p,let rec x = v in e -->  s;p,{ {let rec x=v in v/x}v /x} e
+
+--------------------------- :: iftrue
+s;p,if true then e' else e'' --> s;p,e'
+
+--------------------------- :: iffalse
+s;p,if false then e' else e'' --> s;p,e''
+
+------------------------------------ :: trace
+s;p,trace string_literal v --> s;p,e
+
+------------------ :: not_1
+s; p,not true --> s; p,false
+
+------------------ :: not_2
+s; p,not false --> s; p,true
+
+------------------- :: and_1
+s; p,((&&) true) e --> s; p,e
+
+------------------------ :: and_2
+s; p,((&&) false) e --> s; p,false
+
+l first unused for s
+------------------------------ :: ref
+s; p,ref v -->  s,l|->v ; p,l
+
+s(l)=v
+------------------------------- :: deref
+s; p,(!) l --> s;p,v
+
+------------------------------- :: assign
+ s,l|->v; p,((::=) l) v' --> s,l|->v'; p,()
+
+---------------------------------------- :: thread_create
+s;p,(Thread.create v1) v2 --> s;p,v1 v2,()
+
+s;p,e --> s';p',e'
+--------------  :: context_app1
+s;p,e e1 --> s';p', e' e1
+
+s;p,e --> s';p',e'
+------------  :: context_app2
+s;p, v e --> s';p', v e'
+
+s;p, e --> s';p', e'
+-------------------------------- :: context_let
+s;p, let x=e in e1 --> s';p', let x=e' in e1
+
+s;p,e1 --> s';p',e2
+--------------------------- :: context_if
+s;p,if e1 then e' else e'' --> s';p',if e2 then e' else e''
+
+s;p,e --> s';p',e'
+--------------  :: context_trace
+s;p,trace string_literal e --> s';p', trace string_literal e'
+
+

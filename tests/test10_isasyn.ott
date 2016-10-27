@@ -1,0 +1,59 @@
+metavar termvar , x ::= 
+  {{ isa string }} {{ coq nat }} {{ hol string }} {{ coq-equality }} {{ lex alphanum }}
+  {{ tex \mathit{[[termvar]]} }} {{ com  term variable  }} 
+
+grammar
+
+  t :: 't_' ::=    {{ com term }}
+    | x                   ::   :: Var   
+    | \ x . t             ::   :: Lam   {{ isaprec 60 }}
+    | t t'                ::   :: App   {{ isasyn [[t]]\<bullet>[[t']] }}  {{ isaprec 50 }}
+    | ( t )               :: M :: paren 
+    | { t / x } t'        :: M :: tsub  
+
+  v :: 'v_' ::=    {{ com  value }}
+    | \ x . t             ::   :: Lam   
+
+  terminals :: 'terminals_' ::=
+    | \                   ::   :: lambda  {{ tex \lambda }}  {{ isa \<lambda> }}
+    | -->                 ::   :: red     {{ tex \longrightarrow }} {{ isa ---> }}
+
+
+homs 't_'
+  :: Lam  (+ bind x in t +)  
+
+homs 't_'
+  :: Var     {{ com variable }}         
+  :: Lam     {{ com abstraction }}      
+  :: App     {{ com application }}      
+  :: paren   {{ ic [[t]] }} 
+  :: tsub    {{ ic ( tsubst_t [[t]] [[x]] [[t']] ) }}
+
+homs ''
+  :: reduce  {{ com [[t1]] reduces to [[t2]] }} 
+
+
+subrules
+  v <:: t
+
+substitutions
+  single t x :: tsubst 
+
+defns
+  Jop :: '' ::=
+
+    defn
+    t1 --> t2 ::  :: reduce :: '' {{ isasyn [[t1]] ---> [[t2]] }}  by 
+
+
+    --------------------------  :: ax_app
+    (\x.t12) v2 -->  {v2/x}t12
+
+    t1 --> t1'
+    -------------- :: ctx_app_fun
+    t1 t --> t1' t
+
+    t1 --> t1'
+    -------------- :: ctx_app_arg
+    v t1 --> v t1'
+

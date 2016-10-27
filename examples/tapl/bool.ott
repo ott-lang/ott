@@ -1,0 +1,31 @@
+% TAPL [bool]  Booleans, p34
+grammar
+t :: Tm ::=                                        {{ com terms: }}
+  | true                          ::   :: True       {{ com constant true }}
+  | false                         ::   :: False      {{ com constant false }}
+  | if t1 then t2 else t3         ::   :: If         {{ com conditional }}
+
+v :: Va ::=                                        {{ com values: }}
+  | true                          ::   :: True       {{ com true value }}
+  | false                         ::   :: False      {{ com false value }}
+
+
+subrules
+v <:: t
+
+defns 
+Jop :: '' ::= 
+
+defn 
+t --> t' :: :: red :: E_ {{ com Evaluation }} by
+
+------------------------------- :: IfTrue
+if true then t2 else t3 --> t2
+
+------------------------------- :: IfFalse
+if false then t2 else t3 --> t3
+
+t1 --> t1'
+------------------------------------------------ :: If
+if t1 then t2 else t3 --> if t1' then t2 else t3
+

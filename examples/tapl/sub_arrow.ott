@@ -1,0 +1,27 @@
+defns
+Jtype :: '' ::= 
+
+defn
+G |- t : T :: :: typing :: T_ {{ com Typing }} by
+
+G |- t:S
+S<:T
+---------- :: Sub
+G |- t:T
+
+
+defn
+T1 <: T2 :: :: subtyping :: S_ {{ com Subtyping }} by
+
+------ :: Refl
+S <: S
+
+S <: U
+U <: T
+------ :: Trans
+S <: T
+
+T1 <: S1
+S2 <: T2
+---------------- :: Arrow
+S1->S2 <: T1->T2

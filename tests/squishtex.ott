@@ -1,0 +1,9 @@
+embed 
+ {{ tex-preamble
+\renewcommand{\[[TEX_NAME_PREFIX]]grammartabular}[1]{\begin{minipage}{\columnwidth}\begin{tabular}{ll}#1\end{tabular}\end{minipage} }
+\renewcommand{\[[TEX_NAME_PREFIX]]rulehead}[3]{$#1$  $#2$ & $#3$}
+\renewcommand{\[[TEX_NAME_PREFIX]]prodline}[6]{ \quad $#1$ \ $#2$ & \quad $#3 #4$  $#5$  $#6$}
+\renewcommand{\[[TEX_NAME_PREFIX]]interrule}{\\[2.0mm]}
+ }}
+
+

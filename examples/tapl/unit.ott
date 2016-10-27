@@ -1,0 +1,23 @@
+% The TAPL text also introduces sugar
+%  | t1 ; t2                       :: S :: [[ (\x:Unit.t2) t1 where x notin FV(t2) ]]
+
+
+grammar
+t :: Tm ::=                                        {{ com terms: }}
+  | unit                          ::   :: Unit       {{ com constant [[unit]] }}
+
+v :: Va ::=                                        {{ com values: }}
+  | unit                          ::   :: Unit       {{ com unit value }}
+
+T :: Ty ::=                                       {{ com types: }}
+  | Unit                          ::   :: Unit      {{ com unit type }}
+
+defns
+Jtype :: '' ::= 
+
+defn
+G |- t : T :: :: typing :: T_ {{ com Typing }} by
+
+
+----------------- :: Unit
+G |- unit : Unit

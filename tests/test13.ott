@@ -1,0 +1,61 @@
+metavar terminal, t			::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar metavarroot, mvr  	::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar nontermroot, ntr  	::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar suffix, suff       ::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar auxfn, f          ::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar prodname, pn     ::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+indexvar index, i, j, n, m  ::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+
+grammar
+
+'metavar' :: 'mv_' ::=
+  | metavarroot suffix  :: :: 1
+
+nonterm :: 'nt_' ::=
+  | nontermroot suffix  :: :: 1
+
+element :: 'e_' ::=
+  | terminal :: :: tm
+  | 'metavar' :: :: mv
+  | nonterm  :: :: nt
+
+mse :: 'mse_' ::=
+  | 'metavar' :: :: mv
+  | nonterm :: :: nt
+  | auxfn ( nonterm ) :: :: f
+  | mse union mse' :: :: union
+  | {} :: :: empty
+
+bindspec, bs :: 'bs_' ::=
+  | 'bind' mse in nonterm :: :: bind
+  | auxfn = mse :: :: auxfn
+
+
+prod {{ hol production }} :: 'p_' ::=
+  | '|' element1 .. elementm '::' '::' prodname '(+' bindspec1 .. bindspecn '+)'   :: :: 1
+
+rule :: 'r_' ::= 
+  | nontermroot '::' '''' '::='  prod1 .. prodm :: :: 1
+
+grammar_rules :: 'g_' ::= 
+  | 'grammar' rule1 .. rulem :: :: 1
+
+
+
+formula :: 'formula_' ::=          
+  | judgement           ::   :: judgement
+
+
+terminals :: '' ::=
+  | '{}' :: :: quote {{ tex \texttt{\{\} } }}
+  | '('  :: :: lparen {{ tex \texttt{(} }}
+  | ')'  :: :: rparen {{ tex \texttt{)} }}
+  | '(+'  :: :: lparenplus {{ tex \texttt{(+} }}
+  | '+)'  :: :: rparenplus {{ tex \texttt{+)} }}
+  | ''''  :: :: quotequote {{ tex \texttt{''} }}
+  | '::'  :: :: coloncolon {{ tex \texttt{::} }}
+  | '::='  :: :: coloncoloneq {{ tex \texttt{::=} }}
+  | 'grammar' :: :: tgrammar {{ tex \texttt{grammar} }}
+  | 'bind' :: :: bind {{ tex \texttt{bind} }}
+  | 'in' :: :: in {{ tex \texttt{in} }}
+  | 'union' :: :: union {{ tex \texttt{union} }}

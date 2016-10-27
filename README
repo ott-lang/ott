@@ -1,0 +1,94 @@
+             Ott
+             
+by Peter Sewell and Francesco Zappa Nardelli.
+
+
+Directory contents
+----------------
+The source distribution contains:
+
+doc/                     the user guide, in html, pdf, and ps 
+emacs/                   an Ott Emacs mode
+tex/                     auxiliary files for LaTeX
+coq/                     auxiliary files for Coq
+hol/                     auxiliary files for HOL
+tests/                   various small example Ott files
+examples/                some larger example Ott files
+src/                     the (OCaml) Ott sources
+bin/                     the Ott binary (binary distro only)
+Makefile                 a Makefile for the examples
+LICENCE                  the BSD-style licence terms
+README                   this file (Section 2 of the user guide)
+revisionhistory.txt                   the revision history
+ocamlgraph-0.99a.tar.gz   a copy of the ocamlgraph library
+
+(we no longer provide a Windows binary distribution)
+
+
+
+
+To build
+--------
+Ott depends on OCaml version 3.09.1 or later.  It builds with OCaml
+3.12.1.  (Ott cannot be
+compiled with OCaml 3.08, and it also touched an OCaml bug in 3.10.0 for amd64,
+fixed in 3.10.1).
+
+
+
+The command
+
+  make world
+
+builds the ott binary in the bin/ subdirectory.  
+
+This will compiles Ott using ocamlopt.  To force it to
+compile with ocamlc (which may give significantly slower execution
+of Ott), do "make world.byt".
+
+
+To run
+------
+Ott runs as a command-line tool. Executing bin/ott shows the
+usage and options.  To run Ott on the test file
+tests/test10.ott, generating LaTeX in test10.tex and
+Coq in test10.v, type:
+
+  bin/ott -i tests/test10.ott -o test10.tex -o test10.v
+
+Isabelle and HOL can be generated with options -o test10.thy and
+-o test10Script.sml respectively.
+
+The Makefile has various sample targets, "make tests/test10.out",
+"make test7", etc.  Typically they generate:
+
+  out.tex         LaTeX source for a definition
+  out.ps          the postscript built from that
+  out.v           Coq source
+  outScript.sml   HOL source
+  out.thy         Isabelle source
+
+from files test10.ott, test8.ott, etc., in tests/.
+
+
+Emacs mode
+----------
+The file emacs/ottmode.el defines a very simple Emacs mode for syntax
+highlighting of Ott source files.  It can be used by, for example,
+adding the following to your .emacs, replacing PATH by a path to your
+Ott emacs directory.
+
+(setq load-path (cons (expand-file-name "PATH") load-path))
+(require 'ottmode)
+
+
+
+Copyright information
+---------------------
+The ocamlgraph library is distributed under the LGPL (from
+http://www.lri.fr/~filliatr/ftp/ocamlgraph/); we include a snapshot
+for convenience. For its authorship and copyright information see the
+files therein.
+
+All other files are distributed under the BSD-style licence in LICENCE.
+

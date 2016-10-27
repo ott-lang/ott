@@ -1,0 +1,27 @@
+% TAPL [bool typing]  Typed booleans
+
+grammar
+T {{ hol Typ }}, S, U :: Ty ::=                       {{ com types: }}
+  | Bool                         ::   :: Bool          {{ com type of booleans }}
+
+
+defns
+Jtype :: '' ::= 
+
+defn
+G |- t : T :: :: typing :: T_ {{ com Typing }} by
+
+
+----------------- :: True
+G |- true : Bool
+    
+----------------- :: False
+G |- false : Bool
+
+G |- t1:Bool
+G |- t2:T
+G |- t3:T
+------------------------------ :: If
+G |- if t1 then t2 else t3 : T 
+    
+

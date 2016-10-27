@@ -1,0 +1,6 @@
+embed 
+ {{ tex-preamble
+\renewcommand{\[[TEX_NAME_PREFIX]]grammartabular}[1]{\begin{tabular}{llcllllll}#1\end{tabular} }
+\renewcommand{\[[TEX_NAME_PREFIX]]metavartabular}[1]{\begin{tabular}{ll}#1\end{tabular} }
+ }}
+

@@ -1,0 +1,39 @@
+% minimal + latex + comments
+metavar termvar, x ::=   
+  {{ tex \mathit{[[termvar]]} }}
+
+grammar
+t :: 't_' ::=                               {{ com term    }}
+  | x            ::  :: Var                   {{ com variable}}
+  | \ x . t      ::  :: Lam                   {{ com lambda  }}
+  | t t'         ::  :: App                   {{ com app     }}
+  | ( t )        :: S:: Paren      
+  | { t / x } t' :: M:: Tsub  
+
+v :: 'v_' ::=                               {{ com value   }}
+  | \ x . t      ::  :: Lam                   {{ com lambda  }}
+
+terminals :: 'terminals_' ::=
+  | \            ::  :: lambda  {{ tex \lambda }}
+  | -->          ::  :: red     {{ tex \longrightarrow }}
+
+subrules
+  v <:: t
+
+defns
+Jop :: '' ::=
+
+ defn
+ t1 --> t2 :: ::reduce::'' {{ com [[t1]] reduces to [[t2]]}} by
+
+
+    --------------------------  :: ax_app
+    (\x.t12) v2 -->  {v2/x}t12
+
+    t1 --> t1'
+    -------------- :: ctx_app_fun
+    t1 t --> t1' t
+
+    t1 --> t1'
+    -------------- :: ctx_app_arg
+    v t1 --> v t1'

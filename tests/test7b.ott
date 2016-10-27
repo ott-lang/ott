@@ -1,0 +1,499 @@
+>> TODO 
+- the concrete variable representation currently used in the generated code
+   no longer suffices for these dependent-record type environments 
+- either add distinctness conditions to the syntax, generating predicates
+   is_distinct_t etc, or write them in the typing rules (for labels in 
+   record types, exprs and pats, and termvars in pats)
+
+ideally also:
+
+- implement context rules, so that the explicit reduction context rules 
+   can be replaced by a single one.
+<<
+metavar typevar, X ::=
+ {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ lem string }} {{ lex Alphanum }}  
+ {{ tex \mathit{[[typevar]]} }} {{ com  type variable  }}  
+ {{ isavar ''[[typevar]]'' }} {{ holvar "[[typevar]]" }} {{ lemvar "[[typevar]]" }} {{ texvar \mathrm{[[typevar]]} }} 
+ {{ ocamlvar "[[typevar]]" }}
+
+metavar termvar, x ::=
+ {{ isa string }} {{ coq nat }} {{ hol string }}  {{ lem string }} {{ coq-equality }} {{ lex alphanum }}  
+ {{ tex \mathit{[[termvar]]} }} {{ com  term variable  }} 
+ {{ isavar ''[[termvar]]'' }} {{ holvar "[[termvar]]" }} 
+ {{ lemvar "[[typevar]]" }} 
+ {{ texvar \mathrm{[[termvar]]} }} 
+ {{ ocamlvar "[[termvar]]" }}
+
+metavar label, l, k ::=
+ {{ isa string }} {{ coq nat }} {{ hol string }} {{ lem string }} {{ lex alphanum }}  {{ tex \mathit{[[label]]} }} 
+ {{ com  field label  }}  {{ isavar ''[[label]]'' }} {{ holvar "[[label]]" }} {{ lemvar "[[typevar]]" }} 
+ {{ ocamlvar "[[label]]" }}
+
+indexvar index, i, j, n, m  ::= {{ isa nat }} {{ coq nat }} {{ hol num }} {{ lem num}} {{ lex numeral }}
+  {{ com indices }}
+
+grammar
+T {{ hol Typ }}, S, U :: 'Ty_' ::=                    {{ com type  }}
+  | X                                :: :: Var          {{ com type variable }}  
+  | Top                              :: :: Top          {{ com maximum type }}   
+  | T -> T'                          :: :: Fun          {{ com type of functions }}
+  | Forall X <: T . T'               :: :: Forall (+ bind X in T' +) {{ com universal type }} 
+                                   {{ tex [[Forall]] [[X]] \mathord{[[<:]]} [[T]]. \, [[T']] }}
+  | { l1 : T1 , .. , ln : Tn }      :: :: Rec           {{ com record }}           
+%R  | { }                              :: :: Rec_empty        {{ com empty record }}
+%R  | { Trb }                          :: :: Rec_ne           {{ com nonempty record }}
+% {{ com record type }}    
+  | ( T )                            :: S :: paren {{ ichl [[T]] }}
+  | [ X |-> T ] T'                   :: M :: sub   {{ ichl (Tsubst_T [[T]] [[X]] [[T']]) }} 
+
+%R Trb :: 'Trb_' ::=
+%R  | l : T                            :: :: rb1
+%R  | l : T , Trb                      :: :: rb2         
+
+t :: 't_' ::=                                                      {{ com  term  }}
+  | x                                :: :: Var                       {{ com variable }}         
+  | \ x : T . t                      :: :: Lam  (+ bind x in t +)    {{ com abstraction }}      
+                                       {{ tex \lambda [[x]] \mathord{[[:]]} [[T]]. \, [[t]] }}
+  | t t'                             :: :: App                       {{ com application }}      
+  | \ X <: T . t                     :: :: TLam (+ bind X in t +)    {{ com type abstraction}} 
+                                       {{ tex \Lambda [[X]] \mathord{[[<:]]} [[T]]. \, [[t]] }}
+  | t [ T ]                          :: :: TApp                      {{ com type application}} 
+  | { l1 = t1 ,  .. , ln = tn }      :: :: Rec                      {{ com record }}
+  | t . l                            :: :: Proj                     {{ com projection }} 
+  | let p = t in t'                  :: :: Let (+ bind b(p) in t' +){{ com pattern binding}}
+  | ( t )                            :: S :: paren {{ ichl [[t]] }} 
+  | [ x |-> t ] t'                   :: M :: tsub  {{ ichl ( tsubst_t [[t]] [[x]] [[t']] ) }}
+  | [ X |-> T ] t                    :: M :: Tsub  {{ ichl ( Tsubst_t [[T]] [[X]] [[t]] ) }} 
+%  | E [ t ]                          :: M :: ctx 
+  | s t                              :: M :: tsubs {{ ichl ( m_t_subst_t [[s]] [[t]] ) }}
+
+ p :: 'P_' ::=                                                {{ com  pattern }}
+  | x : T                            :: :: Var (+ b = x  +)     {{ com variable pattern }}
+  | { l1 = p1 , .. , ln = pn }       :: :: Rec (+ b = b(p1 .. pn) +) {{ com  record pattern  }}
+
+v :: 'v_' ::= {{ com  values  }}
+  | \ x : T . t                      :: :: Lam  (+ bind x in t +)  {{ com abstraction }}      
+  | \ X <: T . t                     :: :: TLam (+ bind X in t +)  {{ com type abstraction }} 
+                                       {{ tex \Lambda [[X]] [[<:]] [[T]]. \, [[t]] }}
+  | { l1 = v1 ,  .. , ln = vn }      :: :: Rec                     {{ com record }}
+% {{ com record }}
+%  E :: E_ ::= 
+%        | __                                      :: :: hole
+%        | E t                                     :: :: app_fun
+%        | v E                                     :: :: app_arg
+%        | E [ T ]                                 :: :: type_fun
+%r       | E . l                                   :: :: projection           
+%r%      | { l1 = v1 , .. , lm = vm , l = E , l1' = t1' , .. , ln' = tn' } :: :: record
+%r       | let p = E in t2                         :: :: let_binding
+
+G {{ tex \Gamma }}, D {{ tex \Delta }} :: 'G_' ::= {{ com type environment }}
+  | empty                            ::   :: empty       
+  | G , X <: T                       ::   :: type        
+  | G , x : T                        ::    :: term
+%r  | G , G'                           :: M :: comma    {{ ichl TODO }}
+  | G1 , .. , Gn                     :: M :: dots {{ ichl (flatten_G [[G1..Gn]]) }}  
+
+s {{ tex \sigma }} :: 'S_' ::= {{ com multiple term substitution }} {{ isa (termvar*t) list }} {{ hol (termvar#t) list }} {{ coq list (termvar*t) }} {{ lem list (termvar*t) }}
+  | [ x |-> t ]                    ::   :: singleton {{ ih [ ([[x]],[[t]]) ] }} {{ coq (cons ([[x]],[[t]]) nil) }} {{ lem [ ([[x]],[[t]]) ] }}
+  | s1 , ... , sn                   ::   :: list   {{ isa List.concat [[s1...sn]] }} {{ hol (FLAT [[s1...sn]]) }} {{ coq (List.flat_map (fun x => x) [[s1...sn]]) }} {{ lem (List.flatten [[s1...sn]]) }}
+
+terminals :: terminals_ ::=
+  |  \                     ::   :: lambda    {{ tex  \lambda }}
+  |  ->                    ::   :: arrow     {{ tex  \rightarrow }}
+  |  =>                    ::   :: Arrow     {{ tex  \Rightarrow }}
+%  |  __                    ::   :: hole      {{ tex \_ }}
+  | |-                     ::   :: turnstile {{ tex \vdash }}
+  | -->                    ::   :: red       {{ tex \longrightarrow }}
+  | Forall                 ::   :: forall    {{ tex \forall }}
+  | <:                     ::   :: subtype   {{ tex <: }}
+  | |->                    ::   :: mapsto    {{ tex \mapsto }}
+  | /\                     ::   :: wedge     {{ tex \wedge }}
+  | \/                     ::   :: vee       {{ tex \vee }}
+  | =                      ::   :: eq        {{ tex \!\! = \!\! }}
+
+formula :: formula_ ::=          
+  | judgement              :: :: judgement
+% | G = G'                 :: :: Geq     {{ ichl [[G]] = [[G']] }}
+  | x = x'                 :: :: xeq     {{ ichl [[x]] = [[x']]  }}
+  | X = X'                 :: :: Xeq     {{ ichl [[X]] = [[X']]  }}
+  | ( formula )            :: :: paren   {{ ichl ( [[formula]] ) }}
+  | not formula            :: :: not     {{ isa Not( [[formula]] ) }}
+                                         {{ coq not( [[formula]] ) }}
+                                         {{ lem not( [[formula]] ) }}
+                                         {{ hol ~( [[formula]] ) }}
+                                         {{ tex \neg [[ formula]] }}
+%  | x isin dom ( G )      :: :: xin    {{ isa ? T. ([[x]],T,[[G]]):tin }} 
+%                                         {{ tex [[x]] \in [[dom]]([[G]]) }}
+%  | X isin dom ( G )      :: :: Xin    {{ isa ? T. ([[X]],T,[[G]]):Tin }}
+%                                         {{ tex [[X]] \in [[dom]]([[G]]) }}
+  | forall i isin 1 -- m . formula :: :: forall 
+                               {{ tex \forall [[i]] \in 1 .. [[m]] . [[formula]] }} 
+                               {{ isa ![[i]] . ((1::nat)<=[[i]] & [[i]]<=[[m]]) ==> [[formula]] }} 
+                               {{ hol ![[i]] . (1<=[[i]] /\ [[i]]<=[[m]]) ==> [[formula]] }} 
+                               {{ coq (forall [[i]], (1<=[[i]] /\ [[i]] <= m) -> [[formula]]) }}
+                               {{ lem (forall [[i]]. (1<=[[i]] && [[i]] <= m) --> [[formula]]) }}
+
+  | exists i isin 1 -- m . formula :: :: exists 
+                               {{ tex \exists [[i]] \in 1 .. [[m]]. [[formula]] }}
+                               {{ isa ?[[i]]. ((1::nat)<=[[i]] & i<=[[m]]) ==> [[formula]] }} 
+                               {{ hol ?[[i]] . (1<=[[i]] /\ [[i]]<=[[m]]) ==> [[formula]] }} 
+                               {{ coq exists [[i]], (1<=[[i]] /\ [[i]] <= [[m]]) -> [[formula]] }}
+                               {{ lem (exists [[i]]. (1<=[[i]] && [[i]] <= m) && [[formula]]) }}
+
+  | formula /\ formula'   :: :: and  {{ isa ([[formula]] & [[formula']]) }}
+                                     {{ hol ([[formula]] /\ [[formula']]) }}
+                                     {{ coq ([[formula]] /\ [[formula']]) }}
+                                     {{ lem ([[formula]] && [[formula']]) }}
+
+  | l = l'                :: :: leq  {{ ichl ([[l]]=[[l']]) }}
+ 
+% would be nice to write the above as  {{ isa ?[[T]]. [[X<:T isin G]] }}
+
+%formulalist :: formulalist_ ::=          
+   | formula1 ... formulan   :: :: dots
+
+
+subrules
+  v <:: t
+
+%  E   _:: t :: t
+
+
+substitutions
+  single   t x :: tsubst    
+  single   T X :: Tsubst    
+  multiple t x :: m_t_subst 
+  multiple T X :: m_T_subst 
+
+freevars
+  T X :: ftv 
+  t x :: fv
+
+
+
+ embed 
+   {{ isa 
+ consts append_G :: "G => G => G"
+ primrec
+ "append_G [[G]] [[empty]] = [[G]]"
+ "append_G [[G]] [[G',X<:T]] = (let [[G'']] = append_G [[G]] [[G']] in [[G'',X<:T]])"
+ "append_G [[G]] [[G',x:T]] = (let [[G'']] = append_G [[G]] [[G']] in [[G'',x:T]])"
+ consts flatten_G :: "G list => G"
+ primrec
+ "flatten_G [] = [[empty]]"
+ "flatten_G (Cons [[G]] Gs) = append_G [[G]] (flatten_G Gs)"
+ }}
+ 
+   {{ hol
+ val _ = Define `
+    (append_G [[G]] [[empty]] = [[G]])
+ /\ (append_G [[G]] [[G',X<:T]] = (let [[G'']] = append_G [[G]] [[G']] in [[G'',X<:T]]))
+ /\ (append_G [[G]] [[G',x:T]] = (let [[G'']] = append_G [[G]] [[G']] in [[G'',x:T]]))`;
+ val _ = Define `
+    (flatten_G NIL = [[empty]])
+ /\ (flatten_G (CONS [[G]] Gs) = append_G [[G]] (flatten_G Gs))`;
+ }}
+ 
+ {{ coq 
+ Fixpoint append_G (g1 g2 : G) {struct g2} : G :=
+   match g2 with
+   | G_empty => g1
+   | G_type gh tv t => G_type (append_G g1 gh) tv t
+   | G_term gh v t => G_term (append_G g1 gh) v t
+ end.
+ Fixpoint flatten_G (gl:list_G) : G :=
+   match gl with 
+   | Nil_list_G => G_empty
+   | Cons_list_G g gs => append_G g (flatten_G gs)
+ end.  }}
+   {{ lem
+ (** embedded definitions of operations on type environments **)
+ val append_G : G -> G -> G
+ let rec  append_G [[G]] [[empty]] = [[G]]
+ and      append_G [[G]] [[G',X<:T]] = (let [[G'']] = append_G [[G]] [[G']] in [[G'',X<:T]])
+ and      append_G [[G]] [[G',x:T]] = (let [[G'']] = append_G [[G]] [[G']] in [[G'',x:T]])
+ val flatten_G : list G -> G
+ let rec flatten_G [] = [[empty]]
+ and     flatten_G ([[G]]::Gs) = append_G [[G]] (flatten_G Gs)
+ }}
+ 
+
+defns
+Judgement_in :: '' ::=
+
+
+% defn
+% x isin dom ( G ) :: :: xinG :: xinG_ {{ tex [[x]] \in [[dom]]([[G]])}} by 
+% 
+% x:T isin G
+% ---------------- :: 1
+% x isin dom(G)
+% 
+% 
+% defn
+% X  isin dom ( G ) :: :: XinG :: XinG_  {{ tex [[X]] \in [[dom]]([[G]]) }} by
+% 
+% X<:U isin G
+% ---------------- :: 1
+% X isin dom(G)
+
+defn
+x isin dom ( G ) :: :: xinG :: xinG_ {{ tex [[x]] \in [[dom]]([[G]])}} by 
+
+-------------- :: 1
+x isin dom(G,x:T)
+
+x isin dom(G)
+---------------- :: 2
+x isin dom(G,X'<:U')
+
+x isin dom(G)
+--------------- :: 3
+x isin dom(G,x':T')
+
+
+defn
+X  isin dom ( G ) :: :: XinG :: XinG_  {{ tex [[X]] \in [[dom]]([[G]]) }} by
+
+------------- :: 1
+X isin dom(G,X<:U)
+
+X isin dom(G)
+--------------- :: 2
+X isin dom(G,X'<:U')
+
+X isin dom(G)
+-------------- :: 3
+X isin dom(G,x':T')
+
+
+defn
+x : T isin G :: :: tin :: tin_ {{ tex [[x]] [[:]] [[T]] \in [[G]] }} by
+
+---------------- :: 1
+x:T isin G,x:T
+
+x:T isin G
+------------------ :: 2
+x:T isin G,X'<:U'
+
+x:T isin G
+----------------- :: 3
+x:T isin G,x':T'
+
+
+
+
+defn
+X <: U isin G :: :: Tin :: Tin_ {{ tex [[X]] [[<:]] [[U]] \in [[G]] }} by
+
+---------------- :: 1
+X<:U isin G,X<:U
+
+X<:U isin G
+------------------ :: 2
+X<:U isin G,X'<:U'
+
+X<:U isin G
+----------------- :: 3
+X<:U isin G,x':T'
+
+
+defns
+Jtype :: '' ::=
+
+defn
+G |- ok :: :: Gok :: Gok_ {{ com type environment [[G]] is well-formed }} by
+
+----------- :: 1
+empty |- ok
+
+G |- T 
+not(x isin dom(G))
+------------------ :: 2
+G,x:T |- ok
+
+G |- T
+not(X isin dom(G))
+------------------- :: 3
+G,X<:T |- ok
+
+
+defn
+G |- T :: :: GT :: GT_ {{ com type [[T]] is well-formed in type environment [[G]] }} by
+
+G |- ok
+X<:U isin G
+-------------- :: Var
+G |- X 
+
+G |- ok
+-------------- :: Top
+G |- Top
+
+G |- T
+G |- T'
+-------------- :: Fun
+G |- T->T'
+
+G,X<:T |- T'
+------------------ :: Forall
+G |- Forall X<:T.T'
+
+G |- T1 .. G |- Tn
+% and distinctness, if not in the syntax
+--------------------- :: Rcd
+G |- {l1:T1,..,ln:Tn}
+
+
+
+defn
+G |- S <: T ::  :: SA :: SA_  {{ com [[S]] is a subtype of [[T]] }} by 
+
+G |- ok
+---------- :: Top
+G |- S <: Top
+
+G |- ok
+---------- :: Refl_TVar
+G |- X <: X
+
+%G = G1, X<:U , G2
+X<:U isin G
+G |- U <: T
+------------- :: Trans_TVar
+G |- X <: T
+
+G |- T1<:S1
+G |- S2<:T2
+---------------------- :: Arrow 
+G |- S1->S2 <: T1->T2
+
+G |- T1<:S1
+G,X<:T1 |- S2<:T2
+--------------------------------------- :: All
+G |- Forall X<:S1.S2 <: Forall X<:T1.T2
+
+ forall i isin 1 -- m. exists j isin 1 -- n. (ki=lj /\ G |- Si<:Tj)
+ --------------------------------------------------------------------------- :: Rcd
+ G |- {k1:S1 , .. , km:Sm} <: {l1:T1,..,ln:Tn}
+
+
+defn
+G |- t : T ::  :: Ty :: Ty_  {{ com term [[t]] has type [[T]] }} by 
+
+G |- ok
+x:T isin G
+-------------- :: Var
+G |- x:T
+
+G,x:T1 |- t2:T2
+----------------------- :: Abs
+G |- \x:T1.t2 : T1->T2
+
+G|- t1:T11->T12
+G|- t2:T11
+-------------------- :: App
+G|- t1 t2 : T12
+
+G,X<:T1 |- t2:T2
+-------------------------------- :: TAbs
+G|- \X<:T1.t2 : Forall X<:T1.T2
+
+G|- t1 : Forall X<:T11.T12
+G|- T2 <: T11
+--------------------------- :: TApp
+G|- t1[T2] : [X|->T2]T12
+
+
+ G|- t1:T1
+ |- p:T1=>D
+ G,D |- t2:T2
+ ------------------------ :: Let
+ G|- let p=t1 in t2 : T2
+ 
+ G|-t1:T1 .. G|-tn:Tn
+ % and distinctness, if not in the syntax
+ ------------------------------------- :: Rcd
+ G|- {l1=t1,..,ln=tn}:{l1:T1,..,ln:Tn}
+ 
+ G|- t:{l1:T1,..,ln:Tn}
+ ----------------------- :: Proj
+ G|- t.lj : Tj
+
+
+
+G|- t:S
+G|- S<:T
+--------- :: Sub
+G|- t:T
+
+
+defn
+ |- p : T => D ::  :: Pat :: Pat_  {{ com pattern [[p]] matches type [[T]] giving bindings [[D]] }} by 
+ 
+ ------------------ :: Var
+ |- x:T : T => empty,x:T
+ 
+ |- p1:T1=>D1 .. |- pn:Tn=>Dn
+ % and distinctness, if not in the syntax
+ ------------------------------------------------ :: Rcd
+ |- {l1=p1,..,ln=pn}:{l1:T1,..,ln:Tn} => D1,..,Dn
+
+
+defns
+Jop :: '' ::=
+
+
+defn
+t1 --> t2 ::  :: reduce :: reduce_  {{ com [[t1]] reduces to [[t2]] }} by 
+
+-----------------------------------------  :: AppAbs
+(\x:T11.t12) v2 -->  :t_tsub: [x|->v2]t12
+
+-----------------------------------  :: TappTabs
+(\X<:T11.t12) [T2] -->  [X|->T2]t12
+
+ match(p,v1)=s
+ -------------------------  :: LetV
+ let p=v1 in t2 -->  s t2
+ 
+ --------------------------- :: ProjRcd
+ {l'1=v1,..,l'n=vn}.l'j --> vj
+
+
+%t1 --> t1'
+%------------------- :: Ctx
+%E[t1] --> E[t1']
+
+t1 --> t1'
+---------------- :: Ctx_app_fun
+t1 t --> t1' t
+
+t1 --> t1'
+---------------- :: Ctx_app_arg
+v t1 --> v t1'
+
+t1 --> t1'
+---------------- :: Ctx_type_fun
+t1[T] --> t1'[T]
+
+ t --> t'
+ -------------- :: Ctx_record
+ {l1=v1,..,lm=vm,l=t,l1'=t1',..,ln'=tn'} --> {l1=v1,..,lm=vm,l=t',l1'=t1',..,ln'=tn'}
+ 
+ t1 --> t1'
+ ---------------------------------- :: Ctx_let_binding
+ let p=t1 in t2 --> let p=t1' in t2
+
+defn
+ match ( p , v ) = s ::  :: M :: M_  by 
+ 
+ ----------------------- :: Var
+ match(x:T,v) = [x|->v]
+ 
+ forall i isin 1 -- m. exists j isin 1 -- n. (li=kj /\ match(pi,vj)=si)
+ ---------------------------------------------------------------------- :: Rcd
+ match({l1=p1,..,lm=pm},{k1=v1,..,kn=vn}) = s1,..,sm
+
+

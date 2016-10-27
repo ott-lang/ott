@@ -1,0 +1,52 @@
+% The TAPL E-Rcd rule uses a slightly different indexing form, 
+% {li=vi ^{i IN 1..j-1}, lj=tj, lk=tk^{k IN j+1..n}
+% which ott does not support, so that rule is slightly rephrased here.
+
+grammar
+T {{ hol Typ }}, S, U :: Ty ::=                             {{ com types: }}
+  | { </ li : Ti // , // i IN 1 .. n /> } ::   :: Record      {{ com type of records }} 
+
+t :: Tm ::=                                        {{ com terms: }}
+  | { </ li = ti // , // i IN 1 .. n /> } ::   :: Record      {{ com record }}
+  | t . l                                 ::   :: Proj        {{ com projection }}
+
+v :: Va ::=                                        {{ com values: }}
+  | { </ li = vi // , // i IN 1 .. n /> } ::   :: Record      {{ com record value }}
+
+
+subrules
+ v <:: t
+
+defns 
+Jop :: '' ::= 
+
+defn 
+t --> t' :: :: red :: E_ {{ com Evaluation }} by
+
+---------------------------------- :: ProjRcd
+{ </li=vi//i IN 1..n/> }.lj --> vj
+
+t1 --> t1'
+-------------- :: Proj
+t1.l --> t1'.l
+
+t --> t'
+------------------------------------------------------------------------ :: Rcd
+{ </li=vi//i IN 1..m/>,l=t,</lj'=tj//j IN 1..n/>} --> { </li=vi//i IN 1..m/>,l=t',</lj'=tj//j IN 1..n/>}
+
+
+
+defns
+Jtype :: '' ::= 
+
+defn
+G |- t : T :: :: typing :: T_ {{ com Typing }} by
+
+</ G|-ti:Ti // i IN 1..n />
+DISTINCT </li // i IN 1..n />
+----------------------------------------------------------- :: Rcd
+G|- { </ li=ti // i IN 1..n /> }:{ </ li:Ti // i IN 1..n /> }
+
+G|- t1:{ </ li:Ti // i IN 1..n /> }
+----------------------------------- :: Proj
+G|- t1.lj : Tj

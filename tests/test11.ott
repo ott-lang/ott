@@ -1,0 +1,25 @@
+  metavar termvar , x ::=
+    {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ ocaml int }}
+
+  grammar
+    t :: 't_' ::=                                         
+      | x                   ::   :: Var                   
+      | \ x . t             ::   :: Lam  (+ bind x in t +)
+      | t t'                ::   :: App                   
+      | Foo v               ::   :: Foo
+
+    v :: 'v_' ::=                        
+      | \ x . t             ::   :: Lam   
+
+  subrules
+    v <:: t
+
+  defns
+    Jb :: '' ::=
+
+      defn
+      Baz t , v ::  :: Baz :: ''       by 
+
+      
+      --------- :: ax
+      Baz t , v

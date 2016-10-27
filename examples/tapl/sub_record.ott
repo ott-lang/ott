@@ -1,0 +1,27 @@
+grammar
+formula :: 'formula_' ::=          
+  | T1 is a permutation of T2 ::  :: perm {{ ich TODO }}
+
+defns
+Jtype :: '' ::= 
+
+
+
+defn
+T1 <: T2 :: :: subtyping :: S_ {{ com Subtyping }} by
+
+
+
+-------------------- :: RcdWidth
+{ </li:Ti//i IN 1..m/> , </l'j:T'j//j IN 1..n/> } <: { </li:Ti//i IN 1..m/> }
+
+</ Si <: Ti // i IN 1..m/>
+-------------------- :: RcdDepth
+{ </li:Si//i IN 1..m/> } <:{ </li:Ti//i IN 1..m/> } 
+
+
+{</kj:Sj//j IN 1..n/>} is a permutation of {</li:Ti//i IN 1..n/>}
+-------------------- :: RcdPerm
+{</kj:Sj//j IN 1..n/>} <: {</li:Ti//i IN 1..n/>}
+
+

@@ -1,0 +1,339 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{ottlayout}[16/4/2007 Different ways of displaying Ott TeX]
+\RequirePackage{keyval}
+\RequirePackage{ifthen}
+\RequirePackage[dvipsnames,usenames]{color}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                           Ott TeX style file                           %
+%                                                                        %
+%        Rok Strnisa, Computer Laboratory, University of Cambridge       %
+%     Matthew Parkinson, Computer Laboratory, University of Cambridge    %
+%                                                                        %
+%  Copyright 2006-2007                                                   %
+%                                                                        %
+%  Redistribution and use in source and binary forms, with or without    %
+%  modification, are permitted provided that the following conditions    %
+%  are met:                                                              %
+%  1. Redistributions of source code must retain the above copyright     %
+%  notice, this list of conditions and the following disclaimer.         %
+%  2. Redistributions in binary form must reproduce the above copyright  %
+%  notice, this list of conditions and the following disclaimer in the   %
+%  documentation and/or other materials provided with the distribution.  %
+%  3. The names of the authors may not be used to endorse or promote     %
+%  products derived from this software without specific prior written    %
+%  permission.                                                           %
+%                                                                        %
+%  THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS    %
+%  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED     %
+%  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    %
+%  ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY       %
+%  DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL    %
+%  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE     %
+%  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS         %
+%  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  %
+%  IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR       %
+%  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN   %
+%  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                         %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Both the defnblock command and all individual rule commands can take a
+% keyval list as their first, non-optional argument. Currently supported keys
+% and their values (first option is the default) are:
+%
+% - showruleschema    = yes/no
+% - showcomment       = yes/no
+% - rulelayout        = oneperline/nobreaks
+% - premiselayout     = oneperline/oneline/justify
+% - numberpremises    = no/yes
+% - numbercolour      = any dvips colour name
+%      Example:  {..., numbercolour=Blue, ...}
+% - premisenamelayout = right/left/topright/none
+%
+% The defaults can be changed globally by calling \ottstyledefaults with a
+% single argument: a keyval list with above keys+values.
+%
+% Each rule is currently in its own math display, which allows the user to
+% completely customize their layout, e.g. put a newline after every second
+% rule.
+
+% General advice about editing this file:
+% - presence/absence braces after commands for keys (/their defaults) is
+%   important --- copy how it is done currently
+% - the key DEFAULT/NOARG commands must have a dummy parameter declared
+% - when adding a key:
+%   a) declare commands for its normal+DEFAULT+NOARG value (as below)
+%   b) declare the key: optional param. is NOARG value, body sets the normal value
+%   c) update documentation above
+
+% FUNCTIONS USED TO STORE KEY VALUES AND THEIR DEFAULTS
+% whether to show definition's schema before showing the rules
+\newcommand{\ottshowruleschema}{\ottshowruleschemaDEFAULT}
+\newcommand{\ottshowruleschemaDEFAULT}[1]{yes}
+\newcommand{\ottshowruleschemaNOARG}[1]{yes}
+% whether to show definition's comment before showing the rules
+\newcommand{\ottshowcomment}{\ottshowcommentDEFAULT}
+\newcommand{\ottshowcommentDEFAULT}[1]{yes}
+\newcommand{\ottshowcommentNOARG}[1]{yes}
+% style of laying out rules
+\newcommand{\ottrulelayout}{\ottrulelayoutDEFAULT}
+\newcommand{\ottrulelayoutDEFAULT}[1]{oneperline}
+\newcommand{\ottrulelayoutNOARG}[1]{oneperline}
+% style of laying out premises
+\newcommand{\ottpremiselayout}{\ottpremiselayoutDEFAULT}
+\newcommand{\ottpremiselayoutDEFAULT}[1]{oneperline}
+\newcommand{\ottpremiselayoutNOARG}[1]{justify}
+% numbering of premises
+\newcommand{\ottnumberpremises}{\ottnumberpremisesDEFAULT}
+\newcommand{\ottnumberpremisesDEFAULT}[1]{no}
+\newcommand{\ottnumberpremisesNOARG}[1]{yes}
+% colouring the premise numbers
+\newcommand{\ottnumbercolour}{\ottnumbercolourDEFAULT}
+\newcommand{\ottnumbercolourDEFAULT}[1]{Gray}
+\newcommand{\ottnumbercolourNOARG}[1]{Gray}
+% numbering of premises
+\newcommand{\ottpremisenamelayout}{\ottpremisenamelayoutDEFAULT}
+\newcommand{\ottpremisenamelayoutDEFAULT}[1]{right}
+\newcommand{\ottpremisenamelayoutNOARG}[1]{right}
+
+% The definition of keys
+\makeatletter
+\define@key{ott}{showruleschema}
+  [\ottshowruleschemaNOARG{}]{\renewcommand{\ottshowruleschema}[1]{#1}}%
+\define@key{ott}{showcomment}
+  [\ottshowcommentNOARG{}]{\renewcommand{\ottshowcomment}[1]{#1}}%
+\define@key{ott}{rulelayout}
+  [\ottrulelayoutNOARG{}]{\renewcommand{\ottrulelayout}[1]{#1}}%
+\define@key{ott}{premiselayout}
+  [\ottpremiselayoutNOARG{}]{\renewcommand{\ottpremiselayout}[1]{#1}}%
+\define@key{ott}{numberpremises}
+  [\ottnumberpremisesNOARG{}]{\renewcommand{\ottnumberpremises}[1]{#1}}%
+\define@key{ott}{numbercolour}
+  [\ottnumbercolourNOARG{}]{\renewcommand{\ottnumbercolour}[1]{#1}}%
+\define@key{ott}{premisenamelayout}
+  [\ottpremisenamelayoutNOARG{}]{\renewcommand{\ottpremisenamelayout}[1]{#1}}%
+\makeatother
+
+% allows resetting the defaults
+\newcommand{\ottstyledefaults}[1]{\setkeys{ott}{#1}}
+
+% Used to control rule layout: nobreaks or oneperline.
+\newcommand{\usedruleSTY}{\usedruleNOBREAKS}
+
+% the new block environment (operates in non-math mode)
+\newenvironment{defnblockSTY}[3][]{%
+  \setkeys{ott}{#1}%
+  \ifthenelse{\equal{\ottshowruleschema{}}{yes}}%
+             {\noindent\fbox{\mbox{#2}}\quad}{}%
+  \ifthenelse{\equal{\ottshowcomment{}}{yes}}{\noindent#3}{}%
+  \ifthenelse{\equal{\ottshowruleschema{}}{no}}%
+             {\ifthenelse{\equal{\ottshowcomment{}}{no}}{}{\\[2ex]}}{\\[2ex]}%
+  \ifthenelse{\equal{\ottrulelayout{}}{nobreaks}}%
+             {\renewcommand{\usedruleSTY}{\usedruleNOBREAKS}}{}%
+  \ifthenelse{\equal{\ottrulelayout{}}{oneperline}}%
+             {\renewcommand{\usedruleSTY}{\usedruleONEPERLINE}}{}%
+}{}
+
+% Layout rules like words in text.
+\newcommand{\usedruleNOBREAKS}[1]{#1\quad}
+
+% Layout rules one per line.
+\newcommand{\usedruleONEPERLINE}[1]{#1\\[2ex]}
+
+% Used to switch between different style of drule. changed by \druleSTY.
+\newcommand{\druleSWITCH}{\druleONEPERLINE}
+
+% width of current rule
+\newlength{\rulewidth}
+% premise counter
+\newcounter{premiseno}
+
+% the common parts, and the control structures for calling different functions
+% for different arguments
+\newcommand{\druleSTY}[4][]{{% double brackets here are important!
+  \setkeys{ott}{#1}%
+  \settowidth{\rulewidth}{\ensuremath{#3}}%
+  \ifthenelse{\equal{\ottnumberpremises{}}{yes}}{\setcounter{premiseno}{1}}{}%
+  \renewcommand{\premiseSTY}{\measurepremise}%
+  #2%
+  \ifthenelse{\equal{\ottnumberpremises{}}{yes}}{\setcounter{premiseno}{1}}{}%
+  \ensuremath{\begin{array}{@{}r@{}}%
+    \ifthenelse{\equal{\ottpremisenamelayout{}}{topright}}%
+               {\textsc{#4}\\[1ex]}{}%
+    \ifthenelse{\equal{\ottpremisenamelayout{}}{left}}%
+               {\textsc{#4}~~~}{}%
+    \ifthenelse{\equal{\ottpremiselayout{}}{oneperline}}%
+               {\renewcommand{\druleSWITCH}{\druleONEPERLINE}}{}
+    \ifthenelse{\equal{\ottpremiselayout{}}{oneline}}%
+               {\renewcommand{\druleSWITCH}{\druleONELINE}}{}
+    \ifthenelse{\equal{\ottpremiselayout{}}{justify}}%
+               {\renewcommand{\druleSWITCH}{\druleJUSTIFY}}{}
+    \frac{\druleSWITCH{#2}}%
+         {\raisebox{-.8ex}{\ensuremath{#3}}}%
+    \ifthenelse{\equal{\ottpremisenamelayout{}}{right}}%
+               {~~~\textsc{#4}}{}%
+ \end{array}}%
+}}
+
+% The abstraction required to switch between measuring and placing of a premise.
+\newcommand{\premiseSTY}[1]{}
+
+% width of current premise
+\newlength{\premisewidth}
+
+% Going through all premises, it sets the appropriate width of rule.
+\newcommand{\measurepremise}[1]{%
+  \settowidth{\premisewidth}{\premiseCOUNT{#1}}%
+  \ifthenelse{\rulewidth<\premisewidth}{\setlength{\rulewidth}{\premisewidth}}{}
+}
+
+% drule definition for one per line
+\newcommand{\druleONEPERLINE}[1]{%
+  \renewcommand{\premiseSTY}{\premiseONEPERLINE}%
+  \begin{tabular*}{\rulewidth}{l}#1\end{tabular*}
+}
+
+% premise definition for one per line
+\newcommand{\premiseONEPERLINE}[1]{\premiseCOUNT{#1}\\}
+
+% drule definition for one line
+\newcommand{\druleONELINE}[1]{%
+  \renewcommand{\premiseSTY}{\premiseONELINE}%
+  {\displaystyle #1\hspace{-1ex}}%
+}
+
+% premise definition for one line
+\newcommand{\premiseONELINE}[1]{\premiseCOUNT{#1}\hspace{1ex}}
+
+% A brief explanation of how \druleJUSTIFY works:
+% The rule width is determined by the maximum width of a premise or rule
+% head. As many as possible premises are put on each line, while left aligning
+% them to a 6th of the rule width. If appropriate, premises on the same line
+% are spread out, i.e. their holding boxes are extended and justified, while
+% the premises are still left aligned inside the holding box.
+
+% multiples of unit width
+\newlength{\oneunit}
+\newlength{\twounits}
+\newlength{\threeunits}
+\newlength{\fourunits}
+\newlength{\fiveunits}
+% boxes for premises on a line
+\newsavebox{\boxA}
+\newsavebox{\boxB}
+\newsavebox{\boxC}
+\newsavebox{\boxD}
+\newsavebox{\boxE}
+\newsavebox{\boxF}
+% base lengths of boxes
+\newlength{\basewidthA}
+\newlength{\basewidthB}
+\newlength{\basewidthC}
+\newlength{\basewidthD}
+\newlength{\basewidthE}
+\newlength{\basewidthF}
+% actual widths of boxes
+\newlength{\widthA}
+\newlength{\widthB}
+\newlength{\widthC}
+\newlength{\widthD}
+\newlength{\widthE}
+\newlength{\widthF}
+% alignment within a box
+\newcommand{\boxalign}{l}
+% premise on line
+\newcounter{boxno}
+% box storing a premise
+\newsavebox{\premisebox}
+% box storing premises in current line
+\newsavebox{\premiselinebox}
+% premise unit counter
+\newcounter{premiseulength}
+% filled boxes in a line
+\newcounter{filledcols}
+% multiplier for box width
+\newcounter{multiplier}
+
+% The drule function for justifying premises (described above).
+\newcommand{\druleJUSTIFY}[1]{%
+  \renewcommand{\premiseSTY}{\placepremise}%
+  \setlength{\oneunit}{0.15\rulewidth}%
+  \setlength{\twounits}{2\oneunit}%
+  \setlength{\threeunits}{3\oneunit}%
+  \setlength{\fourunits}{4\oneunit}%
+  \setlength{\fiveunits}{5\oneunit}%
+  \setcounter{boxno}{1}%
+  \setcounter{filledcols}{0}%
+  \begin{tabular*}{\rulewidth}{l}%
+    #1\usebox{\premiselinebox}%
+  \end{tabular*}%
+}
+
+% Places premises as described above.
+\newcommand{\placepremise}[1]{%
+  \savebox{\premisebox}{\premiseCOUNT{#1}}%
+  \settowidth{\premisewidth}{\usebox{\premisebox}}%
+  % Determines the unit width of a premise.
+  \ifthenelse{\premisewidth>\fiveunits}{\setcounter{premiseulength}{6}}{%
+  \ifthenelse{\premisewidth>\fourunits}{\setcounter{premiseulength}{5}}{%
+  \ifthenelse{\premisewidth>\threeunits}{\setcounter{premiseulength}{4}}{%
+  \ifthenelse{\premisewidth>\twounits}{\setcounter{premiseulength}{3}}{%
+  \ifthenelse{\premisewidth>\oneunit}{\setcounter{premiseulength}{2}}{%
+                                      \setcounter{premiseulength}{1}}}}}}%
+  % Saves the premise and its width in appropriate box.
+  \ifthenelse{\theboxno=1}{\savebox{\boxA}{\usebox{\premisebox}}%
+                 \setlength{\basewidthA}{\thepremiseulength\oneunit}}{}%
+  \ifthenelse{\theboxno=2}{\savebox{\boxB}{\usebox{\premisebox}}%
+                 \setlength{\basewidthB}{\thepremiseulength\oneunit}}{}%
+  \ifthenelse{\theboxno=3}{\savebox{\boxC}{\usebox{\premisebox}}%
+                 \setlength{\basewidthC}{\thepremiseulength\oneunit}}{}%
+  \ifthenelse{\theboxno=4}{\savebox{\boxD}{\usebox{\premisebox}}%
+                 \setlength{\basewidthD}{\thepremiseulength\oneunit}}{}%
+  \ifthenelse{\theboxno=5}{\savebox{\boxE}{\usebox{\premisebox}}%
+                 \setlength{\basewidthE}{\thepremiseulength\oneunit}}{}%
+  \ifthenelse{\theboxno=6}{\savebox{\boxF}{\usebox{\premisebox}}%
+                 \setlength{\basewidthF}{\thepremiseulength\oneunit}}{}%
+  % If line too full, flush; otherwise, add the premise to line.
+  \addtocounter{filledcols}{\thepremiseulength}%
+  \ifthenelse{\thefilledcols>6}{%
+    \usebox{\premiselinebox}\\%
+    \setcounter{filledcols}{\thepremiseulength}%
+    %1.~\thepremiseulength-\thefilledcols-\themultiplier;~%debug
+    \addtocounter{premiseno}{-1}%
+    \savebox{\boxA}{\premiseCOUNT{#1}}%
+    \setlength{\basewidthA}{\thepremiseulength\oneunit}%
+    \savebox{\premiselinebox}{\makebox[\rulewidth][\boxalign]{\usebox{\boxA}}}%
+    \setcounter{boxno}{2}%
+  }{%
+    \setcounter{multiplier}{1}%
+    \ifthenelse{\thefilledcols=1}{\setcounter{multiplier}{6}}{}%
+    \ifthenelse{\thefilledcols=2}{\setcounter{multiplier}{3}}{}%
+    \ifthenelse{\thefilledcols=3}{\setcounter{multiplier}{2}}{}%
+    %\theboxno.~\thepremiseulength-\thefilledcols-\themultiplier;~%debug
+    \setlength{\widthA}{\themultiplier\basewidthA}%
+    \setlength{\widthB}{\themultiplier\basewidthB}%
+    \setlength{\widthC}{\themultiplier\basewidthC}%
+    \setlength{\widthD}{\themultiplier\basewidthD}%
+    \setlength{\widthE}{\themultiplier\basewidthE}%
+    \setlength{\widthF}{\themultiplier\basewidthF}%
+    \savebox{\premiselinebox}{%
+      \makebox[\widthA][\boxalign]{\usebox{\boxA}}%
+      \ifthenelse{\theboxno>1}{\makebox[\widthB][\boxalign]{\usebox{\boxB}}}{}%
+      \ifthenelse{\theboxno>2}{\makebox[\widthC][\boxalign]{\usebox{\boxC}}}{}%
+      \ifthenelse{\theboxno>3}{\makebox[\widthD][\boxalign]{\usebox{\boxD}}}{}%
+      \ifthenelse{\theboxno>4}{\makebox[\widthE][\boxalign]{\usebox{\boxE}}}{}%
+      \ifthenelse{\theboxno>5}{\makebox[\widthF][\boxalign]{\usebox{\boxF}}}{}%
+    }%
+    \stepcounter{boxno}%
+  }%
+}
+
+% Inserts the current premise no. in front of the premise.
+\newcommand{\premiseCOUNT}[1]{\ensuremath{%
+  \ifthenelse{\equal{\ottnumberpremises{}}{yes}}%
+  {{\color{\ottnumbercolour{}}{\thepremiseno}\stepcounter{premiseno}.\,}}{}#1~}%
+}
+
+% An alternative, compressed grammar tabular
+\newcommand{\grammartabularSTY}[1]
+{\begin{tabular}{@{}l@{}l@{\ \ }c@{\ \ }ll@{}llll@{}}#1\end{tabular}}

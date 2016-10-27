@@ -1,0 +1,37 @@
+% (Here we represent type environments with proof assistant lists. One could
+%  instead use the Ott free type, or proof assistant finite maps or what have you.)
+
+% (The TAPL version has an implicit convention that the assumptions in G
+%  are for distinct variables.  Here instead we always look up the 
+%  rightmost assumption in a G.  One could equally well add an explicit
+%  well-formedness condition to the T_Var rule.)
+
+grammar
+G {{ tex \Gamma }} :: G_ ::=                      {{ com contexts: }}
+        {{ isa (termvar*T) list }} 
+        {{ coq list (termvar*T) }}
+        {{ hol (termvar#Typ) list }} 
+  | empty                        ::   :: empty      {{ com empty context }}
+        {{ isa Nil }}
+        {{ coq nil }}
+        {{ hol [] }}
+  | G , x : T                    ::   :: vn         {{ com term variable binding }}
+        {{ isa ([[x]],[[T]])#[[G]] }}
+        {{ coq (cons ([[x]],[[T]]) [[G]]) }}
+        {{ hol (([[x]],[[T]])::[[G]]) }}
+
+
+formula :: 'formula_' ::=          
+  | x : T in G          ::   :: xTG 
+        {{ tex [[x]]:[[T]] \in [[G]] }}
+        {{ isa ? G1 G2. [[G]] = G1 @ ([[x]],[[T]])#G2 & [[x]]~:fst ` set G1 }}
+        {{ coq (bound [[x]] [[T]] [[G]])  }}
+        {{ hol ? G1 G2. ([[G]] = G1 ++ ([[x]],[[T]])::G2) /\ ~(MEM [[x]] (MAP FST G1)) }}
+
+embed
+{{ coq
+Definition bound x T0 G :=
+  exists G1, exists G2,
+    (G = G1 ++ (x,T0)::G2)%list /\
+    ~In x (List.map (@fst termvar T) G1).
+}}

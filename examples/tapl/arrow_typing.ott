@@ -1,0 +1,79 @@
+% TAPL  [arrow typing]  Pure simply typed lambda-calculus, p103
+
+% (As in TAPL, there are no types in this fragment.  Isabelle would therefore
+%  complain that it cannot define an empty type.)
+
+metavar termvar, x ::=
+  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}
+  {{ lex alphanum }} {{ tex \mathsf{[[termvar]]} }}
+
+grammar
+t :: Tm ::=                                       {{ com terms: }}
+  | x                            ::   :: Var        {{ com variable }}
+  | \ x : T . t                  ::   :: Abs        (+ bind x in t +) 
+                                                    {{ com abstraction }}
+  | t1 t2                        ::   :: App        {{ com application }}
+  | [ x |-> t' ] t               :: M :: Subst     
+        {{ ich (subst_t [[t']] [[x]] [[t]]) }}
+
+v :: Va ::=                                       {{ com values: }}
+  | \ x : T . t                  ::   :: Abs        (+ bind x in t +)
+                                                    {{ com abstraction value }}
+
+T {{ hol Typ }}, S, U :: Ty ::=                      {{ com types: }}
+  | T -> T'                      ::   :: Arr        {{ com type of functions }}
+  | ( T )                        :: M :: Paren      {{ ich [[T]] }}
+
+
+
+
+subrules
+v <:: t
+
+substitutions
+  single   t termvar :: subst  
+
+freevars
+  t x :: fv
+
+defns 
+Jop :: '' ::= 
+
+defn 
+t --> t' :: :: red :: E_ {{ com Evaluation }} by
+
+t1 --> t1'
+----------------- :: App1
+t1 t2 --> t1' t2
+
+
+t2 --> t2'
+----------------- :: App2
+v1 t2 --> v1 t2'
+
+----------------------------- :: AppAbs
+(\x:T.t12) v2 --> [x |-> v2]t12 
+
+
+defns
+Jtype :: '' ::= 
+
+defn
+G |- t : T :: :: typing :: T_ {{ com Typing }} by
+    
+x:T in G
+-------- :: Var
+G |- x:T
+
+G,x:T1 |- t2 : T2
+---------------------- :: Abs
+G |- \x:T1.t2 : T1->T2
+
+G |- t1 : T11->T12
+G |- t2 : T11 
+------------------ :: App
+G |- t1 t2 : T12
+
+
+
+

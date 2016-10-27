@@ -1,0 +1,45 @@
+metavar var, x ::=   {{ com  term variable }} 
+{{ isa string}} {{ coq nat}} {{ hol string}} {{ lem string }} {{ coq-equality }}
+{{ ocaml int}} {{ lex alphanum}} {{ tex \mathit{[[var]]} }}
+
+grammar
+term, t :: 't_' ::=                          {{ com term    }}
+  | x            ::   :: var                   {{ com variable}}
+  | \ x . t      ::   :: lam (+ bind x in t +) {{ com lambda  }}
+  | t t'         ::   :: app                   {{ com app     }}
+  | ( t )        :: S :: paren                 {{ icho [[t]]  }}  {{ lem [[t]] }}
+  | { t / x } t' :: M :: sub  
+                         {{ icho (tsubst_term [[t]] [[x]] [[t']])}}
+  {{ lem (tsubst_term [[t]] [[x]] [[t']]) }}
+val,v :: 'v_' ::=                            {{ com value   }}
+  | \ x . t      ::   :: lam                   {{ com lambda  }}
+
+terminals :: 'terminals_' ::=
+  | \            ::   :: lambda  {{ tex \lambda }}
+  | -->          ::   :: red     {{ tex \longrightarrow }}
+
+subrules
+  val <:: term
+
+substitutions
+  single term var :: tsubst 
+
+defns
+Jop :: '' ::=
+
+ defn
+ t1 --> t2 :: ::reduce::'' {{ com [[t1]] reduces to [[t2]] }} {{ lemwcf  witness type reduce_witness; check reduce_check; eval : input -> output }} by
+
+
+    --------------------------  :: ax_app
+    (\x.t1) v2 -->  {v2/x}t1
+
+    t1 --> t1'
+    -------------- :: ctx_app_fun
+    t1 t --> t1' t
+
+    t1 --> t1'
+    -------------- :: ctx_app_arg
+    v t1 --> v t1'
+
+

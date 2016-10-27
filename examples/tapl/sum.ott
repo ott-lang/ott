@@ -1,0 +1,65 @@
+% - we add binding in a case
+% - the Case constructor and rule names have "Sm" appended to avoid a clash with variants
+
+grammar
+T {{ hol Typ }}, S, U :: Ty ::=                              {{ com types: }}
+  | T1 + T2                                    ::   :: Sum     {{ com sum type }}
+
+t :: Tm ::=                                                  {{ com terms: }}
+  | inl t                                      ::   :: Inl     {{ com tagging (left) }}
+  | inr t                                      ::   :: Inr     {{ com tagging (right) }}
+  | case t of inl x1 => t1 | inr x2 => t2      ::   :: CaseSm  
+      (+ bind x1 in t1 +) (+ bind x2 in t2 +) {{ com case }}
+
+v :: Va ::=                                                  {{ com values: }}
+  | inl v                                      ::   :: Inl     {{ com tagged value (left) }}
+  | inr v                                      ::   :: Inr     {{ com tagged value (right) }}
+
+
+
+
+defns 
+Jop :: '' ::= 
+
+defn 
+t --> t' :: :: red :: E_ {{ com Evaluation }} by
+
+----------------------------------------------------------------- :: CaseInl
+case ( inl v0 ) of inl x1=>t1 | inr x2=>t2 --> [x1 |-> v0]t1
+
+----------------------------------------------------------------- :: CaseInr
+case ( inr v0 ) of inl x1=>t1 | inr x2=>t2 --> [x2 |-> v0]t2
+
+t0 --> t0'
+-------------------------------------------------------------------------- :: CaseSm
+case t0 of inl x1=>t1 | inr x2=>t2 --> case t0' of inl x1=>t1 | inr x2=>t2 
+
+t1 --> t1'
+------------------ :: Inl
+inl t1 --> inl t1'
+
+t1 --> t1'
+------------------ :: Inr
+inr t1 --> inr t1'
+
+
+
+defns
+Jtype :: '' ::= 
+
+defn
+G |- t : T :: :: typing :: T_ {{ com Typing }} by
+
+G |- t1 : T1
+------------------ :: Inl
+G|- inl t1 : T1+T2
+
+G |- t1 : T2
+------------------ :: Inr
+G|- inr t1 : T1+T2
+
+G |- t0 : T1+T2
+G,x1:T1|- t1:T
+G,x2:T2|- t2:T
+------------------------------------------ :: CaseSm
+G|- case t0 of inl x1=>t1 | inr x2=>t2 : T

@@ -1,0 +1,1018 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Lightweight Java (LJ)'s most basic definitions.                             %
+% Copyright (c) 2007, Rok Strnisa [Rok.Strnisa@cl.cam.ac.uk]                  %
+% All rights reserved.                                                        %
+%                                                                             %
+% Redistribution and use in source and binary forms, with or without          %
+% modification, are permitted provided that the following conditions are met: %
+%                                                                             %
+%   - Redistributions of source code must retain the above copyright notice,  %
+%     this list of conditions and the following disclaimer.                   %
+%                                                                             %
+%   - Redistributions in binary form must reproduce the above copyright       %
+%     notice, this list of conditions and the following disclaimer in the     %
+%     documentation and/or other materials provided with the distribution.    %
+%                                                                             %
+%   - Neither the name of the Computer Laboratory, University of Cambridge    %
+%     nor the names of its contributors may be used to endorse or promote     %
+%     products derived from this software without specific prior written      %
+%     permission.                                                             %
+%                                                                             %
+% THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" %
+% AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   %
+% IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  %
+% ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    %
+% LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR         %
+% CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF        %
+% SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    %
+% INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN     %
+% CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)     %
+% ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  %
+% POSSIBILITY OF SUCH DAMAGE.                                                 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+indexvar j, k, l ::=  {{ com index }} {{ isa num }}
+metavar f ::=  {{ com field name }} {{ isa string }}
+metavar meth ::=  {{ com method name }} {{ isa string }}
+metavar var ::=  {{ com term variable }} {{ isa string }}
+metavar dcl ::=  {{ com name of derived class }} {{ isa string }}
+metavar oid ::=  {{ com object identifier }} {{ isa string }}
+
+grammar
+%%% TERMINALS %%%
+  terminals :: termi_ ::=
+   |  (      :: :: lround   {{ tex (\! }} {{ com left expression bracket }}
+   |  )      :: :: rround   {{ tex \!) }} {{ com right expression bracket }}
+   |  [      :: :: lsquare  {{ tex [\! }} {{ com left environment bracket }}
+   |  ]      :: :: rsquare  {{ tex \!] }} {{ com right environment bracket }}
+   |  ,      :: :: comma    {{ tex \!, }} {{ com separator }}
+   |  /      :: :: replace  {{ tex / }} {{ com `replaces' }}
+   |  :      :: :: colon    {{ tex \!\!:\!\! }} {{ com `is of type' }}
+   |  <      :: :: subty    {{ tex \!\!\prec\! }} {{ com `is a subtype of' }}
+   |  ->     :: :: returns  {{ tex \rightarrow }} {{ com `returns' }}
+   |  |->    :: :: mapsto   {{ tex \mapsto }} {{ com `maps to' }} {{ isa \<mapsto> }}
+   |  -->    :: :: reduce   {{ tex \longrightarrow }} {{ com `reduces' }}
+   |  =>     :: :: results  {{ tex \Rightarrow }} {{ com `results in' }}
+   |  =      :: :: alias    {{ tex \!=\! }} {{ com equality or alias }}
+   |  ==     :: :: eq       {{ tex \!==\! }} {{ com `is equal to' }}
+   |  !=     :: :: neq      {{ tex \neq }} {{ com `is not equal to' }}
+   |  |-     :: :: vdash    {{ tex \vdash }} {{ com `can deduce' }}
+   |  ALL    :: :: all      {{ tex \forall\! }} {{ com `for all' }}
+   |  EX     :: :: ex       {{ tex \exists\! }} {{ com `there exists' }}
+   |  in     :: :: in       {{ tex \!\in\! }} {{ com `in' }}
+   |  notin  :: :: notin    {{ tex \!\notin\! }} {{ com `not in' }}
+   |  \/     :: :: or       {{ tex \vee }} {{ com `or' }}
+   |  /\     :: :: and      {{ tex \wedge }} {{ com `and' }}
+   |  bot    :: :: bot      {{ tex \bot }} {{ com `is disjoint from' }}
+   |  ~>     :: :: trans    {{ tex \leadsto }} {{ com `is translated to' }}
+
+%%% VARIABLE %%%
+  x , y :: x_ ::=  {{ com term variable }}
+   |  var      ::   :: var   {{ com normal variable }}
+   |  this     ::   :: this  {{ com keyword }}
+   |  T ( x )  :: M :: tr    {{ com translate [[x]] with [[T]] }}
+           {{ isa (case [[T]] [[x]] of None \<Rightarrow> [[x]]
+                                     | Some x' \<Rightarrow> x') }}
+
+%%% VARIABLES %%%
+  X {{ tex \overline{x} }} , Y {{ tex \overline{y} }} :: xs_ ::=
+           {{ com term variables }} {{ isa x list }}
+   |  x1 .. xk  :: M :: def  {{ com def }} {{ isa [[x1..xk]] }}
+
+%%% CLASS NAME %%%
+  cl :: cl_ ::=  {{ com class name }}
+   |  Object  :: :: object  {{ com top class }}
+   |  fqn     :: :: fqn     {{ com fully qualified name }}
+
+%%% FIELD DECLARATION %%%
+  fd :: fd_ ::=  {{ com field declaration }}
+   |  cl f ; :: :: def  {{ com def. }}
+
+%%% FIELD DECLARATIONS %%%
+  fds {{ tex \overline{fd} }} :: fds_ ::=
+           {{ com field declarations }} {{ isa fd list }}
+   |  fd1 .. fdk  :: :: def    {{ com def. }} {{ isa [[fd1..fdk]] }}
+
+%%% FIELDS %%%
+  fs {{ tex \overline{f} }} :: fs_ ::=  {{ com fields }} {{ isa f list }}
+   |  f1 .. fk  :: M :: def     {{ com def. }} {{ isa [[f1 .. fk]] }}
+   |  fs ; fs'  :: M :: append  {{ com append }} {{ isa ([[fs]]@[[fs']]) }}
+
+%%% FIELDS OPTION %%%
+  fs_opt {{ tex \overline{f}_{opt} }} :: fs_opt_ ::=
+           {{ com fields option }} {{ isa fs option }}
+   |  null  :: :: none  {{ com none }} {{ isa None }}
+   |  fs    :: :: some  {{ com some }} {{ isa Some ([[fs]]) }}
+
+%%% STATEMENT %%%
+  s :: s_ ::=  {{ com statement }}
+   |  { </ sk // k /> }         :: :: block  {{ com block }}
+   |  var = x ;                 :: :: ass    {{ com variable assignment }}
+   |  var = x . f ;             :: :: read   {{ com field read }}
+   |  x . f = y ;               :: :: write  {{ com field write }}
+   |  if ( x == y ) s else s'   :: :: if     {{ com conditional branch }}
+   |  var = x . meth ( Y ) ;    :: :: call
+           {{ com method call }}
+   |  var = new ctx cl ();      :: :: new
+           {{ com object creation }}
+           {{ tex [[var]]=[[new]]_{[[ctx]]}[[cl]](); }}
+
+%%% VARIABLE DECLARATION %%%
+  vd :: vd_ ::=  {{ com variable declaration }}
+   |  cl var  :: :: def  {{ com def. }}
+
+%%% VARIABLE DECLARATIONS %%%
+  vds {{ tex \overline{vd} }} :: vds_ ::=
+           {{ com variable declarations }} {{ isa vd list }}
+   |  vd1 .. vdk  :: :: def  {{ com def. }} {{ isa [[vd1..vdk]] }}
+
+%%% METHOD SIGNATURE %%%
+  meth_sig :: meth_sig_ ::=  {{ com method sig. }}
+   |  cl meth ( vds )  :: :: def  {{ com def. }}
+
+%%% METHOD BODY %%%
+  meth_body :: meth_body_ ::=  {{ com method body }}
+   |  s1 .. sk return y ;  :: :: def  {{ com def. }}
+
+%%% METHOD DEFINITION %%%
+  meth_def :: meth_def_ ::=  {{ com method def. }}
+   |  meth_sig { meth_body }  :: :: def  {{ com def. }}
+
+%%% METHOD DEFINITIONS %%%
+  meth_defs {{ tex \overline{meth\_def} }} :: meth_defs_ ::=
+           {{ com method def.'s }} {{ isa meth_def list }}
+   |  meth_def1 .. meth_defk  :: :: def
+           {{ com def. }} {{ isa [[meth_def1..meth_defk]] }}
+
+%%% METHOD DEFINITION OPTION %%%
+  meth_def_opt {{ tex meth\_def_{opt} }} :: meth_def_opt_ ::=
+           {{ com method def.~option }} {{ isa meth_def option }}
+   |  null      :: M :: none  {{ com none }} {{ isa None }}
+   |  meth_def  :: M :: some  {{ com some }} {{ isa Some ([[meth_def]]) }}
+
+%%% METHOD DEFINITION IN CONTEXT OPTION %%%
+  ctxmeth_def_opt {{ tex ctxmeth\_def_{opt} }} :: ctxmeth_def_opt_ ::=
+           {{ com method def.~in context option }}
+           {{ isa (ctx \<times> meth_def) option }}
+   |  null                :: :: none
+           {{ com none }} {{ isa (None::ctxmeth_def_opt) }}
+   |  ( ctx , meth_def )  :: :: some
+           {{ com some }} {{ isa (Some ([[ctx]],[[meth_def]])::ctxmeth_def_opt) }}
+
+%%% METHOD NAMES %%%
+  meths {{ tex \overline{meth} }} :: meths_ ::=
+           {{ com method names }} {{ isa meth list }}
+   |  meth1 .. methk  :: M :: def
+           {{ com def. }} {{ isa [[meth1..methk]] }}
+   |  meths ; meths'  :: M :: append
+           {{ com append }} {{ isa ([[meths]]@[[meths']]) }}
+
+%%% CLASS DEFINITIONS %%%
+  clds {{ tex \overline{cld} }} :: clds_ ::=
+           {{ com class def.'s }} {{ isa cld list }}
+   |  cld1 .. cldk  :: :: def    {{ com def. }} {{ isa [[cld1..cldk]] }}
+
+%%% TYPE %%%
+  ty {{ tex \tau }} :: ty_ ::=  {{ com type }}
+   |  Object     :: :: top  {{ com super-type of all types }}
+   |  ctx . dcl  :: :: def  {{ com unique class identifier }}
+           {{ tex [[ctx]]\hspace{-.1ex}.\hspace{-.1ex}[[dcl]] }}
+
+%%% TYPE OPTION %%%
+  ty_opt {{ tex { \tau_{opt} } }} :: ty_opt_ ::=
+           {{ com result of type lookup }} {{ isa ty option }}
+   |  null       :: M :: none   {{ com none }} {{ isa None }}
+   |  ty         :: M :: some
+          {{ com some }} {{ isa Some ([[ty]]) }}
+   |  G ( x )    :: M :: tyenv
+          {{ com static type lookup }} {{ isa [[G]] [[x]] }}
+   |  H ( oid )  :: M :: heap
+           {{ com dynamic type lookup }}
+           {{ isa (case [[H]] [[oid]] of
+                     None \<Rightarrow> None
+                   | Some tyfs \<Rightarrow> Some (fst tyfs)) }}
+
+%%% CLASS DEFINITION IN CONTEXT %%%
+  ctxcld :: ctxcld_ ::=
+           {{ com class def.~in context }} {{ isa (ctx \<times> cld) }}
+   |  ( ctx , cld )  :: :: def  {{ com def. }} {{ isa ([[ctx]],[[cld]]) }}
+
+%%% CLASS DEFINITIONS IN CONTEXT %%%
+  ctxclds {{ tex \overline{ctxcld} }} :: ctxclds_ ::=
+           {{ com class def.'s~in context }} {{ isa ctxcld list }}
+   |  ctxcld1 .. ctxcldk  :: :: def
+           {{ com def. }} {{ isa [[ctxcld1..ctxcldk]] }}
+
+%%% CLASS DEFINITION LOOKUP RESULT %%%
+  ctxcld_opt {{ tex ctxcld_{opt} }} :: ctxcld_opt_ ::=
+           {{ com class def.~lookup result }} {{ isa ctxcld option }}
+   |  null    :: :: none  {{ com none }} {{ isa None }}
+   |  ctxcld  :: :: some  {{ com some }} {{ isa Some ([[ctxcld]]) }}
+
+%%% CLASS DEFINITIONS LOOKUP RESULT %%%
+  ctxclds_opt {{ tex \overline{ctxcld}_{opt} }} :: ctxclds_opt_ ::=
+           {{ com class def.'s lookup result }} {{ isa ctxclds option }}
+   |  null     :: :: none  {{ com none }} {{ isa None }}
+   |  ctxclds  :: :: some  {{ com some }} {{ isa Some ([[ctxclds]]) }}
+
+%%% TYPES %%%
+  tys {{ tex \overline{\tau} }} :: tys_ ::=  {{ com types }} {{ isa ty list }}
+   |  ty1 .. tyk  :: M :: def  {{ com def. }} {{ isa [[ty1..tyk]] }}
+
+%%% METHOD TYPE %%%
+  mty {{ tex \pi }} :: mty_ ::=  {{ com method type }}
+   |  tys -> ty              ::   :: def    {{ com def. }}
+
+%%% TYPE ENVIRONMENT %%%
+  G {{ tex \Gamma }} :: g_ ::=
+           {{ com type environment ($x\rightharpoonup\tau$) }}
+           {{ isa x \<rightharpoonup> ty }}
+   |  G [ x |-> ty ]                  :: M :: add
+          {{ com maps [[x]] to [[ty]] in [[G]] }}
+          {{ isa ([[G]] ([[x]] [[|->]] [[ty]])) }}
+   |  [ x1 |-> ty1  ..  xk |-> tyk ]  :: M :: many
+          {{ com type mappings }}
+          {{ isa (map_of ([[x1 ty1 .. xk tyk]])) }}
+
+%%% VARIABLE TO VARIABLE MAPPING %%%
+  T {{ tex \theta }} :: t_ ::=
+           {{ com variable mapping ($x\rightharpoonup y$) }}
+           {{ isa x \<rightharpoonup> x }}
+   |  T [ x |-> y ]                :: M :: add
+          {{ com [[x]] maps to [[y]] in [[T]] }}
+          {{ isa ([[T]] ([[x]] [[|->]] [[y]])) }}
+   |  [ x1 |-> y1  ..  xk |-> yk ]  :: M :: many
+          {{ com variable mappings }}
+          {{ isa (map_of ([[x1 y1 .. xk yk]])) }}
+
+%%% VALUE %%%
+  v , w :: v_ ::=  {{ com value }}
+   |  null  :: :: null  {{ com null value }}
+   |  oid   :: :: oid   {{ com object identifier }}
+
+%%% VALUE OPTION %%%
+  v_opt {{ tex { v_{opt} } }} :: v_opt_ ::=
+           {{ com result of value lookup }} {{ isa v option }}
+   |  v              :: M :: some   {{ com some }} {{ isa Some [[v]] }}
+   |  L ( x )        :: M :: varstate
+           {{ com lookup value of local variable }}
+           {{ isa [[L]] [[x]] }}
+   |  H ( oid , f )  :: M :: heap
+           {{ com lookup value of field }}
+           {{ isa (case [[H]] [[oid]] of
+                     None \<Rightarrow> None
+                   | Some tyfs \<Rightarrow> (snd tyfs) [[f]]) }}
+
+%%% VARIABLE STATE %%%
+  L  :: l_ ::=  {{ com variable state ($x\rightharpoonup v$) }}
+                {{ isa x \<rightharpoonup> v }}
+   |  L [ x |-> v ]                   :: M :: add_one
+          {{ com [[x]] maps to [[v]] in [[L]] }}
+          {{ isa ([[L]] ([[x]] [[|->]] [[v]])) }}
+   |  L [ x1 |-> v1  ..  xk |-> vk ]  :: M :: add_many
+          {{ com variable state mappings in [[L]] }}
+          {{ isa ([[L]] ++ (map_of ([[x1 v1 .. xk vk]]))) }}
+
+%%% HEAP %%%
+  H  :: h_ ::=
+      {{ com heap ($oid\rightharpoonup (\tau \times (f\rightharpoonup v))$) }}
+      {{ isa oid \<rightharpoonup> (ty \<times> (f \<rightharpoonup> v)) }}
+   |  H [ oid |-> ( ty , f1 |-> v1 .. fk |-> vk ) ]  :: M :: new
+          {{ com new [[oid]] of type [[ty]] in [[H]] }}
+          {{ isa (([[H]] ([[oid]] [[|->]] ([[ty]],
+                          map_of [[f1 v1..fk vk]] )))::H) }}
+   |  H [ ( oid , f ) |-> v ]                        :: M :: update
+          {{ com [[f]] of [[oid]] mapping to [[v]] in [[H]] }}
+          {{ isa (case [[H]] [[oid]] of
+                None \<Rightarrow> [[H]]
+              | Some tyfs \<Rightarrow>
+                   (([[H]] ([[oid]] [[|->]]
+                       (fst tyfs, snd tyfs ([[f]] [[|->]] [[v]]))))::H)) }}
+
+%%% CONFIGURATION %%%
+  config :: config_ ::=  {{ com configuration }}
+   |  ( P , L , H , </ sk // k /> )          :: :: normal
+          {{ com statements to execute under [[L]] and [[H]] }}
+   |  ( P , L , H , Exception )  :: :: ex
+          {{ com exception occured in previous step }}
+
+%%% EXCEPTION %%%
+  Exception :: ex_ ::=  {{ com exception }}
+   |  NPE   :: :: npe   {{ com null pointer exception }}
+   |  CNFE  :: :: cnfe  {{ com class not found exception }}
+
+%%% FORMULA %%%
+  formula :: formula_ ::=  {{ com formulas }}
+   |  judgement                       ::   :: judgement
+          {{ com judgement }}
+   |  </ formulak // k />             :: M :: dots
+          {{ com conjunction of formulas }}
+          {{ isa list_all (\<lambda>f. f) [[ </ formulak // k /> ]] }}
+   |  not formula                     :: M :: not
+          {{ com negated formula }} {{ tex \neg [[formula]] }}
+          {{ isa \<not> ([[formula]]) }}
+   |  ( formula )                     :: M :: brackets
+          {{ com bracketed }}
+          {{ tex ([[formula]]\!) }} {{ isa [[formula]] }}
+   |  formula \/ formula'             :: M :: or
+          {{ com or }}
+          {{ isa [[formula]] \<or> [[formula']] }}
+          {{ tex [[formula]] \vee [[formula']] }}
+   |  formula /\ formula'             :: M :: and
+          {{ com and }}
+          {{ isa [[formula]] \<and> [[formula']] }}
+          {{ tex [[formula]] \wedge [[formula']] }}
+   |  formula --> formula'             :: M :: implies
+          {{ com implies }}
+          {{ isa [[formula]] \<longrightarrow> [[formula']] }}
+          {{ tex [[formula]] \longrightarrow [[formula']] }}
+   |  x = x'                          :: M :: xali
+           {{ com variable alias }} {{ isa [[x]] = [[x']] }}
+   |  X = X'                          :: M :: Xali
+           {{ com variables alias }} {{ isa [[X]] = [[X']] }}
+   |  fs = fs'                        :: M :: fsali
+           {{ com fields alias }} {{ isa [[fs]] = [[fs']] }}
+   |  fds = fds'                      :: M :: fdsali
+           {{ com field declarations alias }} {{ isa [[fds]] = [[fds']] }}
+   |  meths = meths'                  :: M :: methsali
+           {{ com method names alias }} {{ isa [[meths]] = [[meths']] }}
+   |  cld = cld'                      :: M :: cldali
+           {{ com class def.~alias }} {{ isa [[cld]] = [[cld']] }}
+   |  clds = clds'                    :: M :: cldsali
+           {{ com class def.'s alias }} {{ isa [[clds]] = [[clds']] }}
+   |  P = P'                          :: M :: psali
+           {{ com program alias }} {{ isa [[P]] = [[P']] }}
+   |  ctxclds = ctxclds'              :: M :: ctxctldsali
+           {{ com class def.'s with context alias }}
+           {{ isa [[ctxclds]] = [[ctxclds']] }}
+   |  meth_def = meth_def'            :: M :: methdefali
+           {{ com method def.~alias }}
+           {{ isa [[meth_def]] = [[meth_def']] }}
+   |  tys = tys'                      :: M :: tysali
+           {{ com types alias }} {{ isa [[tys]] = [[tys']] }}
+   |  ty_opt = ty_opt'                :: M :: typotali
+           {{ com type option alias }} {{ isa [[ty_opt]] = [[ty_opt']] }}
+   |  mty = mty'                      :: M :: mtyali
+           {{ com method type alias }} {{ isa [[mty]] = [[mty']] }}
+   |  T = T'                          :: M :: thetaali
+           {{ com variable mapping alias }} {{ isa [[T]] = [[T']] }}
+   |  L = L'                          :: M :: varstateali
+           {{ com variable state alias }} {{ isa [[L]] = [[L']] }}
+   |  H = H'                          :: M :: heapali
+           {{ com heap alias }} {{ isa [[H]] = [[H']] }}
+   |  G = G'                          :: M :: tenvali
+          {{ com type environment alias }} {{ isa [[G]] = [[G']] }}
+   |  v_opt = v                       :: M :: valali
+          {{ com value lookup alias }} {{ isa [[v_opt]] = Some [[v]] }}
+   |  v == w                          :: M :: valeq
+          {{ com value equality }} {{ isa [[v]] = [[w]] }}
+   |  cl != cl'                       :: M :: clali
+           {{ com class name inequality }}
+           {{ isa [[cl]] \<noteq> [[cl']] }}
+   |  f != f'                         :: M :: fneq
+           {{ com field name inequality }} {{ isa [[f]] \<noteq> [[f']] }}
+   |  meth != meth'                   :: M :: methneq
+           {{ com method name inequality }} {{ isa [[meth]] \<noteq> [[meth']] }}
+   |  v != w                          :: M :: valneq
+          {{ com value inequality }} {{ isa [[v]] \<noteq> [[w]] }}
+   |  ty != ty'                       :: M :: tyneq
+          {{ com type inequality }} {{ isa [[ty]] \<noteq> [[ty']] }}
+   |  </ xk // k /> bot dom ( L )     :: M :: varsdom_disjoint
+          {{ com disjoint variables and domain }}
+          {{ isa (set [[ </ xk // k /> ]]) Int (dom [[L]]) = {} }}
+   |  fs bot fs'                      :: M :: fields_disjoint
+          {{ com disjoint field sets }}
+          {{ isa list_inter [[fs]] [[fs']] = [] }}
+   |  distinct ( </ fk // k /> )      :: M :: distinct_f
+          {{ com distinct field names }}
+          {{ isa distinct ([[ </ fk // k /> ]]) }}
+   |  distinct ( </ vark // k /> )    :: M :: distinct_var
+          {{ com distinct variable names }}
+          {{ isa distinct ([[ </ vark // k /> ]]) }}
+   |  distinct ( ctxclds )            :: M :: distinct_ctxclds
+          {{ com distinct class def.'s with context }}
+          {{ isa distinct ([[ctxclds]]) }}
+   |  meth notin meths                :: M :: nomethod
+          {{ com [[meth]] not in [[meths]] }}
+          {{ isa [[meth]] \<notin> set [[meths]] }}
+   |  oid notin dom ( H )             :: M :: freshobject
+          {{ com [[oid]] not in domain of [[H]] }}
+          {{ isa [[oid]] \<notin> dom [[H]] }}
+   |  x notin dom ( L )               :: M :: freshx_L
+          {{ com [[x]] not in domain of [[L]] }}
+          {{ isa [[x]] \<notin> dom [[L]] }}
+   |  x notin </ xk // k />           :: M :: freshx_list
+          {{ com [[x]] not in list }}
+          {{ isa [[x]] \<notin> set [[ </ xk // k /> ]] }}   
+   |  ( ctx , dcl ) in </ ( ctxk , dclk ) // k />  :: M :: pair_in_list
+          {{ com pair in list }}
+          {{ isa ([[ctx]],[[dcl]]) \<in> set [[ </ ( ctxk , dclk ) // k /> ]] }}
+   |  EX ty . formula                 :: M :: ex_ty
+          {{ com there exists a [[ty]] }}
+          {{ isa \<exists> [[ty]] . [[formula]] }}
+   |  EX fs . formula                 :: M :: ex_fs
+          {{ com there exist [[fs]] }}
+          {{ isa (\<exists> [[fs]] . [[formula]]) }}
+   |  ALL x in dom ( G ) . formula    :: M :: all_vars
+          {{ com for all variables in domain of [[G]] }}
+          {{ isa \<forall> [[x]] \<in> dom [[G]]. [[formula]] }}
+   |  ALL f in fs . formula           :: M :: all_f
+          {{ com for all fields in [[fs]] }}
+          {{ isa (\<forall> [[f]] \<in> set [[fs]]. [[formula]]) }}
+   |  ALL oid in dom ( H ) . formula  :: M :: all_obj
+          {{ com for all objects in domain of [[H]] }}
+          {{ isa \<forall> [[oid]] \<in> dom [[H]]. [[formula]] }}
+
+
+%%% METHODNAME %%%
+defns
+methodname_def :: '' ::=
+
+defn
+methodname ( meth_def ) = meth :: :: methodname :: '' {{ com get method's name }} by
+
+------------------------------------------- :: methodname
+methodname(cl meth(vds) {meth_body}) = meth
+
+
+%%% FIND TYPE %%%
+defns
+find_type_def :: '' ::=
+
+defn
+find_type ( P , ctx , cl ) = ty_opt :: :: find_type :: ft_
+           {{ com type lookup }} by
+
+----------------------------------- :: obj
+find_type (P, ctx, Object) = Object
+
+
+%%% FIND PATH %%%
+defns
+find_path_def :: '' ::=
+
+defn
+find_path ( P , ctx , cl ) = ctxclds_opt :: :: find_path :: fpcl_
+           {{ com find class hierarchy path }} by
+
+--------------------------- :: obj
+find_path(P, ctx, Object) =
+
+not distinct_names(P)
+----------------------------- :: distinct
+find_path(P, ctx, fqn) = null
+
+find_cld(P, ctx, fqn) = null
+----------------------------- :: hd_null
+find_path(P, ctx, fqn) = null
+
+find_cld(P, ctx, fqn) = (ctx', cld)
+superclass(cld) = cl
+find_path(P, ctx', cl) = null
+----------------------------------- :: tl_null
+find_path(P, ctx, fqn) = null
+
+find_cld(P, ctx, fqn) = (ctx', cld)
+superclass(cld) = cl
+find_path(P, ctx', cl) = </(ctxk, cldk)//k/>
+ctxclds = (ctx',cld) </(ctxk, cldk)//k/>
+distinct_names(P)
+-------------------------------------------- :: dcl
+find_path(P, ctx, fqn) = ctxclds
+
+
+%%% FIND PATH (TY) %%%
+defns
+find_path_ty_def :: '' ::=
+
+defn
+find_path ( P , ty ) = ctxclds_opt :: :: find_path_ty :: fpty_
+           {{ com find class hierarchy path }} by
+
+---------------------- :: obj
+find_path(P, Object) =
+
+
+%%% FIELDS IN PATH %%%
+defns
+fields_in_path_def :: '' ::=
+
+defn
+fields_in_path ( clds ) = fs :: :: fields_in_path :: fip_
+           {{ com get fields in class path }} by
+
+------------------ :: empty
+fields_in_path() =
+
+:formula_cldsali: clds = cld cld2..cldk
+classfields(cld) = </clj fj;//j/>
+fields_in_path(cld2..cldk) = fs
+fs' = </fj//j/>; fs
+--------------------------------------- :: cons
+fields_in_path(clds) = fs'
+
+
+%%% FIELDS %%%
+defns
+fields_def :: '' ::=
+
+defn
+fields ( P , ty ) = fs_opt :: :: fields :: fields_
+           {{ com get all fields of [[ty]] }} by
+
+find_path(P, ty) = null
+----------------------- :: null
+fields(P, ty) = null
+
+find_path(P, ty) = </(ctxk, cldk)//k/>
+fields_in_path(</cldk//k/>) = fs
+-------------------------------------- :: some
+fields(P, ty) = fs
+
+
+%%% METHODS IN PATH %%%
+defns
+methods_in_path_def :: '' ::=
+
+defn
+methods_in_path ( clds ) = meths :: :: methods_in_path :: mip_
+           {{ com get all method names in class path }} by
+
+------------------- :: empty
+methods_in_path() =
+
+classmethods(cld) = </meth_defl//l/>
+</meth_defl = cll methl(vdsl) {meth_bodyl}//l/>
+methods_in_path(cld2..cldk) = meths'
+meths = </methl//l/>; meths'
+----------------------------------------------- :: cons
+methods_in_path(cld cld2..cldk) = meths
+
+
+%%% METHODS %%%
+defns
+methods_def :: '' ::=
+
+defn
+methods ( P , ty ) = meths :: :: methods :: methods_
+           {{ com get all method names of [[ty]] }} by
+
+find_path(P, ty) = </(ctxk, cldk)//k/>
+methods_in_path(</cldk//k/>) = meths
+-------------------------------------- :: methods
+methods(P, ty) = meths
+
+%%% FTYPE IN FDS %%%
+defns
+ftype_in_fds_def :: '' ::=
+
+defn
+ftype_in_fds ( P , ctx , fds , f ) = ty_opt :: :: ftype_in_fds :: ftif_
+           {{ com get class of [[f]] from field declarations }} by
+
+--------------------------------- :: empty
+ftype_in_fds (P, ctx, , f) = null
+
+find_type(P, ctx, cl) = ty_opt
+------------------------------------------------- :: cons_true
+ftype_in_fds (P, ctx, cl f; fd2..fdk, f) = ty_opt
+
+f != f'
+ftype_in_fds(P, ctx, fd2..fdk, f') = ty_opt
+-------------------------------------------------- :: cons_false
+ftype_in_fds (P, ctx, cl f; fd2..fdk, f') = ty_opt
+
+
+%%% FTYPE IN PATH %%%
+defns
+ftype_in_path_def :: '' ::=
+
+defn
+ftype_in_path ( P , ctxclds , f ) = ty_opt :: :: ftype_in_path :: ftip_
+           {{ com get type of [[f]] in class path }} by
+
+---------------------------- :: empty
+ftype_in_path(P, , f) = null
+
+classfields(cld) = fds
+ftype_in_fds(P, ctx, fds, f) = ty
+----------------------------------------------------- :: cons_true
+ftype_in_path(P, (ctx, cld) ctxcld2..ctxcldk, f) = ty
+
+classfields(cld) = fds
+ftype_in_fds(P, ctx, fds, f) = null
+ftype_in_path(P, ctxcld2..ctxcldk, f) = ty_opt
+--------------------------------------------------------- :: cons_false
+ftype_in_path(P, (ctx, cld) ctxcld2..ctxcldk, f) = ty_opt
+
+
+%%% FTYPE %%%
+defns
+ftype_def :: '' ::=
+
+defn
+ftype ( P , ty , f ) = ty' :: :: ftype :: ''
+           {{ com get type of [[f]] in [[ty]] }} by
+
+find_path(P, ty) = ctxclds
+ftype_in_path(P, ctxclds, f) = ty'
+---------------------------------- :: ftype
+ftype(P, ty, f) = ty'
+
+
+%%% FIND METH_DEF IN LIST %%%
+defns
+find_meth_def_in_list_def :: '' ::=
+
+defn
+find_meth_def_in_list ( meth_defs , meth ) = meth_def_opt :: :: find_meth_def_in_list :: fmdil_ {{ com find method def.~in list }} by
+
+------------------------------------ :: empty
+find_meth_def_in_list(, meth) = null
+
+meth_def = cl meth(vds) {meth_body}
+--------------------------------------------------------------------- :: cons_true
+find_meth_def_in_list(meth_def meth_def2..meth_defk, meth) = meth_def
+
+meth_def = cl meth'(vds) {meth_body}
+meth != meth'
+find_meth_def_in_list(meth_def2..meth_defk, meth) = meth_def_opt
+------------------------------------------------------------------------- :: cons_false
+find_meth_def_in_list(meth_def meth_def2..meth_defk, meth) = meth_def_opt
+
+
+%%% FIND METH_DEF IN PATH %%%
+defns
+find_meth_def_in_path_def :: '' ::=
+
+defn
+find_meth_def_in_path ( ctxclds , meth ) = ctxmeth_def_opt :: :: find_meth_def_in_path :: fmdip_
+           {{ com find method def.~(and context) in class path }} by
+
+------------------------------------ :: empty
+find_meth_def_in_path(, meth) = null
+
+classmethods(cld) = meth_defs
+find_meth_def_in_list(meth_defs, meth) = meth_def
+--------------------------------------------------------------------- :: cons_true
+find_meth_def_in_path((ctx, cld) ctxcld2..ctxcldk, meth) = (ctx, meth_def)
+
+classmethods(cld) = meth_defs
+find_meth_def_in_list(meth_defs, meth) = null
+find_meth_def_in_path(ctxcld2..ctxcldk, meth) = ctxmeth_def_opt
+-------------------------------------------------------------------- :: cons_false
+find_meth_def_in_path((ctx, cld) ctxcld2..ctxcldk, meth) = ctxmeth_def_opt
+
+
+%%% FIND METH_DEF %%%
+defns
+find_meth_def_def :: '' ::=
+
+defn
+find_meth_def ( P , ty , meth ) = ctxmeth_def_opt :: :: find_meth_def :: fmd_
+           {{ com find method def.~(given dynamic type [[ty]]) }} by
+
+find_path(P, ty) = null
+--------------------------------- :: null
+find_meth_def(P, ty, meth) = null
+
+find_path(P, ty) = ctxclds
+find_meth_def_in_path(ctxclds, meth) = ctxmeth_def_opt
+------------------------------------------------------ :: opt
+find_meth_def(P, ty, meth) = ctxmeth_def_opt
+
+
+
+%%% MTYPE %%%
+defns
+mtype_def :: '' ::=
+
+defn
+mtype ( P , ty , meth ) = mty :: :: mtype :: ''
+           {{ com find method type }} by
+
+find_meth_def(P, ty, meth) = (ctx, meth_def)
+meth_def = cl meth(</clk vark//k/>) {meth_body}
+find_type(P, ctx, cl) = ty'
+</find_type(P, ctx, clk) = tyk//k/>
+mty = </tyk//k/> -> ty'
+----------------------------------------------- :: mtype
+mtype(P, ty, meth) = mty
+
+>>
+%%% DIRECT SUBTYPING %%%
+defns
+d_subtyping :: sty_ ::=
+<<
+
+%%% STY_ONE %%%
+defns
+sty_one_def :: sty_ ::=
+
+defn
+P |- ty < ty' :: :: one :: '' {{ com subtyping }} by
+
+find_path(P, ty) = ctxclds
+-------------------------- :: obj
+P |- ty < Object
+
+find_path(P, ty) = </(ctxk, cldk)//k/>
+</classname(cldk) = dclk//k/>
+(ctx', dcl') in </(ctxk, dclk)//k/>
+-------------------------------------- :: dcl
+P |- ty < ctx'.dcl'
+
+%%% STY_MANY %%%
+defns
+sty_many_def :: sty_ ::=
+
+defn
+P |- tys < tys' :: :: many :: '' {{ com normal, multiple subtyping }} by
+
+tys = </tyk//k/>
+tys' = </tyk'//k/>
+</:sty_one: P |- tyk < tyk'//k/>
+--------------------------------- :: many
+P |- tys < tys'
+
+%%% STY_OPTION %%%
+defns
+sty_option_def :: sty_ ::=
+
+defn
+P |- ty_opt < ty_opt' :: :: option :: '' {{ com option subtyping }} by
+
+ty_opt = ty
+ty_opt' = ty'
+:sty_one: P |- ty < ty'
+------------------------ :: option
+P |- ty_opt < ty_opt'
+
+
+
+
+%%% WELL-FORMEDNESS %%%
+defns
+well_formedness :: wf_ ::=
+
+
+defn
+P , H |- v_opt < ty_opt :: :: object :: '' {{ com well-formed value }} by
+
+ty_opt = ty
+--------------------- :: null
+P,H |- null < ty_opt
+
+P |- H(oid) < ty_opt
+--------------------- :: object
+P,H |- oid < ty_opt
+
+
+defn
+P , G , H |- L :: :: varstate :: '' {{ com well-formed variable state }} by
+
+ALL x in dom(G). P,H |- L(x) < G(x)
+------------------------------------ :: varstate
+P,G,H |- L
+
+
+defn
+P |- H :: :: heap :: '' {{ com well-formed heap }} by
+
+>>
+ALL oid in dom(H). (EX ty. :formula_and: H(oid) = ty /\ ALL f in dom(H(oid)). EX ty'. :formula_and: ftype(P, ty, f) = ty' /\ P,H |- H(oid, f) < ty')
+-------------------------------------------------------------- :: heap
+P |- H
+<<
+
+ALL oid in dom(H). (EX ty. :formula_and: H(oid) = ty /\ EX fs . :formula_and: fields(P, ty) = fs /\ ALL f in fs. EX ty'. :formula_and: ftype(P, ty, f) = ty' /\ P,H |- H(oid, f) < ty')
+-------------------------------------------------------------- :: heap
+P |- H
+
+defn
+G |- config :: :: config :: '' {{ com well-formed configuration }} by
+
+------------------------- :: all_ex
+G |- (P, L, H, Exception)
+
+|- P
+P |- H
+P,G,H |- L
+</P,G |- sk//k/>
+------------------------- :: all
+G |- (P, L, H, </sk//k/>)
+
+
+defn
+P , G |- s ::  :: stmt :: '' {{ com well-formed statement }} by
+
+</P,G |- sk//k/>
+------------------ :: block
+P,G |- {</sk//k/>}
+
+P |- G(x) < G(var)
+------------------- :: var_assign
+P,G |- var = x;
+
+G(x) = ty
+ftype(P, ty, f) = ty'
+P |- ty' < G(var)
+------------------------------- :: field_read
+P,G |- var = x.f;
+
+G(x) = ty
+ftype(P, ty, f) = ty'
+P |- G(y) < ty'
+----------------------------- :: field_write
+P,G |- x.f = y;
+
+P |- G(x) < G(y) \/ P |- G(y) < G(x)
+:wf_stmt: P,G |- s1
+:wf_stmt: P,G |- s2
+-------------------------------------- :: if
+P,G |- if (x == y) s1 else s2
+
+Y = </yk//k/>
+G(x) = ty
+mtype(P, ty, meth) = </tyk//k/> -> ty'
+</P |- G(yk) < tyk//k/>
+P |- ty' < G(var)
+--------------------------------------- :: mcall
+P,G |- var = x.meth(Y);
+
+find_type(P, ctx, cl) = ty
+P |- ty < G(var)
+-------------------------- :: new
+P,G |- var = new ctx cl();
+
+defn
+P |- ty meth_def :: :: meth :: ''
+           {{ com well-formedness of method in [[ty]] }} 
+           {{ tex [[P]][[|-]]_{[[ty]]} [[meth_def]] }} by
+
+distinct(</vark//k/>)
+</find_type(P, ctx, clk) = tyk//k/>
+G =  :g_add: [</vark |-> tyk//k/>] [this|->ctx.dcl]
+</P,G |- sl//l/>
+find_type(P, ctx, cl) = ty
+P |- G(y) < ty
+---------------------------------------------------------- :: method
+P |-ctx.dcl cl meth(</clk vark//k/>) {</sl//l/> return y;}
+
+
+
+>>
+NOTE: Below, the overriding method must have the same type, as in Java;
+      however, in theory, it could have its subtype.
+<<
+
+defn
+P |- ctx ( dcl , cl , fds , meth_defs ) :: :: class_common :: ''
+           {{ com common well-formedness of class in [[ctx]] }}
+           {{ tex [[P]][[|-]]_{[[ctx]]}([[dcl]],[[cl]],[[fds]],[[meth_defs]]) }} by
+
+find_type(P, ctx, cl) = ty
+ctx.dcl != ty
+distinct (</fj//j/>)
+fields(P, ty) = fs
+</fj//j/> bot fs
+</find_type(P, ctx, clj) = tyj//j/>
+</P |-ctx.dcl meth_defk//k/>
+</methodname(meth_defk) = methk//k/>
+methods(P, ty) = </methl'//l/>
+</mtype(P, ctx.dcl, methl') = mtyl//l/>
+</mtype(P, ty, methl') = mtyl'//l/>
+</methl' notin </methk//k/> \/ mtyl = mtyl'//l/>
+--------------------------------------------------- :: class_common
+P |-ctx (dcl, cl, </clj fj;//j/>, </meth_defk//k/>)
+
+
+
+
+%%% VARIABLE TRANSLATION %%%
+defns
+var_trans :: '' ::=
+
+defn
+T |- s ~> s'  :: :: tr_s :: tr_s_
+           {{ com variable translation for a statement }} by
+
+:formula_xali: T(var) = var'
+:formula_xali: T(x) = x'
+---------------------------- :: var_assign
+T |- var = x; ~> var' = x';
+
+:formula_xali: T(x) = x'
+:formula_xali: T(y) = y'
+T |- s1 ~> s1'
+T |- s2 ~> s2'
+--------------------------------------------------------- :: if
+T |- if (x == y) s1 else s2 ~> if (x' == y') s1' else s2'
+
+</T |- sk ~> sk'//k/>
+-------------------------------- :: block
+T |- {</sk//k/>} ~> {</sk'//k/>}
+
+:formula_xali: T(var) = var'
+------------------------------------------------ :: new
+T |- var = new ctx cl(); ~> var' = new ctx cl();
+
+:formula_xali: T(var) = var'
+:formula_xali: T(x) = x'
+------------------------------- :: field_read
+T |- var = x.f; ~> var' = x'.f;
+
+:formula_xali: T(x) = x'
+:formula_xali: T(y) = y'
+--------------------------- :: field_write
+T |- x.f = y; ~> x'.f = y';
+
+:formula_xali: T(var) = var'
+:formula_xali: T(x) = x'
+</:formula_xali: T(yk) = yk'//k/>
+------------------------------------------------------------ :: mcall
+T |- var = x.meth(</yk//k/>); ~> var' = x'.meth(</yk'//k/>);
+
+
+%%% REDUCTION %%%
+defns
+reduction :: r_ ::=
+
+defn
+config --> config' ::  :: stmt :: '' {{ com one step reduction }} by
+
+L(x) = null
+-------------------------------------------------- :: field_read_npe
+(P, L, H, var = x.f; </sl//l/>) --> (P, L, H, NPE)
+
+L(x) = null
+------------------------------------------------ :: field_write_npe
+(P, L, H, x.f = y; </sl//l/>) --> (P, L, H, NPE)
+
+L(x) = v
+----------------------------------------------------------------------------  :: var_assign
+(P, L, H, var = x; </sl//l/>) --> (P, :l_add_one:L[var |-> v], H, </sl//l/>)
+
+L(x) = oid
+H(oid, f) = v
+------------------------------------------------------------------------------  :: field_read
+(P, L, H, var = x.f; </sl//l/>) --> (P, :l_add_one:L[var |-> v], H, </sl//l/>)
+
+L(x) = oid
+L(y) = v
+----------------------------------------------------------------------  :: field_write
+(P, L, H, x.f = y; </sl//l/>) --> (P, L, H[(oid, f) |-> v], </sl//l/>)
+
+L(x) = null
+---------------------------------------------------------------- :: mcall_npe
+(P, L, H, var = x.meth(</yk//k/>); </sl//l/>) --> (P, L, H, NPE)
+
+L(x) = oid
+H(oid) = ty
+find_meth_def(P, ty, meth) = null
+----------------------------------------------------------------- :: mcall_cnfe
+(P, L, H, var = x.meth(</yk//k/>); </sl//l/>) --> (P, L, H, CNFE)
+
+L(x) = v
+L(y) = w
+v == w
+------------------------------------------------------------------------- :: if_true
+(P, L, H, if (x == y) s1 else s2 </sl'//l/>) --> (P, L, H, s1 </sl'//l/>)
+
+L(x) = v
+L(y) = w
+v != w
+------------------------------------------------------------------------- :: if_false
+(P, L, H, if (x == y) s1 else s2 </sl'//l/>) --> (P, L, H, s2 </sl'//l/>)
+
+
+--------------------------------------------------------------------- :: block
+(P, L, H, {</sk//k/>} </sl'//l/>) --> (P, L, H, </sk//k/> </sl'//l/>)
+
+>>
+fields(P, ty) = null
+-------------------------------------------------------- :: new_cnfe
+(P, L, H, var = new ty(); </sl//l/>) --> (P, L, H, CNFE)
+<<
+
+find_type(P, ctx, cl) = ty
+fields(P, ty) = </fk//k/>
+oid notin dom(H)
+H' = H [oid |-> (ty, </fk |-> null//k/>)]
+------------------------------------------------------------------------------------------ :: new
+(P, L, H, var = new ctx cl(); </sl//l/>) --> (P, :l_add_one:L[var |-> oid], H', </sl//l/>)
+
+L(x) = oid
+H(oid) = ty
+find_meth_def(P, ty, meth) = (ctx, cl meth(</clk vark//k/>) {</sj'//j/> return y;})
+</vark'//k/> bot dom(L)
+distinct(</vark'//k/>)
+x' notin dom(L)
+x' notin </vark'//k/>
+</L(yk) = vk//k/>
+L' = :l_add_one: L [</vark' |-> vk//k/>] [x' |-> oid]
+T = :t_add:[ </vark |-> vark'//k/>] [this |-> x']
+</T |- sj' ~> sj''//j/>
+:formula_xali: T(y) = y'
+--------------------------------------------------------------------------------------------- :: mcall
+(P, L, H, var = x.meth(</yk//k/>); </sl//l/>) --> (P, L', H, </sj''//j/> var = y'; </sl//l/>)

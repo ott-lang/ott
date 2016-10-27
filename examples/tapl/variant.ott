@@ -1,0 +1,58 @@
+% The TAPL variants, p136, don't introduce a new value form.  Here we do
+
+% The case term from TAPL would read "case t of </ < li = xi > => ti // | // i IN 1 .. n />", but
+% ott doesn't support the (+ bind xi in ti +) bindspec, so the auxiliary production C is used below. 
+
+% In the E_Case rule the premise here is t-->t', not involving a subscripted t,
+% to avoid clashing (The TAPL uses a t0-->t0' which here would be misinterpreted.).
+
+grammar
+T {{ hol Typ }}, S, U :: Ty ::=                             {{ com types: }}
+  | < </ li : Ti // , // i IN 1 .. n /> > ::   :: Variant     {{ com type of variants }}
+
+t :: Tm ::=                                                             {{ com terms: }}
+  | < l = t > as T                                        ::   :: Variant {{ com tagging }}
+  | case t of </ Ci // | // i IN 1 .. n /> ::   :: Case    {{ com case }}
+
+C :: C ::=
+  | < l = x > => t					::   :: Case (+ bind x in t +)
+
+v :: Va ::=                                                             {{ com values: }}
+  | < l = v > as T                                        ::   :: Variant {{ com tagged value }}
+
+defns 
+Jop :: '' ::= 
+
+defn 
+t --> t' :: :: red :: E_ {{ com Evaluation }} by
+
+j INDEXES </ti//i IN 1..n/>
+--------------------------------------------------------------------- :: CaseVariant
+case ( <lj=v> as T ) of </<li=xi> => ti //i IN 1..n/> --> [xj |-> v]tj
+
+t --> t'
+------------------------------------------------------------------------------------ :: Case
+case t of </<li=xi> => ti //i IN 1..n/> --> case t' of </<li=xi> => ti //i IN 1..n/> 
+
+ti --> ti'
+------------------------------ :: Variant
+<li=ti> as T --> <li=ti'> as T
+
+
+
+defns
+Jtype :: '' ::= 
+
+defn
+G |- t : T :: :: typing :: T_ {{ com Typing }} by
+
+G |- t : Tj
+j INDEXES </Ti//i IN 1..n/>
+-------------------------------------------------------------------------- :: Variant
+G|- <lj=t> as < </ li:Ti // i IN 1..n /> >  : < </ li:Ti // i IN 1..n /> > 
+
+G |- t : < </ li:Ti // i IN 1..n /> >
+</ G,xi:Ti |- ti:T // i IN 1..n /> 
+DISTINCT </li // i IN 1..n />
+----------------------------------------------- :: Case
+G|- case t of </<li=xi> => ti //i IN 1..n/> : T

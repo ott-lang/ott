@@ -1,0 +1,442 @@
+2006.09.13  Version 0.04
+2006.11.01  Version 0.04.2
+2006.12.20  Version 0.10     initial public release
+
+2006.12.20  Version 0.10.1  
+- include missing HOL file ottDefine.sml
+
+2006.12.22  Version 0.10.2  
+- include missing ottmode.el
+
+2007.01.19  Version 0.10.3   
+- bugfixes
+- new examples: various TAPL fragments, and an OCaml fragment with
+   concurrency (peterson_caml.ott)
+- generation of OCaml code for type definitions and generated
+   functions (substitution etc)
+- merge option to merge ott source files
+- improved HOL support infrastructure
+
+2007.01.24  Version 0.10.4
+- bugfix: allow "-" in bindspec lexing
+  
+2007.02.07  Version 0.10.5
+- various bugfixes (mostly w.r.t. Coq list support)
+- various improvements to examples
+- document generation of OCaml code
+- (breaking) source syntax changes: keyword "rules" is now replaced by
+   "grammar", and hom "caml" is replaced by "ocaml"
+
+2007.04.06  Version 0.10.6
+- fixes and additional examples
+
+2007.07.18  Version 0.10.7
+- bug fixes
+
+2007.08.13  Version 0.10.8
+- rename module Aux to Auxl, to work around a Windows problem
+
+2007.08.28  Version 0.10.9
+- add Windows binary-only release
+
+2007.09.04  Version 0.10.10
+- new manual, in browsable html, pdf and postscript
+- new tex style for typesetting rules (in the tex/ directory)
+- move emacs mode and hol auxiliaries into new emacs/ and hol/ directories
+
+2007.09.28  Version 0.10.11
+- fix bug in Windows version: properly open files in binary mode when writesys and readsys
+
+2007.10.05  Version 0.10.12
+- add missing file from Coq proof support: ott_list_eq_dec.v
+
+2007.10.18  Version 0.10.13
+- new (experimental!) switch -picky_multiple_parses <true>,     
+   to allow multiple parses if the generated code is
+   identical - at present only for filtered LaTeX
+- some source documentation
+ 
+2008.02.15  Version 0.10.14
+- new parser, with better performance and better support for disambiguation
+   (see Section 14 "Parsing Priorities" in the manual, and changes to 
+   Section 20 "Reference: The language of symbolic terms")
+- new support for context grammars, with automatically generated
+   hole-filling functions (see Section 13 "Context rules" in the manual)
+- new syntactic sugar flavour of metaproductions: writing "S" instead
+   of "M" gives metaproductions that can be used in concrete terms
+- various bugfixes
+
+2008.12.16  Version 0.10.15
+- support for Isabelle 2008 (Isabelle 2005 syntax no longer produced)
+- new option -isabelle_primrec <true> : if set to false then ott
+   generates "fun"s instead of "primrec"s  (though Isabelle can only
+   sometimes automatically prove termination of these "fun"s).
+- new declaration "phantom" to turn off type generation for metavariables.
+
+2009.3.9  Version 0.10.16
+- release of the experimental Coq locally-nameless backend
+- aesthetic improvements of the Coq output
+- -show-post-sort and -show-defns are now <false> by default to make
+    output less noisy
+
+2009.7.19 Version 0.10.17
+
+- fix ocamlvar hom bug
+- fix bug in Coq backend when dealing with some kinds of dot forms
+- suppress printing of number of good/bad definition rules if 
+   there are no rules
+- change -tex_show_meta false behaviour to not suppress sugar
+   productions
+- add % at line ends in rules, to prevent extra spaces (per BCP patch)
+- remove doc references to the Windows binary distribution.  It should
+   be easy to build from source, but we don't have access to a
+   suitable machine.
+
+
+2010.3.24 Version 0.10.18alpha
+
+- The previous command-line options -coq, -hol, etc., are no longer
+  supported; they should be replaced by -o. 
+
+- By default (unless -merge true is set) the order of the input file 
+  is preserved, so one can have mixed sequences of definitions of
+  grammar, of inductive relations, and of embed blocks.
+
+- New command-line options -i <filename> and -o <filename> for
+  specifying multiple input and output files.  Input files with
+  non-.ott extensions (.v, .thy, .sml, .ml, .tex) are copied verbatim
+  into the respective outputs.  The command-line order of these
+  options is significant:  the prover output can be split into
+  multiple output files; each prover output file specified with -o
+  will contain the material from the previous input files specified
+  with -i (since the last -o for this prover).
+
+- Better tex default spacing, distinguishing alphabetic and other
+  ("symbolic") terminals based on their ott source strings and
+  wrapping them in \ottkw{} and \ottsym{} respectively. 
+
+- Support for in-line prover code in premises, e.g.
+
+   {{ prover code mentioning [[x]] and [[\y.z]] }}
+   -----------------------------------------------  ::  rulename
+   conclusion
+
+- The {{ phantom }} hom can now be applied to metavariables and to
+  nonterminal rules.  In both cases it suppresses generation of a prover
+  or OCaml definition, but any type homs are taken into account when
+  the metavariable or nonterminal root is output as a type. 
+
+- There is a new hom {{ order ... }} that can be applied to
+  productions which lets one specify the order of arguments of a
+  prover or OCaml constructor independently of the order in which they
+  appear in the production.  For example, one might say:
+
+     | e1 e2   :: :: ReversedApp {{ order [[e2]] [[e1]] }}
+
+- There is a new hom {{ coq-universe UniverseName }} that can be
+  applied to metavariable or nonterminal rules, eg to force Ott to
+  generate definitions in Type instead of in Set. 
+
+- Changed some debug options (eg show-pre-sort)
+
+- Ocaml list homs on productions are now permitted 
+
+- add coq_lngen option for compatibility with the lngen tool
+
+- Bug fixes:
+   - problem with comment line in defns terminated with EOF [Jianzhou Zhao]
+   - freshness of identifier in Ott generated functions [Jianzhou Zhao]
+   - processing of parse tree for some cases of dot forms [Scott Owens]
+   - processing of picky_multiple_parses [Scott Owens]
+   - added some error checks
+   - several fixes in the Coq locally-nameless backend [Stephanie Weirich]
+   - performance issue when using contextrules [Nicolas Pouillard]
+   - parens in OCaml substitutions for multiple binders [Vilhelm Sjoberg]
+
+
+2010.03.29 Version 0.20
+
+- The order among mutually recursive nonterminal definitions in
+  grammar blocks is now preserved in prover output. 
+
+2010.04.04 Version 0.20.1
+
+- Support coq-universe hom on blocks of definitions, eg:
+
+    defns
+    Jop :: '' ::= {{ coq-universe Type }}
+
+     defn
+     t1 --> t2 :: ::reduce::'' by
+
+
+        --------------------------  :: ax_app
+        (\x.t1) v2 -->  {v2/x}t1
+
+
+2010.06.29
+
+- refactor the generated latex for grammars so that condensed grammars
+  can be produced by redefining a couple of latex commands, eg
+
+    \renewcommand{\ottgrammartabular}[1]{{\raggedright #1}}
+    \renewcommand{\ottrulehead}[3]{$#1$  $#2$ }
+    \renewcommand{\ottprodline}[6]{{}\ ${}#1$\mbox{\ {}$#2$}{}}
+    \renewcommand{\ottfirstprodline}[6]{{}\ ${}$\mbox{\ {}$#2$}{}}
+    \renewcommand{\ottprodnewline}{}
+    \renewcommand{\ottinterrule}{\\[1mm]} 
+
+- add experimental option (-ocaml_include_terminals true) to include, in
+   generated OCaml types, an instance of "terminal" in all the places
+   where there's a terminal in the AST
+
+- gforge bugtracker now in use:https://gforge.inria.fr/tracker/?group_id=2980
+
+2010.11.28 Version 0.20.3
+
+- fixes to bugs: 
+
+    11367 coq-universe Type problem with non-native lists
+    11368 generation of induction principles in Ott 0.20
+    11369 0 and O in generated Ott lists
+    11377 {{}} hypothesis and ln backend
+    11378 context rules and ln backend
+
+- (feature request 11373) Support for explicit naming of premises in
+   inductive rules for the Coq backend.  For instance, adding the
+   [[:RED]] annotation below
+
+   t1 --> t1' [[:RED]] 
+   -------------------- :: ctx_app_arg
+   v t1 --> v t1'
+
+   results in:
+
+   | ctx_app_arg : forall (v t1 t1':term)
+      (RED: reduce t1 t1'),
+      is_val_of_term v ->
+      reduce (t_app v t1) (t_app v t1').
+
+   Names of rules cannot contain spaces or other non alpha-numerical
+   characters, and must begin with a letter. The name annotation must
+   at the rightmost place on the hypothesis line, and must be enclosed
+   (without spaces) between the [[: and ]] parentheses.
+
+- (feature request 11372) The Coq backend now tries to preserve the
+   names the user specified in the definition of grammar rules.  For
+   instance the grammar definition below
+
+     grammar 
+     term, t :: 't_' ::=                               
+       | x            ::  :: Var                  
+       | \ x . t      ::  :: Lam     (+ bind x in t +)
+       | t t'         ::  :: App                  
+       | ( t )        :: S:: Paren   {{ icho [[t]]  }} 
+       | { t / x } t' :: M:: Tsub    {{ icho (tsubst_t [[t]] [[x]] [[t']])}}
+
+   generates
+
+     Inductive term : Set := 
+      | t_var (x:var)
+      | t_lam (x:var) (t:term)
+      | t_app (t:term) (t':term).
+
+   instead of 
+
+     Inductive term : Set := 
+      | t_var : var -> term
+      | t_lam : var -> term -> term
+      | t_app : term -> term -> term.
+
+   The old behaviour can be obtained via the top-level option
+   -coq_names_in_rules false.
+
+2011.11.17 Version 0.21
+
+- Bump ocamlgraph version to 1.7, to avoid compilation issues with
+  OCaml 3.12.1.
+
+- Ported the Isabelle backend to Isabelle2011 (*).
+
+- Experimental support for function definitions.  As a simple example,
+  in the Ott file below:
+
+    grammar
+     n :: 'n_' ::= 
+       | 0       :: :: Zero
+       | S n     :: :: Succ
+
+    funs
+      Add ::=  {{ hol-proof ... }}
+    fun
+      n1 + n2 :: n :: add {{ com a function of type num \to num \to num }} 
+    by
+      0 + n2 === n2
+      S n1 + n2 === n1 + S n2
+
+  the add function is compiled into the following coq code:
+
+    Fixpoint add (x1:num) (x2:num) : num:=
+      match x1,x2 with
+      | n_zero , n2 => n2
+      | (n_succ n1) , n2 =>  (add n1 (n_succ n2) ) 
+    end.
+
+  The "fun n1 + n2 :: n :: add by" declaration specifies:
+
+  - the name of the function: add
+  - the symbolic term that defines the lhs: n1 + n2
+  - the symbolic term that defines the rhs: n
+
+  The type of the arguments of the function is defined by the
+  non-terminals appearing in the lhs, the return type by the rhs
+  non-terminal (so num -> num -> num in the above example).  Functions
+  are then defined by case analysis, where the lhs and the rhs are
+  separated by the reserved symbol "===".
+
+  The {{ hol-proof }} hom allows the specification of a termination
+  proof.
+
+- A new option -fast_parse <bool> generates a faster parser but
+  removes the possibility of disambiguating ambiguous terms using the
+  :non_terminal: syntax.
+
+- The generated Coq substitution functions now use the list_minus2
+  auxiliary function rather than list_filter, as it is easier to
+  reason about (since rewriting under quantifiers does not work in
+  Coq).  Added the -coq_use_filter_fn option for backwards
+  compatibility (*).
+
+- Introduced a new embed hom 
+
+      embed {{ coq-lib foo1 foo2 foo3 }}
+
+  to avoid generation of functions foo1, foo2, foo3 (*)
+
+- No longer generate auxiliary list types for formula_dots in Coq
+  backend with -coq_expand_list_types true because today Coq now knows
+  how to generate the right induction principle.
+
+- Parsing of defns or embed is more robust wrt newlines (*).
+
+- Various bug-fixes (including #13487), improvements to error reports,
+  and performance optimisations.
+
+Entries labelled with (*) were contributed by Viktor Vafeiadis.
+
+2011.11.18 Version 0.21.1
+
+This version fixes a packaging problem of the version 0.21.
+
+2011.12.9 Version 0.21.2
+
+- fix bug 13645: forced use of :nonterm: syntax in conclusions of defn
+  rules in 0.21.1 (thanks to Karl Palmskog for reporting the bug).
+
+- Added new hom syntax {{* ... *}} that permits {{ and }} appearing
+  inside.  The existing syntax {{ ... }} is also valid.
+
+- Added embed tex-wrap-pre/tex-wrap-post homs to customize tex
+  wrapping: the default LaTeX header can be changed by writing 
+
+    embed {{ tex-wrap-pre ... }} 
+
+  and the default footer by writing 
+
+    embed {{ tex-wrap-post ... }}.  
+
+  In addition, the program option -tex_wrap false can be used to omit
+  wraping the tex output (-tex_wrap false overrides any
+  tex-wrap-pre/tex-wrap-post embeds).
+
+- minor updates to the Hol backend to target the new Hol syntax.
+
+
+2012.01.04 fix for HOL multiple definitions bug
+
+2012.06.12 fix for HOL syntax change
+
+2012.11.29 bugfix 14175
+
+2012.12.04 bugfix  15158
+
+
+2013.04.20 
+
+- experimental support for generating Lem definitions, including new
+  homs lem, lemvar, ichlo
+
+
+2013.06.22  
+
+- New aux-hom feature:
+
+We permit an aux hom on grammar rules. For any rule with such a hom,
+we transform that rule by appending an "_aux" to its primary nonterminal
+root name. We then add a synthesised rule with the original nonterminal
+root name and a single production, with a shape described by the body of 
+the aux hom, which must be of the form  
+
+  {{ aux  foo1 foo2 _ bar1 bar2 bar3 }}
+
+with a single _ and any number of strings fooi and barj before and
+after, and no Raw_hom_ident's.  The _ is replaced by the original
+nonterminal root name.  
+
+For example, given a grammar or metavariable l of source locations, one
+might say 
+
+ntr :: 'NTR_'  ::=  {{ aux _ l }}
+ | ...
+
+to synthesise grammars ntr_aux and ntr of unannotated and location-annotated 
+terms, the first with all the original productions and the second with a 
+single production 
+ | ntr l :: :: NTR_aux. 
+
+If the rule has an empty production name wrapper (eg with '' in place
+of 'NTR_') then the production name is based on the original
+nonterminal root, capitalised and with _aux appended (eg Ntr_aux), to
+avoid spurious conflicts.
+
+Generation of aux rules is controlled by a command-line option
+-generate_aux_rules {true|false}, which one might (eg) set to false
+for latex output and true for OCaml output.
+
+- New {{ texlong }} hom on productions, letting long productions
+be typeset with the production extending into the space usually used
+for comment, pushing that onto the next line. 
+
+2013.07.04
+
+- replace "make" by "$(MAKE)" in Makefile.  Should fix 15719, reported
+  by peterbb@ifi.uio.no for OpenBSD
+
+2013.07.04 Version 0.22
+
+- add auxparam hom
+
+2013.10.24 Version 0.23
+
+2013.11.17 
+
+- add command-line option -output_source_locations <i>  to include
+  comments in the output giving the source locations:
+    i=0 adds no locations
+    i=1 adds a location for each inductive definition rule
+    i=2 also adds a location for other components of the output
+  Location annotations are lines of the form
+
+   (* #source file FILENAME1 lines M1 - N1  and ... and FILENAMEk lines Mk - Nk *) 
+
+  (or with % instead of (* *) for the Latex output).
+
+2014.01.30 fix bug in {{ order }} hom for Lem backend
+
+2014.01.30 Version 0.24
+
+2014-08-28 Version 0.25
+
+- fix incompatibility with OCaml 4.02.0 comment syntax, from Damien
+  Doligez/Anil Madhavapeddy
+

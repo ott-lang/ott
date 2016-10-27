@@ -1,0 +1,29 @@
+grammar
+t :: Tm ::=                                        {{ com terms: }}
+  | t1 ; t2                       ::   :: Seq      {{ com sequencing }}
+
+
+defns 
+Jop :: '' ::= 
+
+defn 
+t --> t' :: :: red :: E_ {{ com Evaluation }} by
+
+t1 --> t1'
+---------------- :: Seq
+t1;t2 --> t1';t2
+
+-------------- :: SeqNext
+unit;t2 --> t2
+
+
+defns
+Jtype :: '' ::= 
+
+defn
+G |- t : T :: :: typing :: T_ {{ com Typing }} by
+
+G |- t1:Unit
+G |- t2:T2
+---------------- :: Seq
+G |- t1;t2 : T2

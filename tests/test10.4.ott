@@ -1,0 +1,38 @@
+% minimal                    + binding + subst + coq/hol/isa
+metavar termvar, x ::=  
+{{ isa string}} {{ coq nat}} {{ hol string}} {{ coq-equality }}
+
+grammar
+t :: 't_' ::=                               
+  | x            ::  :: Var                  
+  | \ x . t      ::  :: Lam     (+ bind x in t +)
+  | t t'         ::  :: App                  
+  | ( t )        :: S:: Paren   {{ icho [[t]]  }} 
+  | { t / x } t' :: M:: Tsub    {{ icho (tsubst_t [[t]] [[x]] [[t']])}}
+
+v :: 'v_' ::=                              
+  | \ x . t      ::  :: Lam                
+
+subrules
+  v <:: t
+
+substitutions
+  single t x :: tsubst 
+
+defns
+Jop :: '' ::=
+
+ defn
+ t1 --> t2 :: ::reduce::''  by
+
+
+    --------------------------  :: ax_app
+    (\x.t12) v2 -->  {v2/x}t12
+
+    t1 --> t1'
+    -------------- :: ctx_app_fun
+    t1 t --> t1' t
+
+    t1 --> t1'
+    -------------- :: ctx_app_arg
+    v t1 --> v t1'

@@ -1,0 +1,8 @@
+metavar basetype, A ::=
+  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}
+  {{ lex Alphanum }} {{ tex \textsf{[[basetype]]} }}
+
+grammar
+T :: Ty ::=                                       {{ com types: }}
+  | A                            ::   :: Id       {{ com base type }}
+

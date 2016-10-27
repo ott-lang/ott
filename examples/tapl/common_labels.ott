@@ -1,0 +1,27 @@
+metavar label, l, k ::=
+ {{ isa string }} {{ coq nat }} {{ hol string }} {{ lex alphanum }}  {{ tex \mathsf{[[label]]} }} 
+ {{ coq-equality }}
+ {{ com  field label  }}  {{ isavar ''[[label]]'' }} {{ holvar "[[label]]" }}
+
+grammar
+formula :: formula_ ::=
+  | DISTINCT l1 .. ln                                   ::   :: Distinct
+        {{ coq (Is_true (all_distinct eq_label (unmake_list'label [[l1..ln]]))) }}
+        {{ hol (ALL_DISTINCT [[l1..ln]]) }}
+        {{ isa (distinct [[l1..ln]]) }}
+
+embed
+%% See the comment about [unmake_list'T] in common_index.ott.
+{{ coq
+Definition list'label : Set. exact list_label || exact (list label). Defined.
+Definition unmake_list'label : list'label -> list label.
+  exact unmake_list_label || exact (fun x => x). Defined.
+}}
+
+%% We don't actually use the following nonterminal. However, it is needed
+%% to work around a bug in coq code generation with
+%% -coq_expand_list_types true (the type list_label is not generated).
+grammar
+labels :: labels_ ::=
+  | l1 .. ln :: :: seq
+

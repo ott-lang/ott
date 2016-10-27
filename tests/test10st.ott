@@ -1,0 +1,126 @@
+metavar termvar, x ::=
+  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}  {{ lem string }} {{ ocaml int }}
+  {{ tex \mathit{[[termvar]]} }} {{ com term variable }} 
+
+metavar typvar, X ::=
+  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}  {{ lem string }} {{ ocaml int }}
+  {{ tex \mathit{[[typvar]]} }} {{ com type variable }} 
+
+grammar
+  t :: 't_' ::=                                         {{ com term }}
+    | x                   ::   :: Var                     {{ com variable }}         
+    | \ x . t             ::   :: Lam  (+ bind x in t +)  {{ com abstraction }}      
+    | t t'                ::   :: App                     {{ com application }}      
+    | ( t )               :: S :: paren   {{ ichl [[t]] }} {{ ocaml int }}
+    | { t / x } t'        :: M :: tsub    {{ ichl ( tsubst_t [[t]] [[x]] [[t']] ) }} {{ ocaml int }}
+
+  v :: 'v_' ::=                                         {{ com  value }}
+    | \ x . t             ::   :: Lam                     {{ com abstraction }}
+
+  T :: T_ ::=                                           {{ com type }}
+    | X                   ::   :: var                     {{ com variable }}
+    | T -> T'             ::   :: arrow                   {{ com function }}
+    | ( T )               :: S :: paren {{ ichl [[T]] }} {{ ocaml int }}
+
+  G {{ tex \Gamma }} :: G_ ::= {{ isa (termvar*T) list }} {{ coq list (termvar*T) }} {{ ocaml (termvar*T) list }} {{ lem list (termvar*T) }}
+                               {{ hol (termvar#T) list }} {{ com type environment }}
+    | empty               ::   :: em 
+        {{ isa Nil }}
+        {{ coq G_nil }}
+        {{ hol [] }}
+        {{ lem [] }}
+    | G , x : T           ::   :: vn 
+        {{ isa ([[x]],[[T]])#[[G]] }}
+        {{ coq (cons ([[x]],[[T]]) [[G]]) }}
+        {{ hol (([[x]],[[T]])::[[G]]) }}
+        {{ lem (([[x]],[[T]])::[[G]]) }}
+
+  terminals :: 'terminals_' ::=
+    | \                   ::   :: lambda     {{ tex \lambda }}
+    | -->                 ::   :: red        {{ tex \longrightarrow }}
+    |  ->                 ::   :: arrow      {{ tex \rightarrow }}
+    | |-                  ::   :: turnstile  {{ tex \vdash }}
+    | in                  ::   :: in         {{ tex \in }}
+
+  formula :: 'formula_' ::=          
+    | judgement           ::   :: judgement
+    | not ( formula )     ::   :: not  
+       {{ isa (Not [[formula]])) }}
+       {{ coq (not [[formula]]) }}
+       {{ hol (~[[formula]]) }}
+       {{ lem (not [[formula]]) }}
+    | x = x'              ::   :: eqv 
+       {{ ichl [[x]]=[[x']] }}
+    | x : T in G          ::   :: xTG 
+       {{ isa ? G1 G2. [[G]] = G1 @ ([[x]],[[T]])#[[G2]] & [[x]]~:fst ` set G1 }}
+       {{ coq (bound [[x]] [[T]] [[G]])  }}
+       {{ lem (bound [[x]] [[T]] [[G]])  }}
+       {{ hol ? G1 G2. ([[G]] = G1 ++ ([[x]],[[T]])::[[G2]]) /\ ~(MEM [[x]] (MAP FST G1)) }}
+
+embed
+{{ coq
+Notation G_nil := (@nil (termvar*T)).
+Definition bound x T0 G :=
+  exists G1, exists G2,
+    (G = List.app G1 (List.cons (x,T0) G2)) /\
+    ~In x (List.map (@fst termvar T) G1).
+}}
+{{ lem
+let rec bound x t0 g =
+  match g with
+  | (x',t')::g' -> if x=x' then t0=t' else bound x t0 g'
+  | [] -> false
+  end
+}}
+
+subrules
+  v <:: t
+
+freevars
+  t x :: fv 
+
+substitutions
+  single t x :: tsubst 
+
+defns
+  Jtype :: '' ::= 
+
+defn
+    G |- t : T :: :: GtT :: GtT_ by
+        
+    x:T in G
+    -------- :: value_name
+    G |- x:T
+
+    G |- t : T1->T2
+    G |- t' : T1 
+    ---------------- :: apply
+    G |- t t' : T2
+
+    G,x1: T1 |- t : T
+    ------------------ :: lambda
+    G |- \x1.t : T1->T
+
+
+defns
+  Jop :: '' ::=
+
+    defn
+    t1 --> t2 ::  :: reduce :: ''       {{ com [[t1]] reduces to [[t2]] }} by 
+
+
+    --------------------------  :: ax_app
+    (\x.t12) v2 -->  {v2/x}t12
+
+    t1 --> t1'
+    -------------- :: ctx_app_fun
+    t1 t --> t1' t
+
+    t1 --> t1'
+    -------------- :: ctx_app_arg
+    v t1 --> v t1'
+
+embed
+{{ coq
+Hint Constructors reduce GtT : rules.
+}}

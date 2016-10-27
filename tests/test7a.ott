@@ -1,0 +1,362 @@
+>> TODO 
+- the concrete variable representation currently used in the generated code
+   no longer suffices for these dependent-record type environments 
+- either add distinctness conditions to the syntax, generating predicates
+   is_distinct_t etc, or write them in the typing rules (for labels in 
+   record types, exprs and pats, and termvars in pats)
+
+ideally also:
+
+- implement context rules, so that the explicit reduction context rules 
+   can be replaced by a single one.
+<<
+metavar typevar, X ::=
+ {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ lem string }} {{ lex Alphanum }}  
+ {{ tex \mathit{[[typevar]]} }} {{ com  type variable  }}  
+ {{ isavar ''[[typevar]]'' }} {{ holvar "[[typevar]]" }} {{ lemvar "[[typevar]]" }} {{ texvar \mathrm{[[typevar]]} }} 
+ {{ ocamlvar "[[typevar]]" }}
+
+metavar termvar, x ::=
+ {{ isa string }} {{ coq nat }} {{ hol string }}  {{ lem string }} {{ coq-equality }} {{ lex alphanum }}  
+ {{ tex \mathit{[[termvar]]} }} {{ com  term variable  }} 
+ {{ isavar ''[[termvar]]'' }} {{ holvar "[[termvar]]" }} 
+ {{ lemvar "[[typevar]]" }} 
+ {{ texvar \mathrm{[[termvar]]} }} 
+ {{ ocamlvar "[[termvar]]" }}
+
+
+indexvar index, i, j, n, m  ::= {{ isa nat }} {{ coq nat }} {{ hol num }} {{ lem num}} {{ lex numeral }}
+  {{ com indices }}
+
+grammar
+T {{ hol Typ }}, S, U :: 'Ty_' ::=                    {{ com type  }}
+  | X                                :: :: Var          {{ com type variable }}  
+  | Top                              :: :: Top          {{ com maximum type }}   
+  | T -> T'                          :: :: Fun          {{ com type of functions }}
+  | Forall X <: T . T'               :: :: Forall (+ bind X in T' +) {{ com universal type }} 
+                                   {{ tex [[Forall]] [[X]] \mathord{[[<:]]} [[T]]. \, [[T']] }}
+%R  | { }                              :: :: Rec_empty        {{ com empty record }}
+%R  | { Trb }                          :: :: Rec_ne           {{ com nonempty record }}
+% {{ com record type }}    
+  | ( T )                            :: S :: paren {{ ichl [[T]] }}
+  | [ X |-> T ] T'                   :: M :: sub   {{ ichl (Tsubst_T [[T]] [[X]] [[T']]) }} 
+
+%R Trb :: 'Trb_' ::=
+%R  | l : T                            :: :: rb1
+%R  | l : T , Trb                      :: :: rb2         
+
+t :: 't_' ::=                                                      {{ com  term  }}
+  | x                                :: :: Var                       {{ com variable }}         
+  | \ x : T . t                      :: :: Lam  (+ bind x in t +)    {{ com abstraction }}      
+                                       {{ tex \lambda [[x]] \mathord{[[:]]} [[T]]. \, [[t]] }}
+  | t t'                             :: :: App                       {{ com application }}      
+  | \ X <: T . t                     :: :: TLam (+ bind X in t +)    {{ com type abstraction}} 
+                                       {{ tex \Lambda [[X]] \mathord{[[<:]]} [[T]]. \, [[t]] }}
+  | t [ T ]                          :: :: TApp                      {{ com type application}} 
+  | ( t )                            :: S :: paren {{ ichl [[t]] }} 
+  | [ x |-> t ] t'                   :: M :: tsub  {{ ichl ( tsubst_t [[t]] [[x]] [[t']] ) }}
+  | [ X |-> T ] t                    :: M :: Tsub  {{ ichl ( Tsubst_t [[T]] [[X]] [[t]] ) }} 
+%  | E [ t ]                          :: M :: ctx 
+
+
+v :: 'v_' ::= {{ com  values  }}
+  | \ x : T . t                      :: :: Lam  (+ bind x in t +)  {{ com abstraction }}      
+  | \ X <: T . t                     :: :: TLam (+ bind X in t +)  {{ com type abstraction }} 
+                                       {{ tex \Lambda [[X]] [[<:]] [[T]]. \, [[t]] }}
+% {{ com record }}
+%  E :: E_ ::= 
+%        | __                                      :: :: hole
+%        | E t                                     :: :: app_fun
+%        | v E                                     :: :: app_arg
+%        | E [ T ]                                 :: :: type_fun
+%r       | E . l                                   :: :: projection           
+%r%      | { l1 = v1 , .. , lm = vm , l = E , l1' = t1' , .. , ln' = tn' } :: :: record
+%r       | let p = E in t2                         :: :: let_binding
+
+G {{ tex \Gamma }}, D {{ tex \Delta }} :: 'G_' ::= {{ com type environment }}
+  | empty                            ::   :: empty       
+  | G , X <: T                       ::   :: type        
+  | G , x : T                        ::    :: term
+%r  | G , G'                           :: M :: comma    {{ ichl TODO }}
+
+
+terminals :: terminals_ ::=
+  |  \                     ::   :: lambda    {{ tex  \lambda }}
+  |  ->                    ::   :: arrow     {{ tex  \rightarrow }}
+%  |  __                    ::   :: hole      {{ tex \_ }}
+  | |-                     ::   :: turnstile {{ tex \vdash }}
+  | -->                    ::   :: red       {{ tex \longrightarrow }}
+  | Forall                 ::   :: forall    {{ tex \forall }}
+  | <:                     ::   :: subtype   {{ tex <: }}
+  | |->                    ::   :: mapsto    {{ tex \mapsto }}
+  | =                      ::   :: eq        {{ tex \!\! = \!\! }}
+
+formula :: formula_ ::=          
+  | judgement              :: :: judgement
+% | G = G'                 :: :: Geq     {{ ichl [[G]] = [[G']] }}
+  | x = x'                 :: :: xeq     {{ ichl [[x]] = [[x']]  }}
+  | X = X'                 :: :: Xeq     {{ ichl [[X]] = [[X']]  }}
+  | ( formula )            :: :: paren   {{ ichl ( [[formula]] ) }}
+  | not formula            :: :: not     {{ isa Not( [[formula]] ) }}
+                                         {{ coq not( [[formula]] ) }}
+                                         {{ lem not( [[formula]] ) }}
+                                         {{ hol ~( [[formula]] ) }}
+                                         {{ tex \neg [[ formula]] }}
+%  | x isin dom ( G )      :: :: xin    {{ isa ? T. ([[x]],T,[[G]]):tin }} 
+%                                         {{ tex [[x]] \in [[dom]]([[G]]) }}
+%  | X isin dom ( G )      :: :: Xin    {{ isa ? T. ([[X]],T,[[G]]):Tin }}
+%                                         {{ tex [[X]] \in [[dom]]([[G]]) }}
+
+
+
+ 
+% would be nice to write the above as  {{ isa ?[[T]]. [[X<:T isin G]] }}
+
+%formulalist :: formulalist_ ::=          
+   | formula1 ... formulan   :: :: dots
+
+
+subrules
+  v <:: t
+
+%  E   _:: t :: t
+
+
+substitutions
+  single   t x :: tsubst    
+  single   T X :: Tsubst    
+  multiple t x :: m_t_subst 
+  multiple T X :: m_T_subst 
+
+freevars
+  T X :: ftv 
+  t x :: fv
+
+
+
+
+defns
+Judgement_in :: '' ::=
+
+
+% defn
+% x isin dom ( G ) :: :: xinG :: xinG_ {{ tex [[x]] \in [[dom]]([[G]])}} by 
+% 
+% x:T isin G
+% ---------------- :: 1
+% x isin dom(G)
+% 
+% 
+% defn
+% X  isin dom ( G ) :: :: XinG :: XinG_  {{ tex [[X]] \in [[dom]]([[G]]) }} by
+% 
+% X<:U isin G
+% ---------------- :: 1
+% X isin dom(G)
+
+defn
+x isin dom ( G ) :: :: xinG :: xinG_ {{ tex [[x]] \in [[dom]]([[G]])}} by 
+
+-------------- :: 1
+x isin dom(G,x:T)
+
+x isin dom(G)
+---------------- :: 2
+x isin dom(G,X'<:U')
+
+x isin dom(G)
+--------------- :: 3
+x isin dom(G,x':T')
+
+
+defn
+X  isin dom ( G ) :: :: XinG :: XinG_  {{ tex [[X]] \in [[dom]]([[G]]) }} by
+
+------------- :: 1
+X isin dom(G,X<:U)
+
+X isin dom(G)
+--------------- :: 2
+X isin dom(G,X'<:U')
+
+X isin dom(G)
+-------------- :: 3
+X isin dom(G,x':T')
+
+
+defn
+x : T isin G :: :: tin :: tin_ {{ tex [[x]] [[:]] [[T]] \in [[G]] }} by
+
+---------------- :: 1
+x:T isin G,x:T
+
+x:T isin G
+------------------ :: 2
+x:T isin G,X'<:U'
+
+x:T isin G
+----------------- :: 3
+x:T isin G,x':T'
+
+
+
+
+defn
+X <: U isin G :: :: Tin :: Tin_ {{ tex [[X]] [[<:]] [[U]] \in [[G]] }} by
+
+---------------- :: 1
+X<:U isin G,X<:U
+
+X<:U isin G
+------------------ :: 2
+X<:U isin G,X'<:U'
+
+X<:U isin G
+----------------- :: 3
+X<:U isin G,x':T'
+
+
+defns
+Jtype :: '' ::=
+
+defn
+G |- ok :: :: Gok :: Gok_ {{ com type environment [[G]] is well-formed }} by
+
+----------- :: 1
+empty |- ok
+
+G |- T 
+not(x isin dom(G))
+------------------ :: 2
+G,x:T |- ok
+
+G |- T
+not(X isin dom(G))
+------------------- :: 3
+G,X<:T |- ok
+
+
+defn
+G |- T :: :: GT :: GT_ {{ com type [[T]] is well-formed in type environment [[G]] }} by
+
+G |- ok
+X<:U isin G
+-------------- :: Var
+G |- X 
+
+G |- ok
+-------------- :: Top
+G |- Top
+
+G |- T
+G |- T'
+-------------- :: Fun
+G |- T->T'
+
+G,X<:T |- T'
+------------------ :: Forall
+G |- Forall X<:T.T'
+
+
+
+
+defn
+G |- S <: T ::  :: SA :: SA_  {{ com [[S]] is a subtype of [[T]] }} by 
+
+G |- ok
+---------- :: Top
+G |- S <: Top
+
+G |- ok
+---------- :: Refl_TVar
+G |- X <: X
+
+%G = G1, X<:U , G2
+X<:U isin G
+G |- U <: T
+------------- :: Trans_TVar
+G |- X <: T
+
+G |- T1<:S1
+G |- S2<:T2
+---------------------- :: Arrow 
+G |- S1->S2 <: T1->T2
+
+G |- T1<:S1
+G,X<:T1 |- S2<:T2
+--------------------------------------- :: All
+G |- Forall X<:S1.S2 <: Forall X<:T1.T2
+
+
+
+defn
+G |- t : T ::  :: Ty :: Ty_  {{ com term [[t]] has type [[T]] }} by 
+
+G |- ok
+x:T isin G
+-------------- :: Var
+G |- x:T
+
+G,x:T1 |- t2:T2
+----------------------- :: Abs
+G |- \x:T1.t2 : T1->T2
+
+G|- t1:T11->T12
+G|- t2:T11
+-------------------- :: App
+G|- t1 t2 : T12
+
+G,X<:T1 |- t2:T2
+-------------------------------- :: TAbs
+G|- \X<:T1.t2 : Forall X<:T1.T2
+
+G|- t1 : Forall X<:T11.T12
+G|- T2 <: T11
+--------------------------- :: TApp
+G|- t1[T2] : [X|->T2]T12
+
+
+
+
+
+G|- t:S
+G|- S<:T
+--------- :: Sub
+G|- t:T
+
+
+
+
+defns
+Jop :: '' ::=
+
+
+defn
+t1 --> t2 ::  :: reduce :: reduce_  {{ com [[t1]] reduces to [[t2]] }} by 
+
+-----------------------------------------  :: AppAbs
+(\x:T11.t12) v2 -->  :t_tsub: [x|->v2]t12
+
+-----------------------------------  :: TappTabs
+(\X<:T11.t12) [T2] -->  [X|->T2]t12
+
+
+
+%t1 --> t1'
+%------------------- :: Ctx
+%E[t1] --> E[t1']
+
+t1 --> t1'
+---------------- :: Ctx_app_fun
+t1 t --> t1' t
+
+t1 --> t1'
+---------------- :: Ctx_app_arg
+v t1 --> v t1'
+
+t1 --> t1'
+---------------- :: Ctx_type_fun
+t1[T] --> t1'[T]
+
+
+

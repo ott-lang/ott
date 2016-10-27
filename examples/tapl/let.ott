@@ -1,0 +1,30 @@
+grammar
+t :: Tm ::=                                        {{ com terms: }}
+  | let x = t in t'                   ::   :: Let (+ bind x in t' +)     {{ com let binding }}
+
+
+defns 
+Jop :: '' ::= 
+
+defn 
+t --> t' :: :: red :: E_ {{ com Evaluation }} by
+
+----------------------------- :: LetV
+let x=v1 in t2 --> [x|->v1]t2 
+
+t1 --> t1'
+---------------------------------- :: Let
+let x=t1 in t2 --> let x=t1' in t2
+
+
+defns
+
+Jtype :: '' ::= 
+
+defn
+G |- t : T :: :: typing :: T_ {{ com Typing }} by
+
+G |- t1:T1
+G,x:T1 |- t2:T2
+------------------------ :: Let
+G |- let x=t1 in t2 : T2

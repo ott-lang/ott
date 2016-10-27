@@ -1,0 +1,14 @@
+grammar
+t :: Tm ::=                                        {{ com terms: }}
+  | inert T                       ::   :: Inert      {{ com inert element of type [[T]] }}
+                                                     {{ tex [[inert]]_{[[T]]} }}
+
+defns
+Jtype :: '' ::= 
+
+defn
+G |- t : T :: :: typing :: T_ {{ com Typing }} by
+
+
+---------------- :: Inert
+G |- inert T : T

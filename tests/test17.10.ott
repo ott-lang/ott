@@ -1,0 +1,104 @@
+% test17.10.ott  sundry list form test
+
+metavar typevar, X ::=
+ {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ lex Alphanum }}  
+ {{ tex \mathit{[[typevar]]} }} {{ com  type variable  }}  
+ {{ isavar ''[[typevar]]'' }} {{ texvar \mathrm{[[typevar]]} }} 
+
+metavar termvar, x ::=
+ {{ isa string }} {{ coq nat }} {{ hol string }}  {{ coq-equality }} {{ lex alphanum }}  
+ {{ tex \mathit{[[termvar]]} }} {{ com  term variable  }} 
+ {{ isavar ''[[termvar]]'' }} {{ texvar \mathrm{[[termvar]]} }} 
+
+metavar label, l, k ::=
+ {{ isa string }} {{ coq nat }} {{ hol string }} {{ lex alphanum }}  {{ tex \mathit{[[label]]} }} 
+ {{ com  field label  }}
+
+indexvar index, i, j, n, m  ::= {{ isa nat }} {{ coq nat }} {{ hol num }} {{ lex numeral }}
+  {{ com indices }}
+
+
+grammar
+
+T {{ hol Typ }}, S, U :: 'T_' ::=                    {{ com type  }}
+  | X                                :: :: Var          {{ com type variable }}  
+  | { l1 : T1 , .. , ln : Tn }      :: :: Rec           {{ com record }}           
+
+t :: 't_' ::=                                                      {{ com  term  }}
+  | x                                     :: :: Var                 {{ com variable }}         
+%  | { l1 = t1 ,  .. , ln = tn }           :: :: Rec             {{ com record  --- dots }}
+%  | { </ li = ti // i /> }                :: :: Rec_comp_none   {{ com record --- comp }}
+%  | { </ li = ti // , // i /> }           :: :: Rec_comp_some   {{ com record --- comp with terminal }}
+%  | { </ li = ti // i IN n /> }           :: :: Rec_comp_u_none {{ com record --- compu }} 
+%  | { </ li = ti // , // i IN n /> }      :: :: Rec_comp_u_some {{ com record --- compu with terminal }} 
+%  | { </ li = ti // i IN 1 .. n /> }      :: :: Rec_comp_lu_none{{ com record --- complu }}  
+  | { </ li = ti // , // i IN 1 .. n /> } :: :: Rec_comp_lu_some {{ com record --- complu with terminal }}  
+  | t . l                             :: :: Proj                     {{ com projection }} 
+
+
+G {{ tex \Gamma }}, D {{ tex \Delta }} :: 'G_' ::= {{ com type environment }}
+  | empty                            ::   :: empty       
+  | G , X <: T                       ::   :: type        
+  | G , x : T                        ::    :: term
+  | G , G'                           :: M :: comma {{ ich TODO }} {{ ocaml TODO }}
+  | G1 , .. , Gn                     :: M :: dots {{ ich TODO }} {{ ocaml TODO }}
+
+
+formula :: formula_ ::=          
+  | judgement              :: :: judgement
+  | formula1 .. formulan   :: :: dots
+% {{ isa (List.list_all (\<lambda> b . b) ( [[ formula1 .. formulan ]] ) ) }}
+
+terminals :: terminals_ ::=
+  | |-                     ::   :: turnstile {{ tex \vdash }}
+  | <:                     ::   :: subtype   {{ tex <: }}
+
+defns
+  Jtype :: '' ::= 
+
+defn
+G |- t : T ::  :: Ty :: Ty_  {{ com term [[t]] has type [[T]] }} by 
+
+ G|-t1:T1 .. G|-tn:Tn
+ ------------------------------------- :: Rcd_dotform
+ G|- {l1=t1,..,ln=tn}:{l1:T1,..,ln:Tn}
+ 
+ G|- t:{l1:T1,..,ln:Tn}
+ ----------------------- :: Proj_dotform
+ G|- t.lj : Tj
+
+
+ </ G|-ti:Ti //i/>
+ -------------------------------------- :: Rcd_comp
+ G|- { </li=ti//i/> }:{ </ li:Ti //i/> }
+
+ G|- t: { </ li:Ti // i/> }
+ -------------------------------------- :: Proj_comp
+ G|- t.lj : Tj
+
+ </ G|-ti:Ti //i IN n/>
+ -------------------------------------------------- :: Rcd_comp_u
+ G|- { </li=ti//i IN n/> }:{ </ li:Ti //i IN n/> }
+
+ G|- t: { </ li:Ti // i IN n/> }
+ -------------------------------------------------- :: Proj_comp_u
+ G|- t.lj : Tj
+
+ </ G|-ti:Ti //i IN 1..n/>
+ ------------------------------------------------------- :: Rcd_comp_lu
+ G|- { </li=ti//i IN 1..n/> }:{ </ li:Ti //i IN 1..n/> }
+
+ G|- t: { </ li:Ti // i IN 1 .. n/> }
+ ------------------------------------------------------- :: Proj_comp_lu
+ G|- t.lj : Tj
+
+ G|- t:{l0:T0,..,ln-1:Tn-1}
+ ----------------------- :: Proj_dotform_minus
+ G|- t.lj : Tj
+
+ G|- t: { </ li:Ti // i IN 0 .. n-1/> }
+ ------------------------------------------------------- :: Proj_comp_lu_minus
+ G|- t.lj : Tj
+
+
+

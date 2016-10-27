@@ -1,0 +1,12 @@
+grammar
+T {{ hol Typ }}, S, U :: Ty ::=                      {{ com types: }}
+  | Top                          ::   :: Top           {{ com maximum type }}
+
+defns
+Jtype :: '' ::= 
+
+defn
+T1 <: T2 :: :: subtyping :: S_ {{ com Subtyping }} by
+
+--------- :: Top
+S <: Top

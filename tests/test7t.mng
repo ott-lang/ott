@@ -1,0 +1,156 @@
+% -*-LaTeX-*-
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{supertabular}
+\usepackage{geometry}
+\geometry{%
+a4paper,
+% letterpaper,
+dvips,
+twoside,
+left=22.5mm, right=22.5mm,
+top=20mm,  bottom=30mm,
+}
+\usepackage{color}
+\usepackage{out}
+\usepackage{parskip}
+\begin{document}
+\title{\texttt{test7t.mng}: A Test of Ott \TeX{} Filtering Workflow}
+\author{\texttt{ott}}
+\maketitle
+
+This illustrates support for using Ott as a munger. 
+There are command-line argument \verb+-tex_wrap+ and \verb+-tex_filter+.  
+Typical usage would be something like this:
+\begin{verbatim}
+test7afilter: tests/test7b.ott tests/test7t.mng
+        bin/ott  -tex out.sty 						\
+               -tex_show_meta false                                     \
+               -tex_wrap false                                          \
+               -tex_name_prefix	ott					\
+               -tex_filter tests/test7t.mng out.tex                  \
+        tests/test7b.ott 			      		\
+        && ($(LATEX) out; $(DVIPS) out -o)
+\end{verbatim}
+
+The \verb+-tex_wrap false+ turns off output of the default \TeX{}
+document preamble, so the generated file \verb+out.sty+ just contains
+\TeX{} definitions.  The \verb+-tex_filter+ argument takes two
+filenames, a source and a destination.  It filters the source file,
+(roughly) replacing any string found within \verb+[[[+ \verb+]]]+ by
+the tex pretty-print of its parse.  This parsing is done w.r.t.~a new generated nonterminal 
+\verb+user_syntax+ which is a union of all the user's grammar.  
+
+At present (unlike the previous munger) munged strings are not automatically
+put within \verb+$+ \verb+$+, and there is no analogue of \verb+<[+
+\verb+]>+.  We probably want to tune up the tex to make it more
+convenient, e.g.~control whether 
+definitions are in centering environments (or not), etc.
+
+The lexing pays some attention to \TeX{} comments, but may not get it
+right.  It turns any sequence of \verb+[+ (resp. of \verb+]+) of
+length $n+1$ for $n>2$ into a literal sequence of length $n$.
+
+This file shows a definition of F$_{<:}$.
+
+\newpage
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Extracts -- What You See}
+We can TeX-typeset terms of the language, e.g.
+\[ [[ (\X<:Top. \x:X.x) [Top->Top] ]]\]
+
+\[ [[ :user_syntax__t: :concrete:  zz ]]\]
+and similarly judgements etc, e.g.
+\[ [[G |- t : T ]] \]
+
+Here is an extract of the syntax:
+
+\ottgrammartabular{\ottt\ottafterlastrule}
+
+and a single semantic rule:
+
+\[\ottdruletinXXTwo{}\]
+
+and a judgement definition:
+
+\ottdefnSA
+
+(can also include a `defns' collection of judgements).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+\section{Extracts -- What I Typed}
+\begin{verbatim}
+We can TeX-typeset terms of the language, e.g.
+\[ [[[ (\Z<:Top. \z:Z.z) [Top->Top] ]]]\]
+and similarly judgements etc, e.g.
+\[ [[[G |- t : T ]]] \]
+
+Here is an extract of the syntax:
+
+\ottgrammartabular{\ottt}
+
+and a single semantic rule:
+
+\[\ottdruletinXXTwo{}\]
+
+and a judgement definition:
+
+\ottdefnSA
+
+(can also include a `defns' collection of judgements).
+\end{verbatim}
+
+\newpage
+\section{Full Definition}
+\ottmetavars\\[0pt]
+\ottgrammar\\[0pt]
+\ottdefnss
+
+\end{document}
+

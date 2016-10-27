@@ -1,0 +1,24 @@
+grammar
+T {{ hol Typ }}, S, U :: Ty ::=                     {{ com types: }}
+  | Nat                          ::   :: Nat          {{ com type of natural numbers }}
+
+defns
+Jtype :: '' ::= 
+
+defn
+G |- t : T :: :: typing :: T_ {{ com Typing }} by
+
+------------------ :: Zero
+G |- 0 : Nat
+
+G |- t1 : Nat
+------------------ :: Succ
+G |- succ t1 : Nat
+
+G |- t1 : Nat
+------------------ :: Pred
+G |- pred t1 : Nat
+
+G |- t1 : Nat
+--------------------- :: IsZero
+G |- iszero t1 : Bool

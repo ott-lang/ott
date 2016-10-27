@@ -1,0 +1,52 @@
+% The TAPL E-Tuple rule uses a slightly different indexing form, 
+% {li=vi ^{i IN 1..j-1}, lj=tj, lk=tk^{k IN j+1..n}
+% which ott does not support, so that rule is slightly rephrased here.
+
+grammar
+T {{ hol Typ }}, S, U :: Ty ::=                             {{ com types: }}
+  | { </ Ti // , // i IN 1 .. n /> }      ::   :: Tuple       {{ com tuple type }}
+
+t :: Tm ::=                                        {{ com terms: }}
+  | { </ ti // , // i IN 1 .. n /> }      ::   :: Tuple       {{ com tuple }}
+  | t . i                                 ::   :: ProjTp        {{ com projection }}
+
+v :: Va ::=                                        {{ com values: }}
+  | { </ vi // , // i IN 1 .. n /> }      ::   :: Tuple       {{ com tuple value }}
+
+subrules
+ v <:: t
+
+defns 
+Jop :: '' ::= 
+
+defn 
+t --> t' :: :: red :: E_ {{ com Evaluation }} by
+
+j INDEXES </vi//i IN 1..n/>
+---------------------------------- :: ProjTuple
+{ </vi//i IN 1..n/> }.j --> vj
+
+t1 --> t1'
+-------------- :: ProjTp
+t1.i --> t1'.i
+
+t --> t'
+------------------------------------------------------------------------ :: Tuple
+{ </vi//i IN 1..m/>,t,</tj//j IN 1..n/>} --> { </vi//i IN 1..m/>,t',</tj//j IN 1..n/>}
+
+
+
+defns
+Jtype :: '' ::= 
+
+defn
+G |- t : T :: :: typing :: T_ {{ com Typing }} by
+
+</ G|-ti:Ti // i IN 1..n />
+----------------------------------------------------------- :: Tuple
+G|- { </ ti // i IN 1..n /> }:{ </ Ti // i IN 1..n /> }
+
+G|- t1:{ </ Ti // i IN 1..n /> }
+j INDEXES </Ti// i IN 1..n />
+----------------------------------- :: ProjTp
+G|- t1.j : Tj

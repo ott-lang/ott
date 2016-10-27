@@ -1,0 +1,31 @@
+% TAPL also introduces a derived form
+% letrec x:T1=t1 in t2  =def=  let x = fix(\x:T1.t2) in t2
+
+grammar
+t :: Tm ::=                                        {{ com terms: }}
+  | fix t                         ::   :: Fix        {{ com fixed point of [[t]] }}
+
+
+defns 
+Jop :: '' ::= 
+
+defn 
+t --> t' :: :: red :: E_ {{ com Evaluation }} by
+
+------------------------------------------- :: FixBeta
+fix (\x:T1.t2) --> [x|->(fix (\x:T1.t2))]t2
+
+
+t1-->t1'
+------------------ :: Fix
+fix t1 --> fix t1'
+
+defns
+Jtype :: '' ::= 
+
+defn
+G |- t : T :: :: typing :: T_ {{ com Typing }} by
+
+G |- t1:T1->T1
+-------------- :: Fix
+G |- fix t1:T1

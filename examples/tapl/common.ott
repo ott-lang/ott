@@ -1,0 +1,32 @@
+embed
+{{ tex-preamble
+\renewcommand{\ottnt}[1]{\mathsf{#1} }
+\renewcommand{\ottkw}[1]{\textsf{#1} }
+\renewcommand{\ottcom}[1]{\textit{#1} }
+\renewcommand{\ottcomplu}[5]{#1\mbox{}^{\,#2\in #3 #4 #5} }
+}}
+
+{{ coq
+Require Import ott_list. (* for [all_distinct] *)
+}}
+
+
+grammar
+t :: Tm ::=                                       {{ com terms: }}
+  | ( t )                         :: M :: Paren     {{ ich [[t]] }}
+
+terminals :: terminals_ ::=
+  | -->                        ::   :: longrightarrow {{ tex \longrightarrow }}
+  | ->                         ::   :: rightarrow     {{ tex \rightarrow }}
+  | =>                         ::   :: Rightarrow     {{ tex \Rightarrow }}
+  | \                          ::   :: lambda         {{ tex \lambda }}
+  | |->                        ::   :: mapsto         {{ tex \mapsto }}
+  | |-                         ::   :: vdash          {{ tex \vdash }}
+  | empty                      ::   :: varnothing     {{ tex \varnothing }}
+  | *                          ::   :: times          {{ tex \times }}
+  | <:                         ::   :: subtype        {{ tex <: }}
+  | <                          ::   :: langle         {{ tex \langle }}
+  | >                          ::   :: rangle         {{ tex \rangle }}
+
+formula :: 'formula_' ::=          
+  | judgement           ::   :: judgement

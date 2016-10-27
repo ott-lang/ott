@@ -1,0 +1,240 @@
+metavar value_name, x ::=
+  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ ocaml int }}
+  {{ lex alphanum }} 
+metavar ident ::=
+  {{ isa string }} {{ coq nat }} {{ hol string }} {{ ocaml int }}
+  {{ lex Alphanum }} 
+metavar integer_literal ::=
+  {{ isa int }} {{ coq nat }} {{ hol num }} {{ ocaml int }}
+  {{ lex  numeral }}
+indexvar index, i, j, n, m ::=
+  {{ isa nat }} {{ coq nat }}  {{ hol num }} {{ ocaml int }}
+  {{ lex numeral }}
+% the lex specifications above are not accurate - negative numerals, especially, 
+% should be supported
+
+grammar
+typeconstr :: TC_ ::=
+  | unit                               ::   :: unit
+  | bool                               ::   :: bool
+  | int                                ::   :: int
+
+typvar, tv :: TV_ ::= {{ coq-equality decide equality. apply eq_value_name. }}
+  | ' ident                            ::   :: ident
+
+typexpr, t :: TE_ ::=
+  | typvar                             ::   :: var
+  | typexpr -> typexpr'                ::   :: arrow
+  | typeconstr                         ::   :: constr0
+  | ( typexpr )                        :: S :: paren {{ ich [[typexpr]] }} {{ ocaml [[typexpr]] }}
+
+typscheme, ts :: TS_ ::=  
+  | ( typvar1 , .. , typvarn ) typexpr ::   :: ts  (+ bind typvar1 .. typvarn in typexpr +) 
+
+  | generalise ( G , t )               :: M :: ts3 
+    {{ isa (TS_ts (List.remdups (list_minus (ftv_typexpr [[t]]) (ftv_G [[G]]))) [[t]]) }}
+    {{ coq (TS_ts (remove_duplicates (make_list_typvar (list_minus eq_typvar (ftv_typexpr [[t]]) (ftv_G [[G]])))) [[t]]) }} 
+    {{ hol (TS_ts (remove_duplicates (list_minus (ftv_typexpr [[t]]) (ftv_G [[G]]))) [[t]]) }}
+    {{ ocaml TODO }}
+
+%TODO: it might be nicer to have ftv remove duplicates, or indeed
+%return a set
+
+constant, c :: CONST_ ::=
+  | integer_literal                    ::   :: int
+  | false                              ::   :: false
+  | true                               ::   :: true
+  | ()                                 ::   :: unit
+  | (&&)                               ::   :: and
+  | not                                ::   :: not
+
+expr, e :: E_ ::=
+  | value_name                         ::   :: ident
+  | constant                           ::   :: constant
+  | expr expr'                         ::   :: apply
+  | function value_name -> expr        ::   :: function (+ bind value_name in expr +)
+  | let value_name = expr in expr'     ::   :: let      (+ bind value_name in expr' +)
+  | ( expr )                           :: S :: paren {{ ich [[expr]] }} {{ ocaml [[expr]] }}
+  | { v / x } e                        :: M :: subst 
+    {{ isa subst_expr [[v]] [[x]] [[e]] }}
+    {{ ch (subst_expr [[v]] [[x]] [[e]]) }}
+    {{ ocaml (subst_expr [[v]] [[x]] [[e]]) }}
+
+value, v :: V_ ::=
+  | constant                           ::   :: constant
+  | function value_name -> expr        ::   :: function
+
+G {{ tex \Gamma }} :: G_ ::=
+  | empty                              ::   :: em
+  | G , value_name : typscheme         ::   :: vn
+
+formula :: formula_ ::=
+  | judgement                          ::   :: judgement
+  | not ( formula )                    ::   :: not  
+        {{ isa Not([[formula]]) }}
+        {{ coq not([[formula]]) }}
+        {{ hol ~([[formula]]) }}
+        {{ ocaml TODO }}
+
+  | typscheme > t                      ::   :: gen 
+        {{ isa ? typvars . ? typexpr . ? s . 
+             [[typscheme]] = TS_ts typvars typexpr 
+             & typvars=List.map fst s 
+             & tsubst_typexpr s typexpr = [[t]] }}
+        {{ coq (exists tvs, exists txp, exists s, 
+             [[typscheme]] = TS_ts tvs txp 
+             /\ tvs = make_list_typvar
+                    (List.map (fun (x:typvar*typexpr) => match x with (x1,x2) => x1 end) 
+                              s)  
+             /\ tsubst_typexpr s txp = [[t]]) }}
+        {{ hol ? typvars typexpr s . 
+             ([[typscheme]] = TS_ts typvars typexpr )
+             /\ (typvars=MAP FST s )
+             /\ (tsubst_typexpr s typexpr = [[t]]) }}
+        {{ ocaml TODO }}
+
+  | typscheme = typscheme'             ::   :: eqt 
+        {{ ich [[typscheme]]=[[typscheme']] }} {{ ocaml TODO }}
+  | value_name = value_name'           ::   :: eqv 
+        {{ ich [[value_name]]=[[value_name']] }} {{ ocaml TODO }}
+
+terminals :: terminals_ ::=
+  |  ->                                ::   :: arrow      {{ tex \rightarrow }}
+  |  function                          ::   :: function   {{ tex \textbf{function} }}
+  | |-                                 ::   :: turnstile  {{ tex \vdash }}
+  | -->                                ::   :: red        {{ tex \longrightarrow }}
+  | '{'                                ::   :: leftbrace  {{ tex \{ }}
+  | '}'                                ::   :: rightbrace {{ tex \} }}
+
+
+subrules
+  v <:: expr     
+
+substitutions
+  single   expr value_name :: subst  
+  multiple typexpr typvar  :: tsubst 
+
+freevars
+  typexpr typvar :: ftv
+
+embed
+  {{ coq
+Fixpoint remove_duplicates (l:list_typvar) : list_typvar :=
+  match l with
+  | Nil_list_typvar => Nil_list_typvar
+  | Cons_list_typvar h t => 
+    if (list_mem eq_typvar h (unmake_list_typvar t))  
+    then remove_duplicates t
+    else Cons_list_typvar h (remove_duplicates t)
+end. }}
+
+  {{ hol
+val _ = Define `
+  (remove_duplicates [] = []) /\
+  (remove_duplicates (x::xs) = if (MEM x xs) then remove_duplicates xs 
+                               else x::(remove_duplicates xs))
+`; }}
+
+  
+defns 
+Jtype :: '' ::= 
+
+defn 
+value_name : typscheme in G  :: :: VTSin :: VTSin_ by
+
+--------------------------------------------------- :: vn1
+value_name : typscheme in G, value_name:typscheme
+
+value_name : typscheme in G
+not(value_name = value_name')
+--------------------------------------------------- :: vn2
+value_name : typscheme in G, value_name':typscheme'
+
+
+
+defn
+G |- constant : t :: :: G_constant :: constant_ by
+
+-------------------------- :: int
+G |- integer_literal : int          
+
+----------------- :: false
+G |- false : bool                                             
+
+---------------- :: true
+G |- true : bool                                              
+
+-------------- :: unit
+G |- () : unit
+
+------------------------------------ :: and
+G |- (&&) : bool -> ( bool -> bool )
+
+----------------------- :: not
+G |- not : bool -> bool
+
+
+defn 
+G |- e : t :: :: Get :: Get_ by
+
+x:typscheme in G
+typscheme > t   
+---------------- :: value_name
+G |- x:t
+
+:G_constant: G |- constant : t
+------------------------------ :: constant
+G |- constant : t
+
+G |- e : t1->t2
+G |- e' : t1 
+---------------- :: apply
+G |- e e' : t2
+
+G,x1: ( ) t1 |- e : t
+--------------------------- I :: lambda
+G |- function x1->e : t1->t
+
+G |- e : t
+G,x:typscheme |- e':t'
+typscheme = generalise(G,t) 
+--------------------------- :: let
+G |- let x=e in e' : t'
+
+
+defns 
+Jop :: JO_ ::= 
+
+defn 
+e --> e' :: :: red :: red_ by
+
+------------------------------- :: app
+(function x->e)  v --> {v/x}  e
+
+--------------------------- :: let
+let x = v in e -->  {v/x} e
+
+e --> e'
+--------------  :: context_app1
+e e1 --> e' e1
+
+e --> e'
+------------  :: context_app2
+v e --> v e'
+
+e --> e'
+-------------------------------- :: context_let
+let x=e in e1 --> let x=e' in e1
+
+------------------ :: not_1
+not true --> false
+
+------------------ :: not_2
+not false --> true
+
+------------------- :: and_1
+((&&) true) e --> e
+
+------------------------ :: and_2
+((&&) false) e --> false
+

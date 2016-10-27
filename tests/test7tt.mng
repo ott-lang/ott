@@ -1,0 +1,27 @@
+We can TeX-typeset symbolic terms of the language, e.g.
+\[ [[ (\X<:Top. \x:X.x) [Top->Top] ]]\]
+and concrete terms
+\[ [[ :concrete: \Z1<:Top. \x:Z1.x ]]\]
+and similarly judgements etc, e.g.
+\[ [[G |- t : T ]] \]
+   
+Here is an extract of the syntax:
+
+\testSevengrammartabular{\testSevent\testSevenafterlastrule}
+
+and a single semantic rule:
+
+\[\testSevendruletinXXTwo{}\]
+
+and a judgement definition:
+
+\testSevendefnSA
+
+One can also include a `defns' collection of judgements, or the complete definition.
+% \section{Full Definition}
+% \testSevenmetavars\\[0pt]
+% \testSevengrammar\\[0pt]
+% \testSevendefnss
+%
+% \testSevenall
+

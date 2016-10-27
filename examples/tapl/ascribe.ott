@@ -1,0 +1,29 @@
+
+grammar
+t :: Tm ::=                                        {{ com terms: }}
+  | t as T                        ::   :: Ascribe    {{ com ascription }}
+
+
+defns 
+Jop :: '' ::= 
+
+defn 
+t --> t' :: :: red :: E_ {{ com Evaluation }} by
+
+-------------- :: Ascribe
+v1 as T --> v1
+
+t1 --> t1'
+-------------------- :: Ascribe1
+t1 as T --> t1' as T
+
+
+defns
+Jtype :: '' ::= 
+
+defn
+G |- t : T :: :: typing :: T_ {{ com Typing }} by
+
+G |- t1:T
+-------------- :: Ascribe
+G |- t1 as T:T

@@ -1,0 +1,136 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Base for Lightweight Java (LJ).                                             %
+% Copyright (c) 2007, Rok Strnisa [Rok.Strnisa@cl.cam.ac.uk]                  %
+% All rights reserved.                                                        %
+%                                                                             %
+% Redistribution and use in source and binary forms, with or without          %
+% modification, are permitted provided that the following conditions are met: %
+%                                                                             %
+%   - Redistributions of source code must retain the above copyright notice,  %
+%     this list of conditions and the following disclaimer.                   %
+%                                                                             %
+%   - Redistributions in binary form must reproduce the above copyright       %
+%     notice, this list of conditions and the following disclaimer in the     %
+%     documentation and/or other materials provided with the distribution.    %
+%                                                                             %
+%   - Neither the name of the Computer Laboratory, University of Cambridge    %
+%     nor the names of its contributors may be used to endorse or promote     %
+%     products derived from this software without specific prior written      %
+%     permission.                                                             %
+%                                                                             %
+% THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" %
+% AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   %
+% IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  %
+% ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    %
+% LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR         %
+% CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF        %
+% SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    %
+% INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN     %
+% CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)     %
+% ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  %
+% POSSIBILITY OF SUCH DAMAGE.                                                 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+grammar
+%%% FULLY QUALIFIED NAME %%%
+  fqn :: fqn_ ::=  {{ com fully qualified name }}
+   |  dcl  :: :: def  {{ com def. }}
+
+%%% CLASS DEFINITION %%%
+  cld :: cld_ ::=  {{ com class }}
+   |  class dcl extends cl { fds meth_defs }  :: :: def
+           {{ com def. }}
+
+%%% CLASSNAME %%%
+defns
+classname_def :: '' ::=
+
+defn
+classname ( cld ) = dcl :: :: classname :: '' {{ com get name of class }} by
+
+----------------------------------------------------- :: classname
+classname(class dcl extends cl {fds meth_defs}) = dcl
+
+%%% SUPERCLASS %%%
+defns
+superclass_def :: '' ::=
+
+defn
+superclass ( cld ) = cl :: :: superclass :: '' {{ com get name of superclass }} by
+
+----------------------------------------------------- :: superclass
+superclass(class dcl extends cl {fds meth_defs}) = cl
+
+%%% CLASSFIELDS %%%
+defns
+classfields_def :: '' ::=
+
+defn
+classfields ( cld ) = fds :: :: classfields :: '' {{ com get class fields }} by
+
+------------------------------------------------------- :: classfields
+classfields(class dcl extends cl {fds meth_defs}) = fds
+
+%%% CLASSMETHODS %%%
+defns
+classmethods_def :: '' ::=
+
+defn
+classmethods ( cld ) = meth_defs :: :: classmethods :: '' {{ com get class methods }} by
+
+-------------------------------------------------------------- :: classmethods
+classmethods(class dcl extends cl {fds meth_defs}) = meth_defs
+
+%%% METHODNAME %%%
+defns
+methodname_def :: '' ::=
+
+%%% FIND TYPE %%%
+defns
+find_type_def :: '' ::=
+
+defn
+find_type ( P , ctx , cl ) = ty_opt :: :: find_type :: ft_
+           {{ com type lookup }} by
+
+find_cld(P, ctx, dcl) = null
+------------------------------ :: null
+find_type (P, ctx, dcl) = null
+
+find_cld(P, ctx, dcl) = (ctx', cld)
+----------------------------------- :: dcl
+find_type (P, ctx, dcl) = ctx'.dcl
+
+
+%%% FIND PATH (TY) %%%
+defns
+find_path_ty_def :: '' ::=
+
+defn
+find_path ( P , ty ) = ctxclds_opt :: :: find_path_ty :: fpty_
+           {{ com find class hierarchy path }} by
+
+find_path(P, ctx, dcl) = ctxclds_opt
+------------------------------------ :: dcl
+find_path(P, ctx.dcl) = ctxclds_opt
+
+>>
+%%% SUBTYPING %%%
+defns
+d_subtyping :: sty_ ::=
+
+defn
+P |- ty <1 ty' :: :: dsubty :: dir_ {{ com direct normal subtyping }}
+by
+
+find_cld(P, ctx, dcl) = (ctx'', cld)
+superclass(cld) = Object
+------------------------------------ :: obj
+P |- ctx.dcl <1 Object
+
+find_cld(P, ctx, dcl) = (ctx'', cld)
+superclass(cld) = dcl'
+find_cld(P, ctx'', dcl') = (ctx', cld')
+--------------------------------------- :: dcl
+P |- ctx.dcl <1 ctx'.dcl'
+<<

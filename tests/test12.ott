@@ -1,0 +1,15 @@
+  grammar
+    e :: 'e_' ::=
+      | F f                   ::   :: f
+      | C c                   ::   :: c
+    a :: 'a_' ::= 
+      | B b                   ::   :: b
+      | 0                   ::   :: 0
+    b :: 'b_' ::=
+      | A a                   ::   :: a
+    c :: 'c_' ::=
+      | A a                   ::   :: a
+    d :: 'd_' ::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+      | A a                   ::   :: a
+    f :: 'f_' ::=
+      | EA e a                 ::   :: ea

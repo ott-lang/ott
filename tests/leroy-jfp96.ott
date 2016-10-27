@@ -1,0 +1,680 @@
+% Author: Scott Owens
+%
+% A formalization of an ML-style module system based on the path based type
+% system from section 4 of Xavier Leroy's "A syntactic theory of type
+% generativity and sharing", J. Funct. Prog. 1996.  Additionally, I have
+% supplied a term language and an operational semantics of my own design.  The
+% semantic's key feature is that it never substitutes a structure definition
+% because that could duplicate generative type definitions and ruin type
+% preservation (the semantics is similar to the semantics for units from my
+% ICFP '06 paper/Ph.D. dissertation).  I have modified the type system to
+% include an explicit signature ascription construct for structure expressions,
+% and I have also modified the subtyping relations in two ways.  One, I have
+% used the simpler signature subtyping rules from Leroy's POPL paper (which are
+% slightly less general), and two, I have removed rule 33 because it makes
+% subtyping non-transitive (a fact which is not mentioned in the papers), and
+% it does not have much use outside of the slightly more general form of rule
+% 33.  Lastly, I omit the "open" construct.
+%
+% Several auxiliary functions are defined only for HOL, but are able to use OTT
+% notation, almost exclusively, in their definitions.
+%
+% The type system treats identifiers as the combination of a name and a stamp,
+% with the idea that the stamps can alpha-vary, but the names cannot.  Names
+% and stamps are represented with meta-variables of strings and numbers
+% respectively.  Identifiers are represented as a non-terminal, instead of as a
+% meta-variable represented as a pairs of strings and numbers.  Thus, a
+% definition can use "ti" which becomes the HOL variable "ti", or it can use "t
+% i" which becomes the HOL expression "Id t i"; other references to just "t" in
+% the same rule can thus be automatically coordinated with "ti".  Both ways of
+% referencing the identifier are typeset as t_i, as in the paper. 
+%
+% The concrete binding representation is suitable for the type system, with the
+% caveat that some programs will not typecheck, even though an alpha-equivalent
+% version would.  For example, 
+%   datatype t0
+%   structure x0 = struct datatype t0 end
+%
+% Furthermore, true alpha-renaming is needed to correctly specify a sound
+% operational semantics, as the following example illustrates.
+%   structure x0 = struct end
+%   structure x1 =
+%     functor (x2 : sig end)
+%       struct datatype t0 end
+%   datatype t0
+%   structure x2 = x1(x0)
+% An attempt to move the functor body to the functor application position
+% generates one of the above-mentioned conflicts.  Furthermore, various lemmas
+% about the type system, in particular validity and weakening, rely on alpha
+% equivalence.
+
+embed {{ hol
+
+val _ = hide "S";
+
+}}
+
+metavar name, t, x, v ::= {{ hol string }}
+metavar stamp, i ::= {{ hol num }}
+
+indexvar m ::= {{ hol num }}
+
+grammar
+
+ident, ti {{ tex t_i }}, xi {{ tex x_i }}, vi {{ tex v_i }} :: '' ::=
+  | name i			::   :: Id					{{ tex [[name]]_[[i]] }}
+
+s :: '' ::=									{{ com Module expressions }}
+  | p				::   ::	Path					{{ com access to a structure }} 
+  | struct d end		::   :: Strexp 					{{ com structure construction }}
+  | functor ( xi : S ) s	::   :: Ftorexp	(+ bind xi in s +)		{{ com functor abstraction }}
+  | s ( p )			::   ::	Ftorapp					{{ com functor application }}
+  | s :> S			::   :: Seal					{{ com signature ascription }}
+  | s { xi <- p }		:: M :: subst_s					{{ com substitution }} {{ ich (subst_s [[p]] [[xi]] [[s]]) }}
+  | s { d <- p }		:: M :: msubst_s				{{ ich (msubst_s (build_msubst_d [[p]] [[d]]) [[s]]) }}
+  | s / p			:: M :: sstrengthen				{{ ich (sstrengthen [[s]] [[p]]) }}
+  | ( s )			:: M :: paren_s					{{ ich [[s]] }}
+ 
+d :: '' ::=									{{ com Structure bodies }}
+  |				::   :: dNil_d					{{ tex \epsilon }}
+  | c ; d			::   :: dCons	(+ bind cbinders(c) in d +)
+  | d1 ; c ; d2			:: M :: d_append				{{ ich (d_append [[d1]] [[c]] [[d2]]) }}
+  | d { xi <- p }		:: M :: subst_d					{{ com substitution }} {{ ich (subst_d [[p]] [[xi]] [[d]]) }}
+  | d / p			:: M :: dstrengthen				{{ ich (dstrengthen [[d]] [[p]]) }}
+  | ( d )			:: M :: paren_d					{{ ich [[d]] }}
+
+c :: '' ::=									{{ com Definitions }}
+  | type ti = T			::   ::	Typebind (+ cbinders = ti +)		{{ com type binding (non generative) }}
+  | datatype ti			::   ::	Dtype	(+ cbinders = ti +)		{{ com type creation (generative) }}
+  | structure xi = s		::   ::	Strbind	(+ cbinders = xi +)		{{ com structure binding }}
+%  | open s			::   ::	Open					{{ com structure inclusion }}
+% This formulation of Open ruins any sensible notion of alpha-equivalence
+% because the identifiers bound by it depend on the signature of the structure
+% expression.  Requiring an explicit signature annotation would fix things.
+  | val vi = M			::   :: Valbind	(+ cbinders = vi +)		{{ com value binding }}
+  | c / p			:: M :: cstrengthen				{{ ich (cstrengthen [[c]] [[p]]) }}
+  | ( c )			:: M :: paren_c					{{ ich [[cV]] }}
+
+
+S :: '' ::=									{{ com Signature expressions }}
+  | sig D end			::   ::	Strsig					{{ com simple signature }}
+  | functor ( xi : S1 ) S2	::   :: Ftorsig	(+ bind xi in S2 +)		{{ com functor signature }}
+  | S / p			:: M :: Sstrengthen				{{ com strengthening }} {{ ich (Sstrengthen [[S]] [[p]]) }}
+  | S { xi <- p }		:: M :: subst_S					{{ com substitution }} {{ ich (subst_S [[p]] [[xi]] [[S]]) }}
+  | S { D <- p }		:: M :: msubst_S				{{ com substitution }} {{ ich (msubst_S (build_msubst_D [[p]] [[D]]) [[S]]) }}
+										{{ tex [[S]]\{n_i \leftarrow [[p]].n | n_i \in BV([[D]])\} }}
+  | ( S )			:: M :: paren_S					{{ ich [[S]] }}
+
+D :: '' ::=									{{ com Signature bodies }}
+  |				::   :: DNil					{{ tex \epsilon }}
+  | C ; D			::   :: DCons	(+ bind Cbinders(C) in D +)
+  | D1 ; C ; D2			:: M :: D_append				{{ ich (D_append [[D1]] [[C]] [[D2]]) }}
+  | D / p			:: M :: Dstrengthen				{{ com strengthening }} {{ ich (Dstrengthen [[D]] [[p]]) }}
+  | ( D )			:: M :: paren_D					{{ ich [[D]] }}
+
+C :: '' ::=									{{ com Specifications }}
+  | type ti			::   ::	Otyspec	(+ Cbinders = ti +)		{{ com opaque type specification }}
+  | type ti = T			::   ::	Mtyspec	(+ Cbinders = ti +)		{{ com manifest type specification }}
+  | structure xi : S		::   ::	Modspec	(+ Cbinders = xi +)		{{ com structure specification }}
+  | val vi : T			::   :: Valspec (+ Cbinders = vi +)		{{ com value specification }}
+  | C / p			:: M :: Cstrengthen				{{ com strengthening }} {{ ich (Cstrengthen [[C]] [[p]]) }}
+  | ( C )			:: M :: paren_C					{{ ich [[C]] }}
+
+T {{ hol Ty }} :: '' ::=							{{ com Types }}
+  | ti				::   :: Tyvar					{{ com lexical type reference }}
+  | p . t			::   :: Typath					{{ com structure-based type reference }}
+  | T1 -> T2			::   :: Tyarrow					{{ com function type }}
+  | T { D <- p }		:: M :: msubst_T				{{ com substitution }} {{ ich (msubst_T (build_msubst_D [[p]] [[D]]) [[T]]) }}
+										{{ tex [[T]]\{n_i \leftarrow [[p]].n | n_i \in BV([[D]])\} }}
+  | ( T )			:: M :: paren_T					{{ ich [[T]] }}
+
+p :: '' ::=									{{ com Structure paths }}
+  | xi				::   :: Mid					{{ com lexical structure reference }}
+  | p . x			::   :: Mpath					{{ com structure-based structure reference }}
+
+E :: '' ::=									{{ com Typing contexts }} {{ hol C list }}
+  | 				::   :: ENil					{{ hol [] }}
+  | E ; C			::   :: ECons					{{ hol ([[C]] :: [[E]]) }}
+  | E1 ; C ; E2			:: M :: Eappend					{{ hol ([[E2]] ++ [[C]] :: [[E1]]) }}
+  | E ; rev D			:: M :: Dappend					{{ hol (REVERSE (D_to_list [[D]]) ++ [[E]]) }}
+
+M :: '' ::=									{{ com Terms }}
+  | vi				::   :: Var					{{ com Lexical term reference }}
+  | p . v			::   :: Vpath					{{ com Structure-based term reference }}
+  | lambda vi : T . M		::   :: Fun	(+ bind vi in M +)		{{ com Function expression }}
+  | M1 M2			::   :: Fapp					{{ com Function application }}
+  | let d in M			::   :: Letexp					{{ com Lexical binding }}
+  | M { vi <- V }		:: M :: subst_M					{{ com substitution }} {{ ich (vsubst_M [[V]] [[vi]] [[M]]) }}
+  | M { d <- p }		:: M :: msubst_M				{{ com substitution }} {{ ich (msubst_M (build_msubst_d [[p]] [[d]]) [[M]]) }}
+										{{ tex [[M]]\{n_i \leftarrow [[p]].n | n_i \in BV([[d]])\} }}
+  | ( M )			:: M :: paren_M					{{ ich [[M]] }}
+
+V :: '' ::=									{{ com Values }}
+  | lambda vi : T . M		::   :: FunV
+
+cV :: '' ::=									{{ com Definition values }}
+  | type ti = T			::   ::	Typebind_cV				
+  | datatype ti			::   ::	Dtype_cV
+  | structure xi = sV		::   ::	Strbind_cV
+  | val vi = V			::   :: Valbind_cV
+
+sV :: '' ::=									{{ com Module values }}
+  | struct dV end		::   :: StrexpV
+  | functor ( xi : S ) s	::   :: FtorexpV
+
+dV :: '' ::=									{{ com Structure body values }}
+  | 				::   :: dNil_dV
+  | cV ; dV			::   :: dCons_dV
+
+delta {{ tex \Delta }} :: '' ::=						{{ com Value environments }} {{ hol c list }}
+  | 				::   :: deltaNil				{{ hol [] }}
+  | delta ; c			::   :: deltaCons				{{ hol ([[c]] :: [[delta]]) }}
+  | delta1 ; c ; delta2		:: M :: delta_append				{{ hol ([[delta2]] ++ [[c]] :: [[delta1]]) }}
+  | delta ; rev d		:: M :: dVappend				{{ hol (REVERSE (d_to_list [[d]]) ++ [[delta]]) }}
+
+terminals :: terminals_ ::=
+  | ->				::   ::	rarrow					{{ tex \rightarrow }}
+  | |-				::   :: vdash					{{ tex \vdash }}
+  | ~				::   :: type_eq					{{ tex \approx }}
+  | <-				::   :: larrow					{{ tex \leftarrow }}
+  | |->				::   :: mapsto					{{ tex \mapsto }}
+  | lambda			::   :: lambda					{{ tex \lambda }}
+  | ~>				::   :: leadsto					{{ tex \leadsto }}
+
+formula :: formula_ ::=
+  | judgement			::   :: judgement
+  | xi not in BV ( E )		::   :: notinBV					{{ tex [[xi]]\not\in BV([[E]]) }}
+										{{ hol ~(MEM [[xi]] (BV[[E]])) }}
+embed {{ hol
+
+val C_BV_def = Define `
+(C_BV [[type ti]] = ti) /\
+(C_BV (Mtyspec ti Ty) = ti) /\
+(C_BV [[structure xi : S]] = xi) /\
+(C_BV [[val vi : T]] = vi)`;
+
+val c_BV_def = Define `
+(c_BV (Typebind ti Ty) = ti) /\
+(c_BV (Dtype ti) = ti) /\
+(c_BV [[structure xi = s]] = xi) /\
+(c_BV [[val vi = M]] = vi)`;
+
+val BV_def = Define `
+BV = MAP C_BV`;
+
+val D_BV_def = Define `
+(D_BV DNil = []) /\
+(D_BV [[C; D]] = C_BV [[C]] :: D_BV [[D]])`;
+
+val d_BV_def = Define `
+(d_BV dNil = []) /\
+(d_BV [[c; d]] = c_BV [[c]] :: d_BV [[d]])`;
+
+val build_msubst_D_def = Define `
+build_msubst_D p D = 
+MAP (\id. case id of Id n i -> (id, (Mpath p n)))
+    (D_BV D)`;
+
+val build_msubst_d_def = Define `
+build_msubst_d p d = 
+MAP (\id. case id of Id n i -> (id, (Mpath p n)))
+    (d_BV d)`;
+
+}}
+
+substitutions
+  single p ident :: subst 
+  multiple p ident :: msubst 
+  single M ident :: vsubst 
+
+subrules
+V <:: M
+cV <:: c
+sV <:: s
+dV <:: d
+
+embed
+{{ hol
+
+val Sstrengthen_def = Define `
+([[(sig D end)/p]] = [[sig D/p end]]) /\
+([[(functor (xi : S1) S2)/p]] = [[functor (xi : S1) S2]]) /\
+([[:DNil:/p]] = [[:DNil:]]) /\
+([[(C; D)/p]] = [[C/p; (D/p)]]) /\
+([[(type t i)/p]] = [[:Mtyspec: type t i = p.t]]) /\
+([[(:Mtyspec: type ti = T)/p]] = [[:Mtyspec: type ti = T]]) /\
+([[(structure x i : S)/p]] = [[structure x i : (S/p.x)]]) /\
+([[(val vi : T)/p]] = [[val vi : T]])`;
+
+val sstrengthen_def = Define `
+([[(struct d end)/p]] = [[struct d/p end]]) /\
+([[(functor (xi : S) s)/p]] = Ftorexp xi S s) /\
+([[:dNil:/p]] = dNil) /\
+([[(c; d)/p]] = [[c/p; (d/p)]]) /\
+([[(:Typebind: type ti = T)/p]] = Typebind ti Ty) /\
+([[(datatype t i)/p]] = Typebind (Id t i) (Typath p t)) /\
+([[(structure x i = s)/p]] = [[structure x i = (s/p.x)]]) /\
+([[(val vi = M)/p]] = Valbind vi M)`;
+
+
+val D_append_def = Define `
+([[(); C; D2]] = [[C; D2]]) /\
+([[(C1; D1); C2; D2]] = [[C1; (D1; C2; D2)]])`;
+
+val d_append_def = Define `
+([[(); c; d2]] = [[c; d2]]) /\
+([[(c1; d1); c2; d2]] = [[c1; (d1; c2; d2)]])`;
+
+val d_to_list_def = Define `
+(d_to_list dNil = []) /\
+(d_to_list (dCons c d) = c::d_to_list d)`;
+
+val D_to_list_def = Define `
+(D_to_list DNil = []) /\
+(D_to_list (DCons c d) = c::D_to_list d)`;
+
+}}
+
+defns
+
+pathE :: '' ::=
+
+defn
+
+E |- p |-> S			::   :: pathE :: pathE by
+% If this is left inline in the E |- s : S defn, all of the rules become
+% mutually recursive.  The notation E |- p : S could be used, but parsing
+% annotations would be require to remove ambiguities since s ::= p is a
+% production.
+
+--------------------------------------- :: 1
+E1; structure xi : S; E2 |- xi |-> S/xi
+
+E |- p |-> sig D1; structure x i : S; D2 end
+-------------------------------------------- :: 2
+E |- p.x |-> S{D1 <- p}
+
+defns
+
+WFtype :: '' ::=
+
+defn
+
+E |- T type			::   :: WFtype :: WFtype by
+
+-------------------------- :: 1
+E1; type ti; E2 |- ti type
+
+------------------------------ :: 2 
+E1; type ti = T; E2 |- ti type
+
+E |- p |-> sig D1; type t i; D2 end
+----------------------------------- :: 3
+E |- p.t type
+
+E |- p |-> sig D1; type t i = T; D2 end
+--------------------------------------- :: 4
+E |- p.t type
+
+E |- T1 type
+E |- T2 type
+-------------------- :: 5
+E |- (T1 -> T2) type
+
+defns
+
+WFsig :: '' ::=
+
+defn
+
+E |- D decl			::   :: WFdecl :: WFdecl by
+
+--------- :: 1
+E |- decl
+
+E |- T type
+E; type ti = T |- D decl
+-------------------------- :: 2
+E |- (type ti = T; D) decl
+
+E; type ti |- D decl
+---------------------- :: 3
+E |- (type ti; D) decl
+
+E |- S signature
+E; structure xi : S |- D decl
+------------------------------- :: 4
+E |- (structure xi : S; D) decl
+
+E |- T type
+E; val vi : T |- D decl
+------------------------- :: 5
+E |- (val vi : T; D) decl
+
+defn
+
+E |- S signature		::   :: WFsig :: WFsig by
+
+E |- D decl
+-------------------------- :: 1
+E |- (sig D end) signature
+
+E |- S1 signature
+E; structure xi : S1 |- S2 signature
+------------------------------------ :: 2
+E |- (functor(xi : S1) S2) signature
+
+defns
+
+eq :: '' ::=
+
+defn
+
+E |- T ~ T'			::   :: eqT :: eqT by
+
+----------------------------- :: 1
+E1; type ti = T; E2 |- ti ~ T
+
+E |- p |-> sig D1; type t i = T; D2 end
+--------------------------------------- :: 2
+E |- p.t ~ T{D1 <- p}
+
+---------- :: 3
+E |- T ~ T
+
+E |- T2 ~ T1
+------------ :: 4
+E |- T1 ~ T2
+
+E |- T1 ~ T2
+E |- T2 ~ T3
+------------ :: 5
+E |- T1 ~ T3
+
+E |- T1 ~ T3
+E |- T2 ~ T4
+---------------------------- :: 6
+E |- (T1 -> T2) ~ (T3 -> T4)
+
+
+defns
+
+sub :: '' ::=
+
+defn
+
+E |- S <: S'			::   :: subS :: subS by
+
+E |- S2 <: S1
+E; structure xi : S2 |- S1' <: S2'
+------------------------------------------------- :: 1
+E |- functor(xi : S1) S1' <: functor(xi : S2) S2'
+
+E |- D <: D'
+---------------------------- :: 2
+E |- sig D end <: sig D' end
+
+% I decided to use the version of rule 30 that uses the three simple auxiliary
+% grammar below (from Leroy's POPL 94 paper) instead of the paper's more
+% difficult to write in Ott formulation: 
+%   sigma : {1, .., m} |-> {1, .., n}
+%   E; C1; ..; Cn |- C_sigma(i) <: Ci' forall i in {1, .., m}
+%   ---------------------------------------------------------
+%   E |- sig C1; .., Cn end <: sig C1'; ..; Cm' end
+
+
+defn
+
+E |- D <: D'			::   :: subD :: subD by
+
+------ :: 1
+E |- <:
+
+E |- C <: C'
+E; C |- D <: D'
+--------------------- :: 2
+E |- C ; D <: C' ; D'
+
+E; C |- D <: D'
+---------------- :: 3
+E |- C ; D <: D'
+
+
+defn
+
+E |- C <: C'			::   :: subC :: subC by
+
+--------------------------- :: 1
+E |- (type ti) <: (type ti)
+
+------------------------------- :: 2
+E |- (type ti = T) <: (type ti)
+
+%E |- ti ~ T
+%------------------------------- :: 3
+%E |- (type ti) <: (type ti = T)
+% With this rule, for arbitrary T, and (T' ~ ti), 
+% (type ti = T) <: (type ti) <: (type ti = T').  However, is may not hold that
+% (T ~ T') (e.g. if T=int), and so subtyping is not transitive.
+
+
+E |- T1 ~ T2
+------------------------------------- :: 4
+E |- (type ti = T1) <: (type ti = T2)
+
+E |- S1 <: S2
+----------------------------------------------- :: 5
+E |- (structure xi : S1) <: (structure xi : S2)
+
+E |- T1 ~ T2
+----------------------------------- :: 6
+E |- (val vi : T1) <: (val vi : T2)
+
+defns
+
+typ :: '' ::=
+
+defn 
+
+E |- s : S			::   :: type_s :: type_s by
+
+E |- p |-> S
+------------ :: 1
+E |- p : S
+
+E |- S signature
+xi not in BV(E)
+E; structure xi : S |- s : S'
+------------------------------------------- :: 2
+E |- functor(xi : S) s : functor(xi : S) S'
+
+E |- s : functor(xi : S') S
+E |- p |-> S''
+E |- S'' <: S'
+--------------------------- :: 3
+E |- s(p) : S{xi <- p}
+
+E |- d : D
+----------------------------- :: 4
+E |- struct d end : sig D end
+
+E |- S1 signature
+E |- s : S2
+E |- S2 <: S1
+----------------- :: 5
+E |- s:>S1 : S1
+
+defn
+
+E |- c : C			::   :: type_c :: type_c by
+
+E |- T type
+ti not in BV(E)
+------------------------------ :: 1
+E |- type ti = T : type ti = T
+
+ti not in BV(E)
+-------------------------- :: 2
+E |- datatype ti : type ti
+
+E |- s : S
+xi not in BV(E)
+---------------------------------------- :: 3
+E |- structure xi = s : structure xi : S 
+
+E |- M : T
+vi not in BV(E)
+---------------------------- :: 4
+E |- val vi = M : val vi : T
+
+defn
+
+E |- d : D			::   :: type_d :: type_d by
+
+------- :: 1
+E |- :
+
+E |- c : C
+E; C |- d : D
+---------------- :: 2
+E |- c; d : C; D
+
+defn
+
+E |- M : T			::   :: typeM :: typeM by
+
+---------------------------- :: 1
+E1; val vi : T; E2 |- vi : T
+
+E |- p |-> sig D1; val v i : T; D2 end
+-------------------------------------- :: 2
+E |- p.v : T{D1 <- p}
+
+vi not in BV(E)
+E |- T1 type
+E; val vi : T1 |- M : T2
+---------------------------------- :: 3
+E |- lambda vi : T1 . M : T1 -> T2
+
+E |- M1 : T1 -> T2
+E |- M2 : T1
+------------------ :: 4
+E |- M1 M2 : T2
+
+E |- d : D
+E; rev D |- M : T1
+E; rev D |- T1 ~ T2
+E |- T2 type
+-------------------- :: 5
+E |- let d in M : T2
+
+defns
+
+pathDelta :: '' ::=
+
+defn
+
+delta |- p |-> s		::   :: pathDelta :: pathDelta by
+
+------------------------------------------------- :: 1
+delta1; structure xi = s; delta2 |- xi |-> s/xi
+
+delta |- p |-> struct d1; structure x i = s; d2 end
+------------------------------------------------------ :: 2
+delta |- p.x |-> s{d1 <- p}
+
+
+defns
+
+reduce :: '' ::=
+
+defn
+delta |- M ~> M'			::   :: redM :: redM by
+
+--------------------------------------- :: var
+delta1; val vi = V; delta2 |- vi ~> V
+
+delta |- p |-> struct dV1; val v i = V; dV2 end
+----------------------------------------------- :: path
+delta |- p.v ~> V{dV1 <- p}
+
+---------------------------------------- :: app
+delta |- (lambda vi:T.M) V ~> M{vi <- V}
+
+------------------------------------------------------------- :: let
+delta |- let dV in (lambda vi:T.M) ~> lambda vi:T.let dV in M
+
+delta |- M1 ~> M3
+----------------------- :: app_ctxt1
+delta |- M1 M2 ~> M3 M2
+
+delta |- M1 ~> M2
+--------------------- :: app_ctxt2
+delta |- V M1 ~> V M2
+
+delta |- d1 ~> d2
+----------------------------------- :: let_ctxt1
+delta |- let d1 in M ~> let d2 in M
+
+delta; rev dV |- M1 ~> M2
+------------------------------------- :: let_ctxt2
+delta |- let dV in M1 ~> let dV in M2
+
+defn
+delta |- c ~> c'			::   :: red_c :: rec_c_ by
+
+delta |- s1 ~> s2
+----------------------------------------------- :: str_ctxt
+delta |- structure xi = s1 ~> structure xi = s2
+
+delta |- M1 ~> M2
+----------------------------------- :: val_ctxt
+delta |- val vi = M1 ~> val vi = M2
+
+defn
+delta |- d ~> d'			::   :: red_d :: red_d_ by
+
+delta |- c1 ~> c2
+----------------------- :: d_ctxt1
+delta |- c1; d ~> c2; d
+
+delta; cV |- d1 ~> d2
+------------------------- :: d_ctxt2
+delta |- cV; d1 ~> cV; d2
+
+defn
+delta |- s ~> s'			::   :: red_s :: red_s_ by
+
+delta |- p |-> sV
+----------------- :: path 
+delta |- p ~> sV
+
+------------------------------------------- :: ftorapp
+delta |- (functor(xi:S) s)(p) ~> s{xi <- p}
+
+-------------------- :: seal
+delta |- s :> S ~> s
+
+delta |- d1 ~> d2
+--------------------------------------- :: str_ctxt
+delta |- struct d1 end ~> struct d2 end
+
+delta |- s1 ~> s2
+----------------------- :: ftorapp_ctxt
+delta |- s1(p) ~> s2(p)
+
+defns
+
+deltaE :: '' ::=
+
+defn
+
+|- delta : E 			::   :: deltaE :: deltaE by
+
+----- :: 1
+|- : 
+
+|- delta : E
+E |- cV : C
+------------------ :: 2
+|- delta; cV : E; C

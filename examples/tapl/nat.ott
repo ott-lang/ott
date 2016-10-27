@@ -1,0 +1,52 @@
+% TAPL [nat]  Arithmetic expressions, p41
+%
+% (the TAPL definition introduces a syntactic category of numeric values,
+%  nv ::= 0 | succ nv, with nv a production of the value grammar. The Ott
+%  subrule check would not admit that that value grammar is a subgrammar
+%  of the t grammar, so here we flatten occurrences of nv onto v. That 
+%  introduces some junk values, of course.)
+
+grammar
+t :: Tm ::=                                        {{ com terms: }}
+  | 0                             ::   :: Zero       {{ com constant zero }}
+  | succ t                        ::   :: Succ       {{ com successor }}
+  | pred t                        ::   :: Pred       {{ com predecessor }}
+  | iszero t                      ::   :: Iszero     {{ com zero test }}
+
+v :: Va ::=                                        {{ com values: }}
+  | 0                             ::   :: Zero       {{ com zero value }}
+  | succ v                        ::   :: Succ       {{ com successor value }}
+  
+
+subrules
+v <:: t
+
+defns 
+Jop :: '' ::= 
+
+defn 
+t --> t' :: :: red :: E_ {{ com Evaluation }} by
+
+t1 --> t1'
+-------------------- :: Succ
+succ t1 --> succ t1'
+
+------------ :: PredZero
+pred 0 --> 0
+
+--------------------- :: PredSucc
+pred (succ v1) --> v1 
+
+t1 --> t1'
+-------------------- :: Pred
+pred t1 --> pred t1'
+
+----------------- :: IsZeroZero
+iszero 0 --> true
+
+-------------------------- :: IsZeroSucc
+iszero (succ v1) --> false
+
+t1 --> t1'
+------------------------ :: IsZero
+iszero t1 --> iszero t1'

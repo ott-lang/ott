@@ -1,0 +1,29 @@
+\par\noindent{\begin{alltt}
+\mybf{grammar}
+t \mybf{::} Tm \mybf{::=}                    \mylblb{} \mybf{com} terms: \myrbrb{}
+  \mybf{|} let x = t in t'  \mybf{::} \mybf{::} Let   \mybf{(+} \mybf{bind} x \mybf{in} t' \mybf{+)}     
+                                 \mylblb{} \mybf{com} let binding \myrbrb{}
+\mybf{defns}
+Jop \mybf{::} '' \mybf{::=} 
+
+  \mybf{defn}
+  t --> t' \mybf{::} \mybf{::} red \mybf{::} E\_ \mylblb{} \mybf{com} Evaluation \myrbrb{} \mybf{by}
+
+    \mybf{-----------------------------} \mybf{::} LetV
+    let x=v1 in t2 --> [x|->v1]t2 
+
+    t1 --> t1'
+    \mybf{----------------------------------} \mybf{::} Let
+    let x=t1 in t2 --> let x=t1' in t2
+
+\mybf{defns}
+Jtype \mybf{::} '' \mybf{::=} 
+
+  \mybf{defn}
+  G |- t : T \mybf{::} \mybf{::} typing \mybf{::} T\_ \mylblb{} \mybf{com} Typing \myrbrb{} \mybf{by}
+
+    G |- t1:T1
+    G,x:T1 |- t2:T2
+    \mybf{------------------------} \mybf{::} Let
+    G |- let x=t1 in t2 : T2
+\end{alltt}}\noindent
