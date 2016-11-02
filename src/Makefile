@@ -40,7 +40,7 @@ OTTVER=0.25
 #OCAMLOPT	= ocamlopt.opt -w y -g -dtypes -unsafe -inline 9
 
 # for releases
-OCAMLC	 	= ocamlc -g -w p -w y 
+OCAMLC	 	= ocamlc -g -w p -w y
 OCAMLOPT	= ocamlopt -w p -w y -unsafe -inline 9
 
 OCAMLDEP 	= ocamldep
@@ -55,7 +55,7 @@ COQC            = coqc
 COQ_INCLUDE     = -I $(topdir)/coq
 COQ_FLAGS       =
 OCAMLGRAPHDIRBODY = ocamlgraph-1.7
-OCAMLGRAPHDIR = ../$(OCAMLGRAPHDIRBODY)
+OCAMLGRAPHDIR = $(topdir)/$(OCAMLGRAPHDIRBODY)
 OCAMLGRAPHTARGZ	= ocamlgraph-1.7.tar.gz
 LIBRARIES	= str $(OCAMLGRAPHDIR)/graph
 
@@ -63,13 +63,13 @@ LIBRARIES	= str $(OCAMLGRAPHDIR)/graph
 
 SOURCES_LEXER_PARSER = grammar_lexer.mll grammar_parser.mly
 
-SOURCES_NON_LEXER_PARSER1 = location.ml types.ml auxl.ml merge.ml global_option.ml 
+SOURCES_NON_LEXER_PARSER1 = location.ml types.ml auxl.ml merge.ml global_option.ml
 
 SOURCES_NON_LEXER_PARSER2 = grammar_pp.ml parse_table.ml glr.ml new_term_parser.ml term_parser.ml \
 			    dependency.ml bounds.ml context_pp.ml grammar_typecheck.ml 		  \
 			    transform.ml substs_pp.ml subrules_pp.ml				  \
 			    embed_pp.ml defns.ml ln_transform.ml coq_induct.ml	  		  \
-                            system_pp.ml lexyac_pp.ml align.ml main.ml 
+                            system_pp.ml lexyac_pp.ml align.ml main.ml
 
 SOURCES_MLI =           \
   align.mli             \
@@ -85,7 +85,7 @@ SOURCES_MLI =           \
   system_pp.mli         \
   lexyac_pp.mli         \
   transform.mli		\
-  term_parser.mli       
+  term_parser.mli
 
 SOURCES= $(SOURCES_NON_LEXER_PARSER1) 					\
          grammar_lexer.ml grammar_parser.mli grammar_parser.ml 		\
@@ -95,7 +95,7 @@ SOURCES= $(SOURCES_NON_LEXER_PARSER1) 					\
 MLI 	= $(filter %.mli, $(SOURCES))
 ML	= $(filter %.ml, $(SOURCES))
 
-CMO 	= $(patsubst %.ml, %.cmo, $(ML)) 
+CMO 	= $(patsubst %.ml, %.cmo, $(ML))
 CMX 	= $(patsubst %.cmo, %.cmx, $(CMO))
 
 CMI_FROM_MLI = $(patsubst %.mli, %.cmi, $(SOURCES_MLI))
@@ -124,7 +124,7 @@ opt: ott.opt
 ott.opt: Makefile $(CMX) $(CMI_FROM_MLI) version.tex
 	echo $^
 	$(OCAMLOPT) -v
-	$(OCAMLOPT) -o ott.opt $(addsuffix .cmxa, $(LIBRARIES)) $(CMX) 
+	$(OCAMLOPT) -o ott.opt $(addsuffix .cmxa, $(LIBRARIES)) $(CMX)
 	ln -s -f $@ ott
 
 interfaces: $(ML:.ml=.interface)
@@ -133,11 +133,11 @@ mlis: $(ML:.ml=.mli)
 
 # files that require a special treatment
 
-grammar_lexer.ml: grammar_lexer.mll 
+grammar_lexer.ml: grammar_lexer.mll
 	$(OCAMLLEX) grammar_lexer.mll
 
 grammar_parser.ml grammar_parser.mli: grammar_parser.mly
-	$(OCAMLYACC) -v grammar_parser.mly  
+	$(OCAMLYACC) -v grammar_parser.mly
 
 grammar_typecheck.cmo: grammar_typecheck.ml
 	$(OCAMLC) -c -I $(OCAMLGRAPHDIR) grammar_typecheck.ml
@@ -176,7 +176,7 @@ dependency.cmx: dependency.ml
 #	cat tmp_version1.ml tmp_version2.ml tmp_date.txt tmp_version3.ml > version.ml
 #	rm tmp_version1.ml tmp_version2.ml tmp_version3.ml
 
-version.ml: tmp_date.txt #Makefile-core 
+version.ml: tmp_date.txt #Makefile-core
 	echo 'let n="$(OTTVER)"' >version.ml
 	echo let d=\"$$(cat tmp_date.txt)\" >>version.ml
 
@@ -217,7 +217,7 @@ version.tex: tmp_date.txt version_src.tex
 
 ## Rules to unpack and build our copy of ocamlgraph.
 $(OCAMLGRAPHDIR)/Makefile:
-	cd .. && tar -zxvf $(OCAMLGRAPHTARGZ)
+	cd $(topdir) && tar -zxvf $(OCAMLGRAPHTARGZ)
 	cd $(OCAMLGRAPHDIR) && ./configure
 $(OCAMLGRAPHDIR)/graph.cma: $(OCAMLGRAPHDIR)/Makefile
 	cd $(OCAMLGRAPHDIR) && $(MAKE) graph.cma
@@ -230,27 +230,29 @@ ocamlgraph: $(OCAMLGRAPHDIR)/graph.cma $(OCAMLGRAPHDIR)/graph.cmxa
 
 install.byt: $(OCAMLGRAPHDIR)/graph.cma
 	$(MAKE) byt
-	cp ./ott ../bin/ott
+	-mkdir $(topdir)/bin
+	cp ./ott $(topdir)/bin/ott
 
 install: $(OCAMLGRAPHDIR)/graph.cmxa
 	$(MAKE) opt
-	cp ./ott ../bin/ott
+	-mkdir $(topdir)/bin
+	cp ./ott $(topdir)/bin/ott
 
 
 
 # LIBRARY ##############################################################
 
 coq-lib:
-	cd ../coq && $(MAKE) all
+	cd $(topdir)/coq && $(MAKE) all
 
 # CLEANUP ##############################################################
 
 clean:
-	rm -f *~ *.cmi *.cmo *.cmx *.o 
+	rm -f *~ *.cmi *.cmo *.cmx *.o
 	rm -f grammar_lexer.ml grammar_parser.ml 			\
-              grammar_parser.mli grammar_parser.output 
+              grammar_parser.mli grammar_parser.output
 	rm -f version.ml
-	rm -rf ott ott.byt ott.opt ../bin/ott
+	rm -rf ott ott.byt ott.opt $(topdir)/bin/ott
 	rm -f grammar_parser.tex *.mly-y2l
 	rm -f *.aux *.log *.dvi *.ps *.pdf *.annot
 	rm -f out.thy out.v outScript.sml outTheory.uo outTheory.ui outTheory.sig outTheory.sml out.tex out.sty 
@@ -261,7 +263,7 @@ clean:
 
 realclean:
 	rm -f .depend
-	cd ../coq && $(MAKE) clean
+	cd $(topdir)/coq && $(MAKE) clean
 
 
 # DEPENDENCIES ########################################################
@@ -271,7 +273,7 @@ foob:
 
 depend:
 	$(OCAMLDEP) $(SOURCES) $(SOURCES_MLI) > .depend
-.depend: Makefile $(SOURCES) $(SOURCES_MLI) 
+.depend: Makefile $(SOURCES) $(SOURCES_MLI)
 	$(OCAMLDEP) $(SOURCES) $(SOURCES_MLI) > .depend
 
 include .depend
