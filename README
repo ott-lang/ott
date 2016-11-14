@@ -19,8 +19,8 @@ bin/                     the Ott binary (binary distro only)
 Makefile                 a Makefile for the examples
 LICENCE                  the BSD-style licence terms
 README                   this file (Section 2 of the user guide)
-revisionhistory.txt                   the revision history
-ocamlgraph-0.99a.tar.gz   a copy of the ocamlgraph library
+revisionhistory.txt      the revision history
+ocamlgraph-1.7.tar.gz    a copy of the ocamlgraph library
 
 (we no longer provide a Windows binary distribution)
 
@@ -29,10 +29,9 @@ ocamlgraph-0.99a.tar.gz   a copy of the ocamlgraph library
 
 To build
 --------
-Ott depends on OCaml version 3.09.1 or later.  It builds with (at
-least) OCaml 4.02.3 and 3.12.1.  (Ott cannot be compiled with OCaml
-3.08, and it also touched an OCaml bug in 3.10.0 for amd64, fixed in
-3.10.1).
+Ott depends on OCaml. It builds with (at least) OCaml 4.04, 4.03,
+4.02.3 and 3.12.1.  (Ott cannot be compiled with OCaml 3.08, and it
+also touched an OCaml bug in 3.10.0 for amd64, fixed in 3.10.1).
 
 
 
