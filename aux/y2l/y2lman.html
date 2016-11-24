@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--
+  Copyright (c) 1994-2000 by Kris Van Hees, Belgium.  All rights reserved.
+  See the "Artistic License" included in this package (file: "Artistic") for
+  terms and conditions.
+
+  $Id: y2lman.html,v 1.1 2004/08/06 10:59:29 kw217 Exp $
+  -->
+
+<HTML>
+  <HEAD>
+    <TITLE>y2l (1)</TITLE>
+  </HEAD>
+  <BODY>
+    <H4>NAME</H4>
+y2l - Yacc to LaTeX grammar pretty printer
+
+    <H4>SYNOPSIS</H4>
+<TT>
+<B>y2l</B> [<B>--</B> options] <I>file</I><BR>
+Options:<BR>
+[-d] [-h] [-O] [-O{0,1,2}] [-p] [-t{regexp,file}] [-v]
+</TT>
+
+    <H4>DESCRIPTION</H4>
+This utility takes a
+<I>yacc</I>(1)
+grammar description file and generates an EBNF (Extended Backus-Naur Form)
+grammar from it.  By default, the output will be a
+<I>LaTeX</I>(1)
+longtable environment, that can be \input{} into any LaTeX document.  Automatic
+substitution of symbolic terminals can also be taken care of.  Options control
+whether any optimization should be done on the grammar, and whether plain ASCII
+output should be generated instead.
+
+    <H4>OPTIONS</H4>
+    <DL>
+      <DT>
+<I>-d</I>
+      <DD>
+Write out debugging information to standard error.
+      <DT>
+<I>-h</I>
+      <DD>
+Display a short usage summary on standard output and exit.
+      <DT>
+<I>-O<I>
+      <DD>
+Optimize the yacc grammar.  This basic optimization will look for empty rules to
+make non-terminals optional.  It also recursively generates choice groups and
+optional groups and elements based on common prefix and suffix token lists.
+      <DT>
+<I>-O0</I>
+      <DD>
+Turn off optimization.
+      <DT>
+<I>-O1</I>
+      <DD>
+This gives the same optimization as the regular
+<I>-O</I>
+option.
+      <DT>
+<I>-O2</I>
+      <DD>
+Do basic optimization.  In addition, multiple rules for the same non-terminal
+are combined as a choice group.  Rules that were optimized by the first phase
+as optional non-terminals are converted into repetitive rules if possible.
+      <DT>
+<I>-p</I>
+      <DD>
+Generate plain ASCII output rather than LaTeX output.
+      <DT>
+<I>-t</I>regexp
+      <DD>
+Use the provided regular expression to determine whether a terminal is a lexical
+token rather than a literal.  This is useful for grammars where literal tokens
+represent string literals that differ only in that the string literals are all
+lowercase versions of the token.  Since this is a fairly common practise in yacc
+grammars, this option ha sbeen provided.
+      <DT>
+<I>-t</I>file
+      <DD>
+Use the provided file as a mapping between literal tokens and the literal
+strings they represent.  Each line in the file should contain two identifiers:
+the first one is the lexical token, and the second one is the literal string it
+represents.
+      <DT>
+<I>-v</I>
+      <DD>
+Display the program version information on standard error prior to doing any
+processing.
+    </DL>
+
+    <H4>BUGS</H4>
+While no known bugs seem to exist, there are probably quite a few unknown bugs.
+
+    <H4>AUTHOR</H4>
+Kris Van Hees <A HREF="mailto:aedil@alchar.org">&lt;aedil@alchar.org&gt;</A>
+
+    <P>
+    <I>Copyright &#169; 19994-2000 Kris Van Hees.  All rights reserved.</I>
+  </BODY>
+</HTML>

@@ -1,0 +1,40 @@
+
+embed 
+ {{ tex
+\newcommand{\[[TEX_NAME_PREFIX]]testterma}{ [[ p1 | p2 ]] } 
+\newcommand{\[[TEX_NAME_PREFIX]]testtermb}{ [[ (p1,p2) ]] } 
+\newcommand{\[[TEX_NAME_PREFIX]]testtermc}{ [[ let ((None,Some x)|(Some x,None)) = y in (x,x) ]] } 
+
+}}
+
+metavar value_name, x, y ::=
+  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ ocaml int }}
+  {{ lex alphanum }} 
+
+grammar
+t :: E_ ::=
+  | x                                  ::   :: ident
+  | ( t1 , t2 )       :: :: pair
+  | None               :: :: None  
+  | Some p             :: :: Some  
+  | let p = t in t'                    ::   :: let      (+ bind b(p) in t' +)
+
+p :: 'P_' ::=                                              
+  | x                                 :: :: Var (+ b = x  +)
+  | ( p1 , p2 )        :: :: pair    (+ b = b(p1) union b(p2) +)
+%(+ names(p1) # names(p2) +) 
+  | p1 '|' p2          :: :: or      (+ b = b(p1) union b(p2) +) 
+%(+ names(p1) = names(p2) +) 
+  | None               :: :: None    (+ b = {} +)
+  | Some p             :: :: Some    (+ b = b(p) +)
+  | ( p )              :: S :: Paren 
+
+
+terminals :: terminals_ ::=
+  |  ->                                ::   :: arrow      {{ tex \rightarrow }}
+  |  function                          ::   :: function   {{ tex \textbf{function} }}
+  | |-                                 ::   :: turnstile  {{ tex \vdash }}
+  | -->                                ::   :: red        {{ tex \longrightarrow }}
+  | '{'                                ::   :: leftbrace  {{ tex \{ }}
+  | '}'                                ::   :: rightbrace {{ tex \} }}
+

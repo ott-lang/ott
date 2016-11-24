@@ -1,0 +1,32 @@
+metavar value_name, x ::=
+  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ ocaml int }}
+  {{ lex alphanum }} 
+
+metavar label, l, k ::=
+ {{ isa string }} {{ coq nat }} {{ hol string }} {{ lex alphanum }}  {{ tex \mathit{[[label]]} }} 
+ {{ com  field label  }}  {{ isavar ''[[label]]'' }} {{ holvar "[[label]]" }}
+ {{ ocamlvar "[[label]]" }}
+
+indexvar index, i, j, n, m  ::= {{ isa nat }} {{ coq nat }} {{ hol num }} {{ lex numeral }}
+  {{ com indices }}
+
+grammar
+t :: E_ ::=
+  | x                                  ::   :: ident
+  | { l1 = t1 ,  .. , ln = tn }      :: :: record                     
+  | let p = t in t'                    ::   :: let     (+ bind b(p) in t' +)
+
+p :: 'P_' ::=                                              
+  | x                                 :: :: ident (+ b = x  +)
+  | { l1 = p1 , .. , ln = pn }       :: :: record (+ b = b(p1 .. pn) +) 
+
+
+
+terminals :: terminals_ ::=
+  |  ->                                ::   :: arrow      {{ tex \rightarrow }}
+  |  function                          ::   :: function   {{ tex \textbf{function} }}
+  | |-                                 ::   :: turnstile  {{ tex \vdash }}
+  | -->                                ::   :: red        {{ tex \longrightarrow }}
+  | '{'                                ::   :: leftbrace  {{ tex \{ }}
+  | '}'                                ::   :: rightbrace {{ tex \} }}
+

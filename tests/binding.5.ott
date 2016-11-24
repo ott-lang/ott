@@ -1,0 +1,82 @@
+
+embed 
+ {{ tex
+\newcommand{\[[TEX_NAME_PREFIX]]testterma}{ [[ :J_type:  empty, X<:Top, Y<:X->X, x:X, y:Y |- y x  : X  ]] } 
+\newcommand{\[[TEX_NAME_PREFIX]]testtermb}{ [[ :Jb_type: empty, X<:Top, Y<:X->X, x:X, y:Y |- y x : X ]] } 
+\newcommand{\[[TEX_NAME_PREFIX]]testtermc}{ [[ :Gb_term: empty, X<:Top, Y<:X->X, x:X, y:Y ]] } 
+\newcommand{\[[TEX_NAME_PREFIX]]testtermC}{ [[ :Gb_term: empty, W<:Top, Y<:W->W, x:W, y:Y ]] } 
+\newcommand{\[[TEX_NAME_PREFIX]]testtermd}{ [[ :Jc_type: Gc |- t : T      ]] } 
+\newcommand{\[[TEX_NAME_PREFIX]]testterme}{ [[ Gc ]] }
+
+
+}}
+
+metavar typevar, X ::= {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ ocaml int }}  {{ lex Alphanum }}
+metavar termvar, x ::= {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ ocaml int }}  {{ lex alphanum }}
+
+
+grammar 
+      T :: T_ ::= 
+          | X                  :: :: T_Var
+          | Top                :: :: T_Top
+          | T -> T'            :: :: T_Fun
+          | Forall X <: T . T' :: :: T_Forall (+ bind X in T' +)
+                              
+      t :: t_ ::= 
+          | x                  :: :: Var
+          | \ x : T . t        :: :: Lam  (+ bind x in t +)
+          | t t'               :: :: App
+          | \ X <: T . t       :: :: TLam (+ bind X in t +)
+          | t [ T ]            :: :: TApp
+          | let p = t in t'    :: :: Let  (+ bind bo(p) in t' +)
+                              
+      p :: p_ ::=
+          | x : T              :: :: Var          (+ bo = x  +)
+
+      G {{ tex \Gamma }} :: G_ ::= 
+          | empty              :: :: empty       (+ Tdom = {}              tdom = {}+)
+          | G , X <: T         :: :: type        (+ Tdom = Tdom(G) union X tdom = tdom(G) +)
+          | G , x : T          :: :: term        (+ Tdom = Tdom(G)         tdom = tdom(G) union x +)
+
+      J :: J_ ::=           
+          | G |- T <: T'       :: :: subtype     (+ +)
+          | G |- t : T         :: :: type        (+ +)
+          | t --> t'           :: :: red         (+ +)
+
+      Gb {{ tex \Gamma^b }} :: Gb_ ::= 
+          | empty              :: :: empty       (+ Tdom = {}               tdom = {}+)
+          | Gb , X <: T        :: :: type        (+ Tdom = Tdom(Gb) union X tdom = {} 
+                                                    bind Tdom(Gb) in T         +)
+{{ tex [[Gb]],\,[[X]] [[<:]] [[T]] }}
+          | Gb , x : T         :: :: term        (+ Tdom = Tdom(Gb)         tdom = tdom(Gb) union x
+                                                    bind Tdom(Gb) in T   +)
+{{ tex [[Gb]],\,[[x]] [[:]] [[T]] }}
+
+      Jb :: Jb_ ::= 
+           | Gb |- T <: T'     :: :: subtype (+ bind Tdom(Gb) in T   bind Tdom(Gb) in T' +)
+           | Gb |- t : T       :: :: type    (+ bind Tdom(Gb) in t   bind Tdom(Gb) in T  bind tdom(Gb) in t+)
+           | t --> t'          :: :: red     
+
+
+      Gc {{ tex \Gamma }} :: Gc_ ::= 
+          | empty              :: :: empty     
+          | Gc , X <: T         :: :: type     
+{{ tex [[Gc]],\,[[X]] [[<:]] [[T]] }}
+          | Gc , x : T          :: :: term     
+{{ tex [[Gc]],\,[[x]] [[:]] [[T]] }}
+
+     Jc :: Jc_ ::= 
+           | Gc |- t : T       :: :: type 
+
+
+terminals :: terminals_ ::=
+  |  ->                                ::   :: arrow      {{ tex \mathord{\rightarrow} }}
+  |  :                                ::   :: colon      {{ tex \mathord{:} }}
+  |  function                          ::   :: function   {{ tex \textbf{function} }}
+  | |-                                 ::   :: turnstile  {{ tex \vdash }}
+  | -->                                ::   :: red        {{ tex \longrightarrow }}
+  | '{'                                ::   :: leftbrace  {{ tex \{ }}
+  | '}'                                ::   :: rightbrace {{ tex \} }}
+  | \                                  ::   :: lam {{ tex \lambda }}
+  | Forall                             ::   :: forall {{ tex \forall }}
+  | empty                              ::   :: empty {{ tex \varnothing }}

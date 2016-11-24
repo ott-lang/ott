@@ -1,0 +1,5 @@
+  metavar label, l ::= {{ hol string }} {{ coq nat }}
+  indexvar index, n ::=  {{ hol num }} {{ coq nat }} 
+  grammar
+  term, t :: 't_' ::=
+    | { l1 = t1 ,  .. , ln = tn }      :: :: record

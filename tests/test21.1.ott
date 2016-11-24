@@ -1,0 +1,42 @@
+metavar n ::=
+
+grammar
+
+e :: e_ ::= 
+| n             ::   :: num
+| - e           ::   :: neg
+| e1 + e2       ::   :: add
+| e1 - e2       ::   :: sub
+| e1 e2         ::   :: mul
+| e1 / e2       ::   :: div
+| e1 , .. , e2  ::   :: tup
+| ( e )         :: M :: par {{ icho [[e]] }}
+
+parsing
+
+e_add left e_add   % #1
+e_sub left e_sub
+e_add left e_sub   % #3
+e_sub left e_add
+
+e_mul left e_mul
+e_div left e_div
+e_mul left e_div
+e_div left e_mul
+
+e_neg <= e_add     % #9
+e_neg <= e_sub
+e_neg <= e_mul
+e_neg <= e_div
+e_neg <= e_tup
+
+e_add <= e_div
+e_add <= e_mul     % #15
+e_add <= e_tup
+e_sub <= e_div
+e_sub <= e_mul
+e_sub <= e_tup
+
+e_mul <= e_tup     % #20
+e_div <= e_tup
+

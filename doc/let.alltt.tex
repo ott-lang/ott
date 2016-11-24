@@ -1,0 +1,31 @@
+\begin{alltt}
+\mykw{grammar}
+t \mysym{::} Tm \mysym{::=}                                        \mysym{\mylb\mylb{}} \mykw{com} terms: \mysym{\myrb\myrb{}}
+  \mysym{|} let x = t in t'                   \mysym{::}   \mysym{::} Let \mysym{(+} \mykw{bind} x \mykw{in} t' \mysym{+)}     \mysym{\mylb\mylb{}} \mykw{com} let binding \mysym{\myrb\myrb{}}
+
+
+\mykw{defns} 
+Jop \mysym{::} '' \mysym{::=} 
+
+\mykw{defn} 
+t --> t' \mysym{::} \mysym{::} red \mysym{::} E_ \mysym{\mylb\mylb{}} \mykw{com} Evaluation \mysym{\myrb\myrb{}} \mykw{by}
+
+\mysym{-----------------------------} :: LetV
+let x=v1 in t2 --> [x|->v1]t2 
+
+t1 --> t1'
+\mysym{----------------------------------} :: Let
+let x=t1 in t2 --> let x=t1' in t2
+
+
+\mykw{defns}
+Jtype \mysym{::} '' \mysym{::=} 
+
+\mykw{defn}
+G |- t : T \mysym{::} \mysym{::} typing \mysym{::} T_ \mysym{\mylb\mylb{}} \mykw{com} Typing \mysym{\myrb\myrb{}} \mykw{by}
+
+G |- t1:T1
+G,x:T1 |- t2:T2
+\mysym{------------------------} :: Let
+G |- let x=t1 in t2 : T2
+\end{alltt}

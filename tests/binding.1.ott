@@ -1,0 +1,17 @@
+metavar value_name, x, f ::=
+  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ ocaml int }}
+  {{ lex alphanum }} 
+
+grammar
+t :: E_ ::=
+%  | x                                  ::   :: ident
+  | let rec x = t in t'                ::   :: letrec      (+ bind x in t +) (+ bind x in t'+)
+
+terminals :: terminals_ ::=
+  |  ->                                ::   :: arrow      {{ tex \rightarrow }}
+  |  function                          ::   :: function   {{ tex \textbf{function} }}
+  | |-                                 ::   :: turnstile  {{ tex \vdash }}
+  | -->                                ::   :: red        {{ tex \longrightarrow }}
+  | '{'                                ::   :: leftbrace  {{ tex \{ }}
+  | '}'                                ::   :: rightbrace {{ tex \} }}
+

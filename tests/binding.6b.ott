@@ -1,0 +1,36 @@
+grammar
+T {{ hol Typ }}, S, U :: 'T_' ::=                    {{ com type  }}
+  | { l1 : T1 , .. , ln : Tn }      :: :: Rec           {{ com record }}           
+
+G {{ tex \Gamma }}, D {{ tex \Delta }} :: 'G_' ::= {{ com type environment }}
+  | empty                            ::   :: empty       
+
+formula :: formula_ ::=          
+  | judgement              :: :: judgement
+  | formula1 .. formulan   :: :: dots
+
+terminals :: terminals_ ::=
+  |  \                     ::   :: lambda    {{ tex  \lambda }}
+  |  ->                    ::   :: arrow     {{ tex  \rightarrow }}
+  |  =>                    ::   :: Arrow     {{ tex  \Rightarrow }}
+  | |-                     ::   :: turnstile {{ tex \vdash }}
+  | -->                    ::   :: red       {{ tex \longrightarrow }}
+  | Forall                 ::   :: forall    {{ tex \forall }}
+  | <:                     ::   :: subtype   {{ tex <: }}
+  | |->                    ::   :: mapsto    {{ tex \mapsto }}
+  | =                      ::   :: eq        {{ tex \!\! = \!\! }}
+  | :                      ::   :: colon     {{ tex \!\! : \!\! }}
+
+
+defns
+Jtype :: '' ::=
+
+defn
+G |- t : T ::  :: Ty :: Ty_  {{ com term [[t]] has type [[T]] }} by 
+
+
+G|-t0:T0 .. G|-tn-1:Tn-1
+------------------------------------- :: Rcd
+G|- {l0=t0,..,ln-1=tn-1}:{l0:T0,..,ln-1:Tn-1}
+
+

@@ -1,0 +1,24 @@
+metavar value_name, x ::=
+  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ ocaml int }}
+  {{ lex alphanum }} 
+
+grammar
+t :: E_ ::=
+  | x                                  ::   :: ident
+  | ( t1 , t2 )                        ::   :: pair
+  | let p = t in t'                    ::   :: letrec      (+ bind binders(p) in t' +)
+
+
+p :: P_ ::=
+  | _                                  ::   :: wildcard    (+ binders = {} +)
+  | x                                  ::   :: ident       (+ binders = x +)
+  | ( p1 , p2 )                        ::   :: pair        (+ binders = binders(p1) union binders(p2) +)
+
+
+terminals :: terminals_ ::=
+  |  ->                                ::   :: arrow      {{ tex \rightarrow }}
+  |  function                          ::   :: function   {{ tex \textbf{function} }}
+  | |-                                 ::   :: turnstile  {{ tex \vdash }}
+  | -->                                ::   :: red        {{ tex \longrightarrow }}
+  | '{'                                ::   :: leftbrace  {{ tex \{ }}
+  | '}'                                ::   :: rightbrace {{ tex \} }}

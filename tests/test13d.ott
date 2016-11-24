@@ -1,0 +1,474 @@
+metavar terminal, tm			::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar metavarroot, mvr  	::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar nontermroot, ntr  	::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar suffix, suff       ::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar variable, var  	::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar auxfn, f          ::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar prodname, pn     ::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+indexvar index, i, j, k, l, m, n, o, q, jp {{ tex \mbox{$\scriptstyle j'$} }}, qp {{ tex \mbox{$\scriptstyle q'$} }}, np {{ tex \mbox{$\scriptstyle n'$} }}, op {{ tex \mbox{$\scriptstyle o'$} }}, mp {{ tex \mbox{$\scriptstyle m'$} }}, ip {{ tex \mbox{$\scriptstyle i'$} }} ::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+
+metavar defnclassname, dcn ::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar defnname, dn ::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar defnrulename, drn ::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+
+grammar
+
+'metavar', mv :: 'mv_' ::=
+  | metavarroot suffix  :: :: 1
+
+nonterm, nt :: 'nt_' ::=
+  | nontermroot suffix  :: :: 1
+
+element, e :: 'e_' ::=
+  | terminal :: :: tm
+  | 'metavar' :: :: mv
+  | nonterm  :: :: nt
+% TODO - List forms
+
+metavar_set_expression, mse :: 'mse_' ::=
+  | 'metavar' :: :: mv
+  | auxfn ( nonterm ) :: :: f  {{ tex [[auxfn]]\texttt{(}[[nonterm]]\texttt{)} }}
+  | mse union mse' :: :: union
+  | {} :: :: empty
+
+bindspec, bs :: 'bs_' ::=
+  | 'bind' mse in nonterm :: :: bind
+  | auxfn = mse :: :: auxfn
+
+
+prod, p :: 'p_' ::=
+  | '|' element1 .. elementm '::' '::' prodname '(+' bs1 .. bsn '+)'   :: :: 1
+
+rule, r :: 'r_' ::= 
+  | nontermroot '::' '''' '::='  prod1 .. prodm :: :: 1
+
+grammar_rules, g :: 'g_' ::= 
+  | 'grammar' rule1 .. rulem :: :: 1
+
+
+auxfn_type, at :: 'at_' ::=
+  | nontermroot1 .. nontermrootn -> metavarroot :: :: 1
+
+auxfn_type_env, Phi {{ tex \Phi }} :: 'ate_' ::=
+  | empty :: :: 1
+  | Phi , auxfn : auxfn_type :: :: 2
+
+grammar_type, G {{ tex \Gamma }} :: 'gt_' ::=
+  | nontermroot1 .. nontermrootn  :: :: 1
+
+
+%%%
+
+concrete_abstract_syntax_term , cast :: 'cast_' ::=
+  | var : mvr                          :: :: 1
+  | prodname ( cast1 , .. , castm )    :: :: 2
+
+%%%%
+
+cast_type, ct :: 'cast_type_' ::=
+  | ntr :: :: 1
+  | mvr :: :: 2
+
+substitution, s :: 'subst_' ::= {{ isa (concrete_abstract_syntax_term*variable*metavarroot) list }}
+  | { cast1 / var1 : mvr1 , .. , castn / varn : mvrn }    :: :: 1 {{ isa [[ ( cast1 , var1 , mvr1 ) .. ( castn , varn , mvrn ) ]] }}
+  | filter var_set from s                               :: M :: 2 {{ isa filter (% x. not x:[[var_set]]) [[s]] }} {{ coq TODO}}
+
+symterm , st :: 'st_' ::=
+  | stnb  :: :: 1
+  | nonterm :: :: 2
+
+symterm_node_body , stnb :: 'stnb_' ::=
+  | prodname ( ste1 , .. , stem )   :: :: 1
+
+symterm_element , ste :: 'ste_' ::=
+  | st :: :: symterm
+  | 'metavar' :: :: 'metavar'
+  | var : mvr :: :: variable
+%  | ste1 ... sten  :: :: list
+
+
+%%%
+
+% relations, rd :: 'rd_' ::=
+%   | defnclass1 .. defnclassn :: :: 1
+
+% defnclass, dc :: 'dc_' ::=
+%   | 'defns' defnclassname '::' '''' '::=' definition1 .. definitionn :: :: 1
+
+% definition, d :: 'd_' ::=
+%   | 'defn' symterm '::' '::' defnname '::' '''' defnrule1 .. defnrulen :: :: 1
+
+% defnrule, dr :: 'dr_' ::=
+%   | symterm1 .. symtermn gives symterm '::' defnrulename :: :: 1 
+% {{ tex 
+% \begin{array}{ccl} 
+% [[ symterm1 ]] .. [[ symtermn ]] \\
+% \hline & :: & [[ defnrulename ]]\\
+% [[ symterm ]]  
+
+% \end{array} }}
+
+ntmv :: 'ntmv_' ::=
+  | nt :: :: 1
+  | mv :: :: 2
+
+ntmv_list :: 'ntmv_list_' ::= {{ isa ntmv list }}
+  | ntmv1 , .. , ntmvn             :: :: 1 {{ isa [[ntmv1 ..ntmvn ]] }}
+  | remove_terminals ( e1 .. en ) :: M :: 2 {{ isa SOME l. ([[e1..en]], l ) \<in> remove_terminals2 }} {{ coq TODO }}
+  | []                         :: M :: 4 {{ isa Nil }} {{ coq TODO }}
+  | ntmv , ntmv_list               :: M :: 3 {{ isa ( [[ntmv]] ) # ([[ntmv_list]]) }} {{ coq TODO }}
+
+
+ 
+var_set :: 'var_set_' ::=  {{ isa (variable*metavarroot) set }}
+  | {}                     :: M :: 1 {{ ich {} }}
+  | { var : mvr }          :: M :: 2 {{ ich {([[var]], [[mvr]])} }}
+  | union { var_set | formula } :: M :: 3  {{ ich Union { [[var_set]] | [[formula]] } }}
+  | var_set union var_set' :: M :: 3_5 {{ ich ([[var_set]]) Un ([[var_set']]) }}
+  | [| mse |] g ( cast )   :: M :: 4  {{ ich SOME var_set. ([[mse]], [[g]], [[cast]], var_set) \<in> interp_mse }}
+  | var_set - var_set'     :: M :: 5  {{ ich [[var_set]] - [[var_set']] }}
+  | union { </ var_seti // i /> } :: M :: 6 {{ ich Union ( set [[ </ var_seti // i /> ]] ) }}
+
+formula :: 'formula_' ::=          
+  | judgement           ::   :: judgement
+  | formula1 ... formulan ::  :: dots
+  | i = j              ::   :: ieq {{ ic [[i]] = [[j]] }}
+  | f = f'              ::   :: feq {{ ic [[f]] = [[f']] }}
+  | mvr = mvr'              ::   :: mvreq {{ ic [[mvr]] = [[mvr']] }}
+  | ntr = ntr'              ::   :: ntreq {{ ic [[ntr]] = [[ntr']] }}
+  | var = var'              ::   :: vareq {{ ic [[var]] = [[var']] }}
+  | mv = mv'              ::   :: mveq {{ ic [[mv]] = [[mv']] }}
+  | nt = nt'              ::   :: nteq {{ ic [[nt]] = [[nt']] }}
+  | ntmv = ntmv'              ::   :: ntmveq {{ ic [[ntmv]] = [[ntmv']] }}
+  | e = e'              ::   :: eeq {{ ic [[e]] = [[e']] }}
+  | mse = mse'              ::   :: mseeq {{ ic [[mse]] = [[mse']] }}
+  | bs = bs'              ::   :: bseq {{ ic [[bs]] = [[bs']] }}
+  | p = p'              ::   :: peq {{ ic [[p]] = [[p']] }}
+  | r = r'              ::   :: req {{ ic [[r]] = [[r']] }}
+  | g = g'              ::   :: geq {{ ic [[g]] = [[g']] }}
+  | var_set = var_set'              ::   :: var_seteq {{ ic [[var_set]] = [[var_set']] }}
+  | cast = cast'              ::   :: casteq {{ ic [[cast]] = [[cast']] }}
+  | s = s'              ::   :: seq {{ ic [[s]] = [[s']] }}
+  | ( formula )            :: :: paren   {{ ic ( [[formula]] ) }}
+  | not formula            :: :: not     {{ isa Not( [[formula]] ) }}
+  | forall i isin 1 -- m . formula :: :: forall 
+                               {{ tex \forall [[i]] \in 1 .. [[m]]. [[formula]] }} 
+                               {{ isa (![[i]]. ((1::nat)<=[[i]] & [[i]]<=[[m]]) --> [[formula]]) }} 
+  | exists i isin 1 -- m . formula :: :: exists 
+                               {{ tex \exists [[i]] \in 1 .. [[m]]. [[formula]] }}
+                               {{ isa (?[[i]]. ((1::nat)<=[[i]] & [[i]]<=[[m]]) --> [[formula]]) }} 
+  | existsuniq i isin 1 -- m . formula :: :: existsuni 
+                               {{ tex \exists ! [[i]] \in 1 .. [[m]]. [[formula]] }}
+                               {{ isa (?[[i]]. ((1::nat)<=[[i]] & [[i]]<=[[m]]) --> [[formula]]) }} 
+  | exists nt . formula :: :: existsnt 
+                               {{ tex \exists [[nt]]. [[formula]] }}
+                               {{ isa (?[[nt]]. [[formula]]) }} 
+  | exists var:mvr . formula :: :: existsvar 
+                               {{ tex \exists [[var:mvr]]. [[formula]] }}
+                               {{ isa (?[[var]] [[mvr]]. [[formula]]) }} 
+  | formula /\ formula'   :: :: and  {{ isa ([[formula]] & [[formula']]) }}
+  | formula => formula'   :: :: implies  {{ isa ([[formula]] --> [[formula']]) }}
+  | true :: :: true {{ isa True }} 
+  | j INDEXES p1 .. pm                  ::   :: Indexesp
+        {{ coq (1 <= [[j]] /\ [[j]] <= length (unmake_list'p [[p1..pm]])) }}
+        {{ hol (1 <= [[j]] /\ [[j]] <= LENGTH [[p1..pm]]) }}
+        {{ isa (1 <= [[j]] & [[j]] <= length [[p1..pm]]) }}
+
+terminals :: '' ::=
+  | '{}' :: :: quote {{ tex \texttt{\{\} } }}
+%  | '('  :: :: lparen {{ tex \texttt{(} }}
+%  | ')'  :: :: rparen {{ tex \texttt{)} }}
+  | '(+'  :: :: lparenplus {{ tex \texttt{(+} }}
+  | '+)'  :: :: rparenplus {{ tex \texttt{+)} }}
+  | ''''  :: :: quotequote {{ tex \texttt{''} }}
+  | '::'  :: :: coloncolon {{ tex \texttt{::} }}
+  | '::='  :: :: coloncoloneq {{ tex \texttt{::=} }}
+  | 'grammar' :: :: tgrammar {{ tex \texttt{grammar} }}
+  | 'bind' :: :: bind {{ tex \texttt{bind} }}
+  | 'in' :: :: in {{ tex \texttt{in} }}
+  | 'union' :: :: union {{ tex \texttt{union} }}
+  |  ->                    ::   :: arrow     {{ tex  \rightarrow }}
+  |  =>                    ::   :: AArrow     {{ tex  \Rightarrow }}
+  | |-                     ::   :: turnstile {{ tex \vdash }}
+  | /\  :: :: wedge {{ tex {\scriptsize\wedge} }}
+  | \/  :: :: vee {{ tex {\scriptsize\vee} }}
+  | '|' :: :: bar {{ tex \texttt{|} }}
+  | 'defns' :: :: tdefns {{ tex \texttt{defns} }}
+  | 'defn' :: :: tdefn {{ tex \texttt{defn} }}
+  | isin :: :: isin {{ tex \in }}
+
+defns
+Jtype :: '' ::=
+
+
+defn
+Phi |- f : at :: :: FF :: FF_ by
+
+------------------ :: 1
+Phi,f:at |- f : at
+
+
+Phi |- f : at
+not (f=f')
+------------------ :: 2
+Phi,f':at' |- f:at
+
+
+
+defn
+Phi ; e1 .. en |- mse : metavarroot ::  :: Mse :: Mse_  by 
+
+---------------------- :: 1
+Phi;e1..en |- {} : mvr
+
+
+ej = mvr suff
+---------------------------- :: 2
+Phi;e1..en |- mvr suff : mvr 
+
+
+Phi |- f : ntr1 .. ntrm -> mvr
+ej = nt
+:formula_nteq: nt = ntri suff
+------------------------- :: 3
+Phi;e1..en |- f(nt) : mvr
+
+
+Phi;e1..en |- mse : mvr
+Phi;e1..en |- mse' : mvr
+---------------------------------- :: 4
+Phi;e1..en |- mse union mse' : mvr
+
+
+
+defn
+Phi ; e1 .. en |- bs ok :: :: Bs :: Bs_ by
+
+Phi;e1..en |- mse : mvr
+existsuniq j isin 1 -- n . ej=nt
+-------------------------------- :: 1
+Phi;e1..en |- bind mse in nt ok
+
+Phi;e1..en |- mse : mvr
+Phi |- f : ntr1..ntrn -> mvr
+------------------------------- :: 2
+Phi;e1..en |- f=mse ok
+
+
+
+defn
+Phi |- prod ok :: :: Prod :: Prod_ by
+
+forall i isin 1--m. Phi;e1..en |- bsi ok
+prod = | e1..en :: :: prodname (+ bs1..bsm +) 
+------------------------------------------------- :: 1
+Phi |- prod ok
+
+
+
+
+defn
+Phi |- rule ok :: :: Rule :: Rule_ by
+
+forall i isin 1--m. Phi |- prodi ok
+rule = ntr :: '' ::= prod1..prodm 
+------------------------------------------ :: 1
+Phi |- rule ok
+
+
+
+defn
+Phi |- grammar_rules ok :: :: Grammar :: Grammar_ by
+
+forall i isin 1--m. Phi |- rulei ok
+grammar_rules = grammar  rule1..rulem 
+forall i isin 1--m. forall j isin 1--n.  ((rulei=ntr :: '' ::= prod1..prodm /\ rulej=ntr :: '' ::= prod1'..prodn') =>  i=j)
+------------------------------------------ :: 1
+Phi |- grammar_rules ok
+
+% TODO (SS) : 
+% - Check above rules for unique definitions
+% - Prove lemma (easy, by structural induction) that definitions of
+%   auxfns are unique
+% - This property is assumed in what follows
+
+
+
+% have to do this relationally in current ott, unfortunatly
+defn
+remove_suffix ( ntmv ) = ct :: :: remove_suffix :: remove_suffix_ by
+
+-------- :: 1
+remove_suffix(ntr suff) = ntr
+
+-------- :: 2
+remove_suffix(mvr suff) = mvr
+
+% extract_types ( e1  ..  en )  = ct_list :: :: extract_types2 :: extract_types2_ by
+% 
+% ---------------------- :: 1
+% extract_types ()  = []
+% 
+% ------------------------------------------------- :: 2
+% extract_types (tm e1..en) = extract_types (e1..en)
+% 
+% ------------------------------------------------------------ :: 3
+% extract_types (ntr suff e1..en) = ntr,extract_types (e1..en)
+% 
+% ------------------------------------------------------------ :: 4
+% extract_types (mvr suff e1..en) = mvr,extract_types (e1..en)
+
+
+defn
+remove_terminals ( e1  ..  en )  = ntmv_list :: :: remove_terminals2 :: remove_terminals2_ by
+
+---------------------- :: 1
+remove_terminals()  = []
+
+remove_terminals(e1..en) = ntmv_list
+------------------------------------------------- :: 2
+remove_terminals(tm e1..en) = ntmv_list
+
+remove_terminals(e1..en) = ntmv_list
+------------------------------------------------------------ :: 3
+remove_terminals(nt e1..en) = nt,ntmv_list
+
+remove_terminals(e1..en) = ntmv_list
+------------------------------------------------------------ :: 4
+remove_terminals(mv e1..en) = mv,ntmv_list
+
+
+
+defn
+p isin g ( ntr )  :: :: lookup_p :: lookup_p_ by
+
+g = grammar r1 .. rl
+ri = ntr :: '' ::=  p1 .. pm 
+j INDEXES p1 .. pm
+---------------------------- :: 2
+pj isin g ( ntr ) 
+
+
+
+defn
+g |- cast : cast_type :: :: cast_ty :: cast_ty_ by
+
+------------------ :: 1
+g |- var : mvr : mvr
+
+
+%lmnoq
+%ijk l
+| e1 .. en :: :: pn (+ bs1 .. bso +) isin g(ntr)
+remove_terminals(e1..en) = ntmv1,..,ntmvq
+remove_suffix(ntmv1)=ct1 .. remove_suffix(ntmvq)=ctq 
+g |- cast1 : ct1 ..  g |- castq : ctq 
+---------------------------- :: 2
+g |- pn(cast1,..,castq) : ntr 
+
+
+defn
+[| mse |] g ( cast ) => var_set :: :: interp_mse :: interp_mse_ by
+
+
+-------------------- :: 1
+[| {} |]g (cast) => {}
+
+
+[| mse |] g (cast) => var_set
+[| mse' |] g (cast) => var_set'
+---------------------------------------------------------------- :: 2
+[| mse union mse' |]g (cast) => var_set  union var_set' 
+
+
+
+| e1 .. en :: :: pn (+ bs1 .. bso +) isin  g(ntr)
+remove_terminals(e1..en) = ntmv1,..,ntmvq 
+ntmvl = nt
+:formula_nteq: nt = ntr' suff'
+castl = pn' (cast'1, .. , cast'qp) 
+| e'1 .. e'np :: :: pn' (+ bs'1 .. bs'op +) isin g(ntr')
+bs'k = f=mse'
+[|mse'|]g(castl) => var_set
+------------------- :: 3
+[| f(nt) |]g(pn(cast1,..,castq)) => var_set 
+
+
+
+
+| e1 .. en :: :: pn (+ bs1 .. bso +)  isin g(ntr)
+remove_terminals(e1..en) = ntmv1,..,ntmvq 
+ntmvl = mv
+castl = var':mvr'
+------------------- :: 4
+[| mv |]g(pn(cast1,..,castq)) => {var':mvr'}
+
+defn
+var : mvr in dom ( s ) :: :: indom :: indom_ by
+
+----------- :: 1
+var:mvr in dom ({</casti/vari:mvri//i/>, cast/var:mvr, </cast'j/var'j:mvr'j//j/>})
+
+
+defns
+Jsubst_fv :: '' ::=
+
+defn
+subst s in cast = cast''  :: :: subst :: subst_ by
+
+----------- :: 1
+subst {</casti/vari:mvri//i/>, cast/var:mvr, </cast'j/var'j:mvr'j//j/>} in pn(var:mvr)  = cast
+
+not(var:mvr in dom (s))
+----------- :: 2
+subst s in pn(var:mvr) = pn(var:mvr)
+
+----------- :: 0
+subst s in var:mvr = var:mvr
+
+cast = pn(</castk//k/>)
+not(exists var:mvr. cast = pn (var:mvr) )
+| e1 .. en :: :: pn (+ bs1 .. bsm +)  isin g(ntr)
+remove_terminals(e1..en) = </ntmvk//k/>
+</sk = filter union{[| mse' |] g (cast) | exists nt. exists j isin 1--m. (bsj = bind mse' in nt /\ ntmvk = nt)} from s//k/>
+</ subst sk in castk = cast'k // k />
+cast' = pn(</cast'k//k/>)
+----------- :: 3
+subst s in cast = cast'
+
+
+
+%% The free occurences of vars in singleton productions of mvr
+%% in the ntr grammar within cast
+defn
+fv ntr mvr of cast = var_set  :: :: fv :: fv_ by
+
+| e1 .. en :: :: pn (+ bs1 .. bso +)  isin g(ntr')
+not (ntr = ntr')
+----------- :: 1
+fv ntr mvr of pn(var:mvr) = {}
+
+| e1 .. en :: :: pn (+ bs1 .. bso +)  isin g(ntr)
+not (mvr = mvr')
+----------- :: 1_5
+fv ntr mvr of pn(var:mvr') = {}
+
+| e1 .. en :: :: pn (+ bs1 .. bso +)  isin g(ntr)
+----------- :: 2
+fv ntr mvr of pn(var:mvr) = { var:mvr }
+
+----------- :: 0
+fv ntr mvr of var:mvr = {} 
+
+cast = pn(</castk//k/>)
+not(exists var:mvr. cast = pn (var:mvr) )
+| e1 .. en :: :: pn (+ bs1 .. bsm +)  isin g(ntr)
+remove_terminals(e1..en) = </ntmvk//k/>
+</var_setk = union{[| mse' |] g (cast) | exists nt. exists j isin 1--m. (bsj = bind mse' in nt /\ ntmvk = nt)}//k/> 
+%% The above are things that are binding around castk
+</ fv ntr mvr of castk = var_set'k // k />
+var_set = union {</var_set'k - var_setk//k/>}
+----------- :: 3
+fv ntr mvr of cast = var_set
+
+

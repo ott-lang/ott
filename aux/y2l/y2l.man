@@ -1,0 +1,75 @@
+.\"
+.\" Copyright (c) 1994-2000 by Kris Van Hees, Belgium.  All rights reserved.
+.\" See the "Artistic License" included in this package (file: "Artistic") for
+.\" terms and conditions.
+.\"
+.\" $Id: y2l.man,v 1.1 2004/08/06 10:59:29 kw217 Exp $
+.\"
+.TH y2l 1 "Aedil's Utilities" "ASI"
+.SH NAME
+y2l \- Yacc to LaTeX grammar pretty printer
+.SH SYNOPSIS
+\fBy2l\fP [\fB\-\-\fP options] \fIfile\fP
+.br
+Options:
+.br
+[-d] [-h] [-O] [-O{0,1,2}] [-p] [-t{regexp,file}] [-v]
+.SH DESCRIPTION
+This utility takes a
+.IR yacc (1)
+grammar description file and generates an EBNF (Extended Backus-Naur Form)
+grammar from it.  By default, the output will be a
+.IR LaTeX (1)
+longtable environment, that can be \\input{} into any LaTeX document.  Automatic
+substitution of symbolic terminals can also be taken care of.  Options control
+whether any optimization should be done on the grammar, and whether plain ASCII
+output should be generated instead.
+.SH OPTIONS
+.TP
+.I \-d
+Write out debugging information to standard error.
+.TP
+.I \-h
+Display a short usage summary on standard output and exit.
+.TP
+.I \-O
+Optimize the yacc grammar.  This basic optimization will look for empty rules to
+make non-terminals optional.  It also recursively generates choice groups and
+optional groups and elements based on common prefix and suffix token lists.
+.TP
+.I \-O0
+Turn off optimization.
+.TP
+.I \-O1
+This gives the same optimization as the regular
+.I \-O
+option.
+.TP
+.I \-O2
+Do basic optimization.  In addition, multiple rules for the same non-terminal
+are combined as a choice group.  Rules that were optimized by the first phase
+as optional non-terminals are converted into repetitive rules if possible.
+.TP
+.I \-p
+Generate plain ASCII output rather than LaTeX output.
+.TP
+.IR \-t regexp
+Use the provided regular expression to determine whether a terminal is a lexical
+token rather than a literal.  This is useful for grammars where literal tokens
+represent string literals that differ only in that the string literals are all
+lowercase versions of the token.  Since this is a fairly common practise in yacc
+grammars, this option ha sbeen provided.
+.TP
+.IR \-t file
+Use the provided file as a mapping between literal tokens and the literal
+strings they represent.  Each line in the file should contain two identifiers:
+the first one is the lexical token, and the second one is the literal string it
+represents.
+.TP
+.I \-v
+Display the program version information on standard error prior to doing any
+processing.
+.SH BUGS
+While no known bugs seem to exist, there are probably quite a few unknown bugs.
+.SH AUTHOR
+Kris Van Hees <aedil@alchar.org>
