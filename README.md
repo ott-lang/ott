@@ -80,6 +80,12 @@ filename         | description
 
 from files `test10.ott`, `test8.ott`, etc., in `tests/`.
 
+
+## Manual
+
+* <a href="http://www.cl.cam.ac.uk/~pes20/ott/ott_manual_0.25.html">here (html)</a>
+
+
 ## Emacs mode
 
 The file `emacs/ottmode.el` defines a very simple Emacs mode for syntax
