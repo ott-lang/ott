@@ -381,6 +381,9 @@ TOP2DEPS = top2.tex test7.tex test8.tex test10.tex test10.hand.edited.thy  test1
 top2.ps: $(TOP2DEPS) 
 	latex top2 && bibtex top2 && latex top2 && latex top2 && dvips $(DVIPSFLAGS) top2
 
+top2.pdf: top2.ps
+	ps2pdf $<
+
 top2.html: $(TOP2DEPS)
 	hevea -fix top2
 	sed 's/textboxed{border:1px/textboxed{border:0px/g' < top2.html > top2.tmp.html
@@ -399,6 +402,14 @@ quick2: $(TOP2DEPS)
 
 let_alltt.ott: ../examples/tapl/let_alltt.ott
 	cp ../examples/tapl/let_alltt.ott .
+
+
+
+install-top2-built: top2.html top2.ps top2.pdf
+	cp top2.ps ../built_doc
+	cp top2.pdf ../built_doc
+	cp top2.html ../built_doc
+	cp top2*.gif ../built_doc
 
 
 install-top2: top2.html top2.ps top2.pdf

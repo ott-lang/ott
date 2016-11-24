@@ -10,7 +10,8 @@ The source distribution contains:
 
 directory               | description
 ---                     | ---
-`doc/`                    | the user guide, in html, pdf, and ps
+`built_doc/`              | the user guide, in html, pdf, and ps
+`doc/`                    | the user guide sources
 `emacs/`                  | an Ott Emacs mode
 `tex/`                    | auxiliary files for LaTeX
 `coq/`                    | auxiliary files for Coq
@@ -25,7 +26,7 @@ directory               | description
 `revisionhistory.txt`     | the revision history
 `ocamlgraph-0.99a.tar.gz` | a copy of the ocamlgraph library
 
-(we no longer provide a Windows binary distribution)
+(we no longer provide a Windows binary distribution or non-github tarballs)
 
 ## To build
 
@@ -90,6 +91,16 @@ Ott emacs directory.
 (setq load-path (cons (expand-file-name "PATH") load-path))
 (require 'ottmode)
 ```
+
+## Mailing lists
+
+* <a href"https://lists.cam.ac.uk/mailman/listinfo/cl-ott-announce">
+cl-ott-announce announcement mailing list</a>
+* <a href="https://lists.cam.ac.uk/mailman/listinfo/cl-ott-discuss">
+cl-ott-discuss discussion mailing list</a>
+
+
+
 
 ## Copyright information
 
