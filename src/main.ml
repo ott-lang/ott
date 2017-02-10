@@ -71,6 +71,7 @@ let generate_aux_rules = ref true
 let showraw = ref false
 let tex_show_meta = ref true
 let tex_show_categories = ref false
+let tex_suppressed_categories = ref ([]:string list)
 let tex_colour = ref true
 let tex_wrap = ref true
 let process_defns = ref true
@@ -190,6 +191,9 @@ let options = Arg.align [
   ( "-tex_show_categories", 
     Arg.Bool (fun b -> tex_show_categories := b),
     "<"^string_of_bool !tex_show_categories^">  Signal production flags in TeX output" ); 
+  ( "-tex_suppress_category", 
+    Arg.String (fun s -> tex_suppressed_categories := s :: !tex_suppressed_categories),
+    "<["^ String.concat "," !tex_suppressed_categories^"]>  Suppress productions and rules with this category in TeX output" ); 
   ( "-tex_colour", 
     Arg.Bool (fun b -> tex_colour := b),
     "<"^string_of_bool !tex_colour^">     Colour parse errors in TeX output" ); 
@@ -385,6 +389,7 @@ let m_ascii = Ascii { ppa_colour = !colour;
 let m_tex = Tex {ppt_colour= !tex_colour;
                  ppt_show_meta= !tex_show_meta;
                  ppt_show_categories= !tex_show_categories;
+                 ppt_suppressed_categories= !tex_suppressed_categories;
                  ppt_wrap= !tex_wrap;
                  ppt_name_prefix= !tex_name_prefix } 
 let m_isa = Isa { ppi_isa_primrec = !isa_primrec;

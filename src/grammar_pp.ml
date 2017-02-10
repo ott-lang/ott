@@ -2521,7 +2521,10 @@ and pp_prod m xd rnn rpw p = (* returns a string option *)
         | Some s ->  Some ((String.capitalize p.prod_name) ^ " of " ^ s ^ pp_com) )
 
   | Tex xo -> 
-      if not(xo.ppt_show_meta) && p.prod_meta && not(p.prod_sugar) then 
+      let suppressed_category = 
+        StringSet.exists (fun x -> List.mem x xo.ppt_suppressed_categories)
+          p.prod_categories in
+      if suppressed_category || (not(xo.ppt_show_meta) && p.prod_meta && not(p.prod_sugar)) then 
         None
       else
         Some
@@ -2659,7 +2662,11 @@ and pp_rule m xd r = (* returns a string option *)
                      r.rule_ps))
            ^ "")
   | Tex xo ->
-      if not(xo.ppt_show_meta) && r.rule_semi_meta then 
+(*      let suppressed_category = 
+        StringSet.exists (fun x -> List.mem x xo.ppt_suppressed_categories)
+          r.rule_categories in
+*)
+      if (*suppressed_category ||*) (not(xo.ppt_show_meta) && r.rule_semi_meta) then 
         None
       else
         Some
@@ -2809,7 +2816,10 @@ and pp_rule_list m xd rs =
       ^ String.concat (pp_tex_INTERRULE_NAME m ^"\n" )
           (Auxl.option_map 
              (fun r -> 
-               if not(xo.ppt_show_meta) && r.rule_semi_meta then 
+               (*let suppressed_category = 
+                 StringSet.exists (fun x -> List.mem x xo.ppt_suppressed_categories)
+                   r.rule_categories in*)
+               if (*suppressed_category ||*) (not(xo.ppt_show_meta) && r.rule_semi_meta) then 
                  None
                else Some (tex_rule_name m r.rule_ntr_name))
              rs)
