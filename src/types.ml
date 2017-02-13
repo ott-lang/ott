@@ -840,6 +840,7 @@ and pp_tex_opts =
       ppt_show_meta : bool;
       ppt_show_categories : bool;
       ppt_suppressed_categories : string list;
+      ppt_suppressed_ntrs : string list;
       ppt_wrap : bool;
       ppt_name_prefix : string }  (* xo *)
 and pp_caml_opts = 
