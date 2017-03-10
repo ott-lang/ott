@@ -1,0 +1,57 @@
+##########################################################################
+#                                   Ott                                  #
+#                                                                        #
+#        Peter Sewell, Computer Laboratory, University of Cambridge      #
+#      Francesco Zappa Nardelli, Moscova project, INRIA Rocquencourt     #
+#                                                                        #
+#  Copyright 2005-2008                                                   #
+#                                                                        #
+#  Redistribution and use in source and binary forms, with or without    #
+#  modification, are permitted provided that the following conditions    #
+#  are met:                                                              #
+#  1. Redistributions of source code must retain the above copyright     #
+#  notice, this list of conditions and the following disclaimer.         #
+#  2. Redistributions in binary form must reproduce the above copyright  #
+#  notice, this list of conditions and the following disclaimer in the   #
+#  documentation and/or other materials provided with the distribution.  #
+#  3. The names of the authors may not be used to endorse or promote     #
+#  products derived from this software without specific prior written    #
+#  permission.                                                           #
+#                                                                        #
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS    #
+#  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED     #
+#  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    #
+#  ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY       #
+#  DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL    #
+#  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE     #
+#  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS         #
+#  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  #
+#  IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR       #
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN   #
+#  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                         #
+##########################################################################
+
+# REGRESSION ##########################################################
+
+regression: regression.ml
+	ocamlc unix.cma str.cma -o regression -dtypes regression.ml
+
+regression_p: regression_p_client.ml regression_p_master.ml
+	ocamlc unix.cma str.cma -o regression_p_client regression_p_client.ml
+	ocamlc unix.cma str.cma -o regression_p_master regression_p_master.ml
+
+regression_para: regression_para.ml
+	ocamlp3lopt -par unix.cmxa str.cmxa -o regression_para regression_para.ml
+
+reg: regression ott
+	./regression -no_hol -report ../tests/test*.ott
+
+regb: regression ott
+	./regression -no_hol -baseline ../tests/test*.ott
+
+regh: regression ott
+	./regression -report ../tests/test*.ott
+
+regbh: regression ott
+	./regression -baseline ../tests/test*.ott
+
