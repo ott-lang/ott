@@ -282,12 +282,12 @@ let run_test (tn,tl) =
   if (not !coq_test) || (not (check_config tn "Coq"))
   then result.coq_t := { ott = false; tp = Skipped }
   else begin
-    let cmd = "../ott -show_sort false -show_defns false "^t^" -o "^name^".v " (* ^" > /dev/null" *) in
+    let cmd = "../bin/ott -show_sort false -show_defns false "^t ^" -o "^name^".v " (* ^" > /dev/null" *) in
     pp ("*** Ott-Coq: " ^ cmd);
     if (command cmd) = 0
     then begin
       pp (" *  success");
-      let cmd = "coqc -init-file _ott_coqrc.v "^name^".v > /dev/null" in
+      let cmd = "coqc -init-file _ott_coqrc.v "^name^".v > " ^ name ^ ".coq.out" (* was "/dev/null"*)  in
       pp ("*** Coq: " ^ cmd);
       if (command cmd) = 0 then begin
 	result.coq_t := { ott = true; tp = Success };
@@ -306,7 +306,7 @@ let run_test (tn,tl) =
   if (not !coq_test) || (not (check_config tn "CoqNL"))
   then result.coq_no_list_t := { ott = false; tp = Skipped }
   else begin
-    let cmd = "../ott -coq_expand_list_types false "^t^" -o "^name^".v " ^" > /dev/null" in
+    let cmd = "../bin/ott -coq_expand_list_types false "^t^" -o "^name^".v " (*^" > /dev/null"*) in
     pp ("*** Ott-Coq: " ^ cmd);
     if (command cmd) = 0
     then begin
@@ -331,7 +331,7 @@ let run_test (tn,tl) =
   if (not !isa_test) || (not (check_config tn "Isa"))
   then result.isa_t := { ott = false; tp = Skipped }
   else begin
-    let cmd = "../ott "^t^" -o "^name^".thy > /dev/null" in
+    let cmd = "../bin/ott "^t^" -o "^name^".thy" (* ^" > /dev/null"*) in
     pp ("*** Ott-Isa: " ^ cmd);
     if (command cmd) = 0
     then begin
@@ -339,7 +339,7 @@ let run_test (tn,tl) =
       let cmd =
 	"echo 'ML_command {* (use_thy \"" ^ name
 	^ "\"; OS.Process.exit OS.Process.success) handle e => (OS.Process.exit OS.Process.failure); *}'"
-	^ " | isabelle tty -p \"\" > /dev/null" in
+	^ " | isabelle console \"\"" (*^ " > /dev/null"*) in (* was isabelle tty -p *)
       pp ("*** Isa: " ^ cmd);
       if (command cmd) = 0 then begin
 	result.isa_t := { ott = true; tp = Success };
@@ -356,7 +356,7 @@ let run_test (tn,tl) =
 (*   if (not !isa_test) || (not (check_config tn "Isa07")) *)
 (*  result.isa07_t := { ott = false; tp = Skipped } ; *)
 (*   else begin *)
-(*     let cmd = "../ott -isabelle "^name^".thy -isabelle2007_syntax " ^t ^" > /dev/null" in *)
+(*     let cmd = "../bin/ott -isabelle "^name^".thy -isabelle2007_syntax " ^t ^" > /dev/null" in *)
 (*     pp ("*** Ott-Isa07: " ^ cmd); *)
 (*     if (command cmd) = 0 *)
 (*     then begin *)
@@ -382,12 +382,12 @@ let run_test (tn,tl) =
   if (not !hol_test) || (not (check_config tn "HOL"))
   then result.hol_t := { ott = false; tp = Skipped }
   else begin
-    let cmd = "../ott "^t^" -o "^name^"Script.sml > /dev/null" in
+    let cmd = "../bin/ott "^t^" -o "^name^"Script.sml" (* ^" > /dev/null"*) in
     pp ("*** Ott-Hol: " ^ cmd);
     if (command cmd) = 0
     then begin
       pp (" *  success");
-      let cmd = "Holmake -I ../../hol/ "^name^"Theory.uo &> /dev/null" in
+      let cmd = "Holmake -I ../hol/ "^name^"Theory.uo" (* ^ " &> /dev/null"*) in
       pp ("*** HOL: " ^ cmd);
       if (command cmd) = 0 then begin
 	result.hol_t := { ott = true; tp = Success };
@@ -409,7 +409,7 @@ let run_test (tn,tl) =
 (*   if (not !twelf_test) || (not (check_config tn "Twelf")) *)
 (*   then result.twelf_t := { ott = false; tp = Skipped } *)
 (*   else begin *)
-(*     let cmd = "../ott -twelf "^name^".elf " ^t ^" > /dev/null" in *)
+(*     let cmd = "../bin/ott -twelf "^name^".elf " ^t ^" > /dev/null" in *)
 (*     pp ("*** Ott-Twelf: " ^ cmd); *)
 (*     if (command cmd) = 0 *)
 (*     then begin *)
@@ -432,12 +432,12 @@ let run_test (tn,tl) =
   if (not !caml_test) || (not (check_config tn "OCaml"))
   then result.caml_t := { ott = false; tp = Skipped }
   else begin
-    let cmd = "../ott "^t^" -o "^name^".ml > /dev/null" in
+    let cmd = "../bin/ott "^t^" -o "^name^".ml" (* ^" > /dev/null"*) in
     pp ("*** Ott-Ocaml: " ^ cmd);
     if (command cmd) = 0
     then begin
       pp (" * success");
-      let cmd = "ocamlc "^name^".ml > /dev/null" in
+      let cmd = "ocamlc "^name^".ml" (* " > /dev/null"*) in
       pp ("*** OCaml: " ^ cmd);
       if (command cmd) = 0 then begin
 	result.caml_t := { ott = true; tp = Success };
@@ -456,12 +456,12 @@ let run_test (tn,tl) =
   if (not !latex_test) || (not (check_config tn "LaTeX"))
   then result.latex_t := { ott = false; tp = Skipped }
   else begin
-    let cmd = "../ott "^t^" -o "^name^".tex > /dev/null" in
+    let cmd = "../bin/ott "^t^" -o "^name^".tex" (* ^ " > /dev/null"*) in
     pp ("*** Ott-LaTeX: " ^ cmd);
     if (command cmd) = 0
     then begin
       pp (" * success");
-      let cmd = "latex -interaction=batchmode "^name^".tex > /dev/null" in
+      let cmd = "latex -interaction=batchmode "^name^".tex" (* ^ " > /dev/null"*) in
       pp ("*** LaTeX: " ^ cmd);
       if (command cmd) = 0 then begin
 	result.latex_t := { ott = true; tp = Success };

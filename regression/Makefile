@@ -55,3 +55,11 @@ regh: regression ott
 regbh: regression ott
 	./regression -baseline ../tests/test*.ott
 
+simple: regression
+	$(MAKE) clean-regr
+	-make -C ../coq
+	./regression  -todo_list -todo_list_file regression-small.otl -keep_temp
+
+clean-regr:
+	rm -rf testRegr*
+	rm -rf *~
