@@ -16,7 +16,7 @@ e :: '' ::=                               {{ com term    }}
   | if e1 e2 e3  ::   :: if                    {{ com if_then_else }}
   | fix e        ::   :: fix                   {{ com fix }}
 
-  | ( e )        :: S :: eparen                 {{ rdx [[t]] }}
+  | ( e )        :: S :: eparen                 {{ rdx [[e]] }}
   | { e / x } e' :: M :: sub                    {{ rdx XXX }}  
                           
 t :: '' ::=                                           {{ com type }}
@@ -48,7 +48,7 @@ terminals :: 'terminals_' ::=
 
 formula :: formula_ ::=  
   | judgement     ::  :: judgement
-  | x1 != x2      ::  :: diff_var {{ rdx different [[x1]] [[x2]]}}
+  | x1 != x2      ::  :: diff_var {{ rdx side-condition (different [[x1]] [[x2]])}}
   
 embed
 {{ rdx
@@ -62,7 +62,8 @@ defns
   Jtype :: '' ::= 
 
 defn
-    G |- e : t :: :: types :: types  by
+    G |- e : t :: :: types :: types {{ rdx-mode I I O }}
+  by
         
     ------------ :: value_name_found
     G,x:t |- x:t
@@ -73,14 +74,14 @@ defn
     G,x1:t |- x2:t
 
 
-    G |- e : t1->t2
-    G |- e' : t1 
+    G |- e1 : t1->t2
+    G |- e2 : t1 
     ---------------- :: apply
-    G |- e e' : t2
+    G |- e1 e2 : t2
 
-    G,x1: t1 |- e : t
+    G,x: t1 |- e : t2
     ------------------ :: lambda
-    G |- \x1.e : t1->t
+    G |- \x.e : t1->t2
 
 
 defns
