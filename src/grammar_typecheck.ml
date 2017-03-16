@@ -4,7 +4,7 @@
 (*        Peter Sewell, Computer Laboratory, University of Cambridge      *)
 (*      Francesco Zappa Nardelli, Moscova project, INRIA Rocquencourt     *)
 (*                                                                        *)
-(*  Copyright 2005-2010                                                   *)
+(*  Copyright 2005-2017                                                   *)
 (*                                                                        *)
 (*  Redistribution and use in source and binary forms, with or without    *)
 (*  modification, are permitted provided that the following conditions    *)
@@ -383,6 +383,7 @@ let allowable_hom_data =
                     "rule"));
     ( Hu_rule_meta, (["com"], "special rule"));
     ( Hu_prod    , (["isa";"coq";"hol";"lem";(*"twf";*)"tex";"texlong";"ocaml";"com";"order";"isasyn";"isaprec";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ic";"ch";"ih";
+                     "rdx"; 
                      "disambiguate";"prec";"leftassoc";"rightassoc"],
                     "production"));
     ( Hu_prod_tm , (["isa";                      "tex";"lex";  "com"; "prec";"leftassoc";"rightassoc"],"production of the terminals grammar"));
@@ -400,7 +401,7 @@ let allowable_hom_data =
 
 let embed_allowable_homs = ["coq";"coq-lib";
                             "isa";"isa-import";"isa-auxfn-proof";"isa-subrule-proof";"isa-lib";
-                            "hol";"lem";
+                            "hol";"lem";"rdx";
                             "tex";"tex-preamble";"tex-wrap-pre";"tex-wrap-post";
                             (*"twf";*)"ocaml"]
 

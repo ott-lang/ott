@@ -4,7 +4,7 @@
 (*        Peter Sewell, Computer Laboratory, University of Cambridge      *)
 (*      Francesco Zappa Nardelli, Moscova project, INRIA Rocquencourt     *)
 (*                                                                        *)
-(*  Copyright 2005-2010                                                   *)
+(*  Copyright 2005-2017                                                   *)
 (*                                                                        *)
 (*  Redistribution and use in source and binary forms, with or without    *)
 (*  modification, are permitted provided that the following conditions    *)
@@ -311,7 +311,8 @@ let types_of_extensions =
       "twf","twf"; 
       "ml", "ocaml";
       "mll", "lex"; 
-      "mly", "yacc"] 
+      "mly", "yacc";
+      "rkt", "rdx"] 
 
 let extension_of_type t = List.assoc t (List.map (function (a,b)->(b,a)) types_of_extensions)
 
@@ -325,7 +326,7 @@ let file_type name =
   with
     _ -> None 
 
-let non_tex_output_types = ["coq"; "isa"; "hol"; "lem"; "twf"; "ocaml"]
+let non_tex_output_types = ["coq"; "isa"; "hol"; "lem"; "twf"; "ocaml"; "rdx"]
 let output_types =  "tex" :: "lex" :: "yacc" :: non_tex_output_types
 let input_types = "ott" :: output_types
 
@@ -372,7 +373,7 @@ let targets_in ts =
 
 let targets_non_tex = targets_in non_tex_output_types
 let targets = targets_in output_types
-let targets_for_non_picky = targets_in [(*"lex";"ocaml";*)"hol";"lem";"isa";"twf";"coq";"tex"]
+let targets_for_non_picky = targets_in [(*"lex";"ocaml";*)"hol";"lem";"isa";"twf";"coq";"tex";"rdx"]
 
 (* collect the source filenames *)
 let source_filenames = 
@@ -417,7 +418,9 @@ let m_coq = Coq { coq_expand_lists = !coq_expand_lists;
 		  coq_locally_nameless = ref false;
                   coq_lngen = !coq_lngen;
                   coq_use_filter_fn = !coq_use_filter_fn;
-                  coq_names_in_rules = !coq_names_in_rules }  
+                  coq_names_in_rules = !coq_names_in_rules }
+
+  
 let reset_m_coq m = 
   match m with
   | Coq co ->
@@ -432,6 +435,8 @@ let reset_m_coq m =
   | _ ->
       Auxl.errorm m "reset_m_coq"  
 
+let m_rdx = Rdx pp_rdx_opts_default
+  
 let m_caml = Caml { ppo_include_terminals = !caml_include_terminals; caml_library = ref ("",[]) } 
 let m_lex = Lex ()
 let m_yacc = Yacc ()
@@ -451,8 +456,9 @@ let m_yacc = Yacc ()
              "lem",m_lem;
              "isa",m_isa;
              "twf",m_twf;
-             "coq",m_coq ;
-             "tex",m_tex ]) 
+             "coq",m_coq;
+             "tex",m_tex;
+             "rdx",m_rdx]) 
         targets_for_non_picky)
 
 (* process *)
@@ -662,6 +668,8 @@ let output_stage (sd,lookup) =
           System_pp.pp_systemdefn_core_io m_hol sd lookup fi !merge_fragments
       | "lem" ->
           System_pp.pp_systemdefn_core_io m_lem sd lookup fi !merge_fragments
+      | "rdx" ->
+          System_pp.pp_systemdefn_core_io m_rdx sd lookup fi !merge_fragments
       | "twf" -> 
           System_pp.pp_systemdefn_core_io m_twf sd lookup fi !merge_fragments
       | "ocaml" -> 

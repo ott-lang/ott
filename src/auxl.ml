@@ -48,6 +48,7 @@ let mode_name m = match m with
   | Coq _ -> "Coq"
   | Twf _ -> "Twelf"
   | Caml _ -> "OCaml"
+  | Rdx _ -> "Redex"
   | Lex _ -> "Lex"
   | Yacc _ -> "Yacc"
 
@@ -589,6 +590,7 @@ let hom_name_for_pp_mode m
     | Lem _ -> "lem"
     | Coq _ -> "coq"
     | Twf _ -> "twf"
+    | Rdx _ -> "rdx"
     | Caml _ -> "ocaml"
     | Lex _ -> "lex"
     | Yacc _ -> "yacc"

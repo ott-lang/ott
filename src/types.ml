@@ -4,7 +4,7 @@
 (*        Peter Sewell, Computer Laboratory, University of Cambridge      *)
 (*      Francesco Zappa Nardelli, Moscova project, INRIA Rocquencourt     *)
 (*                                                                        *)
-(*  Copyright 2005-2010                                                   *)
+(*  Copyright 2005-2017                                                   *)
 (*                                                                        *)
 (*  Redistribution and use in source and binary forms, with or without    *)
 (*  modification, are permitted provided that the following conditions    *)
@@ -32,6 +32,7 @@
 (**************************************************************************)
 
 exception TwelfNotImplemented;;
+exception RacketNotImplemented;;
 
 exception WorkInProgress;;
 
@@ -846,21 +847,26 @@ and pp_tex_opts =
 and pp_caml_opts = 
     { ppo_include_terminals : bool;
       caml_library : (string * string list) ref } (* oo *) 
+and pp_rdx_opts = (* ro *)
+    { ppr_default_language : string;
+      ppr_metavars : string list ref }
+
 type pp_lex_opts = unit (* lo *)
 type pp_yacc_opts = unit (* yo *)
-
+    
 type pp_mode =  (* m *)
   | Coq of pp_coq_opts
   | Isa of pp_isa_opts
   | Hol of pp_hol_opts
   | Lem of pp_lem_opts
   | Twf of pp_twf_opts
+  | Rdx of pp_rdx_opts
   | Ascii of pp_ascii_opts
   | Tex of pp_tex_opts
   | Caml of pp_caml_opts
   | Lex  of pp_lex_opts
   | Yacc of pp_yacc_opts
-
+      
 let pp_ascii_opts_default =
   Ascii { ppa_colour = true;
 	  ppa_ugly = false;
@@ -868,6 +874,10 @@ let pp_ascii_opts_default =
 	  ppa_show_deps = false;
 	  ppa_show_defns = true }
 
+let pp_rdx_opts_default =
+  { ppr_default_language = "L";
+    ppr_metavars = ref [] }
+    
 let ao_default =
   { ppa_colour = true;
     ppa_ugly = false;

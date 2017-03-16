@@ -4,7 +4,7 @@
 (*        Peter Sewell, Computer Laboratory, University of Cambridge      *)
 (*      Francesco Zappa Nardelli, Moscova project, INRIA Rocquencourt     *)
 (*                                                                        *)
-(*  Copyright 2005-2010                                                   *)
+(*  Copyright 2005-2017                                                   *)
 (*                                                                        *)
 (*  Redistribution and use in source and binary forms, with or without    *)
 (*  modification, are permitted provided that the following conditions    *)
@@ -62,6 +62,7 @@ and pp_embedmorphism fd m xd lookup (l,hn,es) =
   | (Twf _, "twf") 
   | (Tex _, "tex") 
   | (Caml _, "ocaml")
+  | (Rdx _, "rdx")
   | (Lex _,  "lex") -> 
       pp_embed_spec fd m xd lookup es;
       output_string fd "\n"
@@ -87,7 +88,7 @@ and pp_embed_spec_el fd m xd lookup ese =
           output_string fd Grammar_pp.pp_DOUBLERIGHTBRACKET )
   | Tex xo when (match ese with Embed_inner (_,"TEX_NAME_PREFIX")->true | _->false) -> 
       output_string fd xo.ppt_name_prefix
-  | Tex _ | Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Caml _ | Lex _ | Yacc _ -> 
+  | Tex _ | Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Rdx _ | Caml _ | Lex _ | Yacc _ -> 
       ( match ese with
       | Embed_string (l,s) -> output_string fd s
 
