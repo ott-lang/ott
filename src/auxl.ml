@@ -137,6 +137,14 @@ let paren s =
   then "("^s^")"
   else s
 
+let string_begins s1 s2 =
+  try
+    let len = String.length s2 in
+    if String.sub s1 0 len = s2
+    then true
+    else false
+  with _ -> false
+     
 (* equality testing up-to location data ********************************** *)
 
 let rec eq_raw_element (red,red') = 

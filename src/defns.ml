@@ -504,7 +504,8 @@ let pp_defn fd (m:pp_mode) (xd:syntaxdefn) lookup (defnclass_wrapper:string) (un
     (* Printf.fprintf fd "       ;;; defn %s\n" d.d_name; *)
     (try
       let mode = List.assoc "rdx-mode" d.d_homs in
-      Printf.fprintf fd "\n  #:mode (%s)\n\n"
+      Printf.fprintf fd "\n  #:mode (%s %s)\n\n"
+        d.d_name
         (match mode with [Hom_string s] -> s
         | _ -> Auxl.error ("rdx backend: cannot print mode for declaration: "^d.d_name))
     with Not_found -> ());
