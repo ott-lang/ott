@@ -4,7 +4,7 @@
 #        Peter Sewell, Computer Laboratory, University of Cambridge      #
 #      Francesco Zappa Nardelli, Moscova project, INRIA Rocquencourt     #
 #                                                                        #
-#  Copyright 2005-2011                                                   #
+#  Copyright 2005-2017                                                   #
 #                                                                        #
 #  Redistribution and use in source and binary forms, with or without    #
 #  modification, are permitted provided that the following conditions    #
@@ -36,12 +36,12 @@ topdir = ..
 OTTVER=0.25
 
 # for us
-#OCAMLC	 	= ocamlc.opt -g -dtypes  # -w p disables partial match warnings
-#OCAMLOPT	= ocamlopt.opt -w y -g -dtypes -unsafe -inline 9
+OCAMLC	 	= ocamlc.opt -g -dtypes  # -w p disables partial match warnings
+OCAMLOPT	= ocamlopt.opt -w y -g -dtypes -unsafe -inline 9
 
 # for releases
-OCAMLC	 	= ocamlc -g -w p -w y
-OCAMLOPT	= ocamlopt -w p -w y -unsafe -inline 9
+#OCAMLC	 	= ocamlc -g -w p -w y
+#OCAMLOPT	= ocamlopt -w p -w y -unsafe -inline 9
 
 OCAMLDEP 	= ocamldep
 OCAMLLEX        = ocamllex
@@ -101,8 +101,8 @@ CMX 	= $(patsubst %.cmo, %.cmx, $(CMO))
 CMI_FROM_MLI = $(patsubst %.mli, %.cmi, $(SOURCES_MLI))
 
 
-default: ott.opt
-#default: ott.byt
+#default: ott.opt
+default: ott.byt
 
 all: default
 ott: default

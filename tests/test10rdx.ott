@@ -33,8 +33,8 @@ t :: '' ::=                                           {{ com type }}
 %   | \ x . t      ::   :: lam                   {{ com lambda  }}
 
 terminals :: 'terminals_' ::=
-  | \            ::   :: lambda  {{ tex \lambda }}
-  | -->          ::   :: red     {{ tex \longrightarrow }}
+  | \                   ::   :: lambda     {{ tex \lambda }}
+  | -->                 ::   :: red        {{ tex \longrightarrow }}
   |  ->                 ::   :: arrow      {{ tex \rightarrow }}
   | |-                  ::   :: turnstile  {{ tex \vdash }}
   | in                  ::   :: in         {{ tex \in }}
@@ -47,8 +47,9 @@ terminals :: 'terminals_' ::=
 
 
 formula :: formula_ ::=  
-  | judgement     ::  :: judgement
-  | x1 != x2      ::  :: diff_var {{ rdx side-condition (different [[x1]] [[x2]])}}
+  | judgement              ::  :: judgement
+  | formula1 .. formulan   :: :: dots
+  | x1 != x2               ::  :: diff_var {{ rdx side-condition (different [[x1]] [[x2]])}}
   
 embed
 {{ rdx
@@ -65,13 +66,15 @@ defn
     G |- e : t :: :: types :: types {{ rdx-mode I I O }}
   by
         
-    ------------ :: value_name_found
+    -------------- :: value_name_found
     G,x:t |- x:t
+
 
     x1 != x2
     G |- x2:t
     -------------- :: value_name_not_found
     G,x1:t |- x2:t
+
 
     --------------- :: number
     G |- number:num
@@ -82,27 +85,36 @@ defn
     ---------------- :: apply
     G |- e1 e2 : t2
 
-    G,x: t1 |- e : t2
+
+    G,x:t1 |- e : t2
     ------------------ :: lambda
     G |- \x.e : t1->t2
 
 
-defns
- Jop :: '' ::=
-
-defn
- e1 --> e2 :: ::reduce::'' {{ com [[e1]] reduces to [[e2]] }}  by
+% G |- e1:num .. G |- en:num
+% ------------------------------ :: add
+% G |- + e1 .. en : num
 
 
-    --------------------------  :: ax_app
-    (\x.e1) e2 -->  {e2/x}e1
 
-    e1 --> e1'
-    -------------- :: ctx_app_fun
-    e1 e --> e1' e
 
-    e1 --> e1'
-    -------------- :: ctx_app_arg
-    e e1 --> e e1'
+
+% defns
+%  Jop :: '' ::=
+
+% defn
+%  e1 --> e2 :: ::reduce::'' {{ com [[e1]] reduces to [[e2]] }}  by
+
+
+%     --------------------------  :: ax_app
+%     (\x.e1) e2 -->  {e2/x}e1
+
+%     e1 --> e1'
+%     -------------- :: ctx_app_fun
+%     e1 e --> e1' e
+
+%     e1 --> e1'
+%     -------------- :: ctx_app_arg
+%     e e1 --> e e1'
 
 
