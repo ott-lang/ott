@@ -351,14 +351,15 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
         in
         Printf.fprintf fd " [";
         if (snd ppd_premises)<>[] || ppd_subntrs<>[] then begin
-          Printf.fprintf fd "(";
-          iter_asep fd ")\n  (" (output_string fd)          
+          (* Printf.fprintf fd "("; *)
+          iter_asep fd "\n  " (output_string fd)          
 	    (ppd_subntrs @ snd ppd_premises);
-          Printf.fprintf fd ")\n  ";
+          (* Printf.fprintf fd ")\n  "; *)
+          Printf.fprintf fd "\n  ";
           end;
-          output_string fd ((make_hline [ppd_conclusion])^"\n  (");
+          output_string fd ((make_hline [ppd_conclusion])^"\n  ");
           output_string fd ppd_conclusion;
-          output_string fd ")]\n"
+          output_string fd "]\n"
 
       | Hol _ ->
           Printf.fprintf fd "( (* %s *) " dr.drule_name; 

@@ -3236,7 +3236,7 @@ and pp_symterm_node_body m xd sie de stnb : string =
                       | Coq co -> 
                           pp_symterm_element_judge_coq_plain m xd sie de p'' stnb''
                       | Rdx ro -> 
-                          pp_symterm_element_judge_coq_plain m xd sie de p'' stnb''
+                          "("^(pp_symterm_element_judge_coq_plain m xd sie de p'' stnb'')^")"
                       | Twf wo -> 
                           pp_symterm_element_judge_twf_plain m xd sie de p'' stnb''
                       | Hol ho -> 
@@ -3296,6 +3296,14 @@ and pp_symterm_node_body m xd sie de stnb : string =
                       ^ "EVERY (\\ b . b)" ^ " "
                       ^ String.concat " " (pp_es())
                       ^ ")"
+                   )
+              | Rdx _ -> 
+	          ( match stnb.st_es with
+	          | [] -> "GPP3302"^stnb.st_prod_name
+	          | _  -> 
+                    (* "GPP3302"^"(" ^ *)
+                    String.concat " GPP3305 " (pp_es())
+                    (*     ^ ") ..." *)
                    )
               | Lem _ -> 
 	          ( match stnb.st_es with
@@ -3537,7 +3545,7 @@ and pp_symterm_node_body m xd sie de stnb : string =
               | Rdx _ -> 
 	          ( match stnb.st_es with
 	            | [] -> promoted_pn
-                    | [es] -> List.hd (pp_es())
+                    | [es] -> "("^promoted_pn^" "^(List.hd (pp_es()))^")"
 	            | _  ->
 		      "("
                       ^ promoted_pn^" "
@@ -3691,7 +3699,7 @@ and pp_symterm_list_items m xd sie (de :dotenv) tmopt prod_es stlis : (string * 
   let include_terminals = 
     match m with
     | Ascii _ | Tex _ | Lex _ | Yacc _ -> true
-    | Coq _ | Isa _ | Hol _ | Lem _ | Twf _  -> false
+    | Coq _ | Isa _ | Hol _ | Lem _ | Twf _  | Rdx _ -> false
     | Caml oo -> oo.ppo_include_terminals in
   let tmopt' = 
     ( match tmopt with 
@@ -3720,7 +3728,7 @@ and pp_symterm_list_items m xd sie (de :dotenv) tmopt prod_es stlis : (string * 
             Auxl.list_concat tmopt'
               (List.map (pp_symterm_list_item m xd sie de tmopt include_terminals prod_es) stlis) in
           (match m with Ascii ao when  ao.ppa_ugly -> [col_magenta ao "[slb",TTC_dummy] @ ss @ [col_magenta ao "slb]",TTC_dummy]  | _ -> ss)
-      | Isa _ | Caml _ | Coq _ | Hol _ | Lem _ | Twf _ -> 
+      | Isa _ | Caml _ | Coq _ | Hol _ | Lem _ | Twf _ | Rdx _ -> 
           let pp_stlis = List.map (function xs->List.map fst xs)
               (List.map (pp_symterm_list_item m xd sie de tmopt include_terminals prod_es) stlis) in
           (List.map (function s -> (s,TTC_dummy)) (match m with
@@ -3742,6 +3750,13 @@ and pp_symterm_list_items m xd sie (de :dotenv) tmopt prod_es stlis : (string * 
                     (Auxl.list_concat [ "@" ]
                        pp_stlis) 
                 ^ ")"]
+          | Rdx _ -> 
+            [ (* "(GPP3754" ^ *)
+                String.concat " " 
+                  (Auxl.list_concat [ "@GPP3757" ]
+                     pp_stlis) 
+              (*  ^ ")" *)
+              ]
           | Lem _ -> 
               [ lemTODO "13" ("("
                 ^ String.concat " " 
@@ -3804,7 +3819,8 @@ and pp_symterm_list_item m xd sie (de :dotenv) tmopt include_terminals prod_es s
   | Stli_listform stlb -> 
       let pp = pp_symterm_list_body m xd sie de tmopt include_terminals prod_es stlb in
       match m with
-      | Ascii ao -> if ao.ppa_ugly then [col_magenta ao "[stli_listform",TTC_dummy] @ pp @ [col_magenta ao "stli_listform]",TTC_dummy]  else pp
+        | Ascii ao -> if ao.ppa_ugly then [col_magenta ao "[stli_listform",TTC_dummy] @ pp @ [col_magenta ao "stli_listform]",TTC_dummy]  else pp
+        | Rdx _ -> List.map (fun (x,y) -> (x^" ...",y)) pp
       | _ -> pp
 
 and pp_symterm_list_body m xd sie (de :dotenv) tmopt include_terminals prod_es stlb : (string * tex_token_category) list =
@@ -3889,11 +3905,11 @@ and pp_symterm_list_body m xd sie (de :dotenv) tmopt include_terminals prod_es s
            ^ "}",TTC_comp]
       )
         
-  | Isa _ | Coq _ | Hol _ | Lem _ | Twf _ | Caml _ -> 
+  | Isa _ | Coq _ | Hol _ | Lem _ | Twf _ | Caml _ | Rdx _ -> 
       (List.map (function s -> (s,TTC_dummy))
          (match m with
          | Ascii _ | Tex _ | Lex _ | Yacc _ ->  raise ThisCannotHappen
-         | Isa _ | Coq _ | Hol _ | Lem _ | Twf _ | Caml _ -> 
+         | Isa _ | Coq _ | Hol _ | Lem _ | Twf _ | Caml _ | Rdx _ -> 
       (* interim placeholder code - not remotely right *)
       (* FZ I hope that this comment is outdated *) 
       let es = stlb.stl_elements in
@@ -3938,6 +3954,20 @@ and pp_symterm_list_body m xd sie (de :dotenv) tmopt include_terminals prod_es s
             ["(MAP (\\"^de1i.de1_pattern^" . "^pp_body^") "
              ^ de1i.de1_compound_id
 	     ^ ")"]
+        | Rdx _ ->
+          let es = stlb.stl_elements in
+          let (de1,de2)=de in
+          (* print_string ("[[["^pp_plain_dotenv de^"]]]");flush stdout; *)
+          (* let bound = (* was (stlb.stl_lower,stlb.stl_upper) in *) *)
+          let de1i =  de1_lookup de1 stlb.stl_bound in
+
+          let pp_body = 
+	    let tmp = String.concat "," 
+              (pp_symterm_elements m xd ((Si_var ("",0))::sie) de include_terminals prod_es es) in
+	    if (List.length es) > 1 then "("^tmp^")" else tmp in
+
+          [pp_body]
+
         | Caml _ -> 
             ["(List.map (fun "^de1i.de1_pattern^" -> "^pp_body^") "
              ^ de1i.de1_compound_id
