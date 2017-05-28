@@ -3,9 +3,9 @@
 Require Import Arith.
 Require Import Bool.
 Require Import List.
-Require Import ott_list_base.
-Require Import ott_list_core.
-Require Import ott_list_takedrop.
+Require Import Ott.ott_list_base.
+Require Import Ott.ott_list_core.
+Require Import Ott.ott_list_takedrop.
 
 
 
