@@ -138,8 +138,8 @@ Qed.
 
 Lemma nth_error_length :
   forall l n, match nth_error l n with
-                | value _ => n < length l
-                | error => n >= length l
+                | Some _ => n < length l
+                | None => n >= length l
               end.
 Proof.
   induction l; intros; destruct n; try solve [compute; auto with arith].
@@ -173,8 +173,8 @@ Qed.
 Lemma nth_eq_nth_error :
   forall l n default,
     nth n l default = match nth_error l n with
-                        | value x => x
-                        | error => default
+                        | Some x => x
+                        | None => default
                       end.
 Proof.
   induction l; destruct n; intros; try reflexivity. simpl; apply IHl.
