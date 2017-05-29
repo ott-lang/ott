@@ -78,4 +78,4 @@ End Flat_map_definition.
 
 
 (* Provide helper lemmas for {{coq-equality}} homs. *)
-Require Export ott_list_eq_dec.
+Require Export Ott.ott_list_eq_dec.

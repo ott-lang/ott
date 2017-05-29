@@ -3,9 +3,9 @@
 Require Import Arith.
 Require Import List.
 Require Import Omega.
-Require Import ott_list_support.
-Require Import ott_list_base.
-Require Import ott_list_nth.
+Require Import Ott.ott_list_support.
+Require Import Ott.ott_list_base.
+Require Import Ott.ott_list_nth.
 Import List_lib_Arith.
 
 
