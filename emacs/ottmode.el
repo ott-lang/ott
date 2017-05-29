@@ -29,4 +29,4 @@
 
 ;    ("\\%.*" . 'font-lock-doc-face)
 
-(provide 'ottmode)
+(provide 'ott-mode)
