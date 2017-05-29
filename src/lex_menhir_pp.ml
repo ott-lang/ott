@@ -87,18 +87,28 @@ This implementation reuses a little of that infrastructure.
 
 open Types;;
 
-(* which rules and productions to include *)
+(* which metavars, rules and productions to include *)
+let suppress_metavar yo mvd =
+  mvd.mvd_indexvar  (* mvd.mvd_phantom *)
+
+let contains_list p = 
+  List.exists (function e -> match e with Lang_list _ -> true | _ -> false  )  p.prod_es
+
 let suppress_prod yo p = 
   let suppressed_category = 
     StringSet.exists (fun x -> List.mem x yo.ppm_suppressed_categories)
       p.prod_categories in
-  suppressed_category || (not(yo.ppm_show_meta) && p.prod_meta && not(p.prod_sugar))
+
+
+ (* contains_list p (* just for now... *)
+   ||*) suppressed_category || (not(yo.ppm_show_meta) && p.prod_meta && not(p.prod_sugar))
 
 let suppress_rule yo r = 
   let suppressed_ntr = 
     List.mem r.rule_ntr_name yo.ppm_suppressed_ntrs
   in
-  suppressed_ntr || (not(yo.ppm_show_meta) && r.rule_semi_meta)
+  [] = r.rule_ps (*List.filter (function p -> not (contains_list p)) r.rule_ps *)
+|| suppressed_ntr || (not(yo.ppm_show_meta) && r.rule_semi_meta)
 
 
 (* tokens arise from terminals and metavardefns *)
@@ -113,11 +123,11 @@ type token_data =
 (* find the token associated with a terminal or metavarroot *) 
 let token_of_terminal ts t0 = 
   try let (tn,_,_) = List.find (function td -> match td with (tn,t,TK_terminal) when t=t0 -> true | _ -> false) ts in tn 
-  with Not_found -> raise (Failure "token_of_terminal not found")
+  with Not_found -> raise (Failure ("token_of_terminal \""^t0^"\" not found"))
 
 let token_of_metavarroot ts mvr = 
   try let (tn,_,_) = List.find (function td -> match td with (tn,t,TK_metavar _) when t=mvr -> true | _ -> false) ts in tn 
-  with Not_found -> raise (Failure "token_of_metavarroot not found")
+  with Not_found -> raise (Failure ("token_of_metavarroot \""^mvr^"\" not found"))
 
 
 (* pull out all terminals actually used in (non-suppressed) productions *)
@@ -231,7 +241,7 @@ let token_names_of_syntaxdefn yo xd : token_data =
   let ts_terminals' = List.map (function t -> ((token_name_of t), t, TK_terminal)) ts_terminals in
 
   let ts_metavars = Auxl.option_map
-      (function mvd -> match mvd.mvd_phantom with
+      (function mvd -> match suppress_metavar yo mvd with
       | true -> None
       | false -> 
           (* following Grammar_pp.pp_metavarrep *)
@@ -342,7 +352,7 @@ let menhir_semantic_value_id_of_ntmv ((ntmvr,suffix) as ntmv) =
   | Si_num s -> s
   | Si_punct s -> s
   | Si_var (sv,i) -> "Si_var_UNIMPLEMENTED"
-  | Si_index i -> "Si_index_UNIMPLEMENTED" in
+  | Si_index i -> string_of_int i in (* ignoring possible name clashes...*)
   escape (ntmvr ^ String.concat "" (List.map string_of_suffix_item suffix))
 
 (* construct a menhir production *)
@@ -353,12 +363,45 @@ let rec pp_menhir_element ts e =
       Printf.sprintf "%s=%s" (menhir_semantic_value_id_of_ntmv nt) (menhir_nonterminal_id_of_ntr ntr)
   | Lang_metavar (mvr,mv) ->
       Printf.sprintf "%s=%s" (menhir_semantic_value_id_of_ntmv mv) (token_of_metavarroot ts mvr)
-  | Lang_list elb -> "list_UNIMPLEMENTED"
-(*      let ts = List.flatten (List.map get_terminals_of_element elb.elb_es) in
-      (match elb.elb_tmo with
-      | None -> ts
-      | Some t -> t::ts)
+  | Lang_list elb ->
+      let f lhs rhs = 
+        let terminal_option = 
+          match elb.elb_tmo with
+          | None -> None
+          | Some t -> Some (token_of_terminal ts t) in
+        let non_empty = 
+          match elb.elb_boundo with
+          | Some (Bound_dotform bd)   -> bd.bd_length 
+          | Some (Bound_comp bc)      -> 0
+          | Some (Bound_comp_u bcu)   -> 0
+          | Some (Bound_comp_lu bclu) -> bclu.bclu_length 
+          | None                      -> 0 in
+        let rhs' = 
+          (* this isn't enforcing the length >=2 constraints from the Ott source *)
+          match (non_empty, terminal_option) with
+          | (0,Some t) -> "separated_list(" ^ t ^ "," ^ rhs ^ ")"
+          | (0,None)   -> "list(" ^ rhs ^ ")" 
+          | (_,Some t) -> "separated_nonempty_list(" ^ t ^ "," ^ rhs ^ ")"
+          | (_,None)   -> "nonempty_list(" ^ rhs ^ ")"
+(*
+          | (2,Some t) -> "separated_nonempty2_list(" ^ t ^ "," ^ rhs ^ ")"
+          | (2,None)   -> "nonempty2_list(" ^ rhs ^ ")"
+          | (_,_)      -> Auxl.error ("unexpected length in pp_menhir_element") 
 *)
+        in
+        Printf.sprintf "%s=%s" lhs rhs'  in
+      (match elb.elb_es with
+      | [Lang_nonterm (ntr,nt)] -> 
+          let lhs = menhir_semantic_value_id_of_ntmv nt in
+          let rhs = menhir_nonterminal_id_of_ntr ntr in
+          f lhs rhs 
+      | [Lang_metavar (mvr,mv)] ->
+          let lhs = menhir_semantic_value_id_of_ntmv mv in
+          let rhs = token_of_metavarroot ts mvr in
+          f lhs rhs 
+      | _ -> "(*LISTS THAT ARE NOT SINGLETON NONTERMS OR METAARS ARE UNIMPLEMENTED*)"
+            (* we should be able to use the menhir anonymous rules to implement non-singleton Ott lists *)
+      )
   | Lang_option _ -> raise (Failure "Lang_option not implemented")
   | Lang_sugaroption _ -> raise (Failure "Lang_option not implemented")
 
@@ -369,22 +412,37 @@ let rec pp_menhir_element_action ts e =
       Some (menhir_semantic_value_id_of_ntmv nt)
   | Lang_metavar (mvr,mv) ->
       Some (menhir_semantic_value_id_of_ntmv mv)
-  | Lang_list elb -> Some "list_UNIMPLEMENTED"
-(*      let ts = List.flatten (List.map get_terminals_of_element elb.elb_es) in
-      (match elb.elb_tmo with
-      | None -> ts
-      | Some t -> t::ts)
-*)
+  | Lang_list elb -> 
+
+      (match elb.elb_es with
+      | [Lang_nonterm (ntr,nt)] -> 
+          let lhs = menhir_semantic_value_id_of_ntmv nt in
+          Some lhs
+      | [Lang_metavar (mvr,mv)] ->
+          let lhs = menhir_semantic_value_id_of_ntmv mv in
+          Some lhs
+      | _ -> Some "(*LISTS THAT ARE NOT SINGLETON NONTERMS OR METAARS ARE UNIMPLEMENTED*)"
+      )
+
   | Lang_option _ -> raise (Failure "Lang_option not implemented")
   | Lang_sugaroption _ -> raise (Failure "Lang_option not implemented")
 
-let pp_menhir_prod yo xd ts p = 
+let pp_menhir_prod yo xd ts r p = 
   if suppress_prod yo p then 
     ""
   else
     let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in
     "| " ^ String.concat " " (List.map (pp_menhir_element ts) p.prod_es) ^ "\n"
-    ^ "    { " ^ String.capitalize p.prod_name ^ "("^ String.concat "," (Auxl.option_map (pp_menhir_element_action ts) es') ^ ") }\n"
+    ^ if not(r.rule_phantom) then 
+"    { " ^ String.capitalize p.prod_name 
+      ^ (let args = Auxl.option_map (pp_menhir_element_action ts) es' in
+      match args with
+      | [] -> ""
+      | _ -> "("^ String.concat "," args ^ ")" )
+      ^ " }\n"
+    else (* use the ocaml hom *)
+"    { " ^ (match Auxl.hom_spec_for_hom_name "ocaml" p.prod_homs with Some hom -> Grammar_pp.pp_hom_spec (Menhir yo) xd hom | None -> ignore(Auxl.error ("no ocaml hom for production "^p.prod_name));"") ^ " }\n"
+
 
 (* construct a menhir rule *)
 let pp_menhir_rule yo xd ts r = 
@@ -392,7 +450,7 @@ let pp_menhir_rule yo xd ts r =
     ""
   else 
     menhir_nonterminal_id_of_ntr r.rule_ntr_name ^ ":\n" 
-    ^  String.concat "" (List.map (pp_menhir_prod yo xd ts) r.rule_ps)
+    ^  String.concat "" (List.map (pp_menhir_prod yo xd ts r) r.rule_ps)
     ^ "\n"
 
 let is_start_rule yo r = 
@@ -421,11 +479,19 @@ let pp_menhir_start_symbols yo xd =
          if not(is_start_rule yo r) then 
            ""
          else
+           let ty0 = 
+             Grammar_pp.strip_surrounding_parens 
+               (Grammar_pp.pp_nontermroot_ty (Caml yo.ppm_caml_opts) xd r.rule_ntr_name) in
+           let (ty1, ty_arg) = 
+           if String.length ty0 >= 3 && String.sub ty0 0 3 = "'a " then 
+             (String.sub ty0 3 (String.length ty0 - 3), "unit ")
+           else
+             (ty0, "") in
            "%start <" 
+           ^ ty_arg 
            ^ yo.ppm_caml_ast_module 
            ^ "."  
-           ^ Grammar_pp.strip_surrounding_parens 
-               (Grammar_pp.pp_nontermroot_ty (Caml yo.ppm_caml_opts) xd r.rule_ntr_name) 
+           ^ ty1
            ^ "> " 
            ^ menhir_start (menhir_nonterminal_id_of_ntr r.rule_ntr_name) 
            ^ "\n")
