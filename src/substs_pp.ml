@@ -146,12 +146,12 @@ let pp_list_all_cong_lemma_isa =
  
 let pp_list_mem m = match m with 
   | Coq co -> Auxl.add_to_lib co.coq_library "list_mem" pp_list_mem_coq
-  | Caml _ | Hol _ | Lem _ | Isa _ | Tex _ | Twf _ | Ascii _ | Lex _ | Yacc _ 
+  | Caml _ | Hol _ | Lem _ | Isa _ | Tex _ | Twf _ | Ascii _ | Lex _ | Menhir _ 
     -> Auxl.errorm m "pp_list_mem"
 
 let pp_list_filter m = match m with
   | Coq co -> Auxl.add_to_lib co.coq_library "list_filter" pp_list_filter_coq
-  | Isa _ | Hol _ | Lem _ | Caml _ | Tex _ | Twf _ | Ascii _ | Lex _ | Yacc _ 
+  | Isa _ | Hol _ | Lem _ | Caml _ | Tex _ | Twf _ | Ascii _ | Lex _ | Menhir _ 
     -> Auxl.errorm m "pp_list_filter"
 
 let pp_list_minus m = match m with 
@@ -162,13 +162,13 @@ let pp_list_minus m = match m with
   | Coq co  ->
       pp_list_mem m;
       Auxl.add_to_lib co.coq_library "list_minus" pp_list_minus_coq
-  | Tex _ | Twf _ | Ascii _ | Lex _ | Yacc _ -> Auxl.errorm m "pp_list_minus"
+  | Tex _ | Twf _ | Ascii _ | Lex _ | Menhir _ -> Auxl.errorm m "pp_list_minus"
 
 let pp_list_minus2 m = match m with 
   | Coq co ->
       pp_list_mem m;
       Auxl.add_to_lib co.coq_library "list_minus2" pp_list_minus2_coq
-  | Caml _ | Hol _ | Lem _ | Isa _ | Twf _ | Tex _ | Ascii _ | Lex _ | Yacc _ 
+  | Caml _ | Hol _ | Lem _ | Isa _ | Twf _ | Tex _ | Ascii _ | Lex _ | Menhir _ 
     -> Auxl.errorm m "pp_list_minus2"
 
 let pp_list_assoc m = match m with 
@@ -176,7 +176,7 @@ let pp_list_assoc m = match m with
   | Hol ho -> ()
   | Lem lo -> Auxl.add_to_lib lo.lem_library "list_assoc" pp_list_assoc_lem
   | Coq co -> Auxl.add_to_lib co.coq_library "list_assoc" pp_list_assoc_coq
-  | Caml _ | Twf _ | Tex _ | Ascii _ | Lex _ | Yacc _ 
+  | Caml _ | Twf _ | Tex _ | Ascii _ | Lex _ | Menhir _ 
     -> Auxl.errorm m "pp_list_assoc"
 
 let pp_list_mono_lemmas m = match m with 
@@ -336,7 +336,7 @@ let pp_auxfn_clauses m xd f ntr ntmvr =
           )
           ^" =\n" 
 	  ^ "  match " ^ Grammar_pp.pp_nonterm m xd pat_var ^ " with\n" ) 
-    | Twf _ | Tex _ | Ascii _ | Lex _ | Yacc _ -> Auxl.errorm m "pp_auxfn_clauses" ) 
+    | Twf _ | Tex _ | Ascii _ | Lex _ | Menhir _ -> Auxl.errorm m "pp_auxfn_clauses" ) 
   in
 
   let isa_list_name_flag = Auxl.compute_isa_list_name_flag (Auxl.rule_of_ntr xd ntr) in
@@ -602,7 +602,7 @@ let rec pp_subst_symterm
 	      ^ that_s ^ " "
 	      ^ ( match Grammar_pp.pp_mse m xd sie de false "" (Some subst.sb_that) bound_things_glommed with x,_,_ -> x)
 	  | Twf _ -> "<<< mem FZ no idea >>>"
-          | Tex _ | Ascii _ | Lex _ | Yacc _ -> Auxl.errorm m "pp_subst_symterm"
+          | Tex _ | Ascii _ | Lex _ | Menhir _ -> Auxl.errorm m "pp_subst_symterm"
 	in
 
         if subst.sb_multiple then (* code for multiple subst *)
@@ -695,7 +695,7 @@ let rec pp_subst_symterm
 		^ nt_s
 		^ ")"
 	    | Twf _ -> "<<< filter FZ no idea >>>"
-            | Tex _ | Ascii _ | Lex _ | Yacc _ -> Auxl.errorm m "pp_subst_symterm" )
+            | Tex _ | Ascii _ | Lex _ | Menhir _ -> Auxl.errorm m "pp_subst_symterm" )
         else (* code for single subst *)
           let substituted_nonterm = 
 	    let id = Grammar_pp.pp_nontermroot m xd (Auxl.promote_ntr xd ntrp) in (* FZ PROMOTE ?*)
@@ -930,7 +930,7 @@ and pp_subst_symterm_list_body
 
     | Caml _ -> ("",[])
 
-    | Twf _ | Tex _ | Ascii _ | Lex _ | Yacc _ -> Auxl.errorm m "make_aux_func_list"
+    | Twf _ | Tex _ | Ascii _ | Lex _ | Menhir _ -> Auxl.errorm m "make_aux_func_list"
 
 
   and make_aux_funcs_tuple m xd split_suffix elements subst common_lhs : int_func list =
@@ -1060,7 +1060,7 @@ and pp_subst_symterm_list_body
         ( lemTODO "20" " (List.map (fun "^de1i.de1_pattern^" -> "^pp_body^") "
         ^ de1i.de1_compound_id
         ^ ")", [] )
-    | Twf _ | Ascii _ | Tex _ | Lex _ | Yacc _ -> Auxl.errorm m "make_aux_funcs"
+    | Twf _ | Ascii _ | Tex _ | Lex _ | Menhir _ -> Auxl.errorm m "make_aux_funcs"
         
 
 (** ******************************** *)
@@ -1092,7 +1092,7 @@ let pp_subst_prod
           ( if subst.sb_multiple then sub_var
           else Grammar_pp.pp_nonterm m xd this_var ^ " " ^ Grammar_pp.pp_nt_or_mv m xd that_var )
           ^ " " ^ lhs_pat 
-      | Tex _ | Ascii _ | Lex _ | Yacc _ -> Auxl.errorm m "pp_subst_prod") in
+      | Tex _ | Ascii _ | Lex _ | Menhir _ -> Auxl.errorm m "pp_subst_prod") in
     
     (* all the bind clauses from the production with an mse of the *)
     (* same type as that_var*)
@@ -1170,7 +1170,7 @@ let pp_subst_prod
 		  ^ sub_var 
 		  ^ " with Not_found -> " ^ lhs_pat 
 		  ^ ")" 
-	      | Twf _ | Tex _ | Ascii _ | Lex _ | Yacc _ -> raise Auxl.ThisCannotHappen )
+	      | Twf _ | Tex _ | Ascii _ | Lex _ | Menhir _ -> raise Auxl.ThisCannotHappen )
 		
 	    else
 	      let that_s = Grammar_pp.pp_nt_or_mv m xd that_var in
@@ -1185,7 +1185,7 @@ let pp_subst_prod
 		    ^ " "
 		    ^ thing_s ^ " " 
 		    ^ that_s
-		| Tex _ | Ascii _ | Lex _ | Yacc _ -> raise Auxl.ThisCannotHappen ) in
+		| Tex _ | Ascii _ | Lex _ | Menhir _ -> raise Auxl.ThisCannotHappen ) in
               "(if " ^ eq_s 
 	      ^ " then " ^ Grammar_pp.pp_nonterm m xd this_var         
 	      ^ " else " ^ lhs_pat ^ ")" 
@@ -1199,7 +1199,7 @@ let pp_subst_prod
 	    [ ( "/same", Grammar_pp.pp_nonterm m xd this_var, []) ; 
 	      ( "/diff", lhs_pat ^ " <- neq " ^ thing_s ^ " " ^ Grammar_pp.pp_nt_or_mv m xd that_var,[]) ]
 
-      | Ascii _ | Tex _ | Lex _ | Yacc _ -> Auxl.errorm m "pp_subst_prod"
+      | Ascii _ | Tex _ | Lex _ | Menhir _ -> Auxl.errorm m "pp_subst_prod"
 
        )
 
@@ -1435,7 +1435,7 @@ let pp_subst_rule : subst -> pp_mode -> syntaxdefn -> nontermroot list -> rule -
                ^ Grammar_pp.pp_nontermroot_ty m xd r.rule_ntr_name ^ " -> "
 	       ^ Grammar_pp.pp_nontermroot_ty m xd r.rule_ntr_name ^ " -> type.\n")
 	    )  , "", "")
-      | Ascii _ | Tex _ | Lex _ | Yacc _ -> Auxl.error "pp_subst_rule")
+      | Ascii _ | Tex _ | Lex _ | Menhir _ -> Auxl.error "pp_subst_rule")
   
     in 
     
@@ -1542,7 +1542,7 @@ let rec pp_fv_symterm
 	    ( match m with 
 	    | Twf _ -> Some call
 	    | Isa _ | Hol _ | Lem _ | Caml _ | Coq _ -> Some ("("^call^")")
-            | Tex _ | Ascii _ | Lex _ | Yacc _ -> assert false))
+            | Tex _ | Ascii _ | Lex _ | Menhir _ -> assert false))
         else 
           None in
 
@@ -1571,7 +1571,7 @@ let rec pp_fv_symterm
 	      ^ "list_minus/natlist " ^ interm ^ " " 
 	      ^ Grammar_pp.pp_mse_string m xd sie de bound_things_glommed ^ " " ^ result
 
-	  | Ascii _ | Tex _ | Lex _ | Yacc _ -> Auxl.errorm m "list_minus"
+	  | Ascii _ | Tex _ | Lex _ | Menhir _ -> Auxl.errorm m "list_minus"
 	  | Isa _ when has_isa_set_hom fv ->
 	      "(" ^ s ^ " - set "
               ^ Grammar_pp.pp_mse_string m xd sie de bound_things_glommed ^")"
@@ -1580,7 +1580,7 @@ let rec pp_fv_symterm
               "(list_minus "
 	      ^ 
 		(match m with (* HACK is the name eq_thing always correct? *) 
-		| Ascii _ | Tex _ | Twf _ | Lex _ | Yacc _ -> Auxl.errorm m "list_minus"
+		| Ascii _ | Tex _ | Twf _ | Lex _ | Menhir _ -> Auxl.errorm m "list_minus"
 		| Isa _ | Hol _ | Lem _ | Caml _ -> "" 
 		| Coq _ -> "eq_" ^ (Grammar_pp.pp_nt_or_mv_root_ty m xd fv.fv_that) ^ " " ) 
               ^ s ^" "
@@ -1625,7 +1625,7 @@ and pp_fv_symterm_element
           | Isa _ | Hol _ | Lem _ | Caml _ -> ("["^mv_s^"]") 
           | Coq _ -> ("(cons "^mv_s^" nil)") 
 	  | Twf _ -> ("(natlist/cons "^mv_s^" natlist/nil)") 
-          | Ascii _ | Tex _ | Lex _ | Yacc _ -> Auxl.errorm m "pp_fv_symterm_element"
+          | Ascii _ | Tex _ | Lex _ | Menhir _ -> Auxl.errorm m "pp_fv_symterm_element"
           ), []
       else
         None, []
@@ -1716,7 +1716,7 @@ and pp_fv_symterm_list_body
   let de1i = Grammar_pp.de1_lookup de1 stlb.stl_bound in
   (* TODO optimise the output in the common case of a list of singletons *)
   match m with
-  | Twf _ | Tex _ | Ascii _ | Lex _ | Yacc _ -> Auxl.errorm m "pp_fv_symterm_list_body"
+  | Twf _ | Tex _ | Ascii _ | Lex _ | Menhir _ -> Auxl.errorm m "pp_fv_symterm_list_body"
   | Isa _ | Coq _ | Hol _ | Lem _ | Caml _ ->
       let pp_body_elements, funcs =
 	let body_options, funcs = 
@@ -1745,7 +1745,7 @@ and pp_fv_symterm_list_body
                  | _ -> Some "[]"), funcs
       | _ -> 
 	  ( match m with 
-          | Ascii _ | Tex _ | Lex _ | Yacc _ -> Auxl.error "pp_fv_symterm_list_body"
+          | Ascii _ | Tex _ | Lex _ | Menhir _ -> Auxl.error "pp_fv_symterm_list_body"
 	  | Isa io when io.ppi_isa_primrec ->
               let args = 
 	        String.concat "_" 
@@ -1909,7 +1909,7 @@ let pp_freevar_prod
 	    then "(cons "^thing_s^" nil)"
 	    else "{{"^thing_s^"}}"
 	| Twf _ -> ("(natlist/cons "^thing_s^" natlist/nil)") 
-        | Ascii _ | Tex _ | Lex _ | Yacc _ -> Auxl.errorm m "freevar_singleton_rhs"
+        | Ascii _ | Tex _ | Lex _ | Menhir _ -> Auxl.errorm m "freevar_singleton_rhs"
         ) in
       let funcs = [] (* REALLY??? *) in
       (!dependencies, (p.prod_name, lhs,rhs), funcs)  in
@@ -1956,7 +1956,7 @@ let pp_freevar_prod
 		  then "nil"
 		  else "{}"
 	      | Twf _ -> "natlist/nil"
-              | Tex _ | Ascii _ | Lex _ | Yacc _ -> Auxl.errorm m "pp_freevar_prod")
+              | Tex _ | Ascii _ | Lex _ | Menhir _ -> Auxl.errorm m "pp_freevar_prod")
           | _ -> 
 	      ( match m with 
 	      | Isa _ when has_isa_set_hom fv -> String.concat " \\<union> " rhs_elements
@@ -1967,7 +1967,7 @@ let pp_freevar_prod
 		  then Auxl.insert_append m rhs_elements
 		  else String.concat " \\u " rhs_elements
 	      | Twf _ -> Auxl.insert_append m rhs_elements
-              | Tex _ | Ascii _ | Lex _ | Yacc _ -> Auxl.errorm m "pp_freevar_prod")
+              | Tex _ | Ascii _ | Lex _ | Menhir _ -> Auxl.errorm m "pp_freevar_prod")
                 
         in
         
@@ -2038,7 +2038,7 @@ let pp_freevar_rule : freevar -> pp_mode -> syntaxdefn -> nontermroot list -> ru
 	    ^ Grammar_pp.pp_nontermroot_ty m xd r.rule_ntr_name ^ " -> "
 	    ^ "natlist -> type.\n" ), "", ""
 	  
-      | Tex _ | Ascii _ | Lex _ | Yacc _ -> Auxl.errorm m "pp_freevar_rule")
+      | Tex _ | Ascii _ | Lex _ | Menhir _ -> Auxl.errorm m "pp_freevar_rule")
       
     in 
     let id = Auxl.fv_name fv.fv_name (Grammar_pp.pp_nontermroot m xd r.rule_ntr_name) in

@@ -852,7 +852,14 @@ and pp_rdx_opts = (* ro *)
       ppr_metavars : string list ref }
 
 type pp_lex_opts = unit (* lo *)
-type pp_yacc_opts = unit (* yo *)
+type pp_menhir_opts = 
+    { ppm_show_meta : bool;
+      ppm_suppressed_categories : string list;
+      ppm_suppressed_ntrs : string list;
+      ppm_caml_opts : pp_caml_opts; 
+      ppm_caml_ast_module : string;
+      ppm_caml_parser_module : string;
+    } (* yo *)
     
 type pp_mode =  (* m *)
   | Coq of pp_coq_opts
@@ -864,8 +871,8 @@ type pp_mode =  (* m *)
   | Ascii of pp_ascii_opts
   | Tex of pp_tex_opts
   | Caml of pp_caml_opts
-  | Lex  of pp_lex_opts
-  | Yacc of pp_yacc_opts
+  | Lex  of pp_menhir_opts (* NB: same as pp_menhir_opts *)
+  | Menhir of pp_menhir_opts
       
 let pp_ascii_opts_default =
   Ascii { ppa_colour = true;

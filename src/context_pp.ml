@@ -103,7 +103,7 @@ let pp_prod_context m xd lookup (hole:nonterm) (target:nontermroot) (r:rule) (p:
     ( match m with
     | Coq _ | Caml _ -> lhs_pat 
     | Isa _ | Hol _ | Lem _ | Twf _ -> lhs_pat ^ " " ^ Grammar_pp.pp_nonterm m xd hole
-    | Lex _ | Yacc _ | Tex _ | Ascii _ -> assert false) in
+    | Lex _ | Menhir _ | Tex _ | Ascii _ -> assert false) in
   (* compute the rhs *)
   let rhs = Auxl.the (snd (context_app_rhs m xd lookup hole target r p)) in
   (* all together *)
@@ -144,7 +144,7 @@ let pp_rule_context m xd lookup cr : int_func =
 	  "",
 	  " : " ^ (Grammar_pp.pp_nontermroot_ty m xd cr.cr_target) ^ " =\n  match "^ctx_var^" with\n")
     | Twf _ -> Auxl.errorm m "pp_rule_context"
-    | Lex _ | Yacc _ | Tex _ | Ascii _ -> assert false
+    | Lex _ | Menhir _ | Tex _ | Ascii _ -> assert false
     ) in
 
   { r_fun_id = id;

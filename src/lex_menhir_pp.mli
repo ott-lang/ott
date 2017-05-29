@@ -33,6 +33,6 @@
 val pp_lex_systemdefn :
   Types.pp_mode -> Types.systemdefn -> (string * (string list)) list -> unit
 
-val pp_yacc_systemdefn :
+val pp_menhir_systemdefn :
   Types.pp_mode -> Types.systemdefn -> (string * (string list)) list -> unit
 

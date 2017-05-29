@@ -311,7 +311,7 @@ let types_of_extensions =
       "twf","twf"; 
       "ml", "ocaml";
       "mll", "lex"; 
-      "mly", "yacc";
+      "mly", "menhir";
       "rkt", "rdx"] 
 
 let extension_of_type t = List.assoc t (List.map (function (a,b)->(b,a)) types_of_extensions)
@@ -327,7 +327,7 @@ let file_type name =
     _ -> None 
 
 let non_tex_output_types = ["coq"; "isa"; "hol"; "lem"; "twf"; "ocaml"; "rdx"]
-let output_types =  "tex" :: "lex" :: "yacc" :: non_tex_output_types
+let output_types =  "tex" :: "lex" :: "menhir" :: non_tex_output_types
 let input_types = "ott" :: output_types
 
 let classify_file_argument arg =
@@ -420,6 +420,59 @@ let m_coq = Coq { coq_expand_lists = !coq_expand_lists;
                   coq_use_filter_fn = !coq_use_filter_fn;
                   coq_names_in_rules = !coq_names_in_rules }
 
+let oo =  { ppo_include_terminals = !caml_include_terminals; caml_library = ref ("",[]) } 
+let m_caml = Caml oo 
+
+(* collect the target ocaml filenames *)
+let target_ocaml_ast_module = 
+  if List.exists 
+      (function x -> match x with
+      | Out,"menhir",n -> true
+      | _,_,_ -> false) 
+      all_file_arguments
+  then 
+    let target_ocaml_filenames = 
+      Auxl.option_map 
+        (function x -> match x with
+        | Out,"ocaml",n -> Some n
+        | _,_,_ -> None) 
+        all_file_arguments in
+    match target_ocaml_filenames with
+    | [n] -> String.capitalize (Filename.chop_extension n)
+    | _ -> Auxl.error "\n if there is a menhir output file, there must be exactly one ocaml output file"
+  else
+    ""
+
+let target_ocaml_parser_module = 
+  if List.exists 
+      (function x -> match x with
+      | Out,"lex",n -> true
+      | _,_,_ -> false) 
+      all_file_arguments
+  then 
+    let target_menhir_filenames = 
+      Auxl.option_map 
+        (function x -> match x with
+        | Out,"menhir",n -> Some n
+        | _,_,_ -> None) 
+        all_file_arguments in
+    match target_menhir_filenames with
+    | [n] -> String.capitalize (Filename.chop_extension n)
+    | _ -> Auxl.error "\n if there is an ocamllex output file, there must be exactly one menhir output file"
+  else
+    ""
+
+let yo = {
+                 ppm_show_meta= false; (*!tex_show_meta;*)
+                 ppm_suppressed_categories= !tex_suppressed_categories;
+                 ppm_suppressed_ntrs= !tex_suppressed_ntrs;
+                 ppm_caml_opts = oo;
+                 ppm_caml_ast_module = target_ocaml_ast_module;
+                 ppm_caml_parser_module = target_ocaml_parser_module;
+ }
+
+let m_menhir = Menhir yo 
+let m_lex = Lex yo
   
 let reset_m_coq m = 
   match m with
@@ -437,9 +490,6 @@ let reset_m_coq m =
 
 let m_rdx = Rdx pp_rdx_opts_default
   
-let m_caml = Caml { ppo_include_terminals = !caml_include_terminals; caml_library = ref ("",[]) } 
-let m_lex = Lex ()
-let m_yacc = Yacc ()
 (* finally compute the set of modes used in this run of Ott -- used
    when non-picky about multiple parses *)
 (* here we used also to record the suffix-stripped filenames for hol
@@ -675,9 +725,9 @@ let output_stage (sd,lookup) =
       | "ocaml" -> 
           System_pp.pp_systemdefn_core_io m_caml (Auxl.caml_rename sd) lookup fi !merge_fragments
       | "lex" -> 
-          Lexyac_pp.pp_lex_systemdefn m_lex (Auxl.caml_rename sd) fi
-      | "yacc" -> 
-          Lexyac_pp.pp_yacc_systemdefn m_yacc (Auxl.caml_rename sd) fi
+          Lex_menhir_pp.pp_lex_systemdefn m_lex (Auxl.caml_rename sd) fi
+      | "menhir" -> 
+          Lex_menhir_pp.pp_menhir_systemdefn m_menhir (Auxl.caml_rename sd) fi
       | _ -> Auxl.int_error("unknown target "^t))
 
 

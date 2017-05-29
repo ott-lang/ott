@@ -363,7 +363,7 @@ let pp_subrules m xd srs : int_funcs_collapsed =
 		   ^ " /\\ " ^ "(" ^ id ^" " ^ de1i.de1_compound_id ^"_)" ) ] } ] (* :: tuple_aux_fun *)
         | Twf _ ->
             [ " %{ TWELF NOT IMPLEMENTED }%"], deps, []
-        | Tex _ | Ascii _ | Lex _ | Yacc _ -> Auxl.errorm m "pp_subelement"
+        | Tex _ | Ascii _ | Lex _ | Menhir _ -> Auxl.errorm m "pp_subelement"
 
  )
     | _,_ -> raise (Invalid_argument "pp_subelement")
@@ -429,7 +429,7 @@ let pp_subrules m xd srs : int_funcs_collapsed =
                        then Auxl.pp_true m false
 		       else String.concat (Auxl.pp_and m false) conjuncts
                    | Twf _ -> String.concat "" (List.map (function s -> " <- "^s) conjuncts)
-                   | Lex _ | Yacc _ | Tex _ | Ascii _ -> Auxl.errorm m "pp_subrule"
+                   | Lex _ | Menhir _ | Tex _ | Ascii _ -> Auxl.errorm m "pp_subrule"
                   ))
                  pls in
 
@@ -446,7 +446,7 @@ let pp_subrules m xd srs : int_funcs_collapsed =
              | Twf _ -> 
 		 let pfx = pu.prod_name in 
                  List.map (fun rhs -> (pfx, lhs,rhs)) rhss
-             | Ascii _ | Tex _ | Lex _ | Yacc _ -> Auxl.errorm m "pp_subrule"
+             | Ascii _ | Tex _ | Lex _ | Menhir _ -> Auxl.errorm m "pp_subrule"
            )
 	   (List.filter (function p->not (p.prod_meta)) ru.rule_ps))) in
       
@@ -488,7 +488,7 @@ let pp_subrules m xd srs : int_funcs_collapsed =
 	    ( Auxl.pp_is srl sru ^ " : " 
 	      ^ Grammar_pp.pp_nontermroot_ty m xd sru
 	      ^ " -> type.\n", "","")
-        | Tex _ | Ascii _ | Lex _ | Yacc _ -> Auxl.error "pp_subprod"
+        | Tex _ | Ascii _ | Lex _ | Menhir _ -> Auxl.error "pp_subprod"
          ) in
 
 
@@ -499,7 +499,7 @@ let pp_subrules m xd srs : int_funcs_collapsed =
 	| Isa _| Hol _ 
 	| Caml _ | Coq _ 
         | Twf _ 
-        | Tex _ | Ascii _ | Lex _ | Yacc _ -> None
+        | Tex _ | Ascii _ | Lex _ | Menhir _ -> None
          ) in
 *)
       

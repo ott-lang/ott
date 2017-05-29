@@ -78,7 +78,7 @@ let pp_subntr (m: pp_mode) (xd: syntaxdefn): (nontermroot * nontermroot * nonter
 	^ Auxl.hide_isa_trailing_underscore m
 	    (( match m with Twf _ -> String.uppercase ntr' 
 	    | Coq _ | Isa _ | Hol _ | Lem _ -> ntr'
-	    | Caml _ | Tex _ | Ascii _ | Lex _ | Yacc _ -> raise Auxl.ThisCannotHappen )
+	    | Caml _ | Tex _ | Ascii _ | Lex _ | Menhir _ -> raise Auxl.ThisCannotHappen )
 	     ^ Grammar_pp.pp_suffix_with_sie m xd Bounds.sie_project suff)
       in ( match m with
       | Coq co when not co.coq_expand_lists -> "Is_true ("^s^")"
@@ -93,7 +93,7 @@ let pp_listsubntr : pp_mode -> syntaxdefn -> ((nontermroot * nontermroot * nonte
              List.map
                (function subntr ->
                  match m with
-                 | Ascii _ | Tex _ | Caml _ | Twf _ | Lex _ | Yacc _ -> Auxl.errorm m "pp_listsubntr"
+                 | Ascii _ | Tex _ | Caml _ | Twf _ | Lex _ | Menhir _ -> Auxl.errorm m "pp_listsubntr"
                  | Isa _ -> 
 (* Tobias says: should use  "ALL x : set xs. P x" rather than "list_all P xs", so...: *)
 (* TODO: choose a better internal name than x__ *)
@@ -467,9 +467,9 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
           List.iter pr_premise (snd ppd_premises);
           output_string fd ".\n"
 
-      | Tex _ | Ascii _ | Caml _ | Lex _ | Yacc _ -> raise Auxl.ThisCannotHappen 
+      | Tex _ | Ascii _ | Caml _ | Lex _ | Menhir _ -> raise Auxl.ThisCannotHappen 
        )
-  | Caml _ | Lex _ | Yacc _ ->
+  | Caml _ | Lex _ | Menhir _ ->
       Auxl.errorm m "defns not implemented"
 
 let pp_processed_semiraw_rule fd (m:pp_mode) (xd:syntaxdefn) (s: string) (psr:processed_semiraw_rule) =
@@ -561,7 +561,7 @@ let pp_defn fd (m:pp_mode) (xd:syntaxdefn) lookup (defnclass_wrapper:string) (un
         | PSR_Defncom es -> Embed_pp.pp_embed_spec fd m xd lookup es)
         d.d_rules;
       Printf.fprintf fd "\\end{%s}}\n\n" (Grammar_pp.pp_tex_DEFN_BLOCK_NAME m)
-  | Caml _ | Lex _ | Yacc _ -> Auxl.errorm m "pp_defn"
+  | Caml _ | Lex _ | Menhir _ -> Auxl.errorm m "pp_defn"
 
             
 let pp_defnclass fd (m:pp_mode) (xd:syntaxdefn) lookup (dc:defnclass) =
@@ -684,7 +684,7 @@ let pp_defnclass fd (m:pp_mode) (xd:syntaxdefn) lookup (dc:defnclass) =
          dc.dc_defns; 
       List.iter (fun d -> pp_defn fd m xd lookup dc.dc_wrapper universe d) dc.dc_defns
 
-  | Caml _ | Lex _ | Yacc _ -> ()
+  | Caml _ | Lex _ | Menhir _ -> ()
 
   | Tex _ ->
       Printf.fprintf fd "%% defns %s\n" dc.dc_name;
@@ -708,7 +708,7 @@ let pp_funclause (m:pp_mode) (xd:syntaxdefn) (fc:funclause) : string =
       ppd_lhs ^ " === " ^ ppd_rhs ^ "\n"
   | Tex _ ->                                  
       Grammar_pp.pp_tex_FUNCLAUSE_NAME m^"{"^ppd_lhs^"}"^"{"^ppd_rhs^"}%\n"
-  | Isa _ | Hol _ | Lem _ | Coq _ | Caml _ | Twf _ | Lex _ | Yacc _ -> 
+  | Isa _ | Hol _ | Lem _ | Coq _ | Caml _ | Twf _ | Lex _ | Menhir _ -> 
       Auxl.errorm m "pp_funclause"
 
 let rec insert_commas l =
@@ -735,7 +735,7 @@ let pp_symterm_node_lhs m xd sie de st =
 	match m with
 	| Coq _ | Caml _ | Lem _ (* LemTODO4: really? *) -> (insert_commas hom)
 	| Hol _ | Isa _  -> hom
-	| Twf _ | Ascii _ | Tex _ | Lex _ | Yacc _ -> raise Auxl.ThisCannotHappen
+	| Twf _ | Ascii _ | Tex _ | Lex _ | Menhir _ -> raise Auxl.ThisCannotHappen
       in String.concat " " (Grammar_pp.apply_hom_spec m xd hom pes)
 
   | _ -> Auxl.int_error "pp_symterm_node_lhs"
@@ -839,7 +839,7 @@ let fundefn_to_int_func (m:pp_mode) (xd:syntaxdefn) (deps:string list) (fd:funde
 	      (v,ms) 
 	in
 	Some ( fd.fd_name ^ " " ^ type_defn ^ ": " ^ result_type_name ^ "=\n", "", match_string)
-    | Tex _ | Ascii _ | Twf _ | Lex _ | Yacc _ -> raise Auxl.ThisCannotHappen 
+    | Tex _ | Ascii _ | Twf _ | Lex _ | Menhir _ -> raise Auxl.ThisCannotHappen 
 
   in
   match header with None -> None | Some header -> 
@@ -889,7 +889,7 @@ let pp_fundefn (m:pp_mode) (xd:syntaxdefn) lookup (fd:fundefn) : string =
       ^ "\\end{"^Grammar_pp.pp_tex_FUNDEFN_BLOCK_NAME m ^"}" 
       ^ "}\n\n"
 
-  | Isa _ | Hol _ | Lem _ | Coq _ | Twf _ | Caml _ | Lex _ | Yacc _ -> 
+  | Isa _ | Hol _ | Lem _ | Coq _ | Twf _ | Caml _ | Lex _ | Menhir _ -> 
       Auxl.errorm m "pp_fundefn"
 
 let pp_fundefnclass (m:pp_mode) (xd:syntaxdefn) lookup (fdc:fundefnclass) : string =
@@ -933,7 +933,7 @@ let pp_fundefnclass (m:pp_mode) (xd:syntaxdefn) lookup (fdc:fundefnclass) : stri
 	(Dependency.compute m xd int_funcs_collapsed)
 
   | Twf _ -> Auxl.warning "internal: fundefnclass not implemented for Twelf"; ""
-  | Lex _ | Yacc _ -> ""
+  | Lex _ | Menhir _ -> ""
 
 
 
@@ -1005,7 +1005,7 @@ let pp_fun_or_reln_defnclass_list
                        | FDC fdc -> Printf.fprintf fd "%s\n" (Grammar_pp.tex_fundefnclass_name m fdc.fdc_name)
                        | RDC dc -> Printf.fprintf fd "%s\n" (Grammar_pp.tex_defnclass_name m dc.dc_name)) frdcs;
           output_string fd "}\n\n"
-      | Lex _ | Yacc _ -> () 
+      | Lex _ | Menhir _ -> () 
 
 
 (** *********************** *)

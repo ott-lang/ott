@@ -69,7 +69,7 @@ SOURCES_NON_LEXER_PARSER2 = grammar_pp.ml parse_table.ml glr.ml new_term_parser.
 			    dependency.ml bounds.ml context_pp.ml grammar_typecheck.ml 		  \
 			    transform.ml substs_pp.ml subrules_pp.ml				  \
 			    embed_pp.ml defns.ml ln_transform.ml coq_induct.ml	  		  \
-                            system_pp.ml lexyac_pp.ml align.ml main.ml
+                            system_pp.ml lex_menhir_pp.ml align.ml main.ml
 
 SOURCES_MLI =           \
   align.mli             \
@@ -83,7 +83,7 @@ SOURCES_MLI =           \
   subrules_pp.mli       \
   substs_pp.mli         \
   system_pp.mli         \
-  lexyac_pp.mli         \
+  lex_menhir_pp.mli         \
   transform.mli		\
   term_parser.mli
 

@@ -50,7 +50,7 @@ let mode_name m = match m with
   | Caml _ -> "OCaml"
   | Rdx _ -> "Redex"
   | Lex _ -> "Lex"
-  | Yacc _ -> "Yacc"
+  | Menhir _ -> "Menhir"
 
 let debug_on = false
 
@@ -601,7 +601,7 @@ let hom_name_for_pp_mode m
     | Rdx _ -> "rdx"
     | Caml _ -> "ocaml"
     | Lex _ -> "lex"
-    | Yacc _ -> "yacc"
+    | Menhir _ -> "menhir"
 
 (* select dependencies *)
 
@@ -795,7 +795,7 @@ let big_line_comment m s =
   | Coq _ | Hol _ | Lem _ | Isa _ | Caml _ -> "(** "^s^" *)\n"
   | Twf _ -> "%%% "^s^" %%%\n\n"
   | Tex _ -> "% "^s^"\n"
-  | Yacc _ | Lex _ | Ascii _ -> errorm m "big_line_comment"
+  | Menhir _ | Lex _ | Ascii _ -> errorm m "big_line_comment"
 
 (* print only if not empty *)
 
@@ -1578,7 +1578,7 @@ let pp_true m in_prop =
   | Hol _ -> "T" 
   | Caml _ -> "true" 
   | Lem _ -> "true" 
-  | Ascii _ | Tex _ | Twf _ | Lex _ | Yacc _ -> errorm m "pp_true"
+  | Ascii _ | Tex _ | Twf _ | Lex _ | Menhir _ -> errorm m "pp_true"
 
 let pp_false m in_prop =
   match m with 
@@ -1590,7 +1590,7 @@ let pp_false m in_prop =
   | Hol _ -> "F" 
   | Caml _ -> "false"
   | Lem _ -> "false"
-  | Ascii _ | Tex _ | Twf _ | Lex _ | Yacc _ -> errorm m "pp_false"
+  | Ascii _ | Tex _ | Twf _ | Lex _ | Menhir _ -> errorm m "pp_false"
 
 let pp_and m in_prop =
   match m with
@@ -1602,7 +1602,7 @@ let pp_and m in_prop =
       then " /\\ "     
       else " && "
   | Hol _ -> " /\\ "
-  | Ascii _ | Tex _ | Twf _ | Lex _ | Yacc _ -> errorm m "pp_and"
+  | Ascii _ | Tex _ | Twf _ | Lex _ | Menhir _ -> errorm m "pp_and"
 
 let pp_or m in_prop =
   match m with 
@@ -1614,7 +1614,7 @@ let pp_or m in_prop =
   | Hol _ -> " \\/ " 
   | Caml _ -> " || "
   | Lem _ -> " || "
-  | Ascii _ | Tex _ | Twf _ | Lex _ | Yacc _ -> errorm m "pp_or"
+  | Ascii _ | Tex _ | Twf _ | Lex _ | Menhir _ -> errorm m "pp_or"
 
 (* coq/twelf support *)
 let fresh_nl =
@@ -1657,7 +1657,7 @@ let insert_append m l =
 	  ^ ( String.concat " <- " 
 	      (List.map2 (fun s nl -> s ^ " " ^ nl) l list_nl) )
 	  ^ final_append )
-  | Caml _ | Tex _ | Ascii _ | Hol _ | Lem _ | Isa _ | Lex _ | Yacc _ -> raise ThisCannotHappen
+  | Caml _ | Tex _ | Ascii _ | Hol _ | Lem _ | Isa _ | Lex _ | Menhir _ -> raise ThisCannotHappen
 
 (* skip a nonterm or a metavar in a list of elements *)
 let rec skip_nt_mv (es:element list) =
