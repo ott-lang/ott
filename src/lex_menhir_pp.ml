@@ -280,6 +280,10 @@ let token_names_of_syntaxdefn yo xd : token_data =
   List.rev (uniqueify [] ts'')
     
 
+(** ******************************************************************** *)
+(** ocamllex                                                             *)
+(** ******************************************************************** *)
+
 (* output an ocamllex lexing rule for a token *)
 let lex_token_argument_variable_of_mvr  mvr = mvr 
 
@@ -320,6 +324,11 @@ let pp_lex_systemdefn m sd oi =
       output_string fd "\n\n{\n}\n\n";
       close_out fd
   | _ -> Auxl.error "must specify only one output file in the lex backend.\n"
+
+
+(** ******************************************************************** *)
+(** menhir                                                               *)
+(** ******************************************************************** *)
 
 
 (* output a menhir token definition *)
@@ -427,24 +436,32 @@ let rec pp_menhir_element_action ts e =
   | Lang_option _ -> raise (Failure "Lang_option not implemented")
   | Lang_sugaroption _ -> raise (Failure "Lang_option not implemented")
 
+(* build an OCaml application of a production's constructor to
+identifiers for its arguments, to use as the action of a menhir
+production *)
+
+let pp_menhir_prod_rhs p ts es' = 
+  String.capitalize p.prod_name 
+  ^ 
+    (let args = Auxl.option_map (pp_menhir_element_action ts) es' in
+    match args with
+    | [] -> ""
+    | _ -> "("^ String.concat "," args ^ ")" )
+
+(* build a menhir production *)
 let pp_menhir_prod yo xd ts r p = 
   if suppress_prod yo p then 
     ""
   else
     let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in
     "| " ^ String.concat " " (List.map (pp_menhir_element ts) p.prod_es) ^ "\n"
-    ^ if not(r.rule_phantom) then 
-"    { " ^ String.capitalize p.prod_name 
-      ^ (let args = Auxl.option_map (pp_menhir_element_action ts) es' in
-      match args with
-      | [] -> ""
-      | _ -> "("^ String.concat "," args ^ ")" )
-      ^ " }\n"
-    else (* use the ocaml hom *)
-"    { " ^ (match Auxl.hom_spec_for_hom_name "ocaml" p.prod_homs with Some hom -> Grammar_pp.pp_hom_spec (Menhir yo) xd hom | None -> ignore(Auxl.error ("no ocaml hom for production "^p.prod_name));"") ^ " }\n"
+    ^ 
+      if not(r.rule_phantom) then 
+        "    { " ^ pp_menhir_prod_rhs p ts es' ^ " }\n"
+      else (* use the ocaml hom *)
+        "    { " ^ (match Auxl.hom_spec_for_hom_name "ocaml" p.prod_homs with Some hom -> Grammar_pp.pp_hom_spec (Menhir yo) xd hom | None -> ignore(Auxl.error ("no ocaml hom for production "^p.prod_name));"") ^ " }\n"
 
-
-(* construct a menhir rule *)
+(* build a menhir rule *)
 let pp_menhir_rule yo xd ts r = 
   if suppress_rule yo r then 
     ""
@@ -497,6 +514,66 @@ let pp_menhir_start_symbols yo xd =
            ^ "\n")
        xd.xd_rs)
 
+(** ******************************************************************** *)
+(** raw pp                                                               *)
+(** ******************************************************************** *)
+
+(* all this should really use a more efficient representation than string *)
+
+let pp_pp_raw_name ntmvr =
+  "pp_raw_" ^ ntmvr
+
+let rec pp_pp_raw_prod_rhs_element ts e = 
+  match e with
+  | Lang_terminal t -> None
+  | Lang_nonterm (ntr,nt) ->
+      Some (pp_pp_raw_name ntr ^ " " ^ menhir_semantic_value_id_of_ntmv nt)
+  | Lang_metavar (mvr,mv) ->
+      Some (menhir_semantic_value_id_of_ntmv mv)  (* assuming all metavars map onto string-containing tokens *)
+(*      Some (pp_pp_raw_name mvr ^ " " ^ menhir_semantic_value_id_of_ntmv mv)*)
+  | Lang_list elb -> 
+      (match elb.elb_es with
+      | [Lang_nonterm (ntr,nt)] -> 
+          Some ("String.concat \",\" (List.map " ^ pp_pp_raw_name ntr ^ " " ^ menhir_semantic_value_id_of_ntmv nt ^ ")")
+      | [Lang_metavar (mvr,mv)] ->
+          Some ("String.concat \",\" ((*List.map " ^ pp_pp_raw_name mvr ^ "*) " ^ menhir_semantic_value_id_of_ntmv mv ^ ")")
+      | _ -> Some "(*LISTS THAT ARE NOT SINGLETON NONTERMS OR METAARS ARE UNIMPLEMENTED*)"
+      )
+  | Lang_option _ -> raise (Failure "Lang_option not implemented")
+  | Lang_sugaroption _ -> raise (Failure "Lang_option not implemented")
+
+
+let pp_pp_raw_prod_rhs p ts es' = 
+  "\"" ^ String.capitalize p.prod_name ^ "\"" 
+  ^ 
+    (let args = Auxl.option_map (pp_pp_raw_prod_rhs_element ts) es' in
+    match args with
+    | [] -> ""
+    | _ -> " ^ \"(\" ^ "^ String.concat " ^ \",\" ^ " args ^ " ^ \")\"" )
+
+
+let pp_pp_raw_prod yo xd ts r p = 
+  if suppress_prod yo p then 
+    ""
+  else
+    let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in
+    "| " ^ pp_menhir_prod_rhs p ts es' ^ " -> " 
+    ^ pp_pp_raw_prod_rhs p ts es'
+    ^ "\n"
+
+
+let pp_pp_raw_rule yo xd ts r = 
+  if suppress_rule yo r then 
+    None
+  else 
+    Some (pp_pp_raw_name r.rule_ntr_name ^ " x = match x with\n" 
+    ^  String.concat "" (List.map (pp_pp_raw_prod yo xd ts r) r.rule_ps)
+    ^ "\n")
+
+let pp_pp_raw_rules yo xd ts rs = 
+  "let rec " ^ String.concat "and " (Auxl.option_map (pp_pp_raw_rule yo xd ts) rs)
+
+
 
 (* old code to pull out precedence/assoc info*)
 (*
@@ -528,28 +605,45 @@ let pp_menhir_precedences fd ts =
 *)
 
 (* output a menhir source file *)
-let pp_menhir_systemdefn m sd oi =
+let pp_menhir_systemdefn m sd lookup oi =
   let yo = match m with Menhir yo -> yo | _ -> raise (Failure "pp_menhir_systemdefn called with bad ppmode") in 
   match oi with
   | (o,is)::[] ->
       let _ = Auxl.filename_check m o in
+      let xd = sd.syntax in 
       let fd = open_out o in
-      let ts = token_names_of_syntaxdefn yo sd.syntax in
+      let ts = token_names_of_syntaxdefn yo xd in
       Printf.fprintf fd "/* generated by Ott %s from: %s */\n" Version.n sd.sources;
-      output_string fd ("%{\n" ^ "open " ^ yo.ppm_caml_ast_module ^ "\n" ^ "%}\n\n");
+      output_string fd ("%{\n" ^ "open " ^ yo.ppm_caml_ast_module ^ "\n" 
+                        ^ "%}\n\n");
       List.iter (pp_menhir_token fd) ts;
       Printf.fprintf fd "%%token EOF  (* added by Ott *)\n";
 (*
-      let tl = get_terminals sd.syntax in
+      let tl = get_terminals xd in
       pp_menhir_precedences fd tl;
       output_string fd "\n%%\n";
 *)
       output_string fd "\n";
-      output_string fd (pp_menhir_start_symbols yo sd.syntax);
+      Embed_pp.pp_embeds fd m xd lookup xd.xd_embed;
+
+      output_string fd (pp_menhir_start_symbols yo xd);
       output_string fd "\n\n%%\n\n";
 
-      output_string fd (pp_menhir_start_rules yo sd.syntax ts);
-      List.iter (function r -> output_string fd (pp_menhir_rule yo sd.syntax ts r)) sd.syntax.xd_rs;
-      close_out fd
+      output_string fd (pp_menhir_start_rules yo xd ts);
+      List.iter (function r -> output_string fd (pp_menhir_rule yo xd ts r)) xd.xd_rs;
+      close_out fd;
+
+      (* horrid hack to make filename for pp code by removing .mly *)
+      let o_pp = String.sub o 0 (String.length o - 4)  ^ "_pp.ml" in
+
+      let fd = open_out o_pp in
+      Printf.fprintf fd "(* generated by Ott %s from: %s *)\n" Version.n sd.sources;
+      output_string fd ("open " ^ yo.ppm_caml_ast_module ^ "\n\n" 
+                        ^ pp_pp_raw_rules yo xd ts xd.xd_rs
+                        );
+      close_out fd;
+
+
+
   | _ -> Auxl.error "must specify only one output file in the menhir backend.\n"
 

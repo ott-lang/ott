@@ -727,7 +727,7 @@ let output_stage (sd,lookup) =
       | "lex" -> 
           Lex_menhir_pp.pp_lex_systemdefn m_lex (Auxl.caml_rename sd) fi
       | "menhir" -> 
-          Lex_menhir_pp.pp_menhir_systemdefn m_menhir (Auxl.caml_rename sd) fi
+          Lex_menhir_pp.pp_menhir_systemdefn m_menhir (Auxl.caml_rename sd) lookup fi
       | _ -> Auxl.int_error("unknown target "^t))
 
 

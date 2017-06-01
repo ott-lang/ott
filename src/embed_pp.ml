@@ -63,6 +63,7 @@ and pp_embedmorphism fd m xd lookup (l,hn,es) =
   | (Tex _, "tex") 
   | (Caml _, "ocaml")
   | (Rdx _, "rdx")
+  | (Menhir _, "menhir")
   | (Lex _,  "lex") -> 
       pp_embed_spec fd m xd lookup es;
       output_string fd "\n"

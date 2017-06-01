@@ -34,5 +34,5 @@ val pp_lex_systemdefn :
   Types.pp_mode -> Types.systemdefn -> (string * (string list)) list -> unit
 
 val pp_menhir_systemdefn :
-  Types.pp_mode -> Types.systemdefn -> (string * (string list)) list -> unit
+  Types.pp_mode -> Types.systemdefn -> Types.made_parser -> (string * (string list)) list -> unit
 

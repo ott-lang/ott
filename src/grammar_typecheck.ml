@@ -403,7 +403,7 @@ let embed_allowable_homs = ["coq";"coq-lib";
                             "isa";"isa-import";"isa-auxfn-proof";"isa-subrule-proof";"isa-lib";
                             "hol";"lem";"rdx";
                             "tex";"tex-preamble";"tex-wrap-pre";"tex-wrap-post";
-                            (*"twf";*)"ocaml"]
+                            (*"twf";*)"ocaml";"menhir"]
 
 let list_form_allowable_homs =["isa";"coq";"hol";"lem";"ic";"ch";"ih";"ich";"ichl";"icho";"ichlo";(*"icht";*)"coq-struct";"ocaml"] 
 
