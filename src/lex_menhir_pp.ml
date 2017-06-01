@@ -471,7 +471,7 @@ let pp_menhir_rule yo xd ts r =
     ^ "\n"
 
 let is_start_rule yo r = 
-  not(suppress_rule yo r) && (try ignore(List.assoc "menhir_start" r.rule_homs); true with Not_found -> false)
+  not(suppress_rule yo r) (* make all rules start symbols, temporarily *) (* && (try ignore(List.assoc "menhir_start" r.rule_homs); true with Not_found -> false)*)
 
 (* construct a menhir rule for a start symbol, sticking an EOF on *)
 let pp_menhir_start_rule yo xd ts r = 
