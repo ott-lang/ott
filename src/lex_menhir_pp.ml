@@ -606,7 +606,9 @@ let rec pp_pp_prod_rhs_element ts e =
 
 let pp_pp_prod_rhs p ts es' = 
   let args = Auxl.option_map (pp_pp_prod_rhs_element ts) es' in
-  String.concat " ^ \" \" ^ " args 
+  match args with
+  | [] -> "\"\""
+  | _ -> String.concat " ^ \" \" ^ " args 
 
 let pp_pp_prod yo xd ts r p = 
   if suppress_prod yo p then 
