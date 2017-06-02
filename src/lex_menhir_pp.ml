@@ -99,7 +99,6 @@ let suppress_prod yo p =
     StringSet.exists (fun x -> List.mem x yo.ppm_suppressed_categories)
       p.prod_categories in
 
-
  (* contains_list p (* just for now... *)
    ||*) suppressed_category || (not(yo.ppm_show_meta) && p.prod_meta && not(p.prod_sugar))
 
@@ -108,7 +107,7 @@ let suppress_rule yo r =
     List.mem r.rule_ntr_name yo.ppm_suppressed_ntrs
   in
   [] = r.rule_ps (*List.filter (function p -> not (contains_list p)) r.rule_ps *)
-|| suppressed_ntr || (not(yo.ppm_show_meta) && r.rule_semi_meta)
+|| suppressed_ntr || (not(yo.ppm_show_meta) && r.rule_semi_meta) || r.rule_meta
 
 
 (* tokens arise from terminals and metavardefns *)
@@ -390,13 +389,11 @@ let rec pp_menhir_element ts e =
           match (non_empty, terminal_option) with
           | (0,Some t) -> "separated_list(" ^ t ^ "," ^ rhs ^ ")"
           | (0,None)   -> "list(" ^ rhs ^ ")" 
-          | (_,Some t) -> "separated_nonempty_list(" ^ t ^ "," ^ rhs ^ ")"
-          | (_,None)   -> "nonempty_list(" ^ rhs ^ ")"
-(*
+          | (1,Some t) -> "separated_nonempty_list(" ^ t ^ "," ^ rhs ^ ")"
+          | (1,None)   -> "nonempty_list(" ^ rhs ^ ")"
           | (2,Some t) -> "separated_nonempty2_list(" ^ t ^ "," ^ rhs ^ ")"
           | (2,None)   -> "nonempty2_list(" ^ rhs ^ ")"
           | (_,_)      -> Auxl.error ("unexpected length in pp_menhir_element") 
-*)
         in
         Printf.sprintf "%s=%s" lhs rhs'  in
       (match elb.elb_es with
@@ -453,10 +450,38 @@ let pp_menhir_prod yo xd ts r p =
   if suppress_prod yo p then 
     ""
   else
+    (* pp the production source, to use in comment *)
+    let m_ascii = Ascii { ppa_colour = false; 
+		          ppa_lift_cons_prefixes = false; 
+		          ppa_ugly= false; 
+		          ppa_show_deps = false; 
+		          ppa_show_defns = false } in
+    let pp_prod =
+      let stnb = Grammar_pp.canonical_symterm_node_body_of_prod r.rule_ntr_name p in
+      let st = St_node(dummy_loc,stnb) in
+      Grammar_pp.pp_symterm m_ascii xd [] de_empty st in
+ 
+    (* now the real work *)
     let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in
-    "| " ^ String.concat " " (List.map (pp_menhir_element ts) p.prod_es) ^ "\n"
+    "| " ^ String.concat " " (List.map (pp_menhir_element ts) p.prod_es) ^ "    (* "^pp_prod ^ " :: " ^ p.prod_name^" *)" ^ "\n"
     ^ 
-      if not(r.rule_phantom) then 
+      if p.prod_sugar then 
+"    { " ^ 
+(* let m = (Menhir yo) in*)
+let m' = Caml { Types.ppo_include_terminals=false; Types.caml_library = ref ("",[]) } in
+
+      let pp_prod m'=
+        let stnb = Grammar_pp.canonical_symterm_node_body_of_prod r.rule_ntr_name p in
+        let st = St_node(dummy_loc,stnb) in
+        Grammar_pp.pp_symterm m' xd [] de_empty st 
+in 
+(*
+(match Grammar_pp.pp_elements m xd [] (Grammar_pp.apply_hom_order m xd p) (*p.prod_es*) false false true false with Some s -> s | None -> "None")
+*)
+pp_prod m'
+ ^ " }\n"
+
+      else if not(r.rule_phantom) then 
         "    { " ^ pp_menhir_prod_rhs p ts es' ^ " }\n"
       else (* use the ocaml hom *)
         "    { " ^ (match Auxl.hom_spec_for_hom_name "ocaml" p.prod_homs with Some hom -> Grammar_pp.pp_hom_spec (Menhir yo) xd hom | None -> ignore(Auxl.error ("no ocaml hom for production "^p.prod_name));"") ^ " }\n"
@@ -553,7 +578,7 @@ let pp_pp_raw_prod_rhs p ts es' =
 
 
 let pp_pp_raw_prod yo xd ts r p = 
-  if suppress_prod yo p then 
+  if suppress_prod yo p || p.prod_sugar then 
     ""
   else
     let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in
@@ -575,7 +600,7 @@ let pp_pp_raw_rules yo xd ts rs =
 
 
 (** ******************************************************************** *)
-(** raw pp                                                               *)
+(**  pp                                                                  *)
 (** ******************************************************************** *)
 
 (* all this should really use a more efficient representation than string *)
@@ -611,7 +636,7 @@ let pp_pp_prod_rhs p ts es' =
   | _ -> String.concat " ^ \" \" ^ " args 
 
 let pp_pp_prod yo xd ts r p = 
-  if suppress_prod yo p then 
+  if suppress_prod yo p || p.prod_sugar then 
     ""
   else
     let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in
