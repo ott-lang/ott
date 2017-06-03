@@ -44,10 +44,6 @@ exception ThisCannotHappenC;;
 
 (* We take care to report errors in a reasonable way *)
 
-exception Typecheck_error of string*string;;
-
-let ty_error s1 s2 = raise (Typecheck_error(s1,s2))
-let ty_error2 l s1 s2 = raise (Typecheck_error(s1^" at "^Location.pp_loc l,s2))
 
 let rec firstdup xs = match xs with 
   [] -> None 
@@ -379,12 +375,12 @@ let allowable_hom_data =
                     "nonterminal, metavar or indexvar root"));
     ( Hu_metavar , (["isa";"coq";"hol";"lem";(*"twf";*)"tex";"ocaml";"com";"coq-equality";"lex";"texvar";"isavar";"holvar";"lemvar";"ocamlvar";"repr-locally-nameless";(*"repr-nominal";*)"phantom";"ocamllex"],
                     "metavar declaration"));
-    ( Hu_rule    , (["isa";"coq";"hol";"lem";(*"twf";*)"tex";"ocaml";"com";"coq-equality";"coq-universe";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ic";"ch";"ih";"phantom";"aux";"auxparam";"menhir_start"],
+    ( Hu_rule    , (["isa";"coq";"hol";"lem";(*"twf";*)"tex";"ocaml";"com";"coq-equality";"coq-universe";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ic";"ch";"ih";"phantom";"aux";"auxparam";"menhir-start";"quotient-with"],
                     "rule"));
     ( Hu_rule_meta, (["com"], "special rule"));
     ( Hu_prod    , (["isa";"coq";"hol";"lem";(*"twf";*)"tex";"texlong";"ocaml";"com";"order";"isasyn";"isaprec";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ic";"ch";"ih";
                      "rdx";"rdx-mode"; 
-                     "disambiguate";"prec";"leftassoc";"rightassoc";"menhir"],
+                     "disambiguate";"prec";"leftassoc";"rightassoc";"menhir";"quotient-remove"],
                     "production"));
     ( Hu_prod_tm , (["isa";                      "tex";"lex";  "com"; "prec";"leftassoc";"rightassoc"],"production of the terminals grammar"));
     ( Hu_drule   , ([                                          "com"],"definition rule"));
@@ -1365,13 +1361,36 @@ let check_structure (xd:syntaxdefn) (str:structure) : unit =
 
 (** This constructs an internal representation of a grammar from a raw
     representation, typechecking the grammar on the way *)
-let rec check_and_disambiguate (generate_aux_rules:bool) (targets:string list) (source_filenames:string list) (merge_fragments:bool)  (ris_per_file:raw_item list list)
+let rec check_and_disambiguate (quotient_rules:bool) (generate_aux_rules:bool) (targets:string list) (source_filenames:string list) (merge_fragments:bool)  (ris_per_file:raw_item list list)
     : syntaxdefn * structure * raw_fun_or_reln_defnclass list =
 
   (* now we have in our hand the new ris_per_file that preserves the
   source-file ordering information that we can use in the new
   order-respecting output.  More precisely, the source structure
   informations are stored in the xd structure field. *)
+
+  (* quotient rules *)
+  let quotient_rules_item (ri :raw_item) : raw_item =
+    match ri with
+    | Raw_item_rs raw_rs ->   
+        Raw_item_rs (Quotient_rules.quotient_rules raw_rs)
+    | _ -> ri in
+
+
+  let ris_per_file = if quotient_rules then List.map (List.map quotient_rules_item) ris_per_file else ris_per_file in
+
+  (* debug *)
+  let s = 
+    (String.concat "\n" 
+       (List.map 
+          (fun ri -> 
+            String.concat "" (List.map Grammar_pp.pp_raw_item ri))
+              ris_per_file)) in
+(*     let fd = open_out "test2.txt" in  *)
+(*     output_string fd s ;  *)
+(*     close_out fd; *)
+    print_string s;
+
 
   (* synthesise aux rules *)
   let ris_per_file = if generate_aux_rules then List.map (List.map auxify_rules) ris_per_file else ris_per_file in

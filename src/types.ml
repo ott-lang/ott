@@ -971,3 +971,11 @@ let lemTODO s1 s2 = if !lem_debug then "(* lemTODO "^s1^"*) "^s2 else s2
 let lemTODOm m s1 s2 = match m with Lem _ -> lemTODO s1 s2 | _ -> s2
 let lemTODOmo m s1 s2o = match s2o with None -> None | Some s2 -> Some (lemTODOm m s1 s2) 
 
+
+
+(* from grammar_typecheck *)
+
+exception Typecheck_error of string*string;;
+
+let ty_error s1 s2 = raise (Typecheck_error(s1,s2))
+let ty_error2 l s1 s2 = raise (Typecheck_error(s1^" at "^Location.pp_loc l,s2))

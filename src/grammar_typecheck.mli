@@ -31,13 +31,16 @@
 (*  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                         *)
 (**************************************************************************)
 
-exception Typecheck_error of string * string
+
 val subprod : Types.subrule_graph -> Types.prod -> Types.prod -> bool
+
 val cd_hom :
   Types.hom_usage ->
   Types.cd_env ->
   Types.element list -> Types.raw_homomorphism -> Types.homomorphism
+
 val check_and_disambiguate :
+  bool ->
   bool ->
   Types.hom_name list ->
   string list ->

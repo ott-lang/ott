@@ -3,16 +3,39 @@ metavar var, x ::=   {{ com  term variable }}
 {{ ocaml string}} {{ lex alphanum}} {{ tex \mathit{[[var]]} }} {{ ocamllex ['a'-'z''A'-'Z']+ }}
 
 grammar
-term, t :: 't_' ::=                          {{ com term    }} {{ menhir_start }}
-  | x            ::   :: var                   {{ com variable}}
-  | \ x . t      ::   :: lam (+ bind x in t +) {{ com lambda  }}
-  | t t'         ::   :: app                   {{ com app     }}
-  | ( t )        ::   :: paren                 %{{ icho [[t]]  }}  {{ lem [[t]] }}
-  | { t / x } t' :: M :: sub  
-                         {{ icho (tsubst_term [[t]] [[x]] [[t']])}}
-  {{ lem (tsubst_term [[t]] [[x]] [[t']]) }}
-%val,v :: 'v_' ::=                            {{ com value   }} 
-%  | \ x . t      ::   :: lam                   {{ com lambda  }}
+%                lhs_of_app  rhs_of_app  lambda_body
+%  | ( t )           y          y            y 
+%  | x               y          y            y
+%  | \ x . t         n          y            y
+%  | t t'            y          n            y
+
+
+term, t :: 'T_' ::=               {{ menhir-start }}
+  | at             :: :: at          {{ quotient-remove }}   {{ ocaml [[at]] }}
+  | lhs rhs        :: :: app
+  | lambda         :: :: fn          {{ quotient-remove }}   {{ ocaml [[lambda]] }}
+
+  | { t / x } t' :: M :: sub         {{ ichlo (tsubst_term [[t]] [[x]] [[t']])}}
+
+                   
+atomic_term, at :: 'T_' ::=       {{ quotient-with term}}      
+  | x              :: :: var
+  | ( t )          :: :: paren
+                   
+lhs :: 'T_' ::=                   {{ quotient-with term }}      
+  | at             :: :: at_lhs       {{ quotient-remove }}   {{ ocaml [[at]] }}
+  | lhs at         :: :: app_lhs      {{ quotient-remove }}   {{ ocaml T_app([[lhs]], [[at]]) }}
+                   
+rhs :: 'T_' ::=                   {{ quotient-with term }}      
+  | at             :: :: at_rhs       {{ quotient-remove }}   {{ ocaml [[at]] }}
+  | lambda         :: :: fn_rhs       {{ quotient-remove }}   {{ ocaml [[lambda]] }}
+                   
+lambda :: 'T_' ::=                {{ quotient-with term }}
+  | \ x . t        :: :: lambda   
+
+
+% %val,v :: 'v_' ::=                            {{ com value   }} 
+% %  | \ x . t      ::   :: lam                   {{ com lambda  }}
 
 terminals :: 'terminals_' ::=
   | \            ::   :: lambda  {{ tex \lambda }}
@@ -21,8 +44,8 @@ terminals :: 'terminals_' ::=
 %subrules
 %  val <:: term
 
-substitutions
-  single term var :: tsubst 
+%substitutions
+%  single term var :: tsubst 
 
 % defns
 % Jop :: '' ::=

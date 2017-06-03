@@ -67,6 +67,7 @@ let caml_filter_filename_dsts = ref ([] :  string list)
 let lift_cons_prefixes = ref false
 let test_parse_list = ref ([] : string list)
 let sort = ref true
+let quotient_rules = ref true
 let generate_aux_rules = ref true
 let showraw = ref false
 let tex_show_meta = ref true
@@ -163,6 +164,9 @@ let options = Arg.align [
   ( "-picky_multiple_parses",
     Arg.Bool (fun b -> picky_multiple_parses := b),
     "<"^string_of_bool !picky_multiple_parses^">  Picky about multiple parses" );
+  ( "-quotient_rules",
+    Arg.Bool (fun b -> quotient_rules := b),
+    "<"^string_of_bool !quotient_rules^">  Quotient rules, as per {{ quotient-with ntr }} homs" );
   ( "-generate_aux_rules",
     Arg.Bool (fun b -> generate_aux_rules := b),
     "<"^string_of_bool !generate_aux_rules^">  Generate auxiliary rules from {{ aux ... }} homs" );
@@ -582,13 +586,28 @@ let process source_filenames =
     print_string s);
 
   let xd,structure,rdcs = try
-    Grammar_typecheck.check_and_disambiguate !generate_aux_rules targets_non_tex (List.map snd source_filenames) (!merge_fragments) document 
+    Grammar_typecheck.check_and_disambiguate true (*!quotient_rules*) !generate_aux_rules targets_non_tex (List.map snd source_filenames) (!merge_fragments) document 
   with
-  | Grammar_typecheck.Typecheck_error (s1,s2) ->
+  | Typecheck_error (s1,s2) ->
       Auxl.error ("(in checking and disambiguating syntax)\n"^s1
               ^ (if s2<>"" then " ("^s2^")" else "")
               ^ "\n")
   in
+
+  (* if we're generating a parser, then construct the quotiented syntax, otherwise just put in a placeholder *)
+  let xd_unquotiented = 
+    if List.mem "menhir" targets then 
+      try
+        match Grammar_typecheck.check_and_disambiguate false (*!quotient_rules*) !generate_aux_rules targets_non_tex (List.map snd source_filenames) (!merge_fragments) document with xd_unquotiented,_,_  -> xd_unquotiented
+      with
+      | Typecheck_error (s1,s2) ->
+          Auxl.error ("(in checking and disambiguating quotiented syntax)\n"^s1
+                      ^ (if s2<>"" then " ("^s2^")" else "")
+                      ^ "\n")
+    else
+      xd
+  in
+
 
   if !show_sort then (
     print_endline "********** AFTER CHECK, DISAMBIGUATE AND SORT  *********************\n"; 
@@ -612,7 +631,7 @@ let process source_filenames =
   begin try
     Grammar_typecheck.check_with_parser lookup xd
   with
-  | Grammar_typecheck.Typecheck_error (s1,s2) ->
+  | Typecheck_error (s1,s2) ->
       Auxl.error ("(in checking syntax)\n"^s1
               ^ (if s2<>"" then " ("^s2^")\n" else "\n"))
   end;
@@ -629,7 +648,7 @@ let process source_filenames =
                     sources = sources} in
          sd
        with
-       | Bounds.Bounds s | Defns.Rule_parse_error s | Grammar_typecheck.Typecheck_error (s,_)->
+       | Bounds.Bounds s | Defns.Rule_parse_error s | Typecheck_error (s,_)->
            Auxl.error ("\nError in processing definitions:\n"^s^"\n")
       )
     else
@@ -639,25 +658,30 @@ let process source_filenames =
 		  structure = structure;
                   sources = sources} in
        sd) in
-  sd,lookup
+
+  let sd_unquotiented = { syntax = xd_unquotiented;
+                          relations = [];
+	                  structure = structure;
+                          sources = sources} in
+  sd,lookup,sd_unquotiented 
 
 let read_systemdefn read_systemdefn_filename =
   let fd = open_in_bin read_systemdefn_filename in
-  let sd,lookup = 
+  let sd,lookup ,sd_unquotiented = 
     try Marshal.from_channel fd 
     with Failure s -> Auxl.error ("Cannot read dumped systemdefn\n   " ^ s ^"\n")
   in
   close_in fd;
-  sd,lookup
+  sd,lookup,sd_unquotiented
   
-let output_stage (sd,lookup) = 
+let output_stage (sd,lookup,sd_unquotiented) = 
   
   (** output of systemdefn *)
   ( match !write_systemdefn_filename_opt with
   | None -> ()
   | Some s ->
       let fd = open_out_bin s in
-      Marshal.to_channel fd (sd,lookup) [Marshal.Closures];
+      Marshal.to_channel fd (sd,lookup,sd_unquotiented) [Marshal.Closures];
       close_out fd;
       print_string ("system definition in file: " ^ s ^ "\n") );
   
@@ -727,8 +751,14 @@ let output_stage (sd,lookup) =
       | "lex" -> 
           Lex_menhir_pp.pp_lex_systemdefn m_lex (Auxl.caml_rename sd) fi
       | "menhir" -> 
-          Lex_menhir_pp.pp_menhir_systemdefn m_menhir (Auxl.caml_rename sd) lookup fi
-      | _ -> Auxl.int_error("unknown target "^t))
+          let sd_quotiented = Auxl.caml_rename sd in
+          let sd_unquotiented = Auxl.caml_rename sd_unquotiented in
+          let xd_quotiented = sd.syntax in
+          let xd_unquotiented = sd_unquotiented.syntax in
+          (Lex_menhir_pp.pp_menhir_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented lookup fi;
+           Lex_menhir_pp.pp_pp_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented fi )
+
+     | _ -> Auxl.int_error("unknown target "^t))
 
 
     output_details;
@@ -801,11 +831,11 @@ let _ =
 
 let _ = match source_filenames, !read_systemdefn_filename_opt with
 | (_::_),None -> 
-    let (sd,lookup) = process source_filenames in
-    output_stage (sd,lookup)
+    let (sd,lookup,sd_unquotiented) = process source_filenames in
+    output_stage (sd,lookup,sd_unquotiented)
 | [], Some s ->
-    let (sd,lookup) = read_systemdefn s in
-    output_stage (sd,lookup)
+    let (sd,lookup,sd_unquotiented) = read_systemdefn s in
+    output_stage (sd,lookup,sd_unquotiented)
 | [],None -> 
     Arg.usage options usage_msg;
     Auxl.error "\nError: must specify either some source filenames or a readsys option\n"

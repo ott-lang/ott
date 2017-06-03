@@ -72,7 +72,7 @@ Moreover, the implementation is also partial.  Currently it:
 There is a minimal working example in tests/test10menhir. In the Ott source:
 - metavar definitions should have ocaml and ocamllex homs, to specify
    their OCaml type and the ocamllex regexps.
-- grammar rules that are start symbols should have "menhir_start" homs
+- grammar rules that are start symbols should have "menhir-start" homs
 
 Command-line usage should specify single .ml, .mll, and .mly output
 files, in a single run of Ott (as the files have to refer to each
@@ -445,6 +445,9 @@ let pp_menhir_prod_rhs p ts es' =
     | [] -> ""
     | _ -> "("^ String.concat "," args ^ ")" )
 
+
+let has_hom hn hs = match Auxl.hom_spec_for_hom_name hn hs with Some _ -> true | None -> false
+
 (* build a menhir production *)
 let pp_menhir_prod yo xd ts r p = 
   if suppress_prod yo p then 
@@ -465,22 +468,17 @@ let pp_menhir_prod yo xd ts r p =
     let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in
     "| " ^ String.concat " " (List.map (pp_menhir_element ts) p.prod_es) ^ "    (* "^pp_prod ^ " :: " ^ p.prod_name^" *)" ^ "\n"
     ^ 
-      if p.prod_sugar then 
-"    { " ^ 
-(* let m = (Menhir yo) in*)
-let m' = Caml { Types.ppo_include_terminals=false; Types.caml_library = ref ("",[]) } in
-
-      let pp_prod m'=
-        let stnb = Grammar_pp.canonical_symterm_node_body_of_prod r.rule_ntr_name p in
-        let st = St_node(dummy_loc,stnb) in
-        Grammar_pp.pp_symterm m' xd [] de_empty st 
-in 
-(*
-(match Grammar_pp.pp_elements m xd [] (Grammar_pp.apply_hom_order m xd p) (*p.prod_es*) false false true false with Some s -> s | None -> "None")
-*)
-pp_prod m'
- ^ " }\n"
-
+      if p.prod_sugar || (has_hom "quotient-remove" p.prod_homs && has_hom "ocaml" p.prod_homs) then 
+        "    { " ^ 
+        let m' = Caml { Types.ppo_include_terminals=false; Types.caml_library = ref ("",[]) } in
+        let pp_prod m'=
+          let stnb = Grammar_pp.canonical_symterm_node_body_of_prod r.rule_ntr_name p in
+          let st = St_node(dummy_loc,stnb) in
+          Grammar_pp.pp_symterm m' xd [] de_empty st 
+        in 
+       (* (match Grammar_pp.pp_elements m xd [] (Grammar_pp.apply_hom_order m xd p) (*p.prod_es*) false false true false with Some s -> s | None -> "None")*)
+        pp_prod m'
+        ^ " }\n"
       else if not(r.rule_phantom) then 
         "    { " ^ pp_menhir_prod_rhs p ts es' ^ " }\n"
       else (* use the ocaml hom *)
@@ -496,7 +494,7 @@ let pp_menhir_rule yo xd ts r =
     ^ "\n"
 
 let is_start_rule yo r = 
-  not(suppress_rule yo r) (* make all rules start symbols, temporarily *) (* && (try ignore(List.assoc "menhir_start" r.rule_homs); true with Not_found -> false)*)
+  not(suppress_rule yo r) && (has_hom "menhir-start" r.rule_homs) && not (has_hom "quotient-with" r.rule_homs)
 
 (* construct a menhir rule for a start symbol, sticking an EOF on *)
 let pp_menhir_start_rule yo xd ts r = 
@@ -507,7 +505,7 @@ let pp_menhir_start_rule yo xd ts r =
     let nt = (ntr,[]) in
     menhir_start (menhir_nonterminal_id_of_ntr ntr) ^ ":\n" 
     ^ "| " ^ (pp_menhir_element ts (Lang_nonterm (ntr, nt))) ^ " EOF" ^ "\n"
-    ^ "    { " ^ (menhir_semantic_value_id_of_ntmv nt) ^ " }\n"
+    ^ "    { " ^ (menhir_semantic_value_id_of_ntmv nt) ^ " }\n\n"
 
 let pp_menhir_start_rules yo xd ts = 
   String.concat "" 
@@ -610,14 +608,14 @@ let pp_pp_name ntmvr =
 
 let rec pp_pp_prod_rhs_element ts e = 
   match e with
-  | Lang_terminal t -> Some ("\"" ^ t ^ "\"")
+  | Lang_terminal t -> Some ("\"" ^ String.escaped t ^ "\"")
   | Lang_nonterm (ntr,nt) ->
       Some (pp_pp_name ntr ^ " " ^ menhir_semantic_value_id_of_ntmv nt)
   | Lang_metavar (mvr,mv) ->
       Some (menhir_semantic_value_id_of_ntmv mv)  (* assuming all metavars map onto string-containing tokens *)
 (*      Some (pp_pp_name mvr ^ " " ^ menhir_semantic_value_id_of_ntmv mv)*)
   | Lang_list elb -> 
-      let sep = match elb.elb_tmo with Some t -> t | None -> " " in
+      let sep = match elb.elb_tmo with Some t -> String.escaped t | None -> " " in
       (match elb.elb_es with
       | [Lang_nonterm (ntr,nt)] -> 
           Some ("String.concat \"" ^ sep ^ "\" (List.map " ^ pp_pp_name ntr ^ " " ^ menhir_semantic_value_id_of_ntmv nt ^ ")")
@@ -633,7 +631,9 @@ let pp_pp_prod_rhs p ts es' =
   let args = Auxl.option_map (pp_pp_prod_rhs_element ts) es' in
   match args with
   | [] -> "\"\""
-  | _ -> String.concat " ^ \" \" ^ " args 
+  | [arg] -> arg
+  | _ -> "\"(\"^" ^ String.concat " ^ \" \" ^ " args  ^ "^\")\"" (* full parens*)
+(*  | _ -> String.concat " ^ \" \" ^ " args *)
 
 let pp_pp_prod yo xd ts r p = 
   if suppress_prod yo p || p.prod_sugar then 
@@ -687,15 +687,13 @@ let pp_menhir_precedences fd ts =
 *)
 
 (* output a menhir source file *)
-let pp_menhir_systemdefn m sd lookup oi =
-  let yo = match m with Menhir yo -> yo | _ -> raise (Failure "pp_menhir_systemdefn called with bad ppmode") in 
+let pp_menhir_syntaxdefn m sources _(*xd_quotiented*) xd_unquotiented lookup oi = let yo = match m with Menhir yo -> yo | _ -> raise (Failure "pp_menhir_systemdefn called with bad ppmode") in 
   match oi with
   | (o,is)::[] ->
       let _ = Auxl.filename_check m o in
-      let xd = sd.syntax in 
       let fd = open_out o in
-      let ts = token_names_of_syntaxdefn yo xd in
-      Printf.fprintf fd "/* generated by Ott %s from: %s */\n" Version.n sd.sources;
+      let ts = token_names_of_syntaxdefn yo xd_unquotiented in
+      Printf.fprintf fd "/* generated by Ott %s from: %s */\n" Version.n sources;
       output_string fd ("%{\n" ^ "open " ^ yo.ppm_caml_ast_module ^ "\n" 
                         ^ "%}\n\n");
       List.iter (pp_menhir_token fd) ts;
@@ -706,28 +704,37 @@ let pp_menhir_systemdefn m sd lookup oi =
       output_string fd "\n%%\n";
 *)
       output_string fd "\n";
-      Embed_pp.pp_embeds fd m xd lookup xd.xd_embed;
+      Embed_pp.pp_embeds fd m xd_unquotiented lookup xd_unquotiented.xd_embed;
 
-      output_string fd (pp_menhir_start_symbols yo xd);
+      output_string fd (pp_menhir_start_symbols yo xd_unquotiented);
       output_string fd "\n\n%%\n\n";
 
-      output_string fd (pp_menhir_start_rules yo xd ts);
-      List.iter (function r -> output_string fd (pp_menhir_rule yo xd ts r)) xd.xd_rs;
-      close_out fd;
+      output_string fd (pp_menhir_start_rules yo xd_unquotiented ts);
+      List.iter (function r -> output_string fd (pp_menhir_rule yo xd_unquotiented ts r)) xd_unquotiented.xd_rs;
+      close_out fd
+
+  | _ -> Auxl.error "must specify only one output file in the menhir backend.\n"
+
+(* output pp source file (should be called with quotiented syntaxdefn file) *)
+let pp_pp_syntaxdefn m sources xd_quotiented xd_unquotiented oi =
+  let yo = match m with Menhir yo -> yo | _ -> raise (Failure "pp_pp_systemdefn called with bad ppmode") in 
+  match oi with
+  | (o,is)::[] ->
 
       (* horrid hack to make filename for pp code by removing .mly *)
       let o_pp = String.sub o 0 (String.length o - 4)  ^ "_pp.ml" in
 
+
+      let ts = token_names_of_syntaxdefn yo xd_unquotiented in (* from non-quotiented, to match parser *)
+
       let fd = open_out o_pp in
-      Printf.fprintf fd "(* generated by Ott %s from: %s *)\n" Version.n sd.sources;
+      Printf.fprintf fd "(* generated by Ott %s from: %s *)\n" Version.n sources;
       output_string fd ("open " ^ yo.ppm_caml_ast_module ^ "\n\n" 
-                        ^ pp_pp_raw_rules yo xd ts xd.xd_rs
+                        ^ pp_pp_raw_rules yo xd_quotiented ts xd_quotiented.xd_rs
                         ^ "\n"
-                        ^ pp_pp_rules yo xd ts xd.xd_rs
+                        ^ pp_pp_rules yo xd_quotiented ts xd_quotiented.xd_rs
                         );
       close_out fd;
-
-
 
   | _ -> Auxl.error "must specify only one output file in the menhir backend.\n"
 
