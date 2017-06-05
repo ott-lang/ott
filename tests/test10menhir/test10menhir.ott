@@ -21,25 +21,25 @@ grammar
 
 term, t, v :: 'T_' ::=               {{ menhir-start }}
   | at             :: :: at          {{ quotient-remove }}   {{ ocaml [[at]] }}
-  | lhs rhs        :: :: app
+  | lhs rhs'       :: :: app
   | lambda         :: :: fn          {{ quotient-remove }}   {{ ocaml [[lambda]] }}
 
   | { t / x } t' :: M :: sub         {{ ichlo (tsubst_term [[t]] [[x]] [[t']])}}
 
                    
-atomic_term, at :: 'T_' ::=       {{ quotient-with term}}      
+atomic_term, at :: 'T_' ::=       {{ quotient-with t }}      
   | x              :: :: var
   | ( t )          :: :: paren
                    
-lhs :: 'T_' ::=                   {{ quotient-with term }}      
+lhs :: 'T_' ::=                   {{ quotient-with t }}      
   | at             :: :: at_lhs       {{ quotient-remove }}   {{ ocaml [[at]] }}
-  | lhs at         :: :: app_lhs      {{ quotient-remove }}   {{ ocaml T_app([[lhs]], [[at]]) }}
+  | lhs at'        :: :: app_lhs      {{ quotient-remove }}   {{ ocaml T_app([[lhs]], [[at']]) }}
                    
-rhs :: 'T_' ::=                   {{ quotient-with term }}      
+rhs :: 'T_' ::=                   {{ quotient-with t }}      
   | at             :: :: at_rhs       {{ quotient-remove }}   {{ ocaml [[at]] }}
   | lambda         :: :: fn_rhs       {{ quotient-remove }}   {{ ocaml [[lambda]] }}
                    
-lambda :: 'T_' ::=                {{ quotient-with term }}
+lambda :: 'T_' ::=                {{ quotient-with t }}
   | \ x . t        :: :: lambda   
 
 % in principle, these ocaml homs, which are used in the parser actions
@@ -62,25 +62,25 @@ terminals :: 'terminals_' ::=
 %subrules
 %  val <:: term
 
-substitutions
-  single term var :: tsubst 
-
- defns
- Jop :: '' ::=
- 
-  defn
-  t1 --> t2 :: ::reduce::'' {{ com [[t1]] reduces to [[t2]] }} {{ lemwcf  witness type reduce_witness; check reduce_check; eval : input -> output }} by
- 
- 
-     --------------------------  :: ax_app
-     (\x.t1) v2 -->  {v2/x}t1
- 
-     t1 --> t1'
-     -------------- :: ctx_app_fun
-     t1 t --> t1' t
- 
-     t1 --> t1'
-     -------------- :: ctx_app_arg
-     v t1 --> v t1'
+% substitutions
+%   single term var :: tsubst 
+% 
+%  defns
+%  Jop :: '' ::=
+%  
+%   defn
+%   t1 --> t2 :: ::reduce::'' {{ com [[t1]] reduces to [[t2]] }} {{ lemwcf  witness type reduce_witness; check reduce_check; eval : input -> output }} by
+%  
+%  
+%      --------------------------  :: ax_app
+%      (\x.t1) v2 -->  {v2/x}t1
+%  
+%      t1 --> t1'
+%      -------------- :: ctx_app_fun
+%      t1 t --> t1' t
+%  
+%      t1 --> t1'
+%      -------------- :: ctx_app_arg
+%      v t1 --> v t1'
 
 

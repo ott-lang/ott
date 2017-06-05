@@ -9,17 +9,21 @@ OCAMLBUILD      := ocamlbuild -use-ocamlfind -use-menhir -menhir "$(MENHIR) $(ME
 
 MAIN            := main
 
-all: test10menhir_ast.ml test10menhir_parser.mly test10menhir_parser_pp.ml test10menhir_lexer.mll main.ml test10menhir_quotiented.pdf
+all: test10menhir_ast.ml test10menhir_parser.mly test10menhir_parser_pp.ml test10menhir_lexer.mll main.ml test10menhir_quotiented.pdf #test10menhir_unquotiented.pdf
 	$(OCAMLBUILD) $(MAIN).native
 
 # generate the ocaml AST type, ocamllex lexer, menhir parser, and ocaml pretty printers for the AST, all from the Ott soruce
 test10menhir_ast.ml  test10menhir_lexer.mll test10menhir_parser.mly test10menhir_parser_pp.ml test10menhir_ast.tex : test10menhir.ott
-	../../bin/ott -quotient_rules false -i test10menhir.ott  -o test10menhir_parser.mly -o test10menhir_lexer.mll -o test10menhir_ast.ml -o test10menhir.tex
+	../../bin/ott -show_sort true -quotient_rules false -i test10menhir.ott  -o test10menhir_parser.mly -o test10menhir_lexer.mll -o test10menhir_ast.ml -o test10menhir.tex
 
 
 test10menhir_quotiented.pdf: test10menhir.ott Makefile
 	../../bin/ott -quotient_rules true -i test10menhir.ott -o test10menhir_quotiented.tex
 	pdflatex test10menhir_quotiented.tex
+
+test10menhir_unquotiented.pdf: test10menhir.ott Makefile
+	../../bin/ott -quotient_rules false -i test10menhir.ott -o test10menhir_unquotiented.tex
+	pdflatex test10menhir_unquotiented.tex
 
 clean:
 	rm -rf *~

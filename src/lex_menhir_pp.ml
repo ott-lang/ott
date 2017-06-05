@@ -49,22 +49,21 @@ In general this is impossible:
 - practically, because one may also want to hand-tune the grammar or
    lexer, e.g. for decent parse error messages/recovery
 
-Hence the idea is, given a relatively stable Ott source, to produce
-menhir/ocamllex source files that can be hand-edited, to take some of
-the tedious work out of producing a parser and lexer. This contrasts
-with normal Ott usage, where we have aimed to produce files that do
+The normal goal for Ott development has been to produce files that do
 not need hand-editing, so that the Ott source remains the principal
-source.
+source.  Here we may not be able to achieve that: we might aim instead
+to produce menhir/ocamllex source files that can be hand-edited, to
+take some of the tedious work out of producing a parser and lexer;
+we'll see.
 
-(One can imagine fancy mechanisms for maintaining both a context-free
-and LR grammar in sync, eg by writing an LR Ott grammar but including
-annotations saying that some rules should be inlined in the
-context-free grammar, or with ad hoc transformations for standard
-language idioms.  But none of those are here.)
+There is now some support for maintaining both a context-free and LR
+grammar in sync, by writing an LR Ott grammar but including
+annotations saying that some rules should be quotiented together in
+the context-free grammar.
 
 Moreover, the implementation is also partial.  Currently it:
 - does not handle synthesised aux rules, or recording of source location info
-- does not handle ott lists
+- does not handle ott lists containing more than one element
 - does not support subrules properly 
    (it should only take the maximal elements from the subrule order)
 - does not support syntactic sugar productions properly
@@ -76,11 +75,11 @@ There is a minimal working example in tests/test10menhir. In the Ott source:
 
 Command-line usage should specify single .ml, .mll, and .mly output
 files, in a single run of Ott (as the files have to refer to each
-other).
+other).  The output also generates a simple pretty printer for the ast. 
 
 There was a previous attempt at an ocamllex/ocamlyacc backend, by
 Viktor Vafeiadis in 2011, but that code seemed to be very partial.
-This implementation reuses a little of that infrastructure. 
+This implementation repurposes a little of that infrastructure. 
 
 *)
 
@@ -427,7 +426,7 @@ let rec pp_menhir_element_action ts e =
       | [Lang_metavar (mvr,mv)] ->
           let lhs = menhir_semantic_value_id_of_ntmv mv in
           Some lhs
-      | _ -> Some "(*LISTS THAT ARE NOT SINGLETON NONTERMS OR METAARS ARE UNIMPLEMENTED*)"
+      | _ -> Some "(*LISTS THAT ARE NOT SINGLETON NONTERMS OR METAVARS ARE UNIMPLEMENTED*)"
       )
 
   | Lang_option _ -> raise (Failure "Lang_option not implemented")
@@ -470,14 +469,25 @@ let pp_menhir_prod yo xd ts r p =
     ^ 
       if p.prod_sugar || (has_hom "quotient-remove" p.prod_homs && has_hom "ocaml" p.prod_homs) then 
         "    { " ^ 
-        let m' = Caml { Types.ppo_include_terminals=false; Types.caml_library = ref ("",[]) } in
-        let pp_prod m'=
-          let stnb = Grammar_pp.canonical_symterm_node_body_of_prod r.rule_ntr_name p in
-          let st = St_node(dummy_loc,stnb) in
-          Grammar_pp.pp_symterm m' xd [] de_empty st 
-        in 
-       (* (match Grammar_pp.pp_elements m xd [] (Grammar_pp.apply_hom_order m xd p) (*p.prod_es*) false false true false with Some s -> s | None -> "None")*)
-        pp_prod m'
+
+        (* to do the proper escaping of nonterms within the hom, we need to pp here, not reuse the standard machinery *)
+        let hs = (match Auxl.hom_spec_for_hom_name "ocaml" p.prod_homs with Some hs -> hs | None -> raise (Failure "foo")) in
+        let pp_menhir_hse hse = 
+          match hse with
+          | Hom_string s ->  s
+          | Hom_index i -> let e = List.nth es' (*or es? *) i  in (match (pp_menhir_element_action ts e) with Some s -> s | None -> raise (Failure "pp_menhir_hse Hom_index"))
+          | Hom_terminal s -> s
+          | Hom_ln_free_index (mvs,s) -> raise (Failure "Hom_ln_free_index not implemented")  in
+        String.concat "" (List.map pp_menhir_hse hs)
+
+       (*  let m' = Caml { Types.ppo_include_terminals=false; Types.caml_library = ref ("",[]) } in *)
+       (*  let pp_prod m'= *)
+       (*    let stnb = Grammar_pp.canonical_symterm_node_body_of_prod r.rule_ntr_name p in *)
+       (*    let st = St_node(dummy_loc,stnb) in *)
+       (*    Grammar_pp.pp_symterm m' xd [] de_empty st  *)
+       (*  in  *)
+       (* (\* (match Grammar_pp.pp_elements m xd [] (Grammar_pp.apply_hom_order m xd p) (\*p.prod_es*\) false false true false with Some s -> s | None -> "None")*\) *)
+       (*  pp_prod m' *)
         ^ " }\n"
       else if not(r.rule_phantom) then 
         "    { " ^ pp_menhir_prod_rhs p ts es' ^ " }\n"

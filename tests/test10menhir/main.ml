@@ -14,7 +14,7 @@ let rec pp_term t : string =
   | T_paren t -> Printf.sprintf "(%s)" (pp_term t) 
 *)
 
-let () = Printf.printf "enter lambda calculus terms, in the grammar t ::= x | t t | \x.t | (t)\n"
+let () = Printf.printf "enter lambda calculus terms, in the grammar t ::= x | t t | \\x.t | (t)\n"
 
 let process (line : string) =
   let linebuf = Lexing.from_string line in
