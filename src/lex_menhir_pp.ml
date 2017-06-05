@@ -412,7 +412,7 @@ let rec pp_menhir_element ts e =
 
 let rec pp_menhir_element_action ts e = 
   match e with
-  | Lang_terminal t -> None
+  | Lang_terminal t -> (*Printf.printf "** %s **\n" t; flush stdout;*) None
   | Lang_nonterm (ntr,nt) ->
       Some (menhir_semantic_value_id_of_ntmv nt)
   | Lang_metavar (mvr,mv) ->
@@ -472,10 +472,18 @@ let pp_menhir_prod yo xd ts r p =
 
         (* to do the proper escaping of nonterms within the hom, we need to pp here, not reuse the standard machinery *)
         let hs = (match Auxl.hom_spec_for_hom_name "ocaml" p.prod_homs with Some hs -> hs | None -> raise (Failure "foo")) in
+        let es'' =  (* remove terminals from es to get indexing right *)
+      	(List.filter
+           (function 
+             | (Lang_nonterm (_,_)|Lang_metavar (_,_)|Lang_list _) -> true
+             | Lang_terminal _ -> false
+             | (Lang_option _|Lang_sugaroption _) -> 
+               raise (Invalid_argument "com for prods with option or sugaroptions not implemented"))
+           es') in
         let pp_menhir_hse hse = 
           match hse with
           | Hom_string s ->  s
-          | Hom_index i -> let e = List.nth es' (*or es? *) i  in (match (pp_menhir_element_action ts e) with Some s -> s | None -> raise (Failure "pp_menhir_hse Hom_index"))
+          | Hom_index i -> let e = List.nth es'' (*or es? *) i  in (match (pp_menhir_element_action ts e) with Some s -> s | None -> raise (Failure ("pp_menhir_hse Hom_index " ^ string_of_int i ^ " at " ^ Location.pp_loc p.prod_loc)))
           | Hom_terminal s -> s
           | Hom_ln_free_index (mvs,s) -> raise (Failure "Hom_ln_free_index not implemented")  in
         String.concat "" (List.map pp_menhir_hse hs)
