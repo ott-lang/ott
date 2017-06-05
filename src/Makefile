@@ -66,10 +66,14 @@ SOURCES_LEXER_PARSER = grammar_lexer.mll grammar_parser.mly
 SOURCES_NON_LEXER_PARSER1 = location.ml types.ml auxl.ml merge.ml global_option.ml
 
 SOURCES_NON_LEXER_PARSER2 = grammar_pp.ml parse_table.ml glr.ml new_term_parser.ml term_parser.ml \
-			    dependency.ml bounds.ml context_pp.ml quotient_rules.ml grammar_typecheck.ml 		  \
+			    dependency.ml bounds.ml context_pp.ml \
+	grammar_typecheck.ml 		  \
 			    transform.ml substs_pp.ml subrules_pp.ml				  \
 			    embed_pp.ml defns.ml ln_transform.ml coq_induct.ml	  		  \
                             system_pp.ml lex_menhir_pp.ml align.ml main.ml
+
+
+#  quotient_rules.ml 
 
 SOURCES_MLI =           \
   align.mli             \

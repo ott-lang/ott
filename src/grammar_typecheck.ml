@@ -1373,7 +1373,7 @@ let rec check_and_disambiguate (quotient_rules:bool) (generate_aux_rules:bool) (
   let quotient_rules_item (ri :raw_item) : raw_item =
     match ri with
     | Raw_item_rs raw_rs ->   
-        Raw_item_rs (Quotient_rules.quotient_rules raw_rs)
+        Raw_item_rs raw_rs (*(Quotient_rules.quotient_rules raw_rs)*)
     | _ -> ri in
 
 
