@@ -1394,7 +1394,7 @@ and pp_com_es m xd homs es =
     match m with
     | Tex _ ->
       pp_tex_COM_NAME m  ^"{"
-      ^ String.concat "" (apply_hom_spec m xd hs (List.map (function s -> "$"^s^"$") ss))
+      ^ String.concat "" (apply_hom_spec m xd hs ((*List.map (function s -> "$"^s^"$")*) ss))
       ^ "}" 
     | Isa _ -> " -- {* " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " *}"
     | Coq _ -> " (*r " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " *)" 

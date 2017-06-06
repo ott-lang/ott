@@ -585,27 +585,27 @@ let process source_filenames =
 (*     close_out fd; *)
     print_string s);
 
-  let xd,structure,rdcs = try
-    Grammar_typecheck.check_and_disambiguate m_tex true (*!quotient_rules*) !generate_aux_rules targets_non_tex (List.map snd source_filenames) (!merge_fragments) document 
-  with
-  | Typecheck_error (s1,s2) ->
-      Auxl.error ("(in checking and disambiguating syntax)\n"^s1
-              ^ (if s2<>"" then " ("^s2^")" else "")
-              ^ "\n")
+  
+  (* if we're generating a parser, then construct the quotiented and
+  unquotiented syntax, otherwise just generate the one asked for on
+  the command line *)
+
+  let f quotient = 
+    try 
+      Grammar_typecheck.check_and_disambiguate m_tex quotient !generate_aux_rules targets_non_tex (List.map snd source_filenames) (!merge_fragments) document 
+    with
+    | Typecheck_error (s1,s2) ->
+        Auxl.error ("(in checking and disambiguating "^(if quotient then "quotiented " else "") ^ "syntax)\n"^s1
+                    ^ (if s2<>"" then " ("^s2^")" else "")
+                    ^ "\n")
   in
 
-  (* if we're generating a parser, then construct the quotiented syntax, otherwise just put in a placeholder *)
-  let xd_unquotiented = 
+  let ((xd,structure,rdcs),xd_unquotiented) = 
     if List.mem "menhir" targets then 
-      try
-        match Grammar_typecheck.check_and_disambiguate m_tex false (*!quotient_rules*) !generate_aux_rules targets_non_tex (List.map snd source_filenames) (!merge_fragments) document with xd_unquotiented,_,_  -> xd_unquotiented
-      with
-      | Typecheck_error (s1,s2) ->
-          Auxl.error ("(in checking and disambiguating quotiented syntax)\n"^s1
-                      ^ (if s2<>"" then " ("^s2^")" else "")
-                      ^ "\n")
+      (f true, match f false with (xd,_,_)-> xd)
     else
-      xd
+      match f !quotient_rules with 
+      | (xd,structure,rdcs) -> ((xd,structure,rdcs), xd (* dummy, unused *))
   in
 
 
