@@ -40,6 +40,7 @@ val cd_hom :
   Types.element list -> Types.raw_homomorphism -> Types.homomorphism
 
 val check_and_disambiguate :
+  Types.pp_mode -> 
   bool ->
   bool ->
   Types.hom_name list ->

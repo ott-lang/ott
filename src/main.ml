@@ -586,7 +586,7 @@ let process source_filenames =
     print_string s);
 
   let xd,structure,rdcs = try
-    Grammar_typecheck.check_and_disambiguate true (*!quotient_rules*) !generate_aux_rules targets_non_tex (List.map snd source_filenames) (!merge_fragments) document 
+    Grammar_typecheck.check_and_disambiguate m_tex true (*!quotient_rules*) !generate_aux_rules targets_non_tex (List.map snd source_filenames) (!merge_fragments) document 
   with
   | Typecheck_error (s1,s2) ->
       Auxl.error ("(in checking and disambiguating syntax)\n"^s1
@@ -598,7 +598,7 @@ let process source_filenames =
   let xd_unquotiented = 
     if List.mem "menhir" targets then 
       try
-        match Grammar_typecheck.check_and_disambiguate false (*!quotient_rules*) !generate_aux_rules targets_non_tex (List.map snd source_filenames) (!merge_fragments) document with xd_unquotiented,_,_  -> xd_unquotiented
+        match Grammar_typecheck.check_and_disambiguate m_tex false (*!quotient_rules*) !generate_aux_rules targets_non_tex (List.map snd source_filenames) (!merge_fragments) document with xd_unquotiented,_,_  -> xd_unquotiented
       with
       | Typecheck_error (s1,s2) ->
           Auxl.error ("(in checking and disambiguating quotiented syntax)\n"^s1

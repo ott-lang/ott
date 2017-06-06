@@ -2724,7 +2724,7 @@ and pp_rule m xd r = (* returns a string option *)
 	       ^ (String.concat (pp_tex_PROD_NEWLINE_NAME m^"\n") 
                     ( ( pp_tex_RULEHEAD_NAME m^"{"
 	                ^ String.concat  "  ,\\ "
-	                    (List.map (function ntr,homs->pp_nontermroot m xd ntr) r.rule_ntr_names)
+	                    (Auxl.remove_duplicates (List.map (function ntr,homs->pp_nontermroot m xd ntr) r.rule_ntr_names))
 	                ^ "}{::=}{" ^ pp_com ^ "}")
                       ::
 	                (Auxl.option_map 

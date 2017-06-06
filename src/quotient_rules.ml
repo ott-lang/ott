@@ -43,10 +43,7 @@ quotiented for all other purposes.
 In the quotiented grammar, for each rule with a {{ quotient-with ntr }} hom:
 - the productions of that rule are merged with those of ntr
 - all nonterminals of that rule (throughout the grammar block) are
-   renamed to have root ntr (this is debatable - its done in a crude
-   way, so the user has to avoid clashes, and those will only be
-   detected late) (also, renaming could be needed for later grammar
-   blocks, but that is not done)
+   added merged with those of ntr, with an added nonterminalroot tex hom to pretty print them as ntr 
 - the homs and categories of that rule are discarded
 - the production-name prefix of that rule is checked to be identical with that of ntr
 
@@ -62,6 +59,11 @@ rule synthesis, which makes it easier to do on a per-item basis, ie
 open Types
 
 
+(* Old implementation: rename merged-in ntrs to have root ntr (this is
+   debatable - its done in a crude way, so the user has to avoid
+   clashes, and those will only be detected late) (also, renaming
+   could be needed for later grammar blocks, but that is not done) *)
+
 (* rename nonterminalroots in a raw production, as specified by the
 quotient-with hom *)
 
@@ -74,6 +76,7 @@ grammar *)
 (* a renaming is a list of (ntrs,ntr), where all the ntrs (the primary
 or secondary ntrs of a rule that's being quotiented away) get splatted
 to the ntr mentioned in the quotient-with hom *)
+(*
 let rec rename_raw_string renaming s = match renaming with
 | [] -> s 
 | (ntrs,ntr)::renaming' -> 
@@ -135,12 +138,12 @@ and rename_raw_mse renaming mse = match mse with
 | Raw_AuxList_comp(l,i,i', cb) -> Raw_AuxList_comp(l, rename_raw_ident renaming i, rename_raw_ident renaming i', cb) 
 | Raw_Union(l,mse,mse') -> Raw_Union(l,rename_raw_mse renaming mse,rename_raw_mse renaming mse')  
 | Raw_Empty(l) -> Raw_Empty(l) 
-
+*)
       
   
     
 
-let quotient_rules (rs: raw_rule list) :  raw_rule list = 
+let quotient_rules m_tex (rs: raw_rule list) :  raw_rule list = 
 
 (* find the quotient-with homs and check they are to legal ntrs *)
 
@@ -193,6 +196,7 @@ let quotient_rules (rs: raw_rule list) :  raw_rule list =
             | Some _ -> ty_error2 l ("quotient-with hom of " ^ ntr ^ " to " ^ ntr' ^ ", but the latter also has a quotient-with hom") "" ) )
       quotient_data in
 
+(*
   let renaming = 
     Auxl.option_map 
       (function (ntr,ntrs,ntrlo) -> 
@@ -201,12 +205,13 @@ let quotient_rules (rs: raw_rule list) :  raw_rule list =
         | Some (ntr',l) -> Some (ntrs,ntr')
       )
       quotient_data in
+*)
   
   (* construct one quotiented rule *)
-  let quotient_rule (r:raw_rule) (rs: raw_rule list) : raw_rule = 
+  let quotient_rule (r:raw_rule) (rs: (raw_rule * nontermroot) list) : raw_rule = 
     
     (* check the production-name prefixes are identical *)
-    let () = List.iter (function r' -> if r'.raw_rule_pn_wrapper <> r.raw_rule_pn_wrapper then ty_error2 r'.raw_rule_loc ("quotiented rule production-name prefix "^r'.raw_rule_pn_wrapper^" does not match that of the target rule ("^r.raw_rule_pn_wrapper^")") "") rs in
+    let () = List.iter (function (r',_) -> if r'.raw_rule_pn_wrapper <> r.raw_rule_pn_wrapper then ty_error2 r'.raw_rule_loc ("quotiented rule production-name prefix "^r'.raw_rule_pn_wrapper^" does not match that of the target rule ("^r.raw_rule_pn_wrapper^")") "") rs in
 
     let strip_quotient_remove_prods ps = 
       List.filter
@@ -223,13 +228,20 @@ let quotient_rules (rs: raw_rule list) :  raw_rule list =
                p.raw_prod_homs))
         ps in
 
+
+    let add_tex_ntr_hom fake_loc ntr_target (ntr,homs) = 
+      let tex_hom = ("tex", [Raw_hom_string (Grammar_pp.pp_tex_NT_NAME m_tex ^ "{" ^ ntr_target ^ "}")], fake_loc) in
+      let homs' = tex_hom :: List.filter (function (hn,_,_)-> hn<>"tex") homs in
+      (ntr,homs') in
+
     { r with 
-(*      raw_rule_ntr_names = List.flatten (List.map (function r -> r.raw_rule_ntr_names) (r::rs));*)
+      raw_rule_ntr_names = List.flatten (r.raw_rule_ntr_names :: List.map (function (r',ntr_target) -> List.map (add_tex_ntr_hom r'.raw_rule_loc ntr_target) r'.raw_rule_ntr_names) rs);
       raw_rule_ps = strip_quotient_remove_prods 
-        (List.flatten 
+        (List.flatten
+           (r.raw_rule_ps ::
            (List.map 
-              (function r' -> List.map (rename_raw_prod renaming) r'.raw_rule_ps)
-              (r::rs)));
+              (function (r',_) -> (*List.map (rename_raw_prod renaming)*) r'.raw_rule_ps)
+              rs)));
     }  in
 
   let rec f qd rs_all rs = 
@@ -238,10 +250,10 @@ let quotient_rules (rs: raw_rule list) :  raw_rule list =
         (match ntrlo with
         | Some _ -> f qd' rs_all rs' 
         | None -> 
-            (* find the primary ntrs of the rules that should be quotiented in *)
-            let rs_ntrs_to_be_quotiented_in = Auxl.option_map (function (ntr',ntrs',ntrlo') -> match ntrlo' with Some (ntr'',l) when List.mem ntr'' ntrs -> Some ntr' | _ -> None) quotient_data in
-            (* the actual rules, with the renaming for each *)
-            let rs_to_be_quotiented_in = List.map (function ntr -> (List.find (function r' -> r'.raw_rule_ntr_name = ntr) rs_all)) rs_ntrs_to_be_quotiented_in in
+            (* find the primary ntrs of the rules that should be quotiented in, with the ntr target for each *)
+            let rs_ntrs_to_be_quotiented_in = Auxl.option_map (function (ntr',ntrs',ntrlo') -> match ntrlo' with Some (ntr'',l) when List.mem ntr'' ntrs -> Some (ntr',ntr'') | _ -> None) quotient_data in
+            (* the actual rules, with the ntr target for each *)
+            let rs_to_be_quotiented_in = List.map (function (ntr,ntr_target) -> (List.find (function r' -> r'.raw_rule_ntr_name = ntr) rs_all, ntr_target)) rs_ntrs_to_be_quotiented_in in
             (quotient_rule r rs_to_be_quotiented_in) :: f qd' rs_all rs')
     | ([], []) -> []
     | _ -> raise (Failure "quotient rules")

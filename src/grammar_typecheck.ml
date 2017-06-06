@@ -1361,7 +1361,7 @@ let check_structure (xd:syntaxdefn) (str:structure) : unit =
 
 (** This constructs an internal representation of a grammar from a raw
     representation, typechecking the grammar on the way *)
-let rec check_and_disambiguate (quotient_rules:bool) (generate_aux_rules:bool) (targets:string list) (source_filenames:string list) (merge_fragments:bool)  (ris_per_file:raw_item list list)
+let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:bool) (targets:string list) (source_filenames:string list) (merge_fragments:bool)  (ris_per_file:raw_item list list)
     : syntaxdefn * structure * raw_fun_or_reln_defnclass list =
 
   (* now we have in our hand the new ris_per_file that preserves the
@@ -1373,7 +1373,7 @@ let rec check_and_disambiguate (quotient_rules:bool) (generate_aux_rules:bool) (
   let quotient_rules_item (ri :raw_item) : raw_item =
     match ri with
     | Raw_item_rs raw_rs ->   
-        Raw_item_rs (Quotient_rules.quotient_rules raw_rs)
+        Raw_item_rs (Quotient_rules.quotient_rules m_tex raw_rs)
     | _ -> ri in
 
 
