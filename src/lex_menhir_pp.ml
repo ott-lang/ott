@@ -306,7 +306,11 @@ let pp_lex_systemdefn m sd oi =
       output_string fd ("{\n" ^ "open " ^ yo.ppm_caml_parser_module ^ "\n" ^ "exception Error of string\n" ^ "}\n\n");
       output_string fd "rule token = parse\n";
       output_string fd 
-"| [' ' '\\t']
+"| [' ' '\\n' '\\t']
+    { token lexbuf }
+";
+      output_string fd 
+"| \"//\" [^'\\n']* '\\n'
     { token lexbuf }
 ";
       output_string fd 
