@@ -366,16 +366,37 @@ let menhir_semantic_value_id_of_ntmv ((ntmvr,suffix) as ntmv) =
   | Si_index i -> string_of_int i in (* ignoring possible name clashes...*)
   escape (ntmvr ^ String.concat "" (List.map string_of_suffix_item suffix))
 
-(* construct a menhir production *)
-let rec pp_menhir_element ts e = 
-  match e with
-  | Lang_terminal t -> token_of_terminal ts t
+let menhir_semantic_value_id_of_list es = 
+  let f e = match e with
+  | Lang_terminal t -> None
   | Lang_nonterm (ntr,nt) ->
-      Printf.sprintf "%s=%s" (menhir_semantic_value_id_of_ntmv nt) (menhir_nonterminal_id_of_ntr ntr)
+      Some (menhir_semantic_value_id_of_ntmv nt)
   | Lang_metavar (mvr,mv) ->
-      Printf.sprintf "%s=%s" (menhir_semantic_value_id_of_ntmv mv) (token_of_metavarroot ts mvr)
-  | Lang_list elb ->
-      let f lhs rhs = 
+      Some (menhir_semantic_value_id_of_ntmv mv)
+  | Lang_list elb -> 
+      raise (Failure "unexpected nested Lang_list")
+  | _ ->
+      raise (Failure "unexpected other Lang_ form") in
+  let ss = Auxl.option_map f es in
+  match ss with
+  | [] -> raise (Failure "List form consisting only of terminals not supported")
+  | _ -> String.concat "_" ss
+
+(* construct a menhir production *)
+
+let rec pp_menhir_stuff_of_element ts (allow_lists:bool) e : string option(*semantic_value_id*) * string(*grammar body*) * string option (*semantic action*) =
+  match e with
+  | Lang_terminal t -> (None,token_of_terminal ts t, None)
+  | Lang_nonterm (ntr,nt) ->
+      let x = Some (menhir_semantic_value_id_of_ntmv nt) in (x, menhir_nonterminal_id_of_ntr ntr, x)
+  | Lang_metavar (mvr,mv) ->
+      let x = Some (menhir_semantic_value_id_of_ntmv mv) in (x, token_of_metavarroot ts mvr, x)
+  
+  | Lang_list elb -> (
+      if not allow_lists then raise (Failure "unexpected list form");
+      let element_data = List.map (pp_menhir_stuff_of_element ts false) elb.elb_es in 
+      
+      let list_grammar_constructor body = 
         let terminal_option = 
           match elb.elb_tmo with
           | None -> None
@@ -387,34 +408,31 @@ let rec pp_menhir_element ts e =
           | Some (Bound_comp_u bcu)   -> 0
           | Some (Bound_comp_lu bclu) -> bclu.bclu_length 
           | None                      -> 0 in
-        let rhs' = 
-          (* this isn't enforcing the length >=2 constraints from the Ott source *)
-          match (non_empty, terminal_option) with
-          | (0,Some t) -> "separated_list(" ^ t ^ "," ^ rhs ^ ")"
-          | (0,None)   -> "list(" ^ rhs ^ ")" 
-          | (1,Some t) -> "separated_nonempty_list(" ^ t ^ "," ^ rhs ^ ")"
-          | (1,None)   -> "nonempty_list(" ^ rhs ^ ")"
-          | (2,Some t) -> "separated_nonempty2_list(" ^ t ^ "," ^ rhs ^ ")"
-          | (2,None)   -> "nonempty2_list(" ^ rhs ^ ")"
-          | (_,_)      -> Auxl.error ("unexpected length in pp_menhir_element") 
-        in
-        Printf.sprintf "%s=%s" lhs rhs'  in
-      (match elb.elb_es with
-      | [Lang_nonterm (ntr,nt)] -> 
-          let lhs = menhir_semantic_value_id_of_ntmv nt in
-          let rhs = menhir_nonterminal_id_of_ntr ntr in
-          f lhs rhs 
-      | [Lang_metavar (mvr,mv)] ->
-          let lhs = menhir_semantic_value_id_of_ntmv mv in
-          let rhs = token_of_metavarroot ts mvr in
-          f lhs rhs 
-      | _ -> "(*LISTS THAT ARE NOT SINGLETON NONTERMS OR METAARS ARE UNIMPLEMENTED*)"
-            (* we should be able to use the menhir anonymous rules to implement non-singleton Ott lists *)
-      )
-  | Lang_option _ -> raise (Failure "Lang_option not implemented")
-  | Lang_sugaroption _ -> raise (Failure "Lang_option not implemented")
+        (* this isn't enforcing the length >=2 constraints from the Ott source *)
+        match (non_empty, terminal_option) with
+        | (0,Some t) -> "separated_list(" ^ t ^ "," ^ body ^ ")"
+        | (0,None)   -> "list(" ^ body ^ ")" 
+        | (1,Some t) -> "separated_nonempty_list(" ^ t ^ "," ^ body ^ ")"
+        | (1,None)   -> "nonempty_list(" ^ body ^ ")"
+        | (2,Some t) -> "separated_nonempty2_list(" ^ t ^ "," ^ body ^ ")"
+        | (2,None)   -> "nonempty2_list(" ^ body ^ ")"
+        | (_,_)      -> Auxl.error ("unexpected length in pp_menhir_element") 
+      in
 
-let rec pp_menhir_element_action ts e = 
+      let id = menhir_semantic_value_id_of_list elb.elb_es in      
+      match element_data with
+      | [] -> raise (Failure "unexpected empty list form")
+      | [(_,r,_)] -> (Some id, list_grammar_constructor r, Some id)
+      | _ -> 
+          let body = Printf.sprintf "tuple%d(%s)" (List.length element_data) (String.concat "," (List.map (function (_,body',_) -> body') element_data)) in
+          (Some id, list_grammar_constructor body, Some id (*todo: project out terminal elements *))
+      )
+  | _ -> raise (Failure "unexpected Lang_ form")
+
+
+
+  
+let pp_menhir_element_action ts e = 
   match e with
   | Lang_terminal t -> (*Printf.printf "** %s **\n" t; flush stdout;*) None
   | Lang_nonterm (ntr,nt) ->
@@ -422,37 +440,39 @@ let rec pp_menhir_element_action ts e =
   | Lang_metavar (mvr,mv) ->
       Some (menhir_semantic_value_id_of_ntmv mv)
   | Lang_list elb -> 
+      Some (menhir_semantic_value_id_of_list elb.elb_es)
+  | _ -> raise (Failure "unexpected Lang_ form")
 
-      (match elb.elb_es with
-      | [Lang_nonterm (ntr,nt)] -> 
-          let lhs = menhir_semantic_value_id_of_ntmv nt in
-          Some lhs
-      | [Lang_metavar (mvr,mv)] ->
-          let lhs = menhir_semantic_value_id_of_ntmv mv in
-          Some lhs
-      | _ -> Some "(*LISTS THAT ARE NOT SINGLETON NONTERMS OR METAVARS ARE UNIMPLEMENTED*)"
-      )
 
-  | Lang_option _ -> raise (Failure "Lang_option not implemented")
-  | Lang_sugaroption _ -> raise (Failure "Lang_option not implemented")
+
+let pp_menhir_prod_grammar element_data = 
+  String.concat "  " (List.map (function (ido,body,_) -> match ido with Some id -> Printf.sprintf "%s = %s" id body | None -> body) element_data)
 
 (* build an OCaml application of a production's constructor to
-identifiers for its arguments, to use as the action of a menhir
+the code for its arguments, to use as the action of a menhir
 production *)
-
-let pp_menhir_prod_rhs p ts es' = 
+let pp_menhir_prod_action p element_data = 
   String.capitalize p.prod_name 
   ^ 
-    (let args = Auxl.option_map (pp_menhir_element_action ts) es' in
+    (let args = Auxl.option_map (function (_,_,actiono) -> actiono) element_data in
     match args with
     | [] -> ""
     | _ -> "("^ String.concat "," args ^ ")" )
 
+let pp_pattern_prod_action p element_data = 
+  String.capitalize p.prod_name 
+  ^ 
+    (let args = Auxl.option_map (function (ido,_,_) -> ido) element_data in
+    match args with
+    | [] -> ""
+    | _ -> "("^ String.concat "," args ^ ")" )
+      
 
 let has_hom hn hs = match Auxl.hom_spec_for_hom_name hn hs with Some _ -> true | None -> false
 
 (* build a menhir production *)
 let pp_menhir_prod yo xd ts r p = 
+  let element_data = List.map (pp_menhir_stuff_of_element ts true) p.prod_es in 
   if suppress_prod yo p then 
     ""
   else
@@ -462,18 +482,17 @@ let pp_menhir_prod yo xd ts r p =
 		          ppa_ugly= false; 
 		          ppa_show_deps = false; 
 		          ppa_show_defns = false } in
-    let pp_prod =
+    let ppd_prod =
       let stnb = Grammar_pp.canonical_symterm_node_body_of_prod r.rule_ntr_name p in
       let st = St_node(dummy_loc,stnb) in
       Grammar_pp.pp_symterm m_ascii xd [] de_empty st in
- 
-    (* now the real work *)
-    let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in
-    "| " ^ String.concat " " (List.map (pp_menhir_element ts) p.prod_es) ^ "    (* "^pp_prod ^ " :: " ^ p.prod_name^" *)" ^ "\n"
-    ^ 
-      if p.prod_sugar || (has_hom "quotient-remove" p.prod_homs && has_hom "ocaml" p.prod_homs) then 
-        "    { " ^ 
+    let ppd_comment = "(* "^ppd_prod ^ " :: " ^ p.prod_name^" *)" in
 
+    (* now the real work *)
+    let ppd_action = 
+      let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in
+      if p.prod_sugar || (has_hom "quotient-remove" p.prod_homs && has_hom "ocaml" p.prod_homs) then 
+        (* ocaml hom case *)
         (* to do the proper escaping of nonterms within the hom, we need to pp here, not reuse the standard machinery *)
         let hs = (match Auxl.hom_spec_for_hom_name "ocaml" p.prod_homs with Some hs -> hs | None -> raise (Failure "foo")) in
         let es'' =  (* remove terminals from es to get indexing right *)
@@ -500,11 +519,16 @@ let pp_menhir_prod yo xd ts r p =
        (*  in  *)
        (* (\* (match Grammar_pp.pp_elements m xd [] (Grammar_pp.apply_hom_order m xd p) (\*p.prod_es*\) false false true false with Some s -> s | None -> "None")*\) *)
        (*  pp_prod m' *)
-        ^ " }\n"
       else if not(r.rule_phantom) then 
-        "    { " ^ pp_menhir_prod_rhs p ts es' ^ " }\n"
-      else (* use the ocaml hom *)
-        "    { " ^ (match Auxl.hom_spec_for_hom_name "ocaml" p.prod_homs with Some hom -> Grammar_pp.pp_hom_spec (Menhir yo) xd hom | None -> ignore(Auxl.error ("no ocaml hom for production "^p.prod_name));"") ^ " }\n"
+        pp_menhir_prod_action p element_data
+      else (* use the ocaml hom - is this code now defunct? *)
+        (match Auxl.hom_spec_for_hom_name "ocaml" p.prod_homs with Some hom -> Grammar_pp.pp_hom_spec (Menhir yo) xd hom | None -> ignore(Auxl.error ("no ocaml hom for production "^p.prod_name));"")
+    in
+    
+    "| " ^ pp_menhir_prod_grammar element_data ^ "    " ^ ppd_comment ^ "\n"
+    ^ 
+        "    { " ^ ppd_action ^ " }\n"
+
 
 (* build a menhir rule *)
 let pp_menhir_rule yo xd ts r = 
@@ -525,9 +549,10 @@ let pp_menhir_start_rule yo xd ts r =
   else 
     let ntr = r.rule_ntr_name in
     let nt = (ntr,[]) in
-    menhir_start (menhir_nonterminal_id_of_ntr ntr) ^ ":\n" 
-    ^ "| " ^ (pp_menhir_element ts (Lang_nonterm (ntr, nt))) ^ " EOF" ^ "\n"
-    ^ "    { " ^ (menhir_semantic_value_id_of_ntmv nt) ^ " }\n\n"
+    let id,body = menhir_semantic_value_id_of_ntmv nt, menhir_nonterminal_id_of_ntr ntr in 
+    menhir_start id ^ ":\n" 
+    ^ "| " ^ Printf.sprintf "%s = %s" id body ^ " EOF" ^ "\n"
+    ^ "    { " ^ id ^ " }\n\n"
 
 let pp_menhir_start_rules yo xd ts = 
   String.concat "" 
@@ -582,7 +607,7 @@ let rec pp_pp_raw_prod_rhs_element ts e =
           Some ("String.concat \",\" (List.map " ^ pp_pp_raw_name ntr ^ " " ^ menhir_semantic_value_id_of_ntmv nt ^ ")")
       | [Lang_metavar (mvr,mv)] ->
           Some ("String.concat \",\" ((*List.map " ^ pp_pp_raw_name mvr ^ "*) " ^ menhir_semantic_value_id_of_ntmv mv ^ ")")
-      | _ -> Some "(*LISTS THAT ARE NOT SINGLETON NONTERMS OR METAARS ARE UNIMPLEMENTED*)"
+      | _ -> Some "\"LISTS THAT ARE NOT SINGLETON NONTERMS OR METAARS ARE UNIMPLEMENTED\""
       )
   | Lang_option _ -> raise (Failure "Lang_option not implemented")
   | Lang_sugaroption _ -> raise (Failure "Lang_option not implemented")
@@ -602,7 +627,8 @@ let pp_pp_raw_prod yo xd ts r p =
     ""
   else
     let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in
-    "| " ^ pp_menhir_prod_rhs p ts es' ^ " -> " 
+    let element_data = List.map (pp_menhir_stuff_of_element ts true) es' in 
+    "| " ^ pp_pattern_prod_action p element_data ^ " -> " 
     ^ pp_pp_raw_prod_rhs p ts es'
     ^ "\n"
 
@@ -643,7 +669,7 @@ let rec pp_pp_prod_rhs_element ts e =
           Some ("String.concat \"" ^ sep ^ "\" (List.map " ^ pp_pp_name ntr ^ " " ^ menhir_semantic_value_id_of_ntmv nt ^ ")")
       | [Lang_metavar (mvr,mv)] ->
           Some ("String.concat \"" ^ sep ^ "\" ((*List.map " ^ pp_pp_name mvr ^ "*) " ^ menhir_semantic_value_id_of_ntmv mv ^ ")")
-      | _ -> Some "(*LISTS THAT ARE NOT SINGLETON NONTERMS OR METAARS ARE UNIMPLEMENTED*)"
+      | _ -> Some "\"LISTS THAT ARE NOT SINGLETON NONTERMS OR METAARS ARE UNIMPLEMENTED\""
       )
   | Lang_option _ -> raise (Failure "Lang_option not implemented")
   | Lang_sugaroption _ -> raise (Failure "Lang_option not implemented")
@@ -662,7 +688,8 @@ let pp_pp_prod yo xd ts r p =
     ""
   else
     let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in
-    "| " ^ pp_menhir_prod_rhs p ts es' ^ " -> " 
+    let element_data = List.map (pp_menhir_stuff_of_element ts true) es' in 
+    "| " ^ pp_pattern_prod_action p element_data ^ " -> " 
     ^ pp_pp_prod_rhs p ts es'
     ^ "\n"
 
