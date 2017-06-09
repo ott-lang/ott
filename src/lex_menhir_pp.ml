@@ -611,7 +611,7 @@ let rec pp_pp_raw_prod_rhs_element ts e =
   | Lang_nonterm (ntr,nt) ->
       Some (pp_pp_raw_name ntr ^ " " ^ menhir_semantic_value_id_of_ntmv nt)
   | Lang_metavar (mvr,mv) ->
-      Some ("\""^menhir_semantic_value_id_of_ntmv mv^"\"")  (* assuming all metavars map onto string-containing tokens *)  (*TODO: add these quotes for metavar values within lists *)
+      Some ("\"\\\"\"^"  ^menhir_semantic_value_id_of_ntmv mv^"^\"\\\"\"")  (* assuming all metavars map onto string-containing tokens *)  (*TODO: add these quotes for metavar values within lists *)
 (*      Some (pp_pp_raw_name mvr ^ " " ^ menhir_semantic_value_id_of_ntmv mv)*)
   | Lang_list elb -> 
       let id = menhir_semantic_value_id_of_list elb.elb_es in
