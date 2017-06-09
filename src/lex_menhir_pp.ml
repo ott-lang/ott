@@ -99,7 +99,7 @@ let suppress_prod yo p =
       p.prod_categories in
 
  (* contains_list p (* just for now... *)
-   ||*) suppressed_category || (not(yo.ppm_show_meta) && p.prod_meta && not(p.prod_sugar))
+   ||*) suppressed_category || ((*not(yo.ppm_show_meta) &&*) p.prod_meta && not(p.prod_sugar))
 
 let suppress_rule yo r = 
   let suppressed_ntr = 
@@ -425,7 +425,18 @@ let rec pp_menhir_stuff_of_element ts (allow_lists:bool) e : string option(*sema
       | [(_,r,_)] -> (Some id, list_grammar_constructor r, Some id)
       | _ -> 
           let body = Printf.sprintf "tuple%d(%s)" (List.length element_data) (String.concat "," (List.map (function (_,body',_) -> body') element_data)) in
-          (Some id, list_grammar_constructor body, Some id (*todo: project out terminal elements *))
+
+          (* project out unit elements from terminals within list if need be *)
+          let action = 
+            if List.exists (function (_,_,None) -> true | _ -> false) element_data
+            then 
+              let pat = String.concat "," (List.map (function d -> match d with (Some id,_,_)->id | (None,_,_)->"()") element_data) in
+              let rhs = String.concat "," (Auxl.option_map (function d -> match d with (Some id,_,_)->Some id | (None,_,_)->None) element_data) in
+              "List.map (function ("^pat^") -> ("^rhs^")) "^id 
+            else 
+              id  in
+
+          (Some id, list_grammar_constructor body, Some action (*todo: project out terminal elements *))
       )
   | _ -> raise (Failure "unexpected Lang_ form")
 
@@ -472,10 +483,10 @@ let has_hom hn hs = match Auxl.hom_spec_for_hom_name hn hs with Some _ -> true |
 
 (* build a menhir production *)
 let pp_menhir_prod yo xd ts r p = 
-  let element_data = List.map (pp_menhir_stuff_of_element ts true) p.prod_es in 
   if suppress_prod yo p then 
     ""
   else
+
     (* pp the production source, to use in comment *)
     let m_ascii = Ascii { ppa_colour = false; 
 		          ppa_lift_cons_prefixes = false; 
@@ -489,6 +500,7 @@ let pp_menhir_prod yo xd ts r p =
     let ppd_comment = "(* "^ppd_prod ^ " :: " ^ p.prod_name^" *)" in
 
     (* now the real work *)
+    let element_data = List.map (pp_menhir_stuff_of_element ts true) p.prod_es in 
     let ppd_action = 
       let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in
       if p.prod_sugar || (has_hom "quotient-remove" p.prod_homs && has_hom "ocaml" p.prod_homs) then 
@@ -599,16 +611,26 @@ let rec pp_pp_raw_prod_rhs_element ts e =
   | Lang_nonterm (ntr,nt) ->
       Some (pp_pp_raw_name ntr ^ " " ^ menhir_semantic_value_id_of_ntmv nt)
   | Lang_metavar (mvr,mv) ->
-      Some (menhir_semantic_value_id_of_ntmv mv)  (* assuming all metavars map onto string-containing tokens *)
+      Some ("\""^menhir_semantic_value_id_of_ntmv mv^"\"")  (* assuming all metavars map onto string-containing tokens *)  (*TODO: add these quotes for metavar values within lists *)
 (*      Some (pp_pp_raw_name mvr ^ " " ^ menhir_semantic_value_id_of_ntmv mv)*)
   | Lang_list elb -> 
+      let id = menhir_semantic_value_id_of_list elb.elb_es in
+      let element_data = List.map (pp_menhir_stuff_of_element ts false) elb.elb_es in 
+      let pat = "(" ^ String.concat "," (Auxl.option_map (function d -> match d with (Some id,_,_)->Some id | (None,_,_)->None) element_data) ^")" in
+      let rhs_data = Auxl.option_map (pp_pp_raw_prod_rhs_element ts) elb.elb_es in
+      let rhs =  "\"(\"^" ^ String.concat  "^\",\"^" rhs_data ^ "^\")\"" in
+      let f = "(function "^pat^" -> "^rhs^")" in
+      let pper = "\"[\" ^ String.concat  \";\" (List.map " ^ f ^ " " ^ id ^")" ^"^\"]\"" in
+      Some pper
+(*
       (match elb.elb_es with
       | [Lang_nonterm (ntr,nt)] -> 
           Some ("String.concat \",\" (List.map " ^ pp_pp_raw_name ntr ^ " " ^ menhir_semantic_value_id_of_ntmv nt ^ ")")
       | [Lang_metavar (mvr,mv)] ->
           Some ("String.concat \",\" ((*List.map " ^ pp_pp_raw_name mvr ^ "*) " ^ menhir_semantic_value_id_of_ntmv mv ^ ")")
       | _ -> Some "\"LISTS THAT ARE NOT SINGLETON NONTERMS OR METAARS ARE UNIMPLEMENTED\""
-      )
+*)
+
   | Lang_option _ -> raise (Failure "Lang_option not implemented")
   | Lang_sugaroption _ -> raise (Failure "Lang_option not implemented")
 
@@ -669,7 +691,7 @@ let rec pp_pp_prod_rhs_element ts e =
           Some ("String.concat \"" ^ sep ^ "\" (List.map " ^ pp_pp_name ntr ^ " " ^ menhir_semantic_value_id_of_ntmv nt ^ ")")
       | [Lang_metavar (mvr,mv)] ->
           Some ("String.concat \"" ^ sep ^ "\" ((*List.map " ^ pp_pp_name mvr ^ "*) " ^ menhir_semantic_value_id_of_ntmv mv ^ ")")
-      | _ -> Some "\"LISTS THAT ARE NOT SINGLETON NONTERMS OR METAARS ARE UNIMPLEMENTED\""
+      | _ -> Some "\"PP OF LISTS THAT ARE NOT SINGLETON NONTERMS OR METAARS UNIMPLEMENTED\""
       )
   | Lang_option _ -> raise (Failure "Lang_option not implemented")
   | Lang_sugaroption _ -> raise (Failure "Lang_option not implemented")

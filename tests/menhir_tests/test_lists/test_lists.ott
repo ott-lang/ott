@@ -1,0 +1,31 @@
+% This example has list forms containing more than one element, including:
+%  - metavars, nonterms, and terminals
+%  - list forms with different minimum lengths
+%  - nonterms of quotiented grammars
+
+metavar var, x ::=   {{ com  term variable }} 
+{{ isa string}} {{ coq nat}} {{ hol string}} {{ lem string }} {{ coq-equality }}
+{{ ocaml string}} {{ lex alphanum}} {{ tex \mathit{[[var]]} }} {{ ocamllex ['a'-'z''A'-'Z']+ }}
+
+indexvar i,n ::= {{ phantom }} {{ ocaml int }}
+
+grammar
+term, t :: 'T_' ::=               {{ menhir-start }}
+  | T1 ( t1 , .. , tn )             :: :: tuple1
+  | T2 ( t1 , ... , tn )            :: :: tuple2
+  | T3 ( t1 , .... , tn )           :: :: tuple3
+  | T4 ( x1 , .. , xn )             :: :: tuple4
+  | T5 ( t1 : ty1 , .. , tn : tyn ) :: :: tuple5
+  | T6 ( x1 : ty1 , .. , xn : tyn ) :: :: tuple6
+  | T7 ( foo1 , .. , foon )         :: :: tuple7
+  | foo                             :: :: foo2  {{ quotient-remove }} {{ ocaml [[foo]] }}
+  | .                               :: :: dot
+
+foo :: 'T_' ::=   {{ quotient-with t }}
+  | Foo t                         :: :: foo
+
+typ, ty :: 'Ty_' ::=
+  | int                           :: :: int
+
+
+
