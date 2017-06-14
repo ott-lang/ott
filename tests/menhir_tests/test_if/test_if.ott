@@ -1,25 +1,58 @@
 % This example has a non-ambigous grammar for conditionals
 
+
+%nonassoc DUMMY_IF
+
+
+embed {{ menhir
+
+%nonassoc THEN  
+%nonassoc ELSE  
+%left STAR
+
+}}
+
 metavar var, x ::=   {{ com  term variable }} 
 {{ isa string}} {{ coq nat}} {{ hol string}} {{ lem string }} {{ coq-equality }}
 {{ ocaml string}} {{ lex alphanum}} {{ tex \mathit{[[var]]} }} {{ ocamllex ['a'-'z''A'-'Z']+ }}
 
 
 grammar
-exp :: 'E_' ::=               {{ menhir-start }}
-  | if exp1 then balanced_if_exp2 else exp3             ::   :: if  
-  | if exp1 then exp2                                   :: S :: ifnoelse  {{ ocaml E_if ([[exp1]], [[exp2]], E_skip) }}
-  | non_if_exp                                          ::   :: nonifexp  {{ quotient-remove }} {{ ocaml [[non_if_exp]] }}
 
-balanced_if_exp :: 'E_' ::=   {{ quotient-with exp }}
-  | if exp1 then balanced_if_exp2 else balanced_if_exp3 ::   :: if2       {{ quotient-remove }} {{ ocaml E_if([[exp1]],[[balanced_if_exp2]],[[balanced_if_exp3]]) }}
-  | non_if_exp                                          ::   :: nonifexp2 {{ quotient-remove }} {{ ocaml [[non_if_exp]] }}
+% version using ramified grammars
 
-non_if_exp :: 'E_' ::=        {{ quotient-with exp }}
-  | x                                                   ::   :: var  
-  | skip                                                ::   :: skip
+%% exp :: 'E_' ::=               {{ menhir-start }}
+%%   | if exp1 then balanced_if_exp2 else exp3             ::   :: if  {{ menhir-prec DUMMY_IF }}
+%%   | if exp1 then exp2                                   :: S :: ifnoelse  {{ ocaml E_if ([[exp1]], [[exp2]], E_skip) }} {{ menhir-prec DUMMY_IF }}
+%%   | non_if_exp                                          ::   :: nonifexp  {{ quotient-remove }} {{ ocaml [[non_if_exp]] }}
+%% 
+%% balanced_if_exp :: 'E_' ::=   {{ quotient-with exp }}
+%%   | if exp1 then balanced_if_exp2 else balanced_if_exp3 ::   :: if2       {{ quotient-remove }} {{ ocaml E_if([[exp1]],[[balanced_if_exp2]],[[balanced_if_exp3]]) }} {{ menhir-prec DUMMY_IF }}
+%%   | non_if_exp                                          ::   :: nonifexp2 {{ quotient-remove }} {{ ocaml [[non_if_exp]] }}
+%% 
+%% non_if_exp :: 'E_' ::=        {{ quotient-with exp }}
+%%   | x                                                   ::   :: var  
+%%   | skip                                                ::   :: skip
+%%   | exp * exp'                                          ::   :: star
 
 
+% version using precedence for THEN and ELSE
+
+exp :: 'E_' ::=           {{ menhir-start }}
+  | if exp1 then exp2 else exp3             ::   :: if  
+  | if exp1 then exp2                       :: S :: ifnoelse  {{ ocaml E_if ([[exp1]], [[exp2]], E_skip) }} 
+  | skip                                    ::   :: skip
+  | x                                       ::   :: var  
+  | exp * exp'                              ::   :: star
+
+
+
+% bits
+
+%exp :: 'E_' ::=               {{ menhir-start }}
+%  | if exp1 then exp2                                   ::   :: ifnoelse  {{ ocaml E_if ([[exp1]], [[exp2]], E_skip) }}  
+%  | exp * exp'                                          ::   :: star
+%  | x                                                   ::   :: var
 
 
 

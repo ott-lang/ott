@@ -536,6 +536,21 @@ let pp_pattern_prod p element_data =
 
 let has_hom hn hs = match Auxl.hom_spec_for_hom_name hn hs with Some _ -> true | None -> false
 
+let menhir_prec_spec homs = 
+  match Auxl.hom_spec_for_hom_name "menhir-prec" homs with 
+  | None -> ""
+  | Some hs -> 
+      let pp_hse hse = 
+        match hse with
+        | Hom_string s ->  s
+        | Hom_index i -> raise (Failure ("pp_menhir_prec_spec Hom_index"))
+        | Hom_terminal s -> s
+        | Hom_ln_free_index (mvs,s) -> raise (Failure "pp_menhir_prec_spec Hom_ln_free_index")  in
+      "%prec " ^ String.concat "" (List.map pp_hse hs) ^ "\n"
+
+
+
+
 (* build a menhir production *)
 let pp_menhir_prod yo xd ts r p = 
   if suppress_prod yo p then 
@@ -591,11 +606,14 @@ let pp_menhir_prod yo xd ts r p =
       else (* use the ocaml hom - is this code now defunct? *)
         (match Auxl.hom_spec_for_hom_name "ocaml" p.prod_homs with Some hom -> Grammar_pp.pp_hom_spec (Menhir yo) xd hom | None -> ignore(Auxl.error ("no ocaml hom for production "^p.prod_name));"")
     in
+
+
     
     "| " ^ pp_menhir_prod_grammar element_data ^ "    " ^ ppd_comment ^ "\n"
     ^ 
-        "    { " ^ ppd_action ^ " }\n"
-
+      "    { " ^ ppd_action ^ " }\n"
+    ^ 
+      menhir_prec_spec p.prod_homs
 
 (* build a menhir rule *)
 let pp_menhir_rule yo xd ts r = 
