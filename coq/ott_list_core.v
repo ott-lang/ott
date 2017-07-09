@@ -7,7 +7,7 @@ Set Implicit Arguments.
 
 
 Section list_predicates.
-Variable (A : Set). (* should be Type in coq >= V8.1 *)
+Variable (A : Type).
 
 (* Test whether a predicate [p] holds for every element of a list [l]. *)
 Definition forall_list (p:A->bool) (l:list A) :=
@@ -35,7 +35,7 @@ Hint Constructors Forall_list Exists_list.
 Section list_mem.
 (* Functions about membership in a list, with equality between a list
    element and a potential member being decided by [eq_dec]. *)
-Variable (A : Set). (* should be Type in coq >= V8.1 *)
+Variable (A : Type).
 Variable (eq_dec : forall (a b:A), {a=b} + {a<>b}).
 
 (* Test whether [x] appears in [l]. *)
@@ -57,7 +57,7 @@ End list_mem.
 
 
 Section Flat_map_definition.
-Variables (A B : Set). (* should be Type in coq >= V8.1 *)
+Variables (A B : Type).
 Variable (f : A -> list B).
 (* This definition is almost the same as the one in the standard library of
    Coq V8.0 or V8.1. The difference is that this version has the shape
