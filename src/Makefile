@@ -222,6 +222,7 @@ version.tex: tmp_date.txt version_src.tex
 ## Rules to unpack and build our copy of ocamlgraph.
 $(OCAMLGRAPHDIR)/Makefile:
 	cd $(topdir) && tar -zxvf $(OCAMLGRAPHTARGZ)
+	cd $(OCAMLGRAPHDIR) && patch -p1 < $(topdir)/ocamlgraph-safe-string.patch
 	cd $(OCAMLGRAPHDIR) && ./configure
 $(OCAMLGRAPHDIR)/graph.cma: $(OCAMLGRAPHDIR)/Makefile
 	cd $(OCAMLGRAPHDIR) && $(MAKE) graph.cma
