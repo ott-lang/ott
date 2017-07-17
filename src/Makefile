@@ -222,6 +222,7 @@ version.tex: tmp_date.txt version_src.tex
 ## Rules to unpack and build our copy of ocamlgraph.
 $(OCAMLGRAPHDIR)/Makefile:
 	cd $(topdir) && tar -zxvf $(OCAMLGRAPHTARGZ)
+	cd $(OCAMLGRAPHDIR) && patch -p1 < $(topdir)/ocamlgraph-safe-string.patch
 	cd $(OCAMLGRAPHDIR) && ./configure
 $(OCAMLGRAPHDIR)/graph.cma: $(OCAMLGRAPHDIR)/Makefile
 	cd $(OCAMLGRAPHDIR) && $(MAKE) graph.cma
@@ -232,14 +233,15 @@ $(OCAMLGRAPHDIR)/graph.cmxa: $(OCAMLGRAPHDIR)/Makefile
 # PR#4124 (present in OCaml 3.09.*).
 ocamlgraph: $(OCAMLGRAPHDIR)/graph.cma $(OCAMLGRAPHDIR)/graph.cmxa
 
-install.byt: $(OCAMLGRAPHDIR)/graph.cma
+$(topdir)/bin:
+	mkdir $(topdir)/bin
+
+install.byt: $(topdir)/bin $(OCAMLGRAPHDIR)/graph.cma
 	$(MAKE) byt
-	-mkdir $(topdir)/bin
 	cp ./ott $(topdir)/bin/ott
 
-install: $(OCAMLGRAPHDIR)/graph.cmxa
+install: $(topdir)/bin $(OCAMLGRAPHDIR)/graph.cmxa
 	$(MAKE) opt
-	-mkdir $(topdir)/bin
 	cp ./ott $(topdir)/bin/ott
 
 
@@ -356,6 +358,7 @@ clean:
 	rm -f tmp_*.ott
 	rm -f testRegr*
 	rm -f *Theory.* *.ui *.uo
+	rm -rf $(OCAMLGRAPHDIR)
 
 realclean:
 	rm -f .depend
