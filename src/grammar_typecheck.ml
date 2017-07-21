@@ -395,11 +395,15 @@ let allowable_hom_data =
     ( Hu_deadcode, ([], "Internal error: Hu_deadcode"));
   ] 
 
-let embed_allowable_homs = ["coq";"coq-lib";
-                            "isa";"isa-import";"isa-auxfn-proof";"isa-subrule-proof";"isa-lib";
-                            "hol";"lem";"rdx";
+let embed_allowable_homs = ["coq";"coq-lib";"coq-preamble";
+                            "isa";"isa-import";"isa-auxfn-proof";"isa-subrule-proof";"isa-lib";"isa-preamble";
+                            "hol";"hol-preamble";
+                            "lem";"lem-preamble";
+                            "rdx";
                             "tex";"tex-preamble";"tex-wrap-pre";"tex-wrap-post";
-                            (*"twf";*)"ocaml";"menhir"]
+                            (*"twf";*)
+                            "ocaml";"ocaml-preamble";
+                            "menhir"]
 
 let list_form_allowable_homs =["isa";"coq";"hol";"lem";"ic";"ch";"ih";"ich";"ichl";"icho";"ichlo";(*"icht";*)"coq-struct";"ocaml"] 
 
@@ -1916,15 +1920,20 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
 
   (* 9- build a preliminary syntax defn, without dependencies or auxfns *)
 
-  (* embed preamble are those embeds labeled by tex-preamble *)
+  (* embed preamble are those embeds labeled by ___-preamble *)
   let raw_embed_preamble = 
     Auxl.option_map
       (fun (l,hn,he) ->
          match hn with
-         | "tex-preamble" -> Some (l,"tex",he)
+         | "tex-preamble"   -> Some (l,"tex",he)
          | "tex-wrap-pre"
-         | "tex-wrap-post" -> Some (l,hn,he)
-         | _              -> None) 
+         | "tex-wrap-post"  -> Some (l,hn,he)
+         | "coq-preamble"   -> Some (l,"coq",he)
+         | "isa-preamble"   -> Some (l,"isa",he)
+         | "hol-preamble"   -> Some (l,"hol",he)
+         | "lem-preamble"   -> Some (l,"lem",he)
+         | "ocaml-preamble" -> Some (l,"ocaml",he)
+         | _                -> None)
       rsd'.raw_sd_embed in
 
   (* calculate additional file names that the Isabelle header should include (isa-import) *)
