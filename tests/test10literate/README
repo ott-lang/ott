@@ -1,0 +1,16 @@
+This directory illustrates the two ways of writing a "literate" Ott
+definition.  
+
+The first (test10.pdf, generated from test10.ott) uses Ott to generate
+a complete .tex file.  One can add comments {{ com ... }} and
+tex-embed blocks (embed {{ tex ... }}) in various places.  Sometimes
+this is enough, but it's not very flexible.  The tex-embed blocks can
+only usefully be used in limited places, and one is stuck with the
+original order of the definitions.
+
+The second (test10-wrapper.pdf, generated from test10.ott and
+test10-wrapper.tex) uses Ott to generate a .tex file of definitions
+(test10-inc.tex) and includes those in a hand-written document
+(test10-wrapper.tex).  This lets one quote parts of the grammar and
+rule definitions as needed, in any order; it's usually the best way to
+do things.
