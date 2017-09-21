@@ -13,8 +13,7 @@ Set Implicit Arguments.
    you have to set up the induction manually and call [list_eq_dec] on
    your own (TODO: point to an example --- it's systematic but not easy). *)
 Lemma list_eq_dec :
-  forall (A:Set) (* should be Type in coq >= V8.1 *)
-         (eq_dec : forall (x y:A), {x = y} + {x <> y}),
+  forall (A:Type) (eq_dec : forall (x y:A), {x = y} + {x <> y}),
     forall (x y:list A), {x = y} + {x <> y}.
 Proof.
   induction x as [| a l IHl]; destruct y as [| a0 l0]; auto with datatypes.
@@ -31,7 +30,7 @@ Defined.
    pairs on its own, adding the following lemmas in the hint database helps
    when lists of pairs are involved. *)
 Lemma pair_eq_dec :
-  forall (A B:Set) (* should be Type in coq >= V8.1 *)
+  forall (A B:Type)
          (eqA:forall a a0:A, {a=a0}+{a<>a0})
          (eqB:forall b b0:B, {b=b0}+{b<>b0})
          (x y:A*B), {x=y}+{x<>y}.
