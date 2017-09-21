@@ -448,3 +448,13 @@ for comment, pushing that onto the next line.
 
 2017-02-13 Add command-line option -tex_suppress_ntr <string> to
   suppress the grammar rule with that principal nonterminal root.
+
+2017-05-28 fixes for Coq 8.5 and 8.6, contributed by palmskog
+
+2017-05-29 - 2017-06-14  Add experimental support for generating a
+standalone lexer, menhir parser, and pretty printer, as illustrated in 
+tests/menhir_tests/test10menhir
+
+2017-07-17 fixes for OCaml safe string, contributed by jpdeplaix
+
+2017-09-07 example of "literate" ott spec, in tests/test10literate
