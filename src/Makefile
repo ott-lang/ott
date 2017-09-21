@@ -33,7 +33,7 @@
 
 topdir = ..
 
-OTTVER=0.25
+OTTVER=0.26
 
 # for us
 OCAMLC	 	= ocamlc.opt -g -dtypes  # -w p disables partial match warnings
