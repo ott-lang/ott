@@ -1383,18 +1383,16 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
 
   let ris_per_file = if quotient_rules then List.map (List.map quotient_rules_item) ris_per_file else ris_per_file in
 
-  (* debug *)
-  let s = 
-    (String.concat "\n" 
-       (List.map 
-          (fun ri -> 
-            String.concat "" (List.map Grammar_pp.pp_raw_item ri))
-              ris_per_file)) in
-(*     let fd = open_out "test2.txt" in  *)
-(*     output_string fd s ;  *)
-(*     close_out fd; *)
-    print_string s;
-
+  debug ( let s =
+            (String.concat "\n"
+               (List.map
+                  (fun ri ->
+                    String.concat "" (List.map Grammar_pp.pp_raw_item ri))
+                  ris_per_file)) in
+         (*     let fd = open_out "test2.txt" in  *)
+         (*     output_string fd s ;  *)
+         (*     close_out fd; *)
+          s );
 
   (* synthesise aux rules *)
   let ris_per_file = if generate_aux_rules then List.map (List.map auxify_rules) ris_per_file else ris_per_file in
