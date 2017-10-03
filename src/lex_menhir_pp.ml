@@ -87,6 +87,9 @@ This implementation repurposes a little of that infrastructure.
 *)
 
 
+(* for the generated lexer, metavar definitions should either have an ocamllex hom (specifying how they should be lexed) or an ocamllex-remove hom (specifying that a constructor of the token type should be generated, but without a lexer rule). *)
+
+
 open Types;;
 
 (* which metavars, rules and productions to include *)
@@ -115,7 +118,8 @@ let suppress_rule yo r =
 (* tokens arise from terminals and metavardefns *)
 type token_kind = 
   | TK_terminal 
-  | TK_metavar of string (* ocamllex hom *) * string (* ocaml hom, for type*)
+  | TK_metavar of string (* ocamllex hom *) * string option (* ocaml hom, for type*)
+(* or other way round?*)
 
 type token_data = 
     (string(*synthesised token name*) * string(*terminal or metavarroot*) * token_kind) list
@@ -251,12 +255,27 @@ let token_names_of_syntaxdefn yo xd : token_data =
 	      let hs = List.assoc "ocaml" mvd.mvd_rep in
 	      Grammar_pp.pp_hom_spec m xd hs
             with Not_found -> Auxl.error ("ocamllex output: undefined ocaml hom for "^mvd.mvd_name^"\n")) in
-          let ocamllex_hom = 
+          let ocamllex_hom_opt = 
             (try
 	      let hs = List.assoc "ocamllex" mvd.mvd_rep in
-	      Grammar_pp.pp_hom_spec m xd hs
-            with Not_found -> Auxl.error ("ocamllex output: undefined ocamllex hom for "^mvd.mvd_name^"\n")) in
-          Some (token_name_of mvd.mvd_name, mvd.mvd_name, TK_metavar(ocaml_type, ocamllex_hom)))
+	      Some (Grammar_pp.pp_hom_spec m xd hs)
+            with Not_found -> None) in
+          let ocamllex_remove_hom = 
+            (try
+	      let hs = List.assoc "ocamllex-remove" mvd.mvd_rep in
+	      true
+            with Not_found -> false) in
+          (match ocamllex_hom_opt, ocamllex_remove_hom with
+          | Some ocamllex_hom, false -> 
+              Some (token_name_of mvd.mvd_name, mvd.mvd_name, TK_metavar(ocaml_type, Some ocamllex_hom))
+          | None, false -> 
+              Auxl.error ("ocamllex output: no ocamllex or ocamllex-remove hom for "^mvd.mvd_name^"\n")
+          | Some ocamllex_hom, false -> 
+              Auxl.error ("ocamllex output: both ocamllex and ocamllex-remove hom for "^mvd.mvd_name^"\n")
+          | None, true -> 
+              Some (token_name_of mvd.mvd_name, mvd.mvd_name, TK_metavar(ocaml_type, None))
+          )
+      )
       xd.xd_mds in
 
   let ts' = ts_terminals' @ ts_metavars in 
@@ -292,9 +311,11 @@ let pp_lex_token fd (tname, t, tk) =
   match tk with
   | TK_terminal -> 
       Printf.fprintf fd "| \"%s\"\n    { %s }\n" (String.escaped t) tname
-  | TK_metavar(ocaml_type, ocamllex_hom) ->
+  | TK_metavar(ocaml_type, Some ocamllex_hom) ->
       let tv = lex_token_argument_variable_of_mvr t in
       Printf.fprintf fd "| %s as %s\n    { %s (%s) }\n" ocamllex_hom tv tname tv
+  | TK_metavar(ocaml_type, None) ->
+      Printf.fprintf fd "(* lexer rule for %s suppressed by ocamllex-remove *)\n" tname
 
 (* output an ocamllex source file *)
 let pp_lex_systemdefn m sd oi =
@@ -341,7 +362,7 @@ let pp_menhir_token fd (tname, t, tk) =
   match tk with
   | TK_terminal -> 
       Printf.fprintf fd "%%token %s  (* %s *)\n" tname t
-  | TK_metavar(ocaml_type, ocamllex_hom) ->
+  | TK_metavar(ocaml_type, ocamllex_hom_opt) ->
       Printf.fprintf fd "%%token <%s> %s  (* metavarroot %s *)\n" ocaml_type tname t
 
 (* construct the ids used in menhir semantic actions to refer to values of production elements *)
