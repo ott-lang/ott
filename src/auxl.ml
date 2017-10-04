@@ -231,7 +231,9 @@ let is_alpha s =  (* FZ this should work for iso-8859-1 *)
 	    || (c >= '\216' && c <= '\222')
 	    || (c >= 'a' && c <= 'z')
 	    || (c >= '\224' && c <= '\246')
-	    || (c >= '\248' && c <= '\254')) then raise Not_alpha else ()) s;
+	    || (c >= '\248' && c <= '\254')
+	    || (c = '_')
+             ) then raise Not_alpha else ()) s;
     true
   with Not_alpha -> false
 

@@ -835,7 +835,7 @@ and pp_tex_terminal m xd tm =
     pp_hom_spec m xd hom
   with Not_found -> (* otherwise, standard behaviour *)
     let es = Auxl.pp_tex_escape tm in
-    if (*(String.length es > 1) ||*) (Auxl.is_alpha es)
+    if (*(String.length es > 1) ||*) (Auxl.is_alpha tm)
     then pp_tex_KW_NAME m ^ "{"^es^"}" else pp_tex_SYM_NAME m ^"{"^es ^"}"  
 
 and pp_isa_terminal m xd tm =
