@@ -1,8 +1,8 @@
 opam-version: "1.2"
-version: "dev"
 maintainer: "palmskog@gmail.com"
+authors: [ "Peter Sewell" "Francesco Zappa Nardelli" "Scott Owens" ]
 
-homepage: "https://github.com/ott-lang/ott"
+homepage: "http://www.cl.cam.ac.uk/~pes20/ott/"
 dev-repo: "https://github.com/ott-lang/ott.git"
 bug-reports: "https://github.com/ott-lang/ott/issues"
 license: "part BSD3, part LGPL 2.1"
@@ -15,9 +15,4 @@ depends: [ "coq" {((>= "8.5" & < "8.6~") | (>= "8.6" & < "8.7~"))} ]
 tags: [
   "category:Computer Science/Semantics and Compilation/Semantics"
   "keyword:abstract syntax"
-]
-authors: [ 
-  "Peter Sewell <>"
-  "Francesco Zappa Nardelli <>"
-  "Scott Owens <>"
 ]

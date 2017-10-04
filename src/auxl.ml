@@ -202,14 +202,9 @@ let char_list_of_string s =
 
 let string_of_char_list ts =
   let n = List.length ts in
-  let s = String.create n in
-  let rec f i ts = 
-    match ts with 
-    | [] -> ()
-    | t::ts -> String.set s i t; f (i+1) ts
-  in 
-  f 0 ts; 
-  s
+  let s = Buffer.create n in
+  List.iter (Buffer.add_char s) ts;
+  Buffer.contents s
 
 (* tests to identify strings *)
 
@@ -1843,6 +1838,6 @@ let string_of_filename filename =
   let ic = open_in filename in
   let _ = set_binary_mode_in ic true in
   let len = in_channel_length ic in
-  let buff = String.create len  in
-  let _ = really_input ic buff 0 len in
-  buff
+  let buff = Buffer.create len  in
+  Buffer.add_channel buff ic len;
+  Buffer.contents buff

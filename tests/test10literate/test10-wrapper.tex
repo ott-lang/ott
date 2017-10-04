@@ -1,0 +1,52 @@
+\documentclass[11pt]{article}
+
+% standard packages, some relied upon by the generated Ott code
+\usepackage{amsmath,amssymb}
+\usepackage{supertabular}
+\usepackage{geometry}
+\usepackage{ifthen}
+\usepackage{alltt}
+\geometry{a4paper,dvips,twoside,left=22.5mm,right=22.5mm,top=20mm,bottom=30mm}
+\usepackage{color}
+
+% including the ott-generated latex definitions
+\include{test10-inc}
+
+\usepackage{parskip}
+
+
+\begin{document}
+Here are the term and value grammars:
+
+% this is pasted from the generated test10-inc.tex file with
+% the unwanted parts commented out:
+\ottgrammartabular{
+\ottterm\ottinterrule
+\ottval%\ottinterrule
+%\ottterminals\ottinterrule
+%\ottformula\ottinterrule
+%\ottJop\ottinterrule
+%\ottjudgement\ottinterrule
+%\ottuserXXsyntax
+\ottafterlastrule
+}
+% if you want to suppress some parts of the grammar, you can use these
+% command-line options:
+%  -tex_show_meta <true>              Include meta prods and rules in TeX output
+%  -tex_show_categories <false>       Signal production flags in TeX output
+%  -tex_suppress_category <[]>        Suppress productions and rules with this category in TeX output
+%  -tex_suppress_ntr <[]>             Suppress nonterminal root in TeX output
+
+Here's the complete definition of the reduction judgement:
+
+\ottdefnreduce{}
+
+Here's just a single rule from the reduction definition:
+
+% this is pasted from the generated test10-inc.tex file. The
+% latex command name \ottdrulectxXXappXXarg is generated in the obvious
+% way from the "ott" prefix (changeable with -tex_name_prefix) and the
+% rule name "ctx_app_arg" 
+\ottusedrule{\ottdrulectxXXappXXarg{}}
+
+\end{document}
