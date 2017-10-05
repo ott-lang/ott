@@ -1,0 +1,110 @@
+% This example has a non-ambiguous grammar for a lambda calculus, from which Ott generates:
+
+% - ocaml source code for an abstract syntax type (AST), quotiented from the non-ambiguous grammar
+% - ocamllex source code for a simple lexer
+% - menhir source code for a parser, for the non-ambiguous grammar, that constucts values of the ocaml AST type
+% - ocaml source code for a simple pretty printer and raw-term pretty printer, from the ocaml AST type to strings
+
+% - tex for the quotiented grammar
+
+metavar var, x ::=   {{ com  term variable }} 
+{{ isa string}} {{ coq nat}} {{ hol string}} {{ lem string }} {{ coq-equality }}
+{{ ocaml string}} {{ lex alphanum}} {{ tex \mathit{[[var]]} }} {{ ocamllex ['a'-'z''A'-'Z']+ }}
+
+
+embed
+{{ ocaml
+
+type l =
+  | Unknown
+  | Int of string * l option
+  | Generated of l
+  | Range of Lexing.position * Lexing.position
+
+type 'a annot = l * 'a
+
+exception Parse_error_locn of l * string
+
+}}
+
+grammar
+l :: '' ::=                         {{ phantom }}
+                                    {{ ocaml l }}
+                                    {{ com Source location }}
+  |                                 :: :: Unknown {{ ocaml Unknown }}
+
+
+
+grammar
+%                lhs_of_app  rhs_of_app  lambda_body
+%  | ( t )           y          y            y 
+%  | x               y          y            y
+%  | \ x . t         n          y            y
+%  | t t'            y          n            y
+
+
+term, t, v :: 'T_' ::=               {{ menhir-start }}   {{ aux _ l }}
+  | at             :: :: at          {{ quotient-remove }}   {{ ocaml [[at]] }}
+  | lhs rhs'       :: :: app
+  | lambda         :: :: fn          {{ quotient-remove }}   {{ ocaml [[lambda]] }}
+
+  | { t / x } t' :: M :: sub         {{ ichlo (tsubst_term [[t]] [[x]] [[t']])}}
+  | Foo term :: :: foo
+                   
+atomic_term, at :: 'T_' ::=       {{ quotient-with t }}   
+  | x              :: :: var
+  | ( t )          :: :: paren
+                   
+lhs :: 'T_' ::=                   {{ quotient-with t }}      
+  | at             :: :: at_lhs       {{ quotient-remove }}   {{ ocaml [[at]] }}
+  | lhs at'        :: :: app_lhs      {{ quotient-remove }}   {{ ocaml T_app([[lhs]], [[at']]) }}
+                   
+rhs :: 'T_' ::=                   {{ quotient-with t }}      
+  | at             :: :: at_rhs       {{ quotient-remove }}   {{ ocaml [[at]] }}
+  | lambda         :: :: fn_rhs       {{ quotient-remove }}   {{ ocaml [[lambda]] }}
+                   
+lambda :: 'T_' ::=                {{ quotient-with t }}
+  | \ x . t        :: :: lambda   
+
+% in principle, these ocaml homs, which are used in the parser actions
+% of the removed productions, could be constructed automatically, by
+% reparsing the production wrt the quotiented grammar.  Perhaps one
+% could also quotient by production isomorphism up to the quotient on
+% nonterminal roots.  Neither seems worth the complexity right now,
+% though.
+
+
+% the parser generation code doesn't currently support subrules
+
+% %val,v :: 'v_' ::=                            {{ com value   }} 
+% %  | \ x . t      ::   :: lam                   {{ com lambda  }}
+
+terminals :: 'terminals_' ::=
+  | \            ::   :: lambda  {{ tex \lambda }}
+  | -->          ::   :: red     {{ tex \longrightarrow }}
+
+%subrules
+%  val <:: term
+
+% substitutions
+%   single term var :: tsubst 
+% 
+%  defns
+%  Jop :: '' ::=
+%  
+%   defn
+%   t1 --> t2 :: ::reduce::'' {{ com [[t1]] reduces to [[t2]] }} {{ lemwcf  witness type reduce_witness; check reduce_check; eval : input -> output }} by
+%  
+%  
+%      --------------------------  :: ax_app
+%      (\x.t1) v2 -->  {v2/x}t1
+%  
+%      t1 --> t1'
+%      -------------- :: ctx_app_fun
+%      t1 t --> t1' t
+%  
+%      t1 --> t1'
+%      -------------- :: ctx_app_arg
+%      v t1 --> v t1'
+
+

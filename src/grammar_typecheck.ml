@@ -130,19 +130,20 @@ let aux_rule (rr:raw_rule) ((before :string list),(after : string list), (l :loc
       raw_prod_bs = [];
       raw_prod_loc = l } in
   { raw_rule_ntr_name = aux_rule_name rr;
-    raw_rule_ntr_names = [aux_rule_name rr,[]];
+    raw_rule_ntr_names = [aux_rule_name rr,[]]@List.tl rr.raw_rule_ntr_names;
     raw_rule_pn_wrapper = "";
     raw_rule_ps = [aux_prod];
     raw_rule_homs = List.filter (function (hn,_,_) ->  hn="auxparam") rr.raw_rule_homs;
     raw_rule_categories = ["aux"];
     raw_rule_loc = l }
+
 let auxed_rule (rr:raw_rule) : raw_rule =
   (match rr.raw_rule_ntr_names with
   | (_,homs)::_ -> if homs <> [] then ty_error2 rr.raw_rule_loc "rules with aux homs cannot have homs on the principal nonterminal root" ""
   | _ -> ());
   { rr with 
     raw_rule_ntr_name = auxed_rule_name rr;
-    raw_rule_ntr_names = [(auxed_rule_name rr,[])]@List.tl rr.raw_rule_ntr_names;
+    raw_rule_ntr_names = [(auxed_rule_name rr,[])];
   }
 
 let auxify_rules (ri :raw_item) : raw_item =
@@ -1373,6 +1374,21 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
   order-respecting output.  More precisely, the source structure
   informations are stored in the xd structure field. *)
 
+  (* debug *)
+  let debug_ris_per_file heading ris_per_file = 
+    let s = 
+      (String.concat "\n" 
+         (List.map 
+            (fun ri -> 
+              String.concat "" (List.map Grammar_pp.pp_raw_item ri))
+            ris_per_file)) in
+(*     let fd = open_out "test2.txt" in  *)
+(*     output_string fd s ;  *)
+(*     close_out fd; *)
+    debug ("*****************************************************************\n" ^ heading ^ ":\n" ^ s) in
+
+  debug_ris_per_file "original"  ris_per_file;
+
   (* quotient rules *)
   let quotient_rules_item (ri :raw_item) : raw_item =
     match ri with
@@ -1383,22 +1399,12 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
 
   let ris_per_file = if quotient_rules then List.map (List.map quotient_rules_item) ris_per_file else ris_per_file in
 
-  (* debug *)
-  let s = 
-    (String.concat "\n" 
-       (List.map 
-          (fun ri -> 
-            String.concat "" (List.map Grammar_pp.pp_raw_item ri))
-              ris_per_file)) in
-(*     let fd = open_out "test2.txt" in  *)
-(*     output_string fd s ;  *)
-(*     close_out fd; *)
-    print_string s;
-
+  debug_ris_per_file "after quotient"  ris_per_file;
 
   (* synthesise aux rules *)
   let ris_per_file = if generate_aux_rules then List.map (List.map auxify_rules) ris_per_file else ris_per_file in
 
+  debug_ris_per_file "after quotient and aux"  ris_per_file;
 
   (* rebuild old raw type (rsds) from new raw type (ris) *)
   let (rsd_per_file:raw_syntaxdefn list list) = List.map (List.map rsd_of_ri) ris_per_file in
