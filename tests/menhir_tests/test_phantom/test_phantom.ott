@@ -1,0 +1,53 @@
+% This example has a phantom rule, which moreover has a list form in a production
+
+indexvar n ::= {{ phantom }} {{ ocaml int }}
+
+metavar intLit    ::= {{ ocaml string }}  {{ ocamllex ['0'-'9']+  }}
+
+grammar
+expr :: 'Expr_' ::= {{ menhir-start }}
+ | intLit                                 :: :: LitInt  {{ com literal decimal integer }}
+ | expr 'IN' set                          :: :: InSet   {{ com set membership }}
+ | expr 'IN' { element1 , .. , elementn } :: :: InSet_more_idiomatic
+
+% note that (wrt asl.ott):
+% - for a rule which is basically just a list, it's more idiomatic to 
+%    to express it as an in-line list, as in InSet_more_idiomatic above.
+%    Then one doesn't need an auxiliary phantom rule or any of the
+%    following machinery; it should just work.
+%
+% - in other cases, e.g. for a rule which is basically an option (not
+%    natively supported by Ott), there should be a rule as below.
+%    -- it's phantom (so as not to generate another OCaml type), 
+%    -- the productions should have ocaml homs (used in the menhir actions)
+%    -- the rule should have pp and pp-raw homs (used in the pp function clauses)
+set :: 'Set_' ::=             {{ phantom }} {{ ocaml element list }}
+    {{ pp-raw es = "set ["^String.concat ";" (List.map pp_raw_element es) ^ "]" }}
+    {{ pp     es = "{"^String.concat "," (List.map pp_element es) ^ "}" }}
+ | { element1 , .. , elementn } :: :: List          {{ ocaml [[element1..elementn]] }}
+ | { element }                  :: :: SingletonList {{ ocaml [ [[element]] ] }}
+
+% (the SingletonList production is there just for testing Ott; one normally wouldn't have that)
+
+element :: 'Element_' ::=
+ | expr                          :: :: Expr
+
+% Here's an example for an optional terminal
+
+opt_constant :: 'Constant_' ::= {{ ocaml bool }} {{ phantom }}
+    {{ pp-raw oc = match oc with true -> "constant " | false -> "" }}
+    {{ pp     oc = match oc with true -> "constant " | false -> "" }}
+    | constant  :: :: Const     {{ ocaml true }}
+    |           :: :: NonConst  {{ ocaml false }}
+
+% Here's an example for an optional nonterminal
+
+opt_expr :: 'OptExpr_' ::= {{ ocaml expr option }} {{ phantom }}
+    {{ pp-raw oe = match oe with Some e -> pp_raw_expr e | None -> "" }}
+    {{ pp     oe = match oe with Some e -> pp_expr e     | None -> "" }}
+    | expr      :: :: Some     {{ ocaml Some [[expr]] }}
+    |           :: :: None     {{ ocaml None }}
+
+
+
+

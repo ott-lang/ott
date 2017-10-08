@@ -107,12 +107,14 @@ let suppress_prod yo p =
  (* contains_list p (* just for now... *)
    ||*) suppressed_category || ((*not(yo.ppm_show_meta) &&*) p.prod_meta && not(p.prod_sugar))
 
+(* identify which nonterminal-root rules should be suppressed in the generated menhir rule set *)
 let suppress_rule yo r = 
   let suppressed_ntr = 
     List.mem r.rule_ntr_name yo.ppm_suppressed_ntrs
   in
   [] = r.rule_ps (*List.filter (function p -> not (contains_list p)) r.rule_ps *)
-|| suppressed_ntr || (not(yo.ppm_show_meta) && r.rule_semi_meta) || r.rule_meta
+(*|| suppressed_ntr || (not(yo.ppm_show_meta) && r.rule_semi_meta) || r.rule_meta*)
+  || suppressed_ntr || r.rule_semi_meta
 
 
 (* tokens arise from terminals and metavardefns *)
@@ -594,10 +596,11 @@ let pp_menhir_prod yo xd ts r p =
     let element_data = element_data_of_prod ts p in 
     let ppd_action = 
       let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in
-      if p.prod_sugar || (has_hom "quotient-remove" p.prod_homs && has_hom "ocaml" p.prod_homs) then 
+      if p.prod_sugar || (has_hom "quotient-remove" p.prod_homs && has_hom "ocaml" p.prod_homs) || r.rule_phantom then 
         (* ocaml hom case *)
         (* to do the proper escaping of nonterms within the hom, we need to pp here, not reuse the standard machinery *)
-        let hs = (match Auxl.hom_spec_for_hom_name "ocaml" p.prod_homs with Some hs -> hs | None -> raise (Failure "foo")) in
+"(*Case 1*) " ^ 
+        let hs = (match Auxl.hom_spec_for_hom_name "ocaml" p.prod_homs with Some hs -> hs | None -> raise (Failure "no ocaml hom")) in
         let es'' =  (* remove terminals from es to get Hom_index indexing right *)
       	(List.filter
            (function 
@@ -623,9 +626,27 @@ let pp_menhir_prod yo xd ts r p =
        (* (\* (match Grammar_pp.pp_elements m xd [] (Grammar_pp.apply_hom_order m xd p) (\*p.prod_es*\) false false true false with Some s -> s | None -> "None")*\) *)
        (*  pp_prod m' *)
       else if not(r.rule_phantom) then 
-        pp_menhir_prod_action p element_data
+"(*Case 2*) " ^         pp_menhir_prod_action p element_data
       else (* use the ocaml hom - is this code now defunct? *)
-        (match Auxl.hom_spec_for_hom_name "ocaml" p.prod_homs with Some hom -> Grammar_pp.pp_hom_spec (Menhir yo) xd hom | None -> ignore(Auxl.error ("no ocaml hom for production "^p.prod_name));"")
+"(*Case 3*) " ^         
+        (match Auxl.hom_spec_for_hom_name "ocaml" p.prod_homs with 
+        | Some hom -> 
+
+            let m_hol = Hol { Types.hol_library = ref ("",[]) } in
+            let m_ocaml = Caml { Types.ppo_include_terminals=false; Types.caml_library = ref ("",[]) } in
+            let m_ascii = Types.error_opts in 
+           Grammar_pp.pp_hom_spec m_hol (*m_ocaml*) (*(Menhir yo)*) xd hom
+       (*  let pp_prod m'= *)
+       (*    let stnb = Grammar_pp.canonical_symterm_node_body_of_prod r.rule_ntr_name p in *)
+       (*    let st = St_node(dummy_loc,stnb) in *)
+       (*    Grammar_pp.pp_symterm m' xd [] de_empty st *)
+       (*  in *)
+       (* (\* (match Grammar_pp.pp_elements m xd [] (Grammar_pp.apply_hom_order m xd p) (\*p.prod_es*\) false false true false with Some s -> s | None -> "None")*\) *)
+       (*  pp_prod (\*m_ocaml*\) m_ascii *)
+
+
+
+        | None -> ignore(Auxl.error ("no ocaml hom for production "^p.prod_name));"")
     in
 
 
@@ -719,6 +740,12 @@ let pp_pp_raw_prod yo xd ts r p =
 let pp_pp_raw_rule yo xd ts r = 
   if suppress_rule yo r then 
     None
+  else if r.rule_phantom then
+    (match Auxl.hom_spec_for_hom_name "pp-raw" r.rule_homs with 
+    | Some hs -> 
+        Some (pp_pp_raw_name r.rule_ntr_name ^ " " ^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs)
+    | None -> (Auxl.error ("no pp-raw hom for phantom production "^r.rule_ntr_name));
+    )
   else 
     Some (pp_pp_raw_name r.rule_ntr_name ^ " x = match x with\n" 
     ^  String.concat "" (List.map (pp_pp_raw_prod yo xd ts r) r.rule_ps)
@@ -753,6 +780,12 @@ let pp_pp_prod yo xd ts r p =
 let pp_pp_rule yo xd ts r = 
   if suppress_rule yo r then 
     None
+  else if r.rule_phantom then
+    (match Auxl.hom_spec_for_hom_name "pp" r.rule_homs with 
+    | Some hs -> 
+        Some (pp_pp_name r.rule_ntr_name ^ " " ^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs)
+    | None -> (Auxl.error ("no pp hom for phantom production "^r.rule_ntr_name));
+    )
   else 
     Some (pp_pp_name r.rule_ntr_name ^ " x = match x with\n" 
     ^  String.concat "" (List.map (pp_pp_prod yo xd ts r) r.rule_ps)
