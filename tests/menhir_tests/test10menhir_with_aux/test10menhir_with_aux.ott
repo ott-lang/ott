@@ -31,14 +31,23 @@ type 'a annot = l * 'a
 
 exception Parse_error_locn of l * string
 
+let pp_lexing_position p = 
+  Printf.sprintf  "file \"%s\" line %d char %d"
+    p.Lexing.pos_fname p.Lexing.pos_lnum (p.Lexing.pos_cnum - p.Lexing.pos_bol)
+
+let rec pp_l l =  match l with
+    | Unknown -> "no location information available"
+    | Generated l -> Printf.sprintf "Generated: %s"  (pp_l l)
+    | Range(p1,p2) -> Printf.sprintf "Range: %s to %s" (pp_lexing_position p1) (pp_lexing_position p2)
+    | Int(s,lo) -> Printf.sprintf "Int: %s %s" s (match lo with Some l -> pp_l l | None -> "none")
 }}
 
 grammar
 l :: '' ::=                         {{ phantom }}
                                     {{ ocaml l }}
                                     {{ com Source location }}
-{{ pp l = l }}
-{{ pp-raw l = l }}
+{{ pp l = pp_l l }} 
+{{ pp-raw l = pp_l l }}
   |                                 :: :: Unknown {{ ocaml Unknown }}
 
 

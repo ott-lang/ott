@@ -590,7 +590,13 @@ let process source_filenames =
   unquotiented syntax, otherwise just generate the one asked for on
   the command line *)
 
-  (* the unquotiented syntax, which is the one we'll generate menhir rules from, should be without generated aux rules. *)
+  (* the unquotiented syntax, which is the one we'll generate menhir
+  rules from, should be without generated aux rules. *)
+
+  (* the quotiented syntax, used to generate the OCaml types, should
+  be with generated aux rules *)
+
+  (* the quotiented un-auxed syntax, used to generate the pp functions, should be without the generated aux rules *)
 
   let f quotient generate_aux = 
     try 
@@ -602,12 +608,12 @@ let process source_filenames =
                     ^ "\n")
   in
 
-  let ((xd,structure,rdcs),xd_unquotiented) = 
+  let ((xd,structure,rdcs),xd_unquotiented,xd_quotiented_unaux) = 
     if List.mem "menhir" targets then 
-      (f true !generate_aux_rules, match f false false with (xd,_,_)-> xd)
+      (f true !generate_aux_rules, (match f false false with (xd,_,_)-> xd), (match f !generate_aux_rules false with (xd,_,_)-> xd))
     else
       match f !quotient_rules !generate_aux_rules with 
-      | (xd,structure,rdcs) -> ((xd,structure,rdcs), xd (* dummy, unused *))
+      | (xd,structure,rdcs) -> ((xd,structure,rdcs), xd, xd (* two dummies, unused *))
   in
 
 
@@ -665,18 +671,22 @@ let process source_filenames =
                           relations = [];
 	                  structure = structure;
                           sources = sources} in
-  sd,lookup,sd_unquotiented 
+  let sd_quotiented_unaux = { syntax = xd_quotiented_unaux;
+                              relations = [];
+	                      structure = structure;
+                              sources = sources} in
+  sd,lookup,sd_unquotiented,sd_quotiented_unaux 
 
 let read_systemdefn read_systemdefn_filename =
   let fd = open_in_bin read_systemdefn_filename in
-  let sd,lookup ,sd_unquotiented = 
+  let sd,lookup ,sd_unquotiented, sd_quotiented_unaux = 
     try Marshal.from_channel fd 
     with Failure s -> Auxl.error ("Cannot read dumped systemdefn\n   " ^ s ^"\n")
   in
   close_in fd;
-  sd,lookup,sd_unquotiented
+  sd,lookup,sd_unquotiented,sd_quotiented_unaux
   
-let output_stage (sd,lookup,sd_unquotiented) = 
+let output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux) = 
   
   (** output of systemdefn *)
   ( match !write_systemdefn_filename_opt with
@@ -757,8 +767,9 @@ let output_stage (sd,lookup,sd_unquotiented) =
           let sd_unquotiented = Auxl.caml_rename sd_unquotiented in
           let xd_quotiented = sd.syntax in
           let xd_unquotiented = sd_unquotiented.syntax in
+          let xd_quotiented_unaux = sd_quotiented_unaux.syntax in
           (Lex_menhir_pp.pp_menhir_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented lookup !generate_aux_rules fi;
-           Lex_menhir_pp.pp_pp_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented !generate_aux_rules fi )
+           Lex_menhir_pp.pp_pp_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented xd_quotiented_unaux !generate_aux_rules fi )
 
      | _ -> Auxl.int_error("unknown target "^t))
 
@@ -833,11 +844,11 @@ let _ =
 
 let _ = match source_filenames, !read_systemdefn_filename_opt with
 | (_::_),None -> 
-    let (sd,lookup,sd_unquotiented) = process source_filenames in
-    output_stage (sd,lookup,sd_unquotiented)
+    let (sd,lookup,sd_unquotiented,sd_quotiented_unaux) = process source_filenames in
+    output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux)
 | [], Some s ->
-    let (sd,lookup,sd_unquotiented) = read_systemdefn s in
-    output_stage (sd,lookup,sd_unquotiented)
+    let (sd,lookup,sd_unquotiented,sd_quotiented_unaux) = read_systemdefn s in
+    output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux)
 | [],None -> 
     Arg.usage options usage_msg;
     Auxl.error "\nError: must specify either some source filenames or a readsys option\n"
