@@ -1,6 +1,6 @@
 #  make -C ../.. && make clean && make
 
-ROOT            := test10menhir
+ROOT            := test10menhir_with_aux
 
 OTT             := ../../../bin/ott
 

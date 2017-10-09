@@ -575,7 +575,7 @@ let menhir_prec_spec homs =
 
 
 (* build a menhir production *)
-let pp_menhir_prod yo xd ts r p = 
+let pp_menhir_prod yo generate_aux_rules_here xd ts r p = 
   if suppress_prod yo p then 
     ""
   else
@@ -649,21 +649,31 @@ let pp_menhir_prod yo xd ts r p =
         | None -> ignore(Auxl.error ("no ocaml hom for production "^p.prod_name));"")
     in
 
-
-    
+    let aux_wrapper_l, aux_wrapper_r = 
+      if generate_aux_rules_here && not(has_hom "ocaml" p.prod_homs) then
+        let aux_prod_name = (if r.rule_pn_wrapper<>"" then r.rule_pn_wrapper else String.capitalize r.rule_ntr_name ^"_") ^ "aux" in 
+        (aux_prod_name ^ "(",
+         ",Range($symbolstartpos,$endpos) )")
+      else 
+        ("", "") in
     "| " ^ pp_menhir_prod_grammar element_data ^ "    " ^ ppd_comment ^ "\n"
     ^ 
-      "    { " ^ ppd_action ^ " }\n"
+      "    { " ^ aux_wrapper_l ^ ppd_action ^ aux_wrapper_r ^ " }\n"
     ^ 
       menhir_prec_spec p.prod_homs
 
 (* build a menhir rule *)
-let pp_menhir_rule yo xd ts r = 
+let pp_menhir_rule yo generate_aux_rules xd ts r = 
   if suppress_rule yo r then 
     ""
   else 
-    menhir_nonterminal_id_of_ntr r.rule_ntr_name ^ ":\n" 
-    ^  String.concat "" (List.map (pp_menhir_prod yo xd ts r) r.rule_ps)
+    (* ignore the body of the aux hom - assume it is {{ aux _ l }} *)
+    let generate_aux_rules_here = generate_aux_rules &&
+      (match Auxl.hom_spec_for_hom_name "aux" r.rule_homs with 
+      | Some hs -> true
+      | None -> false) in
+     menhir_nonterminal_id_of_ntr r.rule_ntr_name ^ ":\n" 
+    ^  String.concat "" (List.map (pp_menhir_prod yo generate_aux_rules_here xd ts r) r.rule_ps)
     ^ "\n"
 
 let is_start_rule yo r = 
@@ -686,7 +696,7 @@ let pp_menhir_start_rules yo xd ts =
     (List.map (pp_menhir_start_rule yo xd ts)  xd.xd_rs)
                                                                 
 (* construct menhir start symbol declarations *)
-let pp_menhir_start_symbols yo xd = 
+let pp_menhir_start_symbols yo generate_aux_rules xd = 
   String.concat "" 
     (List.map 
        (function r -> 
@@ -701,6 +711,11 @@ let pp_menhir_start_symbols yo xd =
              (String.sub ty0 3 (String.length ty0 - 3), "unit ")
            else
              (ty0, "") in
+           (*let generate_aux_rules_here = generate_aux_rules &&
+             (match Auxl.hom_spec_for_hom_name "aux" r.rule_homs with 
+             | Some hs -> true
+             | None -> false) in
+           let ty1 = if generate_aux_rules_here then ty1 ^ "_aux" else ty1 in*)
            "%start <" 
            ^ ty_arg 
            ^ yo.ppm_caml_ast_module 
@@ -737,7 +752,7 @@ let pp_pp_raw_prod yo xd ts r p =
     ^ "\n"
 
 
-let pp_pp_raw_rule yo xd ts r = 
+let pp_pp_raw_rule yo generate_aux_rules xd ts r = 
   if suppress_rule yo r then 
     None
   else if r.rule_phantom then
@@ -751,8 +766,8 @@ let pp_pp_raw_rule yo xd ts r =
     ^  String.concat "" (List.map (pp_pp_raw_prod yo xd ts r) r.rule_ps)
     ^ "\n")
 
-let pp_pp_raw_rules yo xd ts rs = 
-  "let rec " ^ String.concat "and " (Auxl.option_map (pp_pp_raw_rule yo xd ts) rs)
+let pp_pp_raw_rules yo generate_aux_rules xd ts rs = 
+  "let rec " ^ String.concat "and " (Auxl.option_map (pp_pp_raw_rule yo generate_aux_rules xd ts) rs)
 
 
 (** ******************************************************************** *)
@@ -777,7 +792,7 @@ let pp_pp_prod yo xd ts r p =
     ^ ppd_rhs
     ^ "\n"
 
-let pp_pp_rule yo xd ts r = 
+let pp_pp_rule yo generate_aux_rules xd ts r = 
   if suppress_rule yo r then 
     None
   else if r.rule_phantom then
@@ -791,8 +806,8 @@ let pp_pp_rule yo xd ts r =
     ^  String.concat "" (List.map (pp_pp_prod yo xd ts r) r.rule_ps)
     ^ "\n")
 
-let pp_pp_rules yo xd ts rs = 
-  "let rec " ^ String.concat "and " (Auxl.option_map (pp_pp_rule yo xd ts) rs)
+let pp_pp_rules yo generate_aux_rules xd ts rs = 
+  "let rec " ^ String.concat "and " (Auxl.option_map (pp_pp_rule yo generate_aux_rules xd ts) rs)
 
 
 
@@ -826,7 +841,7 @@ let pp_menhir_precedences fd ts =
 *)
 
 (* output a menhir source file *)
-let pp_menhir_syntaxdefn m sources _(*xd_quotiented*) xd_unquotiented lookup oi = let yo = match m with Menhir yo -> yo | _ -> raise (Failure "pp_menhir_systemdefn called with bad ppmode") in 
+let pp_menhir_syntaxdefn m sources _(*xd_quotiented*) xd_unquotiented lookup generate_aux_rules oi = let yo = match m with Menhir yo -> yo | _ -> raise (Failure "pp_menhir_systemdefn called with bad ppmode") in 
   match oi with
   | (o,is)::[] ->
       let _ = Auxl.filename_check m o in
@@ -845,17 +860,17 @@ let pp_menhir_syntaxdefn m sources _(*xd_quotiented*) xd_unquotiented lookup oi 
       output_string fd "\n";
       Embed_pp.pp_embeds fd m xd_unquotiented lookup xd_unquotiented.xd_embed;
 
-      output_string fd (pp_menhir_start_symbols yo xd_unquotiented);
+      output_string fd (pp_menhir_start_symbols yo generate_aux_rules xd_unquotiented);
       output_string fd "\n\n%%\n\n";
 
       output_string fd (pp_menhir_start_rules yo xd_unquotiented ts);
-      List.iter (function r -> output_string fd (pp_menhir_rule yo xd_unquotiented ts r)) xd_unquotiented.xd_rs;
+      List.iter (function r -> output_string fd (pp_menhir_rule yo generate_aux_rules xd_unquotiented ts r)) xd_unquotiented.xd_rs;
       close_out fd
 
   | _ -> Auxl.error "must specify only one output file in the menhir backend.\n"
 
 (* output pp source file (should be called with quotiented syntaxdefn file) *)
-let pp_pp_syntaxdefn m sources xd_quotiented xd_unquotiented oi =
+let pp_pp_syntaxdefn m sources xd_quotiented xd_unquotiented generate_aux_rules oi =
   let yo = match m with Menhir yo -> yo | _ -> raise (Failure "pp_pp_systemdefn called with bad ppmode") in 
   match oi with
   | (o,is)::[] ->
@@ -869,9 +884,9 @@ let pp_pp_syntaxdefn m sources xd_quotiented xd_unquotiented oi =
       let fd = open_out o_pp in
       Printf.fprintf fd "(* generated by Ott %s from: %s *)\n" Version.n sources;
       output_string fd ("open " ^ yo.ppm_caml_ast_module ^ "\n\n" 
-                        ^ pp_pp_raw_rules yo xd_quotiented ts xd_quotiented.xd_rs
+                        ^ pp_pp_raw_rules yo generate_aux_rules xd_quotiented ts xd_quotiented.xd_rs
                         ^ "\n"
-                        ^ pp_pp_rules yo xd_quotiented ts xd_quotiented.xd_rs
+                        ^ pp_pp_rules yo generate_aux_rules xd_quotiented ts xd_quotiented.xd_rs
                         );
       close_out fd;
 

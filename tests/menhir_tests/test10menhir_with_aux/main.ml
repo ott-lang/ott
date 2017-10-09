@@ -1,8 +1,8 @@
-open Test10menhir_ast
+open Test10menhir_with_aux_ast
 
-module Lexer = Test10menhir_lexer
-module Parser = Test10menhir_parser
-module PP = Test10menhir_parser_pp
+module Lexer = Test10menhir_with_aux_lexer
+module Parser = Test10menhir_with_aux_parser
+module PP = Test10menhir_with_aux_parser_pp
 
 
 (*
