@@ -1,3 +1,6 @@
+% This is a variant of the test10menhir example using aux productions to 
+% record source location info.  In progress. 
+
 % This example has a non-ambiguous grammar for a lambda calculus, from which Ott generates:
 
 % - ocaml source code for an abstract syntax type (AST), quotiented from the non-ambiguous grammar
@@ -12,6 +15,7 @@ metavar var, x ::=   {{ com  term variable }}
 {{ ocaml string}} {{ lex alphanum}} {{ tex \mathit{[[var]]} }} {{ ocamllex ['a'-'z''A'-'Z']+ }}
 
 
+% The following is the OCaml type of source locations used in Sail. 
 embed
 {{ ocaml
 
