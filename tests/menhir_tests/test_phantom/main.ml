@@ -1,8 +1,7 @@
-open Test10menhir_with_aux_ast
-
-module Lexer = Test10menhir_with_aux_lexer
-module Parser = Test10menhir_with_aux_parser
-module PP = Test10menhir_with_aux_parser_pp
+open            Test_phantom_ast
+module Lexer  = Test_phantom_lexer
+module Parser = Test_phantom_parser
+module PP     = Test_phantom_parser_pp
 
 
 (*
@@ -14,19 +13,19 @@ let rec pp_term t : string =
   | T_paren t -> Printf.sprintf "(%s)" (pp_term t) 
 *)
 
-let () = Printf.printf "enter lambda calculus terms, in the grammar t ::= x | t t | \\x.t | (t)\n"
+let () = Printf.printf "enter exprs\n"
 
 let process (line : string) =
   let linebuf = Lexing.from_string line in
   try
     (* Run the parser on this line of input. *)
-    let t = (Parser.term_start Lexer.token linebuf) in
-    Printf.printf "   %s %s\n" (PP.pp_term t) (PP.pp_raw_term t)
+    let t = (Parser.expr_start Lexer.token linebuf) in
+    Printf.printf "   %s %s\n" (PP.pp_expr t) (PP.pp_raw_expr t)
   with
   | Lexer.Error msg ->
       Printf.fprintf stdout "%s" msg
   | Parser.Error ->
-      Printf.fprintf stdout "%s^\nAt offset %d: syntax error.\n" (String.make (Lexing.lexeme_start linebuf) ' ') (Lexing.lexeme_start linebuf)
+      Printf.fprintf stdout "%s^\n%s^\nAt offset %d: syntax error.\n" line(String.make (Lexing.lexeme_start linebuf) ' ') (Lexing.lexeme_start linebuf)
 
 (*
 let process (optional_line : string option) =

@@ -1477,7 +1477,7 @@ and pp_hom_spec_el m xd hse =
       ( match hse with
       | Hom_string s -> s
       | Hom_terminal s -> s
-      | Hom_index i -> "UNIMPLEMENTED"
+      | Hom_index i -> "UNIMPLEMENTED[Hom_index"^string_of_int i^"]"
       | Hom_ln_free_index _ -> Auxl.errorm m "pp_hom_spec el")
 
 and pp_plain_suffix suff = String.concat "" (List.map pp_plain_suffix_item suff)

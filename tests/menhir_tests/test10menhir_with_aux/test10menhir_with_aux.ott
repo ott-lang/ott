@@ -1,7 +1,9 @@
+
 % This is a variant of the test10menhir example using aux productions to 
 % record source location info.  In progress. 
 
-% This example has a non-ambiguous grammar for a lambda calculus, from which Ott generates:
+% This example has a non-ambiguous grammar for a lambda calculus, from
+% which Ott generates:
 
 % - ocaml source code for an abstract syntax type (AST), quotiented from the non-ambiguous grammar
 % - ocamllex source code for a simple lexer
@@ -35,6 +37,8 @@ grammar
 l :: '' ::=                         {{ phantom }}
                                     {{ ocaml l }}
                                     {{ com Source location }}
+{{ pp l = l }}
+{{ pp-raw l = l }}
   |                                 :: :: Unknown {{ ocaml Unknown }}
 
 
@@ -54,31 +58,41 @@ term, t, v :: 'T_' ::=               {{ menhir-start }}   {{ aux _ l }}
 
   | { t / x } t' :: M :: sub         {{ ichlo (tsubst_term [[t]] [[x]] [[t']])}}
   | Foo term :: :: foo
-                   
-atomic_term, at :: 'T_' ::=       {{ quotient-with t }}   
+               
+atomic_term, at :: 'T_' ::=       {{ quotient-with t }}   {{ aux _ l }}
   | x              :: :: var
   | ( t )          :: :: paren
                    
-lhs :: 'T_' ::=                   {{ quotient-with t }}      
+lhs :: 'T_' ::=                   {{ quotient-with t }}    {{ aux _ l }}
   | at             :: :: at_lhs       {{ quotient-remove }}   {{ ocaml [[at]] }}
-  | lhs at'        :: :: app_lhs      {{ quotient-remove }}   {{ ocaml T_app([[lhs]], [[at']]) }}
+  | lhs at'        :: :: app_lhs      {{ quotient-remove }}   {{ ocaml T_aux(T_app([[lhs]], [[at']]), Range($symbolstartpos,$endpos)) }}
                    
-rhs :: 'T_' ::=                   {{ quotient-with t }}      
+rhs :: 'T_' ::=                   {{ quotient-with t }}      {{ aux _ l }}
   | at             :: :: at_rhs       {{ quotient-remove }}   {{ ocaml [[at]] }}
   | lambda         :: :: fn_rhs       {{ quotient-remove }}   {{ ocaml [[lambda]] }}
                    
-lambda :: 'T_' ::=                {{ quotient-with t }}
+lambda :: 'T_' ::=                {{ quotient-with t }}    {{ aux _ l }}
   | \ x . t        :: :: lambda   
 
-% in principle, these ocaml homs, which are used in the parser actions
+% The aux homs on the rules with a quotient-with hom should really be
+% automatically taken from the target of the latter.  But they're not
+% currently.
+
+% The generated parser supports aux rules only of the form {{ aux _ l }},
+% where l is a type (as in the embed above) that contains a 
+%  | Range of Lexing.position * Lexing.position
+% constructor; it generates menhir rules that insert
+% Range($symbolstartpos,$endpos) in the appropriate places.
+
+% The ocaml production homs, which are used in the parser actions
 % of the removed productions, could be constructed automatically, by
 % reparsing the production wrt the quotiented grammar.  Perhaps one
 % could also quotient by production isomorphism up to the quotient on
 % nonterminal roots.  Neither seems worth the complexity right now,
 % though.
 
+% The parser generation code doesn't currently support subrules
 
-% the parser generation code doesn't currently support subrules
 
 % %val,v :: 'v_' ::=                            {{ com value   }} 
 % %  | \ x . t      ::   :: lam                   {{ com lambda  }}

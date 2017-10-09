@@ -590,9 +590,11 @@ let process source_filenames =
   unquotiented syntax, otherwise just generate the one asked for on
   the command line *)
 
-  let f quotient = 
+  (* the unquotiented syntax, which is the one we'll generate menhir rules from, should be without generated aux rules. *)
+
+  let f quotient generate_aux = 
     try 
-      Grammar_typecheck.check_and_disambiguate m_tex quotient !generate_aux_rules targets_non_tex (List.map snd source_filenames) (!merge_fragments) document 
+      Grammar_typecheck.check_and_disambiguate m_tex quotient generate_aux targets_non_tex (List.map snd source_filenames) (!merge_fragments) document 
     with
     | Typecheck_error (s1,s2) ->
         Auxl.error ("(in checking and disambiguating "^(if quotient then "quotiented " else "") ^ "syntax)\n"^s1
@@ -602,9 +604,9 @@ let process source_filenames =
 
   let ((xd,structure,rdcs),xd_unquotiented) = 
     if List.mem "menhir" targets then 
-      (f true, match f false with (xd,_,_)-> xd)
+      (f true !generate_aux_rules, match f false false with (xd,_,_)-> xd)
     else
-      match f !quotient_rules with 
+      match f !quotient_rules !generate_aux_rules with 
       | (xd,structure,rdcs) -> ((xd,structure,rdcs), xd (* dummy, unused *))
   in
 
@@ -755,8 +757,8 @@ let output_stage (sd,lookup,sd_unquotiented) =
           let sd_unquotiented = Auxl.caml_rename sd_unquotiented in
           let xd_quotiented = sd.syntax in
           let xd_unquotiented = sd_unquotiented.syntax in
-          (Lex_menhir_pp.pp_menhir_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented lookup fi;
-           Lex_menhir_pp.pp_pp_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented fi )
+          (Lex_menhir_pp.pp_menhir_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented lookup !generate_aux_rules fi;
+           Lex_menhir_pp.pp_pp_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented !generate_aux_rules fi )
 
      | _ -> Auxl.int_error("unknown target "^t))
 
