@@ -1,5 +1,8 @@
 open Test10menhir_with_aux_ast
 
+open PPrintEngine
+open PPrintCombinators
+
 module Lexer = Test10menhir_with_aux_lexer
 module Parser = Test10menhir_with_aux_parser
 module PP = Test10menhir_with_aux_parser_pp
