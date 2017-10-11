@@ -451,7 +451,7 @@ let rec element_data_of_element ts (allow_lists:bool) e : element_data =
       { semantic_value_id = Some svi;
         grammar_body      = token_of_metavarroot ts mvr;
         semantic_action   = Some svi;
-        pp_raw_rhs        = Some ("\"\\\"\"^" ^ svi ^ "^\"\\\"\"");
+        pp_raw_rhs        = Some (" string \"\\\"\" ^^ string " ^ svi ^ " ^^ string \"\\\"\"");
         pp_pretty_rhs     = "string "^ svi ; }
         
   | Lang_list elb -> 
@@ -503,9 +503,9 @@ let rec element_data_of_element ts (allow_lists:bool) e : element_data =
 
       let pp_raw_rhs = 
         let rhs_data = Auxl.option_map (function x-> x.pp_raw_rhs) element_data in
-        let rhs =  "\"(\"^" ^ String.concat  "^\",\"^" rhs_data ^ "^\")\"" in
+        let rhs =  "string \"(\" ^^ " ^ String.concat  " ^^ string \",\" ^^ " rhs_data ^ " ^^ string \")\"" in
         let f = "(function "^pat^" -> "^rhs^")" in
-        let pper = "\"[\" ^ String.concat  \";\" (List.map " ^ f ^ " " ^ svi ^")" ^"^\"]\"" in
+        let pper = "string \"[\" ^^ seperate  (string \";\") (List.map " ^ f ^ " " ^ svi ^")" ^" ^^ string \"]\"" in
         pper in
 
       let pp_pretty_rhs = 
@@ -763,15 +763,15 @@ let pp_pp_raw_prod yo generate_aux_rules_here xd ts r p =
 
     let ppd_rhs = 
       (match aux_constructor generate_aux_rules_here r p with
-      | Some _ -> " \"[\"^(pp_l ott_menhir_loc) ^ \"]\"^"
+      | Some _ -> " string \"[\" ^^ string (pp_l ott_menhir_loc) ^^ string \"]\" ^^ "
       | None -> "") 
       ^
-      "\"" ^ String.capitalize p.prod_name ^ "\"" 
+      "string \"" ^ String.capitalize p.prod_name ^ "\"" 
       ^ 
         let args = Auxl.option_map (function x->x.pp_raw_rhs) element_data in
         match args with
         | [] -> ""
-        | _ -> " ^ \"(\" ^ "^ String.concat " ^ \",\" ^ " args ^ " ^ \")\"" 
+        | _ -> " ^^ string \"(\" ^^ "^ String.concat " ^^ string \",\" ^^ " args ^ " ^^ string \")\"" 
     in                                                                   
     "| " ^ pp_pattern_prod r p generate_aux_rules_here element_data ^ " -> " 
     ^ ppd_rhs

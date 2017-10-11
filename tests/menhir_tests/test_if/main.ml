@@ -12,7 +12,10 @@ let process (line : string) =
     (* Run the parser on this line of input. *)
     let t = (Parser.exp_start Lexer.token linebuf) in
     (* and pp the original and the parsed result *)
-    Printf.printf "ok:%s\n   %s %s\n" line (PP.pp_exp t) (PP.pp_raw_exp t)
+    Printf.printf "ok:%s\n" line;
+    Printf.printf "   "; PPrintEngine.ToChannel.compact stdout (PP.pp_raw_exp t); Printf.printf "\n";
+    Printf.printf "   "; PPrintEngine.ToChannel.compact stdout (PP.pp_exp t); Printf.printf "\n"
+
   with
   | Lexer.Error msg ->
       Printf.fprintf stdout "%s" msg
