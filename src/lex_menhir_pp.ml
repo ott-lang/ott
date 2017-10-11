@@ -504,7 +504,7 @@ let rec element_data_of_element ts (allow_lists:bool) e : element_data =
         let rhs_data = Auxl.option_map (function x-> x.pp_raw_rhs) element_data in
         let rhs =  "string \"(\" ^^ " ^ String.concat  " ^^ string \",\" ^^ " rhs_data ^ " ^^ string \")\"" in
         let f = "(function "^pat^" -> "^rhs^")" in
-        let pper = "string \"[\" ^^ seperate  (string \";\") (List.map " ^ f ^ " " ^ svi ^")" ^" ^^ string \"]\"" in
+        let pper = "string \"[\" ^^ separate  (string \";\") (List.map " ^ f ^ " " ^ svi ^")" ^" ^^ string \"]\"" in
         pper in
 
       let pp_pretty_rhs = 
@@ -512,7 +512,7 @@ let rec element_data_of_element ts (allow_lists:bool) e : element_data =
         let rhs =  String.concat  " ^^ string \" \" ^^ " rhs_data in
         let f = "(function "^pat^" -> "^rhs^")" in
         let sep = match elb.elb_tmo with Some t -> String.escaped t | None -> " " in
-        let pper = "separate \"" ^ "string "^ sep ^ "\" (List.map " ^ f ^ " " ^ svi ^ ")" in
+        let pper = "separate (" ^ "string \""^ sep ^ "\") (List.map " ^ f ^ " " ^ svi ^ ")" in
         pper in
 
       { semantic_value_id = Some svi;
@@ -781,7 +781,7 @@ let pp_pp_raw_prod yo generate_aux_info_here xd ts r p =
 
     let ppd_rhs = 
       (match aux_constructor generate_aux_info_here r p with
-      | Some _ -> " string \"[\" ^^ string (pp_l "^ott_menhir_loc^") ^^ string \"]\" ^^ "
+      | Some _ -> " string \"[\" ^^ string (pp_raw_l "^ott_menhir_loc^") ^^ string \"]\" ^^ "
       | None -> "") 
       ^
       "string \"" ^ String.capitalize p.prod_name ^ "\"" 
