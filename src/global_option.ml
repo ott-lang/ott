@@ -39,3 +39,4 @@ let do_pp_grammar = ref false
 
 let output_source_locations = ref 0
 
+let aux_style_rules = ref true

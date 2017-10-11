@@ -111,6 +111,8 @@ let aux_hom_of_raw_rule rr : (string list * string list * loc) option  =
   | [(hn,rhs,l)] -> Some (cd_raw_aux_hom_before l [] rhs)
   | _ -> ty_error2 rr.raw_rule_loc "more than one aux hom" ""
 
+(* auxiliary rule version *)
+
 let aux_rule_name rr = rr.raw_rule_ntr_name
 let auxed_rule_name rr = rr.raw_rule_ntr_name ^ "_aux"
 
@@ -146,6 +148,23 @@ let auxed_rule (rr:raw_rule) : raw_rule =
     raw_rule_ntr_names = [(auxed_rule_name rr,[])];
   }
 
+
+(* auxiliary data as extra arguments to constructors version *)
+
+let auxed_constructors_rule (rr:raw_rule) ((before :string list),(after : string list), (l :loc)) : raw_rule =
+  let auxify_prod p = 
+    { p with 
+      raw_prod_es = p.raw_prod_es @
+      begin
+	let raw_ident_of_string s = Raw_ident(l,(l,s)) in
+	List.map raw_ident_of_string before
+	@ List.map raw_ident_of_string after
+      end } in
+  { rr with raw_rule_ps = List.map auxify_prod rr.raw_rule_ps }
+
+
+(* common *)
+
 let auxify_rules (ri :raw_item) : raw_item =
   match ri with
   | Raw_item_rs raw_rs ->   
@@ -155,7 +174,12 @@ let auxify_rules (ri :raw_item) : raw_item =
 	| rr::raw_rs' -> 
 	    (match aux_hom_of_raw_rule rr with
 	    | None -> rr :: f raw_rs'
-	    | Some aux_hom -> auxed_rule rr :: aux_rule rr aux_hom :: f raw_rs') in
+	    | Some aux_hom -> 
+                if !Global_option.aux_style_rules then 
+                  auxed_rule rr :: aux_rule rr aux_hom :: f raw_rs'
+                else
+                  auxed_constructors_rule rr aux_hom :: f raw_rs'
+            ) in
       Raw_item_rs (f raw_rs)
   | _ -> ri
 

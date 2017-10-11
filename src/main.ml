@@ -169,7 +169,10 @@ let options = Arg.align [
     "<"^string_of_bool !quotient_rules^">  Quotient rules, as per {{ quotient-with ntr }} homs" );
   ( "-generate_aux_rules",
     Arg.Bool (fun b -> generate_aux_rules := b),
-    "<"^string_of_bool !generate_aux_rules^">  Generate auxiliary rules from {{ aux ... }} homs" );
+    "<"^string_of_bool !generate_aux_rules^">  Generate auxiliary rules or constructor arguments from {{ aux ... }} homs" );
+  ( "-aux_style_rules",
+    Arg.Bool (fun b -> Global_option.aux_style_rules := b),
+    "<"^string_of_bool !Global_option.aux_style_rules^">  Auxiliary rules (true) vs constructor arguments (false)" );
   ( "-output_source_locations",
     Arg.Int (fun i -> Global_option.output_source_locations := i),
     "<"^string_of_int !Global_option.output_source_locations^">  Include source location info in output (0=none, 1=drules, 2=grammar+drules)" );
