@@ -36,8 +36,8 @@ topdir = ..
 OTTVER=0.26
 
 # for us
-OCAMLC	 	= ocamlc.opt -g -dtypes  # -w p disables partial match warnings
-OCAMLOPT	= ocamlopt.opt -w y -g -dtypes -unsafe -inline 9
+OCAMLC	 	= ocamlc -g -dtypes  # -w p disables partial match warnings
+OCAMLOPT	= ocamlopt -w y -g -dtypes -unsafe -inline 9
 
 # for releases
 #OCAMLC	 	= ocamlc -g -w p -w y
