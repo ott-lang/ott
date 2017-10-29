@@ -20,7 +20,8 @@ let process (line : string) =
   try
     (* Run the parser on this line of input. *)
     let t = (Parser.expr_start Lexer.token linebuf) in
-    Printf.printf "   %s %s\n" (PP.pp_expr t) (PP.pp_raw_expr t)
+    Printf.printf "   "; PPrintEngine.ToChannel.compact stdout (PP.pp_raw_expr t); Printf.printf "\n";
+    Printf.printf "   "; PPrintEngine.ToChannel.compact stdout (PP.pp_expr t); Printf.printf "\n"
   with
   | Lexer.Error msg ->
       Printf.fprintf stdout "%s" msg

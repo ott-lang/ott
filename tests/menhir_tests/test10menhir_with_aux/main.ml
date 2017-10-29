@@ -1,8 +1,5 @@
 open Test10menhir_with_aux_ast
 
-open PPrintEngine
-open PPrintCombinators
-
 module Lexer = Test10menhir_with_aux_lexer
 module Parser = Test10menhir_with_aux_parser
 module PP = Test10menhir_with_aux_parser_pp
@@ -24,7 +21,7 @@ let process (line : string) =
   try
     (* Run the parser on this line of input. *)
     let t = (Parser.term_start Lexer.token linebuf) in
-    Printf.printf "   %s\n" (PP.pp_raw_term t);
+    Printf.printf "   "; PPrintEngine.ToChannel.compact stdout (PP.pp_raw_term t); Printf.printf "\n";
     Printf.printf "   "; PPrintEngine.ToChannel.compact stdout (PP.pp_term t); Printf.printf "\n"
   with
   | Lexer.Error msg ->

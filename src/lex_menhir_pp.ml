@@ -63,7 +63,6 @@ annotations saying that some rules should be quotiented together in
 the context-free grammar.
 
 The implementation is partial in several respects.  Currently it:
-- does not handle synthesised aux rules, or recording of source location info
 - does not support subrules
    (it should only take the maximal elements from the subrule order)
 - does not support {{ order }} homs
@@ -451,7 +450,7 @@ let rec element_data_of_element ts (allow_lists:bool) e : element_data =
       { semantic_value_id = Some svi;
         grammar_body      = token_of_metavarroot ts mvr;
         semantic_action   = Some svi;
-        pp_raw_rhs        = Some ("\"\\\"\"^" ^ svi ^ "^\"\\\"\"");
+        pp_raw_rhs        = Some (" string \"\\\"\" ^^ string " ^ svi ^ " ^^ string \"\\\"\"");
         pp_pretty_rhs     = "string "^ svi ; }
         
   | Lang_list elb -> 
@@ -503,9 +502,9 @@ let rec element_data_of_element ts (allow_lists:bool) e : element_data =
 
       let pp_raw_rhs = 
         let rhs_data = Auxl.option_map (function x-> x.pp_raw_rhs) element_data in
-        let rhs =  "\"(\"^" ^ String.concat  "^\",\"^" rhs_data ^ "^\")\"" in
+        let rhs =  "string \"(\" ^^ " ^ String.concat  " ^^ string \",\" ^^ " rhs_data ^ " ^^ string \")\"" in
         let f = "(function "^pat^" -> "^rhs^")" in
-        let pper = "\"[\" ^ String.concat  \";\" (List.map " ^ f ^ " " ^ svi ^")" ^"^\"]\"" in
+        let pper = "string \"[\" ^^ separate  (string \";\") (List.map " ^ f ^ " " ^ svi ^")" ^" ^^ string \"]\"" in
         pper in
 
       let pp_pretty_rhs = 
@@ -513,7 +512,7 @@ let rec element_data_of_element ts (allow_lists:bool) e : element_data =
         let rhs =  String.concat  " ^^ string \" \" ^^ " rhs_data in
         let f = "(function "^pat^" -> "^rhs^")" in
         let sep = match elb.elb_tmo with Some t -> String.escaped t | None -> " " in
-        let pper = "separate \"" ^ "string "^ sep ^ "\" (List.map " ^ f ^ " " ^ svi ^ ")" in
+        let pper = "separate (" ^ "string \""^ sep ^ "\") (List.map " ^ f ^ " " ^ svi ^ ")" in
         pper in
 
       { semantic_value_id = Some svi;
@@ -551,31 +550,49 @@ let pp_menhir_prod_action p element_data =
 let has_hom hn hs = match Auxl.hom_spec_for_hom_name hn hs with Some _ -> true | None -> false
 
 (* aux rule stuff *)
-let generate_aux_rules_for_rule generate_aux_rules r = 
-  generate_aux_rules &&
+(* ...for rules *)
+let generate_aux_info_for_rule generate_aux_info r = 
+  generate_aux_info &&
   (match Auxl.hom_spec_for_hom_name "aux" r.rule_homs with 
   | Some hs -> true
   | None -> false)
 
-let aux_constructor generate_aux_rules_here r p : string option = 
-  if generate_aux_rules_here && not(has_hom "ocaml" p.prod_homs) then
+let aux_constructor generate_aux_info_here r p : string option = 
+  if generate_aux_info_here && not(has_hom "ocaml" p.prod_homs) && !Global_option.aux_style_rules then
     let aux_prod_name = (if r.rule_pn_wrapper<>"" then r.rule_pn_wrapper else String.capitalize r.rule_ntr_name ^"_") ^ "aux" in
     Some aux_prod_name
   else
     None
+(* ...for construtors *)
+
+let ott_menhir_loc = "ott_menhir_loc" (* ocaml variable to use for locations *)
+
+let aux_constructor_element : element_data = 
+  { semantic_value_id = Some ott_menhir_loc;
+    grammar_body = "DUMMY";
+    semantic_action = Some "Range($symbolstartpos,$endpos)";
+    pp_raw_rhs = None;
+    pp_pretty_rhs = ""; }
+
+let generate_aux_info_for_prod generate_aux_info r p = 
+  generate_aux_info && not(!Global_option.aux_style_rules) && 
+  (match Auxl.hom_spec_for_hom_name "aux" r.rule_homs with 
+  | Some hs -> true
+  | None -> false)
 
 
-let pp_pattern_prod r p generate_aux_rules_here element_data = 
+let pp_pattern_prod r p generate_aux_info_here element_data = 
+  let element_data' = element_data @ if generate_aux_info_for_prod generate_aux_info_here r p then [aux_constructor_element] else [] in
   let inner_pattern = 
     String.capitalize p.prod_name 
     ^ 
-      (let args = Auxl.option_map (function x-> x.semantic_value_id) element_data in
+      (let args = Auxl.option_map (function x-> x.semantic_value_id) element_data' in
       match args with
       | [] -> ""
       | _ -> "("^ String.concat "," args ^ ")" )
   in
-  match aux_constructor generate_aux_rules_here r p with
-  | Some aux_con -> aux_con ^ "(" ^ inner_pattern ^ ",ott_menhir_loc)"
+  match aux_constructor generate_aux_info_here r p with
+  | Some aux_con -> aux_con ^ "(" ^ inner_pattern ^ "," ^ ott_menhir_loc^")"
   | None -> inner_pattern
 
 
@@ -597,7 +614,7 @@ let menhir_prec_spec homs =
 
 
 (* build a menhir production *)
-let pp_menhir_prod yo generate_aux_rules_here xd ts r p = 
+let pp_menhir_prod yo generate_aux_info_here xd ts r p = 
   if suppress_prod yo p then 
     ""
   else
@@ -616,6 +633,7 @@ let pp_menhir_prod yo generate_aux_rules_here xd ts r p =
 
     (* now the real work *)
     let element_data = element_data_of_prod ts p in 
+    let element_data' = element_data @ if generate_aux_info_for_prod generate_aux_info_here r p then [aux_constructor_element] else [] in
     let ppd_action = 
       let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in
       if p.prod_sugar || (has_hom "quotient-remove" p.prod_homs && has_hom "ocaml" p.prod_homs) || r.rule_phantom then 
@@ -648,7 +666,7 @@ let pp_menhir_prod yo generate_aux_rules_here xd ts r p =
        (* (\* (match Grammar_pp.pp_elements m xd [] (Grammar_pp.apply_hom_order m xd p) (\*p.prod_es*\) false false true false with Some s -> s | None -> "None")*\) *)
        (*  pp_prod m' *)
       else if not(r.rule_phantom) then 
-"(*Case 2*) " ^         pp_menhir_prod_action p element_data
+"(*Case 2*) " ^         pp_menhir_prod_action p element_data'
       else (* use the ocaml hom - is this code now defunct? *)
 "(*Case 3*) " ^         
         (match Auxl.hom_spec_for_hom_name "ocaml" p.prod_homs with 
@@ -672,7 +690,7 @@ let pp_menhir_prod yo generate_aux_rules_here xd ts r p =
     in
 
     let aux_wrapper_l, aux_wrapper_r = 
-      (match aux_constructor generate_aux_rules_here r p with 
+      (match aux_constructor generate_aux_info_here r p with 
       | Some aux_con -> 
           (aux_con ^ "(",
        ",Range($symbolstartpos,$endpos) )")
@@ -688,14 +706,14 @@ let pp_menhir_prod yo generate_aux_rules_here xd ts r p =
 
 
 (* build a menhir rule *)
-let pp_menhir_rule yo generate_aux_rules xd ts r = 
+let pp_menhir_rule yo generate_aux_info xd ts r = 
   if suppress_rule yo r then 
     ""
   else 
     (* ignore the body of the aux hom - assume it is {{ aux _ l }} *)
-    let generate_aux_rules_here = generate_aux_rules_for_rule generate_aux_rules r in 
+    let generate_aux_info_here = generate_aux_info_for_rule generate_aux_info r in 
      menhir_nonterminal_id_of_ntr r.rule_ntr_name ^ ":\n" 
-    ^  String.concat "" (List.map (pp_menhir_prod yo generate_aux_rules_here xd ts r) r.rule_ps)
+    ^  String.concat "" (List.map (pp_menhir_prod yo generate_aux_info_here xd ts r) r.rule_ps)
     ^ "\n"
 
 let is_start_rule yo r = 
@@ -718,7 +736,7 @@ let pp_menhir_start_rules yo xd ts =
     (List.map (pp_menhir_start_rule yo xd ts)  xd.xd_rs)
                                                                 
 (* construct menhir start symbol declarations *)
-let pp_menhir_start_symbols yo generate_aux_rules xd = 
+let pp_menhir_start_symbols yo generate_aux_info xd = 
   String.concat "" 
     (List.map 
        (function r -> 
@@ -733,11 +751,11 @@ let pp_menhir_start_symbols yo generate_aux_rules xd =
              (String.sub ty0 3 (String.length ty0 - 3), "unit ")
            else
              (ty0, "") in
-           (*let generate_aux_rules_here = generate_aux_rules &&
+           (*let generate_aux_info_here = generate_aux_info &&
              (match Auxl.hom_spec_for_hom_name "aux" r.rule_homs with 
              | Some hs -> true
              | None -> false) in
-           let ty1 = if generate_aux_rules_here then ty1 ^ "_aux" else ty1 in*)
+           let ty1 = if generate_aux_info_here then ty1 ^ "_aux" else ty1 in*)
            "%start <" 
            ^ ty_arg 
            ^ yo.ppm_caml_ast_module 
@@ -754,7 +772,7 @@ let pp_menhir_start_symbols yo generate_aux_rules xd =
 
 (* all this should really use a more efficient representation than string *)
 
-let pp_pp_raw_prod yo generate_aux_rules_here xd ts r p = 
+let pp_pp_raw_prod yo generate_aux_info_here xd ts r p = 
   if suppress_prod yo p || p.prod_sugar then 
     ""
   else
@@ -762,23 +780,23 @@ let pp_pp_raw_prod yo generate_aux_rules_here xd ts r p =
     let element_data = element_data_of_prod ts p in 
 
     let ppd_rhs = 
-      (match aux_constructor generate_aux_rules_here r p with
-      | Some _ -> " \"[\"^(pp_l ott_menhir_loc) ^ \"]\"^"
+      (match aux_constructor generate_aux_info_here r p with
+      | Some _ -> " string \"[\" ^^ string (pp_raw_l "^ott_menhir_loc^") ^^ string \"]\" ^^ "
       | None -> "") 
       ^
-      "\"" ^ String.capitalize p.prod_name ^ "\"" 
+      "string \"" ^ String.capitalize p.prod_name ^ "\"" 
       ^ 
         let args = Auxl.option_map (function x->x.pp_raw_rhs) element_data in
         match args with
         | [] -> ""
-        | _ -> " ^ \"(\" ^ "^ String.concat " ^ \",\" ^ " args ^ " ^ \")\"" 
+        | _ -> " ^^ string \"(\" ^^ "^ String.concat " ^^ string \",\" ^^ " args ^ " ^^ string \")\"" 
     in                                                                   
-    "| " ^ pp_pattern_prod r p generate_aux_rules_here element_data ^ " -> " 
+    "| " ^ pp_pattern_prod r p generate_aux_info_here element_data ^ " -> " 
     ^ ppd_rhs
     ^ "\n"
 
 
-let pp_pp_raw_rule yo generate_aux_rules xd ts r = 
+let pp_pp_raw_rule yo generate_aux_info xd ts r = 
   if suppress_rule yo r then 
     None
   else if r.rule_phantom then
@@ -788,21 +806,21 @@ let pp_pp_raw_rule yo generate_aux_rules xd ts r =
     | None -> (Auxl.error ("no pp-raw hom for phantom production "^r.rule_ntr_name));
     )
   else 
-    let generate_aux_rules_here = generate_aux_rules_for_rule generate_aux_rules r in 
+    let generate_aux_info_here = generate_aux_info_for_rule generate_aux_info r in 
     
     Some (pp_pp_raw_name r.rule_ntr_name ^ " x = match x with\n" 
-    ^  String.concat "" (List.map (pp_pp_raw_prod yo generate_aux_rules_here xd ts r) r.rule_ps)
+    ^  String.concat "" (List.map (pp_pp_raw_prod yo generate_aux_info_here xd ts r) r.rule_ps)
     ^ "\n")
 
-let pp_pp_raw_rules yo generate_aux_rules xd ts rs = 
-  "let rec " ^ String.concat "and " (Auxl.option_map (pp_pp_raw_rule yo generate_aux_rules xd ts) rs)
+let pp_pp_raw_rules yo generate_aux_info xd ts rs = 
+  "let rec " ^ String.concat "and " (Auxl.option_map (pp_pp_raw_rule yo generate_aux_info xd ts) rs)
 
 
 (** ******************************************************************** *)
 (**  pp                                                                  *)
 (** ******************************************************************** *)
 
-let pp_pp_prod yo generate_aux_rules_here xd ts r p = 
+let pp_pp_prod yo generate_aux_info_here xd ts r p = 
   if suppress_prod yo p || p.prod_sugar then 
     ""
   else
@@ -816,11 +834,11 @@ let pp_pp_prod yo generate_aux_rules_here xd ts r p =
       | _ -> "string \"(\" ^^ " ^ String.concat " ^^ string \" \" ^^ " args  ^ " ^^ string \")\"" (* full parens*)
 (*  | _ -> String.concat " ^ \" \" ^ " args *)
     in
-    "| " ^ pp_pattern_prod r p generate_aux_rules_here element_data ^ " -> " 
+    "| " ^ pp_pattern_prod r p generate_aux_info_here element_data ^ " -> " 
     ^ ppd_rhs
     ^ "\n"
 
-let pp_pp_rule yo generate_aux_rules xd ts r = 
+let pp_pp_rule yo generate_aux_info xd ts r = 
   if suppress_rule yo r then 
     None
   else if r.rule_phantom then
@@ -830,13 +848,13 @@ let pp_pp_rule yo generate_aux_rules xd ts r =
     | None -> (Auxl.error ("no pp hom for phantom production "^r.rule_ntr_name));
     )
   else 
-    let generate_aux_rules_here = generate_aux_rules_for_rule generate_aux_rules r in 
+    let generate_aux_info_here = generate_aux_info_for_rule generate_aux_info r in 
     Some (pp_pp_name r.rule_ntr_name ^ " x = match x with\n" 
-    ^  String.concat "" (List.map (pp_pp_prod yo generate_aux_rules_here xd ts r) r.rule_ps)
+    ^  String.concat "" (List.map (pp_pp_prod yo generate_aux_info_here xd ts r) r.rule_ps)
     ^ "\n")
 
-let pp_pp_rules yo generate_aux_rules xd ts rs = 
-  "let rec " ^ String.concat "and " (Auxl.option_map (pp_pp_rule yo generate_aux_rules xd ts) rs)
+let pp_pp_rules yo generate_aux_info xd ts rs = 
+  "let rec " ^ String.concat "and " (Auxl.option_map (pp_pp_rule yo generate_aux_info xd ts) rs)
 
 
 
@@ -870,7 +888,7 @@ let pp_menhir_precedences fd ts =
 *)
 
 (* output a menhir source file *)
-let pp_menhir_syntaxdefn m sources _(*xd_quotiented*) xd_unquotiented lookup generate_aux_rules oi = let yo = match m with Menhir yo -> yo | _ -> raise (Failure "pp_menhir_systemdefn called with bad ppmode") in 
+let pp_menhir_syntaxdefn m sources _(*xd_quotiented*) xd_unquotiented lookup generate_aux_info oi = let yo = match m with Menhir yo -> yo | _ -> raise (Failure "pp_menhir_systemdefn called with bad ppmode") in 
   match oi with
   | (o,is)::[] ->
       let _ = Auxl.filename_check m o in
@@ -889,17 +907,17 @@ let pp_menhir_syntaxdefn m sources _(*xd_quotiented*) xd_unquotiented lookup gen
       output_string fd "\n";
       Embed_pp.pp_embeds fd m xd_unquotiented lookup xd_unquotiented.xd_embed;
 
-      output_string fd (pp_menhir_start_symbols yo generate_aux_rules xd_unquotiented);
+      output_string fd (pp_menhir_start_symbols yo generate_aux_info xd_unquotiented);
       output_string fd "\n\n%%\n\n";
 
       output_string fd (pp_menhir_start_rules yo xd_unquotiented ts);
-      List.iter (function r -> output_string fd (pp_menhir_rule yo generate_aux_rules xd_unquotiented ts r)) xd_unquotiented.xd_rs;
+      List.iter (function r -> output_string fd (pp_menhir_rule yo generate_aux_info xd_unquotiented ts r)) xd_unquotiented.xd_rs;
       close_out fd
 
   | _ -> Auxl.error "must specify only one output file in the menhir backend.\n"
 
 (* output pp source file (should be called with quotiented syntaxdefn file) *)
-let pp_pp_syntaxdefn m sources xd_quotiented xd_unquotiented xd_quotiented_unaux generate_aux_rules oi =
+let pp_pp_syntaxdefn m sources xd_quotiented xd_unquotiented xd_quotiented_unaux generate_aux_info oi =
   let yo = match m with Menhir yo -> yo | _ -> raise (Failure "pp_pp_systemdefn called with bad ppmode") in 
   match oi with
   | (o,is)::[] ->
@@ -914,9 +932,9 @@ let pp_pp_syntaxdefn m sources xd_quotiented xd_unquotiented xd_quotiented_unaux
       Printf.fprintf fd "(* generated by Ott %s from: %s *)\n" Version.n sources;
       output_string fd "open PPrintEngine\nopen PPrintCombinators\n";
       output_string fd ("open " ^ yo.ppm_caml_ast_module ^ "\n\n" 
-                        ^ pp_pp_raw_rules yo generate_aux_rules xd_quotiented_unaux ts xd_quotiented_unaux.xd_rs
+                        ^ pp_pp_raw_rules yo generate_aux_info xd_quotiented_unaux ts xd_quotiented_unaux.xd_rs
                         ^ "\n"
-                        ^ pp_pp_rules yo generate_aux_rules xd_quotiented_unaux ts xd_quotiented_unaux.xd_rs
+                        ^ pp_pp_rules yo generate_aux_info xd_quotiented_unaux ts xd_quotiented_unaux.xd_rs
                         );
       close_out fd;
 
