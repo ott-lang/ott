@@ -63,3 +63,12 @@ simple: regression
 clean-regr:
 	rm -rf testRegr*
 	rm -rf *~
+	rm -f regression-jenkins tests.xml
+
+# Jenkins
+
+regression-jenkins: 
+	ocamlc unix.cma str.cma -o regression-jenkins -dtypes regression-jenkins.ml
+
+run-jenkins: regression-jenkins
+	./regression-jenkins

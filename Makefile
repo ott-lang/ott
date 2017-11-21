@@ -258,3 +258,9 @@ sys-purercdsub: $(SYS_PURERCDSUB)
 	bin/ott -merge true -tex_show_meta false -o out.tex -o out.v -o out.thy -o outScript.sml $(SYS_PURERCDSUB) \
 	&& ($(LATEX) out; $(DVIPS) out -o)
 
+# Jenksin regression
+
+jenkins:
+	cd regression; \
+          make regression-jenkins; \
+          make run-jenkins
