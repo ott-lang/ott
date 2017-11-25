@@ -233,7 +233,7 @@ defns
   Jop :: '' ::= 
 
     defn
-    Config1 - l -> Config2 ::  :: reduce :: ''  {{ com [[Config1]] reduces to [[Config2]] }}
+    Config1 - l -> Config2 ::  :: reduce :: ''  {{ com $[[Config1]]$ reduces to $[[Config2]]$ }}
     {{ tex [[Config1]] \stackrel{[[l]]}{\longrightarrow} [[Config2]] }} by 
 
     -----------------------  :: skip_seq

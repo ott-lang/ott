@@ -176,7 +176,7 @@ defns
 Jtype :: '' ::=
 
 defn
-G |- ok :: :: Gok :: Gok_ {{ com type environment [[G]] is well-formed }} by
+G |- ok :: :: Gok :: Gok_ {{ com type environment $[[G]]$ is well-formed }} by
 
 ----------- :: 1
 empty |- ok
@@ -188,7 +188,7 @@ G,x:T |- ok
 
 
 defn
-G |- T :: :: GT :: GT_ {{ com type [[T]] is well-formed in type environment [[G]] }} by
+G |- T :: :: GT :: GT_ {{ com type $[[T]]$ is well-formed in type environment $[[G]]$ }} by
 
 G |- ok
 -------------- :: Top
@@ -207,7 +207,7 @@ G |- {l1:T1,..,ln:Tn}
 
 
 defn
-G |- S <: T ::  :: SA :: SA_  {{ com [[S]] is a subtype of [[T]] }} by 
+G |- S <: T ::  :: SA :: SA_  {{ com $[[S]]$ is a subtype of $[[T]]$ }} by 
 
 G |- ok
 ---------- :: Top
@@ -224,7 +224,7 @@ G |- {k1:S1 , .. , km:Sm} <: {l1:T1,..,ln:Tn}
 
 
 defn
-G |- t : T ::  :: Ty :: Ty_  {{ com term [[t]] has type [[T]] }} by 
+G |- t : T ::  :: Ty :: Ty_  {{ com term $[[t]]$ has type $[[T]]$ }} by 
 
 G |- ok
 x:T isin G
@@ -264,7 +264,7 @@ G|- t:T
 
 
 defn
- |- p : T => D ::  :: Pat :: Pat_  {{ com pattern [[p]] matches type [[T]] giving bindings [[D]] }} by 
+ |- p : T => D ::  :: Pat :: Pat_  {{ com pattern $[[p]]$ matches type $[[T]]$ giving bindings $[[D]]$ }} by 
  
  ------------------ :: Var
  |- x:T : T => empty,x:T
@@ -280,7 +280,7 @@ Jop :: '' ::=
 
 
 defn
-t1 --> t2 ::  :: reduce :: reduce_  {{ com [[t1]] reduces to [[t2]] }} by 
+t1 --> t2 ::  :: reduce :: reduce_  {{ com $[[t1]]$ reduces to $[[t2]]$ }} by 
 
 -----------------------------------------  :: AppAbs
 (\x:T11.t12) v2 -->  :t_tsub: [x|->v2]t12

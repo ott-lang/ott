@@ -18,13 +18,13 @@ grammar
 
 % where that tex hom is used to pp these symbolic nonterms - in fact it should default to the above for all nonterms
 
-        | x                        ::   :: ident    {{ tex [[x]] }} {{ com variable named [[x]] }}
+        | x                        ::   :: ident    {{ tex [[x]] }} {{ com variable named $[[x]]$ }}
 
 % where the [[ x ]] is processed by the tex (or texobj) hom - so it should default to this if we don't say anything else
 
         | ()                       ::   :: unit     {{ tex () }} {{ com unit value }}
         | ( exp , exp' )           ::   :: pair     {{ tex ([[exp]],\,[[exp']]) }}   
-                                                    {{ com pair of [[exp]] and [[exp']] }}
+                                                    {{ com pair of $[[exp]]$ and $[[exp']]$ }}
 
 % note that here we introduce some spacing (the \,).  Is this kind of mechanism expressive enough for spacing, or do we want 
 % something smarter?  
@@ -184,7 +184,7 @@ E,x:t,E' |- x:t
 
 
 defn
-E |- e : t ::  :: Eet :: Eet_  {{ com term [[e]] has type [[t]] in type environment [[E]] }} by 
+E |- e : t ::  :: Eet :: Eet_  {{ com term $[[e]]$ has type $[[t]]$ in type environment $[[E]]$ }} by 
 
 :Ext: E |- x:t
 --------------- :: ident

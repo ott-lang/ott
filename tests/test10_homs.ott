@@ -29,7 +29,7 @@ homs 't_'
   :: tsub    {{ ich ( tsubst_t [[t]] [[x]] [[t']] ) }}
 
 homs ''
-  :: reduce  {{ com [[t1]] reduces to [[t2]] }} 
+  :: reduce  {{ com $[[t1]]$ reduces to $[[t2]]$ }} 
 
 
 subrules
