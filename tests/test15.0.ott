@@ -1,0 +1,16 @@
+% test15.0.ott   is_v test
+% single upper/lower type pair, not mutually recursive 
+
+% ISA SUCCEEDS  with no warning
+
+  grammar
+
+    a :: 'a_' ::= 
+      | AA         :: :: AA
+      | A a          :: :: a
+
+    av :: 'av_' ::= 
+      | A a          :: :: a
+
+subrules
+  av <:: a

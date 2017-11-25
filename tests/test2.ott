@@ -1,0 +1,33 @@
+embed 
+  {{ coq 
+(* coq preamble embed *) }} 
+  {{ isa 
+(* isa preamble embed *) }}
+
+metavar ident , x  ::= {{ isa string }} {{ coq nat }} {{ lex [A-Z]+ }}
+
+embed {{ coq (* after metavar embed *) }}
+
+grammar
+  T :: T_ ::=
+        | int            ::  :: integer
+        | float          ::  :: float
+
+  E :: E_ ::=  {{ isa (ident*type) list }} {{ coq  list (ident * T) }}   
+        | empty                 ::   :: empty  {{ coq nil }}
+                                               {{ isa [] }}
+        | E , x : T             ::   :: ident  {{ coq cons ([[x]],[[T]]) [[E]] }}
+                                               {{ isa [[x]] :: [[T]] }}
+
+  F :: F_ ::=  {{ coq  list (ident * ident) }}  
+               {{ isa (ident*ident) list    }}
+
+        | empty                 ::   :: empty  {{ coq nil }}
+                                               {{ isa [] }}
+        | E , x1 : x2           ::   :: ident  {{ coq (cons ([[x1]],[[x2]]) [[E]]) }}
+                                               {{ isa ([[x1]],[[x2]])#[[E]] }}
+
+embed {{ coq (* after rules embed *) }}
+
+
+

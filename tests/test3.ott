@@ -1,0 +1,344 @@
+metavar ident  ::=
+  {{ isa string }} {{ coq nat }} {{ hol string }}
+  {{ lex alphanum }} 
+metavar integer_literal ::=
+  {{ isa int }} {{ coq nat }} {{ lex numeral }}
+metavar infix_symbol ::=
+  {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar lowercase_ident ::= 
+  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}
+  {{ lex alphanum0 }}
+metavar capitalized_ident ::=
+  {{ isa string }} {{ coq nat }} {{ hol string }}
+  {{ lex Alphanum }}
+
+grammar
+infix_op :: IO_ ::=
+  | =                                                          ::   :: equal
+
+typeconstr_name :: TCN_ ::=
+  | lowercase_ident                                            ::   :: id
+
+
+typeconstr :: TC_ ::=
+  | unit                                                       ::   :: unit
+  | bool                                                       ::   :: bool
+  | int                                                        ::   :: int
+
+value_name , x :: VN_ ::=  {{ coq-equality decide equality. apply eq_lowercase_ident_t. }}
+  | lowercase_ident                                            ::   :: id
+
+typexpr , t :: TE_ ::=
+  | ' ident                                                    ::   :: var
+  | ( typexpr )                                                :: S :: paren
+  | typexpr -> typexpr'                                         ::   :: arrow
+  | typeconstr                                                 ::   :: constr0
+
+>>
+typscheme :: TS_ ::=
+  | ( ' ident , .. , 'ident ) typexpr                          ::   :: ts
+<<
+
+constant :: CONST_ ::=
+  | integer_literal                                            ::   :: int
+  | false                                                      ::   :: false
+  | true                                                       ::   :: true
+  | ()                                                         ::   :: unit
+
+expr , e :: expr_ ::=
+  | value_name                         ::   :: ident
+  | constant                           ::   :: constant
+  | ( expr )                           :: S :: paren
+  | expr expr'                         ::   :: apply
+  | expr infix_op expr'                :: S :: applyi 
+  | if expr then expr1 else expr2      ::   :: ifthenelse
+  | expr ; expr'                       ::   :: sequence
+  | function value_name -> expr        ::   :: function
+  | let value_name = expr in expr'     ::   :: let
+  | C . e                              :: M :: context
+     {{ ich TODO }}
+  | '{' v / x '}' e                    :: M :: subst
+     {{ ich ( subst_expr [[v]] [[x]] [[e]] ) }}
+
+Value , v :: V_ ::=
+  | constant                           ::   :: constant
+  | function value_name -> expr        ::   :: function
+
+C_expr , C :: C_ ::=
+  | __ expr                            ::   :: apply_l
+  | v __                               ::   :: apply_r
+  | __ infix_op expr                   ::   :: infix_op_l
+  | v infix_op __                      ::   :: infix_op_r
+  | if __ then expr  else expr'        ::   :: ifthenelse
+  | __ ; expr                          ::   :: sequence
+  | let value_name = __ in expr        ::   :: let
+
+
+
+
+E :: E_ ::=
+  | empty                              ::   :: em
+% | E , value_name : typscheme         ::   :: vn
+  | E , value_name : typexpr           ::   :: vn
+  | E , value_name : typexpr , E'      :: M :: vn_middle
+%   that needs a hom!!!     
+
+
+formula :: formula_ ::=
+  | judgement                                                  ::   :: judgement
+  | not ( formula )                 :: :: not  {{ isa Not( [[formula]] ) }}
+                                               {{ coq not( [[formula]] ) }}
+                                               {{ hol ~( [[formula]] ) }}
+
+  | E = E'                          ::   :: eq {{ ich [[E]]=[[E']] }}
+
+
+
+
+ terminals :: terminals_ ::=
+        | *                      ::   :: star  {{ tex  \star }}
+        |  ->                    ::   :: arrow {{ tex  \rightarrow }}
+        |  function              ::   :: function {{ tex  \textbf{function} }}
+        |  __                    ::   :: hole {{ tex \_ }}
+        | |-                     ::   :: turnstile {{ tex \vdash }}
+        | -->                    ::   :: red {{ tex \longrightarrow }}
+        | '{'                    ::   :: leftbrace {{ tex \{ }}
+        | '}'                    ::   :: rightbrace {{ tex \} }}
+
+
+
+subrules
+
+  v <:: expr   
+%  C_expr  _:: expr :: expr  {{ baz }}
+
+
+substitutions
+  single expr value_name :: subst
+
+
+defns
+Jtype :: '' ::= 
+
+defn
+value_name in dom ( E ) :: :: Vid :: Vid_ by
+
+------------------------------------------ :: vn1
+value_name in dom ( E, value_name:typexpr ) 
+
+
+value_name in dom ( E ) 
+------------------------------------------ :: vn2
+value_name in dom ( E, value_name':typexpr ) 
+
+
+
+defn
+E |- ok :: :: Eok :: Eok_ by 
+
+E |- typexpr : Type
+not(value_name in dom(E))
+----------------------------- :: value_name
+E, value_name : typexpr |- ok
+
+
+
+defn
+|- infix_op : t -> t' -> t'' :: :: E_infix_op :: infix_op_ by
+
+---------------------------- :: equal
+|- = : bool -> bool -> bool
+
+
+
+%defn
+%E |- value_path : t :: :: E_value_path :: value_path_ by
+
+
+
+
+defn
+|- typeconstr : Type :: :: E_typeconstr :: typconstr_ by
+
+
+----------- :: unit
+|- unit : Type
+
+
+----------- :: bool
+|- bool : Type
+
+----------- :: int
+|- int : Type
+
+
+
+defn
+E |- typexpr : Type :: :: E_typexpr :: typexpr_ by
+
+
+E |- ok
+------------------- :: ident
+E |- ' ident : Type
+
+
+E |- typexpr : Type
+----------------------- S :: paren
+E |- ( typexpr ) : Type
+
+
+E |- typexpr : Type 
+E |- typexpr' : Type
+-------------------------------- :: arrow
+E |- typexpr->typexpr' : Type
+
+
+|- typeconstr : Type
+------------------------------------------------  S :: constr0
+E |-  typeconstr : Type
+
+
+
+defn
+E |- constant : t :: :: E_constant :: constant_ by
+
+E |- ok
+------------------------------- :: int
+E |- integer_literal : int          
+
+E |- ok
+------------------------------- :: false
+E |- false : bool                                             
+
+E |- ok
+------------------------------- :: true
+E |- true : bool                                              
+
+E |- ok
+------------------------------- :: unit
+E |- () : unit
+
+
+
+defn
+E |- e : t :: :: Eet :: Eet_ by
+
+
+
+% got to add polymorphic instantiation to these rules 
+
+E |- ok
+not(x in dom(E2))
+E = E1, x:t, E2
+------------------ :: value_name
+E |- x:t
+
+
+E |- ok
+:E_constant: E |- constant : t
+------------------------------- :: constant
+E |- constant : t
+
+
+E |- e : t
+---------------------   S :: paren
+E |- ( e ) : t
+
+
+
+E |- e : t1->t2
+E |- e' : t1 
+---------------------------- :: apply
+E |- e e' : t2
+
+
+|- infix_op : t -> t' -> t''
+E |- e:t
+E |- e':t'
+------------------------------  S :: applyi
+E |- e infix_op e' : t''
+
+
+E|- e1:bool                      
+E|- e2:t                            
+E|- e3:t                            
+------------------------------ I :: ifthenelse
+E|- if e1 then e2 else e3 : t       
+
+
+E|-  e1 : unit  
+E|-  e2 : t     
+---------------- :: sequence
+E|-  e1; e2 : t 
+
+
+
+E,x1:t1 |- e : t
+--------------------------------------------------------- I :: lambda
+E |- function x1->e : t1->t
+
+
+%todo: generalise t
+E |- e : t
+E,x:t |- e':t'
+----------------------------- :: let
+E |- let x=e in e' : t'
+
+
+
+
+
+defns
+Jop :: JO_ ::= 
+
+
+% Pure expression reduction    
+
+defn
+ e --> e' :: :: red :: red_ by
+
+
+----------------------------------- :: app
+(function x->e)  v --> { v / x }  e
+
+% above we use substitution, not presently understood by ott
+
+--------- :: iftrue
+  if true then e1 else e2  -->  e1 
+
+-------- :: iffalse
+  if false then e1 else e2  -->  e2
+
+-------- :: seq
+  (); e  -->   e       
+
+
+
+---------- :: let
+  let x = v in e -->  { v / x } e
+
+
+% we give explicit rules for the infix op in situ, rather than
+% a desugaring translation into normal application and rules for
+% application of = 
+
+-------- :: eq
+  v=v --> true 
+
+% there we depend on the inclusion (not presently understood by ott) between v and e
+
+-------- :: eq2
+  true=false --> false 
+
+-------- :: eq3
+  false=true --> false 
+
+% above would be more elegant written with a sidecondition:  v=v' --> false   if v=/=v'
+
+  e --> e'
+  -----------------  :: context
+  C.e --> C.e'
+
+% that C.e is context application, not presently understood by ott
+
+

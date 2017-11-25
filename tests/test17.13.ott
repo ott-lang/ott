@@ -1,0 +1,36 @@
+% test17.3.ott  dot form test
+% 
+% auxfn with dot forms and binding thereof
+
+metavar value_name , x ::=
+  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}
+
+indexvar index , n ::= {{ isa nat }} {{ coq nat }} {{ coq-equality }} {{ hol num }}
+
+  grammar
+
+    a :: 'a_' ::= 
+      | x              :: :: x (+ b = x         +)
+      | A a1 .. an     :: :: A (+ b = b(a1..an) +)
+      | X x1 .. xn     :: :: X (+ b = x1..xn    +)
+      | V av1 .. avn   :: :: V (+ b = b(av1..avn) +)
+      | CCC c1 .. cn   :: :: C (+ b = b(c1..cn) +)
+
+    av :: 'av_' ::= 
+      | A a1 .. an     :: :: A (+ b = b(a1..an) +)
+      | V av1 .. avn   :: :: V (+ b = b(av1..avn) +)   
+
+    c :: 'c_' ::=
+      | C a a'         :: :: C (+ bind b(a) in a' +)  (+ b=b(a) +)
+      | VC av1 .. avn   :: :: VC                      (+ b=b(av1..avn) +)
+
+subrules
+  av <:: a
+
+freevars
+  a value_name :: fv
+
+substitutions
+  single   a value_name :: subst  
+  multiple a value_name :: msubst 
+

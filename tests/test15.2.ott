@@ -1,0 +1,20 @@
+% test15.2.ott   is_v test
+% mutual recursion between a single upper/lower type pair
+
+% ISA FAILS: isa doesn't seem to like multiple mutually recursive primrecs over the same type
+
+  grammar
+
+    a :: 'a_' ::= 
+      | AA         :: :: AA
+      | A a          :: :: a
+      | C av       :: :: C
+      | CC av      :: :: CC
+
+    av :: 'av_' ::= 
+      | A a          :: :: a
+      | C av       :: :: C
+
+subrules
+  av <:: a
+

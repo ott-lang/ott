@@ -1,0 +1,165 @@
+
+metavar ident , x ::= {{ isa string }} {{ coq nat }} {{ coq-equality }}  {{ lex alphanum }}
+
+grammar
+  exp , e :: Exp_ ::= 
+        | x                     ::   :: ident
+        | ()                    ::   :: unit
+        | ( exp , exp' )        ::   :: pair      
+        | function x -> exp     ::   :: 'fun'  (+ bind x in exp +)
+        | exp exp'              ::   :: app
+%       | exp0 exp1 exp1        ::   :: sdlfkj
+%       | Foo val               ::   :: foo
+        | let pat = exp in exp' ::   :: let  (+ bind bo(pat) in exp' +)
+        | '{' exp / x '}' exp'  :: M :: subst  {{ isa subst [[exp]] [[x]] [[exp']] }}
+        | s exp                 :: M :: msubst {{ isa msubst [[s]] [[exp]] }}
+        | ( exp )               :: M :: paren
+%       | C . e                 :: M :: context
+
+  val , v :: Val_ ::=
+        | x                     ::   :: ident   
+        | ()                    ::   :: unit    
+        | ( val , val' )        ::   :: pair    
+        | function x -> exp     ::   :: 'fun'
+
+  pat , p :: Pat_ ::=
+        | x                     ::   :: ident (+ bo=x +)                     
+        | ()                    ::   :: unit  (+ bo={} +)                    
+        | ( pat , pat' )        ::   :: pair  (+ bo=bo(pat) union bo(pat') +)    
+
+%  cmd :: Cmd_ ::=            
+%        | Baz exp              ::   :: exp
+%        | Boz val              ::   :: val
+
+
+ s {{ tex \sigma }} :: 'S_' ::= {{ com multiple term substitution }} {{ isa (ident*exp) list }}
+      | '[' x |-> e ']'         ::   :: singleton {{ isa [ ([[x]],[[t]]) ] }}
+      | []                      ::   :: empty     {{ isa Nil }}
+      | s1 , s2                 ::   :: list      {{ isa [[s1]]@[[s2]] }}
+
+  formula :: formula_ ::=          
+        | judgement             ::   :: judgement
+        | not ( formula )       ::   :: not
+
+%  C :: Ctx_ ::= 
+%        | ( __  , exp )        ::   :: pairL
+%        | ( val , __  )        ::   :: pairR      
+%        | __ exp               ::   :: appL
+%        | val __               ::   :: appR
+
+
+
+
+  terminals :: terminals_ ::=
+%          *                      ::   :: star  {{ tex  \star }}
+        |  ->                    ::   :: arrow {{ tex  \rightarrow }}
+%        |  function              ::   :: function {{ tex  \textbf{function} }}
+%        |  __                    ::   :: hole {{ tex \_ }}
+%        | |-                     ::   :: turnstile {{ tex \vdash }}
+        | -->                    ::   :: red {{ tex \longrightarrow }}
+        | |->                    ::   :: mapsto {{ tex \mapsto }}
+%        | '{'                    ::   :: leftbrace {{ tex \{ }}
+%        | '}'                    ::   :: rightbrace {{ tex \} }}
+
+
+subrules
+
+  val <:: exp  
+
+%  C   _:: exp :: exp
+
+
+substitutions
+single   exp ident :: subst
+multiple exp ident :: msubst 
+
+
+
+
+
+defns
+Jop :: JO_ ::= 
+
+% Pure expression reduction    
+
+defn
+ e --> e' :: :: red :: red_ by
+
+------------------------  :: 'fun'
+(function x->e) v -->  { v / x }  e 
+
+match(p,v)=s
+------------------------  :: let
+let p=v in e  -->  s  e 
+
+
+
+% e --> e'
+% ------- :: context
+% C.e --> C.e'
+
+  e1 --> e1'
+  -----------------  :: context1
+  e1 e2 --> e1' e2
+
+  e2 --> e2'
+  -----------------  :: context2
+  v1 e2 --> v1 e2'
+
+  e1 --> e1'
+  -----------------  :: context3
+  (e1,e2) --> (e1',e2)
+  
+  e2 --> e2'
+  -----------------  :: context4
+  (v1,e2) --> (v1,e2')
+
+  e1 --> e1'
+  -----------------  :: context5
+  let p=e1 in e2 --> let p=e1' in e2
+
+
+
+defn
+match ( p , v ) = s ::  :: M :: M_  by 
+
+----------------------- :: ident
+match(x,v) = [x|->v]
+
+
+----------------------- :: unit
+match((),()) = []  
+
+match(p1,v1)=s1
+match(p2,v2)=s2
+--------------------------------- :: pair
+match( (p1,p2), (v1,v2) ) = s1,s2
+
+
+
+
+
+>>
+
+hand-crafted isa for simultaneous substitution
+
+
+consts
+list_assoc :: "'a => ('a*'b) list => 'b option"
+primrec
+"list_assoc x0 Nil = None"
+"list_assoc x0 (Cons xy  xys) = (if x0=fst xy then Some (snd xy) else list_assoc x0 xys)"
+
+consts
+ssubst_exp :: "(ident* exp) list => exp => exp"
+
+primrec
+"ssubst_exp s (Exp_ident x)= (case list_assoc x s of None => Exp_ident x | Some exp' => exp')"
+"ssubst_exp s Exp_unit = (Exp_unit )"
+"ssubst_exp s (Exp_pair exp exp') = (Exp_pair (ssubst_exp s exp) (ssubst_exp s exp'))"
+"ssubst_exp s (Exp_fun x exp) = (Exp_fun x (ssubst_exp (List.filter (%(x',exp').x ~= x') s) exp))"
+"ssubst_exp s (Exp_app exp exp') = (Exp_app (ssubst_exp s exp)
+(ssubst_exp s exp'))"
+
+
+<<

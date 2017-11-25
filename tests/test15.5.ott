@@ -1,0 +1,27 @@
+% test15.5.ott   is_v test
+% simple subrule transitive closure
+
+  grammar
+
+    a :: 'a_' ::= 
+      | AAA          :: :: AAA
+      | AA           :: :: AA
+      | A a          :: :: a
+      | B a a' av     :: :: B
+      | C a a' av     :: :: C
+    av :: 'av_' ::= 
+      | AA              :: :: AA
+      | A a             :: :: a
+      | B av avv avv'    :: :: B
+      | C a a' av        :: :: C
+
+
+    avv :: 'avv_' ::= 
+      | A a             :: :: a
+      | B avv avv' avv''   :: :: B
+      | C av avv' avv''    :: :: C
+
+subrules
+  av <:: a
+  avv <:: av
+

@@ -1,0 +1,49 @@
+% test17.8.ott  dot form test
+
+%metavar x ::= {{ isa string }} 
+
+indexvar index , n , i ::= {{ isa nat }} {{ coq nat }} {{ hol num }}
+
+  grammar
+
+    a :: 'a_' ::= 
+      | ()                 :: :: unit
+      | ( a0 , .... , an ) :: :: tuple
+      | ( a0 : t0 , .... , an : tn ) :: :: typedtuple
+      | a . i              :: :: proj
+ 
+    t :: 't_' ::=
+      | unit               ::   :: unit
+      | t0 * .... * tn     ::   :: tuple 
+      | ( t )              :: M :: paren {{ ich [[t]] }} {{ ocaml [[t]] }}
+      | t + t2             ::   :: sum
+
+formula :: formula_ ::=          
+  | judgement              :: :: judgement
+  | formula1 .. formulan   :: :: dots 
+%         {{ isa (List.list_all (\<lambda> b . b) ( [[ formula1 .. formulan ]] ) ) }}
+%         {{ coq (List.fold_left (fun (a b:Prop) => a /\ b) ([[ formula1 .. formulan ]]) True) }}
+
+terminals :: terminals_ ::=
+  | |-                     ::   :: turnstile {{ tex \vdash }}
+
+
+defns
+  Jtype :: '' ::= 
+
+defn
+  |- a : t :: :: ati :: at_ by
+
+
+--------- :: 1
+|- () : unit
+
+|- a0 : t'0  .... |- an : t'n
+---------------------------- :: 2
+|- ( a0,....,an):t'0*....*t'n
+
+|- a : t0*....*tn
+%|- a : (t0 + t'0)*....*(tn + t'n)
+------------------- :: 3
+|- a.i :ti
+

@@ -1,0 +1,200 @@
+metavar terminal, t			::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar metavarroot, mvr  	::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar nontermroot, ntr  	::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar suffix, suff       ::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar auxfn, f          ::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar prodname, pn     ::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+indexvar index, i, j, n, m  ::= {{ isa string }} {{ coq nat }} {{ hol num }}  
+
+grammar
+
+'metavar', mv :: 'mv_' ::=
+  | metavarroot suffix  :: :: 1
+
+nonterm, nt :: 'nt_' ::=
+  | nontermroot suffix  :: :: 1
+
+element, e :: 'e_' ::=
+  | terminal :: :: tm
+  | 'metavar' :: :: mv
+  | nonterm  :: :: nt
+
+mse :: 'mse_' ::=
+  | 'metavar' :: :: mv
+  | auxfn ( nonterm ) :: :: f  {{ tex [[auxfn]]\texttt{(}[[nonterm]]\texttt{)} }}
+  | mse union mse' :: :: union
+  | {} :: :: empty
+
+bindspec, bs :: 'bs_' ::=
+  | 'bind' mse in nonterm :: :: bind
+  | auxfn = mse :: :: auxfn
+
+
+prod {{ hol prodd }} {{isa prodd}} , p :: 'p_' ::=
+  | '|' element1 .. elementm '::' '::' prodname '(+' bindspec1 .. bindspecn '+)'   :: :: 1
+
+rule, r :: 'r_' ::= 
+  | nontermroot '::' '''' '::='  prod1 .. prodm :: :: 1
+
+grammar_rules, g :: 'g_' ::= 
+  | 'grammar' rule1 .. rulem :: :: 1
+
+
+auxfn_type, at :: 'at_' ::=
+  | nontermroot1 .. nontermrootn -> metavarroot :: :: 1
+
+auxfn_type_env, Phi {{ tex \Phi }} :: 'ate_' ::=
+  | empty :: :: 1
+  | Phi , auxfn : auxfn_type :: :: 2
+
+grammar_type, G {{ tex \Gamma }} :: 'gt_' ::=
+  | nontermroot1 .. nontermrootn  :: :: 1
+
+
+formula :: 'formula_' ::=          
+  | judgement           ::   :: judgement
+  | i = j              ::   :: ieq {{ ich ([[i]] = [[j]]) }}
+  | f = f'              ::   :: feq {{ ich ([[f]] = [[f']]) }}
+  | mvr = mvr'              ::   :: mvreq {{ ich ([[mvr]] = [[mvr']]) }}
+  | ntr = ntr'              ::   :: ntreq {{ ich ([[ntr]] = [[ntr']]) }}
+  | mv = mv'              ::   :: mveq {{ ich ([[mv]] = [[mv']]) }}
+  | nt = nt'              ::   :: nteq {{ ich ([[nt]] = [[nt']]) }}
+  | e = e'              ::   :: eeq {{ ich ([[e]] = [[e']]) }}
+  | mse = mse'              ::   :: mseeq {{ ich ([[mse]] = [[mse']]) }}
+  | bs = bs'              ::   :: bseq {{ ich ([[bs]] = [[bs']]) }}
+  | p = p'              ::   :: peq {{ ich ([[p]] = [[p']]) }}
+  | r = r'              ::   :: req {{ ich ([[r]] = [[r']]) }}
+  | g = g'              ::   :: geq {{ ich ([[g]] = [[g']]) }}
+  | ( formula )            :: :: paren   {{ ich ( [[formula]] ) }}
+  | not formula            :: :: not     {{ isa Not( [[formula]] ) }} {{ hol ~( [[formula]] ) }}
+  | forall i isin 1 -- m . formula :: :: forall 
+                               {{ tex \forall [[i]] \in 1 .. [[m]]. [[formula]] }} 
+                               {{ isa (![[i]]. ((1::nat)<=[[i]] & i<=[[m]]) => [[formula]]) }} 
+                               {{ hol (![[i]]. (1<=[[i]] /\ i<=[[m]]) ==> [[formula]]) }} 
+  | exists i isin 1 -- m . formula :: :: exists 
+                               {{ tex \exists [[i]] \in 1 .. [[m]]. [[formula]] }}
+                               {{ isa (?[[i]]. ((1::nat)<=[[i]] & i<=[[m]]) => [[formula]]) }} 
+                               {{ hol (?[[i]]. (1<=[[i]] /\ i<=[[m]]) ==> [[formula]]) }} 
+  | formula /\ formula'   :: :: and  {{ isa ([[formula]] & [[formula']]) }}
+{{ hol ([[formula]] /\ [[formula']]) }}
+  | formula => formula'   :: :: implies  {{ isa ([[formula]] ==> [[formula']]) }}
+{{ hol ([[formula]] ==> [[formula']]) }}
+  | true :: :: true {{ isa True }} 
+ {{ hol T }} 
+
+terminals :: '' ::=
+  | '{}' :: :: quote {{ tex \texttt{\{\} } }}
+%  | '('  :: :: lparen {{ tex \texttt{(} }}
+%  | ')'  :: :: rparen {{ tex \texttt{)} }}
+  | '(+'  :: :: lparenplus {{ tex \texttt{(+} }}
+  | '+)'  :: :: rparenplus {{ tex \texttt{+)} }}
+  | ''''  :: :: quotequote {{ tex \texttt{''} }}
+  | '::'  :: :: coloncolon {{ tex \texttt{::} }}
+  | '::='  :: :: coloncoloneq {{ tex \texttt{::=} }}
+  | 'grammar' :: :: tgrammar {{ tex \texttt{grammar} }}
+  | 'bind' :: :: bind {{ tex \texttt{bind} }}
+  | 'in' :: :: in {{ tex \texttt{in} }}
+  | 'union' :: :: union {{ tex \texttt{union} }}
+  |  ->                    ::   :: arrow     {{ tex  \rightarrow }}
+  |  =>                    ::   :: AArrow     {{ tex  \Rightarrow }}
+  | |-                     ::   :: turnstile {{ tex \vdash }}
+  | /\  :: :: wedge {{ tex {\scriptsize\wedge} }}
+  | \/  :: :: vee {{ tex {\scriptsize\vee} }}
+  | '|' :: :: bar {{ tex \texttt{|} }}
+
+defns
+Jtype :: '' ::=
+
+
+defn
+Phi |- f : at :: :: FF :: FF_ by
+
+------------------ :: 1
+Phi,f:at |- f : at
+
+
+Phi |- f : at
+not (f=f')
+------------------ :: 2
+Phi,f':at' |- f:at
+
+
+
+defn
+Phi ; e1 .. en |- mse : metavarroot ::  :: Mse :: Mse_  by 
+
+---------------------- :: 1
+Phi;e1..en |- {} : mvr
+
+
+ej = mvr suff
+----------------------------- :: 2
+Phi;e1..en |- mvr suff : mvr 
+
+
+Phi |- f : ntr1 .. ntrm -> mvr
+ej = nt
+:formula_nteq: nt = ntri suff
+------------------------- :: 3
+Phi;e1..en |- f(nt) : mvr
+
+
+Phi;e1..en |- mse : mvr
+Phi;e1..en |- mse' : mvr
+---------------------------------- :: 4
+Phi;e1..en |- mse union mse' : mvr
+
+
+
+defn
+Phi ; e1 .. en |- bs ok :: :: Bs :: Bs_ by
+
+Phi;e1..en |- mse : mvr
+ej=nt
+-------------------------------- :: 1
+Phi;e1..en |- bind mse in nt ok
+
+Phi;e1..en |- mse : mvr
+Phi |- f : ntr1..ntrn -> mvr
+------------------------------- :: 2
+Phi;e1..en |- f=mse ok
+
+
+
+defn
+Phi |- prod ok :: :: Prod :: Prod_ by
+
+forall i isin 1--m. Phi;e1..en |- bsi ok
+prod = | e1..en :: :: prodname (+ bs1..bsm +) 
+------------------------------------------------- :: 1
+Phi |- prod ok
+
+
+
+
+defn
+Phi |- rule ok :: :: Rule :: Rule_ by
+
+forall i isin 1--m. Phi |- prodi ok
+rule = ntr :: '' ::= prod1..prodm 
+------------------------------------------ :: 1
+Phi |- rule ok
+
+
+
+defn
+Phi |- grammar_rules ok :: :: Grammar :: Grammar_ by
+
+forall i isin 1--m. Phi |- rulei ok
+grammar_rules = grammar  rule1..rulem 
+forall i isin 1--m. forall j isin 1--n.  ((rulei=ntr :: '' ::= prod1..prodm /\ rulej=ntr :: '' ::= prod1'..prodn') =>  i=j)
+------------------------------------------ :: 1
+Phi |- grammar_rules ok
+
+%(rulei=ntr :: '' ::= prod1..prodm /\  =>
+
+%  
+
+
+% and some conditions on the uniqueness of f defns!
+

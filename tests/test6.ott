@@ -1,0 +1,218 @@
+
+metavar ident , x ::=    {{ isa string }} 
+                      {{ coq nat }} {{ coq-equality }}  
+                      {{ lex alphanum }}
+
+grammar
+  exp , e :: Exp_ ::= 
+        | x                     ::   :: ident
+        | ()                    ::   :: unit
+        | ( exp , exp' )        ::   :: pair      
+        | function x : type -> exp      ::   :: 'fun' (+ bind x in exp +)
+        | exp exp'              ::   :: app
+        | '{' exp / x '}' exp'  :: M :: subst  {{ isa subst_exp ( [[ exp ]] , [[ x ]] , [[ exp' ]] ) }}
+                                               {{ coq (subst_exp [[ exp ]] [[ x ]] [[ exp' ]] ) }}
+        | ( exp )               :: M :: paren  {{ ich [[exp]] }}
+%       | Foo val               ::   :: foo
+%       | C . e                 :: M :: context
+
+  type , t :: Typ_ ::=
+        | unit                  ::   :: unit
+        | type * type'          ::   :: pair
+        | type -> type'         ::   :: 'fun'
+%       | Bar exp               ::   :: Bar
+
+  E :: E_ ::= {{ isa (ident*type) list }}
+        | empty                 ::   :: empty  {{ isa [] }}
+        | E , x : t             ::   :: ident  {{ isa ( [[ x ]] , [[ t ]] ) # [[ E ]] }}
+        | E , x : t , E'        ::   :: ident2 {{ isa [[ E' ]] @ ( [[ x ]] , [[ t ]] ) # [[ E ]] }}
+
+  val , v :: Val_ ::=
+        | x                     ::   :: ident
+        | ()                    ::   :: unit
+        | ( val , val' )        ::   :: pair      
+        | function x : t -> exp ::   :: 'fun'
+
+%  C :: Ctx_ ::= 
+%        | ( __  , exp )         ::   :: pairL
+%        | ( val , __  )         ::   :: pairR      
+%        | __ exp                ::   :: appL
+%        | val __                ::   :: appR
+
+  formula :: formula_ ::=          
+        | judgement             ::   :: judgement
+        | not ( formula )       ::   :: not  {{ isa not( [[formula]] ) }}
+                                             {{ coq not( [[formula]] ) }}
+        | x in dom ( E )        :: M :: indom {{ isa list_ex ( \<lambda>(x',y'). x=x') [[ E ]] }}
+
+  terminals :: terminals_ ::=
+%        | *                      ::   :: star  {{ tex  \star }}
+        |  ->                    ::   :: arrow {{ tex  \rightarrow }}
+%        |  function              ::   :: function {{ tex  \textbf{function} }}
+%        |  __                    ::   :: hole {{ tex \_ }}
+        | |-                     ::   :: turnstile {{ tex \vdash }}
+        | -->                    ::   :: red {{ tex \longrightarrow }}
+%        | '{'                    ::   :: leftbrace {{ tex \{ }}
+%        | '}'                    ::   :: rightbrace {{ tex \} }}
+
+
+subrules
+
+  val <:: exp  
+
+%  C   _:: exp :: exp
+
+substitutions
+
+ single   exp x :: subst 
+ multiple exp x :: msubst
+
+ 
+
+% defns
+% Jin :: '' ::=
+% defn
+% x in dom ( E ) :: :: xinE :: xinE_ by
+% 
+% -------------------- :: 1
+% x in dom ( E )
+% 
+% x in dom(E)
+% -------------------- :: 2
+% x in dom(E,x':t)
+
+
+% this type system doesn't allow any shadowing
+
+defns
+Jtype :: '' ::=
+
+defn
+E |- ok :: M :: Eok :: Eok_  by 
+
+----------- :: empty
+empty |- ok
+
+
+
+E |- ok
+not (x in dom(E))
+-------------- :: ident
+E,x:t |- ok
+
+
+
+defn
+E |- e : t ::  :: Eet :: Eet_  by 
+
+E,x:t,E' |- ok
+--------------- :: ident
+E,x:t,E' |- x:t
+
+
+
+E |- ok
+---------------- :: unit
+E |- () : unit
+
+E |- e1:t1
+E |- e2:t2
+------------------- :: pair
+E |- (e1,e2):t1*t2
+
+E,x:t1 |- e :t2
+---------------------- :: 'fun'
+E |- function x:t1 -> e : t1->t2
+
+E |- e : t1->t2
+E |- e': t1
+------------------ :: app
+E |- e e' : t2
+
+
+
+
+
+
+defns
+Jop :: JO_ ::= 
+
+% Pure expression reduction    
+
+defn
+ e --> e' :: :: red :: red_ by
+
+  -----------------------------------  :: 'fun'
+%fake  (function x:t->e) v -->   v 
+ (function x:t->e) v -->  { v / x }  e 
+
+
+
+% e --> e'
+% ------- :: context
+% C.e --> C.e'
+
+  e1 --> e1'
+  -----------------  :: context1
+  e1 e2 --> e1' e2
+
+  e2 --> e2'
+  -----------------  :: context2
+  v1 e2 --> v1 e2'
+
+  e1 --> e1'
+  -----------------  :: context3
+  (e1,e2) --> (e1',e2)
+  
+  e2 --> e2'
+  -----------------  :: context4
+  (v1,e2) --> (v1,e2')
+
+
+
+% syntax and typing for pair patterns, all commented out
+
+
+>>
+        | let pat = exp in exp' ::   :: let
+
+  pat , p :: Pat_ ::= 
+          x                     ::   :: ident
+        | _                     ::   :: wildcard
+        | ()                    ::   :: unit
+        | ( pat , pat' )        ::   :: pair
+<<
+
+>>
+|- p : t gives E'
+E |- e : t
+E,E' |- e' : t'
+------------------------ :: let
+E |- let p=e in e' : t'
+
+
+defn
+|- p : t gives E' ::  :: Ept :: Ept_  by 
+
+----------------------- :: ident
+|- x:t gives empty,x:t
+
+
+----------------------- :: wildcard
+|- _:t gives empty
+
+------------------------ :: unit
+|- () : unit gives empty
+
+|- p1:t1 gives E1
+|- p2:t2 gives E2
+-------------------------- :: pair
+|- (p1,p2):t1*t2 gives E1,E2
+
+
+
+
+<<
+
+
+

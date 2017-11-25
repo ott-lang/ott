@@ -1,0 +1,49 @@
+%% Lists of foos where foo has a Coq hom
+
+indexvar i , j , k , l , m , n ::= {{ coq nat }}
+metavar ident ::= {{ coq nat }}
+
+grammar
+  value_name , x :: VN_ ::=
+    | ident       ::   :: id
+  typexpr , t :: TE_ ::=
+    | typevar                                             ::   :: var
+  typevar {{ tex \alpha }} :: TV_ ::=
+    | ' ident                                   ::   :: ident
+        {{ tex {'[[ident]]} }}
+  typevars :: TVS_ ::=
+      {{ coq (list typevar) }}
+    | typevar1 .. typevarn                      ::   :: list
+        {{ coq [[typevar1 .. typevarn]] }}
+  typescheme, ts :: TS_ ::=
+    | forall typevars , t                       ::   :: forall
+
+environment_binding , EB :: EB_ ::=
+    | value_name : typescheme                           ::   :: vn
+
+environment , E :: Env_ ::=
+      {{ coq list environment_binding }}
+    | empty                            ::    :: nil
+        {{ coq (@List.nil environment_binding) }}
+    | E , EB                           ::    :: snoc
+        {{ tex \ottenvironmentappend{[[E]]}{[[EB]]} }}
+        {{ coq (@List.cons environment_binding [[EB]] [[E]]) }}
+    | E1 , .. , En                     :: M  :: list
+        {{ ich (@List.flat_map _ _ (fun l=>l) [[E1 .. En]]) }}
+
+grammar
+  formula :: formula_ ::=
+    | judgement                           :: :: judgement
+    | formula1 .. formulan                :: :: dots
+
+
+
+defns
+Jtype :: JT_ ::=
+defn
+E |- value_name : t :: :: value_name :: value_name_ by
+
+%E1, x:ts, E2 |- ok
+%t <= ts
+------------------------------- :: value_name
+E1, x:ts, E2 |- x:t

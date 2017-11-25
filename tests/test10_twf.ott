@@ -1,0 +1,100 @@
+embed 
+ {{ twf
+
+
+%%%%% Library stuff %%%%%
+
+%% Natural Numbers %%
+nat        : type.
+
+nat/z      : nat.
+nat/s      : nat -> nat.
+
+
+
+%% Inequality for nats %%
+neq        : nat -> nat -> type.
+
+neq/zs     : neq nat/z (nat/s _).
+neq/sz     : neq (nat/s _) nat/z.
+neq/ss     : neq (nat/s N1) (nat/s N2)
+	      <- neq N1 N2.
+
+
+
+%% Lists of nats %%
+natlist         : type.
+
+natlist/nil     : natlist.
+natlist/cons    : nat -> natlist -> natlist.
+
+
+
+remove/natlist       : nat -> natlist -> natlist -> type.
+
+remove/natlist/nil   : remove/natlist _ natlist/nil natlist/nil.
+remove/natlist/hit   : remove/natlist N (natlist/cons N NL) 
+			NLout
+			<- remove/natlist N NL NLout.
+remove/natlist/hit   : remove/natlist M (natlist/cons N NL)  
+			(natlist/cons N NLout)
+			<- neq N M
+			<- remove/natlist M NL NLout.
+
+
+append/natlist       : natlist -> natlist -> natlist -> type.
+
+append/natlist/nil   : append/natlist natlist/nil NL NL.
+append/natlist/cons  : append/natlist (natlist/cons N NL1) NL2
+			(natlist/cons N NL3)
+			<- append/natlist NL1 NL2 NL3.
+
+
+}}
+
+metavar termvar, x ::= 
+  {{ isa string }} {{ coq nat }} {{ hol string }} {{ coq-equality }} 
+  {{ lex alphanum }} {{ tex \mathit{[[termvar]]} }} {{ com  term variable  }} 
+
+grammar
+
+  t :: 't_' ::=                                         {{ com term }}
+    | x                   ::   :: Var                     {{ com variable }}         
+    | \ x . t             ::   :: Lam  (+ bind x in t +)  {{ com abstraction }}      
+    | t t'                ::   :: App                     {{ com application }}      
+    | ( t )               :: M :: paren   {{ icht [[t]] }} 
+    | { t / x } t'        :: M :: tsub    {{ icht ( tsubst_t [[t]] [[x]] [[t']] ) }}
+  v :: 'v_' ::=                                         {{ com  value }}
+    | \ x . t             ::   :: Lam   
+
+  terminals :: 'terminals_' ::=
+    | \                   ::   :: lambda  {{ tex \lambda }}
+    | -->                 ::   :: red     {{ tex \longrightarrow }}
+
+subrules
+  v <:: t
+
+substitutions
+  single t x :: tsubst 
+
+freevars
+  t x :: fv 
+
+%defns
+%  Jop :: '' ::= 
+%
+%    defn
+%    t1 --> t2 ::  :: reduce :: ''       {{ com [[t1]] reduces to [[t2]] }} by 
+%
+%
+%    ---------------------------  :: ax_app 
+%    (\x.t12) v2 -->  {v2/x}t12
+%
+%    t1 --> t1'
+%    -------------- :: ctx_app_fun
+%    t1 t --> t1' t
+%
+%    t1 --> t1'
+%    -------------- :: ctx_app_arg
+%    v t1 --> v t1'
+

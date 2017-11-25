@@ -1,0 +1,294 @@
+metavar value_name , x ::=
+  {{ isa string }} {{ coq nat }} 
+%  {{ lex \([a-z]\|[_]\)\([A-Z]\|[a-z]\|[0-9]\|[_]\|[']\)* }} 
+  {{ lex alphanum }}
+metavar ident  ::=
+  {{ isa string }} {{ coq nat }} 
+%  {{ lex \([A-Z][a-z]\|[_]\)\([A-Z]\|[a-z]\|[0-9]\|[_]\|[']\)* }} 
+  {{ lex alphanum }}
+metavar integer_literal ::=
+  {{ isa int }} {{ coq nat }} 
+% {{ lex  -?[0-9]+ }}
+  {{ lex numeral }}
+metavar label , l , k ::=
+  {{ isa string }} {{ coq nat }} 
+% {{ lex [A-Z]+ }}  
+  {{ lex Alphanum }}
+  {{ tex \mathit{[[label]]} }} 
+  {{ com  field label  }}
+
+indexvar index , i , j , n , m ::=
+  {{ isa nat }} {{ coq positive }} 
+% {{ lex [0-9]+ }}
+  {{ lex numeral}}
+
+
+grammar
+
+typeconstr :: TC_ ::=
+  | unit                               ::   :: unit
+  | bool                               ::   :: bool
+  | int                                ::   :: int
+
+typvar :: TV_ ::=
+  | ' ident                            ::   :: ident
+
+typexpr , t :: TE_ ::=
+  | typvar                             ::   :: var
+  | typexpr -> typexpr'                ::   :: arrow
+  | typeconstr                         ::   :: constr0
+  | '{' l1 : typexpr1 , .. , ln : typexprn '}'   ::   :: Rec                      
+  | ( typexpr )                        :: M :: paren {{ isa [[typexpr]] }}
+
+typscheme :: TS_ ::=  
+  | ( typvar1 , .. , typvarn ) typexpr ::   :: ts  (+ bind typvar1 .. typvarn in typexpr +) 
+
+  | generalise ( G , t )          :: M :: ts3 {{ isa (TS_ts (List.remdups (list_minus (ftv_typexpr [[t]]) (ftv_G [[G]]))) [[t]]) }}
+
+%TODO: it might be nicer to have ftv remove duplicates 
+
+constant :: CONST_ ::=
+  | integer_literal                    ::   :: int
+  | false                              ::   :: false
+  | true                               ::   :: true
+  | ()                                 ::   :: unit
+  | (&&)                               ::   :: and
+  | not                                ::   :: not
+
+expr , e :: E_ ::=
+  | value_name                         ::   :: ident
+  | constant                           ::   :: constant
+  | expr expr'                         ::   :: apply
+  | function value_name -> expr        ::   :: function (+ bind value_name in expr +)
+  | let p = expr in expr'              ::   :: let      (+ bind b(p) in expr' +)
+  | '{' l1 = e1 ,  .. , ln = en '}'    :: :: Rec                     
+  | e . l                              :: :: Proj                   {{ com projection }} 
+  | ( expr )                           :: M :: paren {{ isa [[expr]] }}
+  | '{' v / x '}' e                    :: M :: subst {{ isa subst_expr [[v]] [[x]] [[e]] }}
+  | s e                              :: M :: tsubs {{ isa msubst_e [[s]] [[e]] }}
+                                                     {{ coq ( msubst_e [[s]] [[e]] ) }}
+
+p :: 'P_' ::=                                                     {{ com  pattern }}
+  | x                                :: :: Var (+ b = x  +)     {{ com variable pattern }}
+  | '{' l1 = p1 , .. , ln = pn '}'   :: :: Rec (+ b = b(p1 .. pn) +)   
+
+
+Value , v :: V_ ::=
+  | constant                           ::   :: constant
+  | function value_name -> expr        ::   :: function
+  | '{' l1 = v1 ,  .. , ln = vn '}'    ::   :: Rec                     
+
+G {{ tex \Gamma }} , D {{ tex \Delta }} :: G_ ::=
+  | empty                              ::   :: em
+  | G , value_name : typscheme         ::   :: vn
+  | G1 , .. , Gn                     :: M :: dots
+  | generalise ( G , D )             :: M :: gen {{ isa A BIT LIKE THIS (TS_ts (List.remdups (list_minus (ftv_typexpr [[t]]) (ftv_G [[G]]))) [[t]]) }}
+
+s {{ tex \sigma }} :: 'S_' ::= {{ com multiple term substitution }} {{ isa (value_name*expr) list }}
+      | '[' x |-> e ']'                ::   :: singleton {{ isa [ ([[x]],[[e]]) ] }}
+      | s1 , .. , sn                   ::   :: list   {{ isa List.concat s_list }}
+
+
+
+
+formula :: formula_ ::=
+  | judgement                          ::   :: judgement
+  | not ( formula )                    ::   :: not  {{ isa Not([[formula]]) }}
+         | ( formula )           ::   :: paren {{ isa ( [[formula]] ) }}
+                                               {{ coq ( [[formula]] ) }}
+  | typscheme > t                      ::   :: gen 
+        {{ isa ? typvars . ? typexpr . ? s . 
+             [[typscheme]] = TS_ts typvars typexpr 
+             & typvars=List.map fst s 
+             & tsubst_typexpr s typexpr = [[t]] }}
+
+  | typscheme = typscheme'             ::   :: eqt {{ isa [[typscheme]]=[[typscheme']] }}
+  | value_name = value_name'           ::   :: eqv {{ isa [[value_name]]=[[value_name']] }}
+  | formula1 .. formulan  ::   :: formuladots
+         | forall i isin 1 -- m . formula :: :: forall 
+                                      {{ tex \forall [[i]] \in 1 .. [[m]]. [[formula]] }} 
+                                      {{ isa ![[i]]. (1<=[[i]] & i<=[[m]]) => [[formula]] }} 
+         | exists i isin 1 -- m . formula :: :: exists 
+                                      {{ tex \exists [[i]] \in 1 .. [[m]]. [[formula]] }}
+                                      {{ isa ?[[i]]. (1<=[[i]] & i<=[[m]]) => [[formula]] }} 
+         | formula /\ formula'   :: :: and  {{ isa ([[formula]] & [[formula']]) }}
+         | l = l'                :: :: leq  {{ isa ([[l]]=[[l']]) }}
+
+terminals :: terminals_ ::=
+        |  ->                    ::   :: arrow {{ tex  \rightarrow }}
+        |  function              ::   :: function {{ tex  \textbf{function} }}
+        | |-                     ::   :: turnstile {{ tex \vdash }}
+        | -->                    ::   :: red {{ tex \longrightarrow }}
+        | '{'                    ::   :: leftbrace {{ tex \{ }}
+        | '}'                    ::   :: rightbrace {{ tex \} }}
+        |  =>                    ::   :: Arrow {{ tex  \Rightarrow }}
+        | |->                    ::   :: mapsto {{ tex \mapsto }}
+
+subrules
+  v <:: expr     
+
+substitutions
+  single   expr value_name :: subst  
+  multiple expr value_name :: msubst 
+  multiple typexpr typvar  :: tsubst 
+
+freevars
+  typexpr typvar :: ftv
+  
+
+defns
+Jtype :: '' ::= 
+
+defn
+value_name : typscheme in G  :: :: VTSin :: VTSin_ by
+
+--------------------------------------------------- :: vn1
+value_name : typscheme in G, value_name:typscheme
+
+value_name : typscheme in G
+not(value_name = value_name')
+--------------------------------------------------- :: vn2
+value_name : typscheme in G, value_name':typscheme'
+
+
+
+defn
+G |- constant : t :: :: G_constant :: constant_ by
+
+
+------------------------------- :: int
+G |- integer_literal : int          
+
+
+------------------------------- :: false
+G |- false : bool                                             
+
+
+------------------------------- :: true
+G |- true : bool                                              
+
+
+------------------------------- :: unit
+G |- () : unit
+
+
+---------------------- :: and
+G |- (&&) : bool -> ( bool -> bool )
+
+
+------------------------------- :: not
+G |- not : bool -> bool
+
+
+defn
+G |- e : t :: :: Get :: Get_ by
+
+
+x:typscheme in G
+typscheme > t   
+---------------------- :: value_name
+G |- x:t
+
+
+:G_constant: G |- constant : t
+------------------------------- :: constant
+G |- constant : t
+
+G |- e : t1->t2
+G |- e' : t1 
+------------------------------- :: apply
+G |- e e' : t2
+
+G,x1: ( ) t1 |- e : t
+------------------------------- I :: lambda
+G |- function x1->e : t1->t
+
+
+ G|- e1:t1
+ |- p:t1=>D
+ G,generalise(G,D) |- e2:t2
+ ------------------------ :: Let
+ G|- let p=e1 in e2 : t2
+
+ G|-e1:t1 .. G|-en:tn
+ % and distinctness, if not in the syntax
+ ------------------------------------- :: Rcd
+ G|- {l1=e1,..,ln=en}:{l1:t1,..,ln:tn}
+ 
+ G|- e:{l1:t1,..,ln:tn}
+ ----------------------- :: Proj
+ G|- e.lj : tj
+
+
+
+ 
+defn
+ |- p : t => D ::  :: P :: P_  by 
+ 
+ ------------------ :: Var
+ |- x : t => empty,x : ( ) t
+ 
+ |- p1:t1=>D1 .. |- pn:tn=>Dn
+ % and distinctness, if not in the syntax
+------------------------------------------------ :: Rcd
+|- {l1=p1,..,ln=pn}:{l1:t1,..,ln:tn} => D1,..,Dn
+
+
+
+
+defns
+Jop :: JO_ ::= 
+
+defn
+e --> e' :: :: red :: red_ by
+
+----------------------------------- :: app
+(function x->e)  v --> {v/x}  e
+
+
+ match(p,v1)=s
+ -------------------------  :: LetV
+ let p=v1 in e2 -->  s e2
+
+
+ --------------------------- :: ProjRcd
+ {l'1=v1,..,l'n=vn}.l'j --> vj
+
+
+
+e --> e'
+-----------------  :: context_app1
+e e1 --> e' e1
+
+e --> e'
+-----------------  :: context_app2
+v e --> v e'
+
+e --> e'
+--------------------------------- :: context_let
+let p=e in e1 --> let p=e' in e1
+
+--------------------------------- :: not_1
+not true --> false
+
+--------------------------------- :: not_2
+not false --> true
+
+------------------------ :: and_1
+((&&) true) e --> e
+
+------------------------ :: and_2
+((&&) false) e --> false
+
+
+
+
+defn
+ match ( p , v ) = s ::  :: M :: M_  by 
+ 
+ ----------------------- :: Var
+ match(x,v) = [x|->v]
+ 
+ forall i isin 1 -- m. exists j isin 1 -- n. (li=kj /\ match(pi,vj)=si)
+ ---------------------------------------------------------------------- :: Rcd
+ match({l1=p1,..,lm=pm},{k1=v1,..,kn=vn}) = s1,..,sm

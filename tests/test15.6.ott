@@ -1,0 +1,42 @@
+% test15.6.ott   is_v test
+% subrule dag
+
+  grammar
+
+    a :: 'a_' ::= 
+      | AAA         :: :: AAA
+      | BBB         :: :: BBB
+      | CC          :: :: CC
+      | D a         :: :: a
+
+    avA :: 'avA_' ::= 
+      | AAA         :: :: AAA
+      | CC          :: :: CC
+      | D a         :: :: a
+
+    avB :: 'avB_' ::= 
+      | BBB         :: :: BBB
+      | CC          :: :: CC
+      | D a         :: :: a
+
+
+    avv :: 'avv_' ::= 
+      | D a          :: :: a
+
+subrules
+  avA <:: a
+  avB <:: a
+  avv <:: avA
+  avv <:: avB
+
+
+
+defns
+  Jtype :: '' ::= 
+
+defn
+    |- avA avB  :: :: T :: T_ by
+
+
+---------- :: 1
+|- avv avv

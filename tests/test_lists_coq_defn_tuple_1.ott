@@ -1,0 +1,11 @@
+%% Using a list of tuples in a defn.
+indexvar i , j , k , l , m , n ::= {{ coq nat }}
+metavar x ::= {{ coq nat }}
+grammar
+foo :: foo_ ::=
+  | Foo :: :: foo
+
+defns
+J :: J_ ::=
+defn
+foo1 foo1' .. foon foon' :: :: wibble :: wibble_ by

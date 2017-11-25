@@ -1,0 +1,16 @@
+% test17.14.ott  dot form test
+
+metavar value_name , x ::=
+  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}
+
+indexvar index , n ::= {{ isa nat }} {{ coq nat }} {{ hol num }}
+
+  grammar
+
+    a :: 'a_' ::= 
+      | x                                                :: :: x (+ b = x +)  
+      | E ( ( c1 , c'1 , c''1 ) .. ( cn , c'n , c''n ) ) :: :: E (+ b = b(c1..cn) +) 
+
+    c :: 'c_' ::=
+      | x                                                :: :: C (+ b = x +)
+

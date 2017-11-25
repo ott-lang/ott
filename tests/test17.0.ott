@@ -1,0 +1,22 @@
+% test17.0.ott  dot form test
+% 
+% simple subrules
+
+indexvar index , n ::= {{ isa nat }} {{ coq nat }} {{ coq-equality }} {{ hol num }}
+
+  grammar
+
+    a :: 'a_' ::= 
+      | AA            :: :: AA
+      | A a           :: :: A
+      | C a1 .. an    :: :: C
+
+    av :: 'av_' ::= 
+      | A a           :: :: A
+      | C av1 .. avn  :: :: C
+
+
+
+subrules
+  av <:: a
+

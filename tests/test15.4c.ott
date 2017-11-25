@@ -1,0 +1,32 @@
+% test15.4c.ott  is_v test
+% mutual recursion between a single upper/lower type pair, with dot forms involving tuples
+
+indexvar index , n ::= {{ isa nat }} {{ coq nat }} {{ coq-equality }}
+                        {{ hol num }} {{ ocaml int }}
+
+metavar x ::= {{ isa nat }} {{ coq nat }} {{ coq-equality }}
+                        {{ hol num }} {{ ocaml int }}
+
+   grammar
+
+     a :: 'a_' ::=
+       | x             :: :: Ax         
+       | AA            :: :: AA		
+       | A a           :: :: a		
+       | C ( a1 , a'1 , a''1 ) .. ( an , a'n , a''n )   :: :: C 
+       | CC ( a1 , a'1 , a''1 ) .. ( an , a'n , a''n )  :: :: CC 
+
+     av :: 'av_' ::=
+       | A a           :: :: a
+       | C ( av1 , av'1 , av''1 ) .. ( avn , av'n , av''n )    :: :: C
+       | CC ( av1 , av'1 , av''1 ) .. ( avn , av'n , av''n )   :: :: CC
+
+subrules
+   av <:: a
+
+freevars
+   a x :: fv
+
+substitutions
+   single a x :: su
+   multiple a x :: sum

@@ -1,0 +1,22 @@
+%% At the time this example was checked in, ott crashed with
+%% [Aux.TheOfNone] when generating Isabelle.
+indexvar index , i , j , k , l , m , n ::= {{ coq nat }} {{ isa nat }} {{ hol num }}
+grammar
+ value_name , x :: value_name_ ::=
+ pattern , pat :: P_ ::=
+    | value_name                                        ::   :: var
+        (+ gives = value_name +)
+ expr , e  :: Expr_ ::=
+    | value_path                                        ::   :: ident
+    | let let_binding in expr                           ::   :: let
+  pattern_matching , pm :: PM_  ::=
+    | pattern1 -> expr1 '|' ... '|' patternn -> exprn   ::   :: pm
+  multiple_matching :: MM_ ::=
+    | pattern1 ... patternn -> expr                     ::   :: patterns
+        (+ bind gives(pattern1...patternn) in expr +)
+
+  let_binding :: LB_ ::=
+    | pattern = expr                                    ::   :: simple
+
+substitutions
+  multiple expr value_name :: substs_value_name

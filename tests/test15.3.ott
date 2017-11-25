@@ -1,0 +1,31 @@
+% test15.3.ott  is_v test
+% mutual recursion between a pair of upper/lower type pairs
+
+% ISA FAILS
+
+  grammar
+
+    a :: 'a_' ::= 
+      | AA         :: :: AA
+      | A a          :: :: a
+      | B b          :: :: b
+      | C av bv    :: :: C
+      | D av bv    :: :: D
+
+    b :: 'b_' ::= 
+      | BB         :: :: BB
+      | A a          :: :: a
+      | B b          :: :: b
+
+    av :: 'av_' ::= 
+      | A a          :: :: a
+      | B b          :: :: b
+      | C av bv    :: :: C
+
+    bv :: 'bv_' ::= 
+      | A a          :: :: a
+      | B b          :: :: b
+
+subrules
+  av <:: a
+  bv <:: b

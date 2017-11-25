@@ -1,0 +1,29 @@
+%% Use of a subrule in a list.
+indexvar i , j , k , l , m , n ::= {{ coq nat }} {{ isa nat }} {{ hol num }}
+grammar
+  constant :: CONST_ ::=
+    | ()                                                ::   :: unit
+  p :: P_ ::=
+    | constant                                          ::   :: constant
+  e  :: E_ ::=
+    | constant                                          ::   :: constant
+  v :: V_ ::=
+    | constant                                          ::   :: constant
+subrules
+   v <:: e
+grammar
+  formula :: formula_ ::=
+    | judgement                           :: :: judgement
+    | formula1 .. formulan                :: :: dots
+
+defns
+Jred :: JR_ ::=
+
+defn
+e =~ p :: :: match :: match_ by
+%% Note that using [[v =~ p]] above would trigger the bug
+%% exhibited by test_lists_coq_defn_subrule_3.
+
+v1 =~ constant ... vn =~ constant
+---------------------------------------------------------------- :: constant
+v =~ constant

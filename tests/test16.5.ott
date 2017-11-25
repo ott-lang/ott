@@ -1,0 +1,21 @@
+% test16.5.ott   auxfn and subst test
+% single type, single auxfn, with dot form
+
+% ISA FAILS (for the auxfn part already) - I think simply because primrec can't handle the nested pattern 
+
+metavar value_name , x ::=
+  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}
+
+indexvar index , n ::= {{ isa nat }} {{ coq nat }} {{ hol num }}
+
+  grammar
+
+    a , aa, aaa :: 'a_' ::= 
+      | x           :: :: x  (+ f=x +)
+      | A aaa1 .. aaan  :: :: A  (+ f=f(aaa1..aaan) +)  
+      | C           :: :: C  (+ f={} +)
+
+substitutions
+  single   a value_name :: subst  
+  multiple a value_name :: msubst 
+

@@ -1,0 +1,10 @@
+grammar
+  a :: a_ ::=
+   | c :: :: c
+
+  b :: b_ ::=
+   | foo :: :: foo
+
+%  c :: c_ ::= {{ isa b list }}
+c :: c_ ::=
+   | bar :: :: bar

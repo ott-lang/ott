@@ -1,0 +1,181 @@
+
+metavar ident , x ::= 
+  {{ isa string }} {{ coq nat }} {{ hol string }} {{ ocaml string }} {{ lex [A-Z]+ }} {{ coq-equality }}
+
+grammar
+  exp , e :: Exp_ ::= 
+        | x                     ::   :: ident
+        | ()                    ::   :: unit
+        | ( exp , exp' )        ::   :: pair      
+        | function x : type -> exp      ::   :: 'fun'
+        | exp exp'              ::   :: app
+%        |                       ::   :: empty
+
+  type , t :: Typ_ ::=
+        | unit                  ::   :: unit
+        | type * type'          ::   :: pair
+        | type -> type'         ::   :: 'fun'
+
+  E :: E_ ::= {{ isa (ident*type) list }} {{ coq list (ident*type) }} {{ hol (ident#type) list }}
+        | empty         :: :: empty  
+             {{ isa [] }} 
+             {{ coq nil }}
+             {{ hol [] }} 
+        | E , x : t      :: :: ident  
+             {{ isa (([[x]],[[t]])#[[E]]) }}
+             {{ coq (cons ([[x]],[[t]]) [[E]]) }}
+             {{ hol (([[x]],[[t]])::[[E]]) }}
+        | E , x : t , E' :: :: ident2 
+             {{ isa ([[E']] @ ([[x]],[[t]])#[[E]]) }}
+             {{ coq (app [[E']] (cons ([[x]],[[t]]) [[E]])) }}
+             {{ hol ( [[E']] ++ ([[x]],[[t]])::[[E]] )}}
+
+  formula :: formula_ ::=          
+        | judgement             ::   :: judgement
+        | not ( formula )       ::   :: not 
+             {{ isa not( [[formula]] ) }}
+             {{ coq not([[formula]]) }}
+             {{ hol ~( [[formula]] ) }}
+             {{ ocaml not([[formula]]) }}
+        | x in dom ( E )        :: M :: indom 
+             {{ isa list_ex ( \<lambda>(x',y'). [[x]]=x') [[E]] }}
+             {{ ocaml List.exists (fun (x',y') -> [[x]]=x') [[E]] }}
+	     {{ coq (indom [[x]] [[E]]) }}
+             {{ hol (EXISTS ( \(x',y'). [[x]]=x') [[E]]) }}  % TODO 
+
+  terminals :: 'terminals_' ::=
+    | \                   ::   :: lambda     {{ tex \lambda }}
+    | -->                 ::   :: red        {{ tex \longrightarrow }}
+    |  ->                 ::   :: arrow      {{ tex \rightarrow }}
+    | |-                  ::   :: turnstile  {{ tex \vdash }}
+    | in                  ::   :: in         {{ tex \in }}
+
+embed 
+  {{ coq
+Fixpoint indom (x:ident) (e:E) { struct e } : Prop :=
+  match e with
+  | nil => False
+  | cons (x',y') tl => if eq_ident x x' then True else indom x tl
+end. }}
+
+{{ isa
+
+primrec
+  order :: "type => nat"
+where
+  "order [[unit]] = 0"
+| "order [[t*t']] = max (order [[t]]) (order [[t']])"
+| "order [[t->t']] = max (1+order [[t]]) (order [[t']])"
+
+}}
+
+
+{{ tex
+A test of some filtered embedded latex: 
+$Foo( [[ E,x:t |- ok ]] )$
+}}
+
+% defns
+% Jin :: '' ::=
+% defn
+% x in dom ( E ) :: :: xinE :: xinE_ by
+% 
+% -------------------- :: 1
+% x in dom ( E )
+% 
+% x in dom(E)
+% -------------------- :: 2
+% x in dom(E,x':t)
+
+
+% this type system doesn't allow any shadowing
+
+defns
+Jtype :: '' ::=
+
+defn
+E |- ok ::  :: Eok :: Eok_  by 
+
+----------- :: empty
+empty |- ok
+
+
+
+E |- ok
+not (x in dom(E))
+-------------- :: ident
+E,x:t |- ok
+
+
+
+defn
+E |- e : t ::  :: Eet :: Eet_  by 
+
+E,x:t,E' |- ok
+--------------- :: ident
+E,x:t,E' |- x:t
+
+
+
+E |- ok
+---------------- :: unit
+E |- () : unit
+
+E |- e1:t1
+E |- e2:t2
+------------------- :: pair
+E |- (e1,e2):t1*t2
+
+E,x:t1 |- e :t2
+---------------------- :: 'fun'
+E |- function x:t1 -> e : t1->t2
+
+E |- e : t1->t2
+E |- e': t1
+------------------ :: app
+E |- e e' : t2
+
+
+>>
+        | let pat = exp in exp' ::   :: let
+
+  pat , p :: Pat_ ::= 
+          x                     ::   :: ident
+        | _                     ::   :: wildcard
+        | ()                    ::   :: unit
+        | ( pat , pat' )        ::   :: pair
+<<
+
+>>
+|- p : t gives E'
+E |- e : t
+E,E' |- e' : t'
+------------------------ :: let
+E |- let p=e in e' : t'
+
+
+defn
+|- p : t gives E' ::  :: Ept :: Ept_  by 
+
+----------------------- :: ident
+|- x:t gives empty,x:t
+
+
+----------------------- :: wildcard
+|- _:t gives empty
+
+------------------------ :: unit
+|- () : unit gives empty
+
+|- p1:t1 gives E1
+|- p2:t2 gives E2
+-------------------------- :: pair
+|- (p1,p2):t1*t2 gives E1,E2
+
+
+
+
+<<
+
+
+

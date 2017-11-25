@@ -1,0 +1,18 @@
+% test16.3.ott   auxfn and subst test
+% single type, multiple mutually dependent auxfn
+
+% ISA FAILS, even if we hand-edit the consts and primrecs into single ones
+
+metavar value_name , x ::=
+  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}
+
+  grammar
+
+    a :: 'a_' ::= 
+      | x           :: :: x  (+ f=x                        g=x +) 
+      | A a1 a2     :: :: A  (+ f=f(a1) union g(a2)        g=f(a1) +)  
+      | C           :: :: C  (+ f={}                       g={} +)
+
+substitutions
+  single   a value_name :: subst  
+  multiple a value_name :: msubst 

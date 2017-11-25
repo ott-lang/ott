@@ -1,0 +1,20 @@
+%% Test case for a repeated nonterminal in a defn.
+indexvar n ::= {{ coq nat }}
+
+grammar
+a :: a_ ::=
+  | ( a1 , .. , an )                                    ::   :: tuple
+
+grammar
+formula :: formula_ ::=
+  | judgement                                           :: :: judgement
+  | formula1 .. formulan                                :: :: dots
+
+defns
+J :: J_ ::=
+defn
+a = a' :: :: equal :: equal_ by
+
+a1=a'1 .. an=a'n
+---------------------------------------------------------------- :: unit
+(a1,..,an) = (a'1,..,a'n)

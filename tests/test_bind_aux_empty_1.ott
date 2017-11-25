@@ -1,0 +1,8 @@
+%% There happens to be no production for foo, so every production for
+%% foo does define the bindspec auxiliary function vars.
+metavar x ::= {{ coq nat }} {{ isa nat }} {{ hol num }}
+grammar
+foo :: foo_ ::= % | :: :: z (+ vars = {} +)
+oof :: oof_ ::= | x :: :: x (+ vars = x +)
+bar :: bar_ ::=
+  | foo1 foo2 :: :: foo (+ bind vars(foo1) in foo2 +)

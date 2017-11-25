@@ -1,0 +1,99 @@
+
+metavar ident , x  ::= {{ coq-equality auto with arith. }}
+  {{ isa string }} {{ coq nat }}  {{ lex alphanum }}
+
+indexvar index , j , n ::=
+  {{ isa nat }} {{ coq nat }}  {{ lex numeral }}
+
+grammar
+
+ expr , e  :: Expr_ ::=   
+                     |  x                            ::   :: var   {{ com ident }}
+                     |  ()                           ::   :: unit  {{ com unit }} 
+                     |  ( e1 : t1 , .... , en : tn ) ::   :: tuple 
+%{{ com typed tuple }}
+                     |   e . j                       ::   :: proj
+                     |   e1 e2 :: :: foo
+
+ type , t :: Typ_ ::=
+                     | () :: :: unit
+                     | ( t1 , .... , tn ) :: :: tuple
+
+ foo1expr  :: Foo1Expr_ ::=   
+                     |  x ( @@ e1 : t1 , .... ,  @@ en : tn ) ::   :: tuple 
+(+ b=t1....tn +)
+
+ foo2expr  :: Foo2Expr_ ::=   
+                     |  x ( e1 @@ e'1 : t1 , .... , en @@ e'n : tn ) ::   :: tuple 
+
+ foo3expr  :: Foo3Expr_ ::=   
+                     |  x ( e_0 : t_0 , .... , e_n-1 : t_n-1 ) ::   :: tuple 
+
+% foo4expr  :: Foo4Expr_ ::=   
+%                     |  x ( e0 @@ e1 : t1 , .... , em @@ en : tn ) ::   :: tuple 
+
+
+
+
+ formula :: formula_ ::=          
+                      |   judgement             ::   :: judgement
+                      |   formula1 .. formulan    ::   :: dotdot 
+%                                           {{ isa list_all (%(b).b)  [[formula1 .. formulan ]] }}
+
+terminals :: terminals_ ::=
+%        |  \                     ::   :: lambda  {{ tex  \lambda }}
+%        |  ->                    ::   :: arrow {{ tex  \rightarrow }}
+%        |  =>                    ::   :: Arrow {{ tex  \Rightarrow }}
+%        |  __                    ::   :: hole {{ tex \_ }}
+        | |-                     ::   :: turnstile {{ tex \vdash }}
+        | -->                    ::   :: red {{ tex \longrightarrow }}
+%        | Forall                 ::   :: forall {{ tex \forall }}
+%        | <:                     ::   :: subtype {{ tex <: }}
+%        | |->                    ::   :: mapsto {{ tex \mapsto }}
+%         | gives                  ::   :: gives {{ tex \vartriangleright }}
+
+
+substitutions
+  single e x :: subst
+substitutions
+  multiple e x :: m_subst 
+
+
+
+defns
+Jin :: '' ::=
+
+
+defn
+|- e ok ::  :: eok :: eok_  by 
+
+
+---------------- :: unit
+|- () ok
+
+
+%|- e1 ok .... |- en ok
+------------------------------- :: tuple
+|- (e1:t1,....,en:tn) ok 
+
+
+defn
+e --> e' :: :: ered :: ered_ by
+
+--------------------------- :: proj
+(e1:t1,....,en:tn).j --> ej
+
+>>
+not sure if we should isa that ej as a "(%(e,t).e) (List.nth ets j)" or as an
+"(%(e,t).e) et  where List.mem et ets "
+
+the former.
+
+
+How do we recognise that we need to do that special thing for the ej?
+
+try to merge all the None nt_or_mv's with each bound, and if we find
+one record it in the symterm pp environment?
+
+<<
+

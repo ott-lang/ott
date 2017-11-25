@@ -1,0 +1,26 @@
+%% Coq: test whether some list functions are generated
+indexvar i , j , k , l , m , n ::= {{ isa nat }} {{ coq nat }} {{ coq-equality }} {{ hol num }} {{ ocaml int }}
+grammar
+foo :: foo_ ::=
+  | ( foo1 , .. , foon ) :: :: tuple
+bar :: bar_ ::=
+  | ( bar1 , .. , barn ) :: :: tuple
+formula :: formula_ ::=
+  | judgement                                 :: :: judgement
+  | formula1 .. formulan                      :: :: dots
+defns
+J :: J_ ::=
+defn
+foo :: :: D :: D_ by
+
+foo1 .. foon
+---------------------------------------------------------------- :: tuple
+(foo1,..,foon)
+
+embed
+{{ coq
+Check list_bar.
+Check J_D_list.
+Check make_list_bar.
+Check make_J_D_list.
+}}

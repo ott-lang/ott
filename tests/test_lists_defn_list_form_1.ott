@@ -1,0 +1,27 @@
+%% Test of a defn production containing a list form
+
+indexvar i, j, k, l, m, n ::= {{ coq nat }}
+metavar x ::= {{ coq nat }}
+grammar
+  e :: e_ ::=
+    | ( x1 , .. , xn )                          ::   :: tuple
+  formula :: formula_ ::=
+    | judgement                                 ::   :: judgement
+    | formula1 .. formulan                      ::   :: dots
+    | x1 != x2                                  ::   :: neq
+
+defns
+Typing :: Typing_ ::=
+
+defn
+e ok :: :: ok :: ok_ by
+
+---------------------------------------------------------------- :: ok
+e ok
+
+defn
+( x1 , .. , xn ) linear :: :: linear :: linear_ by
+
+( x1 , .. , xn ) ok
+---------------------------------------------------------------- :: foo
+( x1 , .. , xn ) linear

@@ -1,0 +1,12 @@
+grammar
+big :: big_ ::=
+  | Foo big Oof                                         ::   :: foo
+  | Bar big Rab                                         ::   :: bar
+  | Qux tweedledum Xuq                                  ::   :: qux
+tweedledum :: tweedledum_ ::=
+  | Foo tweedledum Oof                                  ::   :: foo
+tweedledee :: tweedledee_ ::=
+  | Foo tweedledee Oof                                  ::   :: foo
+subrules
+  tweedledum <:: big
+  tweedledee <:: big
