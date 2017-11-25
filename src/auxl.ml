@@ -52,7 +52,7 @@ let mode_name m = match m with
   | Lex _ -> "Lex"
   | Menhir _ -> "Menhir"
 
-let debug_on = true
+let debug_on = false
 
 let debug s = if debug_on then begin print_string s; flush stdout end
 

@@ -33,6 +33,8 @@
 
 # REGRESSION ##########################################################
 
+all: regression
+
 regression: regression.ml
 	ocamlc unix.cma str.cma -o regression -dtypes regression.ml
 
@@ -59,6 +61,11 @@ simple: regression
 	$(MAKE) clean-regr
 	-make -C ../coq
 	./regression  -todo_list -todo_list_file regression-small.otl -keep_temp
+
+clean:
+	rm -rf *~
+	rm -rf regression
+	rm -rf testRegr*
 
 clean-regr:
 	rm -rf testRegr*
