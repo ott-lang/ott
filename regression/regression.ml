@@ -337,9 +337,13 @@ let run_test (tn,tl) =
     then begin
       pp (" *  success");
       let cmd =
+        (* Victor's suggestion *)
+        "echo '(use_thy \"" ^ name ^ "\"; OS.Process.exit OS.Process.success) handle _ => (OS.Process.exit OS.Process.failure);' | isabelle console" in
+(*
 	"echo 'ML_command {* (use_thy \"" ^ name
 	^ "\"; OS.Process.exit OS.Process.success) handle e => (OS.Process.exit OS.Process.failure); *}'"
 	^ " | isabelle console \"\"" (*^ " > /dev/null"*) in (* was isabelle tty -p *)
+*)
       pp ("*** Isa: " ^ cmd);
       if (command cmd) = 0 then begin
 	result.isa_t := { ott = true; tp = Success };
