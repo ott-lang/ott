@@ -64,6 +64,7 @@ let hol_test = ref true
 let latex_test = ref true
 let dump_baseline = ref false
 let night = ref false
+let jenkins = ref false
 let emails = ref []
 let dump_report = ref false
 let keep_temporary_files = ref false
@@ -282,6 +283,9 @@ let options =
       ("-night",
        Arg.Unit (fun () -> night := true),
        " perform the nightly regression test");
+      ("-jenkins",
+       Arg.Unit (fun () -> jenkins := true),
+       " output result in XML format for Jenkins");
       ("-email",
        Arg.String (fun s -> emails := s::!emails),
        "<email> send the night report to");
@@ -357,10 +361,12 @@ let run_test i n (tn,tl) =
 	result.coq_t := { ott = true; tp = Success };
 	pp_success tgt name;
 	maybe_remove (name^".vo");
-	maybe_remove (name^".glob")
+	maybe_remove (name^".glob");
+	maybe_remove (name^".coq.out");
       end else begin
 	result.coq_t := { ott = true; tp = Failure };
 	pp_failure tgt name;
+	maybe_remove (name^".coq.out");
       end;
       maybe_remove (name^".v")
     end else
@@ -518,6 +524,7 @@ let run_test i n (tn,tl) =
       if (command cmd) = 0 then begin
 	result.caml_t := { ott = true; tp = Success };
 	pp_success tgt name;
+	maybe_remove (name^".cmi");
 	maybe_remove (name^".cmo")
       end else begin
 	result.caml_t := { ott = true; tp = Failure };
@@ -550,6 +557,7 @@ let run_test i n (tn,tl) =
       end else begin
 	result.latex_t := { ott = true; tp = Failure };
 	pp_failure tgt name;
+	maybe_remove (name^".dvi");
 	maybe_remove (name^".log");
 	maybe_remove (name^".aux");
       end;
@@ -814,4 +822,21 @@ let _ =
         (fun e -> "mail -s '" ^ subject ^ "' " ^ e ^ " < report.txt" )
         !emails in
     execute_cmd_list cmd_list
+  end;
+
+  if !jenkins then begin
+    let fd = open_out "tests.xml" in
+    output_string fd "<testsuite tests=\"1\">\n";
+    if !regressions == 0
+    then begin
+      output_string fd "  <testcase classname=\"regression\" name=\"SuccessfulRegressionTest\"/>\n";
+    end else begin
+      output_string fd "  <testcase classname=\"regression\" name=\"FailureRegressionTest\">\n";
+      output_string fd "    <failure type=\"FailureRegression\">\n";
+      output_string fd "      todo\n";
+      output_string fd "    <failure>\n";
+      output_string fd "  </testcase>\n";
+    end;
+    output_string fd "</testsuite>\n";
+    close_out fd
   end
