@@ -1,2 +1,2 @@
-let n="0.26"
-let d="Thu Sep 21 18:00:00 UTC 2017"
+let n="0.27"
+let d="Mon 27 Nov 2017 17:18:55 GMT"
