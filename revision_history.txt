@@ -462,3 +462,32 @@ tests/menhir_tests/test10menhir
 2017-09-21 use Type instead of Set in Coq list functions, contributed by palmskog
 
 2017-09-21 Version 0.26
+
+2017-09-26  [palmskog] fixes for Coq 8.7
+
+2017-10-03  For the generated lexer, metavar definitions should either have an ocamllex hom (specifying how they should be lexed) or an ocamllex-remove hom (specifying that a constructor of the token type should be generated, but without a lexer rule).
+
+2017-10-09
+
+- improve menhir parser and pp generation for combinations of
+  {{ aux _  l }} rules (recording source location info) and quotient
+  rules.  As in test/menhir/test10menhir_with_aux/.  Probably fragile.
+
+- improve menhir parser and pp generation for {{ phantom }} rules
+
+2017-10-11 
+
+- add highly experimental -aux_style_rules false option,
+  adding aux info as extra constructor arguments rather than additional
+  rules
+
+- use PPrint instead of OCaml string concatenation in raw and cooked
+  generated pp
+
+2017-10-16 [hannesm] use ocamlc/ocamlopt (not .opt)
+
+2017-10-29 add tex file for macros used in -alltt <filename> output
+
+2017-11-26 fixes for Isabelle and for regression testing (in progress)
+
+2017-11-27 Version 0.27
