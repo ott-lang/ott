@@ -12,4 +12,4 @@ clean:
 	  $(MAKE) -f Makefile.coq cleanall; fi
 	rm -f Makefile.coq
 
-.PHONY: default clean quick install
+.PHONY: default clean install
