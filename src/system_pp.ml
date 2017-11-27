@@ -56,7 +56,7 @@ let uses_lists_syntaxdefn xd =
 
 let pp_auxiliary_lemmas m xd =
   if uses_lists_syntaxdefn xd then begin
-    Substs_pp.pp_list_mono_lemmas m;
+(*    Substs_pp.pp_list_mono_lemmas m; *)
     Substs_pp.pp_list_all_cong_lemma m;
     Substs_pp.pp_list_simp_lemmas m xd
   end
