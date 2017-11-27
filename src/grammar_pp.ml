@@ -1292,7 +1292,7 @@ and pp_metavardefn m xd mvd =
 	    then
 	      "atom_decl \"" ^ type_name ^ "\"" ^ pp_com ^ "\n"
 	    else
-	      "types \"" ^ type_name ^ "\" = \"" 
+	      "type_synonym \"" ^ type_name ^ "\" = \"" 
 	      ^ pp_metavarrep m xd mvd.mvd_rep type_name^ "\"" ^ pp_com ^ "\n"
 	| Hol ho -> 
 	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in 
@@ -2776,7 +2776,7 @@ and pp_rule_list m xd rs =
                     (Auxl.hom_spec_for_pp_mode m (Auxl.rule_of_ntr xd ntr).rule_homs) in
                 ( match m with 
                 | Isa _ -> 
-                    "types "
+                    "type_synonym "
                     ^ "\"" ^ pp_nontermroot_ty m xd ntr ^ "\" = \""
                     ^ pp_hom_spec m xd hs
                     ^ "\"\n"

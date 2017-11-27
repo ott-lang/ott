@@ -67,6 +67,7 @@ let night = ref false
 let emails = ref []
 let dump_report = ref false
 let keep_temporary_files = ref false
+let colour_output = ref true
 
 (* ** state *)
 let progressions = ref 0
@@ -101,6 +102,46 @@ let _ =
     putenv "TWELFSERVER" "/home/yquem/moscova/zappa/lib/twelf/bin/twelf-server";
   end
 
+
+(** ******************* *)
+(** colour highlighting *)
+(** ******************* *)
+
+(* vt220 colour definitions *)
+
+let black   = 0
+let red     = 1
+let green   = 2
+let yellow  = 3
+let blue    = 4
+let magenta = 5
+let cyan    = 6
+let white   = 7
+let dark_gray = 60
+
+let _reset = "\x1b[0m"
+let _color fg br = Printf.sprintf "\x1b[%u;%um" br (fg+30)
+let _bold = Printf.sprintf "\x1b[%u;%um" 0 (1)
+let _w = "\x1b[0;1;4m"
+let _r = _color red 0
+let _b = _color blue 0  (* was blue 1 *)
+let _g = _color green 0
+
+let col_wrap col s = col ^ s ^ _reset
+
+let col_bold  s =  col_wrap  _bold s
+let col_red  s =  col_wrap  _r s
+let col_black  s = col_wrap  _b s
+let col_green  s = col_wrap  _g s
+let col_yellow  s = col_wrap  (_color yellow 0) s
+let col_blue  s = col_wrap  (_color blue 0)  s
+let col_magenta  s = col_wrap  (_color  magenta 0) s
+let col_cyan  s = col_wrap  (_color  cyan 0) s
+let col_white  s = col_wrap   (_color  white 0)  s
+let col_dark_gray  s = col_wrap   (_color  dark_gray 0)  s
+
+(* ******************************************* *)
+
 let pp_fn s =
   Filename.basename s
 
@@ -111,6 +152,22 @@ let error s =
 let pp s =
   print_endline s
 (*  if not !night then print_endline s *)
+
+
+let pp_coloured c s =
+  if !colour_output then pp (col_wrap (_color c black) s) else pp s
+
+let pp_bold s =
+  if !colour_output then pp (_bold ^ s ^ _reset) else pp s
+
+let pp_tgt s cmd = 
+  pp ("*** " ^ s ^ ": " ^ cmd)
+
+let pp_success s =
+  pp_coloured green (" *  " ^ s ^ ": " ^ "success")
+
+let pp_failure s = 
+  pp_coloured red  (" *  " ^ s ^ ": " ^ "failure")
 
 let pp_report s =
   output_string !report_fd s;
@@ -234,6 +291,9 @@ let options =
       ("-keep_temp",
        Arg.Unit (fun () -> keep_temporary_files := true),
        " do not clean up temporary files");
+      ("-no_colour",
+       Arg.Unit (fun () -> colour_output := false),
+       " do not use colour in output");
     ]
 
 let rec search t state =
@@ -283,48 +343,52 @@ let run_test (tn,tl) =
   then result.coq_t := { ott = false; tp = Skipped }
   else begin
     let cmd = "../bin/ott -show_sort false -show_defns false "^t ^" -o "^name^".v " (* ^" > /dev/null" *) in
-    pp ("*** Ott-Coq: " ^ cmd);
+    let tgt = "Ott-Coq" in
+    pp_tgt tgt cmd; 
     if (command cmd) = 0
     then begin
-      pp (" *  success");
+      pp_success tgt;
       let cmd = "coqc -init-file _ott_coqrc.v "^name^".v > " ^ name ^ ".coq.out" (* was "/dev/null"*)  in
-      pp ("*** Coq: " ^ cmd);
+      let tgt = "Coq" in
+      pp_tgt tgt cmd;
       if (command cmd) = 0 then begin
 	result.coq_t := { ott = true; tp = Success };
-	pp (" *  success");
+	pp_success tgt;
 	maybe_remove (name^".vo");
 	maybe_remove (name^".glob")
       end else begin
 	result.coq_t := { ott = true; tp = Failure };
-	pp (" *  failure");
+	pp_failure tgt;
       end;
       maybe_remove (name^".v")
     end else
-      pp (" *  failure");  
+      pp_failure tgt;  
   end;
   (* Coq with native lists *)
   if (not !coq_test) || (not (check_config tn "CoqNL"))
   then result.coq_no_list_t := { ott = false; tp = Skipped }
   else begin
     let cmd = "../bin/ott -coq_expand_list_types false "^t^" -o "^name^".v " (*^" > /dev/null"*) in
-    pp ("*** Ott-Coq: " ^ cmd);
+    let tgt = "Ott-Coq" in
+    pp_tgt tgt cmd; 
     if (command cmd) = 0
     then begin
-      pp (" *  success");
+      pp_success tgt;
       let cmd = "coqc -init-file _ott_coqrc.v "^name^".v" in
-      pp ("*** Coq: " ^ cmd);
+      let tgt = "Coq" in
+      pp_tgt tgt cmd;
       if (command cmd) = 0 then begin
 	result.coq_no_list_t := { ott = true; tp = Success };
-	pp (" *  success");
+	pp_success tgt;
 	maybe_remove (name^".vo");
 	maybe_remove (name^".glob")
       end else begin
 	result.coq_no_list_t := { ott = true; tp = Failure };
-	pp (" *  failure");
+	pp_failure tgt;
       end;
       maybe_remove (name^".v")
     end else
-      pp (" *  failure");  
+      pp_failure tgt;  
   end;
   
   (* ** run Isa *)
@@ -332,10 +396,11 @@ let run_test (tn,tl) =
   then result.isa_t := { ott = false; tp = Skipped }
   else begin
     let cmd = "../bin/ott "^t^" -o "^name^".thy" (* ^" > /dev/null"*) in
-    pp ("*** Ott-Isa: " ^ cmd);
+    let tgt = "Ott-Isa" in
+    pp_tgt tgt cmd;
     if (command cmd) = 0
     then begin
-      pp (" *  success");
+      pp_success tgt;
       let cmd =
         (* Victor's suggestion *)
         "echo '(use_thy \"" ^ name ^ "\"; OS.Process.exit OS.Process.success) handle _ => (OS.Process.exit OS.Process.failure);' | isabelle console" in
@@ -344,17 +409,18 @@ let run_test (tn,tl) =
 	^ "\"; OS.Process.exit OS.Process.success) handle e => (OS.Process.exit OS.Process.failure); *}'"
 	^ " | isabelle console \"\"" (*^ " > /dev/null"*) in (* was isabelle tty -p *)
 *)
-      pp ("*** Isa: " ^ cmd);
+      let tgt = "Isa" in
+      pp_tgt tgt cmd;
       if (command cmd) = 0 then begin
 	result.isa_t := { ott = true; tp = Success };
-	pp (" *  success")
+	pp_success tgt
       end else begin
 	result.isa_t := { ott = true; tp = Failure };
-	pp (" *  failure");
+	pp_failure tgt;
       end;
       maybe_remove (name^".thy")
     end else
-      pp (" *  failure");  
+      pp_failure tgt;  
   end;
   (* ** run Isa07 *)
 (*   if (not !isa_test) || (not (check_config tn "Isa07")) *)
@@ -364,7 +430,7 @@ let run_test (tn,tl) =
 (*     pp ("*** Ott-Isa07: " ^ cmd); *)
 (*     if (command cmd) = 0 *)
 (*     then begin *)
-(*       pp (" *  success"); *)
+(*       pp_success ""; *)
 (*       let cmd = *)
 (* 	"echo 'use_thy \"" ^ name *)
 (* 	^ "\" handle e => (OS.Process.exit OS.Process.failure);'" *)
@@ -372,14 +438,14 @@ let run_test (tn,tl) =
 (*       pp ("*** Isa07: " ^ cmd); *)
 (*       if (command cmd) = 0 then begin *)
 (* 	result.isa07_t := { ott = true; tp = Success }; *)
-(* 	pp (" *  success") *)
+(* 	pp_success "" *)
 (*       end else begin *)
 (* 	result.isa07_t := { ott = true; tp = Failure }; *)
-(* 	pp (" *  failure"); *)
+(* 	pp_failure s; *)
 (*       end; *)
 (*       maybe_remove (name^".thy") *)
 (*     end else *)
-(*       pp (" *  failure");   *)
+(*       pp_failure s;   *)
 (*   end; *)
   
   (* ** run HOL *)
@@ -387,18 +453,20 @@ let run_test (tn,tl) =
   then result.hol_t := { ott = false; tp = Skipped }
   else begin
     let cmd = "../bin/ott "^t^" -o "^name^"Script.sml" (* ^" > /dev/null"*) in
-    pp ("*** Ott-Hol: " ^ cmd);
+    let tgt = "Ott-Hol" in
+    pp_tgt tgt cmd;
     if (command cmd) = 0
     then begin
-      pp (" *  success");
+      pp_success tgt;
       let cmd = "Holmake -I ../hol/ "^name^"Theory.uo" (* ^ " &> /dev/null"*) in
-      pp ("*** HOL: " ^ cmd);
+      let tgt = "HOL" in
+      pp_tgt tgt cmd;
       if (command cmd) = 0 then begin
 	result.hol_t := { ott = true; tp = Success };
-	pp (" *  success")
+	pp_success tgt;
       end else begin
 	result.hol_t := { ott = true; tp = Failure };
-	pp (" *  failure")
+	pp_failure tgt;
       end;
       maybe_remove (name^"Theory.sml");
       maybe_remove (name^"Theory.sig");
@@ -406,7 +474,7 @@ let run_test (tn,tl) =
       maybe_remove (name^"Script.sml");
       maybe_remove (name^"Theory.uo");
     end else
-      pp (" *  failure");  
+      pp_failure tgt;  
   end;
 
   (* ** run Twelf *)
@@ -417,19 +485,19 @@ let run_test (tn,tl) =
 (*     pp ("*** Ott-Twelf: " ^ cmd); *)
 (*     if (command cmd) = 0 *)
 (*     then begin *)
-(*       pp (" *  success"); *)
+(*       pp_success ""; *)
 (*       let cmd = "./run_twelf "^name^".elf &> /dev/null" in *)
 (*       pp ("*** Twelf: " ^ cmd); *)
 (*       if (command cmd) = 0 then begin *)
 (* 	result.twelf_t := { ott = true; tp = Success }; *)
-(* 	pp (" *  success") *)
+(* 	pp_success "" *)
 (*       end else begin *)
 (* 	result.twelf_t := { ott = true; tp = Failure }; *)
-(* 	pp (" *  failure") *)
+(* 	pp_failure s *)
 (*       end; *)
 (*       maybe_remove (name^".elf"); *)
 (*     end else *)
-(*       pp (" *  failure");   *)
+(*       pp_failure s;   *)
 (*   end; *)
 
   (* ** run OCaml *)
@@ -437,23 +505,25 @@ let run_test (tn,tl) =
   then result.caml_t := { ott = false; tp = Skipped }
   else begin
     let cmd = "../bin/ott "^t^" -o "^name^".ml" (* ^" > /dev/null"*) in
-    pp ("*** Ott-Ocaml: " ^ cmd);
+    let tgt = "Ott-OCaml" in
+    pp_tgt tgt cmd;
     if (command cmd) = 0
     then begin
-      pp (" * success");
+      pp_success tgt;
       let cmd = "ocamlc "^name^".ml" (* " > /dev/null"*) in
-      pp ("*** OCaml: " ^ cmd);
+      let tgt = "OCaml" in
+      pp_tgt tgt cmd;
       if (command cmd) = 0 then begin
 	result.caml_t := { ott = true; tp = Success };
-	pp (" *  success");
+	pp_success tgt;
 	maybe_remove (name^".cmo")
       end else begin
 	result.caml_t := { ott = true; tp = Failure };
-	pp (" *  failure")
+	pp_failure tgt
       end;
       maybe_remove (name^".ml")
     end else
-      pp (" *  failure");  
+      pp_failure tgt;  
   end;
 
   (* ** run LaTeX *)
@@ -461,27 +531,29 @@ let run_test (tn,tl) =
   then result.latex_t := { ott = false; tp = Skipped }
   else begin
     let cmd = "../bin/ott "^t^" -o "^name^".tex" (* ^ " > /dev/null"*) in
-    pp ("*** Ott-LaTeX: " ^ cmd);
+    let tgt = "Ott-LaTeX" in
+    pp_tgt tgt cmd;
     if (command cmd) = 0
     then begin
-      pp (" * success");
+      pp_success tgt;
       let cmd = "latex -interaction=batchmode "^name^".tex" (* ^ " > /dev/null"*) in
-      pp ("*** LaTeX: " ^ cmd);
+      let tgt = "LaTeX" in 
+      pp_tgt tgt cmd;
       if (command cmd) = 0 then begin
 	result.latex_t := { ott = true; tp = Success };
-	pp (" *  success");
+	pp_success tgt;
 	maybe_remove (name^".dvi");
 	maybe_remove (name^".aux");
 	maybe_remove (name^".log");
       end else begin
 	result.latex_t := { ott = true; tp = Failure };
-	pp (" *  failure");
+	pp_failure tgt;
 	maybe_remove (name^".log");
 	maybe_remove (name^".aux");
       end;
       maybe_remove (name^".tex")
     end else
-      pp (" *  failure");  
+      pp_failure tgt;  
   end;
 
   (* ** return the result *)
