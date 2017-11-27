@@ -160,14 +160,14 @@ let pp_coloured c s =
 let pp_bold s =
   if !colour_output then pp (_bold ^ s ^ _reset) else pp s
 
-let pp_tgt s cmd = 
-  pp ("*** " ^ s ^ ": " ^ cmd)
+let pp_tgt i_of_n s cmd = 
+  pp ("*** " ^ i_of_n ^ " " ^ s ^ ": " ^ cmd)
 
-let pp_success s =
-  pp_coloured green (" *  " ^ s ^ ": " ^ "success")
+let pp_success s name =
+  pp_coloured green (" *  " ^ name ^ " " ^ s ^ ": " ^ "success")
 
-let pp_failure s = 
-  pp_coloured red  (" *  " ^ s ^ ": " ^ "failure")
+let pp_failure s name = 
+  pp_coloured red  (" *  " ^ name ^ " " ^ s ^ ": " ^ "failure")
 
 let pp_report s =
   output_string !report_fd s;
@@ -319,7 +319,9 @@ let check_config t tp =
     else true
   with Not_found -> print_endline ("*** test "^t^" not found in config file"); true
 
-let run_test (tn,tl) =
+let run_test i n (tn,tl) =
+  let i_of_n = Printf.sprintf "(%d/%d)" i n in
+
   let t = 
     if List.length tl = 1 
     then "-i "^(List.hd tl)
@@ -333,7 +335,7 @@ let run_test (tn,tl) =
 (* 		 twelf_t = ref { ott = false; tp = Undone }; *)
                  caml_t = ref { ott = false; tp = Undone };
 		 latex_t = ref { ott = false; tp = Undone }; } in
-  pp ("\n*** " ^ tn ^ "\n");
+  pp ("\n*** " ^ i_of_n ^ " " ^ tn ^ "\n");
 
   (* ** preliminary *)
   let name = "testRegr"^(string_of_int (Random.int 1000)) in
@@ -344,25 +346,25 @@ let run_test (tn,tl) =
   else begin
     let cmd = "../bin/ott -show_sort false -show_defns false "^t ^" -o "^name^".v " (* ^" > /dev/null" *) in
     let tgt = "Ott-Coq" in
-    pp_tgt tgt cmd; 
+    pp_tgt i_of_n tgt cmd; 
     if (command cmd) = 0
     then begin
-      pp_success tgt;
+      pp_success tgt name;
       let cmd = "coqc -init-file _ott_coqrc.v "^name^".v > " ^ name ^ ".coq.out" (* was "/dev/null"*)  in
       let tgt = "Coq" in
-      pp_tgt tgt cmd;
+      pp_tgt i_of_n tgt cmd;
       if (command cmd) = 0 then begin
 	result.coq_t := { ott = true; tp = Success };
-	pp_success tgt;
+	pp_success tgt name;
 	maybe_remove (name^".vo");
 	maybe_remove (name^".glob")
       end else begin
 	result.coq_t := { ott = true; tp = Failure };
-	pp_failure tgt;
+	pp_failure tgt name;
       end;
       maybe_remove (name^".v")
     end else
-      pp_failure tgt;  
+      pp_failure tgt name;  
   end;
   (* Coq with native lists *)
   if (not !coq_test) || (not (check_config tn "CoqNL"))
@@ -370,25 +372,25 @@ let run_test (tn,tl) =
   else begin
     let cmd = "../bin/ott -coq_expand_list_types false "^t^" -o "^name^".v " (*^" > /dev/null"*) in
     let tgt = "Ott-Coq" in
-    pp_tgt tgt cmd; 
+    pp_tgt i_of_n tgt cmd; 
     if (command cmd) = 0
     then begin
-      pp_success tgt;
+      pp_success tgt name;
       let cmd = "coqc -init-file _ott_coqrc.v "^name^".v" in
       let tgt = "Coq" in
-      pp_tgt tgt cmd;
+      pp_tgt i_of_n tgt cmd;
       if (command cmd) = 0 then begin
 	result.coq_no_list_t := { ott = true; tp = Success };
-	pp_success tgt;
+	pp_success tgt name;
 	maybe_remove (name^".vo");
 	maybe_remove (name^".glob")
       end else begin
 	result.coq_no_list_t := { ott = true; tp = Failure };
-	pp_failure tgt;
+	pp_failure tgt name;
       end;
       maybe_remove (name^".v")
     end else
-      pp_failure tgt;  
+      pp_failure tgt name;  
   end;
   
   (* ** run Isa *)
@@ -397,10 +399,10 @@ let run_test (tn,tl) =
   else begin
     let cmd = "../bin/ott "^t^" -o "^name^".thy" (* ^" > /dev/null"*) in
     let tgt = "Ott-Isa" in
-    pp_tgt tgt cmd;
+    pp_tgt i_of_n tgt cmd;
     if (command cmd) = 0
     then begin
-      pp_success tgt;
+      pp_success tgt name;
       let cmd =
         (* Victor's suggestion *)
         "echo '(use_thy \"" ^ name ^ "\"; OS.Process.exit OS.Process.success) handle _ => (OS.Process.exit OS.Process.failure);' | isabelle console" in
@@ -410,17 +412,17 @@ let run_test (tn,tl) =
 	^ " | isabelle console \"\"" (*^ " > /dev/null"*) in (* was isabelle tty -p *)
 *)
       let tgt = "Isa" in
-      pp_tgt tgt cmd;
+      pp_tgt i_of_n tgt cmd;
       if (command cmd) = 0 then begin
 	result.isa_t := { ott = true; tp = Success };
-	pp_success tgt
+	pp_success tgt name
       end else begin
 	result.isa_t := { ott = true; tp = Failure };
-	pp_failure tgt;
+	pp_failure tgt name;
       end;
       maybe_remove (name^".thy")
     end else
-      pp_failure tgt;  
+      pp_failure tgt name;  
   end;
   (* ** run Isa07 *)
 (*   if (not !isa_test) || (not (check_config tn "Isa07")) *)
@@ -454,19 +456,19 @@ let run_test (tn,tl) =
   else begin
     let cmd = "../bin/ott "^t^" -o "^name^"Script.sml" (* ^" > /dev/null"*) in
     let tgt = "Ott-Hol" in
-    pp_tgt tgt cmd;
+    pp_tgt i_of_n tgt cmd;
     if (command cmd) = 0
     then begin
-      pp_success tgt;
+      pp_success tgt name;
       let cmd = "Holmake -I ../hol/ "^name^"Theory.uo" (* ^ " &> /dev/null"*) in
       let tgt = "HOL" in
-      pp_tgt tgt cmd;
+      pp_tgt i_of_n tgt cmd;
       if (command cmd) = 0 then begin
 	result.hol_t := { ott = true; tp = Success };
-	pp_success tgt;
+	pp_success tgt name;
       end else begin
 	result.hol_t := { ott = true; tp = Failure };
-	pp_failure tgt;
+	pp_failure tgt name;
       end;
       maybe_remove (name^"Theory.sml");
       maybe_remove (name^"Theory.sig");
@@ -474,7 +476,7 @@ let run_test (tn,tl) =
       maybe_remove (name^"Script.sml");
       maybe_remove (name^"Theory.uo");
     end else
-      pp_failure tgt;  
+      pp_failure tgt name;  
   end;
 
   (* ** run Twelf *)
@@ -506,24 +508,24 @@ let run_test (tn,tl) =
   else begin
     let cmd = "../bin/ott "^t^" -o "^name^".ml" (* ^" > /dev/null"*) in
     let tgt = "Ott-OCaml" in
-    pp_tgt tgt cmd;
+    pp_tgt i_of_n tgt cmd;
     if (command cmd) = 0
     then begin
-      pp_success tgt;
+      pp_success tgt name;
       let cmd = "ocamlc "^name^".ml" (* " > /dev/null"*) in
       let tgt = "OCaml" in
-      pp_tgt tgt cmd;
+      pp_tgt i_of_n tgt cmd;
       if (command cmd) = 0 then begin
 	result.caml_t := { ott = true; tp = Success };
-	pp_success tgt;
+	pp_success tgt name;
 	maybe_remove (name^".cmo")
       end else begin
 	result.caml_t := { ott = true; tp = Failure };
-	pp_failure tgt
+	pp_failure tgt name
       end;
       maybe_remove (name^".ml")
     end else
-      pp_failure tgt;  
+      pp_failure tgt name;  
   end;
 
   (* ** run LaTeX *)
@@ -532,28 +534,28 @@ let run_test (tn,tl) =
   else begin
     let cmd = "../bin/ott "^t^" -o "^name^".tex" (* ^ " > /dev/null"*) in
     let tgt = "Ott-LaTeX" in
-    pp_tgt tgt cmd;
+    pp_tgt i_of_n tgt cmd;
     if (command cmd) = 0
     then begin
-      pp_success tgt;
+      pp_success tgt name;
       let cmd = "latex -interaction=batchmode "^name^".tex" (* ^ " > /dev/null"*) in
       let tgt = "LaTeX" in 
-      pp_tgt tgt cmd;
+      pp_tgt i_of_n tgt cmd;
       if (command cmd) = 0 then begin
 	result.latex_t := { ott = true; tp = Success };
-	pp_success tgt;
+	pp_success tgt name ;
 	maybe_remove (name^".dvi");
 	maybe_remove (name^".aux");
 	maybe_remove (name^".log");
       end else begin
 	result.latex_t := { ott = true; tp = Failure };
-	pp_failure tgt;
+	pp_failure tgt name;
 	maybe_remove (name^".log");
 	maybe_remove (name^".aux");
       end;
       maybe_remove (name^".tex")
     end else
-      pp_failure tgt;  
+      pp_failure tgt name;  
   end;
 
   (* ** return the result *)
@@ -636,14 +638,16 @@ let dump_baseline_fc () =
 
 let compute_baseline_fc () = 
   let baseline = ref [] in
-  List.iter
-    ( fun t ->
-      let result_t = run_test t in
+  let n_tests = List.length !tests in 
+  List.iteri
+    ( fun i -> 
+      fun t ->
+      let result_t = run_test i n_tests t in
       baseline := ((fst t),result_t)::!baseline )
-    !tests;
+    (List.rev !tests);
   if file_exists !baseline_file_name then remove !baseline_file_name;
   let baseline_fd = open_out_bin !baseline_file_name in
-  Marshal.to_channel baseline_fd !baseline [];
+  Marshal.to_channel baseline_fd (List.rev !baseline) [];
   close_out baseline_fd;
   pp "\n*** baseline built succesfully"
 
@@ -658,9 +662,11 @@ let test_fc auto =
   print_endline "end content of baseline";
 
   (* ** for each test *)
-  List.iter
-    ( fun (tn,tl) ->
-      let result_t = run_test (tn,tl) in
+  let n_tests = List.length !tests in 
+  List.iteri
+    ( fun i -> 
+      fun (tn,tl) ->
+      let result_t = run_test i n_tests (tn,tl) in
       summary := (tn,result_t)::!summary;
       try
         let result_baseline = List.assoc tn baseline in
@@ -673,7 +679,7 @@ let test_fc auto =
         report "OCaml" !(result_t.caml_t) !(result_baseline.caml_t);
         report "LaTeX" !(result_t.latex_t) !(result_baseline.latex_t);
       with Not_found -> pp ("*** test " ^ tn ^ " not in the baseline") )
-    !tests;
+    (List.rev !tests);
   (* ** print summary *)
   pp_report ("\n*** final report");
 
