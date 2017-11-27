@@ -1,0 +1,52 @@
+% test17.9.ott  dot form test
+
+metavar ident, x ::= {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ ocaml int }}
+
+indexvar index, n , i ::= {{ isa nat }} {{ coq nat }} {{ hol num }} {{ ocaml int }}
+
+  grammar
+
+    E :: 'E_' ::= {{ isa ( ident * t ) list  }}
+      | < x1 : t1 , .. , xn : tn > :: :: 2  {{ isa  List.rev [[x1 t1 .. xn tn]] }}
+ 
+    t :: 't_' ::=
+      | unit               ::   :: unit
+
+    K :: 'K_' ::=
+      | Type               ::   :: Type
+
+
+formula :: formula_ ::=          
+  | judgement              :: :: judgement
+  | formula1 .. formulan   :: :: dots
+%  | formula1 .. formulan   :: :: realdots {{ isa (List.list_all (\<lambda> b . b) ( [[ formula1 .. formulan ]] ) ) }}
+
+terminals :: terminals_ ::=
+  | |-                     ::   :: turnstile {{ tex \vdash }}
+  | <                      ::   :: langle {{ tex \langle }}
+  | >                      ::   :: rangle {{ tex \rangle }}
+
+defns
+  Jtype :: '' ::= 
+
+defn
+|- E  :: :: Eok :: Eok_ by
+
+
+--------- :: 1
+|- < >
+
+---------------------------- :: 2
+|- <x1:t1,..,xn:tn> 
+
+|- t1:K1  .. |- tn:Kn
+---------------------------- :: 3
+|- <x1:t1,..,xn:tn> 
+
+
+defn
+|- t : K  :: :: tK :: tK_ by
+
+--------------- :: 1
+|- unit : Type
+

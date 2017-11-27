@@ -1,0 +1,185 @@
+metavar ident , x   {{ tex \mathtt{[[x]]} }} ,
+   y {{ tex \mathtt{[[y]]} }} , this {{ tex \mathtt{[[this]]} }} ::= 
+  {{ lex \([a-z]\|[_]\)\([A-Z]\|[a-z]\|[0-9]\|[_]\|[']\)* }} 
+metavar location , l {{ tex \ell }} ::=
+  {{ lex \([a-z]\|[_]\)\([A-Z]\|[a-z]\|[0-9]\|[_]\|[']\)* }} 
+metavar class_name , C    {{ tex \mathtt{[[C]]} }}  , D   {{ tex \mathtt{[[D]]} }} , E   {{ tex \mathtt{[[E]]} }}   ::=
+  {{ lex \([a-z]\|[_]\)\([A-Z]\|[a-z]\|[0-9]\|[_]\|[']\)* }} 
+metavar field_name , f   {{ tex \mathtt{[[f]]} }} ::=
+  {{ lex \([a-z]\|[_]\)\([A-Z]\|[a-z]\|[0-9]\|[_]\|[']\)* }} 
+metavar method_name , m   {{ tex \mathtt{[[m]]} }} ::=
+  {{ lex \([a-z]\|[_]\)\([A-Z]\|[a-z]\|[0-9]\|[_]\|[']\)* }} 
+metavar constr_name , K   {{ tex \mathtt{[[K]]} }} ::=
+  {{ lex \([a-z]\|[_]\)\([A-Z]\|[a-z]\|[0-9]\|[_]\|[']\)* }} 
+indexvar index , h , i , j , k , n ::=   {{ lex [0-9]+ }}
+  
+grammar
+
+class_def  :: C_ ::=
+ | class C extends D '{' C1 f1 , .. , Ci fi ;  K , M1 , .. , Mj '}' :: :: cdef
+
+
+
+constr_def , KK :: K_ ::=
+ | C ( C1 x1 , .. , Ci xi , C'1 x'1 , .. , C'j x'j ) 
+    '{' super ( x1 , .. , xk ) ';' f1 = x'1 , .. , fh = x'h ';' '}'  :: :: kdef
+
+
+method_def ,  M  :: M_ ::=
+ | C m ( C1 x1 , .. , Ci xi ) '{' return  e ; '}'  :: :: mdef
+
+expr , e {{ tex \mathtt{[[e]]} }} :: E_ ::=
+     | x                                              ::   :: ide
+     | e . m ( e1 , .. , en )                         ::   :: app
+     | e . f                                          ::   :: sel
+     | new C ( e1 , .. , en )                         ::   :: obj
+     | ( C ) e                                        ::   :: cast
+     | ( e )                                          :: M :: parn
+     | '{' e1 / x1 , .. , ek / xk , this / e' '}' e'' :: M :: subs
+
+terminals :: terminals_ ::=
+  |  -->       :: :: red {{ tex \longrightarrow }}
+  |  ->       :: ::  arrow {{ tex \rightarrow }}
+  |  extends   :: :: ext {{ tex \mathtt{extends} }}
+  |  return    :: :: ret {{ tex \mathtt{return} }}
+  |  =         :: :: eq
+  |  <:        :: :: lt  {{ tex \mathtt{<:} }}
+  |  !<:       :: :: nlt {{ tex \mathtt{\not<:} }}
+  |  !=        :: :: neq {{ tex \mathtt{\not=} }}
+  |  |-        :: :: turnstile {{ tex \vdash }}
+
+G {{ tex \Gamma }} :: 'G_' ::=
+ | x : C                :: :: type
+ | G , G'                   :: M :: comma
+ | G1 , .. , Gn             :: M :: dots
+
+
+formula :: formula_ ::=
+ | judgement                                :: :: judgement
+ | formula1 .. formulan                     :: :: dots
+ | C != D                                   :: :: neq
+ | C !<: D                                  :: :: nsub
+ | fields ( C ) = C1 f1 , .. , Cn fn        :: :: flds
+ | stupid                                   :: :: stupid
+ | CT ( C ) = class_def                     :: :: ct
+ | G = G'                                   :: :: geq
+ | K = KK                                   :: :: keq
+ | mbody ( m , C ) = ( x1 , .. , xn ,  e )  :: :: plain
+ | 1 <= i <= n  :: :: forall 
+                {{ tex 1 \leq  [[i]] \leq [[n]] }}
+                {{ isa (1<=[[i]] & i<=[[n]])  }}
+
+defns
+Jop :: '' ::=
+
+defn 
+x : C isin G :: :: tin :: tin_ {{ tex [[x]] [[:]] [[C]] \in [[G]] }} by
+
+----------:: 1
+x:C isin G
+
+x:C isin G
+-------------- :: 2
+x:C isin G,x':C'
+
+defn
+mtype ( m , C ) = D1 , .. , Dn -> C' :: :: get :: get_  by
+
+--------------------- :: placeholderdefintion
+mtype ( m , C ) = D1 , .. , Dn -> C 
+
+defn
+override ( C1 , .. , Cn -> C' , m , D ) :: :: ovr :: ovr_  by
+
+--------------------- :: placeholderdefintion
+override ( C1 , .. , Cn -> C0 , m , D ) 
+
+defn
+C <: D :: :: sub :: S_ by
+
+----------  :: refl
+C <: C
+
+C <: D 
+D <: E
+----------- :: trans
+C <: E
+
+CT(C) = class C extends D { C1 f1,..,Ci fi; K, M1, ..,Mj }
+-------------------------------------------------------- :: inh
+c <: D
+
+defn
+e --> e'  :: :: red :: R_ by
+
+1 <= i <= k
+fields(C)= C1 f1,..,Cn fn
+------------------------------------------------------------------- :: field
+:deeper: ( new C(e1 ,.., en) ) .fi  --> ei
+
+mbody(m,C)=(x1,..,xk, e)
+-------------------------------------------------------------------- :: invk
+:deeper: (new C(e1 ,.., en)).m(e'1,..,e'k) --> {e'1/x1,..,e'k/xk,this/new C(e1,..,en)} e
+
+C<:D
+-------------------------------------------------------------------- :: cast
+:deeper: (D)(new C(e1,..,en)) --> new C(e1,..,en)
+
+defn
+G |- e : C :: :: Ty :: Ty_ by
+
+x : C isin G
+----------------- ::  var
+G |- x : C
+
+G |- e0 : C0
+mtype(m, C0) = D1,..,Dn -> C
+G |- e1: C1 .. G |- en: Cn
+C1 <: D1 .. Cn <: Dn
+------------------------ :: invk
+G |- e0.m(e1,..,en) : C
+
+fields(C) = D1 f1, .. , Dn fn
+G |- e1: C1 .. G |- en: Cn
+C1 <: D1 .. Cn <: Dn
+--------------- :: new
+G |- new C(e1,..,en): C
+
+G |- e : D
+D <: C
+--------------- :: cast1
+G |- (C)e: C
+
+G |- e : D
+C <: D
+C != D
+--------------- :: cast2
+G |- (C)e: C
+
+G |- e : D
+C !<: D
+D !<: C
+stupid
+--------------- :: cast3
+G |- (C)e: C
+
+defn
+class_def OK  :: :: MCl :: MCl_ by
+
+
+
+K = C(D1 x1,..,Di xi, C1 y1 ,..,Cj yj) { super(x1,..,xi); f1 = y1,.., fj = yj;}
+fields(D) = D1 f'1, .., Di f'i
+M1 OKIN C .. Mn OKIN C
+---------------------------------------------------------------------------:: 1
+class C extends D {C1 f1,..,Cj fj; K, M1,..,Mn} OK
+
+defn
+M OKIN C :: :: MTy :: MTy_ by
+
+x1 : C1 , .. , xn : Cn  |- e' : D'
+D' <: C'
+CT(C) = class C extends D { C'1 f1,.., C'i fi; K, M1, ..,Mj }
+override(C1,..,Cn -> C',m, D)
+--------------------------------------------- :: meth
+C' m (C1 x1,..,Cn xn) { return e'; } OKIN C

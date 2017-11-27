@@ -1,0 +1,31 @@
+% test17.7.ott  dot form test
+
+metavar value_name , x ::=
+  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}
+
+indexvar index , n ::= {{ isa nat }} {{ coq nat }} {{ coq-equality }} {{ hol num }}
+
+  grammar
+
+% binding a dot form of metavars
+
+    a :: 'a_' ::= 
+      | x                                    :: :: var
+      | let x1 = a1 and .. and xn = an  in a :: :: let  (+ bind x1..xn in a +)
+
+
+% and a similar example, but showing the optimised case where no 
+% list projection is required
+    b :: 'b_' ::= 
+      | x                                    :: :: var
+      | let x1 .. xn  in a                   :: :: let  (+ bind x1..xn in a +)
+
+
+substitutions
+  single   a value_name :: subst  
+  multiple a value_name :: msubst 
+
+substitutions
+  single   b value_name :: bsubst  
+  multiple b value_name :: bmsubst 
+

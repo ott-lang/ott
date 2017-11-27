@@ -1,0 +1,53 @@
+embed
+{{ tex
+\newcommand{\helloone}{Hello, world.}
+}}
+{{ coq
+Definition index := nat.
+}}
+{{ hol
+val _ = type_abbrev("index", ``:num``);
+}}
+{{ isa
+types index = "nat"
+}}
+
+%% Hmm, seems I can't use ich here, I wonder why
+%%indexvar i ::= {{ich index}}
+indexvar i ::= {{coq index}} {{isa index}} {{hol index}}
+
+embed
+{{ tex
+\helloone
+}}
+
+grammar
+thing :: thing_ ::=
+  | Normal  ::   :: normal
+  | meta    :: M :: meta {{ ich thing_meta }}
+
+embed
+{{ tex
+Grammar one to relations one.
+}}
+{{ coq
+Definition thing_meta := thing_normal.
+}}
+%% TODO: hol, isa
+
+defns
+relations :: '' ::=
+defn
+thing ok :: :: ok :: ok_ by
+
+---------------------------------------------------------------- :: wibble
+meta ok
+
+embed
+{{ tex
+Goodbye, world.
+}}
+{{ coq
+Definition okay := ok.
+}}
+%% TODO: hol, isa

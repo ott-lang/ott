@@ -1,0 +1,66 @@
+metavar termvar, x ::=
+  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}
+  {{ tex \mathit{[[termvar]]} }} {{ com  term variable  }} 
+
+metavar typvar, X ::=
+  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}
+  {{ tex \mathit{[[typvar]]} }} {{ com  type variable  }} 
+
+grammar
+
+  t :: 't_' ::=                                         {{ com term }}
+    | x                   ::   :: Var                     {{ com variable }}         
+    | \ x . t             ::   :: Lam  (+ bind x in t +)  {{ com abstraction }}      
+    | t t'                ::   :: App                     {{ com application }}      
+    | ( t )               :: M :: paren   {{ ich [[t]] }} 
+    | { t / x } t'        :: M :: tsub    {{ ich ( tsubst_t [[t]] [[x]] [[t']] ) }}
+
+  v :: 'v_' ::=                                         {{ com  value }}
+    | \ x . t             ::   :: Lam                     {{ com abstraction }}
+
+  terminals :: 'terminals_' ::=
+    | \                   ::   :: lambda     {{ tex \lambda }}
+    | -->                 ::   :: red        {{ tex \longrightarrow }}
+    |  ->                 ::   :: arrow      {{ tex \rightarrow }}
+    | |-                  ::   :: turnstile  {{ tex \vdash }}
+    | in                  ::   :: in         {{ tex \in }}
+
+  formula :: 'formula_' ::=          
+    | judgement           ::   :: judgement
+    | not ( formula )     ::   :: not  
+       {{ isa Not([[formula]]) }}
+       {{ coq not ([[formula]]) }}
+       {{ hol ~([[formula]]) }}
+    | x = x'              ::   :: eqv 
+       {{ ich [[x]]=[[x']] }}
+    | x : T in G          ::   :: xTG 
+       {{ isa ? G1 G2. [[G]] = G1 @ ([[x]],[[T]])#[[G2]] & [[x]]~:fst ` set G1 }}
+       {{ coq (exists G1, exists G2, (([[G]] = (app G1 (cons ([[x]],[[T]]) [[G2]]))) /\ not (In [[x]] (List.map (fun (h:termvar_t*T_t) => match h with (h1,h2) => h1 end) G1))))  }}
+       {{ hol ? G1 G2. ([[G]] = G1 ++ ([[x]],[[T]])::[[G2]]) /\ ~(MEM [[x]] (MAP FST G1)) }}
+
+
+subrules
+  v <:: t
+
+substitutions
+  single t x :: tsubst 
+
+
+defns
+  Jop :: '' ::=
+
+    defn
+    t1 --> t2 ::  :: reduce :: ''       {{ com $[[t1]]$ reduces to $[[t2]]$ }} by 
+
+
+    --------------------------  :: ax_app
+    (\x.t12) v2 -->  {v2/x}t12
+
+    t1 --> t1'
+    -------------- :: ctx_app_fun
+    t1 t --> t1' t
+
+    t1 --> t1'
+    -------------- :: ctx_app_arg
+    v t1 --> v t1'
+

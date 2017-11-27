@@ -33,6 +33,8 @@
 
 # REGRESSION ##########################################################
 
+all: regression
+
 regression: regression.ml
 	ocamlc unix.cma str.cma -o regression -dtypes regression.ml
 
@@ -60,6 +62,11 @@ simple: regression
 	-make -C ../coq
 	./regression  -todo_list -todo_list_file regression-small.otl -keep_temp
 
+clean:
+	rm -rf *~
+	rm -rf regression
+	rm -rf testRegr*
+
 clean-regr:
 	rm -rf testRegr*
 	rm -rf *~
@@ -67,8 +74,8 @@ clean-regr:
 
 # Jenkins
 
-regression-jenkins: 
-	ocamlc unix.cma str.cma -o regression-jenkins -dtypes regression-jenkins.ml
+# regression-jenkins: 
+# 	ocamlc unix.cma str.cma -o regression-jenkins -dtypes regression-jenkins.ml
 
-run-jenkins: regression-jenkins
-	./regression-jenkins
+run-jenkins: regression
+	./regression -baseline_file baseline-jenkins.bl -todo_list -jenkins

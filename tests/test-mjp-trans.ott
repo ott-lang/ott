@@ -1,0 +1,428 @@
+
+ embed 
+
+{{ coq
+Parameter heap : Set.
+Parameter star : heap -> heap -> option heap.
+Parameter empheap : heap.
+
+Axiom associative_star  :  
+      forall h1 h2 h3 h4 h5,
+      star h1 h2 = Some h3  
+      -> star h3 h4 = Some h5
+      -> exists h6, star h2 h4 = Some h6 /\ star h1 h6 = Some h5.
+
+Axiom commutative_star :
+      forall h1 h2,
+         star h1 h2 = star h2 h1.
+
+Axiom injective_star :
+      forall h1 h2 h3,
+         star h1 h2 = star h1 h3 -> h2 = h3.
+
+Axiom empheap_unit :
+      forall h1,  star h1 empheap = Some h1.
+
+Definition pred : Set := heap -> bool.
+Definition heappred : Set := heap -> option bool.
+Definition heappred_local (hp : heappred) : Prop :=
+    forall h1 h h1' t,
+      star h1 h = Some h1'
+      -> hp h1 = Some t
+      -> hp h1' = Some t.
+
+Definition heappred_safe (hp : heappred ) : Prop :=
+	  forall h1  h'  h1', 
+	    star h1 h' = Some h1' 
+	    -> hp h1' = None
+	    -> hp h1 = None.
+
+Definition precise (p : pred) : Prop :=
+    forall h1 h2 h h' h'', 
+       star h1 h' = h
+       -> star h2 h'' = h
+       -> p h1 = true 
+       -> p h2 = true 
+       -> h1 = h2.
+
+
+Definition heaprel : Set := (heap * heap) -> bool.
+Definition heaprel_local (hr : heaprel) : Prop := 
+	  forall h1 h' h1' h2' hx, 
+	    hr (h1,hx) =true
+ 	    -> star h1 h' = Some h1' 
+	    -> hr (h1',h2') = true
+	    -> exists h2, (hr (h1,h2) = true /\ star h2 h' = Some h2' ).
+(*
+Definition heaprel_safe (hr : heaprel) : Prop := 
+	  forall h1 h2 h'  h1' h2', 
+	    star h1 h' = Some h1' 
+	    -> star h2 h' = Some h2' 
+	    -> hr (h1,h2) = true
+	    -> hr (h1',h2') = true.
+*)
+
+Definition heaprel_safe (hr : heaprel) : Prop := 
+	  forall h1  h'  h1', 
+	    star h1 h' = Some h1' 
+	    -> (forall h, hr (h1',h) = false)
+	    -> (forall h, hr (h1,h) = false).
+
+
+
+Definition reflex (hr : heaprel) : Prop :=
+	   forall h, hr ( h,h) = true.
+
+
+(*Axiom emprel_diagonal : 
+      (forall h, emprel (h,h) = true)
+      /\ (forall h h', h != h' -> emprel(h,h') = false).
+*)
+
+Record localrel : Set := mkMap {
+  hr : heaprel;
+  proof_local : heaprel_local hr;
+  proof_safe : heaprel_safe hr}.
+
+Record precisepred : Set := mkPPred {
+  predp : pred;
+  proofprecise:  precise predp}.
+
+Record reflrel : Set := mkReflRel {
+  hrr : heaprel;
+  proofrr : reflex hrr
+}.
+
+Parameter emprel : reflrel.
+
+
+Record localpred : Set := mkPred {
+  hp : heappred;
+  proofp : heappred_local hp;
+  proofsafe : heappred_safe hp}.
+
+Definition union' (hr1 :heaprel) (hr2 : heaprel)  :heaprel := 
+	 fun (hp : (prod heap heap)) => if (hr1 hp) then true else (hr2 hp).
+
+Definition inter' (hr1 :heaprel) (hr2 : heaprel)  :heaprel := 
+	 fun (hp : (prod heap heap)) => if (hr1 hp) then (hr2 hp) else false.
+
+Lemma union_refl_is_refl:
+   forall (hr1 hr2 : reflrel), 
+      reflex (union' (hrr hr1) (hrr hr2)).
+Proof.
+intros; unfold reflex; unfold union';
+intros; generalize (proofrr hr1 h); 
+destruct (hrr hr1 (h,h)); congruence.
+Qed.
+
+Lemma inter_refl_is_refl:
+   forall (hr1 hr2 : reflrel), 
+      reflex (inter' (hrr hr1) (hrr hr2)).
+Proof.
+intros; unfold reflex; unfold inter';
+intros; generalize (proofrr hr1 h); 
+generalize (proofrr hr2 h); 
+destruct (hrr hr1 (h,h));
+destruct (hrr hr2 (h,h)); congruence.
+Qed.
+
+Definition union (hr1 :reflrel) (hr2 : reflrel)  :reflrel :=
+  mkReflRel (union' (hrr hr1) (hrr hr2))
+            (union_refl_is_refl hr1 hr2).	   
+
+Definition inter (hr1 :reflrel) (hr2 : reflrel)  :reflrel :=
+  mkReflRel (inter' (hrr hr1) (hrr hr2))
+            (inter_refl_is_refl hr1 hr2).	   
+
+
+Definition disjoint  (hhh : prod (prod heap heap) heap) : Prop := 
+   match hhh with 
+   | (h1,h2,h3) =>
+      exists h', exists h'',
+         star h1 h2 = Some h' /\ star h' h3 = Some h''
+   end.
+
+}}
+
+
+
+
+
+
+
+
+grammar 
+
+  h :: '' ::= {{ coq heap }}
+    | emph			:: M :: EmpH  {{ coq empheap }}
+
+  t :: 't_' ::=                                         {{ com commands }}
+    | skip                   ::   :: Skip                    {{ com skip }}         
+    | A                      ::   :: Abs                     {{ com Abstract Command }}
+    | t ; t'                 ::   :: Seq  		     {{ com sequencing }}      
+    | t || t'                ::   :: Par                     {{ com parallel composition}}   
+    | atomic( B ) { t } [ P ]          ::   :: Atomic                  {{ com atomic operation }}   
+    | while( B ) { t }          ::   :: While                  {{ com while loop }}   
+    | ( t )               :: M :: paren   {{ ich [[t]] }} 
+
+ wf_t :: 'wf_t_' ::=                                       {{ com commands }}
+    | skip                   ::   :: Skip                    {{ com skip }}         
+    | A                      ::   :: Abs                     {{ com Abstract Command }}
+    | wf_t ; wf_t'                 ::   :: Seq  		     {{ com sequencing }}      
+    | wf_t || wf_t'                ::   :: Par                     {{ com parallel composition}}   
+    | atomic( B ) { no_atomic_t } [ P ]         ::   :: Atomic                  {{ com atomic operation }}   
+    | while( B ) { wf_t }          ::   :: While                  {{ com while loop }}   
+    | ( wf_t )               :: M :: paren   {{ ich [[t]] }} 
+
+
+  no_atomic_t :: 'no_atomic_t_' ::=                        {{ com commands }}
+    | skip                   ::   :: Skip                    {{ com skip }}         
+    | A                      ::   :: Abs                     {{ com Abstract Command }}
+    | no_atomic_t ; no_atomic_t'                 ::   :: Seq  		     {{ com sequencing }}      
+    | no_atomic_t || no_atomic_t'                ::   :: Par                     {{ com parallel composition}}   
+    | while( B ) { no_atomic_t }          ::   :: While                  {{ com while loop }}   
+    | ( no_atomic_t )               :: M :: paren   {{ ich [[t]] }} 
+
+
+  l :: 'label_' ::= 
+    | R			::   :: Rely
+    | p 		::   :: Prog
+
+  n :: 'step_' ::= 	     	{{ coq nat }}
+    | n + 1		:: :: Succ  {{ coq (S [[n]]) }}
+    | 0    		:: :: Zero  {{ coq 0 }}
+
+  s :: '' ::= 		       {{ coq prod (prod heap  heap) heap }}
+    | ( h1 , h2 , h3 )	::  :: state  {{ coq ([[h1]],[[h2]],[[h3]]) }} 
+
+ A  :: '' ::= {{ com abstract command }} {{ coq localrel  }}
+    | s     	       	:: M :: foo {{ coq do not use}}
+
+ B  :: '' ::= {{ com abstract boolean }} {{ coq localpred }}
+
+ P  :: '' ::= {{ com abstract boolean }} {{ coq precisepred }}
+
+ R, G :: '' ::= {{ com interference }} {{ coq reflrel  }}
+    | Emp    	    	:: M :: Emp {{ coq emprel }}
+ 
+  Config :: '' ::=                               {{ com  configuration }}
+    | ( t , s )                 ::   :: config   
+    | fault                 	::   :: fault
+
+
+  formula :: formula_ ::= 
+    | A ( h1 , h2 )	  ::	:: Command    {{ coq (hr [[A]]) ([[h1]],[[h2]]) = true }}
+    | R ( h1 , h2 )  	  ::	:: Relation   {{ coq hrr [[R]] ([[h1]],[[h2]]) = true }}
+    | h1 * h2 = h3	  ::	:: HeapEq     {{ coq star [[h1]] [[h2]] = Some [[h3]] }}
+    | h1 notin A  	  ::	:: RelationNotIn    {{ coq (forall h2, (hr [[A]]) ([[h1]],h2) = false) }}
+    | disjoint ( h1 , h2 , h3 ) ::    :: Disjoint  {{ coq disjoint ([[h1]],[[h2]],[[h3]]) }}  
+    | B ( h ) 	 	  :: 	:: BooleanTrue    {{ coq (hp [[B]]) ([[h]]) = Some true }}
+    | P ( h ) 	 	  :: 	:: PredTrue    {{ coq (predp [[P]] [[h]]) = true }}
+    | ~ B ( h ) 	 	  :: 	:: BooleanFalse    {{ coq (hp [[B]]) ([[h]]) = Some false }}
+    | B fault on h 	 	  :: 	:: BooleanFault    {{ coq (hp [[B]]) ([[h]]) = None }}
+    | h |/= P1 * true		  :: 	:: PredNotSats  {{ coq (forall h1 h2, star h1 h2 = Some [[h]] -> (predp [[P1]] h1) = false) }}
+    | judgement	 	  :: 	:: judgement
+
+subrules
+  wf_t <:: t
+  no_atomic_t <:: wf_t
+
+
+defns
+  Jop :: '' ::= 
+
+    defn
+    Config1 - l -> Config2 ::  :: reduce :: ''  {{ com $[[Config1]]$ reduces to $[[Config2]]$ }}
+    {{ tex [[Config1]] \stackrel{[[l]]}{\longrightarrow} [[Config2]] }} by 
+
+    -----------------------  :: skip_seq
+    (skip; t, s) -p-> (t,s)  
+
+    (t, s) -p-> (t1,s')  
+    --------------------------  :: seq
+    (t; t', s) -p-> (t1;t',s')  
+
+
+    ---------------------------  :: skip_par_l
+    (skip || t, s) -p-> (t,s)  
+
+
+    ---------------------------  :: skip_par_r
+    (t || skip, s) -p-> (t,s)  
+
+
+    (t1, s) -p-> (t1',s')  
+    --------------------------------  :: par_l
+    (t1 || t2, s) -p-> (t1' || t2,s')  
+
+
+    (t2, s) -p-> (t2',s')  
+    --------------------------------  :: par_r
+    (t1 || t2, s) -p-> (t1 || t2',s')  
+
+
+    A(h1,h1')   
+    disjoint (h1',h2,h3)
+    -----------------------------------------  :: program_action
+    (A, (h1,h2,h3)) -p-> (skip,(h1',h2,h3))  
+
+    P1 ( h2' )
+    B ( h )
+    h1' * h2' = h'
+    h1 * h2 = h
+    (t, (h,emph,h3)) -Emp->n (skip, (h',emph,h3'))
+    ---------------------------------------------------  :: atomic
+    (atomic(B) {t} [P1], (h1,h2,h3)) -p-> (skip, (h1',h2',h3'))  
+
+    B ( h )
+    h' |/= P1 * true 
+    h1 * h2 = h
+    (t, (h,emph,h3)) -Emp->n (skip, (h',emph,h3'))
+    ---------------------------------------------------  :: fault_atomic_exit
+    (atomic(B) {t} [P1], (h1,h2,h3)) -p-> fault  
+
+    B ( h )
+    h1 * h2 = h
+    (t, (h,emph,h3)) -Emp->n fault
+    ---------------------------------------------------  :: fault_atomic_body
+    (atomic(B) {t} [P1], (h1,h2,h3)) -p-> fault
+
+
+    B fault on h 
+    h1 * h2 = h
+    ---------------------------------------------------  :: fault_atomic_guard
+    (atomic(B) {t} [P1], (h1,h2,h3)) -p-> fault
+
+    B(h1)
+    -------------------------------------------------------------  :: while_true
+    (while(B) {t}, (h1,h2,h3)) -p-> (t; while(B) {t}, (h1,h2,h3))
+
+    ~B(h1) 
+    ---------------------------------------------------  :: while_false
+    (while(B) {t}, (h1,h2,h3)) -p-> (skip, (h1,h2,h3))
+
+    B fault on h1 
+    ---------------------------------------------------  :: while_fault
+    (while(B) {t}, (h1,h2,h3)) -p-> fault
+
+
+    h1 notin A
+    -----------------------  :: fault_prim
+    (A, (h1,h2,h3)) -p-> fault  
+
+
+    (t, s) -p-> fault  
+    -----------------------  :: fault_seq
+    (t;t2, s) -p-> fault  
+
+    (t, s) -p-> fault  
+    -----------------------  :: fault_par_l
+    (t || t2, s) -p-> fault  
+
+    (t, s) -p-> fault  
+    -----------------------  :: fault_par_r
+    (t2 || t, s) -p-> fault  
+
+
+    R(h2,h2')
+    disjoint (h1,h2',h3')
+    ---------------------------------------  :: environment_action
+    (t, (h1,h2,h3)) - R -> (t,(h1,h2',h3'))  
+
+
+    defn 
+    Config1 - R -> n Config2 :: :: reduces :: ''  
+      {{ tex [[Config1]] \stackrel{[[l]]}{\longrightarrow}\,\!\!\!^* [[Config2]] }} by	
+
+
+      ------------------------  :: refl
+      Config1 - R -> 0 Config1
+
+
+      Config1 - R -> Config2
+      Config2 - R -> n Config3
+      -----------------------  :: env
+      Config1 - R -> n+1 Config3
+
+      Config1 - p -> Config2
+      Config2 - R -> n Config3
+      --------------------------  :: prog
+      Config1 - R -> n+1 Config3
+
+
+
+
+embed
+{{ coq
+
+
+Fixpoint guarantee  (n:nat) (t1 : t)  (s1:s) (R1: R) (G1:R) {struct n} : Prop := 
+  match n with 
+    | 0 => True
+    | S(n) => 
+	(forall h1 h2 h3 h1' h2' h3' t', 
+	  s1 = (h1,h2,h3) ->   
+          [[ (t1,(h1,h2,h3)) -p-> (t',(h1',h2',h3'))]] -> 
+	  [[G1 (h2,h2')]])
+	/\
+	(forall s' t' l, [[ (t1,s1) -l-> (t',s')]] -> 
+		   guarantee n t' s' R1 G1 )
+        /\
+	(forall Config', [[ (t1,s1) -p-> Config' ]] -> ~ Config'=fault )
+  end.          
+
+Fixpoint safe  (n:nat) (t1 : t)  (s1:s) (R1: R) {struct n} : Prop := 
+  match n with 
+    | 0 => True
+    | S(n') => 
+	(forall s' t' l, [[ (t1,s1) -l-> (t',s')]] -> 
+		   safe n' t' s' R1 )
+        /\
+	(forall Config', [[ (t1,s1) -p-> Config' ]] -> ~ Config'=fault )
+  end.          
+
+}}
+
+{{ tex
+
+\section{Look, see}
+
+Here's the original rendering:
+
+\[ \ottdruleenv{} \]
+%
+And here's Matt's LaTeX hackery in use (potentially):
+
+% have to avoid consecutive } } within an embed section
+\newcounter{premiseno}
+\setcounter{premiseno}{1}
+\renewcommand{\ottpremise}[1]{
+\ifthenelse{\equal{\value{premiseno} }{1} }{}{\\}
+##1
+\stepcounter{premiseno}
+}
+
+\renewcommand{\ottdrule}[4][]{
+\frac{\begin{array}{l}##2\end{array} }{##3}\quad\textsc{##4}
+}
+
+\[ \ottdruleenv{2} \]
+
+\setcounter{premiseno}{1}
+\renewcommand{\ottpremise}[1]{
+\ifthenelse{\equal{\value{premiseno} }{1 } }{\array{l@{\hspace{1cm} }l @{\hspace{1cm} }l} }{}
+##1
+\ifthenelse{\equal{\value{premiseno} }{3 } }{\endarray\\}{
+\ifthenelse{\equal{\value{premiseno} }{4 } }{}{ & }
+}
+\stepcounter{premiseno}
+}
+
+\renewcommand{\ottdrule}[4][]{
+\frac{\begin{array}{l}##2\end{array} }{##3}\quad\textsc{##4}
+}
+\[ \ottdrulefaultXXatomicXXexit{2} \]
+
+
+}}

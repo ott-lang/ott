@@ -1,0 +1,278 @@
+
+metavar ident , x ::= {{ isa string }} {{ coq positive }}  {{ lex '[A-Z]+' }}
+metavar X ::= {{ isa string }} {{ coq positive }}  {{ lex '[A-Z]+' }}
+metavar U ::= {{ isa string }} {{ coq positive }}  {{ lex '[A-Z]+' }}
+
+grammar
+  exp , e :: Exp_ ::= 
+        | x                     ::   :: ident
+        | U . Term              ::   :: module
+        | [ e ] _ c ^ h         ::   :: coloured {{ tex [ [[e]] ]_[[c]]^[[h]] }}
+        | ()                    ::   :: unit
+        | ( exp , exp' )        ::   :: pair      
+        | function x : type -> exp      ::   :: 'fun' (+ bind x in exp +)
+        | exp exp'              ::   :: app
+        | '{' exp / x '}' exp'  :: M :: subst  {{ isa subst ( [[ exp ]] , [[ x ]] , [[ exp' ]] ) }}
+        | ( exp )               :: M :: paren
+        | Foo val               ::   :: foo
+%       | C . e                 :: M :: context
+
+  val , v :: Val_ ::=
+        | [ v ] _ c ^ h         ::   :: coloured {{ tex [ [[v]] ]_[[c]]^[[h]] }}
+        | ()                    ::   :: unit
+        | ( val , val' )        ::   :: pair      
+        | function x : t -> exp ::   :: 'fun'
+
+
+  M :: Structure_ ::=
+        | [ t , v ]             ::   :: struct
+  
+  S :: Signature_ ::=
+        | [ X : K , t ]         ::   :: struct (+ bind X in t +)
+
+  Sab :: Signatureab_ ::=
+        | [ X : Kab , t ]       ::   :: struct (+ bind X in t +)
+
+
+  K :: Kind_ ::=
+        | Type                  ::   :: type
+        | Eq ( t )              ::   :: eq
+
+
+  Kab :: Kindab_ ::=
+        | Type                  ::   :: type
+
+  m :: Machine_ ::=
+        | e                     ::   :: expr
+        | let U = M : S in m    ::   :: module (+ bind U in m +)
+
+  h :: Hash_ ::=
+        |  hash ( M : Sab )      ::   :: hash
+
+  c :: Colour_ ::= {{ isa h set }}
+        | empty                 ::   :: empty {{ isa emptyset }}
+        | c union c'            ::   :: union {{ isa union [[ c ]] [[ c' ]] }} 
+        | c intersect c'        :: M :: intersect {{ isa intersect [[ c ]] [[ c' ]] }} 
+        | '{' h '}'             ::   :: singleton {{ isa singleton [[ h ]] }}
+
+  type , t :: Typ_ ::=
+        | X                     ::   :: ident
+        | U . Type              ::   :: module
+        | unit                  ::   :: unit
+        | type * type'          ::   :: pair
+        | type -> type'         ::   :: 'fun'
+
+  E :: E_ ::= {{ isa (ident*type) list }}
+        | empty                 ::   :: empty  {{ isa [] }}
+        | E , x : t             ::   :: ident  {{ isa ( [[ x ]] , [[ t ]] ) # [[ E ]] }}
+        | E , x : t , E'        ::   :: ident2 {{ isa [[ E' ]] @ ( [[ x ]] , [[ t ]] ) # [[ E ]] }}
+
+
+%  C :: Ctx_ ::= 
+%        | ( __  , exp )         ::   :: pairL
+%        | ( val , __  )         ::   :: pairR      
+%        | __ exp                ::   :: appL
+%        | val __                ::   :: appR
+
+  formula :: formula_ ::=          
+        | judgement             ::   :: judgement
+        | not ( formula )       ::   :: not
+        | x in dom ( E )        :: M :: indom {{ isa list_ex ( \<lambda>(x',y'). x=x') [[ E ]] }}
+        | x notin c             :: M :: notincol {{ isa not (in [[ x ]] [[ c ]] ) }}
+        | h notin c             :: M :: notincolh {{ isa not (in [[ h ]] [[ c ]] ) }}
+
+  terminals :: 'terminals_' ::=
+    | \                   ::   :: lambda     {{ tex \lambda }}
+    | -->                 ::   :: red        {{ tex \longrightarrow }}
+    |  ->                 ::   :: arrow      {{ tex \rightarrow }}
+    | |-                  ::   :: turnstile  {{ tex \vdash }}
+    | in                  ::   :: in         {{ tex \in }}
+
+subrules
+
+  val <:: exp  
+  Kab <:: K
+  Sab <:: S
+
+%  C   _:: exp :: exp
+
+substitutions
+ single exp x  :: subst 
+% WAS  single  v exp :: subst2
+
+
+
+%U.Term
+
+% defns
+% Jin :: '' ::=
+% defn
+% x in dom ( E ) :: :: xinE :: xinE_ by
+% 
+% -------------------- :: 1
+% x in dom ( E )
+% 
+% x in dom(E)
+% -------------------- :: 2
+% x in dom(E,x':t)
+
+
+% this type system doesn't allow any shadowing
+
+defns
+Jtype :: '' ::=
+
+defn
+E |- ok :: M :: Eok :: Eok_  by 
+
+----------- :: empty
+empty |- ok
+
+
+
+E |- ok
+not (x in dom(E))
+-------------- :: ident
+E,x:t |- ok
+
+
+
+defn
+E |- e : t ::  :: Eet :: Eet_  by 
+
+E,x:t,E' |- ok
+--------------- :: ident
+E,x:t,E' |- x:t
+
+
+
+E |- ok
+---------------- :: unit
+E |- () : unit
+
+E |- e1:t1
+E |- e2:t2
+------------------- :: pair
+E |- (e1,e2):t1*t2
+
+E,x:t1 |- e :t2
+---------------------- :: 'fun'
+E |- function x:t1 -> e : t1->t2
+
+E |- e : t1->t2
+E |- e': t1
+------------------ :: app
+E |- e e' : t2
+
+
+
+
+defn
+ v : c  :: :: wffval :: wffval_ by
+
+
+ v : c'
+ h notin c' intersect c 
+ --------------------------- :: coloured
+ [v] _ c' ^ h : c  
+
+ ------ :: unit
+ () : c
+
+ v : c
+ v' : c
+ ----------- :: pair
+ (v, v') : c
+
+
+ ------------------------- :: 'fun'
+ function x : t -> exp : c 
+
+
+defns
+Jop :: JO_ ::= 
+
+% Pure expression reduction    
+
+defn
+ e --> e' :: :: red :: red_ by
+
+  -----------------------------------  :: 'fun'
+%fake  (function x:t->e) v -->   v 
+   (function x:t->e) v -->  { v / x }  e 
+
+
+
+% e --> e'
+% ------- :: context
+% C.e --> C.e'
+
+  e1 --> e1'
+  -----------------  :: context1
+  e1 e2 --> e1' e2
+
+  e2 --> e2'
+  -----------------  :: context2
+  v1 e2 --> v1 e2'
+
+  e1 --> e1'
+  -----------------  :: context3
+  (e1,e2) --> (e1',e2)
+  
+  e2 --> e2'
+  -----------------  :: context4
+  (v1,e2) --> (v1,e2')
+
+
+
+% syntax and typing for pair patterns, all commented out
+
+
+>>
+        | let pat = exp in exp' ::   :: let
+
+  pat , p :: Pat_ ::= 
+          x                     ::   :: ident
+        | _                     ::   :: wildcard
+        | ()                    ::   :: unit
+        | ( pat , pat' )        ::   :: pair
+<<
+
+>>
+|- p : t gives E'
+E |- e : t
+E,E' |- e' : t'
+------------------------ :: let
+E |- let p=e in e' : t'
+
+
+defn
+|- p : t gives E' ::  :: Ept :: Ept_  by 
+
+----------------------- :: ident
+|- x:t gives empty,x:t
+
+
+----------------------- :: wildcard
+|- _:t gives empty
+
+------------------------ :: unit
+|- () : unit gives empty
+
+|- p1:t1 gives E1
+|- p2:t2 gives E2
+-------------------------- :: pair
+|- (p1,p2):t1*t2 gives E1,E2
+
+
+
+
+<<
+
+defn
+ e --> c e' :: :: cred :: cred_ {{ tex [[e]] [[-->]]_[[c]] [[e']] }} by
+
+ e -->c' e' 
+ --------------------------- :: coloured
+ [e]_c'^h  -->c [e']_c'^h
+

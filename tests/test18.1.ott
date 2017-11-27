@@ -1,0 +1,45 @@
+% test18.1.ott  dot form test 
+% 
+% nested dot forms in symterms
+
+metavar termvar, x ::=
+  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}
+  {{ tex \mathit{[[termvar]]} }} {{ com  term variable  }} 
+
+indexvar index, n, m ::= {{ isa nat }} {{ coq nat }} {{ hol num }}
+
+  grammar
+
+    a :: 'a_' ::= 
+      | AA            :: :: AA
+      | C a1 .. an    :: :: C
+      | D x a1 .. an    :: :: D
+      | ( a )         :: M :: paren  {{ ich [[a]] }} {{ ocaml [[a]] }}
+
+  terminals :: 'terminals_' ::=
+    | |-                  ::   :: turnstile  {{ tex \vdash }}
+
+
+defns
+  Jtype :: '' ::= 
+
+defn
+    |- a  :: :: Foo :: Foo_ by
+        
+    --------------------------------- :: 1C
+    |- C a1 .. an
+
+
+    --------------------------------- :: 1D
+    |- D x a1 .. an
+
+    --------------------------------- :: 2
+    |- C (D x1 a1 .. an) .. (D xm a1 .. an)
+
+
+% Note that the following is not parsable, as no index varies for the outer
+% list form
+%
+%    --------------------------------- :: 3
+%    |- C (D x a1 .. an) .. (D x a1 .. an)
+

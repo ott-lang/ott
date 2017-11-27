@@ -1,0 +1,34 @@
+%% Using a subrule in a list in a defn.
+indexvar i , j , k , l , m , n ::= {{ coq nat }} {{ isa nat }} {{ hol num }}
+metavar ident , x ::= {{ coq nat }} {{ isa string }} {{ hol string }} {{ coq-equality }}
+grammar
+  constant :: CONST_ ::=
+    | ()                                                ::   :: unit
+  expr , e  :: Expr_ ::=
+    | constant                                          ::   :: constant
+  substs_x :: substs_x_ ::=
+    | x1 <- e1 ,, .. ,, xn <- en                        ::   :: xs
+  valu , v :: V_ ::=
+    | constant                                          ::   :: constant
+  formula :: formula_ ::=
+    | judgement                           :: :: judgement
+    | formula1 .. formulan                :: :: dots
+subrules
+   valu <:: expr
+substitutions
+  multiple expr ident :: substs_ident
+defns
+Jred :: JR_ ::=
+defn
+v '<<' substs_x '>>' :: :: match :: match_ by
+
+v <<x1<-v1,,..,,xn<-vn>>
+---------------------------------------------------------------- :: alias
+v <<x1<-v1,,..,,xn<-vn,,x<-v>>
+
+defn
+( v1 & .. & vn ) '<<' substs_x '>>' :: :: matches :: matches_ by
+
+v1 <<substs_x>> .. vn <<substs_x>>
+---------------------------------------------------------------- :: and
+(v1&..&vn) <<substs_x>>

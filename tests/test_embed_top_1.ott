@@ -1,0 +1,7 @@
+embed
+{{ tex \def\ThisShouldBeInThePreamble{} }}
+{{ coq Require Import ZArith. }}
+
+embed
+{{ tex \def\ShouldThisAlsoBeInThePreamble{} }}
+{{ coq Check (42). }}

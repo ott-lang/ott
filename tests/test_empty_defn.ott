@@ -1,0 +1,17 @@
+defns
+  Empty_defns :: '' ::= 
+
+
+
+defns
+  Nonempty_defns :: '' ::= 
+
+    defn 
+    Non_empty_defn :: :: non_empty_defn :: '' by
+
+    -------------- :: 1
+    Non_empty_defn
+
+    defn
+    Empty_defn ::  :: empty_defn :: ''        by 
+

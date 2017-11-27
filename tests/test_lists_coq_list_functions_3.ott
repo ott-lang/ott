@@ -1,0 +1,27 @@
+%% Generation of a list function that is used in two separate defns's.
+indexvar i , j , k , l , m , n ::= {{ isa num }} {{ coq nat }} {{ hol num }}
+grammar
+data :: data_ ::=
+  | ( data1 , .. , datan )                      :: :: tuple
+map :: map_ ::=
+  | { data1 map1 , .. , datan mapn }            :: :: finite
+formula :: formula_ ::=
+  | judgement                                 :: :: judgement
+  | formula1 .. formulan                      :: :: dots
+
+defns
+Data :: Data_ ::=
+defn
+data :: :: data :: data_ by
+data1 .. datan
+---------------------------------------------------------------- :: tuple
+(data1,..,datan)
+
+defns
+Map :: Map_ ::=
+defn
+map :: :: map :: map_ by
+data1 .. datan
+map1 .. mapn
+---------------------------------------------------------------- :: finite
+{data1 map1,..,datan mapn}

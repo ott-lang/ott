@@ -1,0 +1,18 @@
+indexvar i , j , k , l , m , n ::=
+  {{ isa num }}
+  {{ coq nat }}
+  {{ lex [0-9]+ }}
+
+metavar x ::= {{ isa num }} {{ coq nat }}
+
+grammar
+t :: t_ ::=
+  | x                           ::   :: x
+  | ( t1 , .. , tn )            ::   :: tuple
+  | ( p1 > t1 , .. , pn > tn )  ::   :: cond
+
+p :: p_ ::=
+  | x                           ::   :: x
+
+freevars t x :: fv
+

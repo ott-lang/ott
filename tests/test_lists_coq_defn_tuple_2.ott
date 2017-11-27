@@ -1,0 +1,23 @@
+%% Use of a subrule in a list.
+indexvar i , j , k , l , m , n ::= {{ coq nat }} {{ isa nat }} {{ hol num }}
+grammar
+foo :: foo_ ::= | Foo :: :: Foo
+bar :: bar_ ::= | Bar :: :: Bar
+barbar :: barbar_ ::= | Bar :: :: Bar | Qux :: :: Qux
+formula :: formula_ ::=
+    | judgement                           :: :: judgement
+    | formula1 .. formulan                :: :: dots
+subrules
+bar <:: barbar
+
+defns
+J :: J_ ::=
+defn
+foo barbar :: :: one :: one_ by
+
+defn
+hello :: :: hello :: hello_ by
+
+foo1 bar1 ... foon barn
+---------------------------------------------------------------- :: world
+hello

@@ -1,0 +1,31 @@
+% test15.4.ott  is_v test
+% mtutual recursion between a single upper/lower type pair, with dot forms
+
+indexvar index , n ::= {{ isa nat }} {{ coq nat }} {{ coq-equality }} 
+                       {{ hol num }} {{ ocaml int }}
+
+metavar x ::= {{ isa nat }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ ocaml int }}
+
+  grammar
+
+    a {{ isa pluto}} :: 'a_' ::= 
+      | x               :: :: Ax  	(+ b = x +)
+      | A a           :: :: a		(+ b = b(a) +)
+      | C a1 .. an    :: :: C		(+ b = b(a1..an) +)
+      | CC a1 .. an   :: :: CC		(+ b = b(a1..an) +)
+
+    av :: 'av_' ::= 
+      | A a           :: :: a
+      | C av1 .. avn    :: :: C
+      | CC av1 .. avn    :: :: CC
+
+subrules
+  av <:: a
+
+freevars
+  a x :: ftv
+
+substitutions
+  single a x :: subst
+  multiple a x :: msubst
+

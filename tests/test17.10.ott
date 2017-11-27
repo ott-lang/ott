@@ -57,7 +57,7 @@ defns
   Jtype :: '' ::= 
 
 defn
-G |- t : T ::  :: Ty :: Ty_  {{ com term [[t]] has type [[T]] }} by 
+G |- t : T ::  :: Ty :: Ty_  {{ com term $[[t]]$ has type $[[T]]$ }} by 
 
  G|-t1:T1 .. G|-tn:Tn
  ------------------------------------- :: Rcd_dotform

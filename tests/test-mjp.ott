@@ -1,0 +1,15 @@
+embed 
+{{ coq
+Parameter heap : Set.
+}}
+
+metavar h ::= {{ coq heap }}
+
+grammar
+  s :: '' ::= 		       {{ coq prod (prod heap  heap) heap }}
+    | ( h1 , h2 , h3 )	::  :: state  {{ coq ([[h1]],[[h2]],[[h3]]) }} 
+
+  A, R :: '' ::= {{ com abstract command }} 
+	{{ coq s_ty * s_ty -> bool }}
+
+

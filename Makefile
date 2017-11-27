@@ -262,5 +262,4 @@ sys-purercdsub: $(SYS_PURERCDSUB)
 
 jenkins:
 	cd regression; \
-          make regression-jenkins; \
           make run-jenkins

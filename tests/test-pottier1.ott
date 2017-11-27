@@ -1,0 +1,13 @@
+metavar termvar , x ::= 
+  {{ isa string }} {{ coq nat }} {{ hol string }} {{ coq-equality }} {{ lex [a-z]+ }}
+  {{ tex \mathit{[[termvar]]} }} {{ com  term variable  }} 
+
+grammar
+
+  t :: 't_' ::=                        
+    | x                   ::   :: Var                       (+ bv={} +)
+    | \ x . t             ::   :: Lam  (+ bind x in t +)    (+ bv=x union bv(t) +)
+    | t1 t2               ::   :: App                       (+ bv=bv(t1) union bv(t2) +)
+
+substitutions
+  single t x :: subst 

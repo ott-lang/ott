@@ -1,0 +1,27 @@
+
+metavar termvar , x ::=
+{{ isa string }} {{ hol string }} {{ coq nat }} {{ lex alphanum }} {{ com  term variable  }} 
+
+metavar label , l , k ::=
+{{ isa string }} {{ hol string }}  {{ coq nat }} {{ lex Alphanum }} {{ com  field label  }} 
+
+indexvar index , i , j , n , m  ::= 
+{{ isa nat }} {{ hol num }} {{ coq nat }} {{ lex numeral }} {{ com indices }}
+
+grammar
+
+t :: 't_' ::=                                                      {{ com  term  }}
+  | x                                :: :: Var                       {{ com variable }}         
+  | \ x . t                          :: :: Lam  (+ bind x in t +)    {{ com abstraction }}      
+  | t t'                             :: :: App                       {{ com application }}      
+  | '{' l1 = t1 ,  .. , ln = tn '}'  :: :: Rec                       {{ com record }}
+  | t . l                            :: :: Proj                      {{ com projection }} 
+
+v :: 'v_' ::= {{ com  values  }}
+  | \ x . t                         :: :: Lam  (+ bind x in t +)   {{ com abstraction }}      
+  | '{' l1 = v1 ,  .. , ln = vn '}'  :: :: Rec                     
+
+subrules
+
+  v <:: t
+

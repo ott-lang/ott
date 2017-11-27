@@ -1,0 +1,37 @@
+% test15.1.ott   is_v test
+% mutually recursive upper types
+
+% ISA SUCCEEDS  but it warns
+%
+% ### No function definition for datatype "out.b"
+% ### No function definition for datatype "out.a"
+%
+% which I don't understand
+
+
+  grammar
+
+    a :: 'a_' ::= 
+      | AA         :: :: AA
+      | A a          :: :: a
+      | B b          :: :: b
+
+    b :: 'b_' ::= 
+      | BB         :: :: BB
+      | A a          :: :: a
+      | B b          :: :: b
+
+    av :: 'av_' ::= 
+      | A a          :: :: a
+      | B b          :: :: b
+
+    bv :: 'bv_' ::= 
+      | A a          :: :: a
+      | B b          :: :: b
+
+subrules
+  av <:: a
+  bv <:: b
+
+
+

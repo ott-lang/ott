@@ -28,7 +28,7 @@ defns
 Jop :: '' ::=
 
  defn
- t1 --> t2 :: ::reduce::'' {{ com [[t1]] reduces to [[t2]] }} {{ lemwcf  witness type reduce_witness; check reduce_check; eval : input -> output }} by
+ t1 --> t2 :: ::reduce::'' {{ com $[[t1]]$ reduces to $[[t2]]$ }} {{ lemwcf  witness type reduce_witness; check reduce_check; eval : input -> output }} by
 
 
     --------------------------  :: ax_app

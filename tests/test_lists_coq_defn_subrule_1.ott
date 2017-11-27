@@ -1,0 +1,22 @@
+%% Using a subrule in a list in a defn.
+indexvar i , j , k , l , m , n ::= {{ coq nat }} {{ isa nat }} {{ hol num }}
+metavar x ::= {{ coq nat }} {{ isa nat }} {{ hol num }}
+grammar
+foo :: foo_ ::=
+  | Foo :: :: foo
+foobar :: foobar_ ::=
+  | Foo :: :: foo
+  | Bar :: :: bar
+seq :: seq_ ::=
+  | foo1 foobar1 .. foon foobarn :: :: foofoobar
+subrules
+foo <:: foobar
+
+defns
+J :: J_ ::=
+
+defn
+foo1 ... fooi & foobar1 ... foobarj = seq :: :: zip :: zip_ by
+
+---------------------------------------------------------------- :: zap
+foo1 ... foon & foobar1 ... foobarn = foo1 foobar1 ... foon foobarn

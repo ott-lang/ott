@@ -1,0 +1,299 @@
+
+
+metavar ident , x  ::=   {{ isa string }} 
+		      {{ coq nat }} {{ coq-equality }}
+                      {{ lex alphanum }}  
+                      {{ tex \mathit{[[ ident ]]} }} 
+                      {{ texvar \mathrm{ [[ ident ]] } }}
+                      {{ com (* identifiers *) }}
+% where:
+%  - texmagic is a magic built-in hom that takes a symbolic ident and (1) replaces _ by \_, (2) puts subscripts in as _\mathit{ }, and (3) puts primes in right
+%  - the tex hom is used to pp symbolic metavars
+%  - the texobj hom is used to pp object-language cars
+%  - texmagicobj is a magic built-in hom that takes a string and (1) replaces _ by \_.
+%  - the $$ denotes the argument of the hom  (better lexeme for this??)
+
+grammar
+  exp , e :: Exp_  ::= {{ tex \mathit{[[exp]]} }} {{ com  expressions like [[exp]] }}
+
+% where that tex hom is used to pp these symbolic nonterms - in fact it should default to the above for all nonterms
+
+        | x                        ::   :: ident    {{ tex [[x]] }} {{ com variable named $[[x]]$ }}
+
+% where the [[ x ]] is processed by the tex (or texobj) hom - so it should default to this if we don't say anything else
+
+        | ()                       ::   :: unit     {{ tex () }} {{ com unit value }}
+        | ( exp , exp' )           ::   :: pair     {{ tex ([[exp]],\,[[exp']]) }}   
+                                                    {{ com pair of $[[exp]]$ and $[[exp']]$ }}
+
+% note that here we introduce some spacing (the \,).  Is this kind of mechanism expressive enough for spacing, or do we want 
+% something smarter?  
+
+        | function x : type -> exp ::   :: 'fun'   (+ bind x in exp +) {{ tex [[function]] \ [[x]] [[:]] [[type ]] \, [[->]] \, [[exp]] }}  
+
+% the default should [[  ]] each nonterm and metavar, and each terminal
+% that exists in the terminals grammar with a tex hom, and just in-line
+% all others (or be a bit smarter - automatically put each alpha nonterm
+% in \kw{...}, for example.  Maybe even add spacing at alpha/alpha boundaries, eventually :-)).
+
+% to reduce syntactic noise, could let ourselves write the above with multiple elements inside a [[  ]], eg
+%
+%        | function x : type -> exp ::   :: 'fun'      {{ tex [[function]] \ [[ x : type ]] \, [[ -> ]] \, [[ exp ]] }}
+% not at all sure that's worthwhile (but it does make the default case very simple - just [[   ]] the whole production)
+
+
+        | exp exp'                 ::   :: app      {{ tex [[exp]]\;[[exp']] }}
+        | '{' exp / x '}' exp'     :: M :: subst    {{ tex \{[[exp]] / [[x]] \}[[exp']] }}
+                                                    {{ isa subst_exp [[exp]] [[x]] [[exp']] }}
+
+% above we choose to write in-line \{ / \} instead of using the terminals defn, just for variety
+
+        | ( exp )                  :: M :: paren  
+%       | C . e                    :: M :: context    
+
+  type , t :: Typ_ ::=  {{ tex \mathsf{[[type]]} }} 
+
+% where that tex hom overrides the default, using \mathsf
+
+        | unit                  ::   :: unit     {{ tex \mathsf{unit} }}
+        | type * type'          ::   :: pair     {{ tex [[type]] [[*]] [[type']] }}
+        | type -> type'         ::   :: 'fun'      {{ tex [[type]] [[->]] [[type']] }}
+
+% where that [[ * ]] and [[ -> ]] are using the tex hom on the grammar of terminals defined below
+% (can that be deduced, or would we need to say [[ :terminals: *  ]] or somesuch?  Not sure about my hom typing here...)
+
+  E :: E_ ::= {{ isa (ident*type) list }}
+        | empty                 ::   :: empty  {{ isa [] }}
+        | E , x : t             ::   :: ident  {{ isa ([[x]],[[t]])#[[E]] }}
+        | E , x : t , E'        ::   :: ident2 {{ isa [[E']] @ ([[x]],[[t]])#[[E]] }}
+
+% here the tex defaults might be ok?  Except that for empty we would
+% normally have nothing and would omit the initial comma.  Not sure what
+% to do about that.
+
+
+  val , v :: Val_ ::=
+        | x                     ::   :: ident
+        | ()                    ::   :: unit
+        | ( val , val' )        ::   :: pair      
+        | function x : t -> exp ::   :: 'fun'
+
+% the subgrammar processing should (when we write val <:: exp) automatically inherit the tex hom from exp to val?
+
+%  C :: Ctx_ ::= 
+%        | ( __  , exp )         ::   :: pairL
+%        | ( val , __  )         ::   :: pairR      
+%        | __ exp                ::   :: appL
+%        | val __                ::   :: appR
+
+% the subgrammar processing should (when we write C _:: exp) automatically inherit the tex hom from exp to C?
+
+  formula :: formula_ ::=          
+        | judgement             ::   :: judgement
+        | not ( formula )       ::   :: not   {{ tex \neg([[formula]]) }}
+                                              {{ isa not([[formula]]) }}
+					      {{ coq not([[formula]]) }}
+        | x in dom ( E )        :: M :: indom {{ isa list_ex (\<lambda>(x',y'). x=x') [[E]] }}
+                                              {{ tex [[x]]\in\mathrm{dom([[E]])} }}
+
+
+
+  terminals :: terminals_ ::=
+        | *                      ::   :: star  {{ tex  \star }}
+        |  ->                    ::   :: arrow {{ tex  \rightarrow }}
+        |  function              ::   :: function {{ tex  \textbf{function} }}
+        |  __                    ::   :: hole {{ tex \_ }}
+        | |-                     ::   :: turnstile {{ tex \vdash }}
+        | -->                    ::   :: red {{ tex \longrightarrow }}
+        | '{'                    ::   :: leftbrace {{ tex \{ }}
+        | '}'                    ::   :: rightbrace {{ tex \} }}
+% where we expect to have \newcommand{\kw}[1]{\textbf{#1}} somewhere
+
+% another reason to be able to typeset terminals and things is to let
+% the user typeset _fragments_ of syntax nicely 
+
+% and be a workaround to let them typeset code with layout, eg in
+% arrays
+
+
+
+% When we start getting lots of hairy homs, it may be worth having the front-end let us pull them out, eg to write
+% 
+%  Typ_unit :: {{ tex \mathsf{unit} }}
+%  Typ_pair :: {{ tex [[ type ]] [[  *  ]] [[ type' ]] }}
+%  Typ_fun  :: {{ tex [[ type ]] [[  ->  ]] [[ type' ]]  }}
+% 
+% all in one place in the file instead of with the productions.
+
+
+
+
+subrules
+
+  val <:: exp 
+
+%  C   _:: exp :: exp
+
+substitutions
+  single exp x :: subst
+
+
+
+% defns
+% Jin :: '' ::=
+% defn
+% x in dom ( E ) :: :: xinE :: xinE_ by
+% 
+% -------------------- :: 1
+% x in dom ( E )
+% 
+% x in dom(E)
+% -------------------- :: 2
+% x in dom(E,x':t)
+
+
+% this type system doesn't allow any shadowing
+
+defns
+Jtype :: '' ::=
+
+defn
+E |- ok :: M :: Eok :: Eok_  by 
+
+----------- :: empty
+empty |- ok
+
+
+
+E |- ok
+not (x in dom(E))
+-------------- :: ident
+E,x:t |- ok
+
+
+% to illustrate the use of :prodname: annotations we factor out the
+% E |- x:t notion into a separate judgement
+
+defn
+E |- x : t :: M :: Ext :: Ext_  by 
+
+E,x:t,E' |- ok
+-------------- :: ident
+E,x:t,E' |- x:t
+
+
+
+defn
+E |- e : t ::  :: Eet :: Eet_  {{ com term $[[e]]$ has type $[[t]]$ in type environment $[[E]]$ }} by 
+
+:Ext: E |- x:t
+--------------- :: ident
+E |- x:t
+
+
+
+E |- ok
+---------------- :: unit
+E |- () : unit
+
+E |- e1:t1
+E |- e2:t2
+------------------- :: pair  {{ com pairing }}
+E |- (e1,e2):t1*t2
+
+E,x:t1 |- e :t2
+---------------------- :: 'fun'
+E |- function x:t1 -> e : t1->t2
+
+E |- e : t1->t2
+E |- e': t1
+------------------ :: app
+E |- e e' : t2
+
+
+
+
+
+
+defns
+Jop :: JO_ ::= 
+
+% Pure expression reduction    
+
+defn
+ e --> e' :: :: red :: red_ by
+
+  -----------------------------------  :: 'fun'
+%fake  (function x:t->e) v -->   v 
+ (function x:t->e) v -->  { v / x }  e 
+
+
+
+% e --> e'
+% ------- :: context
+% C.e --> C.e'
+
+  e1 --> e1'
+  -----------------  :: context1
+  e1 e2 --> e1' e2
+
+  e2 --> e2'
+  -----------------  :: context2
+  v1 e2 --> v1 e2'
+
+  e1 --> e1'
+  -----------------  :: context3
+  (e1,e2) --> (e1',e2)
+  
+  e2 --> e2'
+  -----------------  :: context4
+  (v1,e2) --> (v1,e2')
+
+
+
+% syntax and typing for pair patterns, all commented out
+
+
+>>
+        | let pat = exp in exp' ::   :: let
+
+  pat , p :: Pat_ ::= 
+          x                     ::   :: ident
+        | _                     ::   :: wildcard
+        | ()                    ::   :: unit
+        | ( pat , pat' )        ::   :: pair
+<<
+
+>>
+|- p : t gives E'
+E |- e : t
+E,E' |- e' : t'
+------------------------ :: let
+E |- let p=e in e' : t'
+
+
+defn
+|- p : t gives E' ::  :: Ept :: Ept_  by 
+
+----------------------- :: ident
+|- x:t gives empty,x:t
+
+
+----------------------- :: wildcard
+|- _:t gives empty
+
+------------------------ :: unit
+|- () : unit gives empty
+
+|- p1:t1 gives E1
+|- p2:t2 gives E2
+-------------------------- :: pair
+|- (p1,p2):t1*t2 gives E1,E2
+
+
+
+
+<<
+
+
+

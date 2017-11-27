@@ -1,0 +1,17 @@
+%% At the time this example was checked in, ott did not generate all
+%% the auxiliary functions it needed in Coq.
+indexvar index , i , j , k , l , m , n ::= {{ coq nat }} {{ isa nat }} {{ hol num }}
+metavar value_name , x ::= {{ coq nat }} {{ isa nat }} {{ hol num }} {{ coq-equality }}
+grammar
+pattern , pat :: P_ ::=
+  | value_name                                        ::   :: var
+expr , e  :: Expr_ ::=
+  | let rec letrec_binding1 and ... and letrec_bindingn in expr ::   :: letrec
+        (+ bind gives(letrec_binding1...letrec_bindingn) in expr +)
+pattern_matching , pm :: PM_  ::=
+  | pattern1 -> expr1 '|' ... '|' patternn -> exprn   ::   :: pm
+letrec_binding :: LRB_ ::=
+  | value_name = function pattern_matching          ::     :: simple
+        (+ gives = value_name +)
+substitutions
+  single expr value_name :: subst_value_name

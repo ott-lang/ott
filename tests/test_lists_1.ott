@@ -1,0 +1,54 @@
+%% Some examples of usage of lists
+%% (trying to gather the interesting cases from minicaml)
+
+indexvar i, j, k, l, m, n ::=
+metavar x ::=
+
+grammar
+
+t, term :: t_ ::=
+  | x                                   ::   :: x
+  | letrec lb1 and ... and lbn in t     ::   :: letrec
+lb, letrec_binding :: lb_ ::=
+  | x = t                               ::   :: simple
+
+b, binding :: b_ ::=
+  | x                                   ::   :: x
+E, environment :: E_ ::=
+  | b1 , .. , bn                        ::   :: concrete
+  | nil                                 :: M :: nil {{ ich wibble }}
+  | E1 , .... , En                      :: M :: concat {{ ich wibble }}
+
+
+defns Typing :: Typing_ ::=
+
+defn
+E |- ok :: :: ok :: ok_ by
+
+---------------------------------------------------------------- :: nil
+nil |- ok
+
+E |- ok
+---------------------------------------------------------------- :: x
+E, x |- ok
+
+
+defn
+E |- t :: :: term :: term_ by
+
+E1, x, E2 |- ok
+---------------------------------------------------------------- :: x
+E1, x, E2 |- x
+
+E, E1, ... , En |- lb1 gives E1   ...   E, E1, ... , En |- lbn
+E, E1, ... , En |- t
+---------------------------------------------------------------- :: letrec
+E |- letrec lb1 and ... and lbn in t
+
+
+defn
+E |- lb gives E' :: :: lb :: lb_ by
+
+E |- t
+---------------------------------------------------------------- :: simple
+E |- x = t gives x

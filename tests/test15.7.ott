@@ -1,0 +1,44 @@
+% test15.7.ott   is_v test
+% transitive subrules used in symterms in rules
+
+  grammar
+
+    a :: 'a_' ::= 
+      | A a av avv :: :: A
+      | B a av avv :: :: B
+      | C a av avv :: :: C
+      | D          :: :: D
+
+    av :: 'av_' ::= 
+      | B a av avv :: :: B
+      | C a av avv :: :: C
+      | D          :: :: D
+
+
+    avv :: 'avv_' ::= 
+      | C a av avv :: :: C
+      | D          :: :: D
+
+subrules
+  av  <:: a
+  avv <:: av
+
+
+defns
+  Jtype :: '' ::= 
+
+defn
+    |- a  :: :: T :: T_ by
+
+|- C a av avv
+------------ :: 1
+|- D 
+
+|- C avv avv avv
+------------ :: 2
+|- D 
+
+%shouldn't parse
+%|- C a1 a2 a3
+%------------ :: 3
+%|- D 
