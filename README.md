@@ -14,26 +14,26 @@ We no longer provide non-github tarballs or a Windows distribution.
 
 ## Directory contents
 
-directory                description
------------------------  -------------------------------------------------
-`aux/`                   auxiliary code (y2l) used to build the user guide
-`bin/`                   the Ott binary
-`built_doc/`             the user guide, in html, pdf, and ps
-`coq/`                   auxiliary files for Coq
-`doc/`                   the user guide sources
-`emacs/`                 an Ott Emacs mode
-`examples/`              some larger example Ott files
-`tex/`                   auxiliary files for LaTeX
-`hol/`                   auxiliary files for HOL
-`menhir/`                auxiliary files for menhir
-`ocamlgraph-1.7.tar.gz`  a copy of the ocamlgraph library
-`regression/`            regression-test machinery
-`tests/`                 various small example Ott files
-`src/`                   the (OCaml) Ott sources
-`Makefile`               a Makefile for the examples
-`LICENCE`                the BSD-style licence terms
-`README.md`              this file (Section 2 of the user guide)
-`revisionhistory.txt`    the revision history
+directory                | description
+-----------------------  | -------------------------------------------------
+`aux/`                   | auxiliary code (y2l) used to build the user guide
+`bin/`                   | the Ott binary
+`built_doc/`             | the user guide, in html, pdf, and ps
+`coq/`                   | auxiliary files for Coq
+`doc/`                   | the user guide sources
+`emacs/`                 | an Ott Emacs mode
+`examples/`              | some larger example Ott files
+`tex/`                   | auxiliary files for LaTeX
+`hol/`                   | auxiliary files for HOL
+`menhir/`                | auxiliary files for menhir
+`ocamlgraph-1.7.tar.gz`  | a copy of the ocamlgraph library
+`regression/`            | regression-test machinery
+`tests/`                 | various small example Ott files
+`src/`                   | the (OCaml) Ott sources
+`Makefile`               | a Makefile for the examples
+`LICENCE`                | the BSD-style licence terms
+`README.md`              | this file (Section 2 of the user guide)
+`revisionhistory.txt`    | the revision history
 
 
 
