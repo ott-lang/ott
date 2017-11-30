@@ -419,17 +419,15 @@ install-top2: top2.html top2.ps top2.pdf
 	cp top2*.png ~/public_html/ott
 
 
+# ghastly hackery to make ../README.md work both in the github
+# markdown processing and in the latex user guide
 README.tex: ../README.md Makefile
 	rm -rf README.tex
-	pandoc  ../README.md -o README.tmp.tex
+	cat ../README.md | sed -e 's/|//g' > README.tmp.md
+	pandoc  README.tmp.md -o README.tmp.tex
 	cat README.tmp.tex | sed -e 's/section{Ott}/section{Getting started with Ott (the README)}/g' | sed -e 's/href/ahref/g' | sed -e 's/\\noalign{\\medskip}//g' > README.tex
 	chmod ugo-w README.tex
 
-
-#README: README.tex
-#	rm -f README
-#	cat README.tex | sed -e 's/home/home FOO/g'| detex | sed -e 's/alltt//g' | sed -e 's/tabularll//g' | sed -e 's/tabular//' | sed -e 's/&/ /g' | sed -e 's/FOO/~/g' > README
-#	chmod ugo-w README
 
 %.pstex %.pstex_t : %.fig Makefile
 	fig2dev -L pstex               $($*_FIG_OPTS) $< $*.pstex

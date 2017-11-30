@@ -83,13 +83,13 @@ Isabelle, HOL, and Lem can be generated with options `-o test10.thy`,
 The Makefile has various sample targets, `make tests/test10.out`,
 `make test7`, etc.  Typically they generate:
 
-filename          description
-----------------  ----------------------------------
-`out.tex`         LaTeX source for a definition
-`out.ps`          the postscript built from that
-`out.v`           Coq source
-`outScript.sml`   HOL source
-`out.thy`         Isabelle source
+filename          | description
+----------------  | ----------------------------------
+`out.tex`         | LaTeX source for a definition
+`out.ps`          | the postscript built from that
+`out.v`           | Coq source
+`outScript.sml`   | HOL source
+`out.thy`         | Isabelle source
 
 from files `test10.ott`, `test8.ott`, etc., in `tests/`.
 
