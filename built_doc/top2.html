@@ -5,7 +5,7 @@
 <TITLE>Ott: Tool Support for
 Semantics 
 User Guide 
- version 0.25
+ version 0.27
 
 </TITLE>
 
@@ -50,11 +50,11 @@ TD P{margin:0px;}
 </STYLE>
 </HEAD>
 <BODY >
-<!--HEVEA command line is: hevea -fix top2 -->
+<!--HEVEA command line is: /usr/bin/hevea -fix top2 -->
 <!--CUT DEF section 1 --><TABLE CLASS="title"><TR><TD><H1 CLASS="titlemain">Ott: Tool Support for
 Semantics<BR>
 User Guide<BR>
- version 0.25
+ version 0.27
 </H1><H3 CLASS="titlerest">Peter Sewell<SUP>*</SUP> &#XA0;&#XA0;&#XA0;&#XA0;Francesco Zappa Nardelli<SUP>**</SUP><BR>
 with Scott Owens<SUP>*</SUP>, Gilles Peskine<SUP>*</SUP>, Tom
 Ridge<SUP>*</SUP>,<BR>
@@ -63,91 +63,99 @@ Susmit Sarkar<SUP>*</SUP>, and Rok Strni&#X161;a<SUP>*</SUP><BR>
 </TABLE><!--TOC section Contents-->
 <H2 CLASS="section"><!--SEC ANCHOR -->Contents</H2><!--SEC END --><UL CLASS="toc"><LI CLASS="li-toc">
 <A HREF="#htoc1">1&#XA0;&#XA0;Introduction</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc2">2&#XA0;&#XA0;Getting started with Ott</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc2">2&#XA0;&#XA0;Getting started with Ott (the README)</A>
 <UL CLASS="toc"><LI CLASS="li-toc">
-<A HREF="#htoc3">2.1&#XA0;&#XA0;Directory contents</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc4">2.2&#XA0;&#XA0;To build</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc5">2.3&#XA0;&#XA0;To run</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc6">2.4&#XA0;&#XA0;Emacs mode</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc7">2.5&#XA0;&#XA0;Copyright information</A>
-</LI></UL>
-</LI><LI CLASS="li-toc"><A HREF="#htoc8">3&#XA0;&#XA0;A minimal Ott source file: the untyped CBV lambda calculus</A>
+<A HREF="#htoc3">2.1&#XA0;&#XA0;Repository and Package</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc4">2.2&#XA0;&#XA0;Directory contents</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc5">2.3&#XA0;&#XA0;To build</A>
 <UL CLASS="toc"><LI CLASS="li-toc">
-<A HREF="#htoc9">3.1&#XA0;&#XA0;Index variables</A>
+<A HREF="#htoc6">2.3.1&#XA0;&#XA0;With OPAM</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc7">2.3.2&#XA0;&#XA0;Without OPAM</A>
 </LI></UL>
-</LI><LI CLASS="li-toc"><A HREF="#htoc10">4&#XA0;&#XA0;Generating LaTeX</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc8">2.4&#XA0;&#XA0;To run</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc9">2.5&#XA0;&#XA0;Manual</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc10">2.6&#XA0;&#XA0;Emacs mode</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc11">2.7&#XA0;&#XA0;Mailing lists</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc12">2.8&#XA0;&#XA0;Web page with examples</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc13">2.9&#XA0;&#XA0;Copyright information</A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="#htoc14">3&#XA0;&#XA0;A minimal Ott source file: the untyped CBV lambda calculus</A>
 <UL CLASS="toc"><LI CLASS="li-toc">
-<A HREF="#htoc11">4.1&#XA0;&#XA0;Specifying LaTeX for productions</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc12">4.2&#XA0;&#XA0;Specifying LaTeX for grammar rules</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc13">4.3&#XA0;&#XA0;Using the LaTeX code</A>
+<A HREF="#htoc15">3.1&#XA0;&#XA0;Index variables</A>
 </LI></UL>
-</LI><LI CLASS="li-toc"><A HREF="#htoc14">5&#XA0;&#XA0;Generating proof assistant definitions</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc16">4&#XA0;&#XA0;Generating LaTeX</A>
 <UL CLASS="toc"><LI CLASS="li-toc">
-<A HREF="#htoc15">5.1&#XA0;&#XA0;Proof assistant code for grammar rules</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc16">5.2&#XA0;&#XA0;Proof assistant code for inductive definitions</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc17">5.3&#XA0;&#XA0;Representation of binding</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc18">5.4&#XA0;&#XA0;Helper functions for free variable and substitution functions</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc19">5.5&#XA0;&#XA0;Correctness of the generated proof assistant code</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc20">5.6&#XA0;&#XA0;Using the generated proof assistant code</A>
+<A HREF="#htoc17">4.1&#XA0;&#XA0;Specifying LaTeX for productions</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc18">4.2&#XA0;&#XA0;Specifying LaTeX for grammar rules</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc19">4.3&#XA0;&#XA0;Using the LaTeX code</A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="#htoc20">5&#XA0;&#XA0;Generating proof assistant definitions</A>
 <UL CLASS="toc"><LI CLASS="li-toc">
-<A HREF="#htoc21">5.6.1&#XA0;&#XA0;Coq</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc22">5.6.2&#XA0;&#XA0;HOL</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc23">5.6.3&#XA0;&#XA0;Isabelle</A>
-</LI></UL>
-</LI></UL>
-</LI><LI CLASS="li-toc"><A HREF="#htoc24">6&#XA0;&#XA0;Judgments and formulae</A>
+<A HREF="#htoc21">5.1&#XA0;&#XA0;Proof assistant code for grammar rules</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc22">5.2&#XA0;&#XA0;Proof assistant code for inductive definitions</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc23">5.3&#XA0;&#XA0;Representation of binding</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc24">5.4&#XA0;&#XA0;Helper functions for free variable and substitution functions</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc25">5.5&#XA0;&#XA0;Correctness of the generated proof assistant code</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc26">5.6&#XA0;&#XA0;Using the generated proof assistant code</A>
 <UL CLASS="toc"><LI CLASS="li-toc">
-<A HREF="#htoc25">6.1&#XA0;&#XA0;Naming of premises for the Coq backend</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc26">6.2&#XA0;&#XA0;In-line embedded prover code in premises</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc27">6.3&#XA0;&#XA0;User syntax</A>
+<A HREF="#htoc27">5.6.1&#XA0;&#XA0;Coq</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc28">5.6.2&#XA0;&#XA0;HOL</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc29">5.6.3&#XA0;&#XA0;Isabelle</A>
 </LI></UL>
-</LI><LI CLASS="li-toc"><A HREF="#htoc28">7&#XA0;&#XA0;Concrete terms and OCaml generation</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc29">8&#XA0;&#XA0;Filtering: Using Ott syntax within LaTeX, Coq, Isabelle,
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="#htoc30">6&#XA0;&#XA0;Judgments and formulae</A>
+<UL CLASS="toc"><LI CLASS="li-toc">
+<A HREF="#htoc31">6.1&#XA0;&#XA0;Naming of premises for the Coq backend</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc32">6.2&#XA0;&#XA0;In-line embedded prover code in premises</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc33">6.3&#XA0;&#XA0;User syntax</A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="#htoc34">7&#XA0;&#XA0;Concrete terms and OCaml generation</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc35">8&#XA0;&#XA0;Filtering: Using Ott syntax within LaTeX, Coq, Isabelle,
 HOL, or OCaml</A>
 <UL CLASS="toc"><LI CLASS="li-toc">
-<A HREF="#htoc30">8.1&#XA0;&#XA0;Filtering embedded code</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc31">8.2&#XA0;&#XA0;Filtering files</A>
+<A HREF="#htoc36">8.1&#XA0;&#XA0;Filtering embedded code</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc37">8.2&#XA0;&#XA0;Filtering files</A>
 </LI></UL>
-</LI><LI CLASS="li-toc"><A HREF="#htoc32">9&#XA0;&#XA0;Binding specifications</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc33">10&#XA0;&#XA0;Generating substitution and free variable functions</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc34">11&#XA0;&#XA0;Locally-nameless representation</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc35">12&#XA0;&#XA0;List forms</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc38">9&#XA0;&#XA0;Binding specifications</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc39">10&#XA0;&#XA0;Generating substitution and free variable functions</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc40">11&#XA0;&#XA0;Locally-nameless representation</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc41">12&#XA0;&#XA0;List forms</A>
 <UL CLASS="toc"><LI CLASS="li-toc">
-<A HREF="#htoc36">12.1&#XA0;&#XA0;List dot forms</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc37">12.2&#XA0;&#XA0;List comprehension forms</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc38">12.3&#XA0;&#XA0;Proof assistant code for list forms</A>
+<A HREF="#htoc42">12.1&#XA0;&#XA0;List dot forms</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc43">12.2&#XA0;&#XA0;List comprehension forms</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc44">12.3&#XA0;&#XA0;Proof assistant code for list forms</A>
 <UL CLASS="toc"><LI CLASS="li-toc">
-<A HREF="#htoc39">12.3.1&#XA0;&#XA0;Types</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc40">12.3.2&#XA0;&#XA0;Terms (in inductive definition rules)</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc41">12.3.3&#XA0;&#XA0;List forms in homomorphisms</A>
+<A HREF="#htoc45">12.3.1&#XA0;&#XA0;Types</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc46">12.3.2&#XA0;&#XA0;Terms (in inductive definition rules)</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc47">12.3.3&#XA0;&#XA0;List forms in homomorphisms</A>
 </LI></UL>
 </LI></UL>
-</LI><LI CLASS="li-toc"><A HREF="#htoc42">13&#XA0;&#XA0;Subrules</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc43">14&#XA0;&#XA0;Context rules</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc44">15&#XA0;&#XA0;Auxiliary Rules</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc45">16&#XA0;&#XA0;Functions</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc46">17&#XA0;&#XA0;Parsing Priorities</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc47">18&#XA0;&#XA0;Combining multiple source files</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc48">19&#XA0;&#XA0;Hom blocks</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc49">20&#XA0;&#XA0;Isabelle syntax support</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc50">21&#XA0;&#XA0;Isabelle code generation example</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc51">22&#XA0;&#XA0;Reference: Command-line usage</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc52">23&#XA0;&#XA0;Reference: The language of symbolic terms</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc53">24&#XA0;&#XA0;Reference: Generation of proof assistant definitions</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc48">13&#XA0;&#XA0;Subrules</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc49">14&#XA0;&#XA0;Context rules</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc50">15&#XA0;&#XA0;Auxiliary Rules</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc51">16&#XA0;&#XA0;Functions</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc52">17&#XA0;&#XA0;Parsing Priorities</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc53">18&#XA0;&#XA0;Combining multiple source files</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc54">19&#XA0;&#XA0;Hom blocks</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc55">20&#XA0;&#XA0;Isabelle syntax support</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc56">21&#XA0;&#XA0;Isabelle code generation example</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc57">22&#XA0;&#XA0;Reference: Command-line usage</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc58">23&#XA0;&#XA0;Reference: The language of symbolic terms</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc59">24&#XA0;&#XA0;Reference: Generation of proof assistant definitions</A>
 <UL CLASS="toc"><LI CLASS="li-toc">
-<A HREF="#htoc54">24.1&#XA0;&#XA0;Generation of types</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc55">24.2&#XA0;&#XA0;Generation of functions</A>
+<A HREF="#htoc60">24.1&#XA0;&#XA0;Generation of types</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc61">24.2&#XA0;&#XA0;Generation of functions</A>
 <UL CLASS="toc"><LI CLASS="li-toc">
-<A HREF="#htoc56">24.2.1&#XA0;&#XA0;Subrule predicates</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc57">24.2.2&#XA0;&#XA0;Binding auxiliaries</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc58">24.2.3&#XA0;&#XA0;Free variables</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc59">24.2.4&#XA0;&#XA0;Substitutions</A>
+<A HREF="#htoc62">24.2.1&#XA0;&#XA0;Subrule predicates</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc63">24.2.2&#XA0;&#XA0;Binding auxiliaries</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc64">24.2.3&#XA0;&#XA0;Free variables</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc65">24.2.4&#XA0;&#XA0;Substitutions</A>
 </LI></UL>
-</LI><LI CLASS="li-toc"><A HREF="#htoc60">24.3&#XA0;&#XA0;Generation of relations</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc66">24.3&#XA0;&#XA0;Generation of relations</A>
 </LI></UL>
-</LI><LI CLASS="li-toc"><A HREF="#htoc61">25&#XA0;&#XA0;Reference: Summary of homomorphisms</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc62">26&#XA0;&#XA0;Reference: The Ott source grammar</A>
-</LI><LI CLASS="li-toc"><A HREF="#htoc63">27&#XA0;&#XA0;Reference: Examples</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc67">25&#XA0;&#XA0;Reference: Summary of homomorphisms</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc68">26&#XA0;&#XA0;Reference: The Ott source grammar</A>
+</LI><LI CLASS="li-toc"><A HREF="#htoc69">27&#XA0;&#XA0;Reference: Examples</A>
 </LI></UL><!--TOC section Introduction-->
 <H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc1">1</A>&#XA0;&#XA0;Introduction</H2><!--SEC END --><P><A NAME="a1"></A>Ott is a tool for writing definitions of programming languages and
 calculi. 
@@ -160,10 +168,11 @@ the definition;
 </LI><LI CLASS="li-enumerate">a Coq version of the definition; 
 </LI><LI CLASS="li-enumerate">a HOL version of the definition;
 </LI><LI CLASS="li-enumerate">an Isabelle/HOL version of the definition; 
+</LI><LI CLASS="li-enumerate">a Lem version of the definition; 
 </LI><LI CLASS="li-enumerate">an OCaml version of the syntax of the definition.
 </LI></OL><P>
 Additionally, it can be run as a filter, taking a
-LaTeX/Coq/Isabelle/HOL/OCaml source file
+LaTeX/Coq/Isabelle/HOL/Lem/OCaml source file
 with embedded (symbolic) terms of the defined language, parsing them and replacing
 them by typeset terms.</P><P>This document is a user guide for the tool. The papers
 </P><UL CLASS="itemize"><LI CLASS="li-itemize">
@@ -200,7 +209,7 @@ By parsing (and so sort-checking) this input, it quickly catches a
 range of simple errors, e.g.&#XA0;inconsistent use of judgement forms or
 metavariable naming conventions. 
 That same input, extended with some additional data, can be used to generate formal definitions for
-Coq, HOL, and Isabelle. It should thereby enable a smooth transition
+Coq, HOL, Isabelle, and Lem. It should thereby enable a smooth transition
 between use of informal and formal mathematics. Further, the
 tool can automatically generate definitions of functions for free
 variables, single and multiple substitutions, subgrammar checks
@@ -221,72 +230,91 @@ then it will aid only a small part of the work (and one might choose
 instead to work just within a single proof assistant), but for larger
 languages the definition is a more substantial problem &#X2014; so much so
 that only a handful of full-scale languages have been given complete definitions. We
-aim to make this more commonplace, less of a heroic task.</P><!--TOC section Getting started with Ott-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc2">2</A>&#XA0;&#XA0;Getting started with Ott</H2><!--SEC END --><!--TOC subsection Directory contents-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc3">2.1</A>&#XA0;&#XA0;Directory contents</H3><!--SEC END --><P>
+aim to make this more commonplace, less of a heroic task.</P><!--TOC section Getting started with Ott (the README)-->
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc2">2</A>&#XA0;&#XA0;Getting started with Ott (the README)</H2><!--SEC END --><P>A tool for writing definitions of programming languages and calculi</P><P>by Peter Sewell, Francesco Zappa Nardelli, and Scott Owens.</P><!--TOC subsection Repository and Package-->
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc3">2.1</A>&#XA0;&#XA0;Repository and Package</H3><!--SEC END --><P>Ott is now <A HREF="https://github.com/ott-lang/ott">available from
+github</A>, and as an <A HREF="https://opam.ocaml.org">opam</A> package.</P><P>We no longer provide non-github tarballs or a Windows distribution.</P><!--TOC subsection Directory contents-->
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc4">2.2</A>&#XA0;&#XA0;Directory contents</H3><!--SEC END --><P>ll
 
-The source distribution contains:</P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP><TT>doc/</TT></TD><TD ALIGN=left NOWRAP>the user guide, in html, pdf, and ps</TD></TR>
-<TR><TD ALIGN=left NOWRAP><TT>emacs/</TT></TD><TD ALIGN=left NOWRAP>an Ott Emacs mode</TD></TR>
-<TR><TD ALIGN=left NOWRAP><TT>tex/</TT></TD><TD ALIGN=left NOWRAP>auxiliary files for LaTeX</TD></TR>
+</P><DIV CLASS="center"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP>directory</TD><TD ALIGN=left NOWRAP>description</TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=2></TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>aux/</TT></TD><TD ALIGN=left NOWRAP>auxiliary code (y2l) used to build the user guide</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>bin/</TT></TD><TD ALIGN=left NOWRAP>the Ott binary</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>built_doc/</TT></TD><TD ALIGN=left NOWRAP>the user guide, in html, pdf, and ps</TD></TR>
 <TR><TD ALIGN=left NOWRAP><TT>coq/</TT></TD><TD ALIGN=left NOWRAP>auxiliary files for Coq</TD></TR>
-<TR><TD ALIGN=left NOWRAP><TT>hol/</TT></TD><TD ALIGN=left NOWRAP>auxiliary files for HOL</TD></TR>
-<TR><TD ALIGN=left NOWRAP><TT>tests/</TT></TD><TD ALIGN=left NOWRAP>various small example Ott files</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>doc/</TT></TD><TD ALIGN=left NOWRAP>the user guide sources</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>emacs/</TT></TD><TD ALIGN=left NOWRAP>an Ott Emacs mode</TD></TR>
 <TR><TD ALIGN=left NOWRAP><TT>examples/</TT></TD><TD ALIGN=left NOWRAP>some larger example Ott files</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>tex/</TT></TD><TD ALIGN=left NOWRAP>auxiliary files for LaTeX</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>hol/</TT></TD><TD ALIGN=left NOWRAP>auxiliary files for HOL</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>menhir/</TT></TD><TD ALIGN=left NOWRAP>auxiliary files for menhir</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>ocamlgraph-1.7.tar.gz</TT></TD><TD ALIGN=left NOWRAP>a copy of the ocamlgraph library</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>regression/</TT></TD><TD ALIGN=left NOWRAP>regression-test machinery</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>tests/</TT></TD><TD ALIGN=left NOWRAP>various small example Ott files</TD></TR>
 <TR><TD ALIGN=left NOWRAP><TT>src/</TT></TD><TD ALIGN=left NOWRAP>the (OCaml) Ott sources</TD></TR>
-<TR><TD ALIGN=left NOWRAP><TT>bin/</TT></TD><TD ALIGN=left NOWRAP>the Ott binary (binary distro only)</TD></TR>
 <TR><TD ALIGN=left NOWRAP><TT>Makefile</TT></TD><TD ALIGN=left NOWRAP>a Makefile for the examples</TD></TR>
 <TR><TD ALIGN=left NOWRAP><TT>LICENCE</TT></TD><TD ALIGN=left NOWRAP>the BSD-style licence terms</TD></TR>
-<TR><TD ALIGN=left NOWRAP><TT>README</TT></TD><TD ALIGN=left NOWRAP>this file (Section 2 of the user guide)</TD></TR>
-<TR><TD ALIGN=left NOWRAP><TT>revision_history.txt</TT></TD><TD ALIGN=left NOWRAP>the revision history</TD></TR>
-<TR><TD ALIGN=left NOWRAP><TT>ocamlgraph-0.99a.tar.gz</TT></TD><TD ALIGN=left NOWRAP>a copy of the <TT>ocamlgraph</TT> library</TD></TR>
-</TABLE><P>(we no longer provide a Windows binary distribution)
-</P><!--TOC subsection To build-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc4">2.2</A>&#XA0;&#XA0;To build</H3><!--SEC END --><P>
-
-Ott depends on OCaml version 3.09.1 or later. It builds with OCaml
-3.12.1. (Ott cannot be
-compiled with OCaml 3.08, and it also touched an OCaml bug in 3.10.0 for amd64,
-fixed in 3.10.1).</P><P>The command
-</P><PRE>
-  make world
-</PRE><P>
-builds the <TT>ott</TT> binary in the <TT>bin/</TT> subdirectory. </P><P>This will compiles Ott using <TT>ocamlopt</TT>. To force it to
-compile with <TT>ocamlc</TT> (which may give significantly slower execution
-of Ott), do "<TT>make world.byt</TT>".</P><!--TOC subsection To run-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc5">2.3</A>&#XA0;&#XA0;To run</H3><!--SEC END --><P>
-
-Ott runs as a command-line tool. Executing <TT>bin/ott</TT> shows the
+<TR><TD ALIGN=left NOWRAP><TT>README.md</TT></TD><TD ALIGN=left NOWRAP>this file (Section 2 of the user guide)</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>revisionhistory.txt</TT></TD><TD ALIGN=left NOWRAP>the revision history</TD></TR>
+</TABLE></DIV><!--TOC subsection To build-->
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc5">2.3</A>&#XA0;&#XA0;To build</H3><!--SEC END --><!--TOC subsubsection With OPAM-->
+<H4 CLASS="subsubsection"><!--SEC ANCHOR --><A NAME="htoc6">2.3.1</A>&#XA0;&#XA0;With OPAM</H4><!--SEC END --><P>If you have <A HREF="https://opam.ocaml.org">OPAM</A> installed on your
+system, <TT>opam install ott</TT> will install the latest Ott version.
+The Emacs mode will be in
+<TT>&#X2018;opam config var prefix&#X2018;/share/ott/emacs</TT>, and documentation in
+<TT>&#X2018;opam config var prefix&#X2018;/doc/ott</TT>.</P><P>To install the Ott auxiliary files for Coq, first activate the
+<TT>coq-released</TT> OPAM repository:</P><P><TT>opam repo add coq-released https://coq.inria.fr/opam/released</TT></P><P>and then run <TT>opam install coq-ott</TT>.</P><!--TOC subsubsection Without OPAM-->
+<H4 CLASS="subsubsection"><!--SEC ANCHOR --><A NAME="htoc7">2.3.2</A>&#XA0;&#XA0;Without OPAM</H4><!--SEC END --><P>Ott depends on OCaml version 4.00.0 or later. It builds with (at least)
+OCaml 4.02.3.</P><P>The command <TT>make</TT> (<TT>make world</TT>) builds the <TT>ott</TT>
+binary in the <TT>bin/</TT> subdirectory.</P><P>This will compile Ott using <TT>ocamlopt</TT>. To force it to compile
+with <TT>ocamlc</TT> (which may give significantly slower execution of
+Ott), do <TT>make world.byt</TT>.</P><P>To build the Ott auxiliary files for Coq, go to the <TT>coq/</TT>
+subdirectory and run <TT>make</TT>. To install the resulting files in
+Coq&#X2019;s <TT>user-contrib</TT>, run <TT>make install</TT>.</P><!--TOC subsection To run-->
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc8">2.4</A>&#XA0;&#XA0;To run</H3><!--SEC END --><P>Ott runs as a command-line tool. Executing <TT>bin/ott</TT> shows the
 usage and options. To run Ott on the test file
 <TT>tests/test10.ott</TT>, generating LaTeX in <TT>test10.tex</TT> and
-Coq in <TT>test10.v</TT>, type:
-</P><PRE>
-  bin/ott -i tests/test10.ott -o test10.tex -o test10.v
-</PRE><P>
-Isabelle and HOL can be generated with options <TT>-o test10.thy</TT> and
-<TT>-o test10Script.sml</TT> respectively.</P><P>The Makefile has various sample targets, "<TT>make tests/test10.out</TT>",
-"<TT>make test7</TT>", etc. Typically they generate:</P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP> <TT>out.tex</TT></TD><TD ALIGN=left NOWRAP>LaTeX source for a definition</TD></TR>
-<TR><TD ALIGN=left NOWRAP> <TT>out.ps</TT></TD><TD ALIGN=left NOWRAP>the postscript built from that</TD></TR>
-<TR><TD ALIGN=left NOWRAP> <TT>out.v</TT></TD><TD ALIGN=left NOWRAP>Coq source</TD></TR>
-<TR><TD ALIGN=left NOWRAP> <TT>outScript.sml</TT></TD><TD ALIGN=left NOWRAP>HOL source</TD></TR>
-<TR><TD ALIGN=left NOWRAP> <TT>out.thy</TT></TD><TD ALIGN=left NOWRAP>Isabelle source</TD></TR>
-</TABLE><P>from files <TT>test10.ott</TT>, <TT>test8.ott</TT>, etc., in <TT>tests/</TT>.</P><!--TOC subsection Emacs mode-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc6">2.4</A>&#XA0;&#XA0;Emacs mode</H3><!--SEC END --><P>
+Coq in <TT>test10.v</TT>, type:</P><P><TT>bin/ott -i tests/test10.ott -o test10.tex -o test10.v</TT></P><P>Isabelle, HOL, and Lem can be generated with options
+<TT>-o test10.thy</TT>, <TT>-o test10Script.sml</TT>, and
+<TT>-o test10.lem</TT>, respectively.</P><P>The Makefile has various sample targets, <TT>make tests/test10.out</TT>,
+<TT>make test7</TT>, etc. Typically they generate:</P><P>ll
 
-The file <TT>emacs/ottmode.el</TT> defines a very simple Emacs mode for syntax
-highlighting of Ott source files. It can be used by, for example,
-adding the following to your <TT>.emacs</TT>, replacing <TT>PATH</TT> by a path to your
-Ott <TT>emacs</TT> directory.
-</P><PRE>
-(setq load-path (cons (expand-file-name "PATH") load-path))
-(require &#X2019;ottmode)
-</PRE><!--TOC subsection Copyright information-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc7">2.5</A>&#XA0;&#XA0;Copyright information</H3><!--SEC END --><P>
-
-The <TT>ocamlgraph</TT> library is distributed under the LGPL (from
-<A HREF="http://www.lri.fr/~filliatr/ftp/ocamlgraph/"><TT>http://www.lri.fr/~filliatr/ftp/ocamlgraph/</TT></A>); we include a snapshot
-for convenience. For its authorship and copyright information see the
-files therein.</P><P>All other files are distributed under the BSD-style licence in <TT>LICENCE</TT>.</P><!--TOC section A minimal Ott source file: the untyped CBV lambda calculus-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc8">3</A>&#XA0;&#XA0;A minimal Ott source file: the untyped CBV lambda calculus</H2><!--SEC END --><P><A NAME="a51"></A>Fig.&#XA0;<A HREF="#a45">1</A> shows an Ott source file for an untyped call-by-value
+</P><DIV CLASS="center"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP>filename</TD><TD ALIGN=left NOWRAP>description</TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=2></TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>out.tex</TT></TD><TD ALIGN=left NOWRAP>LaTeX source for a definition</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>out.ps</TT></TD><TD ALIGN=left NOWRAP>the postscript built from that</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>out.v</TT></TD><TD ALIGN=left NOWRAP>Coq source</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>outScript.sml</TT></TD><TD ALIGN=left NOWRAP>HOL source</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>out.thy</TT></TD><TD ALIGN=left NOWRAP>Isabelle source</TD></TR>
+</TABLE></DIV><P>from files <TT>test10.ott</TT>, <TT>test8.ott</TT>, etc., in
+<TT>tests/</TT>.</P><!--TOC subsection Manual-->
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc9">2.5</A>&#XA0;&#XA0;Manual</H3><!--SEC END --><UL CLASS="itemize"><LI CLASS="li-itemize">
+in the <A HREF="https://github.com/ott-lang/ott">Ott github</A> built_doc
+directory, or
+</LI><LI CLASS="li-itemize"><A HREF="http://www.cl.cam.ac.uk/&#XA0;pes20/ott/ott_manual_0.27.html">here
+(html)</A>
+</LI></UL><!--TOC subsection Emacs mode-->
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc10">2.6</A>&#XA0;&#XA0;Emacs mode</H3><!--SEC END --><P>The file <TT>emacs/ott-mode.el</TT> defines a very simple Emacs mode for
+syntax highlighting of Ott source files. It can be used by, for example,
+adding the following to your <TT>.emacs</TT> file, replacing
+<TT>PATH</TT> by a path to your Ott Emacs directory.</P><PRE CLASS="verbatim">(setq load-path (cons (expand-file-name "PATH") load-path))
+(require 'ott-mode)
+</PRE><!--TOC subsection Mailing lists-->
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc11">2.7</A>&#XA0;&#XA0;Mailing lists</H3><!--SEC END --><UL CLASS="itemize"><LI CLASS="li-itemize">
+<A HREF="https://lists.cam.ac.uk/mailman/listinfo/cl-ott-announce">cl-ott-announce
+announcement mailing list</A>
+</LI><LI CLASS="li-itemize"><A HREF="https://lists.cam.ac.uk/mailman/listinfo/cl-ott-discuss">cl-ott-discuss
+discussion mailing list</A>
+</LI></UL><!--TOC subsection Web page with examples-->
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc12">2.8</A>&#XA0;&#XA0;Web page with examples</H3><!--SEC END --><UL CLASS="itemize"><LI CLASS="li-itemize">
+<A HREF="http://www.cl.cam.ac.uk/users/pes20/ott">here</A>
+</LI></UL><!--TOC subsection Copyright information-->
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc13">2.9</A>&#XA0;&#XA0;Copyright information</H3><!--SEC END --><P>The ocamlgraph library is distributed under the LGPL (from
+http://www.lri.fr/&#X223C;filliatr/ftp/ocamlgraph/); we include
+a snapshot for convenience. For its authorship and copyright information
+see the files therein.</P><P>All other files are distributed under the BSD-style licence in LICENCE.
+</P><!--TOC section A minimal Ott source file: the untyped CBV lambda calculus-->
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc14">3</A>&#XA0;&#XA0;A minimal Ott source file: the untyped CBV lambda calculus</H2><!--SEC END --><P><A NAME="a51"></A>Fig.&#XA0;<A HREF="#a45">1</A> shows an Ott source file for an untyped call-by-value
 (CBV) lambda calculus. This section explains the basic features that
 appear there, while in the following sections we show what must be
 added to generate typeset output, proof assistant definitions, and
@@ -470,7 +498,7 @@ The colourisation uses vt220 control codes; if they do not work on
 your screen add <TT>-colour false</TT> to the middle of the command
 line. To suppress the echo of the definition, add
 <TT>-show_post_sort false</TT> and <TT>-show_defns false</TT>.</P><!--TOC subsection Index variables-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc9">3.1</A>&#XA0;&#XA0;Index variables</H3><!--SEC END --><P>
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc15">3.1</A>&#XA0;&#XA0;Index variables</H3><!--SEC END --><P>
 In addition to the <FONT COLOR="#A51815"><TT>metavar</TT></FONT> declarations above, the user can declare any number of distinguished <EM>index</EM>
 metavariables, e.g. by:
 </P><PRE>
@@ -483,7 +511,7 @@ and <CODE>m</CODE> can be used in suffixes, e.g.&#XA0;in the production
 </PRE><P>
 There is a fixed ad-hoc language of suffixes, including numbers, primes, and index variables (see &#XA7;<A HREF="#a17">23</A>).
 Index metavariables cannot themselves be suffixed.</P><!--TOC section Generating LaTeX-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc10">4</A>&#XA0;&#XA0;Generating LaTeX</H2><!--SEC END --><P><A NAME="a58"></A>The example from the previous section can already be used to generate
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc16">4</A>&#XA0;&#XA0;Generating LaTeX</H2><!--SEC END --><P><A NAME="a58"></A>The example from the previous section can already be used to generate
 LaTeX, for example by executing 
 </P><PRE>
    bin/ott -i tests/test10.0.ott -o out.tex 
@@ -523,7 +551,7 @@ v </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>::</TT></FONT></SPAN>
 Jop </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>::</TT></FONT></SPAN><SPAN CLASS="textboxed"> &#X201D; </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>::=</TT></FONT></SPAN><SPAN CLASS="textboxed">
 
  </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#A51815"><TT>defn</TT></FONT></SPAN><SPAN CLASS="textboxed">
- t1 &#X2013;&gt; t2 </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>::</TT></FONT></SPAN><SPAN CLASS="textboxed"> </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>::</TT></FONT></SPAN><SPAN CLASS="textboxed">reduce</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>::</TT></FONT></SPAN><SPAN CLASS="textboxed">&#X201D; </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>{</TT></FONT></SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>{</TT></FONT></SPAN><SPAN CLASS="textboxed"> </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#A51815"><TT>com</TT></FONT></SPAN><SPAN CLASS="textboxed"> </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>[[</TT></FONT></SPAN><SPAN CLASS="textboxed">t1</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>]]</TT></FONT></SPAN><SPAN CLASS="textboxed"> reduces to </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>[[</TT></FONT></SPAN><SPAN CLASS="textboxed">t2</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>]]</TT></FONT></SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>}</TT></FONT></SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>}</TT></FONT></SPAN><SPAN CLASS="textboxed"> </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#A51815"><TT>by</TT></FONT></SPAN><SPAN CLASS="textboxed">
+ t1 &#X2013;&gt; t2 </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>::</TT></FONT></SPAN><SPAN CLASS="textboxed"> </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>::</TT></FONT></SPAN><SPAN CLASS="textboxed">reduce</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>::</TT></FONT></SPAN><SPAN CLASS="textboxed">&#X201D; </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>{</TT></FONT></SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>{</TT></FONT></SPAN><SPAN CLASS="textboxed"> </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#A51815"><TT>com</TT></FONT></SPAN><SPAN CLASS="textboxed"> $</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>[[</TT></FONT></SPAN><SPAN CLASS="textboxed">t1</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>]]</TT></FONT></SPAN><SPAN CLASS="textboxed">$ reduces to $</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>[[</TT></FONT></SPAN><SPAN CLASS="textboxed">t2</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>]]</TT></FONT></SPAN><SPAN CLASS="textboxed">$</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>}</TT></FONT></SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>}</TT></FONT></SPAN><SPAN CLASS="textboxed"> </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#A51815"><TT>by</TT></FONT></SPAN><SPAN CLASS="textboxed">
 
 
 </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>    --------------------------</TT></FONT></SPAN><SPAN CLASS="textboxed">  :: ax_app
@@ -543,7 +571,7 @@ Jop </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>::</TT></FONT></SPA
 </TABLE></DIV>
 <DIV CLASS="center"><HR WIDTH="80%" SIZE=2></DIV></BLOCKQUOTE><BLOCKQUOTE CLASS="figure"><DIV CLASS="center"><HR WIDTH="80%" SIZE=2></DIV>
 
-<IMG SRC="top2001.gif"><DIV CLASS="caption"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD VALIGN=top ALIGN=left>Figure 3: Generated LaTeX: <TT>test10.2.tex</TT><A NAME="a49"></A></TD></TR>
+<IMG SRC="top2001.png"><DIV CLASS="caption"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD VALIGN=top ALIGN=left>Figure 3: Generated LaTeX: <TT>test10.2.tex</TT><A NAME="a49"></A></TD></TR>
 </TABLE></DIV>
 <DIV CLASS="center"><HR WIDTH="80%" SIZE=2></DIV></BLOCKQUOTE><P>
 The source file has three additions to the previous file. 
@@ -555,7 +583,7 @@ specification of how metavariables should be translated to LaTeX:
 </PRE><P>
 Inside the <TT><FONT COLOR="#007FFF">{</FONT></TT><TT><FONT COLOR="#007FFF">{</FONT></TT><TT> </TT><TT><FONT COLOR="#A51815">tex</FONT></TT><TT> </TT>&#X2026;<TT> </TT><TT><FONT COLOR="#007FFF">}</FONT></TT><TT><FONT COLOR="#007FFF">}</FONT></TT>
 is some LaTeX code
-<TT>\</TT><TT>mathit</TT><TT>{</TT><TT><FONT COLOR="#007FFF">[[</FONT></TT><TT>termvar</TT><TT><FONT COLOR="#007FFF">]]</FONT></TT><TT>}</TT> 
+<TT>\</TT><TT>mathit</TT><TT>{</TT><TT><FONT COLOR="#007FFF">$[[</FONT></TT><TT>termvar</TT><TT><FONT COLOR="#007FFF">]]$</FONT></TT><TT>}</TT> 
 giving the translation of a <TT>termvar</TT> or <TT>x</TT>. Here they
 are typeset in math italic (which in fact is also the default).
 Within the translation, the metavariable itself can be mentioned
@@ -581,7 +609,7 @@ attached to a production, and the
 <TT><FONT COLOR="#007FFF">{</FONT></TT><TT><FONT COLOR="#007FFF">{</FONT></TT><TT> </TT><TT><FONT COLOR="#A51815">com</FONT></TT><TT> </TT><TT><FONT COLOR="#007FFF">[[</FONT></TT><TT>t1</TT><TT><FONT COLOR="#007FFF">]]</FONT></TT><TT> reduces to </TT><TT><FONT COLOR="#007FFF">[[</FONT></TT><TT>t2</TT><TT><FONT COLOR="#007FFF">]]</FONT></TT><TT><FONT COLOR="#007FFF">}</FONT></TT><TT><FONT COLOR="#007FFF">}</FONT></TT>
 attached to a semantic relation. These appear in the LaTeX output
 as shown in Figure&#XA0;<A HREF="#a49">3</A>.</P><!--TOC subsection Specifying LaTeX for productions-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc11">4.1</A>&#XA0;&#XA0;Specifying LaTeX for productions</H3><!--SEC END --><P>
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc17">4.1</A>&#XA0;&#XA0;Specifying LaTeX for productions</H3><!--SEC END --><P>
 One can also specify <FONT COLOR="#A51815"><TT>tex</TT></FONT> translations for productions, overriding the default
 LaTeX typesetting, e.g.&#XA0;as in this example of
 a type abstraction production.
@@ -600,7 +628,7 @@ terms. For example, an F<SUB>&lt;:</SUB> term
  \, \, [ \, \mathit{T_{\mathrm{2}}} \, ]
 </PRE><P>which is typeset as below.
 </P><TABLE CLASS="display dcenter"><TR VALIGN="middle"><TD CLASS="dcell">
-<IMG SRC="top2002.gif"></TD></TR>
+<IMG SRC="top2002.png"></TD></TR>
 </TABLE><P>
 Note the <CODE>X</CODE>, <CODE>T11</CODE> and <CODE>t12</CODE> of the symbolic term are
 used to instantiate the formal parameters <CODE>X</CODE>, <CODE>T</CODE> and
@@ -612,13 +640,13 @@ If the <CODE>t</CODE> itself had compound term structure, e.g. as below
 . \,  \mathit{x} \,  \, )
 </PRE><P>typeset as follows.
 </P><TABLE CLASS="display dcenter"><TR VALIGN="middle"><TD CLASS="dcell">
-<IMG SRC="top2003.gif"></TD></TR>
+<IMG SRC="top2003.png"></TD></TR>
 </TABLE><P>
 Where there is no user-supplied homomorphism clause the LaTeX
 pretty-printing defaults to a sequence of the individual items
 separated by thin spaces (<CODE>\,</CODE>),
 with reasonable default fonts and making use of the <CODE>terminals</CODE> grammar where appropriate.</P><!--TOC subsection Specifying LaTeX for grammar rules-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc12">4.2</A>&#XA0;&#XA0;Specifying LaTeX for grammar rules</H3><!--SEC END --><P>
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc18">4.2</A>&#XA0;&#XA0;Specifying LaTeX for grammar rules</H3><!--SEC END --><P>
 Grammar rules can include a <FONT COLOR="#A51815"><TT>tex</TT></FONT> hom specifying how all the
 nonterminal roots should be typeset, e.g.
 </P><PRE>
@@ -636,8 +664,8 @@ homs specifying how they should be typeset:
 permitting the user to write <CODE>G'</CODE>, <CODE>D12</CODE> etc.&#XA0;in symbolic
 terms, to be typeset as 
 
-<IMG SRC="top2004.gif">etc.</P><!--TOC subsection Using the LaTeX code-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc13">4.3</A>&#XA0;&#XA0;Using the LaTeX code</H3><!--SEC END --><P><A NAME="a64"></A>The generated LaTeX code can be used in two main ways. 
+<IMG SRC="top2004.png">etc.</P><!--TOC subsection Using the LaTeX code-->
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc19">4.3</A>&#XA0;&#XA0;Using the LaTeX code</H3><!--SEC END --><P><A NAME="a64"></A>The generated LaTeX code can be used in two main ways. 
 By default, Ott generates a stand-alone LaTeX file, 
 with a standard wrapper (including a <CODE>\documentclass</CODE>, various
 macro definitions, and a main body),
@@ -681,7 +709,7 @@ so such style files can be reused in different contexts.</P><P>A more sophistica
 inference rules and grammars should be typeset, is contained in the
 <CODE>tex</CODE> directory of the distribution. It is described in the
 manual therein.</P><!--TOC section Generating proof assistant definitions-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc14">5</A>&#XA0;&#XA0;Generating proof assistant definitions</H2><!--SEC END --><P><A NAME="a52"></A>To generate proof assistant definitions, for Coq, Isabelle, and HOL,
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc20">5</A>&#XA0;&#XA0;Generating proof assistant definitions</H2><!--SEC END --><P><A NAME="a52"></A>To generate proof assistant definitions, for Coq, Isabelle, and HOL,
 the minimal Ott source file of Section&#XA0;<A HREF="#a51">3</A>/Figure&#XA0;<A HREF="#a45">1</A> must
 be extended with a modest amount of additional data, as shown in Figure&#XA0;<A HREF="#a47">4</A>.
 Executing 
@@ -802,7 +830,7 @@ The body of a proof assistant hom should normally include outer
 parentheses, as in the <TT>Tsub</TT> hom above, so that it is
 parsed correctly by the proof assistant in all contexts.</P><BLOCKQUOTE CLASS="figure"><DIV CLASS="center"><HR WIDTH="80%" SIZE=2></DIV>
 <DIV CLASS="minipage"><SPAN CLASS="textboxed">
-</SPAN><PRE CLASS="verbatim"><SPAN CLASS="textboxed">(* generated by Ott 0.25 from: ../tests/test10.ott ../tests/non_super_tabular.ott *)
+</SPAN><PRE CLASS="verbatim"><SPAN CLASS="textboxed">(* generated by Ott 0.27 from: ../tests/test10.ott ../tests/non_super_tabular.ott *)
 
 Require Import Arith.
 Require Import Bool.
@@ -868,12 +896,12 @@ Inductive reduce : term -&gt; term -&gt; Prop :=    (* defn reduce *)
 </TABLE></DIV>
 <DIV CLASS="center"><HR WIDTH="80%" SIZE=2></DIV></BLOCKQUOTE><BLOCKQUOTE CLASS="figure"><DIV CLASS="center"><HR WIDTH="80%" SIZE=2></DIV>
 <DIV CLASS="minipage"><SPAN CLASS="textboxed">
-</SPAN><PRE CLASS="verbatim"><SPAN CLASS="textboxed">(* generated by Ott 0.25 from: ../tests/test10.ott ../tests/non_super_tabular.ott *)
+</SPAN><PRE CLASS="verbatim"><SPAN CLASS="textboxed">(* generated by Ott 0.27 from: ../tests/test10.ott ../tests/non_super_tabular.ott *)
 theory test10
-imports Main "~~/src/HOL/Library/Multiset"
+imports Main
 begin
 
-types "var" = "string" -- {* term variable *}
+type_synonym "var" = "string" -- {* term variable *}
 datatype "term" =  -- {* term *}
    t_var "var"   -- {* variable *}
  | t_lam "var" "term"   -- {* lambda *}
@@ -923,7 +951,7 @@ end
 </TABLE></DIV>
 <DIV CLASS="center"><HR WIDTH="80%" SIZE=2></DIV></BLOCKQUOTE><BLOCKQUOTE CLASS="figure"><DIV CLASS="center"><HR WIDTH="80%" SIZE=2></DIV>
 <DIV CLASS="minipage"><SPAN CLASS="textboxed">
-</SPAN><PRE CLASS="verbatim"><SPAN CLASS="textboxed">(* generated by Ott 0.25 from: ../tests/test10.ott ../tests/non_super_tabular.ott *)
+</SPAN><PRE CLASS="verbatim"><SPAN CLASS="textboxed">(* generated by Ott 0.27 from: ../tests/test10.ott ../tests/non_super_tabular.ott *)
 (* to compile: Holmake test10Theory.uo   *)
 (* for interactive use:
   app load ["pred_setTheory","finite_mapTheory","stringTheory","containerTheory","ottLib"];
@@ -991,7 +1019,7 @@ val _ = export_theory ();
 <DIV CLASS="caption"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD VALIGN=top ALIGN=left>Figure 7: Generated HOL:<TT>test10Script.sml</TT><A NAME="a40"></A></TD></TR>
 </TABLE></DIV>
 <DIV CLASS="center"><HR WIDTH="80%" SIZE=2></DIV></BLOCKQUOTE><!--TOC subsection Proof assistant code for grammar rules-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc15">5.1</A>&#XA0;&#XA0;Proof assistant code for grammar rules</H3><!--SEC END --><P>
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc21">5.1</A>&#XA0;&#XA0;Proof assistant code for grammar rules</H3><!--SEC END --><P>
 The normal behaviour is to generate a free proof assistant type for
 each (non-subrule, non-phantom) grammar rule. 
 For example, the Coq compilation for <TT>t</TT> here generates a free type with three
@@ -1054,7 +1082,7 @@ T <FONT COLOR="#007FFF"><TT>{</TT></FONT><FONT COLOR="#007FFF"><TT>{</TT></FONT>
 When generating Isabelle/Coq/HOL/OCaml representation types, however, they are
 topologically sorted, to simplify the resulting induction
 principles.</P><!--TOC subsection Proof assistant code for inductive definitions-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc16">5.2</A>&#XA0;&#XA0;Proof assistant code for inductive definitions</H3><!--SEC END --><P>
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc22">5.2</A>&#XA0;&#XA0;Proof assistant code for inductive definitions</H3><!--SEC END --><P>
 The semantic relations are defined
 with the proof-assistant inductive relations packages, 
 <CODE>Inductive</CODE>, <CODE>Hol_reln</CODE>, and <CODE>inductive_set</CODE> or <CODE>inductive</CODE>, respectively.
@@ -1087,7 +1115,7 @@ invoking the generated subrule predicate for the non-free rule is added, e.g.&#X
 For Coq and HOL, explicit quantifiers are introduced for all variables
 mentioned in the rule.
 For HOL, rules are tagged with their rule name (using <CODE>clause_name</CODE>).</P><!--TOC subsection Representation of binding-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc17">5.3</A>&#XA0;&#XA0;Representation of binding</H3><!--SEC END --><P>
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc23">5.3</A>&#XA0;&#XA0;Representation of binding</H3><!--SEC END --><P>
 At present the generated Isabelle/Coq/HOL uses fully concrete
 representations of variables in terms, without any notion of alpha
 equivalence, as one can see in Fig.&#XA0;<A HREF="#a5">6</A>:
@@ -1113,7 +1141,7 @@ paper and in a working draft
 Zappa Nardelli. August 2007.
 </BLOCKQUOTE><P>
 available from the Ott web page.</P><!--TOC subsection Helper functions for free variable and substitution functions-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc18">5.4</A>&#XA0;&#XA0;Helper functions for free variable and substitution functions</H3><!--SEC END --><P>The generated free variable and substitution functions in the Coq output 
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc24">5.4</A>&#XA0;&#XA0;Helper functions for free variable and substitution functions</H3><!--SEC END --><P>The generated free variable and substitution functions in the Coq output 
 (e.g., in Figure&#XA0;<A HREF="#a6">5</A>) often rely on a few standard library functions: 
 <CODE>list_mem</CODE>, <CODE>list_assoc</CODE>, <CODE>list_minus</CODE>, <CODE>list_minus2</CODE>.
 In order to avoid dependencies on external libraries for defining those
@@ -1129,7 +1157,7 @@ generated equivalent code based on <CODE>list_filter</CODE>, which was more
 difficult to reason about. For backwards compatibility, however, we provide the
 command-line option <CODE>-coq_use_filter_fn</CODE> for generating a definition using
 the older code pattern.</P><!--TOC subsection Correctness of the generated proof assistant code-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc19">5.5</A>&#XA0;&#XA0;Correctness of the generated proof assistant code</H3><!--SEC END --><P>
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc25">5.5</A>&#XA0;&#XA0;Correctness of the generated proof assistant code</H3><!--SEC END --><P>
 We have attempted to ensure that the proof assistant definitions
 generated by Ott are well-formed and what the user would intend. This
 is not guaranteed, however, for several reasons: (1) There may be name
@@ -1145,15 +1173,15 @@ to read the generated proof assistant definitions to check that they
 are as intended &#X2014; but typically one would do this in any case, many
 times over, in the process of proving metatheoretic results, so we do
 not consider it a major issue.</P><!--TOC subsection Using the generated proof assistant code-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc20">5.6</A>&#XA0;&#XA0;Using the generated proof assistant code</H3><!--SEC END --><P>
-Ott builds code for </P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP>Coq 8.3</TD><TD ALIGN=left NOWRAP><A HREF="http://coq.inria.fr/"><TT>http://coq.inria.fr/</TT></A></TD></TR>
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc26">5.6</A>&#XA0;&#XA0;Using the generated proof assistant code</H3><!--SEC END --><P>
+Note added 2017-11-30: the following is out of date. </P><P>Ott builds code for </P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP>Coq 8.3</TD><TD ALIGN=left NOWRAP><A HREF="http://coq.inria.fr/"><TT>http://coq.inria.fr/</TT></A></TD></TR>
 <TR><TD ALIGN=left NOWRAP>HOL 4 (the current svn version)</TD><TD ALIGN=left NOWRAP><A HREF="http://hol.sourceforge.net/"><TT>http://hol.sourceforge.net/</TT></A></TD></TR>
 <TR><TD ALIGN=left NOWRAP>Isabelle/HOL (Isabelle 2011)</TD><TD ALIGN=left NOWRAP><A HREF="http://isabelle.in.tum.de/"><TT>http://isabelle.in.tum.de/</TT></A></TD></TR>
 </TABLE><P>Given proof assistant files in the top-level directory of the
 distribution, as produced at the start of this section
 (Coq <TT>out.v</TT>, Isabelle <TT>out.thy</TT>, and HOL
 <TT>outScript.sml</TT>), the various proof assistants can be invoked as follows.</P><!--TOC subsubsection Coq-->
-<H4 CLASS="subsubsection"><!--SEC ANCHOR --><A NAME="htoc21">5.6.1</A>&#XA0;&#XA0;Coq</H4><!--SEC END --><P>
+<H4 CLASS="subsubsection"><!--SEC ANCHOR --><A NAME="htoc27">5.6.1</A>&#XA0;&#XA0;Coq</H4><!--SEC END --><P>
 First run 
 </P><PRE CLASS="verbatim">  make
 </PRE><P>in the <TT>coq</TT> directory of the distribution, to build the auxiliary files.
@@ -1165,7 +1193,7 @@ There are also various lemmas (in
 <CODE>Require Import ott_list.</CODE> </P><P>For batch mode run
 </P><PRE CLASS="verbatim">  coqc -I coq  out.v
 </PRE><P>where <CODE>coq</CODE> is the path to the <CODE>coq</CODE> directory of the distribution.</P><P>The experimental locally-nameless backend requires the <CODE>Metatheory</CODE> library by Arthur Chargueraud, available from the project web page.</P><!--TOC subsubsection HOL-->
-<H4 CLASS="subsubsection"><!--SEC ANCHOR --><A NAME="htoc22">5.6.2</A>&#XA0;&#XA0;HOL</H4><!--SEC END --><P>
+<H4 CLASS="subsubsection"><!--SEC ANCHOR --><A NAME="htoc28">5.6.2</A>&#XA0;&#XA0;HOL</H4><!--SEC END --><P>
 First run 
 </P><PRE CLASS="verbatim">  Holmake
 </PRE><P>in the <TT>hol</TT> directory of the distribution, to build the auxiliary files.</P><P>For
@@ -1179,13 +1207,13 @@ to the <CODE>hol</CODE> directory of the distribution), and in
 another window view the <CODE>outScript.sml</CODE> file. First
 paste in the <CODE>app load</CODE> command from a comment at the top of the
 file, then paste in the remainder.</P><!--TOC subsubsection Isabelle-->
-<H4 CLASS="subsubsection"><!--SEC ANCHOR --><A NAME="htoc23">5.6.3</A>&#XA0;&#XA0;Isabelle</H4><!--SEC END --><P>
+<H4 CLASS="subsubsection"><!--SEC ANCHOR --><A NAME="htoc29">5.6.3</A>&#XA0;&#XA0;Isabelle</H4><!--SEC END --><P>
 For batch mode:
 </P><PRE CLASS="verbatim">  echo 'ML_command {* (use_thy "Tmp"; OS.Process.exit OS.Process.success) handle e =&gt; (OS.Process.exit OS.Process.failure); *}' | /usr/local/Isabelle/bin/isabelle tty 
 </PRE><P>Interactively, using Proof General:
 </P><PRE CLASS="verbatim">  isabelle emacs out.thy
 </PRE><!--TOC section Judgments and formulae-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc24">6</A>&#XA0;&#XA0;Judgments and formulae</H2><!--SEC END --><P><A NAME="a53"></A>In a semantic rule, for example
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc30">6</A>&#XA0;&#XA0;Judgments and formulae</H2><!--SEC END --><P><A NAME="a53"></A>In a semantic rule, for example
 </P><PRE>
     t1 &#X2013;&gt; t1&#X2019;
 <FONT COLOR="#007FFF"><TT>    -------------- ::</TT></FONT> ctx_app_arg
@@ -1195,7 +1223,7 @@ the conclusion must be a symbolic term of the form of the judgement being
 defined, but in general the premises may be symbolic terms
 of a <FONT COLOR="#A51815"><TT>formula</TT></FONT> grammar or in-line embedded prover code.
 By default the formula grammar includes all the defined judgement forms: for the
-running example Ott will synthesise grammars as below.</P><P><IMG SRC="top2005.gif"></P><P>The user can also define an explicit formula grammar, to let other
+running example Ott will synthesise grammars as below.</P><P><IMG SRC="top2005.png"></P><P>The user can also define an explicit formula grammar, to let other
 forms (not just judgements) appear as rule premises. Below is a
 fragment of the formula grammar from the LJ example on the Ott web page.
 </P><PRE>
@@ -1225,7 +1253,7 @@ each, <FONT COLOR="#A51815"><TT>tex</TT></FONT> and <FONT COLOR="#A51815"><TT>is
 typeset and be translated into Isabelle.</P><P>If the user defines a <FONT COLOR="#A51815"><TT>formula</TT></FONT> grammar then (as here) the production
 name prefix must be <TT>formula_</TT> and the name for the
 <TT>judgement</TT> production must be <TT>judgement</TT>.</P><!--TOC subsection Naming of premises for the Coq backend-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc25">6.1</A>&#XA0;&#XA0;Naming of premises for the Coq backend</H3><!--SEC END --><P>
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc31">6.1</A>&#XA0;&#XA0;Naming of premises for the Coq backend</H3><!--SEC END --><P>
 It is possible to specify the names of premises of inductive
 predicates; these names are then used by the Coq backend, and are
 often useful in proofs. For instance, we can call <TT>RED</TT> the hypothesis in the rule below
@@ -1245,7 +1273,7 @@ Names of rules cannot contain spaces or other non alpha-numerical
 characters, and must begin with a letter. The name annotation must at
 the rightmost place on the hypothesis line, and must be enclosed
 (without spaces) between the <TT>[[:</TT> and <TT>]]</TT> parentheses.</P><!--TOC subsection In-line embedded prover code in premises-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc26">6.2</A>&#XA0;&#XA0;In-line embedded prover code in premises</H3><!--SEC END --><P>
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc32">6.2</A>&#XA0;&#XA0;In-line embedded prover code in premises</H3><!--SEC END --><P>
 Instead of adding a formula production, one can directly embed prover
 code as a premise, delimited as below by <TT><FONT COLOR="#007FFF">{</FONT></TT><TT><FONT COLOR="#007FFF">{</FONT></TT> and
 <TT><FONT COLOR="#007FFF">}</FONT></TT><TT><FONT COLOR="#007FFF">}</FONT></TT>. Within that, text will be echoed
@@ -1257,11 +1285,11 @@ directly to a prover (or given a default L<sup>A</sup>T<sub>E</sub>X typesetting
   <FONT COLOR="#007FFF"><TT>----------------------------------------------------------- ::</TT></FONT> Assign1
   e1=e2 . k |env   &#X2013;tau&#X2013;&gt;    lval(e1) . [__=c e2] . k |env
 </PRE><!--TOC subsection User syntax-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc27">6.3</A>&#XA0;&#XA0;User syntax</H3><!--SEC END --><P>
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc33">6.3</A>&#XA0;&#XA0;User syntax</H3><!--SEC END --><P>
 The tool also synthesises a <TT>user_syntax</TT> grammar of all the
-user syntax, for example:</P><P><IMG SRC="top2006.gif"></P><P>This is used for parsing top-level strings, for example when filtering
+user syntax, for example:</P><P><IMG SRC="top2006.png"></P><P>This is used for parsing top-level strings, for example when filtering
 embedded code (&#XA7;<A HREF="#a54">8</A>).</P><!--TOC section Concrete terms and OCaml generation-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc28">7</A>&#XA0;&#XA0;Concrete terms and OCaml generation</H2><!--SEC END --><P><A NAME="a57"></A>In semantic definitions, one typically never uses concrete variables,
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc34">7</A>&#XA0;&#XA0;Concrete terms and OCaml generation</H2><!--SEC END --><P><A NAME="a57"></A>In semantic definitions, one typically never uses concrete variables,
 only metavariables that range over them. 
 In examples, however, one may need either a mix of concrete variables
 and metavariables, or, for strictly concrete terms, to restrict to
@@ -1331,7 +1359,7 @@ v </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>::</TT></FONT></SPAN>
 Jop </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>::</TT></FONT></SPAN><SPAN CLASS="textboxed"> &#X201D; </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>::=</TT></FONT></SPAN><SPAN CLASS="textboxed">
 
  </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#A51815"><TT>defn</TT></FONT></SPAN><SPAN CLASS="textboxed">
- t1 &#X2013;&gt; t2 </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>::</TT></FONT></SPAN><SPAN CLASS="textboxed"> </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>::</TT></FONT></SPAN><SPAN CLASS="textboxed">reduce</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>::</TT></FONT></SPAN><SPAN CLASS="textboxed">&#X201D; </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>{</TT></FONT></SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>{</TT></FONT></SPAN><SPAN CLASS="textboxed"> </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#A51815"><TT>com</TT></FONT></SPAN><SPAN CLASS="textboxed"> </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>[[</TT></FONT></SPAN><SPAN CLASS="textboxed">t1</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>]]</TT></FONT></SPAN><SPAN CLASS="textboxed"> reduces to </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>[[</TT></FONT></SPAN><SPAN CLASS="textboxed">t2</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>]]</TT></FONT></SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>}</TT></FONT></SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>}</TT></FONT></SPAN><SPAN CLASS="textboxed"> </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#A51815"><TT>by</TT></FONT></SPAN><SPAN CLASS="textboxed">
+ t1 &#X2013;&gt; t2 </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>::</TT></FONT></SPAN><SPAN CLASS="textboxed"> </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>::</TT></FONT></SPAN><SPAN CLASS="textboxed">reduce</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>::</TT></FONT></SPAN><SPAN CLASS="textboxed">&#X201D; </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>{</TT></FONT></SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>{</TT></FONT></SPAN><SPAN CLASS="textboxed"> </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#A51815"><TT>com</TT></FONT></SPAN><SPAN CLASS="textboxed"> $</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>[[</TT></FONT></SPAN><SPAN CLASS="textboxed">t1</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>]]</TT></FONT></SPAN><SPAN CLASS="textboxed">$ reduces to $</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>[[</TT></FONT></SPAN><SPAN CLASS="textboxed">t2</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>]]</TT></FONT></SPAN><SPAN CLASS="textboxed">$</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>}</TT></FONT></SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>}</TT></FONT></SPAN><SPAN CLASS="textboxed"> </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#A51815"><TT>by</TT></FONT></SPAN><SPAN CLASS="textboxed">
 
 
 </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>    --------------------------</TT></FONT></SPAN><SPAN CLASS="textboxed">  :: ax_app
@@ -1351,7 +1379,7 @@ Jop </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>::</TT></FONT></SPA
 </TABLE></DIV>
 <DIV CLASS="center"><HR WIDTH="80%" SIZE=2></DIV></BLOCKQUOTE><BLOCKQUOTE CLASS="figure"><DIV CLASS="center"><HR WIDTH="80%" SIZE=2></DIV>
 <DIV CLASS="minipage"><SPAN CLASS="textboxed">
-</SPAN><PRE CLASS="verbatim"><SPAN CLASS="textboxed">(* generated by Ott 0.25 from: ../tests/test10.ott ../tests/non_super_tabular.ott *)
+</SPAN><PRE CLASS="verbatim"><SPAN CLASS="textboxed">(* generated by Ott 0.27 from: ../tests/test10.ott ../tests/non_super_tabular.ott *)
 
 type var = int (* term variable *)
 
@@ -1388,9 +1416,9 @@ let rec tsubst_term (t5:term) (x5:var) (t_6:term) : term =
 </TABLE></DIV>
 <DIV CLASS="center"><HR WIDTH="80%" SIZE=2></DIV></BLOCKQUOTE><!--TOC section Filtering: Using Ott syntax within LaTeX, Coq, Isabelle,
 HOL, or OCaml-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc29">8</A>&#XA0;&#XA0;Filtering: Using Ott syntax within LaTeX, Coq, Isabelle,
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc35">8</A>&#XA0;&#XA0;Filtering: Using Ott syntax within LaTeX, Coq, Isabelle,
 HOL, or OCaml</H2><!--SEC END --><P><A NAME="a54"></A></P><!--TOC subsection Filtering embedded code-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc30">8.1</A>&#XA0;&#XA0;Filtering embedded code</H3><!--SEC END --><P><A NAME="a60"></A>It is possible to embed arbitrary code in
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc36">8.1</A>&#XA0;&#XA0;Filtering embedded code</H3><!--SEC END --><P><A NAME="a60"></A>It is possible to embed arbitrary code in
 the Ott source using an <FONT COLOR="#A51815"><TT>embed</TT></FONT> block, which can contain
 <FONT COLOR="#A51815"><TT>tex</TT></FONT>, 
 <FONT COLOR="#A51815"><TT>coq</TT></FONT>, 
@@ -1445,7 +1473,7 @@ contents appear in the generated L<sup>A</sup>T<sub>E</sub>X preamble.
 Any definitions of L<sup>A</sup>T<sub>E</sub>X commands must appear in such a
 <FONT COLOR="#A51815"><TT>tex-preamble</TT></FONT> section.
 </P><!--TOC subsection Filtering files-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc31">8.2</A>&#XA0;&#XA0;Filtering files</H3><!--SEC END --><P>
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc37">8.2</A>&#XA0;&#XA0;Filtering files</H3><!--SEC END --><P>
 Similar processing can be carried out on separate files, using the
 command-line options <CODE>tex_filter</CODE>, <CODE>isa_filter</CODE>, etc.
 Each of these takes two arguments, a source filename and a destination
@@ -1525,12 +1553,12 @@ One can also include a &#X2018;defns&#X2019; collection of judgements, or the co
 <DIV CLASS="caption"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD VALIGN=top ALIGN=left>Figure 10: F<SUB>&lt;:</SUB> Extracts: LaTeX source file to be filtered (<TT>test7tt.mng</TT>)<A NAME="a56"></A></TD></TR>
 </TABLE></DIV>
 <DIV CLASS="center"><HR WIDTH="80%" SIZE=2></DIV></BLOCKQUOTE><BLOCKQUOTE CLASS="figure"><DIV CLASS="center"><HR WIDTH="80%" SIZE=2></DIV>
-<IMG SRC="top2007.gif"><DIV CLASS="caption"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD VALIGN=top ALIGN=left>Figure 11: F<SUB>&lt;:</SUB> Extracts: the filtered output (<TT>test7tt.tex</TT>)<A NAME="a55"></A></TD></TR>
+<IMG SRC="top2007.png"><DIV CLASS="caption"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD VALIGN=top ALIGN=left>Figure 11: F<SUB>&lt;:</SUB> Extracts: the filtered output (<TT>test7tt.tex</TT>)<A NAME="a55"></A></TD></TR>
 </TABLE></DIV>
 <DIV CLASS="center"><HR WIDTH="80%" SIZE=2></DIV></BLOCKQUOTE><!--TOC section Binding specifications-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc32">9</A>&#XA0;&#XA0;Binding specifications</H2><!--SEC END --><P><A NAME="a62"></A></P><P>Our first example involved a production with a single binder:
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc38">9</A>&#XA0;&#XA0;Binding specifications</H2><!--SEC END --><P><A NAME="a62"></A></P><P>Our first example involved a production with a single binder:
 
-</P><P><IMG SRC="top2008.gif"></P><P>specified by the source shown in Figure&#XA0;<A HREF="#a47">4</A>:
+</P><P><IMG SRC="top2008.png"></P><P>specified by the source shown in Figure&#XA0;<A HREF="#a47">4</A>:
 </P><PRE>
   <FONT COLOR="#007FFF"><TT>|</TT></FONT> <TT>\</TT> x . t      <FONT COLOR="#007FFF"><TT>::</TT></FONT>  <FONT COLOR="#007FFF"><TT>::</TT></FONT> Lam     <FONT COLOR="#007FFF"><TT>(+</TT></FONT> <FONT COLOR="#A51815"><TT>bind</TT></FONT> x <FONT COLOR="#A51815"><TT>in</TT></FONT> t <FONT COLOR="#007FFF"><TT>+)</TT></FONT>
 </PRE><P>
@@ -1542,25 +1570,25 @@ expressive enough to cover these.
 It comprises two forms of annotation on productions.
 The first, 
 
-<IMG SRC="top2009.gif">lets one specify that variables bind in nonterminals of the
+<IMG SRC="top2009.png">lets one specify that variables bind in nonterminals of the
 production, as in the <TT>Lam</TT> production above.
 Here 
 
-<IMG SRC="top2010.gif">is a <EM>metavariable set expression</EM>,
+<IMG SRC="top2010.png">is a <EM>metavariable set expression</EM>,
 e.g.&#XA0;in that lambda production just the singleton
 metavariable 
 
-<IMG SRC="top2011.gif">of the production.
+<IMG SRC="top2011.png">of the production.
 A variable can bind in multiple nonterminals, as in the example of
-a simple recursive <TT>let</TT> below.</P><P><IMG SRC="top2012.gif"></P><P>More complex examples require one to collect together sets of
+a simple recursive <TT>let</TT> below.</P><P><IMG SRC="top2012.png"></P><P>More complex examples require one to collect together sets of
 variables. For example, the grammar below (shown in Ott source and the
 generated LaTeX) has structured patterns,
 with a 
-<IMG SRC="top2013.gif">production in which all the binders of the pattern 
+<IMG SRC="top2013.png">production in which all the binders of the pattern 
 
-<IMG SRC="top2014.gif">bind in the continuation 
+<IMG SRC="top2014.png">bind in the continuation 
 
-<IMG SRC="top2015.gif"></P><PRE>
+<IMG SRC="top2015.png"></P><PRE>
 t <FONT COLOR="#007FFF"><TT>::</TT></FONT> E_ <FONT COLOR="#007FFF"><TT>::=</TT></FONT>
   <FONT COLOR="#007FFF"><TT>|</TT></FONT> x                        <FONT COLOR="#007FFF"><TT>::</TT></FONT>   <FONT COLOR="#007FFF"><TT>::</TT></FONT> ident
   <FONT COLOR="#007FFF"><TT>|</TT></FONT> ( t1 , t2 )              <FONT COLOR="#007FFF"><TT>::</TT></FONT>   <FONT COLOR="#007FFF"><TT>::</TT></FONT> pair
@@ -1571,18 +1599,18 @@ p <FONT COLOR="#007FFF"><TT>::</TT></FONT> P_ <FONT COLOR="#007FFF"><TT>::=</TT>
   <FONT COLOR="#007FFF"><TT>|</TT></FONT> _                        <FONT COLOR="#007FFF"><TT>::</TT></FONT>   <FONT COLOR="#007FFF"><TT>::</TT></FONT> wildcard    <FONT COLOR="#007FFF"><TT>(+</TT></FONT> binders <FONT COLOR="#007FFF"><TT>=</TT></FONT> <FONT COLOR="#007FFF"><TT>{</TT></FONT><FONT COLOR="#007FFF"><TT>}</TT></FONT> <FONT COLOR="#007FFF"><TT>+)</TT></FONT>
   <FONT COLOR="#007FFF"><TT>|</TT></FONT> x                        <FONT COLOR="#007FFF"><TT>::</TT></FONT>   <FONT COLOR="#007FFF"><TT>::</TT></FONT> ident       <FONT COLOR="#007FFF"><TT>(+</TT></FONT> binders <FONT COLOR="#007FFF"><TT>=</TT></FONT> x <FONT COLOR="#007FFF"><TT>+)</TT></FONT>
   <FONT COLOR="#007FFF"><TT>|</TT></FONT> ( p1 , p2 )              <FONT COLOR="#007FFF"><TT>::</TT></FONT>   <FONT COLOR="#007FFF"><TT>::</TT></FONT> pair        <FONT COLOR="#007FFF"><TT>(+</TT></FONT> binders <FONT COLOR="#007FFF"><TT>=</TT></FONT> binders<FONT COLOR="#007FFF"><TT>(</TT></FONT>p1<FONT COLOR="#007FFF"><TT>)</TT></FONT> <FONT COLOR="#A51815"><TT>union</TT></FONT> binders<FONT COLOR="#007FFF"><TT>(</TT></FONT>p2<FONT COLOR="#007FFF"><TT>)</TT></FONT> <FONT COLOR="#007FFF"><TT>+)</TT></FONT>
-</PRE><P><IMG SRC="top2016.gif"></P><P>This is expressed with the second form of annotation: user-defined
+</PRE><P><IMG SRC="top2016.png"></P><P>This is expressed with the second form of annotation: user-defined
 <EM>auxiliary functions</EM> such as the 
 binders above. This is an auxiliary function defined over the
 
-<IMG SRC="top2017.gif">grammar that identifies a set of variables to be
+<IMG SRC="top2017.png">grammar that identifies a set of variables to be
 used in the <FONT COLOR=purple>bind</FONT> annotation on the 
-<IMG SRC="top2018.gif">production. There can be any number of such auxiliary functions;
+<IMG SRC="top2018.png">production. There can be any number of such auxiliary functions;
 binders is not a distinguished keyword.</P><P>The syntax of a precise fragment of the binding metalanguage is given in
 Fig.&#XA0;<A HREF="#a13">12</A>,
 
 </P><BLOCKQUOTE CLASS="figure"><DIV CLASS="center"><HR WIDTH="80%" SIZE=2></DIV>
-<IMG SRC="top2019.gif"><DIV CLASS="caption"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD VALIGN=top ALIGN=left>Figure 12: Mini-Ott in Ott: the binding specification metalanguage<A NAME="a13"></A></TD></TR>
+<IMG SRC="top2019.png"><DIV CLASS="caption"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD VALIGN=top ALIGN=left>Figure 12: Mini-Ott in Ott: the binding specification metalanguage<A NAME="a13"></A></TD></TR>
 </TABLE></DIV>
 <DIV CLASS="center"><HR WIDTH="80%" SIZE=2></DIV></BLOCKQUOTE><P>where we have used Ott to define part of the Ott
 metalanguage. A simple type system (not shown) enforces sanity properties,
@@ -1593,11 +1621,11 @@ of &#XA7;<A HREF="#a61">12</A>.
 Metavariable set expressions can include lists of metavariables
 and auxiliary functions applied to lists of nonterminals, e.g.&#XA0;as in
 the record patterns below.
-</P><P><IMG SRC="top2020.gif"></P><P>This suffices to express the binding structure of almost all the
+</P><P><IMG SRC="top2020.png"></P><P>This suffices to express the binding structure of almost all the
 natural examples we have come across, including definitions of
 mutually recursive functions with multiple clauses for each, Join
 calculus definitions&#XA0;[<A HREF="#FGLMR96">FGL+96</A>], dependent record patterns, and many others.</P><!--TOC section Generating substitution and free variable functions-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc33">10</A>&#XA0;&#XA0;Generating substitution and free variable functions</H2><!--SEC END --><P><A NAME="a67"></A>The tool can generate Isabelle/Coq/HOL/OCaml code for both single and multiple
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc39">10</A>&#XA0;&#XA0;Generating substitution and free variable functions</H2><!--SEC END --><P><A NAME="a67"></A>The tool can generate Isabelle/Coq/HOL/OCaml code for both single and multiple
 substitution functions. For example, the ML polymorphism Ott source
 of <TT>test8.ott</TT> includes the following.
 </P><PRE>
@@ -1644,7 +1672,7 @@ the free <TT>typvar</TT>s that occur in singleton productions in the
   ftv_typscheme :: "typscheme =&gt; typvar list"
   ftv_G :: "G =&gt; typvar list"
 </PRE><!--TOC section Locally-nameless representation-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc34">11</A>&#XA0;&#XA0;Locally-nameless representation</H2><!--SEC END --><P>The Coq backend of Ott includes experimental support for a
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc40">11</A>&#XA0;&#XA0;Locally-nameless representation</H2><!--SEC END --><P>The Coq backend of Ott includes experimental support for a
 locally-nameless representation (and co-finite quantification). </P><P>The user must specify which metavariables require a locally-nameless
 representation via the <TT><FONT COLOR="#A51815">repr-locally-nameless</FONT></TT> hom,
 e.g.:</P><PRE>
@@ -1745,11 +1773,11 @@ shown above.</P><P><I>Current limitations: support for single binders only, no a
 </I></P><P>If Ott is invoked with the <TT>-coq_lngen</TT> option, then the
 generated locally-nameless Coq code is compatible with Aydemir&#X2019;s
 <I>lngen</I> tool (<A HREF="http://www.cis.upenn.edu/&#XA0;baydemir/papers/lngen/"><TT>http://www.cis.upenn.edu/&#XA0;baydemir/papers/lngen/</TT></A>).</P><!--TOC section List forms-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc35">12</A>&#XA0;&#XA0;List forms</H2><!--SEC END --><P><A NAME="a61"></A>Ott has direct support for lists, both as <EM>dot forms</EM> such as 
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc41">12</A>&#XA0;&#XA0;List forms</H2><!--SEC END --><P><A NAME="a61"></A>Ott has direct support for lists, both as <EM>dot forms</EM> such as 
 
-<IMG SRC="top2021.gif">and as <EM>list comprehensions</EM> such as 
+<IMG SRC="top2021.png">and as <EM>list comprehensions</EM> such as 
 
-<IMG SRC="top2022.gif">.
+<IMG SRC="top2022.png">.
 Figure&#XA0;<A HREF="#a63">13</A> shows an example semantic rule taken from our OCaml
 fragment semantics, as both the generated LaTeX and its Ott
 source, that involves several dot forms.
@@ -1766,7 +1794,7 @@ production to the <FONT COLOR="#A51815"><TT>formula</TT></FONT> grammar, e.g. (a
 </PRE><P>
 The proof assistant code generation for such a production (which must
 be named <CODE>formula_dots</CODE>) is special-cased to a list conjunction.</P><BLOCKQUOTE CLASS="figure"><DIV CLASS="center"><HR WIDTH="80%" SIZE=2></DIV>
-<IMG SRC="top2023.gif"><PRE>
+<IMG SRC="top2023.png"><PRE>
  E |- e1 : t1 ... E |- en : tn
  E |- field_name1 : t-&gt;t1 ... E |- field_namen : t-&gt;tn
  t = (t1&#X2019;, ..., tl&#X2019;) typeconstr_name
@@ -1778,7 +1806,7 @@ be named <CODE>formula_dots</CODE>) is special-cased to a list conjunction.</P><
 </PRE><DIV CLASS="caption"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD VALIGN=top ALIGN=left>Figure 13: A sample OCaml semantic rule, in LaTeX and Ott
 source forms<A NAME="a63"></A></TD></TR>
 </TABLE></DIV><DIV CLASS="center"><HR WIDTH="80%" SIZE=2></DIV></BLOCKQUOTE><!--TOC subsection List dot forms-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc36">12.1</A>&#XA0;&#XA0;List dot forms</H3><!--SEC END --><P><A NAME="a66"></A>Example productions for 
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc42">12.1</A>&#XA0;&#XA0;List dot forms</H3><!--SEC END --><P><A NAME="a66"></A>Example productions for 
 record types, record terms, and record
 patterns are shown below, in both Ott source and LaTeX, taken
 from our F<SUB>&lt;:</SUB> example.
@@ -1795,13 +1823,13 @@ p <FONT COLOR="#007FFF"><TT>::</TT></FONT> &#X2019;P_&#X2019; <FONT COLOR="#007F
   <FONT COLOR="#007FFF"><TT>|</TT></FONT> <TT>{</TT> l1 = p1 , <FONT COLOR="#007FFF"><TT>..</TT></FONT> , ln = pn <TT>}</TT>      <FONT COLOR="#007FFF"><TT>::</TT></FONT> <FONT COLOR="#007FFF"><TT>::</TT></FONT> Rec <FONT COLOR="#007FFF"><TT>(+</TT></FONT> b <FONT COLOR="#007FFF"><TT>=</TT></FONT> b<FONT COLOR="#007FFF"><TT>(</TT></FONT>p1 <FONT COLOR="#007FFF"><TT>..</TT></FONT> pn<FONT COLOR="#007FFF"><TT>)</TT></FONT> <FONT COLOR="#007FFF"><TT>+)</TT></FONT> <FONT COLOR="#007FFF"><TT>{</TT></FONT><FONT COLOR="#007FFF"><TT>{</TT></FONT> <FONT COLOR="#A51815"><TT>com</TT></FONT>  record pattern  <FONT COLOR="#007FFF"><TT>}</TT></FONT><FONT COLOR="#007FFF"><TT>}</TT></FONT>
 
 </PRE><P>
-<IMG SRC="top2024.gif"></P><P>Dot forms can be used in symbolic terms in semantic rules:</P><P>
-<IMG SRC="top2025.gif"></P><P>Individually indexed projections from dot forms can be mentioned, eg
+<IMG SRC="top2024.png"></P><P>Dot forms can be used in symbolic terms in semantic rules:</P><P>
+<IMG SRC="top2025.png"></P><P>Individually indexed projections from dot forms can be mentioned, eg
 the <I>l</I><SUB><I>j</I></SUB> below:</P><P>
-<IMG SRC="top2026.gif"></P><P>Symbolic terms can also include concatenations of two dot forms with a
+<IMG SRC="top2026.png"></P><P>Symbolic terms can also include concatenations of two dot forms with a
 singleton in between:</P><P>
-<IMG SRC="top2027.gif"></P><P>Multiple dot forms within the same semantic rule can share bounds (e.g.&#XA0;1..<I>m</I>):</P><P>
-<IMG SRC="top2028.gif"></P><P>In more detail, productions can have dot tokens interspersed between the elements. 
+<IMG SRC="top2027.png"></P><P>Multiple dot forms within the same semantic rule can share bounds (e.g.&#XA0;1..<I>m</I>):</P><P>
+<IMG SRC="top2028.png"></P><P>In more detail, productions can have dot tokens interspersed between the elements. 
 Dot tokens consist of two, three or four consecutive dots (<FONT COLOR="#007FFF"><TT>..</TT></FONT>,
 <FONT COLOR="#007FFF"><TT>...</TT></FONT>, or <FONT COLOR="#007FFF"><TT>....</TT></FONT>), indicating lists with minimum lengths 0,
 1, and 2 respectively (these length minimums are respected
@@ -1832,7 +1860,7 @@ some means to specify
 a homomorphism for the repeated expression, and also data on how any
 list separators should be typeset. This would require more
 special-case treatment, which is not currently supported.)</P><!--TOC subsection List comprehension forms-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc37">12.2</A>&#XA0;&#XA0;List comprehension forms</H3><!--SEC END --><P><A NAME="a44"></A>Lists can also be expressed as explicit list comprehensions, 
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc43">12.2</A>&#XA0;&#XA0;List comprehension forms</H3><!--SEC END --><P><A NAME="a44"></A>Lists can also be expressed as explicit list comprehensions, 
 for more concise typesetting.
 Three different styles are supported, with no bounds, an upper bound,
 or a lower and upper bound. For example, in a symbolic
@@ -1885,7 +1913,7 @@ For example, the rules below
  </PRE><P>
 
 are typeset as follows.</P><P>
-<IMG SRC="top2029.gif"></P><P>Upper bounds of the form <I>n</I>&#X2212;1 are also permitted, e.g. with
+<IMG SRC="top2029.png"></P><P>Upper bounds of the form <I>n</I>&#X2212;1 are also permitted, e.g. with
 </P><PRE>
  G|- t:l0:T0,<FONT COLOR="#007FFF"><TT>..</TT></FONT>,ln-1:Tn-1
 <FONT COLOR="#007FFF"><TT> ----------------------- ::</TT></FONT> Proj_dotform_minus
@@ -1898,7 +1926,7 @@ are typeset as follows.</P><P>
 
 typeset as below. More complex arithmetic expressions are not
 currently supported.</P><P>
-<IMG SRC="top2030.gif"></P><P>A list form used in a symbolic term does not have to be in the same
+<IMG SRC="top2030.png"></P><P>A list form used in a symbolic term does not have to be in the same
 style as that in the corresponding production. 
 However, if a metavariable or nonterminal occurs in multiple different
 list forms in the same inference rule, they must all be in the same style and
@@ -1907,11 +1935,11 @@ homomorphism must be in the same style and with the same bounds as the
 corresponding list form in the elements of the production. </P><P>The comprehension form without an upper bound, 
 e.g.&#XA0;<TT><FONT COLOR="#007FFF">&lt;/</FONT></TT><TT> G |- ti:Ti </TT><TT><FONT COLOR="#007FFF">//</FONT></TT><TT> i </TT><TT><FONT COLOR="#007FFF">/&gt;</FONT></TT>, 
 typeset as 
-<IMG SRC="top2031.gif">is not standard
+<IMG SRC="top2031.png">is not standard
 notation, but is often very useful. Many semantic rules involve lists
 of matched length, e.g.&#XA0;of the 
-<IMG SRC="top2032.gif">and
-<IMG SRC="top2033.gif">here, but do not need to introduce an
+<IMG SRC="top2032.png">and
+<IMG SRC="top2033.png">here, but do not need to introduce an
 identifier for that length; omitting it keeps them concise.</P><P>The default visual style for typesetting list comprehensions can be
 overridden by redefining the LaTeX commands <CODE>\ottcomp</CODE>,
 <CODE>\ottcompu</CODE>, and <CODE>\ottcomplu</CODE> in an <FONT COLOR="#A51815"><TT>embed</TT></FONT> section, as
@@ -1925,8 +1953,8 @@ e.g. <CODE>&lt;&lt; Ti // i&gt;&gt;</CODE> for <SPAN style="text-decoration:over
 should be automated in future Ott releases, though it would bring the typeset and ASCII
 versions out of step.</P><P>List comprehension forms can also be used in bindspecs and in
 homomorphisms. </P><!--TOC subsection Proof assistant code for list forms-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc38">12.3</A>&#XA0;&#XA0;Proof assistant code for list forms</H3><!--SEC END --><P><A NAME="a65"></A></P><!--TOC subsubsection Types-->
-<H4 CLASS="subsubsection"><!--SEC ANCHOR --><A NAME="htoc39">12.3.1</A>&#XA0;&#XA0;Types</H4><!--SEC END --><P>
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc44">12.3</A>&#XA0;&#XA0;Proof assistant code for list forms</H3><!--SEC END --><P><A NAME="a65"></A></P><!--TOC subsubsection Types-->
+<H4 CLASS="subsubsection"><!--SEC ANCHOR --><A NAME="htoc45">12.3.1</A>&#XA0;&#XA0;Types</H4><!--SEC END --><P>
 We have to choose proof assistant representations for productions involving list
 forms. For example, for a language with records one might write 
 </P><PRE>
@@ -1965,9 +1993,9 @@ with t : Set :=
 </PRE><P>These are included in the grammar topological sort, and utility functions, e.g.&#XA0;to 
 make and unmake lists, are synthesised. 
 </P><!--TOC subsubsection Terms (in inductive definition rules)-->
-<H4 CLASS="subsubsection"><!--SEC ANCHOR --><A NAME="htoc40">12.3.2</A>&#XA0;&#XA0;Terms (in inductive definition rules)</H4><!--SEC END --><P>
+<H4 CLASS="subsubsection"><!--SEC ANCHOR --><A NAME="htoc46">12.3.2</A>&#XA0;&#XA0;Terms (in inductive definition rules)</H4><!--SEC END --><P>
 Supporting list forms in the rules of an inductive definition requires some additional analysis. For example,
-consider the record typing rule below.</P><P><IMG SRC="top2034.gif"></P><P>We analyse the symbolic terms in the premises and conclusion to
+consider the record typing rule below.</P><P><IMG SRC="top2034.png"></P><P>We analyse the symbolic terms in the premises and conclusion to
 identify lists of nonterminals and metavariables with the same bounds &#X2014; here <I>t</I><SUB>0</SUB> .. <I>t</I><SUB><I>n</I>&#X2212;1</SUB>, <I>T</I><SUB>0</SUB> .. <I>T</I><SUB><I>n</I>&#X2212;1</SUB>, and <I>l</I><SUB>0</SUB> .. <I>l</I><SUB><I>n</I>&#X2212;1</SUB>
 all have bounds 0..<I>n</I>&#X2212;1.
 To make the fact that they have the same length immediate in the
@@ -1989,7 +2017,7 @@ alternative of three different list variables coupled with assertions
 that they have the same length. </P><P>With direct support for lists, we need also direct support for 
 symbolic terms involving list projection and concatenation.
 For example, the rule
-</P><P><IMG SRC="top2035.gif"></P><P>gives rise to HOL code as below &#X2014; note the list-lifted usage of the
+</P><P><IMG SRC="top2035.png"></P><P>gives rise to HOL code as below &#X2014; note the list-lifted usage of the
 <CODE>is_v_of_t</CODE> predicate, and the list appends (<TT>++</TT>) in the conclusion.
 </P><PRE CLASS="verbatim">(* reduce_Rec *)  !(l'_t'_list:(label#t) list) 
        (l_v_list:(label#t) list) (l:label) (t:t) (t':t) . 
@@ -1998,7 +2026,7 @@ For example, the rule
  ==&gt; 
 (( reduce (t_Rec (l_v_list ++ [(l,t)] ++ l'_t'_list)) 
           (t_Rec (l_v_list ++ [(l,t')] ++ l'_t'_list))))
-</PRE><P>For the <TT>Proj</TT> typing rule </P><P><IMG SRC="top2036.gif"></P><P>we need a specific projection (the
+</PRE><P>For the <TT>Proj</TT> typing rule </P><P><IMG SRC="top2036.png"></P><P>we need a specific projection (the
 HOL <CODE>EL</CODE>) to
 pick out the <I>j</I>&#X2019;th element:
 </P><PRE CLASS="verbatim">(* Ty_Proj *)  !(l_Typ_list:(label#Typ) list) 
@@ -2044,7 +2072,7 @@ E_Ctx_recordI: "
 The generated code for substitutions and free variables takes account of such list structure.</P><P>Note that at present the generated Isabelle code for these functions
 does not always build without change, in particular if tuples of size
 3 or more are required in patterns.</P><!--TOC subsubsection List forms in homomorphisms-->
-<H4 CLASS="subsubsection"><!--SEC ANCHOR --><A NAME="htoc41">12.3.3</A>&#XA0;&#XA0;List forms in homomorphisms</H4><!--SEC END --><P>Proof assistant homomorphisms in productions can refer to dot-form
+<H4 CLASS="subsubsection"><!--SEC ANCHOR --><A NAME="htoc47">12.3.3</A>&#XA0;&#XA0;List forms in homomorphisms</H4><!--SEC END --><P>Proof assistant homomorphisms in productions can refer to dot-form
 metavariables and nonterminals. For example, the second production
 below (taken from <CODE>test17.9</CODE>) mentions <TT><FONT COLOR="#007FFF">[[</FONT></TT><TT>x1 t1 </TT><TT><FONT COLOR="#007FFF">...</FONT></TT><TT> xn tn</TT><TT><FONT COLOR="#007FFF">]]</FONT></TT> in the <FONT COLOR="#A51815"><TT>isa</TT></FONT>
 homomorphism. This must exactly match the dot form in the production
@@ -2088,7 +2116,7 @@ Eok_3I: "[|
  </PRE><P>
 Note that in the second the list of pairs is projected out from the
 <CODE>x_t_K_list</CODE> list of triples that is quantified over in the rule.</P><!--TOC section Subrules-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc42">13</A>&#XA0;&#XA0;Subrules</H2><!--SEC END --><P><A NAME="a14"></A>Subrule declarations have the form
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc48">13</A>&#XA0;&#XA0;Subrules</H2><!--SEC END --><P><A NAME="a14"></A>Subrule declarations have the form
 </P><PRE>
   <FONT COLOR="#A51815"><TT>subrules</TT></FONT>
     nt1 <FONT COLOR="#007FFF"><TT>&lt;::</TT></FONT> nt2
@@ -2138,7 +2166,7 @@ and <TT>is_t</TT> predicates, and the generated inductive definition
 clause for <TT>ax</TT> uses both predicates. The Isabelle clause is below.
 </P><PRE CLASS="verbatim">  axI: "[|is_t t ; is_v v|] ==&gt;  ( t , v ) : Baz"
 </PRE><!--TOC section Context rules-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc43">14</A>&#XA0;&#XA0;Context rules</H2><!--SEC END --><P><A NAME="a69"></A>The system supports the definition of single-hole contexts, e.g.&#XA0;for
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc49">14</A>&#XA0;&#XA0;Context rules</H2><!--SEC END --><P><A NAME="a69"></A>The system supports the definition of single-hole contexts, e.g.&#XA0;for
 evaluation contexts. For example, suppose one has a term grammar as below:
 </P><PRE>
 t <FONT COLOR="#007FFF"><TT>::</TT></FONT> &#X2019;t_&#X2019; <FONT COLOR="#007FFF"><TT>::=</TT></FONT>                               <FONT COLOR="#007FFF"><TT>{</TT></FONT><FONT COLOR="#007FFF"><TT>{</TT></FONT> <FONT COLOR="#A51815"><TT>com</TT></FONT> term    <FONT COLOR="#007FFF"><TT>}</TT></FONT><FONT COLOR="#007FFF"><TT>}</TT></FONT>
@@ -2216,7 +2244,7 @@ the hole terminal <CODE>__</CODE>, e.g.&#XA0;here we typeset the hole as [&#XB7;
 <FONT COLOR="#A51815"><TT>terminals</TT></FONT> <FONT COLOR="#007FFF"><TT>::</TT></FONT> &#X2019;terminals_&#X2019; <FONT COLOR="#007FFF"><TT>::=</TT></FONT>
   <FONT COLOR="#007FFF"><TT>|</TT></FONT> __           <FONT COLOR="#007FFF"><TT>::</TT></FONT>  <FONT COLOR="#007FFF"><TT>::</TT></FONT> hole    <FONT COLOR="#007FFF"><TT>{</TT></FONT><FONT COLOR="#007FFF"><TT>{</TT></FONT> <FONT COLOR="#A51815"><TT>tex</TT></FONT> [<TT>\</TT>cdot] <FONT COLOR="#007FFF"><TT>}</TT></FONT><FONT COLOR="#007FFF"><TT>}</TT></FONT>
 </PRE><!--TOC section Auxiliary Rules-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc44">15</A>&#XA0;&#XA0;Auxiliary Rules</H2><!--SEC END --><P>
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc50">15</A>&#XA0;&#XA0;Auxiliary Rules</H2><!--SEC END --><P>
 We permit an <TT>aux</TT> hom on grammar rules. For any rule with such a hom,
 we transform that rule by appending an <TT>_aux</TT> to its primary nonterminal
 root name. We then add a synthesised rule with the original nonterminal
@@ -2240,7 +2268,7 @@ avoid spurious conflicts.</P><P>An additional <TT>auxparams</TT> hom on rules le
 parameters to the generated OCaml output. </P><P>Generation of aux rules is controlled by a command-line option
 <TT>-generate_aux_rules</TT>, which one might (eg) set to false
 for latex output and true for OCaml output.</P><!--TOC section Functions-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc45">16</A>&#XA0;&#XA0;Functions</H2><!--SEC END --><P>Ott includes experimental support for writing function definitions.
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc51">16</A>&#XA0;&#XA0;Functions</H2><!--SEC END --><P>Ott includes experimental support for writing function definitions.
 As a simple example, consider the Ott file below:</P><PRE>
     <FONT COLOR="#A51815"><TT>grammar</TT></FONT>
      n <FONT COLOR="#007FFF"><TT>::</TT></FONT> &#X2019;n_&#X2019; <FONT COLOR="#007FFF"><TT>::=</TT></FONT>
@@ -2284,7 +2312,7 @@ Hol. Mutually recursive functions can be defined in the same
 definitions.</P><P><EM>Disclaimer:</EM> the different treatment of partial functions by the
 different provers can result in a function definition being compiled
 correctly to one prover but not to others.</P><!--TOC section Parsing Priorities-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc46">17</A>&#XA0;&#XA0;Parsing Priorities</H2><!--SEC END --><P>Symbolic terms that can have more than one parse tree are typically considered
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc52">17</A>&#XA0;&#XA0;Parsing Priorities</H2><!--SEC END --><P>Symbolic terms that can have more than one parse tree are typically considered
 erroneous; however, certain classes of parse trees are ignored in order to
 support common idioms that are ambiguous. For example, the production 
 </P><TABLE CLASS="display dcenter"><TR VALIGN="middle"><TD CLASS="dcell">&#X393;&#XA0;::=&#XA0;&#X393;<SUB>1</SUB>,&#XA0;..,&#XA0;&#X393;<SUB><I>n</I></SUB></TD></TR>
@@ -2381,7 +2409,7 @@ e_div <FONT COLOR="#007FFF"><TT>&lt;=</TT></FONT> e_tup
 <A NAME="parsing_figure"></A>
 </PRE><DIV CLASS="caption"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD VALIGN=top ALIGN=left>Figure 14: An Ott source file for basic arithmetic using the typical parsing priorities</TD></TR>
 </TABLE></DIV><DIV CLASS="center"><HR WIDTH="80%" SIZE=2></DIV></BLOCKQUOTE><!--TOC section Combining multiple source files-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc47">18</A>&#XA0;&#XA0;Combining multiple source files</H2><!--SEC END --><P>
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc53">18</A>&#XA0;&#XA0;Combining multiple source files</H2><!--SEC END --><P>
 Ott can be invoked with multiple source files.
 Input filenames with extensions <TT>.tex</TT>, <TT>.v</TT>,
 <TT>.thy</TT>, <TT>.sml</TT>, or <TT>ml</TT> are simply copied into
@@ -2447,7 +2475,7 @@ In <TT>examples/tapl</TT> we build a system, similar to the TinkerType
 <TT>sys-fullsimple</TT>, from <TT>ott</TT> source files that
 correspond roughly to the various TinkerType components, each with
 syntax and semantic rules for a single feature. </P><!--TOC section Hom blocks-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc48">19</A>&#XA0;&#XA0;Hom blocks</H2><!--SEC END --><P>
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc54">19</A>&#XA0;&#XA0;Hom blocks</H2><!--SEC END --><P>
 Bindspecs and homomorphisms for productions, and any homomorphisms
 for definitions, can appear in an Ott source file either 
 attached to the production or definition, as we have shown earlier, or
@@ -2507,7 +2535,7 @@ blocks.
   </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>::</TT></FONT></SPAN><SPAN CLASS="textboxed"> tsub    </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>{</TT></FONT></SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>{</TT></FONT></SPAN><SPAN CLASS="textboxed"> </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#A51815"><TT>ich</TT></FONT></SPAN><SPAN CLASS="textboxed"> ( tsubst_t </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>[[</TT></FONT></SPAN><SPAN CLASS="textboxed">t</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>]]</TT></FONT></SPAN><SPAN CLASS="textboxed"> </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>[[</TT></FONT></SPAN><SPAN CLASS="textboxed">x</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>]]</TT></FONT></SPAN><SPAN CLASS="textboxed"> </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>[[</TT></FONT></SPAN><SPAN CLASS="textboxed">t&#X2019;</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>]]</TT></FONT></SPAN><SPAN CLASS="textboxed"> ) </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>}</TT></FONT></SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>}</TT></FONT></SPAN><SPAN CLASS="textboxed">
 
 </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#A51815"><TT>homs</TT></FONT></SPAN><SPAN CLASS="textboxed"> &#X201D;
-  </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>::</TT></FONT></SPAN><SPAN CLASS="textboxed"> reduce  </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>{</TT></FONT></SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>{</TT></FONT></SPAN><SPAN CLASS="textboxed"> </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#A51815"><TT>com</TT></FONT></SPAN><SPAN CLASS="textboxed"> </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>[[</TT></FONT></SPAN><SPAN CLASS="textboxed">t1</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>]]</TT></FONT></SPAN><SPAN CLASS="textboxed"> reduces to </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>[[</TT></FONT></SPAN><SPAN CLASS="textboxed">t2</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>]]</TT></FONT></SPAN><SPAN CLASS="textboxed"> </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>}</TT></FONT></SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>}</TT></FONT></SPAN><SPAN CLASS="textboxed"> 
+  </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>::</TT></FONT></SPAN><SPAN CLASS="textboxed"> reduce  </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>{</TT></FONT></SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>{</TT></FONT></SPAN><SPAN CLASS="textboxed"> </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#A51815"><TT>com</TT></FONT></SPAN><SPAN CLASS="textboxed"> $</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>[[</TT></FONT></SPAN><SPAN CLASS="textboxed">t1</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>]]</TT></FONT></SPAN><SPAN CLASS="textboxed">$ reduces to $</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>[[</TT></FONT></SPAN><SPAN CLASS="textboxed">t2</SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>]]</TT></FONT></SPAN><SPAN CLASS="textboxed">$ </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>}</TT></FONT></SPAN><SPAN CLASS="textboxed"><FONT COLOR="#007FFF"><TT>}</TT></FONT></SPAN><SPAN CLASS="textboxed"> 
 
 
 </SPAN><SPAN CLASS="textboxed"><FONT COLOR="#A51815"><TT>subrules</TT></FONT></SPAN><SPAN CLASS="textboxed">
@@ -2540,7 +2568,7 @@ blocks.
 <DIV CLASS="caption"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD VALIGN=top ALIGN=left>Figure 16: Hom Sections: <TT>test10_homs.ott</TT><A NAME="a38"></A></TD></TR>
 </TABLE></DIV>
 <DIV CLASS="center"><HR WIDTH="80%" SIZE=2></DIV></BLOCKQUOTE><!--TOC section Isabelle syntax support-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc49">20</A>&#XA0;&#XA0;Isabelle syntax support</H2><!--SEC END --><P><A NAME="a39"></A>Ott has limited facilities to allow the Isabelle mixfix syntax support
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc55">20</A>&#XA0;&#XA0;Isabelle syntax support</H2><!--SEC END --><P><A NAME="a39"></A>Ott has limited facilities to allow the Isabelle mixfix syntax support
 and xsymbol to be used. The example <CODE>test10_isasyn.ott</CODE> shows
 this in use. 
 </P><P>Non-meta productions can be annotated with
@@ -2594,7 +2622,7 @@ and
 (4) it would be desirable to have more fine-grain control of whether
 to automatically generate annotations: per-production, per-rule, and
 per-file.</P><!--TOC section Isabelle code generation example-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc50">21</A>&#XA0;&#XA0;Isabelle code generation example</H2><!--SEC END --><P><A NAME="a22"></A>The Isabelle/Coq/HOL code generation facilities can be sometimes used to
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc56">21</A>&#XA0;&#XA0;Isabelle code generation example</H2><!--SEC END --><P><A NAME="a22"></A>The Isabelle/Coq/HOL code generation facilities can be sometimes used to
 generate (variously) OCaml and SML code from the Isabelle/Coq/HOL
 definitions produced by Ott.</P><P>For example, the <CODE>test10st_codegen.thy</CODE> file uses Isabelle
 code generation to produce SML code to calculate the possible
@@ -2641,7 +2669,7 @@ val it = t_Lam (["y"], t_Var ["y"]) : Test10st_codegen.t
 
 end
 </PRE><!--TOC section Reference: Command-line usage-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc51">22</A>&#XA0;&#XA0;Reference: Command-line usage</H2><!--SEC END --><P><A NAME="a32"></A>A good place to get started is one of the test
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc57">22</A>&#XA0;&#XA0;Reference: Command-line usage</H2><!--SEC END --><P><A NAME="a32"></A>A good place to get started is one of the test
 <TT>make</TT> targets in the <TT>ott</TT> directory, e.g.
 </P><PRE CLASS="verbatim">test10: tests/test10.ott
            bin/ott                                                \
@@ -2680,7 +2708,7 @@ also targets &#XA0;<CODE>%.coq.out</CODE>, &#XA0;<CODE>%.hol.out</CODE>, and
 &#XA0;<CODE>%.isa.out</CODE>, to generate just LaTeX and the code for one proof
 assistant, and &#XA0;<CODE>%.tex.out</CODE>, to generate just LaTeX.</P><P>The <TT>ott</TT> command-line options (with default values where applicable) are
 shown below. 
-</P><PRE CLASS="verbatim">Ott version 0.25   distribution of Thu Nov 24 15:34:20 GMT 2016
+</P><PRE CLASS="verbatim">Ott version 0.27   distribution of Mon 27 Nov 2017 17:18:55 GMT
 
 usage: ott &lt;options&gt; &lt;filename1&gt; .. &lt;filenamen&gt; 
   (use "OCAMLRUNPARAM=p  ott ..." to show the ocamlyacc trace)
@@ -2702,13 +2730,17 @@ usage: ott &lt;options&gt; &lt;filename1&gt; .. &lt;filenamen&gt;
   -fast_parse &lt;false&gt;                do not parse :rulename: pseudoterminals
   -signal_parse_errors &lt;false&gt;       return &gt;0 if there are bad defns
   -picky_multiple_parses &lt;false&gt;     Picky about multiple parses
-  -generate_aux_rules &lt;true&gt;         Generate auxiliary rules from {{ aux ... }} homs
+  -quotient_rules &lt;true&gt;             Quotient rules, as per {{ quotient-with ntr }} homs
+  -generate_aux_rules &lt;true&gt;         Generate auxiliary rules or constructor arguments from {{ aux ... }} homs
+  -aux_style_rules &lt;true&gt;            Auxiliary rules (true) vs constructor arguments (false)
   -output_source_locations &lt;0&gt;       Include source location info in output (0=none, 1=drules, 2=grammar+drules)
   -colour &lt;true&gt;                     Use (vt220) colour for ASCII pretty print
   -show_sort &lt;false&gt;                 Show ASCII pretty print of syntax
   -show_defns &lt;false&gt;                Show ASCII pretty print defns
   -tex_show_meta &lt;true&gt;              Include meta prods and rules in TeX output
   -tex_show_categories &lt;false&gt;       Signal production flags in TeX output
+  -tex_suppress_category &lt;[]&gt;        Suppress productions and rules with this category in TeX output
+  -tex_suppress_ntr &lt;[]&gt;             Suppress nonterminal root in TeX output
   -tex_colour &lt;true&gt;                 Colour parse errors in TeX output
   -tex_wrap &lt;true&gt;                   Wrap TeX output in document pre/postamble
   -tex_name_prefix &lt;string&gt;          Prefix for tex commands (default "ott")
@@ -2737,7 +2769,7 @@ usage: ott &lt;options&gt; &lt;filename1&gt; .. &lt;filenamen&gt;
   -help                              Display this list of options
   --help                             Display this list of options
 </PRE><!--TOC section Reference: The language of symbolic terms-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc52">23</A>&#XA0;&#XA0;Reference: The language of symbolic terms</H2><!--SEC END --><P><A NAME="a17"></A>A syntax definition conceptually defines two different languages: that
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc58">23</A>&#XA0;&#XA0;Reference: The language of symbolic terms</H2><!--SEC END --><P><A NAME="a17"></A>A syntax definition conceptually defines two different languages: that
 of concrete terms of the object language, and that of symbolic terms
 over the object language. 
 The former includes concrete variables (if nontrivial <CODE>lex</CODE> homs
@@ -2752,7 +2784,7 @@ A simplified abstract syntax of symbolic terms is shown in
 Figure&#XA0;<A HREF="#a19">17</A>, omitting list forms. In this section we give an
 informal definition of the full concrete syntax of symbolic terms.
 </P><BLOCKQUOTE CLASS="figure"><DIV CLASS="center"><HR WIDTH="80%" SIZE=2></DIV>
-<IMG SRC="top2037.gif"><DIV CLASS="caption"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD VALIGN=top ALIGN=left>Figure 17: Mini-Ott in Ott: symbolic terms<A NAME="a19"></A></TD></TR>
+<IMG SRC="top2037.png"><DIV CLASS="caption"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD VALIGN=top ALIGN=left>Figure 17: Mini-Ott in Ott: symbolic terms<A NAME="a19"></A></TD></TR>
 </TABLE></DIV>
 <DIV CLASS="center"><HR WIDTH="80%" SIZE=2></DIV></BLOCKQUOTE><P>The premises and conclusions of inductive definition rules are
 symbolic terms. 
@@ -2888,10 +2920,10 @@ console in detail during the Ott run.</P><P>The GLR parser
 achieves reasonable performance on the small symbolic terms that are
 typical in semantic rules. Its performance on large (whole-program
 size) examples is untested.</P><!--TOC section Reference: Generation of proof assistant definitions-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc53">24</A>&#XA0;&#XA0;Reference: Generation of proof assistant definitions</H2><!--SEC END --><P><A NAME="a42"></A>This section briefly summarises the steps involved in the generation
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc59">24</A>&#XA0;&#XA0;Reference: Generation of proof assistant definitions</H2><!--SEC END --><P><A NAME="a42"></A>This section briefly summarises the steps involved in the generation
 of proof assistant definitions from an Ott source file. For a description of the locally-nameless backend, refer to <A HREF="http://moscova.inria.fr/&#XA0;zappa/projects/ln_ott/"><TT>http://moscova.inria.fr/&#XA0;zappa/projects/ln_ott/</TT></A>.
 </P><!--TOC subsection Generation of types-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc54">24.1</A>&#XA0;&#XA0;Generation of types</H3><!--SEC END --><UL CLASS="itemize"><LI CLASS="li-itemize"> 
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc60">24.1</A>&#XA0;&#XA0;Generation of types</H3><!--SEC END --><UL CLASS="itemize"><LI CLASS="li-itemize"> 
 The primary metavariable roots and primary nonterminal roots are used
 directly as the names of proof assistant types, except where they
 have a hom specifying a root-overriding string.
@@ -2930,7 +2962,7 @@ synthesise an additional inductive type for each list-of-tuples that arises
 the translations of inductive definitions) and include them in the
 topological sort. 
 </LI></UL><!--TOC subsection Generation of functions-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc55">24.2</A>&#XA0;&#XA0;Generation of functions</H3><!--SEC END --><P>
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc61">24.2</A>&#XA0;&#XA0;Generation of functions</H3><!--SEC END --><P>
 A small number of library functions (<CODE>list_mem</CODE>,
 <CODE>list_minus</CODE>,...) are included in the output if they are
 required.</P><P>Several Coq list functions (<CODE>map</CODE>, <CODE>make</CODE>, <CODE>unmake</CODE>, <CODE>nth</CODE>, <CODE>app</CODE>) are generated
@@ -2981,7 +3013,7 @@ those proofs working in all cases.
 We therefore use an <CODE>ottDefine</CODE> variant (due to Scott Owens),
 with slightly stronger support for proving termination of
 definitions involving list operators.</P><!--TOC subsubsection Subrule predicates-->
-<H4 CLASS="subsubsection"><!--SEC ANCHOR --><A NAME="htoc56">24.2.1</A>&#XA0;&#XA0;Subrule predicates</H4><!--SEC END --><P><A NAME="a43"></A>We generate subrule predicates to carve out the subsets of each free
+<H4 CLASS="subsubsection"><!--SEC ANCHOR --><A NAME="htoc62">24.2.1</A>&#XA0;&#XA0;Subrule predicates</H4><!--SEC END --><P><A NAME="a43"></A>We generate subrule predicates to carve out the subsets of each free
 proof assistant type (from the maximal elements of the subrule order) 
 that represent the rules of the grammar. 
 The non-free rules are the least subset of the rules that either
@@ -2995,12 +3027,12 @@ constructors of the maximal type above it &#X2014; for each non-meta
 production of the maximal type it calculates a disjunction
 over all the productions of the lower type that are subproductions of
 it, invoking other subrule predicates as appropriate. </P><!--TOC subsubsection Binding auxiliaries-->
-<H4 CLASS="subsubsection"><!--SEC ANCHOR --><A NAME="htoc57">24.2.2</A>&#XA0;&#XA0;Binding auxiliaries</H4><!--SEC END --><P>
+<H4 CLASS="subsubsection"><!--SEC ANCHOR --><A NAME="htoc63">24.2.2</A>&#XA0;&#XA0;Binding auxiliaries</H4><!--SEC END --><P>
 The binding auxiliary functions calculate the intuitive semantics of auxiliary functions defined in bindspecs of the Ott source file. Currently these are represented as proof assistant lists of metavariables or nonterminals (arguably set types should be used instead, at least in Isabelle).</P><!--TOC subsubsection Free variables-->
-<H4 CLASS="subsubsection"><!--SEC ANCHOR --><A NAME="htoc58">24.2.3</A>&#XA0;&#XA0;Free variables</H4><!--SEC END --><P>
+<H4 CLASS="subsubsection"><!--SEC ANCHOR --><A NAME="htoc64">24.2.3</A>&#XA0;&#XA0;Free variables</H4><!--SEC END --><P>
 The free variable functions simply walk over the structure of the free proof assistant types, using any bind specifications (and binding auxiliaries) as appropriate. 
 For these, and for substitutions, we simplify the generated functions by using the dependency analysis of the syntax to exclude recursive calls where there is no dependency. </P><!--TOC subsubsection Substitutions-->
-<H4 CLASS="subsubsection"><!--SEC ANCHOR --><A NAME="htoc59">24.2.4</A>&#XA0;&#XA0;Substitutions</H4><!--SEC END --><P>
+<H4 CLASS="subsubsection"><!--SEC ANCHOR --><A NAME="htoc65">24.2.4</A>&#XA0;&#XA0;Substitutions</H4><!--SEC END --><P>
 The generated substitution functions also walk over the structure of the free proof assistant types. 
 For each production, for each occurrence of a nonterminal <CODE>nt</CODE> within it, we first calculate the things (of whatever type is in question) binding in that <CODE>nt</CODE>, i.e.&#XA0;those that should be removed from the domain of any substitution pushed down into it. There are two cases:
 (1) the <CODE>mse'</CODE> from any <CODE>bind mse' in nt</CODE>;
@@ -3011,7 +3043,7 @@ List forms within bindspecs are dealt with analogously.
 either (1) the production comprises a single element, of the nonterminal or metavariable that we are substituting for, and this is within the rule of the nonterminal that it is being replaced by, or (2) all other cases. 
 For (1) the element is compared with the domain of the substitution, and replaced by the corresponding value from the range if it is found.
 For (2) the substitution functions are mapped over the subelements, having first removed any bound things from the domain of the substitution. </P><P>This is all done similarly, but with differences in detail, for single and for multiple substitutions. </P><!--TOC subsection Generation of relations-->
-<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc60">24.3</A>&#XA0;&#XA0;Generation of relations</H3><!--SEC END --><P>
+<H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc66">24.3</A>&#XA0;&#XA0;Generation of relations</H3><!--SEC END --><P>
 The semantic relations are defined
 with the proof-assistant inductive relations packages
 (<CODE>coq</CODE>: <CODE>Inductive</CODE>,
@@ -3039,7 +3071,7 @@ e.g.&#XA0;a usage of <CODE>v'</CODE> where <CODE>v&lt;::t</CODE>, an additional 
 </LI><LI CLASS="li-itemize">For Coq, as the projections from list forms involve (Ott-generated) <CODE>nth</CODE> functions that return option types, for any such projection a pattern-match against <CODE>Some</CODE> is introduced as an additional premise.
 </LI><LI CLASS="li-itemize">For Coq and HOL, explicit quantifiers are introduced for all variables mentioned in the rule.
 </LI></UL><!--TOC section Reference: Summary of homomorphisms-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc61">25</A>&#XA0;&#XA0;Reference: Summary of homomorphisms</H2><!--SEC END --><P><A NAME="a41"></A>Homomorphisms can appear in various positions in an Ott source
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc67">25</A>&#XA0;&#XA0;Reference: Summary of homomorphisms</H2><!--SEC END --><P><A NAME="a41"></A>Homomorphisms can appear in various positions in an Ott source
 file. The table below summarises their meanings. A * indicates that arguments are meaningful for that usage (e.g.&#XA0;<TT><FONT COLOR="#007FFF">[[</FONT></TT><TT>e1</TT><TT><FONT COLOR="#007FFF">]]</FONT></TT> in a production mentioning a nonterminal or metavariable
 <CODE>e1</CODE>).</P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP COLSPAN=3>a metavar or indexvar declaration, after one of the defined metavar/indexvar roots, or</TD></TR>
 <TR><TD ALIGN=left NOWRAP COLSPAN=3>a rule, after one of the defined nonterminal
@@ -3142,14 +3174,14 @@ roots</TD></TR>
 </TABLE><P>(1) This is occasionally useful to work around a clash between a
 metavar or nonterminal primary root and a proof assistant symbol,
 e.g.&#XA0;<TT>value</TT> in Isabelle or <TT>T</TT> in HOL.</P><!--TOC section Reference: The Ott source grammar-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc62">26</A>&#XA0;&#XA0;Reference: The Ott source grammar</H2><!--SEC END --><P>
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc68">26</A>&#XA0;&#XA0;Reference: The Ott source grammar</H2><!--SEC END --><P>
 This is automatically generated (by <CODE>mly-y2l</CODE>) from the
 <CODE>ocamlyacc</CODE> grammar for Ott.
 </P><P>The lexing of Ott source files is context-dependent; this does not
 show that.</P><P>Not everything in the grammar is fully supported &#X2014; in particular,
 option element forms, non-dotted element list forms, the three <CODE>names</CODE> distinctness forms of
 bindspecs, and context rules.</P><!--TOC section Reference: Examples-->
-<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc63">27</A>&#XA0;&#XA0;Reference: Examples</H2><!--SEC END --><P><A NAME="a33"></A>The project web page
+<H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc69">27</A>&#XA0;&#XA0;Reference: Examples</H2><!--SEC END --><P><A NAME="a33"></A>The project web page
 </P><BLOCKQUOTE CLASS="quotation">
 <A HREF="http://www.cl.cam.ac.uk/users/pes20/ott/"><TT>http://www.cl.cam.ac.uk/users/pes20/ott/</TT></A>
 </BLOCKQUOTE><P>

@@ -7,8 +7,13 @@
 \usepackage{verbatim}
 \usepackage{alltt}
 \usepackage{hevea}
+\usepackage[usenames]{color}
  
-
+%\usepackage{ctable} %for pandoc-generated table
+\newcommand{\ctable}[1][]{}
+\newcommand{\FL}{\begin{center}\begin{tabular}{ll}}
+\newcommand{\ML}{\\\hline}
+\newcommand{\LL}{\end{tabular}\end{center}}
 
 %\begin{htmlonly}
 %\renewcommand{\fbox}[1]
@@ -25,7 +30,6 @@ twoside,
 left=25.4mm, right=25.5mm,
 top=20mm,  bottom=35mm,
 }
-\usepackage[usenames]{color}
 \usepackage{parskip}
 
 
@@ -134,10 +138,11 @@ write in informal mathematics.  It generates output:
 \item a Coq version of the definition; 
 \item a HOL version of the definition;
 \item an Isabelle/HOL version of the definition; 
+\item a Lem version of the definition; 
 \item an OCaml version of the syntax of the definition.
 \end{enumerate}
 Additionally, it can be run as a filter, taking a
-\myLaTeX{}/Coq/Isabelle/HOL/OCaml  source file
+\myLaTeX{}/Coq/Isabelle/HOL/Lem/OCaml  source file
 with embedded (symbolic) terms of the defined language, parsing them and replacing
 them by typeset terms.
 
@@ -191,7 +196,7 @@ range of simple errors, e.g.~inconsistent use of judgement forms or
 metavariable naming conventions. 
 %
 That same input, extended with some additional data, can be used to generate formal definitions for
-Coq, HOL, and Isabelle.  It should thereby enable a smooth transition
+Coq, HOL, Isabelle, and Lem.  It should thereby enable a smooth transition
 between use of informal and formal mathematics.  Further, the
 tool can automatically generate definitions of functions for free
 variables, single and multiple substitutions, subgrammar checks
@@ -215,9 +220,7 @@ languages the definition is a more substantial problem --- so much so
 that only a handful of full-scale languages have been given complete definitions. We
 aim to make this more commonplace, less of a heroic task.
 
-
-\section{Getting started with Ott}
-\newcommand{\mydummy}[1]{}
+% getting started with Ott
 \input{README}
 
 
@@ -477,7 +480,7 @@ specification of how metavariables should be translated to \myLaTeX:
 \end{alltt}
 Inside the   \texttt{\mysym{\mylb\mylb{}} \mykw{tex} }$\ldots$\texttt{ \mysym{\myrb\myrb{}}}
 is some \myLaTeX{} code
-\texttt{\mybackslash{}mathit\mylb{}\mysym{[[}termvar\mysym{]]}\myrb{}} 
+\texttt{\mybackslash{}mathit\mylb{}\mysym{\$[[}termvar\mysym{]]\$}\myrb{}} 
 giving the translation of a \texttt{termvar} or \texttt{x}.  Here they
 are typeset in math italic (which in fact is also the default).
 Within the translation, the metavariable itself can be mentioned
@@ -958,6 +961,8 @@ not consider it a major issue.
 
 \subsection{Using the generated proof assistant code}
 %
+Note added 2017-11-30: the following is out of date.  
+
 Ott builds code for 
 
 \begin{tabular}{ll}

@@ -4,29 +4,38 @@ A tool for writing definitions of programming languages and calculi
 
 by Peter Sewell, Francesco Zappa Nardelli, and Scott Owens.
 
+## Repository and Package
+
+Ott is now [available from github](https://github.com/ott-lang/ott), and as
+an [opam](https://opam.ocaml.org) package.
+
+We no longer provide non-github tarballs or a Windows distribution.
+
+
 ## Directory contents
 
-The source distribution contains:
+directory                description
+-----------------------  -------------------------------------------------
+`aux/`                   auxiliary code (y2l) used to build the user guide
+`bin/`                   the Ott binary
+`built_doc/`             the user guide, in html, pdf, and ps
+`coq/`                   auxiliary files for Coq
+`doc/`                   the user guide sources
+`emacs/`                 an Ott Emacs mode
+`examples/`              some larger example Ott files
+`tex/`                   auxiliary files for LaTeX
+`hol/`                   auxiliary files for HOL
+`menhir/`                auxiliary files for menhir
+`ocamlgraph-1.7.tar.gz`  a copy of the ocamlgraph library
+`regression/`            regression-test machinery
+`tests/`                 various small example Ott files
+`src/`                   the (OCaml) Ott sources
+`Makefile`               a Makefile for the examples
+`LICENCE`                the BSD-style licence terms
+`README.md`              this file (Section 2 of the user guide)
+`revisionhistory.txt`    the revision history
 
-directory               | description
----                     | ---
-`built_doc/`              | the user guide, in html, pdf, and ps
-`doc/`                    | the user guide sources
-`emacs/`                  | an Ott Emacs mode
-`tex/`                    | auxiliary files for LaTeX
-`coq/`                    | auxiliary files for Coq
-`hol/`                    | auxiliary files for HOL
-`tests/`                  | various small example Ott files
-`examples/`               | some larger example Ott files
-`src/`                    | the (OCaml) Ott sources
-`bin/`                    | the Ott binary (binary distro only)
-`Makefile`                | a Makefile for the examples
-`LICENCE`                 | the BSD-style licence terms
-`README`                  | this file (Section 2 of the user guide)
-`revisionhistory.txt`     | the revision history
-`ocamlgraph-1.7.tar.gz`   | a copy of the ocamlgraph library
 
-(we no longer provide a Windows binary distribution or non-github tarballs)
 
 ## To build
 
@@ -34,7 +43,7 @@ directory               | description
 
 If you have [OPAM](https://opam.ocaml.org) installed on your system,
 `opam install ott` will install the latest Ott version.  The Emacs mode
-will be in `` `opam config var prefix`/share/ott/emacs ``, documentation in
+will be in `` `opam config var prefix`/share/ott/emacs ``, and documentation in
 `` `opam config var prefix`/doc/ott ``.
 
 To install the Ott auxiliary files for Coq, first activate the
@@ -49,7 +58,7 @@ and then run `opam install coq-ott`.
 Ott depends on OCaml version 4.00.0 or later. It builds with (at
 least) OCaml 4.02.3.
 
-The command `make world` builds the `ott` binary in the `bin/` subdirectory.
+The command `make` (`make world`) builds the `ott` binary in the `bin/` subdirectory.
 
 This will compile Ott using `ocamlopt`.  To force it to
 compile with `ocamlc` (which may give significantly slower execution
@@ -68,25 +77,26 @@ Coq in `test10.v`, type:
 
   `bin/ott -i tests/test10.ott -o test10.tex -o test10.v`
 
-Isabelle and HOL can be generated with options `-o test10.thy` and
-`-o test10Script.sml`, respectively.
+Isabelle, HOL, and Lem can be generated with options `-o test10.thy`,
+`-o test10Script.sml`, and `-o test10.lem`, respectively.
 
 The Makefile has various sample targets, `make tests/test10.out`,
 `make test7`, etc.  Typically they generate:
 
-filename         | description
----              | ---
-`out.tex`        | LaTeX source for a definition
-`out.ps`         | the postscript built from that
-`out.v`          | Coq source
-`outScript.sml`  | HOL source
-`out.thy`        | Isabelle source
+filename          description
+----------------  ----------------------------------
+`out.tex`         LaTeX source for a definition
+`out.ps`          the postscript built from that
+`out.v`           Coq source
+`outScript.sml`   HOL source
+`out.thy`         Isabelle source
 
 from files `test10.ott`, `test8.ott`, etc., in `tests/`.
 
 ## Manual
 
-* [here (html)](http://www.cl.cam.ac.uk/~pes20/ott/ott_manual_0.25.html)
+* in the [Ott github](https://github.com/ott-lang/ott) built_doc directory, or 
+* [here (html)](http://www.cl.cam.ac.uk/~pes20/ott/ott_manual_0.27.html)
 
 ## Emacs mode
 

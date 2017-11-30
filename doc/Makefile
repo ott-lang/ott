@@ -29,7 +29,7 @@ clean::
 	rm -f bind.tex bind.thy
 	rm -f test10_tuple.tex test10_tuple.thy test10_tuple.v test10_tupleScript.sml test10b.tex test10b.thy test10b.v test10bScript.sml test10st_narrow.tex test10st_narrow.thy test10st_narrow.v test10st_narrowScript.sml
 	rm -f test10.alltt.tex test10_html.html 
-	rm -f README
+	rm -f README.tex
 	rm -f *~
 
 realclean::
@@ -409,21 +409,27 @@ install-top2-built: top2.html top2.ps top2.pdf
 	cp top2.ps ../built_doc
 	cp top2.pdf ../built_doc
 	cp top2.html ../built_doc
-	cp top2*.gif ../built_doc
+	cp top2*.png ../built_doc
 
 
 install-top2: top2.html top2.ps top2.pdf
 	cp top2.ps ~/public_html/ott
 	cp top2.pdf ~/public_html/ott
 	cp top2.html ~/public_html/ott
-	cp top2*.gif ~/public_html/ott
+	cp top2*.png ~/public_html/ott
 
 
+README.tex: ../README.md Makefile
+	rm -rf README.tex
+	pandoc  ../README.md -o README.tmp.tex
+	cat README.tmp.tex | sed -e 's/section{Ott}/section{Getting started with Ott (the README)}/g' | sed -e 's/href/ahref/g' | sed -e 's/\\noalign{\\medskip}//g' > README.tex
+	chmod ugo-w README.tex
 
-README: README.tex
-	rm -f README
-	cat README.tex | sed -e 's/home/home FOO/g'| detex | sed -e 's/alltt//g' | sed -e 's/tabularll//g' | sed -e 's/tabular//' | sed -e 's/&/ /g' | sed -e 's/FOO/~/g' > README
-	chmod ugo-w README
+
+#README: README.tex
+#	rm -f README
+#	cat README.tex | sed -e 's/home/home FOO/g'| detex | sed -e 's/alltt//g' | sed -e 's/tabularll//g' | sed -e 's/tabular//' | sed -e 's/&/ /g' | sed -e 's/FOO/~/g' > README
+#	chmod ugo-w README
 
 %.pstex %.pstex_t : %.fig Makefile
 	fig2dev -L pstex               $($*_FIG_OPTS) $< $*.pstex
