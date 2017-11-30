@@ -53,7 +53,7 @@ test8.tex: ../src/ott  ../tests/test8.ott
                 ../tests/non_super_tabular.ott ../tests/test8.ott                                      
 
 
-test10.tex: ../src/ott  ../tests/test10.ott
+test10.lem test10.tex: ../src/ott  ../tests/test10.ott
 	../src/ott  -colour true -showraw true  			\
 	       -o test10.tex						\
 	       -tex_show_meta false                                      \
@@ -62,6 +62,7 @@ test10.tex: ../src/ott  ../tests/test10.ott
 	       -o test10.thy 					\
 	       -o test10.v 						\
 	       -o test10Script.sml                                    \
+	       -o test10.lem                                    \
 	       -o test10.ml                                         \
                 ../tests/non_super_tabular.ott ../tests/test10.ott                                      
 
@@ -405,6 +406,28 @@ let_alltt.ott: ../examples/tapl/let_alltt.ott
 
 
 
+# these are files for which we update the web page for the current version
+# (while other old examples are not)
+WEB_FILES=                                              \
+	../tests/test10.ott 					\
+	test10.thy 					\
+	test10.v 					\
+	test10Script.sml                                \
+	test10.lem                                      \
+	test10.ml                                       \
+	../revision_history.txt \
+	top2.pdf \
+	top2.ps \
+	top2.html \
+	top2*.png
+
+test10.pdf: ../tests/test10.ott
+	../bin/ott -i ../tests/test10.ott -o test10.tex
+	pdflatex test10
+
+install-web-files: top2.html test10.lem test10.pdf
+	cp $(WEB_FILES) ~/public_html/ott
+
 install-top2-built: top2.html top2.ps top2.pdf
 	cp top2.ps ../built_doc
 	cp top2.pdf ../built_doc
@@ -412,16 +435,10 @@ install-top2-built: top2.html top2.ps top2.pdf
 	cp top2*.png ../built_doc
 
 
-install-top2: top2.html top2.ps top2.pdf
-	cp top2.ps ~/public_html/ott
-	cp top2.pdf ~/public_html/ott
-	cp top2.html ~/public_html/ott
-	cp top2*.png ~/public_html/ott
-
 
 # ghastly hackery to make ../README.md work both in the github
 # markdown processing and in the latex user guide
-README.tex: ../README.md Makefile
+README.tex: ../README.md
 	rm -rf README.tex
 	cat ../README.md | sed -e 's/|//g' > README.tmp.md
 	pandoc  README.tmp.md -o README.tmp.tex
@@ -429,6 +446,6 @@ README.tex: ../README.md Makefile
 	chmod ugo-w README.tex
 
 
-%.pstex %.pstex_t : %.fig Makefile
+%.pstex %.pstex_t : %.fig
 	fig2dev -L pstex               $($*_FIG_OPTS) $< $*.pstex
 	fig2dev -L pstex_t -p $*.pstex $($*_FIG_OPTS) $< $*.pstex_t
