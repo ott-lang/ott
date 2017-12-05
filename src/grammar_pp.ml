@@ -2805,7 +2805,7 @@ and pp_rule_list m xd rs =
                     ^ "\n\n"
                 | Lem _ -> 
                     "\ntype "
-                    ^ pp_nontermroot_ty m xd ntr ^ " = "
+                    ^ strip_surrounding_parens (pp_nontermroot_ty m xd ntr) ^ " = "
                     ^ pp_hom_spec m xd hs
                     ^ "\n\n"
                 | Ascii _ | Tex _ | Lex _ | Menhir _ -> Auxl.errorm m "int_rule_list_dep" )
