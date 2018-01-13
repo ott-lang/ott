@@ -1,0 +1,39 @@
+Run the tests with make.  Requires that the proof and ocamlpp be built, and 
+also requires the following software.
+   1) hol,
+   2) PLT Scheme (tested with v371.3), and 
+   3) SML/NJ (tested with v110.65).
+Modify the first line of process-tests.scm so that it points to the mzscheme
+executable from your PLT Scheme distribution.
+
+The process-tests.scm traverses the file "tests" and calls the ocamlpp filter
+program to build HOL ASTs in tests.sml.  The make_ml.sml script uses HOL's SML
+code extraction to convert the operational semantics and test case ASTs into
+SML.  The run_tests.sml script runs the test cases, taking advantage of
+SML/NJ's coverage checking.
+
+Before running the tests, you must modify two files in your HOL distribution to
+remove some Moscow ML specific features.
+
+HOLROOT/src/theoryML/numML.sig
+  Comment out the following lines:
+
+  val ppBin  : ppstream -> num -> unit
+  val ppOct  : ppstream -> num -> unit
+  val ppDec  : ppstream -> num -> unit
+  val ppHex  : ppstream -> num -> unit
+  val pp_num : ppstream -> num -> unit
+
+
+HOLROOT/src/theoryML/numML.sml
+  Comment out the following lines:
+
+  fun ppBin ppstrm n = PP.add_string ppstrm (toBinString n);
+  fun ppOct ppstrm n = PP.add_string ppstrm (toOctString n);
+  fun ppDec ppstrm n = PP.add_string ppstrm (toDecString n);
+  fun ppHex ppstrm n = PP.add_string ppstrm (toHexString n);
+
+and
+
+  val pp_num = ppHex;
+  

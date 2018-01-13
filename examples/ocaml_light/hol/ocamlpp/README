@@ -1,0 +1,7 @@
+The parser from ocaml-3.10.0 stripped off to run as a filter: code in on stdin,
+HOL AST out on stdout.
+
+Run "make" to build the program, called "filter".  The ocaml distribution
+should be in your path for this to work (ocamlc, ocamlopt, ocamllex,
+ocamlyacc). 
+

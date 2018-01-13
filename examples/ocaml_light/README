@@ -1,0 +1,71 @@
+A formal specification for OCaml: the Core Language
+Scott Owens and Gilles Peskine and Peter Sewell
+
+Quick start
+===========
+1) Set the "topdir" variable in Makefile to point to your Ott distribution.
+2) Run make
+This produces a typeset version of the specification in caml_typedef.pdf (also
+caml_typedef.ps) and proof assistant code in 
+  caml_typedef.v              (Coq)
+  caml_typedefScript.sml      (HOL)
+  caml_typedef.thy            (Isabelle/HOL)
+(NOTE: The distribution already contains these files.)
+
+To compile the Coq/HOL/Isabelle specification, run one of
+  make coq-def      # requires Coq 8.1
+  make hol-def      # requires a reasonably recent HOL-4 
+                    #    (tested on svn version 5632 from 
+                    #     https://hol.svn.sf.net/svnroot/hol/HOL).
+                    # Further, the HOL proof libraries that are distributed
+                    # with Ott must first be compiled by running "make" in
+                    # the hol subdirectory of your Ott directory.
+  make isa-def      # requires Isabelle2005
+
+To compile Scott Owens' type soundness proof (in HOL):
+  make hol-proof    # requires a recent HOL-4
+                       (tested on svn version 5632 from 
+                        https://hol.svn.sf.net/svnroot/hol/HOL)
+
+It is highly recommended that your ott distribution is built using ocaml's
+native code compiler (use "make world-opt" from Ott's top level directory). 
+
+Overview
+========
+
+The source of the specification is in the files
+  syntax.ott
+  typing.ott
+  reduction.ott
+These source files contain optional features. The only currently supported
+optional feature is type definitions (such lines begin with %d). To produce the
+ott sources with type definitions enabled, run `make'; this leaves the output
+in
+  caml_typedef_syntax.ott
+  caml_typedef_typing.ott
+  caml_typedef_reduction.ott
+The default makefile invocations have type definitions enabled.
+
+  ott-spec.ltx
+  ott-preamble.sed
+These files are used in typesetting the specification.
+
+  caml_lib_misc.v
+Contains some Coq code necessary to build the Coq version of the specification.
+
+
+The subdirectory "hol" contains a type soundness proof in HOL (in
+definitionsScript.sml, but relying on almost all of the other script files) and
+an executable semantics (in defs_red_funScript.sml, reduction_funScript.sml,
+and matching_funScript.sml).  Using "make hol-proof" runs HOL to generate
+corresponding *Theory.uo files (thus checking the proofs).  The "Holmake"
+program, distributed with HOL-4, should be in your path for this to work;
+otherwise, alter the HOLMAKE= line of "Makefile" to point to your "Holmake". 
+
+
+The "hol/ocamlpp" subdirectory contains the parser from Objective Caml 3.10.0
+modified to produce the AST for the HOL representation of OCaml programs 
+(see hol/ocamlpp/README).
+
+The "hol/testing" subdirectory contains the test cases for the operational
+semantics (see hol/testing/README).

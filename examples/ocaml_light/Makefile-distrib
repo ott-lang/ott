@@ -1,0 +1,58 @@
+FILES = \
+   Makefile README caml_lib_misc.v ott-preamble.sed ott-spec.ltx \
+   reduction.ott syntax.ott typing.ott
+
+HOL_FILES = \
+   basicScript.sml definitionsScript.sml defs_red_funScript.sml \
+   env_permScript.sml environmentScript.sml matching_funScript.sml \
+   preservationScript.sml progressScript.sml reduction_funScript.sml \
+   remv_tyvarScript.sml shiftScript.sml storeScript.sml strengthenScript.sml \
+   substsScript.sml teqScript.sml type_substScript.sml type_substsScript.sml \
+   utilScript.sml validScript.sml weakenScript.sml
+
+PP_FILES = \
+   Makefile README main.ml .depend
+
+PP_FILES_PARSING = \
+   asttypes.mli lexer.mll linenum.ml linenum.mli linenum.mll location.ml \
+   location.mli longident.ml longident.mli parse.ml parse.mli parser.mly  \
+   parsetree.mli printast.ml printast.mli syntaxerr.ml syntaxerr.mli
+
+PP_FILES_UTIL = \
+   ccomp.ml ccomp.mli clflags.ml clflags.mli config.ml config.mlbuild \
+   config.mli config.mlp consistbl.ml consistbl.mli misc.ml misc.mli tbl.ml \
+   tbl.mli terminfo.ml terminfo.mli warnings.ml warnings.mli
+
+TESTING_FILES = \
+   Makefile make_ml.sml process-tests.scm sources1.cm sources2.cm tests \
+   theoryML.cm reduction_funML.BUGFIX.sml README
+
+WEB_FILES = \
+   caml_typedef.pdf caml_typedef.ps \
+   caml_typedefScript.sml caml_typedef.v caml_typedef.thy \
+   caml_typedef_syntax.ott caml_typedef_typing.ott caml_typedef_reduction.ott \
+   hol/testing/tests
+
+ocaml_light.tar.gz: ocaml_light
+	tar -cf ocaml_light.tar ocaml_light
+	gzip ocaml_light.tar
+
+ocaml_light: 
+	mkdir -p ocaml_light/hol/ocamlpp/parsing
+	mkdir -p ocaml_light/hol/ocamlpp/utils
+	mkdir -p ocaml_light/hol/testing
+	cp $(FILES) ocaml_light
+	cp $(addprefix hol/,$(HOL_FILES)) ocaml_light/hol
+	cp $(addprefix hol/ocamlpp/,$(PP_FILES)) ocaml_light/hol/ocamlpp
+	cp $(addprefix hol/ocamlpp/parsing/,$(PP_FILES_PARSING)) ocaml_light/hol/ocamlpp/parsing
+	cp $(addprefix hol/ocamlpp/utils/,$(PP_FILES_UTIL)) ocaml_light/hol/ocamlpp/utils
+	cp $(addprefix hol/testing/,$(TESTING_FILES)) ocaml_light/hol/testing
+	cd ocaml_light && make
+
+install: ocaml_light.tar.gz
+	cp ocaml_light.tar.gz $(addprefix ocaml_light/,$(WEB_FILES)) ~/public_html/ocaml
+
+clean:
+	rm -rf ocaml_light
+	rm -f ocaml_light.tar
+	rm -f ocaml_light.tar.gz

@@ -1,0 +1,168 @@
+
+>>
+  -*-LaTeX-*-
+
+ S.4 Reduction Rules
+ *=*=*=*=*=*=*=*=*=*=*=*
+
+\heading{Matching}
+Define a partial function [[matchsub __ __ ]] taking a value 
+and a pattern and giving a substitution:
+
+matchsub v            x               = {v/x}
+matchsub v            _               = {}
+matchsub constant     constant        = {} 
+matchsub v            (pat as x)      = {v/x} union matchsub v pat
+matchsub v            ( pat : t )     = matchsub v pat
+matchsub v            ( pat1 | pat2 ) = matchsub v pat1, if defined, otherwise matchsub v pat2
+matchsub constr v     constr pat      = matchsub v pat
+matchsub v1,....,vn   pat1,....,patn  = matchsub(v1,pat1) union .. union matchsub(vn ,patn ) 
+%d matchsub { field1=v1 ; ... ; fieldn=vn} { field1=pat1 ; ... ; fieldn=patn} 
+%d                                       =  matchsub(v1,pat1) union .. union matchsub(vn ,patn )
+
+matchsub v            pat             undefined otherwise
+
+
+Define a partial function [[match __ __ ]] taking a value 
+and a pattern_matching and giving an expression:
+
+match v  ( | pat1->e1 ... | patn->en) =
+  (matchsub v patk) ek   , where k is the smallest value such that (matchsub v patk) is defined,
+  undefined              , if there is no such k
+
+\heading{Reduction Axioms}
+
+<<
+
+defns
+Jop :: JO_ ::= 
+
+
+% Pure expression reduction    
+
+defn
+ e --> e :: :: red :: red_ by
+
+
+
+%d   { {field1=v1;...;fieldm=vm} with field1'=v1' ; ... ; fieldn'=vn' }
+%d   -->
+%d    {field1=v1;...;fieldm=vm}  oplus {field1'=v1' ; ... ; fieldn'=vn' }
+
+
+(function x1-> ... -> function xn->e)  v1 ... vn e1 .. em --> ( { v1 ... vn  / x1 ... xn } e ) e1 .. em
+
+
+% maybe this rule:
+(e e1 ... em) e'1 ... e'n --> e e1 ... em e'1 ... e'n
+
+
+%d   {field1=v1;...;fieldm=vn}.fieldi --> vi
+
+
+  if true then e1 else e2  -->  e1 
+
+  if false then e1 else e2  -->  e2
+
+
+while e1 do e2 done  -->   if e1 then (e2 ;  while e1 do e2 done) else () 
+
+  for x=v1 to v2 do e done --> 
+     let x=v1 in e ; for x=v1+1 to v2 do e done           if v1<=v2
+     ()                                                   otherwise
+
+  for x=v1 downto v2 do e done --> 
+     let x=v1 in e ; for x=v1-1 to v2 do e done           if v1>=v2
+     ()                                                   otherwise
+
+  (); e  -->   e       
+
+
+  match v with pattern_matching --> match v pattern_matching   if that is defined, 
+
+  match v with pattern_matching --> raise (Match_failure v')   otherwise, where |- v':string*int*int
+
+
+  try raise v with pattern_matching  -->    match  v pattern_matching  if that is defined
+
+  try v with  pattern_matching       -->    v
+
+  C . raise v                        -->    raise v    if not exists pattern_matching. C = try __ with pattern_matching and  match v pattern_matching is defined  
+
+  let pat=v in e --> 
+     (match v pat) e            if (match v pat) is defined, 
+     raise (Match_failure v')   otherwise, where |- v':string*int*int
+
+
+  let rec x1=function pm1 and ... and xn=function pmn in e 
+--> 
+  LET sigma = { let rec x1=function pm1 and ... and xn=function pmn in xi / xi | i=1...n } IN
+  LET rho   = { sigma (function pmj) / xj | j=1...n } IN
+  rho e
+
+ % watch out for our cheating substitution - is it ok here above? 
+
+%  let rec x1:T=function (x2:T') -> e1 in e2  -->   
+% { ( { (let rec x1:T=function (x2:T') -> e1 in x1) / x1 } function (x2:T') -> e1) /   x1  } e2
+
+
+
+  assert true --> () 
+
+empty |- v : string*int*int  
+-------------------------------------------- :: assert2
+assert false --> raise (Assert_failure v)
+
+
+
+%m Instantiation reduction
+%m 
+%m ...TODO...
+
+>>
+Delta rules for applications of functions defined in the standard library
+-------------------------------------------------------------------------
+
+some special magic for total applications of || and && to ensure that
+we have:
+<<
+
+ true || e --> true 
+
+ false && e --> false 
+
+ true && e --> e 
+
+ false || e --> e
+
+>>
+and likely wierd evaluation order for other operators - cf the Acute
+semantics.
+
+
+
+
+Store reduction    
+--------------------------------
+<<
+
+defn
+ s ; e --> s' ; e' :: :: sred :: sred_ by
+
+ location notin dom(s)
+-------------------------------------------------------------------- :: ref
+  s ; ref v                           --> s,location|->v;   location    
+
+  s,location |-> v,s' ; ( := ) location v' --> s,location |-> v',s' ; ()
+
+  s,location |-> v,s' ; ( ! ) location     --> s,location |->v,s' ;   v
+
+  e --> e'
+  ------------ :: pure
+  s;e --> s;e'
+
+  s;e --> s';e'
+  -----------------  :: context
+  s;C.e --> s';C.e'
+
+% that C.e is context application...

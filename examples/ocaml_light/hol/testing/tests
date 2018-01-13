@@ -1,0 +1,985 @@
+
+Make sure the tester is working.  First two false.
+
+TESTEXPR
+1
+EXPECT
+2
+END
+
+TESTSTUCK
+1+2
+END
+
+TESTEXPR
+1
+EXPECT
+1
+END
+
+TESTSTUCK
+1
+END
+
+Test pattern matching.
+
+TESTEXPR
+match 1 with
+    2 -> 2
+  | 3 -> 3
+EXPECT
+Match_failure
+END
+
+TESTEXPR
+match 1 with
+    2 -> 2
+  | _ -> 1
+EXPECT
+1
+END
+
+TESTEXPR
+match 1 with 
+    x -> x
+  | _ -> 2
+EXPECT
+1
+END
+
+TESTEXPR
+match 1 with 
+    _ -> 1
+  | _ -> 2 
+EXPECT
+1
+END
+
+TESTEXPR
+match 1 with 
+    1 -> 1
+  | _ -> 2
+EXPECT
+1
+END
+
+TESTEXPR
+match 1 with 
+    1 as x -> x
+  | _ -> 2
+EXPECT
+1
+END
+
+TESTEXPR
+match 1 with 
+    2 as x -> x
+  | _ -> 2
+EXPECT
+2
+END
+
+TESTEXPR
+match 1 with
+    (1:int) -> 1
+  | _ -> 2
+EXPECT
+1
+END
+
+TESTEXPR
+match (1,2) with
+    ((a,b) | (b,a)) -> (a,b)
+  | _ -> (0,0)
+EXPECT
+(1,2)
+END
+
+TESTEXPR
+match (1,2) with
+    ((2,a)|(a,2)) -> a
+  | _ -> 2
+EXPECT
+1
+END
+
+TESTEXPR
+match [1;2;3] with
+    x::y -> x
+  | _ -> 2
+EXPECT
+1
+END
+
+TESTEXPR
+match [1;2;3] with
+    x::y -> y
+  | _ -> [2]
+EXPECT
+[2;3]
+END
+
+TESTEXPR
+match Some 1 with
+    None -> 2
+  | Some x -> x
+EXPECT
+1
+END
+
+TESTEXPR
+match None with
+    Some x -> x
+  | None -> 2
+EXPECT
+2
+END
+
+TESTEXPR
+match () with
+    () -> 1
+EXPECT
+1
+END
+
+TESTEXPR
+match [] with
+    x::y -> 1
+  | [] -> 2
+EXPECT
+2
+END
+
+TESTEXPR
+match [1] with
+    x::y -> 1
+  | [] -> 2
+EXPECT
+1
+END
+
+TESTEXPR
+match Some 1 with
+    None -> 2
+  | Some _ -> 1
+EXPECT
+1
+END
+
+TESTEXPR
+match (1,(2,3),4) with
+    (a, ((e,f) as b),c) as d -> (a,b,c,d,e,f)
+EXPECT
+(1, (2, 3), 4, (1, (2, 3), 4), 2, 3)
+END
+
+
+TESTEXPR
+match true with
+    false -> 1
+  | true -> 2
+EXPECT
+2
+END
+
+TESTEXPR
+match false with
+    true -> 1
+  | false -> 2
+EXPECT
+2
+END
+
+TESTEXPR
+match {f=1} with
+    {f=x} -> x
+  | _ -> 2
+EXPECT
+1
+END
+
+TESTEXPR
+match {f=1; g=2} with
+    {f=3} -> 1
+  | _ -> 2
+EXPECT
+2
+END
+
+TESTEXPR
+match {f=1; g=2} with
+    {g=x; f=y} -> (x,y)
+  | _ -> (3,4)
+EXPECT
+(2,1)
+END
+
+TESTEXPR
+match {f=1;g=2} with
+    {g=x} -> x
+  | _ -> 1
+EXPECT
+2
+END
+
+
+Testing primitives
+
+TESTEXPR
+1+2
+EXPECT
+3
+END
+
+TESTEXPR
+1-2
+EXPECT
+-1
+END
+
+TESTEXPR
+5 * 4
+EXPECT
+20
+END
+
+TESTEXPR
+~- 1
+EXPECT
+-1
+END
+
+TESTEXPR
+5/4
+EXPECT
+1
+END
+
+TESTEXPR
+1073741823 + 1
+EXPECT
+-1073741824
+END
+
+TESTEXPR
+-1073741824 - 1
+EXPECT
+1073741823
+END
+
+TESTEXPR
+not true
+EXPECT
+false
+END
+
+TESTEXPR
+not false
+EXPECT
+true
+END
+
+TESTEXPR
+1 = 2
+EXPECT
+false
+END
+
+
+TESTEXPR
+1 = 1
+EXPECT
+true
+END
+
+TESTEXPR
+true = false
+EXPECT
+false
+END
+
+TESTEXPR
+false = false
+EXPECT
+true
+END
+
+TESTEXPR
+true = true
+EXPECT
+true
+END
+
+TESTEXPR
+[] = []
+EXPECT
+true
+END
+
+TESTEXPR
+[] = [1]
+EXPECT
+false
+END
+
+TESTEXPR
+[1;2] = [1;2]
+EXPECT
+true
+END
+
+TESTEXPR
+[1;2;3] = [1;2;4]
+EXPECT
+false
+END
+
+TESTEXPR
+None = None
+EXPECT
+true
+END
+
+TESTEXPR
+Some 1 = Some 2
+EXPECT
+false
+END
+
+
+TESTEXPR
+Some None = Some None
+EXPECT
+true
+END
+
+TESTEXPR
+Some 1 = NONE
+EXPECT
+false
+END
+
+TESTEXPR
+{f=1; h=3; g=2} = {g=2; f=1; h=3}
+EXPECT
+true
+END
+
+TESTEXPR
+{f=1; h=2; g=3} = {g=1; f=2; h=3}
+EXPECT
+false
+END
+
+TESTEXPR
+(fun x -> 1) = (fun x -> 1)
+EXPECT
+Invalid_argument "equal: functional value"
+END
+
+
+TESTEXPR
+(1,2) = (1,2)
+EXPECT
+true
+END
+
+TESTEXPR
+(1,2) = (1,4)
+EXPECT
+false
+END
+
+TESTEXPR
+C (1,2) = C (1,2)
+EXPECT
+true
+END
+
+TESTEXPR
+C (1,2) = D (1,2,3)
+EXPECT
+false
+END
+
+TESTEXPR
+C = C
+EXPECT
+true
+END
+
+TESTEXPR
+C = D
+EXPECT
+false
+END
+
+TESTEXPR
+C (1,2) = C (1,3)
+EXPECT
+false
+END
+
+TESTEXPR
+C = D (1,2)
+EXPECT
+false
+END
+
+Test exception propogation and evaluation ordering
+
+TESTEXPR
+1 + raise E
+EXPECT
+E
+END
+
+TESTEXPR
+(raise E) 1
+EXPECT
+E
+END
+
+TESTEXPR
+(raise E1) (raise E2)
+EXPECT
+E2
+END
+
+TESTEXPR
+((raise E) : int)
+EXPECT
+E
+END
+
+TESTEXPR
+(1, 2, raise E1, raise E2, 3, 4)
+EXPECT
+E2
+END
+
+TESTEXPR
+C (1, 2, raise E1, raise E2, 3, 4)
+EXPECT
+E2
+END
+
+TESTEXPR
+raise E1::raise E
+EXPECT 
+E
+END
+
+TESTEXPR
+raise E1::[]
+EXPECT
+E1
+END
+
+TESTEXPR
+{f=1; g=raise E1; h=raise E2; i=3}
+EXPECT
+E2
+END
+
+TESTEXPR
+{(raise E3) with f=1; g=raise E1; h=raise E2; i=3}
+EXPECT
+E3
+END
+
+
+TESTEXPR
+{{f=1;g=1;h=1;i=1} with f=1; g=raise E1; h=raise E2; i=3}
+EXPECT
+E2
+END
+
+TESTEXPR
+raise E1 && raise E2
+EXPECT
+E1
+END
+
+TESTEXPR
+true && raise E2
+EXPECT
+E2
+END
+
+TESTEXPR
+false && raise E2
+EXPECT
+false
+END
+
+TESTEXPR
+raise E1 || raise E2
+EXPECT
+E1
+END
+
+TESTEXPR
+true || raise E2
+EXPECT
+true
+END
+
+TESTEXPR
+false || raise E2
+EXPECT
+E2
+END
+
+TESTEXPR
+(raise E).f
+EXPECT
+E
+END
+
+TESTEXPR
+if raise E then raise E1 else raise E2
+EXPECT
+E
+END
+
+TESTEXPR
+if true then raise E1 else raise E2
+EXPECT
+E1
+END
+
+TESTEXPR
+if false then raise E1 else raise E2
+EXPECT
+E2
+END
+
+TESTEXPR
+while raise E1 do raise E2 done
+EXPECT
+E1
+END
+
+TESTEXPR
+while true do raise E2 done
+EXPECT
+E2
+END
+
+TESTEXPR
+while false do raise E2 done
+EXPECT
+()
+END
+
+TESTEXPR
+for i = raise E1 to raise E2 do raise E3 done
+EXPECT
+E1
+END
+
+TESTEXPR
+for i = 1 to raise E2 do raise E3 done
+EXPECT
+E2
+END
+
+TESTEXPR
+for i = 1 to 0 do raise E3 done
+EXPECT
+()
+END
+
+TESTEXPR
+for i = 0 to 0 do raise E3 done
+EXPECT
+E3
+END
+
+TESTEXPR
+(raise E1);(raise E2)
+EXPECT
+E1
+END
+
+TESTEXPR
+();(raise E3)
+EXPECT
+E3
+END
+
+TESTEXPR
+match raise E with
+ | _ -> raise E1
+EXPECT
+E
+END
+
+TESTEXPR
+match 1 with
+   1 -> 1
+ | _ -> raise E
+EXPECT
+1
+END
+
+TESTEXPR
+match 1 with
+   2 -> raise E
+ | _ -> raise E1
+EXPECT
+E1
+END
+
+TESTEXPR 
+function _ -> raise E
+EXPECT
+function _ -> raise E
+END
+
+TESTEXPR
+let x = raise E1 in raise E2
+EXPECT
+E1
+END
+
+TESTEXPR
+let x = 1 in raise E2
+EXPECT
+E2
+END
+
+TESTEXPR
+let rec f x = raise E1 and g x = raise E2 in raise E3
+EXPECT
+E3
+END
+
+TESTEXPR
+let rec f x = 1 and g x = raise E2 in raise E3
+EXPECT
+E3
+END
+
+TESTEXPR
+assert (raise E)
+EXPECT
+E
+END
+
+Test the core forms
+
+TESTEXPR
+(1+2,3+4)
+EXPECT
+(3,7)
+END
+
+TESTEXPR
+Some (1+2)
+EXPECT
+Some 3
+END
+
+TESTEXPR
+C (1+2, 3+4, 5+6)
+EXPECT
+C (3, 7, 11)
+END
+
+TESTEXPR
+(1+2)::if true then [] else (1::[])
+EXPECT
+3::[]
+END
+
+TESTEXPR
+{f = 1+2; g = 3+4}
+EXPECT
+{f=3; g=7}
+END
+
+TESTEXPR
+(function x -> x) 1
+EXPECT
+1
+END
+
+TESTEXPR
+(function x -> x) ((+) 1)
+EXPECT
+((+) 1)
+END
+
+TESTEXPR
+true && false 
+EXPECT
+false
+END
+
+TESTEXPR
+false || false
+EXPECT
+false
+END
+
+TESTEXPR
+if true then 1 else 2
+EXPECT
+1
+END
+
+
+TESTEXPR
+if false then 1 else 2
+EXPECT
+2
+END
+
+TESTEXPR
+(function None -> 1+2 | Some x -> 1+x) (Some 4)
+EXPECT
+5
+END
+
+TESTEXPR
+let x = 1 + 2 in x + 4
+EXPECT
+7
+END
+
+TESTEXPR
+assert true
+EXPECT
+()
+END
+
+TESTEXPR
+assert false
+EXPECT
+Assert_failure
+END
+
+TESTEXPR
+assert (false && true)
+EXPECT
+Assert_failure
+END
+
+TESTEXPR
+let rec fact x = if x = 0 then 1 else x * fact  (x - 1) in fact 4
+EXPECT
+24
+END
+
+TESTEXPR
+let rec even x = if x = 0 then true else odd (x - 1)
+    and odd x = if x = 0 then false else even (x - 1)
+in
+(even 10, odd 10, even 9, odd 9)
+EXPECT
+(true, false, false, true)
+END
+
+TESTEXPR
+let f = function x -> function y -> x + y in
+f 1 2
+EXPECT
+3
+END
+
+TESTEXPR
+let f = function x -> function x -> x in
+f 1 2
+EXPECT
+2
+END
+
+TESTEXPR
+let x = ref 1 in
+  !x
+EXPECT
+1
+END
+
+TESTEXPR
+let x = ref 1 in
+  x := 10;
+  !x
+EXPECT
+10
+END
+
+TESTEXPR
+let x = ref [] in
+  (for j = 0 to 10 do x := j :: !x done);
+  !x
+EXPECT 
+[10; 9; 8; 7; 6; 5; 4; 3; 2; 1; 0]
+END
+
+TESTEXPR
+let x = ref [] in
+  (for j = 10 downto 0 do x := j :: !x done);
+  !x
+EXPECT 
+[0; 1; 2; 3; 4; 5; 6; 7; 8; 9; 10]
+END
+
+TESTEXPR
+let x = ref [] in
+for i = 1+1 to 2+2 do x:=i::!x done;
+!x
+EXPECT
+[4;3;2]
+END
+
+
+TESTEXPR
+let x = ref [1;2;3;4;5] in
+let y = ref [] in
+  (while not (!x = []) do x := (match !x with a::b -> b); y := !x :: !y done);
+  !y
+EXPECT
+[[]; [5]; [4; 5]; [3; 4; 5]; [2; 3; 4; 5]]
+END
+
+
+TESTEXPR
+try (raise E) ; 2 with
+    E -> 1
+EXPECT
+1
+END
+
+TESTEXPR
+try raise E with
+    E1 -> 1
+  | E2 -> 2
+EXPECT
+E
+END
+
+TESTEXPR
+try
+  (try raise (E (1,2)) with
+      E (1,3) -> 1)
+  with
+    E _ -> 10
+EXPECT
+10
+END
+
+TESTEXPR
+try
+  (try raise (E (1,2)) with
+      E (1,3) -> (3,4))
+  with
+    E (a,b) -> (a,b)
+EXPECT
+(1,2)
+END
+
+TESTEXPR
+let x = ref Empty in
+let y = ref Empty in
+let fst (Cons (x, y)) = x in
+let snd (Cons (x, y)) = y in
+  x := Cons (1, y);
+  y := Cons (2, x);
+  (fst (!(snd (!(snd (!x))))), fst (!(snd (!(snd (!(snd (!x))))))))
+EXPECT
+(1,2)
+END
+
+TESTEXPR
+{{f=1; g=2; h=3} with g = 4}
+EXPECT
+{f=1;g=4;h=3}
+END
+
+TESTEXPR
+{{f=1; g=2; h=3} with g = 4; f = 5}
+EXPECT
+{f=5;g=4;h=3}
+END
+
+TESTEXPR
+{{f = 1} with f = 1+2}
+EXPECT
+{f=3}
+END
+
+TESTEXPR
+{{f = 1+2; g = 3+4} with g = 3+2}
+EXPECT
+{f = 3; g=5}
+END
+
+TESTEXPR
+{f=1;g=2;h=3}.g
+EXPECT
+2
+END
+
+TESTEXPR
+{f=1;g=2+2;h=3}.g
+EXPECT
+4
+END
+
+TESTSTUCK
+(1,2)
+END
+
+TESTSTUCK
+C
+END
+
+TESTSTUCK
+C (1,2)
+END
+
+TESTSTUCK
+{f=1;g=2}
+END
+
+TESTSTUCK
+function x -> x+1
+END
+
+TESTSTUCK
+x
+END
+
+TESTSTUCK
+(+)
+END
+
+TESTSTUCK
+(!)
+END
+
+TESTSTUCK
+(+) 1
+END
+
+TESTSTUCK
+1::2::[]
+END
+
+TESTDEFS
+let g x y = x * y;;
+type ('a, 'b, 'c) t = C;;
+let rec f = function y -> if y = 0 then 1 else g (f (y - 1)) y;;
+EXPR
+f 5
+EXPECT
+120
+END
+
+
+
+
+

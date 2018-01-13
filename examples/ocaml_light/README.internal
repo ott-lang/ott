@@ -1,0 +1,58 @@
+Specifications
+==============
+
+The source of the specification is in the files
+  syntax.ott
+  typing.ott
+  reduction.ott
+
+The language contains two optional features: type definitions and modules.
+This leads to four variants:
+  plain             the core core language
+  typedef           with type definitions
+  module            with modules
+  module_typedef    with both modules and type definitions
+The source files are first preprocessed to specialise them for a certain
+feature combination, yielding the files
+  caml_plain_syntax.ott caml_module_syntax.ott caml_module_typedef_syntax.ott caml_typedef_syntax.ott
+  caml_plain_typing.ott caml_module_typing.ott caml_module_typedef_typing.ott caml_typedef_typing.ott
+  caml_plain_reduction.ott caml_module_reduction.ott caml_module_typedef_reduction.ott caml_typedef_reduction.ott
+
+Inside the ott sources, optional features are hidden within comments.
+Lines beginning with "%d" are commented out to enable type
+definitions, and lines beginning with "%m" are commented out to enable
+modules. Whole passages can be restricted to a feature by the following
+trick:
+  ... basic material ...
+  >>
+  %d<<
+  ... type definitions specific material ...
+  %d>>
+  <<
+  ... more basic material ...
+
+For each feature combination, the spec is processed by ott with the command
+  ott <FLAGS> caml_<FEATURES>_syntax.ott caml_<FEATURES>_typing.ott caml_<FEATURES>_reduction.ott
+The Makefile is set up to produce the following output files:
+  caml_<FEATURES>.rawtex      # LaTeX
+  caml_<FEATURES>.v           # Coq
+  caml_<FEATURES>Script.sml   # HOL
+  caml_<FEATURES>.thy         # Isabelle
+
+The .rawtex file is tweaked to obtain a .tex file with better typesetting
+choices.
+
+To build the versions of a file with all possible feature combinations, run
+`make caml_combinations<SUFFIX>', e.g., `make caml_combinations.ps'.
+
+
+
+Coq stuff
+=========
+
+The following files are used when building the spec:
+  caml_lib_misc.v 
+
+Other *.v files are attempts at demonstrating some aspects of the spec, none
+currently worth distributing.
+

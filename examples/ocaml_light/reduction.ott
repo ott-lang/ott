@@ -1,0 +1,805 @@
+
+defns
+JmatchP :: JM_ ::=
+
+defn
+|- expr matches pattern :: :: matchP :: matchP_ {{ com Pattern matching }} by
+
+{{ com
+Determines if a value matches a pattern.
+}}
+
+------------------------------------------------------- :: var
+|- v matches x
+
+------------------------------------------------------- :: any
+|- v matches _
+
+------------------------------------------------------- :: constant
+|- constant matches constant
+
+|- v matches pat
+------------------------------------------------------- :: alias
+|- v matches pat as x
+
+|- v matches pat
+------------------------------------------------------- :: typed
+|- v matches (pat : t)
+
+|- v matches pat1
+------------------------------------------------------- :: or_left
+|- v matches pat1 | pat2
+
+|- v matches pat2
+------------------------------------------------------- :: or_right
+|- v matches pat1 | pat2
+
+|- v1 matches pat1   ...   |- vn matches patn
+------------------------------------------------------- :: construct
+|- constr (v1,...,vn) matches constr (pat1,...,patn)
+
+------------------------------------------------------- :: construct_any
+|- constr (v1,...,vn) matches constr _ 
+
+|- v1 matches pat1   ....   |- vn matches patn
+------------------------------------------------------- :: tuple
+|- (v1,....,vn) matches (pat1,....,patn)
+
+%d field_name1'=v1'...field_namen'=vn' fn1=v1''..fnl=vl'' PERMUTES field_name1=v1...field_namem=vm
+%d |- v1' matches pat1  ...   |- vn' matches patn
+%d field_name1 ... field_namem distinct
+%d----------------------------------------------------- :: record
+%d |- {field_name1=v1;...;field_namem=vm} matches {field_name1'=pat1;...;field_namen'=patn}
+
+|- v1 matches pat1
+|- v2 matches pat2
+------------------------------------------------------- :: cons
+|- v1::v2 matches pat1::pat2
+
+defns
+Jmatch :: JM_ ::=
+
+defn
+|- expr matches pattern gives '<<' substs_x '>>' :: :: match :: match_ {{ com Pattern matching with substitution creation }} by
+
+{{ com
+Determines if a value matches a pattern and destructures the value into a
+substitution according to the pattern's variables.  The previous pattern
+matching relation is used to get deterministic behavior for \texttt{|}
+patterns.
+}}
+
+------------------------------------------------------- :: var
+|- v matches x gives <<x<-v>>
+
+------------------------------------------------------- :: any
+|- v matches _ gives <<:substs_x_xs:>>
+
+------------------------------------------------------- :: constant
+|- constant matches constant gives <<:substs_x_xs:>>
+
+|- v matches pat gives <<x1<-v1,..,xn<-vn>>
+------------------------------------------------------- :: alias
+|- v matches pat as x gives <<x1<-v1,..,xn<-vn,x<-v>>
+
+|- v matches pat gives <<x1<-v1,..,xn<-vn>>
+------------------------------------------------------- :: typed
+|- v matches (pat : t) gives <<x1<-v1,..,xn<-vn>>
+
+|- v matches pat1 gives <<x1<-v1,..,xn<-vn>>
+------------------------------------------------------- :: or_left
+|- v matches pat1 | pat2 gives <<x1<-v1,..,xn<-vn>>
+
+|- v notmatches pat1
+|- v matches pat2 gives <<x1<-v1,..,xn<-vn>>
+------------------------------------------------------- :: or_right
+|- v matches pat1 | pat2 gives <<x1<-v1,..,xn<-vn>>
+
+|- v1 matches pat1 gives <<substs_x1>>   ...   |- vn matches patn gives <<substs_xn>>
+------------------------------------------------------- :: construct
+|- constr (v1,...,vn) matches constr (pat1,...,patn) gives <<substs_x1@...@substs_xn>>
+
+------------------------------------------------------- :: construct_any
+|- constr (v1,...,vn) matches constr _ gives <<:substs_x_xs:>>
+
+|- v1 matches pat1 gives <<substs_x1>>   ....   |- vn matches patn gives <<substs_xn>>
+------------------------------------------------------- :: tuple
+|- (v1,....,vn) matches (pat1,....,patn) gives <<substs_x1@....@substs_xn>>
+
+%d field_name1'=v1'...field_namen'=vn' fn1=v1''..fnl=vl'' PERMUTES field_name1=v1...field_namem=vm
+%d |- v1' matches pat1 gives <<substs_x1>>   ...   |- vn' matches patn gives <<substs_xn>>
+%d field_name1 ... field_namem distinct
+%d----------------------------------------------------- :: record
+%d |- {field_name1=v1;...;field_namem=vm} matches {field_name1'=pat1;...;field_namen'=patn} gives <<substs_x1@...@substs_xn>>
+
+|- v1 matches pat1 gives <<substs_x1>>
+|- v2 matches pat2 gives <<substs_x2>>
+------------------------------------------------------- :: cons
+|- v1::v2 matches pat1::pat2 gives <<substs_x1@substs_x2>>
+
+
+
+defns
+Jrecfun :: J ::=
+
+defn
+recfun ( letrec_bindings , pattern_matching ) gives expr :: :: recfun :: recfun_ {{ com Recursive function helper }} by
+
+{{ com
+Expands a recursive definition.
+}}
+
+%%WIDTH: >~a4/landscape/normalsize
+letrec_bindings = x1 = function pattern_matching1 and ... and xn = function pattern_matchingn
+------------------------------------------------------- :: letrec
+recfun(letrec_bindings, pattern_matching) gives <<x1 <- let rec letrec_bindings in x1,...,xn <- let rec letrec_bindings in xn>> (function pattern_matching)
+
+
+
+defns
+Jfunval :: J ::=
+defn
+|- funval ( e ) :: :: funval :: funval_ {{ com Function values }} by
+
+{{ com
+Determines if an expression is a function value, for use in
+(\ottdrulename{Jbprim\_equal\_fun}).
+}}
+
+------------------------------------------------------- :: up
+|- funval((%prim unary_prim))
+
+------------------------------------------------------- :: bp
+|- funval((%prim binary_prim))
+
+------------------------------------------------------- :: bp_app
+|- funval((%prim binary_prim) v)
+
+------------------------------------------------------- :: func
+|- funval(function pattern_matching)
+
+
+
+defns 
+JRuprim :: J ::=
+
+defn
+|- unary_prim expr labelled_arrow expr' :: :: Ruprim :: uprim_ {{ com Unary primitive evaluation }} by
+
+{{ com
+Computes the result of a unary primitive application.
+}}
+
+-------------------------------------------------- :: not_true
+|- not true --> false
+
+-------------------------------------------------- :: not_false
+|- not false --> true
+
+-------------------------------------------------- :: uminus
+|- ~- intn --> 0 .- intn
+
+{{ com
+The effect of creating a reference is communicated to the store via
+the label on the reduction arrow. Similarly the reduction arrow
+carries the value read from the store when accessing a location.
+}}
+
+--------------------------------------- :: ref_alloc
+|- ref v -->:Lab_paren:(ref v = l) l
+
+----------------- :: deref
+|- !l -->:Lab_paren:(!l=v) v
+
+
+
+defns 
+JRbprim :: J ::=
+
+defn
+|- expr1 binary_prim expr2 labelled_arrow expr :: :: Rbprim :: bprim_ {{ com Binary primitive evaluation }} by
+
+{{ com
+Computes the result of a binary primitive application.
+}}
+
+|- funval(v)
+------------------------------------------------------- :: equal_fun
+|- v = v' --> (%prim raise) (:Expr_construct: Invalid_argument (equal_error_string))
+% equal_error_string should be "equal: functional value", but we can't write that directly.
+
+------------------------------------------------------- :: equal_const_true
+|- constant = constant --> true
+
+constant noteq constant'
+------------------------------------------------------- :: equal_const_false
+|- constant = constant' --> false
+
+------------------------------------------------------- :: equal_loc
+|- l = l' --> ((%prim =) ((%prim !) l)) ((%prim !) l')
+
+------------------------------------------------------- :: equal_cons
+|- (v1::v2) = (v1'::v2') --> (((%prim =) v1) v1') && (((%prim =) v2) v2')
+
+------------------------------------------------------- :: equal_cons_nil
+|- (v1::v2) = [] --> false
+
+------------------------------------------------------- :: equal_nil_cons
+|- [] = (v1::v2) --> false
+
+length (v1) .... (vn) >= 2
+------------------------------------------------------- :: equal_tuple
+|- (v1, ...., vn) = (v1', ...., vn') --> AND(((%prim =) v1) v1' && .... && ((%prim =) vn) vn')
+
+
+------------------------------------------------------- :: equal_constr
+|- (constr (v1, ..., vn)) = (constr (v1', ..., vn')) --> AND(((%prim =) v1) v1' && ... && ((%prim =) vn) vn')
+
+constr noteq constr'
+------------------------------------------------------- :: equal_constr_false
+|- constr (v1, ..., vm) = constr' (v1', ..., vn') --> false
+
+------------------------------------------------------- :: equal_const_constr_false
+|- constr' = constr (v1, ..., vn) --> false
+
+------------------------------------------------------- :: equal_constr_const_false
+|- constr (v1, ..., vn) = constr' --> false
+
+
+%d v' = {fn1''=v1''; ...; fnm''=vm''}
+%d fn1...fnn PERMUTES fn1''...fnm''
+%d----------------------------------------------------- :: equal_rec
+%d |- {fn1=v1; ...; fnn=vn} = v' --> AND(((%prim =) v1) (v'.fn1) && ... && ((%prim =) vn) (v'.fnn))
+
+------------------------------------------------------- :: plus
+|- intn1 + intn2 --> intn1 .+ intn2
+
+------------------------------------------------------- :: minus
+|- intn1 - intn2 --> intn1 .- intn2
+
+------------------------------------------------------- :: times
+|- intn1 * intn2 --> intn1 .* intn2
+
+------------------------------------------------------- :: div0
+|- intn / 0 --> (%prim raise) Division_by_zero
+
+intn2 noteq 0
+------------------------------------------------------- :: div
+|- intn1 / intn2 --> intn1 ./ intn2
+
+{{ com
+The side effect of an assignment is communicated to the store via the
+label on the reduction arrow.
+}}
+
+------------------------------------------------------- :: assign
+|- l := v -->:Lab_paren:(l:=v) ()
+
+%% Note that at the moment, JRmatching_step and JRmatching_success
+%% do not depend on expression reduction, so they appear
+%% before reduction (but after JM_match). However, adding guards would
+%% make expression reduction and matching steps mutually recursive.
+
+defns
+JRmatching_step :: JR ::=
+
+defn
+|- expr with pattern_matching --> pattern_matching' :: :: matching_step :: matching_ {{ com Pattern matching step }} by
+
+{{ com
+Proceeding to the next case because the first, but not only, case has failed to
+match.
+}}
+
+|- v notmatches pat
+length (e1) ... (en) >= 1
+------------------------------------------------------- :: next
+|- v with pat -> e | pat1->e1 | ... | patn->en --> pat1->e1 | ... | patn->en
+
+defns
+JRmatching_success :: JR ::=
+
+defn
+|- expr with pattern_matching --> expr' :: :: matching_success :: matching_ {{ com Pattern matching finished }} by
+
+{{ com
+Proceeding to an expression because the first case matches, or the only case
+does not match.
+}}
+
+|- v matches pat gives <<x1<-v1,..,xm<-vm>>
+------------------------------------------------------- :: found
+|- v with pat -> e | pat1->e1 | ... | patn->en --> <<x1<-v1,..,xm<-vm>> e
+
+|- v notmatches pat
+------------------------------------------------------- :: fail
+|- v with pat -> e --> (%prim raise) Match_failure
+
+
+defns
+Jred :: JR_ ::=
+
+defn
+|- expr labelled_arrow expr' :: :: expr :: expr_  {{ com Expression evaluation }} by
+
+{{ com
+Reduces an expression one-step.  Most evaluation contexts require two rules,
+one for normal evaluation and one for exception propagation.
+}}
+
+|- unary_prim v -->L e
+------------------------------------------------------- :: uprim
+|- (%prim unary_prim) v -->L e
+
+|- v1 binary_prim v2 -->L e
+------------------------------------------------------- :: bprim
+|- ((%prim binary_prim) v1) v2 -->L e
+
+
+------------------------------------------------------- :: typed_ctx
+|- (e : t) --> e
+
+{{ com
+Right-to-left evaluation order for application (i.e., argument before function).
+}}
+
+|- e0 -->L e0'
+------------------------------------------------------- :: apply_ctx_arg
+|- e1 e0 -->L e1 e0'
+
+------------------------------------------------------- :: apply_raise1
+|- e ((%prim raise) v) --> (%prim raise) v
+
+|- e1 -->L e1'
+------------------------------------------------------- :: apply_ctx_fun
+|- e1 v0 -->L e1' v0
+
+------------------------------------------------------- :: apply_raise2
+|- ((%prim raise) v) v' --> (%prim raise) v
+
+------------------------------------------------------- :: apply
+|- (function pattern_matching v0) --> match v0 with pattern_matching
+
+|- e0 -->L e0'
+------------------------------------------------------- :: let_ctx
+|- let pat = e0 in e -->L let pat = e0' in e
+
+------------------------------------------------------- :: let_raise
+|- let pat = (%prim raise) v in e --> (%prim raise) v
+
+|- v matches pat gives <<x1<-v1,..,xm<-vm>>
+------------------------------------------------------- :: let_subst
+|- let pat = v in e --> <<x1<-v1,..,xm<-vm>>e
+
+|- v notmatches pat
+------------------------------------------------------- :: let_fail
+|- let pat = v in e --> (%prim raise) Match_failure
+
+letrec_bindings = x1 = function pattern_matching1 and ... and xn = function pattern_matchingn 
+recfun(letrec_bindings, pattern_matching1) gives e1 ... recfun(letrec_bindings, pattern_matchingn) gives en
+------------------------------------------------------- :: letrec
+|- let rec letrec_bindings in e --> <<x1 <- e1,...,xn <- en>>e
+
+|- e1 -->L e1'
+------------------------------------------------------- :: sequence_ctx_left
+|- e1; e2 -->L e1'; e2
+
+------------------------------------------------------- :: sequence_raise
+|- ((%prim raise) v); e --> (%prim raise) v
+
+------------------------------------------------------- :: sequence
+|- v; e2 --> e2
+
+|- e1 -->L e1'
+------------------------------------------------------- :: ifthenelse_ctx
+|- if e1 then e2 else e3 -->L if e1' then e2 else e3
+
+------------------------------------------------------- :: if_raise
+|- if (%prim raise) v then e1 else e2 --> (%prim raise) v
+
+------------------------------------------------------- :: ifthenelse_true
+|- if true then e2 else e3 --> e2
+
+------------------------------------------------------- :: ifthenelse_false
+|- if false then e2 else e3 --> e3
+
+{{ com
+We treat matching one pattern against one value as atomic (this would be
+relevant when matching the contents of a reference after introducing concurrent
+evaluation).
+}}
+
+|- e -->L e'
+------------------------------------------------------- :: match_ctx
+|- match e with pattern_matching -->L match e' with pattern_matching
+
+------------------------------------------------------- :: match_raise
+|- match (%prim raise) v with pattern_matching --> (%prim raise) v
+
+|- v with pattern_matching --> pattern_matching'
+------------------------------------------------------- :: match_step
+|- match v with pattern_matching --> match v with pattern_matching'
+
+|- v with pattern_matching --> e'
+------------------------------------------------------- :: match_success
+|- match v with pattern_matching --> e'
+
+---------------------------------------------------------------- :: and
+|- e1 && e2 --> if e1 then e2 else false
+
+---------------------------------------------------------------- :: or
+|- e1 || e2 --> if e1 then true else e2
+
+---------------------------------------------------------------- :: while
+|- while e1 do e2 done --> if e1 then (e2; while e1 do e2 done)
+
+{{ com
+We specify the evaluation of $[[e1]]$ before $[[e2]]$ in $\ottkw{for}$ loops,
+which appears to follow the implementation.
+}}
+
+|- e1 -->L e1'
+------------------------------------------------------- :: for_ctx1
+|- for x = e1 for_dirn e2 do e3 done -->L for x = e1' for_dirn e2 do e3 done
+
+------------------------------------------------------- :: for_raise1
+|- for x = (%prim raise) v for_dirn e2 do e3 done --> (%prim raise) v
+
+|- e2 -->L e2'
+------------------------------------------------------- :: for_ctx2
+|- for x = v1 for_dirn e2 do e3 done -->L for x = v1 for_dirn e2' do e3 done
+
+------------------------------------------------------- :: for_raise2
+|- for x = v for_dirn (%prim raise) v' do e3 done --> (%prim raise) v'
+
+intn1 <= intn2
+------------------------------------------------------- :: for_to_do
+|- for x = intn1 to intn2 do e done --> (let x = intn1 in e); for x = intn1 .+ 1 to intn2 do e done
+
+intn1 > intn2
+------------------------------------------------------- :: for_to_done
+|- for x = intn1 to intn2 do e done --> ()
+
+intn2 <= intn1
+------------------------------------------------------- :: for_downto_do
+|- for x = intn1 downto intn2 do e done --> (let x = intn1 in e); for x = intn1 .- 1 downto intn2 do e done
+
+intn2 > intn1
+------------------------------------------------------- :: for_downto_done
+|- for x = intn1 downto intn2 do e done --> ()
+
+|- e -->L e'
+------------------------------------------------------- :: try_ctx
+|- try e with pattern_matching -->L try e' with pattern_matching
+
+------------------------------------------------------- :: try_return
+|- try v with pattern_matching --> v
+
+------------------------------------------------------- :: try_catch
+|- try (%prim raise) v with pat_exp1 | ... | pat_expn --> match v with pat_exp1 | ... | pat_expn | _ -> ((%prim raise) v)
+
+{{ com
+We specify right-to-left evaluation order for tuples, applied variant
+constructors, and $\ottkw{::}$.
+}}
+
+|- e -->L e'
+------------------------------------------------------- :: tuple_ctx
+|- e1,..,em,e,v1,..,vn -->L e1,..,em,e',v1,..,vn
+
+------------------------------------------------------- :: tuple_raise
+|- e1, .., em, ((%prim raise) v), v1, .., vn --> (%prim raise) v
+
+|- e -->L e'
+------------------------------------------------------- :: constr_ctx
+|- constr (e1,..,em,e,v1,..,vn) -->L constr (e1,..,em,e',v1,..,vn)
+
+------------------------------------------------------- :: constr_raise
+|- constr (e1, .., em, ((%prim raise) v), v1, .., vn) --> (%prim raise) v
+
+|- e -->L e'
+------------------------------------------------------- :: cons_ctx1
+|- e0 :: e -->L e0 :: e'
+
+------------------------------------------------------- :: cons_raise1
+|- e :: ((%prim raise) v) --> (%prim raise) v
+
+|- e -->L e'
+------------------------------------------------------- :: cons_ctx2
+|- e :: v -->L e' :: v
+
+------------------------------------------------------- :: cons_raise2
+|- ((%prim raise) v) :: v' --> (%prim raise) v
+
+>>
+%d<<
+
+{{ com
+We specify right-to-left evaluation for records.  The bytecode implementation
+appears to go right to left after first reordering the record to correspond to
+the field ordering in the record type definition.
+}}
+
+{{ com
+\ottbreakconclusionlinetrue
+}}
+
+%%WIDTH: >~a4/landscape/normalsize
+|- expr -->L expr'
+------------------------------------------------------- :: record_ctx
+|- {fn1=e1;...;fnm=em; field_name=expr; fn1'=v1;...;fnn'=vn} -->L {fn1=e1;...;fnm=em; field_name=expr'; fn1'=v1;...;fnn'=vn}
+
+{{ com
+\ottbreakconclusionlinefalse
+}}
+
+------------------------------------------------------- :: record_raise
+|- {fn1=e1;...;fnm=em;fn=(%prim raise) v;fn1'=v1;...;fnn'=vn} --> (%prim raise) v
+
+{{ com
+The bytecode implementation appears to evaluate the leftmost position first in
+$\ottkw{with}$ expressions, so we follow that here. 
+}}
+
+{{ com
+\ottbreakconclusionlinetrue
+}}
+
+%%WIDTH: >>a4/landscape/normalsize
+|- e -->L e'
+------------------------------------------------------- :: record_with_ctx1
+|- {v with fn1=e1;...;fnm=em; field_name=e; fn1'=v1;...;fnn'=vn} -->L {v with fn1=e1;...;fnm=em; field_name=e'; fn1'=v1;...;fnn'=vn}
+
+{{ com
+\ottbreakconclusionlinefalse
+}}
+
+------------------------------------------------------- :: record_with_raise1
+|- {v' with fn1=e1;...;fnm=em; fn=(%prim raise) v; fn1'=v1;...;fnn'=vn} --> (%prim raise) v
+
+|- e -->L e'
+------------------------------------------------------- :: record_with_ctx2
+|- {e with field_name1=e1;...;field_namen=en} -->L {e' with field_name1=e1;...;field_namen=en}
+
+------------------------------------------------------- :: record_raise_ctx2
+|- {(%prim raise) v with field_name1=e1;...;field_namen=en} --> (%prim raise) v
+
+{{ com
+\ottbreakconclusionlinetrue
+}}
+
+%%WIDTH: >>a4/landscape/normalsize
+length (v1'')...(vl'') >=1
+field_name notin fn1...fnm
+------------------------------------------------------- :: record_with_many 
+|- {{fn1=v1;...;fnm=vm;field_name=v;fn1'=v1';...;fnn'=vn'} with field_name=v'; fn1''=v1'';...;fnl''=vl''} --> {{fn1=v1;...;fnm=vm;field_name=v';fn1'=v1';...;fnn'=vn'} with fn1''=v1'';...;fnl''=vl''} 
+
+
+%%WIDTH: >>a4/landscape/normalsize
+field_name notin fn1...fnm
+------------------------------------------------------- :: record_with_1
+|- {{fn1=v1;...;fnm=vm;field_name=v;fn1'=v1';...;fnn'=vn'} with field_name=v'} --> {fn1=v1;...;fnm=vm;field_name=v';fn1'=v1';...;fnn'=vn'}
+
+{{ com
+\ottbreakconclusionlinefalse
+}}
+
+|- e -->L e'
+------------------------------------------------------- :: record_access_ctx 
+|- e.field_name -->L e'.field_name
+
+------------------------------------------------------- :: record_access_raise
+|- ((%prim raise) v).field_name --> (%prim raise) v
+
+field_name notin fn1...fnn
+------------------------------------------------------- :: record_access 
+|- {fn1=v1;...;fnn=vn;field_name=v;fn1'=v1';...;fnm'=vm'}.field_name --> v
+
+%d>>
+<<
+
+|- e -->L e'
+------------------------------------------------------- :: assert_ctx
+|- assert e -->L assert e'
+
+------------------------------------------------------- :: assert_raise
+|- assert ((%prim raise) v) --> (%prim raise) v
+
+------------------------------------------------------- :: assert_true
+|- assert true --> ()
+
+------------------------------------------------------- :: assert_false
+|- assert false --> (%prim raise) Assert_failure 
+
+
+
+>>
+%d<<
+defns 
+JRdefn :: J ::=
+
+defn
+|- < definitions , program > labelled_arrow < definitions' , program' > :: :: Rdefn :: defn_ 
+{{ com Definition sequence evaluation }}
+{{ tex \vdash \langle [[definitions]] , [[program]] \rangle [[labelled_arrow]] \langle [[definitions']] , [[program']] \rangle }} by
+{{ com
+Reduces a definition one-step.  Type and exception definitions are moved into
+the tuple left sequence as encountered to support typing of intermediate
+states.
+}}
+
+|- e -->L e'
+------------------------------------------------------- :: let_ctx
+|- <ds_value, let pat = e ;; definitions> -->L <ds_value, let pat = e' ;; definitions>
+
+------------------------------------------------------- :: let_raise
+|- <ds_value, let pat = (%prim raise) v ;; definitions> --> <ds_value, (%prim raise) v>
+
+|- v matches pat gives <<x1<-v1,..,xm<-vm>>
+------------------------------------------------------- :: let_match
+|- <ds_value, let pat = v ;; definitions> --> <ds_value, <<x1<-remv_tyvar v1,..,xm<-remv_tyvar vm>>definitions>
+
+|- v notmatches pat
+------------------------------------------------------- :: let_not_match
+|- <ds_value, let pat = v ;; definitions> --> <ds_value, (%prim raise) Match_failure>
+
+letrec_bindings = x1 = function pattern_matching1 and ... and xn = function pattern_matchingn 
+recfun(letrec_bindings, pattern_matching1) gives e1 ... recfun(letrec_bindings, pattern_matchingn) gives en
+------------------------------------------------------- :: letrec
+|- <ds_value, let rec letrec_bindings ;; definitions> --> <ds_value, <<x1<-remv_tyvar e1,...,xn<-remv_tyvar en>>definitions>
+
+------------------------------------------------------- :: type
+|- <ds_value, type_definition ;; definitions> --> <ds_value ;; type_definition, definitions>
+
+------------------------------------------------------- :: exn
+|- <ds_value, exception_definition ;; definitions> --> <ds_value ;; exception_definition, definitions>
+%d>>
+<<
+
+defns
+JSlookup :: JS ::=
+
+defn
+store ( location ) gives expr :: :: lookup :: stlookup_ {{ com Store lookup }} by
+
+{{ com
+Gets the value stored at a given location.
+}}
+
+st(l) gives e'
+l noteq l'
+------------------------------------------------------- :: rec
+st,l'|->e(l) gives e'
+
+------------------------------------------------------- :: found
+st,l|->e(l) gives e
+
+defns
+JRstore :: JR ::=
+
+defn
+|- store labelled_arrow store' :: :: store :: store_ {{ com Store transition }} by
+
+{{ com
+Coordinates a store with a label.
+}}
+
+------------------------------------------------------- :: empty
+|- st --> st
+
+st(l) gives v
+------------------------------------------------------- :: lookup
+|- st -->(!l=v) st
+
+st'(l) unallocated
+------------------------------------------------------- :: assign
+|- st,l|->expr,st' -->(l:=v) st,l|->remv_tyvar v,st'
+
+st(l) unallocated
+------------------------------------------------------- :: alloc
+|- st -->(ref v=l) st,l|->remv_tyvar v
+
+
+
+>>
+%d<<
+defns
+JRtop :: JR ::=
+
+defn
+|- < definitions , program , store > --> < definitions' , program' , store' > :: :: top :: top_ 
+ {{ tex \vdash \langle [[definitions]] , [[program]] , [[store]] \rangle [[-->]] \langle [[definitions']] , [[program']] , [[store']] \rangle }}
+ {{ com Top-level reduction }} by
+
+{{ com
+The semantics of a machine is described as the parallel evolution of a
+structure body (the program) and a store. Each program evaluation step
+labelled $[[L]]$ must be matched by a store evaluation step with the
+same label.
+}}
+
+|- store -->L store'
+|- <definitions_value, program> -->L <definitions, program'>
+-------------------------------------------------------------------------------------- :: defs
+|- <definitions_value, program, store> --> <definitions, program', store'>
+
+%d>>
+<<
+
+
+defns
+Jebehaviour :: JRB_ ::=
+defn
+|- expr behaves :: :: ebehaviour :: ebehaviour_ {{ com Expression behaviour }} by
+
+{{ com
+This relation describes expressions whose behaviour is defined. This includes
+values, expressions that reduce, and raised exceptions. An expression with no
+behaviour is said to be stuck.  In this definition of expression behaviour, we
+treat any reducing expression as behaving, no matter what (satisfiable)
+constraint is imposed on the label.
+}}
+
+---------------------------------------------------------------- :: value
+|- v behaves
+
+|- e -->L e'
+---------------------------------------------------------------- :: reduces
+|- e behaves
+
+---------------------------------------------------------------- :: raises
+|- (%prim raise) v behaves
+
+
+
+>>
+%d<<
+
+defns
+Jdbehaviour :: JRB_ ::=
+
+defn
+|- < definitions , program , store > behaves :: :: dbehaviour :: behaviour_ 
+{{ tex \vdash \langle [[definitions]] , [[program]] , [[store]] \rangle [[behaves]] }}
+{{ com structure body behaviour }} by
+
+{{ com
+As for expressions, a definition sequence behaves if it is a value, if it
+reduces (under any label), or if it raises an exception.
+}}
+
+---------------------------------------------------------------- :: value
+|- <definitions_value, , store> behaves
+
+|- <definitions_value, program, store> --> <definitions', program', store'>
+---------------------------------------------------------------- :: reduces
+|- <definitions_value, program, store> behaves
+
+---------------------------------------------------------------- :: raises
+|- <definitions_value, (%prim raise) v, store> behaves
+
+%d>>
+<<
+
+
+{{ com
+\section{Statistics}
+\label{sec.statistics}
+
+}}
+
+
+embed
+{{ coq
+Hint Constructors JM_matchP JM_match
+                  Jrecfun Jfunval JRuprim JRbprim
+                  JRmatching_step JRmatching_success
+                  JR_expr JRdefn
+                  JSlookup JRstore
+                  JRB_ebehaviour
+                  : rules.
+}}
+%dembed
+%d{{ coq
+%dHint Constructors JRdefn JRtop JRB_dbehaviour : rules.
+%d}}

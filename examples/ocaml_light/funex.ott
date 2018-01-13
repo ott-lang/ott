@@ -1,0 +1,190 @@
+funs
+envF ::=
+  
+fun
+dom ( EB ) :: name :: domEB by   
+
+dom(TV) === TV
+dom(value_name:typescheme) === value_name
+dom(constr_name of typeconstr) === constr_name
+dom(constr_name of forall type_params_opt, (t1, ..., tn) : typeconstr) === constr_name
+dom(typeconstr_name:kind) === typeconstr_name
+dom(type_params_opt typeconstr_name = t) === typeconstr_name
+dom(typeconstr_name : kind {field_name1; ...; field_namen}) === typeconstr_name
+dom(field_name:forall type_params_opt, typeconstr_name -> typexpr) === field_name
+dom(location:t) === location
+
+
+%fun
+%dom ( E ) :: name1 .. namen :: domE by
+
+%dom(empty) === 
+%dom(E,EB) === dom(E) dom(EB)
+
+%fun
+%lookup ( E , name ) :: EB option :: lookupE by
+
+%val lookup_def = Define
+%`(lookup [] name = NONE) /\
+% (lookup (EB::E) name = 
+%    if domEB EB = name then 
+%      SOME EB
+%    else OPTION_MAP (\EB2. shiftEB 0 (if domEB EB = name_tv then 1 else 0) EB2) (lookup E name))`;
+
+
+funs
+indexF ::=
+
+%fun
+%idx_bound ( E , idx ) :: bool :: idx_bound by
+
+%val idx_bound_def = Define
+%`(idx_bound [] idx = F) /\
+% (idx_bound (EB_tv::E) 0 = T) /\
+% (idx_bound (EB_tv::E) (SUC n2) = idx_bound E n2) /\
+% (idx_bound (_::E) n = idx_bound E n)`; 
+
+fun
+shift m n typexpr' :: typexpr :: shiftt by
+
+shift m n typevar === typevar
+shift m n <idx, num> === if idx < m then <idx, num> else <idx+n, num>
+shift m n _ === _
+shift m n typexpr1->typexpr2 === (shift m n typexpr1)->(shift m n typexpr2)
+shift m n typexpr1 * .... * typexprn === shift m n typexpr1 * .... * shift m n typexprn
+shift m n (typexpr1, ..., typexprn) typeconstr === (shift m n typexpr1, ..., shift m n typexprn) typeconstr 
+
+fun
+shift m n typexprs' :: typexprs :: shifttes by
+
+shift m n typexpr1, ..., typexprn === shift m n typexpr1, ..., shift m n typexprn
+
+fun
+shift m n typescheme' :: typescheme :: shiftts by
+
+shift m n forall typexpr === forall shift (m+1) n typexpr
+
+fun
+shift m n EB' :: EB :: shiftEB by
+
+shift m n TV === TV
+shift m n value_name:typescheme === value_name : shift m n typescheme
+shift m n constr_name of typeconstr === constr_name of typeconstr
+shift m n constr_name of forall type_params_opt, (typexprs) : typeconstr === constr_name of forall type_params_opt, (shift m n typexprs) : typeconstr
+shift m n field_name:forall type_params_opt, typeconstr_name -> typexpr === field_name:forall type_params_opt, typeconstr_name -> shift m n typexpr
+shift m n typeconstr_name:kind === typeconstr_name:kind
+shift m n typeconstr_name : kind {field_name1; ...; field_namen} === typeconstr_name : kind {field_name1; ...; field_namen}
+shift m n type_params_opt typeconstr_name = typexpr === type_params_opt typeconstr_name = shift m n typexpr
+shift m n location: typexpr === location: shift m n typexpr
+
+%fun
+%num_tv E :: intn :: num_tv by
+
+%num_tv [] === 0
+%num_tv E,EB = if EB = TV then 1 + num_tv E else num_tv E
+
+fun
+shift m n E' :: E :: shiftE by
+
+shift m n === 
+shift m n E,EB === shift m n E , shift (m + num_tv E) n EB
+
+fun
+shift m n Tsigma' :: Tsigma :: shiftTsig by
+shift m n <<typevar1 <- typexpr1, .., typevarn <- typexprn>> === <<typevar1 <- shift m n typexpr1, .., typevarn <- shift m n typexprn>>
+
+
+funs
+redF ::=
+
+%fun
+%recfun letrec_bindings pattern_matching :: expr :: recfun by
+
+%val recfun_def = Define
+%`recfun (LRBs_inj letrec_bindings) pattern_matching =
+%  (substs_value_name_expr
+%    (MAP (\letrec_binding. case letrec_binding of
+%                             LRB_simple x pattern_matching ->
+%                               (x , Expr_letrec (LRBs_inj letrec_bindings)
+%                                                (Expr_ident x)))
+%         letrec_bindings)
+%    (Expr_function pattern_matching))`;
+
+fun
+snoc definitions' definition :: definitions :: definitions_snoc by
+
+snoc  d === d;;  
+snoc d;;ds d' === d;;snoc ds d'
+
+funs
+remv_tyvarF ::=
+
+fun
+remv_tyvar typexpr' :: typexpr :: remv_tyvar_typexpr by
+
+remv_tyvar typevar === _
+remv_tyvar <idx, num> === <idx, num>
+remv_tyvar _ === _
+remv_tyvar typexpr1 -> typexpr2 === remv_tyvar typexpr1 -> remv_tyvar typexpr2
+remv_tyvar typexpr1 * .... * typexprn === remv_tyvar typexpr1 * .... * remv_tyvar typexprn
+remv_tyvar (typexpr1, .., typexprn) typeconstr === (remv_tyvar typexpr1, .., remv_tyvar typexprn) typeconstr
+
+fun
+remv_tyvar pattern' :: pattern :: remv_tyvar_pattern by
+
+remv_tyvar value_name === value_name
+remv_tyvar _ === _
+remv_tyvar constant === constant
+remv_tyvar pattern as value_name === remv_tyvar pattern as value_name
+remv_tyvar (pattern : typexpr) === (remv_tyvar pattern : typexpr)
+remv_tyvar pattern1 | pattern2 === remv_tyvar pattern1 | remv_tyvar pattern2
+remv_tyvar constr (pattern1, ..., patternn) === constr (remv_tyvar pattern1, ..., remv_tyvar patternn)
+remv_tyvar constr _ === constr _
+remv_tyvar pattern1, ...., patternn === remv_tyvar pattern1, ...., remv_tyvar patternn
+remv_tyvar {field1 = pattern1; ...; fieldn = patternn} === {field1 = remv_tyvar pattern1; ...; fieldn = remv_tyvar patternn} 
+remv_tyvar pattern1 :: pattern2 === remv_tyvar pattern1 :: remv_tyvar pattern2 
+
+
+fun
+remv_tyvar expr' :: expr :: remv_tyvar_expr by
+
+remv_tyvar (%prim unary_prim) === (%prim unary_prim)
+remv_tyvar (%prim binary_prim) === (%prim binary_prim)
+remv_tyvar value_name === value_name
+remv_tyvar constant === constant
+remv_tyvar (expr : typexpr) === (remv_tyvar expr : remv_tyvar typexpr)
+remv_tyvar expr1, ...., exprn === remv_tyvar expr1, ...., remv_tyvar exprn
+remv_tyvar constr (expr1, .., exprn) === constr (remv_tyvar expr1, .., remv_tyvar exprn)
+remv_tyvar expr1 :: expr2 === remv_tyvar expr1 :: remv_tyvar expr2
+remv_tyvar {field1 = expr1; ...; fieldn = exprn} === {field1 = remv_tyvar expr1; ...; fieldn = remv_tyvar exprn}
+remv_tyvar {expr with field1 = expr1; ...; fieldn = exprn} === {remv_tyvar expr with field1 = remv_tyvar expr1; ...; fieldn = remv_tyvar exprn}
+remv_tyvar expr1 expr2 === remv_tyvar expr1 remv_tyvar expr2
+remv_tyvar expr1 && expr2 === remv_tyvar expr1 && remv_tyvar expr2
+remv_tyvar expr1 || expr2 === remv_tyvar expr1 || remv_tyvar expr2
+remv_tyvar expr.field === remv_tyvar expr . field
+remv_tyvar if expr0 then expr1 else expr2 === if remv_tyvar expr0 then remv_tyvar expr1 else remv_tyvar expr2
+remv_tyvar while expr1 do expr2 done === while remv_tyvar expr1 do remv_tyvar expr2 done
+remv_tyvar for x = expr1 for_dirn expr2 do expr3 done === for x = remv_tyvar expr1 for_dirn remv_tyvar expr2 do remv_tyvar expr3 done
+remv_tyvar expr1 ; expr2 === remv_tyvar expr1; remv_tyvar expr2
+remv_tyvar match expr with pattern_matching === match remv_tyvar expr with remv_tyvar pattern_matching
+remv_tyvar function pattern_matching === function remv_tyvar pattern_matching
+remv_tyvar try expr with pattern_matching === try remv_tyvar expr with remv_tyvar pattern_matching
+remv_tyvar let let_binding in expr === let remv_tyvar let_binding in remv_tyvar expr
+remv_tyvar let rec letrec_bindings in expr === let rec remv_tyvar letrec_bindings in remv_tyvar expr
+remv_tyvar assert expr === assert remv_tyvar expr
+remv_tyvar location === location
+ 
+fun
+remv_tyvar pattern_matching' :: pattern_matching :: remv_tyvar_pattern_matching by
+
+remv_tyvar pattern1->expr1 | ... | patternn->exprn === remv_tyvar pattern1->remv_tyvar expr1 | ... | remv_tyvar patternn->remv_tyvar exprn 
+
+fun
+remv_tyvar let_binding' :: let_binding :: remv_tyvar_let_binding by
+
+remv_tyvar pattern = expr === remv_tyvar pattern = remv_tyvar expr
+
+fun
+remv_tyvar letrec_bindings' :: letrec_bindings :: remv_tyvar_letrec_bindings by
+
+remv_tyvar value_name1 = function pattern_matching1 and ... and value_namen = function pattern_matchingn ===  value_name1 = function remv_tyvar pattern_matching1 and ... and value_namen = function remv_tyvar pattern_matchingn 

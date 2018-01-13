@@ -1,0 +1,1973 @@
+%%%% Preamble follows, search \title to know what this file is about %%%%
+
+%% In this file, lines beginning with %d or %m are to allow different versions
+%% of the system to be build by filtering with a sed script.  %d corresponds to
+%% definition-level features and %m corresponds to module-level features.  (The
+%% %m version of the system is not currently working or maintained.)
+
+
+%% Note that with the current ott behaviour, all macro definitions *must*
+%% be in the first TeX embedding which must come before anything else that
+%% ott doesn't ignore.
+embed
+{{ tex
+\makeatletter
+\input ott-spec.ltx
+\newcommand{\ottenvironmentappend}[2]{%
+  \begingroup%
+  \def\@tempa{#1}\def\@tempb{ \ottkw{empty} }%
+  \ifx\@tempa\@tempb\def\@tempc{}\else\def\@tempc{#1,}\fi%
+  \expandafter\endgroup%
+  \@tempc#2%
+}
+\newcommand{\ie}{%
+i.e.,
+}
+\newcommand{\eg}{%
+e.g.,
+}
+\makeatother
+\newif\ifHAVEtypedefinitions \newif\ifHAVEmodules
+%d\HAVEtypedefinitionstrue
+%m\HAVEmodulestrue
+
+%%%% End of preamble %%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{A formal specification for OCaml: the Core Language}
+\author{Scott Owens and Gilles Peskine and Peter Sewell}
+\maketitle
+
+\tableofcontents
+
+\section{Introduction}
+\label{sec.introduction}
+
+This document describes the syntax and semantics of a substantial fragment of
+Objective Caml's core language.   When writing this semantics, we have followed
+the structure of part 2 of the Objective Caml manual:
+
+\begin{quote}
+  The Objective Caml system \\
+  release 3.09 \\
+  Documentation and user's manual \\
+  Xavier Leroy (with Damien Doligez, Jacques Garrigue, Didier R\'emy and J\'er\^ome Vouillon) \\
+  Copyright \copyright{} 2005 Institut National de Recherche en Informatique et en Automatique
+\end{quote}
+
+Our aim is to describe a real language, including theoretically redundant but
+practically useful features. We do not however cover the whole Objective Caml
+language: we have omitted some major semantic features, such as objects and
+modules.  Our guideline is to retain the semantic features of core ML as
+implemented in Objective Caml.  Our language corresponds roughly to the
+fragment presented in Chapter 1 of the Objective Caml manual.
+
+Supported features include:
+\begin{itemize}
+\item 
+the following primitive types and type constructors: \verb|int|, \verb|char|,
+\verb|string|, \verb|float|, \verb|bool|, \verb|unit|, \verb|exn|, \verb|list|,
+\verb|option|, \verb|ref|;
+\item
+tuple and function types
+\ifHAVEtypedefinitions
+\item 
+type and type constructor definitions, including:
+\begin{itemize}
+\item
+type abbreviations (\eg \verb|type t = int|),
+\item
+variant data and record types (\eg \verb$type t = I of int | D of char$ and \verb|type t = {f:int}|),
+\item
+parametric type constructors (\eg \verb|type 'a t = 'a -> 'a|),
+\item
+recursive and mutually recursive combinations of the above (although all
+recursion must go through a variant data or record type);
+\end{itemize}
+\fi
+\item 
+let-based polymorphism (with the traditional ML-style value restriction);
+\item
+31-bit word semantics for integers and IEEE-754 semantics for floating point
+numbers (in the version of the system generated for HOL);
+\item
+type annotations (\eg \verb|3:int|), list notation (\eg [1; 2; 3]), record
+\verb|with| expressions, \verb|if| expressions, \verb|while| expressions, 
+\verb|for| expressions, sequencing (\verb|;|), \verb|assert| expressions;
+\item 
+(potentially) mutually-recursive function definitions;
+\item
+pattern matching with nested patterns and \verb$|$ patterns;
+\item 
+mutable references through \verb|ref|, \verb|:=|, and \verb|!|;
+\ifHAVEmodules
+%% ?
+\fi
+\item
+exception definitions and handling (\verb|try|, \verb|raise|, \verb|exception|);
+\item
+polymorphic equality (the \verb|=| operator).
+\end{itemize}
+
+The following features are not supported:
+\begin{itemize}
+\ifHAVEtypedefinitions
+\item
+mutable records (\eg \texttt{\{mutable l1=e1;...;mutable ln=en\} });
+\else
+\item
+type definitions;
+\fi
+\item
+arrays;
+\ifHAVEmodules
+\item functors, named signatures, abstract signatures, module constraints
+\item any form of subsignaturing, whether type abstraction, field erasure
+      or less polymorphic values
+\else
+\item
+modules;
+\fi
+\item
+subtyping, labels, polymorphic variants, objects;
+\item 
+pattern matching guards (\texttt{when});
+\item 
+features documented in the ``language extensions'' part of the manual;
+\item 
+\texttt{-rectypes}, exhaustivity of pattern matching, and other compiler command-line options;
+\item 
+support for type abbreviations in the HOL model (we explain in the commentary
+how they should be added);
+\iffalse
+\item a couple of really dark corners best left untold;
+\fi
+\item 
+finiteness of memory.
+\end{itemize}
+
+This document contains a description of the language syntax
+(\S\ref{sec.syntax}), a type system (\S\ref{sec.typing}) and an
+operational semantics (\S\ref{sec.runtime}).
+
+\paragraph{Metatheory}
+This typeset definition is generated by \texttt{ott}.  Well-formed definitions
+in HOL, Isabelle/HOL and Coq are also generated.  We have mechanized the type
+soundness theorem for the system in HOL.
+
+}}
+
+{{ coq
+Require Ascii.
+Require Import BinInt.
+Require String.
+Require Import Zdiv.
+Require Import ott_list.
+Require Import caml_lib_misc.
+}}
+
+{{ hol
+local open integerTheory sortingTheory floatTheory integer_wordTheory in end;
+val _ = wordsLib.mk_word_size 31;
+}}
+
+
+{{ tex
+\section{Syntax}
+\label{sec.syntax}
+
+We describe the syntax of the core OCaml language in BNF form, closely
+following the description in the Objective Caml manual, but omitting
+unsupported language features. The concrete syntax of Objective Caml includes
+lexical specifications as well as precedence rules to disambiguate the grammar;
+we do not reproduce these here.
+
+Some productions mention annotations to the right of the right-hand side.
+The following annotations are understood by Ott.
+\begin{itemize}
+\item 
+\textsf{M} indicates a metaproduction.  These are not part of the free grammar
+for the relevant nonterminal.  Instead they are given meaning (in the theorem
+prover models) by translation into non-metaproductions.  These translations,
+specified in the Ott source, are specific to each theorem prover.  We summarize
+their action in this document.
+\item 
+\textsf{S} indicates a metaproduction that is implemented as syntactic sugar.
+
+\item ``\textsf{bind ...}'' and ``$\mathit{auxfun=\ldots}$'' are Ott
+      binding specifications.
+\end{itemize}
+The following annotations are for informational purposes only.
+\begin{itemize}
+\item \textsf{[I]} indicates a production that is not intended to be
+      available in user programs but is useful in the metatheory.
+\item \textsf{[L]} indicates a library facility (as opposed to a
+      strictly language facility).
+\item \textsf{d} indicates a definition-level feature, if enabled.
+\end{itemize}
+
+\bigskip
+}}
+
+%% Note: ott does not currently supports TeX embeddings inside the
+%% grammar (any embedding except for the very first embed block they
+%% is printed after the grammar).
+
+indexvar index , i , j , k , l , m , n ::=
+      {{ lex numeral }}
+      {{ coq nat }}
+      {{ coq-equality }}
+      {{ hol num }}
+      {{ lem nat }}
+      {{ isa nat }}
+      {{ com index variables (subscripts) }}
+
+
+%% 6.1 (Identifiers) http://caml.inria.fr/pub/docs/manual-ocaml/lex.html#ident
+
+%% Our usage of [[ident]] is probably wrong: we should probably use
+%% [[lowercase_ident]] instead. There are cases where the concrete
+%% syntax lexes as alphanum though; these should be called [[ident]],
+%% but I don't think we handle any of them (e.g., polmyorphic variants).
+
+metavar ident ::=
+      {{ lex alphanum }}
+      {{ coq nat }}
+      {{ coq-equality }}
+      {{ hol string }}
+      {{ lem string }}
+      {{ isa string }}
+
+%% 6.1 (Integer literals) http://caml.inria.fr/pub/docs/manual-ocaml/lex.html#integer-literal
+
+metavar  integer_literal ::=
+      {{ lex numeral }}
+      {{ coq Z }}
+      {{ coq-equality }}
+      {{ hol word31 }} 
+      {{ holvar [[integer_literal]]w }}
+      {{ lem integer }} % TODO
+      {{ lemvar [[integer_literal]] }}
+      {{ isa int }}
+
+%% 6.1 (Floating-point literals) http://caml.inria.fr/pub/docs/manual-ocaml/lex.html#float-literal
+
+metavar  float_literal ::=
+      {{ coq nat }} % should be real
+      {{ coq-equality }}
+      {{ hol float }}
+      {{ lem nat }} % TODO
+      {{ isa nat }}
+
+%% 6.1 (Character literals) http://caml.inria.fr/pub/docs/manual-ocaml/lex.html#char-literal
+
+metavar char_literal ::=
+      {{ coq Ascii.ascii }}
+      {{ coq-equality }}
+      {{ hol char }}
+      {{ lem nat }} % TODO
+      {{ isa char }}
+
+%% 6.1 (String literals) http://caml.inria.fr/pub/docs/manual-ocaml/lex.html#string-literal
+
+metavar string_literal ::=
+      {{ coq String.string }}
+      {{ coq-equality }}
+      {{ hol string }}
+      {{ lem string }}
+      {{ isa string }}
+
+%% 6.1 (Prefix and infix symbols) http://caml.inria.fr/pub/docs/manual-ocaml/lex.html#infix-symbol
+
+metavar infix_symbol ::=
+      {{ coq String.string }}
+      {{ coq-equality }}
+      {{ hol string }}
+      {{ lem string }}
+      {{ isa string }}
+
+metavar  prefix_symbol ::=
+      {{ coq String.string }}
+      {{ coq-equality }}
+      {{ hol string }}
+      {{ lem string }}
+      {{ isa string }}
+
+%% Not in OCaml's syntax: Locations
+
+metavar location , l {{ tex \ell }} ::=
+      {{ coq nat }}
+      {{ coq-equality }}
+      {{ hol num }}
+      {{ lem nat }}
+      {{ isa nat }}
+      {{ com store locations (not in the source syntax) }}
+
+%% 6.3 (Names)
+
+metavar lowercase_ident ::=
+      {{ lex alphanum0 }}
+      {{ coq String.string }}
+      {{ coq-equality }}
+      {{ hol string }}
+      {{ lem string }}
+      {{ isa string }}
+metavar capitalized_ident ::=
+      {{ lex Alphanum }}
+      {{ coq String.string }}
+      {{ coq-equality }}
+      {{ hol string }}
+      {{ lem string }}
+      {{ isa string }}
+
+
+grammar
+
+  %% 6.3 (Naming objects) http://caml.inria.fr/pub/docs/manual-ocaml/manual011.html#value-name
+
+  value_name , x :: VN_ ::= {{ coq-equality }}
+    | lowercase_ident                                   ::   :: id
+    | ( operator_name )                                 ::   :: op
+  operator_name :: ON_ ::= {{ coq-equality }}
+    | prefix_symbol                                     ::   :: symbol
+    | infix_op                                          ::   :: infix
+  infix_op :: IO_ ::= {{ coq-equality }}
+    | infix_symbol                                      ::   :: symbol
+    | *                                                 :: L :: star
+    | =                                                 :: L :: equal
+  %% "or" and "&" are obsolete syntactic sugar.
+%   | or                                                ::   :: or
+%   | &                                                 ::   :: amp
+    | :=                                                :: L :: colonequal
+  %% The following 7 are integer operators (not handled at the moment).
+%   | mod                                               ::   :: mod
+%   | land                                              ::   :: land
+%   | lor                                               ::   :: lor
+%   | lxor                                              ::   :: lxor
+%   | lsl                                               ::   :: lsl
+%   | lsr                                               ::   :: lsr
+%   | asr                                               ::   :: asr
+  constr_name , C :: CN_  ::= {{ coq-equality }}
+    | capitalized_ident                                 ::   :: id
+  typeconstr_name, tcn :: TCN_ ::=  {{ coq-equality }}
+    | lowercase_ident                                   ::   :: id
+%d field_name , fn :: FN_  ::=  {{ coq-equality }}
+%d  | lowercase_ident                                   :: d :: id
+%m module_name , M :: MN_  ::= {{ coq-equality }}
+%m  | capitalized_ident                                 :: m :: id
+%m modtype_name  :: MTN_ ::= {{ coq-equality }}
+%m  | ident                                             :: m :: id
+
+  %% 6.3 (Referring to named objects) http://caml.inria.fr/pub/docs/manual-ocaml/manual011.html#value-path
+  value_path :: VP_  ::= {{ coq-equality }}
+    | value_name                                        ::   :: name
+%m  |  module_path . value_name                         :: m :: path
+  constr :: C_   ::= {{ coq-equality }}
+      {{ com constructors: named, and built-in (including exceptions) }}
+    | constr_name                                       ::   :: name
+%m  | module_path . constr_name                         :: m :: path
+  %% 19.1 (Predefined exceptions) http://caml.inria.fr/pub/docs/manual-ocaml/manual033.html
+    | Invalid_argument                                  :: L :: invalidargument
+    | Not_found                                         :: L :: notfound
+    | Assert_failure                                    :: L :: assertfailure
+    | Match_failure                                     :: L :: matchfailure
+    | Division_by_zero                                  :: L :: div_by_0
+  %% 19.1 (Built-in types) http://caml.inria.fr/pub/docs/manual-ocaml/manual033.html
+    | None                                              :: L :: none
+    | Some                                              :: L :: some
+  typeconstr :: TC_  ::= {{ coq-equality }}
+      {{ com type constructors: named, and built-in }}
+    | typeconstr_name                                   ::   :: name
+%m  | extended_module_path . typeconstr_name            :: m :: epath
+  %% 19.1 (Built-in types) http://caml.inria.fr/pub/docs/manual-ocaml/manual033.html
+    | int                                               :: L :: int
+    | char                                              :: L :: char
+    | string                                            :: L :: string
+    | float                                             :: L :: float
+    | bool                                              :: L :: bool
+    | unit                                              :: L :: unit
+    | exn                                               :: L :: exn
+    | list                                              :: L :: list
+    | option                                            :: L :: option
+  %% Pervasives http://caml.inria.fr/pub/docs/manual-ocaml/libref/Pervasives.html
+    | ref                                               :: L :: ref
+%d field {{ lem fieldl }} :: F_  ::= {{ coq-equality }}
+%d  | field_name                                        :: d :: name
+%d% |  module_path . field_name                         :: d :: path
+%m module_path , mp :: MP_  ::= {{ coq-equality }}
+%m  | module_name                                       :: m :: name
+%m  |  module_path . module_name                        :: m :: path
+%m extended_module_path :: EMP_ ::= {{ coq-equality }}
+%m  | module_name                                       :: m :: name
+%m  |  extended_module_path . module_name               :: m :: epath
+%m  |  extended_module_path ( extended_module_path )    :: m ::
+%m modtype_path :: MTP_ ::= {{ coq-equality }}
+%m  | modtype_name                                      :: m :: name
+%m  |  extended_module_path . modtype_name              :: m :: epath
+
+  idx, num :: '' ::=
+      {{ coq nat }}
+      {{ hol num }}
+      {{ lem nat }}
+      {{ isa nat }}
+      {{ com index arithmetic for the type system's deBruijn type variable representation }}
+    | m                                                 :: I :: N 
+        {{ ichl [[m]] }}
+    | idx1 + idx2                                       :: I :: Add 
+        {{ ichl ([[idx1]] + [[idx2]]) }}
+    | ( num )			  		        :: S I :: paren 
+        {{ ichl [[num]] }}
+
+  Tsigma {{ tex \sigma^T }} :: Tsigma_ ::= 
+      {{ coq list (typevar * typexpr) }}
+      {{ hol (typevar#typexpr) list }} 
+      {{ lem list (typevar*typexpr) }} 
+      {{ isa (typevar*typexpr) list }} 
+      {{ com multiple substitutions of types for type variables }}
+    | '<<' typevar1 <- typexpr1 , .. , typevarn <- typexprn '>>' :: I :: substs
+        {{ ichl [[typevar1 typexpr1..typevarn typexprn]] }}
+    | shift num num' Tsigma                             :: M I :: shift
+        {{ ichl (shiftTsig [[num]] [[num']] [[Tsigma]]) }}
+        {{ com shift the indices in the types in [[Tsigma]] by [[num]], ignoring indices lower than [[num']] }}
+
+  %% 6.4 (Type expressions) http://caml.inria.fr/pub/docs/manual-ocaml/manual012.html#typexpr
+
+  typexpr , t :: TE_ ::=
+    | typevar                                           ::   :: var
+    | < idx , num >                                     :: I :: idxvar
+        {{ com de Bruijn represenataion of type variables.  [[num]] allows each binder (\ie a polymorphic $\ottkw{let}$) to introduce an arbitrary number of binders }}
+    | _                                                 ::   :: any
+    | ( typexpr )                                       :: S :: paren
+        {{ ichl [[typexpr]] }}
+    | typexpr1 -> typexpr2                              ::   :: arrow
+    | typexpr1 * .... * typexprn                        ::   :: tuple
+    | typeconstr                                        :: S :: constr0
+        {{ coq (TE_constr nil [[typeconstr]]) }}
+        {{ hol (TE_constr [] [[typeconstr]]) }}
+        {{ lem (TE_constr [] [[typeconstr]]) }}
+        {{ isa (TE_constr [] [[typeconstr]]) }}
+        {{ com in the theorem prover models we use a uniform representation for 0-, 1-, and n-ary type constructor applications }}
+    | typexpr typeconstr                                :: S :: constr1
+        {{ coq (TE_constr (cons [[typexpr]] nil) [[typeconstr]]) }}
+        {{ hol (TE_constr ([ [[typexpr]] ]) [[typeconstr]]) }}
+        {{ lem (TE_constr ([ [[typexpr]] ]) [[typeconstr]]) }}
+        {{ isa (TE_constr ([ [[typexpr]] ]) [[typeconstr]]) }}
+    | ( typexpr1 , ... , typexprn ) typeconstr          ::   :: constr
+%   | typexpr as typevar                                ::   ::
+    | shift num num' typexpr                            :: M :: shift
+        {{ ichl (shiftt [[num]] [[num']] [[typexpr]]) }}
+        {{ com shifts as in $\sigma^T$ above }}
+    | t1 -> ... -> tn ---> t                            :: M I :: arrown
+        {{ coq (fold_right TE_arrow [[t]] [[t1 ... tn]]) }}
+        {{ hol (FOLDR TE_arrow [[t]] [[t1 ... tn]]) }}
+        {{ lem (List.foldr TE_arrow [[t]] [[t1 ... tn]]) }}
+        {{ isa (foldr TE_arrow [[t1 ... tn]] [[t]]) }}
+    | Tsigma typexpr                                    :: M I :: susbts
+        {{ ichl (substs_typevar_typexpr [[Tsigma]] [[typexpr]]) }}
+        {{ com apply the substitution }}
+
+  src_typexpr , src_t :: STE_ ::=  {{ com types that can appear in source programs }}
+    | typevar                                           ::   :: var
+    | _                                                 ::   :: any
+    | ( src_typexpr )                                   ::   :: paren
+    | src_typexpr1 -> src_typexpr2                      ::   :: arrow
+    | src_typexpr1 * .... * src_typexprn                ::   :: tuple
+    | typeconstr                                        ::   :: constr0
+    | src_typexpr typeconstr                            ::   :: constr1
+    | ( src_typexpr1 , ... , src_typexprn ) typeconstr  ::   :: constr
+    | shift num num' src_typexpr                        ::   :: shift
+
+  typevar {{ tex \alpha }} , tv {{ tex \alpha }} :: TV_ ::= {{ coq-equality }}
+    | ' ident                                           ::   :: ident
+        {{ tex {\ottkw{'}[[ident]]} }}
+
+  typescheme, ts :: TS_ ::=
+    | forall typexpr                                    :: I :: forall
+    | shift num num' typescheme	                        :: I M :: shift
+        {{ ichl (shiftts [[num]] [[num']] [[typescheme]]) }}
+        {{ com shifts as in $\sigma^T$ above }}
+  
+  intn {{ tex \dot{n} }} :: Intn_ ::=
+      {{ coq integer_literal }}
+      {{ coq-equality }}
+      {{ hol word31 }}
+      {{ lem integer }} % TODO
+      {{ isa int }}
+      {{ com integer mathematical expressions, used to implement primitive operations and $\ottkw{for}$ loops }}
+    | integer_literal                                   ::   :: lit
+        {{ coq ([[integer_literal]])%Z }}
+        {{ hol [[integer_literal]] }}
+        {{ lem [[integer_literal]] }}
+        {{ isa ( [[integer_literal]]) }} %% FIXME not sure about this
+    | ( intn )                                          :: M I :: paren
+        {{ ichl [[intn]] }}
+    | intn1 .+ intn2                                    :: M I :: plus
+        {{ tex [[intn1]] \stackrel\centerdot+ [[intn2]] }}
+        {{ coq (([[intn1]] + [[intn2]])%Z) }}
+        {{ hol ([[intn1]] + [[intn2]]) }}
+        {{ lem ([[intn1]] + [[intn2]]) }}
+        {{ isa ([[intn1]] + [[intn2]]) }}
+    | intn1 .- intn2                                    :: M I :: minus
+        {{ tex [[intn1]] \stackrel\centerdot- [[intn2]] }}
+        {{ coq (([[intn1]] - [[intn2]])%Z) }}
+        {{ hol ([[intn1]] - [[intn2]]) }}
+        {{ lem ([[intn1]] - [[intn2]]) }}
+        {{ isa ([[intn1]] - [[intn2]]) }}
+    | intn1 .* intn2                                    :: M I :: times
+        {{ tex [[intn1]] \stackrel\centerdot* [[intn2]] }}
+        {{ coq (([[intn1]] * [[intn2]])%Z) }}
+        {{ hol ([[intn1]] * [[intn2]]) }}
+        {{ lem ([[intn1]] * [[intn2]]) }}
+        {{ isa ([[intn1]] * [[intn2]]) }}
+    | intn1 ./ intn2                                    :: M I :: div
+        {{ tex [[intn1]] \stackrel\centerdot/ [[intn2]] }}
+        {{ coq (([[intn1]] / [[intn2]])%Z) }}
+        {{ hol ([[intn1]] / [[intn2]]) }}
+        {{ lem ([[intn1]] / [[intn2]]) }}
+        {{ isa ([[intn1]] div [[intn2]]) }} %% FIXME not sure about this
+
+  %% 6.5 (Constants) http://caml.inria.fr/pub/docs/manual-ocaml/manual013.html#constant
+
+  constant {{ lem constantl }} :: CONST_ ::= {{ coq-equality }}
+    | intn                                              :: L :: int
+    | float_literal                                     :: L :: float
+    | char_literal                                      :: L :: char
+    | string_literal                                    :: L :: string
+    | equal_error_string				:: M L :: equal_error_string
+        {{ hol (CONST_string "equal: functional value") }}
+        {{ lem (CONST_string "equal: functional value") }}
+        {{ isa (CONST_string ''equal: functional value'') }}
+        {{ coq (CONST_string string_equal_functional_value) }}
+        {{ com The string constant "equal: functional value" }}
+    | constr                                            :: L :: constr
+    | false                                             :: L :: false
+    | true                                              :: L :: true
+    | []                                                :: L :: nil
+    | ()                                                :: L :: unit
+
+  %% 6.6 (Patterns) http://caml.inria.fr/pub/docs/manual-ocaml/patterns.html#pattern 
+
+ pattern {{ lem patternl }} , pat :: P_ ::=
+    | value_name                                        ::   :: var
+        (+ xs = value_name +)
+    | _                                                 ::   :: any
+        (+ xs = {} +)
+    | constant                                          ::   :: constant
+        (+ xs = {} +)
+    | pattern as value_name                             ::   :: alias
+        (+ xs = xs(pattern) union value_name +)
+    | ( pattern )                                       :: S :: paren
+        {{ ichl [[pattern]] }}
+    | ( pattern : typexpr )                             ::   :: typed
+        (+ xs = xs(pattern) +)
+    | pattern1 '|' pattern2                             ::   :: or
+        (+ xs = xs(pattern1) +)
+  %% Comment out [construct_unary] when it can be given proper precedence wrt
+  %% [construct] and [construct_any].
+%    | constr pattern                                  :: S :: construct_unary
+%       {{ ichl (P_construct [[constr]] (cons [[pattern]] nil)) }}
+    | constr ( pattern1 , ... , patternn )              ::   :: construct
+        (+ xs = xs(pattern1...patternn) +)
+    | constr _                                          ::   :: construct_any
+        (+ xs = {} +)
+    | pattern1 , .... , patternn                        ::   :: tuple
+        (+ xs = xs(pattern1....patternn) +)
+%d  | { field1 = pattern1 ; ... ; fieldn = patternn }   :: d :: record
+%d      (+ xs = xs(pattern1...patternn) +)
+    | [ pattern1 ; ... ; patternn ]                     :: S L :: list
+        {{ coq (fold_right P_cons CONST_nil [[pattern1...patternn]]) }}
+        {{ hol (FOLDR P_cons (P_constant CONST_nil) [[pattern1...patternn]]) }}
+        {{ lem (List.foldr P_cons (P_constant CONST_nil) [[pattern1...patternn]]) }}
+        {{ isa (foldr P_cons (P_constant CONST_nil) [[pattern1...patternn]]) }}
+    | pattern1 '::' pattern2                            :: L :: cons
+        (+ xs = xs(pattern1) union xs(pattern2) +)
+
+parsing
+
+P_tuple <= P_construct
+
+grammar
+
+ %% Important primitives from Pervasives http://caml.inria.fr/pub/docs/manual-ocaml/libref/Pervasives.html
+ unary_prim :: Uprim_ ::=
+      {{ com primitive functions with one argument }}
+    | raise                                             :: L I :: raise
+    | not                                               :: L I :: not
+    | ~-                                                :: L I :: minus 
+    | ref                                               :: L I :: ref
+    | !                                                 :: L I :: deref
+ binary_prim :: Bprim_ ::=
+      {{ com primitive functions with two arguments }}
+    | =                                                 :: L I :: equal
+    | +                                                 :: L I :: plus
+    | -                                                 :: L I :: minus
+    | *                                                 :: L I :: times
+    | /                                                 :: L I :: div
+    | :=                                                :: L I :: assign
+
+ %% 6.7 (Expressions) http://caml.inria.fr/pub/docs/manual-ocaml/expr.html#expr
+ 
+ expr , e  :: Expr_ ::=
+    | ( %prim unary_prim )                              :: L I :: uprim
+        {{ com a unary primitive function value }}
+    | ( %prim binary_prim )                             :: L I :: bprim
+        {{ com a binary primitive function value }}
+    | value_name                                        ::   :: ident
+    | constant                                          ::   :: constant
+    | ( expr )                                          :: S :: paren
+        {{ ichl [[expr]] }}
+    | begin expr end                                    :: S :: parenb
+        {{ ichl [[expr]] }}
+    | ( expr : typexpr )                                ::   :: typed
+    | expr1 , .... , exprn                              ::   :: tuple
+    | constr ( expr1 , .. , exprn )                    ::   :: construct
+        {{ com potentially empty constructors to work around ott parser restriction }}
+    | expr1 '::' expr2                                  :: L :: cons
+    | [ expr1 ; ... ; exprn ]                           :: S L :: list
+        {{ coq (fold_right Expr_const CONST_nil [[expr1...exprn]]) }}
+        {{ hol (FOLDR Expr_cons (Expr_constant CONST_nil) [[expr1...exprn]]) }}
+        {{ lem (List.foldr Expr_cons (Expr_constant CONST_nil) [[expr1...exprn]]) }}
+        {{ isa (foldr Expr_cons [[expr1...exprn]] (Expr_constant CONST_nil)) }}
+%d  | { field1 = expr1 ; ... ; fieldn = exprn }         :: d :: record
+%d  | { expr with field1 = expr1 ; ... ; fieldn = exprn } :: d :: override
+    | expr1 expr2                                       ::   :: apply
+    | prefix_symbol expr                                :: S :: applyp
+        {{ ichl (Expr_apply (Expr_ident (VP_name (VN_op [[prefix_symbol]]))) [[expr]]) }}
+    | expr1 infix_op expr2                              :: S :: applyi
+        {{ ichl (Expr_apply (Expr_apply (Expr_ident (VP_name (VN_op (ON_infix [[infix_op]])))) [[expr1]]) [[expr2]]) }}
+    | expr1 && expr2                                    :: L :: and
+    | AND ( expr1 && .. && exprn )                      :: M I L :: multiand
+        {{ coq (fold_right Expr_and CONST_true [[expr1..exprn]]) }}
+        {{ hol (FOLDR Expr_and (Expr_constant CONST_true) [[expr1..exprn]]) }}
+        {{ lem (List.foldr Expr_and (Expr_constant CONST_true) [[expr1..exprn]]) }}
+        {{ isa (foldr Expr_and [[expr1..exprn]] (Expr_constant CONST_true)) }}
+        {{ com a delimited ``and'' operator with a list of arguments }}
+    | expr1 || expr2                                    :: L :: or
+%d  | expr . field                                      :: d :: field
+%   | expr . field <- expr                              :: d :: setfield
+    | if expr0 then expr1                               :: S :: ifthen
+        {{ ichl (Expr_ifthenelse [[expr0]] [[expr1]] (Expr_constant CONST_unit)) }}
+    | if expr0 then expr1 else expr2                    ::   :: ifthenelse
+    | while expr1 do expr2 done                         ::   :: while
+    | for x = expr1 for_dirn expr2 do expr3 done        ::   :: for
+        (+ bind x in expr3 +)
+    | expr1 ; expr2                                     ::   :: sequence
+    | match expr with pattern_matching                  ::   :: match
+    | function pattern_matching                         ::   :: function
+    | fun pattern1 ... patternn -> expr                 :: S :: func
+        {{ ichl (fold_pats [[pattern1...patternn]] [[expr]]) }}
+    | try expr with pattern_matching                    ::   :: try
+    | let let_binding in expr                           ::   :: let
+        (+ bind xs(let_binding) in expr +)
+        {{ com omitting multiple bindings, i.e.\ $\ottkw{and}$ }}
+    | let rec letrec_bindings in expr                   ::   :: letrec
+        (+ bind xs(letrec_bindings) in letrec_bindings +)
+        (+ bind xs(letrec_bindings) in expr +)
+    | assert expr                                       ::   :: assert
+
+    | location                                          :: I :: location
+    | '<<' substs_x '>>' expr                           :: M I :: substs
+        {{ coq (substs_value_name_expr (substs_x_proj [[substs_x]]) [[expr]]) }}
+        {{ hol (substs_value_name_expr (case [[substs_x]] of substs_x_xs l => l) [[expr]]) }}
+        {{ lem (substs_value_name_expr (match [[substs_x]] with Substs_x_xs l -> l end) [[expr]]) }}
+        {{ isa (substs_value_name_expr (case [[substs_x]] of substs_x_xs l => l) [[expr]]) }}
+        {{ com substitution of expressions for variables }}
+    | remv_tyvar expr                                   :: M I :: rem_tyvar
+        {{ ichl (remv_tyvar_expr [[expr]]) }}
+        {{ com replace the type variables in an expression's type annotations with $\ottkw{\_}$ }}
+
+parsing
+
+Expr_tuple <= Expr_construct
+Expr_tuple <= Expr_tuple
+CONST_constr right Expr_apply
+
+grammar
+
+
+  for_dirn {{ tex \ottkw{\relax{\sf[}down{\sf]}to} }} :: FD_ ::=
+        {{ coq-equality }}
+    | to                                                ::   :: upto
+    | downto                                            ::   :: downto
+
+  %% It would be nice for the theorem prover type for [[substs_x]]
+  %% to be exactly [list (value_name*expr)], but we cannot declare
+  %% type representation homs as ott would then stop generating
+  %% auxiliary functions.
+  substs_x :: substs_x_ ::=
+      {{ com substitutions of expressions for variables }}
+    | value_name1 <- expr1 , .. , value_namen <- exprn  :: I :: xs
+    | substs_x1 @ .. @ substs_xn                        :: M I :: substs
+        {{ coq (substs_x_xs (flat_map substs_x_proj [[substs_x1..substs_xn]])) }}
+        {{ hol (substs_x_xs (FLAT (MAP (\x. case x of substs_x_xs l => l) [[substs_x1..substs_xn]]))) }}
+        {{ lem (Substs_x_xs (List.concat (List.map (fun x -> match x with Substs_x_xs l -> l end) [[substs_x1..substs_xn]]))) }}
+        {{ isa (substs_x_xs (concat (map (%x. case x of substs_x_xs l => l) [[substs_x1..substs_xn]]))) }}
+
+  pattern_matching , pm :: PM_  ::=
+    | pat_exp1 '|' ... '|' pat_expn                     ::   :: pm
+    | '|' pat_exp1 '|' ... '|' pat_expn                 :: S :: pm_extra_bar
+        {{ ichl (PM_pm [[pat_exp1...pat_expn]]) }}
+
+  pat_exp :: PE_ ::=
+    | pattern -> expr                                   ::   :: inj (+ bind xs(pattern) in expr +)
+
+  let_binding :: LB_ ::=
+    | pattern = expr                                    ::   :: simple
+        (+ xs = xs(pattern) +)
+    | value_name pattern1 ... patternn = expr           :: S :: func
+        {{ ichl (LB_simple (P_var [[value_name]]) (fold_pats [[pattern1...patternn]] [[expr]])) }}
+    | value_name pattern1 ... patternn : typexpr = expr :: S :: typed
+        {{ ichl (LB_simple (P_var [[value_name]]) (fold_pats [[pattern1...patternn]] (Expr_typed [[expr]] [[typexpr]]))) }}
+    | '<<' typevar1 <- typexpr1 , .. , typevarn <- typexprn '>>' let_binding :: M :: susbts
+        {{ ichl (substs_typevar_let_binding [[typevar1 typexpr1..typevarn typexprn]] [[let_binding]]) }}
+        {{ com substitution of types for type variables }}
+
+  letrec_bindings :: LRBs_ ::=
+    | letrec_binding1 and ... and letrec_bindingn       ::   :: inj (+ xs = xs(letrec_binding1 ... letrec_bindingn) +)
+    | '<<' typevar1 <- typexpr1 , .. , typevarn <- typexprn '>>' letrec_bindings :: M :: susbts
+        {{ ichl (substs_typevar_letrec_bindings [[typevar1 typexpr1..typevarn typexprn]] [[letrec_bindings]]) }}
+        {{ com substitution of types for type variables }}
+
+%% We want to restrict recursive definitions to functions. We can do this
+%% in the syntax or in the type system. We currently do it in the syntax.
+  letrec_binding :: LRB_ ::=
+    | value_name = function pattern_matching            ::   :: simple
+        (+ xs = value_name +)
+    | value_name = fun pattern pattern1 .. patternn -> expr :: S :: func
+        {{ ichl (LRB_simple [[value_name]] (PM_pm [PE_inj [[pattern]] (fold_pats [[pattern1..patternn]] [[expr]])])) }}
+    | value_name pattern pattern1 .. patternn = expr    :: S :: impl_fun
+        {{ ichl (LRB_simple [[value_name]] (PM_pm [PE_inj [[pattern]] (fold_pats [[pattern1..patternn]] [[expr]])])) }}
+    | value_name pattern pattern1 .. patternn : typexpr = expr :: S :: typed
+        {{ ichl (LRB_simple [[value_name]] (PM_pm [PE_inj [[pattern]] (fold_pats [[pattern1..patternn]] (Expr_typed [[expr]] [[typexpr]]))])) }}
+
+>>
+%d<<
+
+ %% 6.8.1 (Type definitions) http://caml.inria.fr/pub/docs/manual-ocaml/manual016.html#type-definition
+
+  type_definition {{ isa caml_type_definition }} :: TDF_ ::=
+    | type typedef1 and .. and typedefn                 :: d :: tdf
+        (+ type_names = type_names(typedef1..typedefn) +)
+        (+ constr_names = constr_names(typedef1..typedefn) +)
+        {{ com potentially empty definitions to work around Ott parser restrictions }}
+
+  typedef {{ isa caml_typedef }} :: TD_ ::=
+    | type_params_opt typeconstr_name type_information  :: d :: td
+        (+ bind typevars(type_params_opt) in type_information +)
+        (+ type_names = typeconstr_name +)
+        (+ constr_names = constr_names(type_information) +)
+
+  type_information :: TI_ ::=
+    | type_equation                                     :: d :: eq
+        (+ constr_names = {} +)
+        (+ field_names = {} +)
+    | type_representation                               :: d :: def
+        (+ constr_names = constr_names(type_representation) +)
+        (+ field_names = field_names(type_representation) +)
+
+  type_equation :: TE_ ::= 
+    | = typexpr                                         :: d :: te
+
+  type_representation :: TR_ ::=
+    | = constr_decl1 '|' ... '|' constr_decln           :: d :: variant
+        (+ constr_names = constr_names(constr_decl1...constr_decln) +)
+        (+ field_names = {} +)
+    | = { field_decl1 ; ... ; field_decln  }            :: d :: record
+        (+ constr_names = {} +)
+        (+ field_names = field_names(field_decl1...field_decln) +)
+
+  type_params_opt :: TPS_ ::=
+    |                                                   :: S d :: nullary
+        {{ coq (TPS_nary nil) }}
+        {{ hol (TPS_nary []) }}
+        {{ lem (TPS_nary []) }}
+        {{ isa (TPS_nary []) }}
+        {{ com in the theorem prover models we use a uniform representation for empty, singleton and multiple type paramaters }}
+    | type_param                                        :: S d :: unary
+        {{ coq (TPS_nary (cons [[type_param]] nil)) }}
+        {{ hol (TPS_nary [ [[type_param]] ]) }}
+        {{ lem (TPS_nary [ [[type_param]] ]) }}
+        {{ isa (TPS_nary [ [[type_param]] ]) }}
+    | ( type_param1 , ... , type_paramn )               :: d :: nary
+        (+ typevars = typevars(type_param1...type_paramn) +)
+
+  type_param , tp :: TP_ ::= {{ coq-equality }}
+    | typevar                                           :: d :: var
+        (+ typevars = typevar +)
+
+  constr_decl :: CD_ ::=
+    | constr_name                                       :: d :: nullary
+        (+ constr_names = constr_name +)
+    |  constr_name of typexpr1 * ... * typexprn         :: d :: nary
+        (+ constr_names = constr_name +)
+
+parsing
+
+TE_tuple <= CD_nary
+STE_tuple <= CD_nary
+
+grammar
+
+  field_decl :: FD_ ::=
+    | field_name : typexpr                              :: d :: immutable
+        (+ field_names = field_name +)
+
+ %% 6.8.2 (Exception definitions) http://caml.inria.fr/pub/docs/manual-ocaml/manual016.html#exception-definition
+
+  exception_definition :: ED_ ::=
+    | exception constr_decl                             :: d :: def
+%   | exception constr_name = constr                    :: d :: alias
+
+ %% 6.11 (Module expressions (module implementations)) http://caml.inria.fr/pub/docs/manual-ocaml/manual019.html#definition
+
+  definition {{ isa caml_definition }} , d :: D_ ::=
+    | let let_binding                                   :: d :: let
+        (+ xs = xs(let_binding) +)
+        {{ com omitting multiple bindings, i.e.\ $\ottkw{and}$ }}
+    | let rec letrec_bindings                           :: d :: letrec
+        (+ xs = xs(letrec_bindings) +)
+        (+ bind xs(letrec_bindings) in letrec_bindings +)
+    | type_definition                                   :: d :: type
+        (+ xs = {} +)
+    | exception_definition                              :: d :: exception
+        (+ xs = {} +)
+%m% | module module_name { ( module_name : module_type ) }  [ : module_type ]  = module_expr :: m :: functor
+%m  | module_definition                                 :: m :: module
+%m  | module type modtype_name  =  module_type          :: m :: modtype
+%m% | open module_path                                  :: m ::  open
+%m% | include module_expr                               :: m ::  include
+
+  definitions , ds :: Ds_ ::=
+    |                                                   :: d :: nil 
+    | definition definitions                            :: d :: cons
+        (+ bind xs(definition) in definitions +)
+    | definition ;; definitions                         :: S d :: cons_semi
+        {{ ichl (Ds_cons [[definition]] [[definitions]]) }}
+    | '<<' substs_x '>>' definitions                    :: M d :: substs
+        {{ coq (substs_value_name_definitions (substs_x_proj [[substs_x]]) [[definitions]]) }}
+        {{ hol (substs_value_name_definitions (case [[substs_x]] of substs_x_xs l => l) [[definitions]]) }}
+        {{ lem (substs_value_name_definitions (match [[substs_x]] with Substs_x_xs l -> l end) [[definitions]]) }}
+        {{ isa (substs_value_name_definitions (case [[substs_x]] of substs_x_xs l => l) [[definitions]]) }}
+        {{ com substitution of expressions for variables }}
+    | definitions definition                            :: M d :: snoc
+        {{ ichl (definitions_snoc [[definitions]] [[definition]]) }}
+        {{ com adding a definition to the end of a sequence }}
+    | definitions ;; definition                         :: M d :: snoc_semi
+        {{ ichl (definitions_snoc [[definitions]] [[definition]]) }}
+    
+  program :: Prog_ ::=
+    | definitions                                       :: d :: defs
+    | (%prim raise) expr                                :: d :: raise
+%d>>
+<<
+
+ %% Gadgets for the type system and semantics that are not in the source syntax.  
+
+  value {{ coq core_value }} , v :: V_ ::=
+      {{ com core value }}
+    | ( %prim unary_prim )                              :: L I :: uprim
+    | ( %prim binary_prim )                             :: L I :: bprim
+    | binary_prim_app_value value                       :: I :: bprim_app
+        {{ com partially applied binary primitive }}
+    | constant                                          :: I :: constant
+    | ( value )                                         :: I :: paren
+    | value1 , .... , valuen                            :: I :: tuple
+    | constr ( value1 , .. , valuen )                   :: I :: construct
+    | value1 '::' value2                                :: I L :: cons
+    | [ value1 ; ... ; valuen ]                         :: I L :: list
+%d  | { field1 = value1 ; ... ; fieldn = valuen }       :: I d :: record
+    | function pattern_matching                         :: I :: function
+    | fun pattern1 ... patternn -> expr                  :: I :: func
+    | location                                          :: I :: location
+
+  binary_prim_app_value :: BPAV_ ::=
+    | ( %prim binary_prim )                             :: I :: inj
+
+parsing
+
+V_tuple <= V_construct
+
+grammar
+
+>>
+%d<<
+  definition_value , d_value :: DV_ ::=
+    | type_definition                                   :: d I :: type
+    | exception_definition                              :: d I :: exception
+
+  definitions_value , ds_value :: DsV_ ::=
+    |                                                   :: d I :: nil
+    | definition_value definitions_value                :: d I :: cons
+    | definition_value ;; definitions_value             :: d I :: cons_semi
+%d>>
+<<
+
+  non_expansive , nexp :: Nexp_ ::=
+        {{ com nonexpansive expression (allowed in a polymorphic let) }}
+    | ( %prim unary_prim )                              :: I :: uprim
+    | ( %prim binary_prim )                             :: I :: bprim
+    | binary_prim_app_value nexp                        :: I :: bprim_app
+        {{ com partially applied binary primitive }}
+    | value_name                                        :: I :: ident
+    | constant                                          :: I :: constant
+    | ( nexp )                                          :: I :: paren
+    | ( nexp : typexpr )                                :: I :: typed
+    | nexp1 , .... , nexpn                              :: I :: tuple
+    | constr ( nexp1 , .. , nexpn )                     :: I :: construct
+    | nexp1 '::' nexp2                                  :: I :: cons
+    | [ nexp1 ; ... ; nexpn ]                           :: I L :: list
+%d  | { field1 = nexp1 ; ... ; fieldn = nexpn }         :: I d :: record
+    | let rec letrec_bindings in nexp                   :: I :: letrec
+    | function pattern_matching                         :: I :: function
+    | fun pattern1 ... patternn -> expr                 :: I :: func
+    | location                                          :: I :: location
+
+parsing
+
+Nexp_tuple <= Nexp_construct
+
+grammar
+
+  store , st :: STORE_ ::= 
+      {{ hol ((location#expr) list) }} 
+      {{ lem (list (location*expr)) }} 
+      {{ isa ((location*expr) list) }}
+      {{ coq list (location * expr)}}
+    | empty                                             :: I :: empty
+      {{ hol [] }}
+      {{ lem [] }}
+      {{ isa [] }}
+      {{ coq (@nil (location*expr)) }}
+    | store , location |-> expr                         :: I :: map
+      {{ hol (([[location]], [[expr]])::[[store]]) }}
+      {{ lem (([[location]], [[expr]])::[[store]]) }}
+      {{ isa (([[location]], [[expr]])#[[store]]) }}
+      {{ coq (cons ([[location]], [[expr]]) [[store]]) }}
+    | store , location |-> expr , store'                :: M I :: middle
+      {{ hol ([[store']]++[([[location]], [[expr]])]++[[store]]) }}
+      {{ lem ([[store']]++[([[location]], [[expr]])]++[[store]]) }}
+      {{ isa ([[store']]@[([[location]], [[expr]])]@[[store]]) }}
+      {{ coq (app [[store']] (cons ([[location]], [[expr]]) [[store]])) }}
+
+kind :: K_ ::=
+      {{ coq nat }}
+      {{ hol num }}
+      {{ lem nat }}
+      {{ isa nat }}
+  | num -> Type                                         :: I :: arity
+        {{ ichl [[num]] }}
+        {{ tex \ottkw{Type}^{[[num]]}\rightarrow[[Type]] }}
+  | Type                                                :: S I :: type
+        {{ ichl 0 }}
+
+name :: name_ ::= {{ coq-equality }}
+      {{ com environment lookup key }}
+    | TV                                                :: I :: tv
+    | value_name                                        :: I :: vn
+%d  | constr_name                                       :: d I :: cn
+%d  | typeconstr_name                                   :: d I :: tcn
+%d  | field_name                                        :: d I :: fn
+    | location                                          :: I :: l
+
+names :: names_ ::= 
+      {{ coq list name }}
+      {{ hol (name list) }} 
+      {{ lem (list name) }} 
+      {{ isa (name list) }}
+    | name1 .. namen                                    :: I :: inj 
+        {{ ichl [[name1..namen]] }} 
+
+typexprs :: typexprs_ ::=
+    | typexpr1 , ... , typexprn                         :: I :: inj
+    | shift num num' typexprs				:: M I ::   shift
+        {{ ichl (shifttes [[num]] [[num']] [[typexprs]]) }}
+        {{ com shift the indices in the types in [[typexprs]] by [[num]], ignoring indices lower than [[num']] }}
+
+environment_binding , EB :: EB_ ::=
+    | TV                                                :: I :: tv
+        {{ com type variable }}
+    | value_name : typescheme                           :: I :: vn
+        {{ com value binding }}
+    | value_name : typexpr                              :: M I :: vntype
+        {{ com value binding with no universal quantifier }}
+        {{ ichl (EB_vn [[value_name]] (TS_forall (shiftt 0 1 [[typexpr]]))) }}
+%d  | constr_name of typeconstr                         :: d I :: cc
+%d      {{ com constant constructor }}
+%d  | constr_name of forall type_params_opt , ( typexprs ) : typeconstr :: d I :: pc
+%d      (+ bind typevars(type_params_opt) in typexprs +)
+%d      {{ com parameterised constructor }}
+%d  | field_name : forall type_params_opt , typeconstr_name -> typexpr ::  d I :: fn
+%d      (+ bind typevars(type_params_opt) in typexpr +)
+%d      {{ com field name a record destructor }}
+%d  | typeconstr_name : kind                            :: d I :: td
+%d      {{ com type name, bound to a fresh type }}
+%d  | typeconstr_name : kind { field_name1 ; ... ; field_namen } :: d I :: tr
+%d      {{ com type name which is a record type definition }}
+%d  | type_params_opt typeconstr_name = typexpr         :: d I :: ta
+%d      (+ bind typevars(type_params_opt) in typexpr +)
+%d      {{ com type name which is an abbreviation }}
+    | location : typexpr                                :: I :: l
+        {{ com location (memory cell) }}
+    | ( EB )                                            :: M I :: paren
+        {{ ichl [[EB]] }}
+    | shift num num' EB					:: M I :: shift
+        {{ ichl (shiftEB [[num]] [[num']] [[EB]]) }}
+        {{ com shift the indices in the types in [[EB]] by [[num]], ignoring indices lower than [[num']] }}
+
+environment , E :: Env_ ::=
+      {{ coq (list environment_binding) }}
+      {{ hol (environment_binding list) }}
+      {{ lem (list environment_binding) }}
+      {{ isa (environment_binding list) }}
+    | empty                                             :: I :: nil
+        {{ coq (@nil environment_binding) }}
+        {{ hol [] }}
+        {{ lem [] }}
+        {{ isa [] }}
+    | E , EB                                            :: I :: snoc
+        {{ tex \ottenvironmentappend{[[E]]}{[[EB]]} }}
+        {{ coq (cons [[EB]] [[E]]) }}
+        {{ hol ([[EB]]::[[E]]) }}
+        {{ lem ([[EB]]::[[E]]) }}
+        {{ isa ([[EB]]#[[E]]) }}
+    | EB1 , .. , EBn                                    :: M I :: list
+        {{ coq (rev [[EB1 .. EBn]]) }}
+        {{ hol (REVERSE [[EB1 .. EBn]]) }}
+        {{ lem (List.reverse [[EB1 .. EBn]]) }}
+        {{ isa (rev [[EB1 .. EBn]]) }}
+    | E1 @ .. @ En                                      :: M I :: tree
+        {{ coq (flatten (rev [[E1 .. En]])) }}
+        {{ hol (FLAT (REVERSE [[E1 .. En]])) }}
+        {{ lem (List.concat (List.reverse [[E1 .. En]])) }}
+        {{ isa (concat (rev [[E1 .. En]])) }}
+
+trans_label , L :: Lab_ ::=
+      {{ com reduction label (denoting a side effect) }}
+  |                                                     :: I :: nil
+  | ref v = location                                    :: I :: alloc
+  | ! location = v                                      :: I :: deref
+  | location := v                                       :: I :: assign
+  | ( L )                                               :: I M :: paren
+        {{ ichl [[L]] }}
+        {{ tex [[L]] }}
+
+labelled_arrow :: LA_ ::= 
+      {{ ichl trans_label }} 
+      {{ tex \stackrel{\ottnt{L} }{\longrightarrow}\ottmaybebreakline }}
+  | --> L                                               :: I :: inj
+        {{ ichl [[L]] }}
+        {{ tex \stackrel{[[L]]}{\longrightarrow}\ottmaybebreakline }}
+
+subrules
+   value <:: expr
+   binary_prim_app_value <:: expr
+   non_expansive <:: expr
+   src_typexpr <:: typexpr
+
+>>
+%d<<
+subrules
+  definition_value <:: definition
+  definitions_value <:: definitions
+%d>>
+<<
+
+freevars typexpr typevar :: ftv
+freevars expr value_name :: fv
+freevars expr location :: fl
+
+substitutions
+  multiple typexpr typevar :: substs_typevar
+  multiple expr value_name :: substs_value_name
+  single expr value_name :: subst_value_name
+
+
+
+grammar
+  formula :: formula_ ::=
+      {{ com semantic judgements and their side conditions }}
+    | judgement                                         ::   :: judgement
+    | formula1 .. formulan                              ::   :: dots
+    | intn1 <= intn2                                    ::   :: le_int
+        {{ coq (([[intn1]] <= [[intn2]])%Z) }}
+        {{ hol ([[intn1]] <= [[intn2]]) }}
+        {{ lem ([[intn1]] <= [[intn2]]) }}
+        {{ isa ([[intn1]] <= [[intn2]]) }}
+        {{ tex [[intn1]] \stackrel\centerdot\leq [[intn2]] }}
+    | intn1 > intn2                                     ::   :: gt_int
+        {{ coq (([[intn1]] > [[intn2]])%Z) }}
+        {{ hol ([[intn1]] > [[intn2]]) }}
+        {{ lem ([[intn1]] > [[intn2]]) }}
+        {{ isa ([[intn1]] > [[intn2]]) }}
+        {{ tex [[intn1]] \stackrel\centerdot > [[intn2]] }}
+    | num1 < num2                                       ::   :: lt_num
+        {{ coq (([[num1]] < [[num2]])%Z) }}
+        {{ hol ([[num1]] < [[num2]]) }}
+        {{ lem ([[num1]] < [[num2]]) }}
+        {{ isa ([[num1]] < [[num2]]) }}
+    | E = E'                                            ::   :: eq_environment
+        {{ ichl ([[E]] = [[E']]) }}
+    | expr = expr'                                      ::   :: eq_expr
+        {{ ichl ([[expr]] = [[expr']]) }}
+    | typexpr = typexpr'                                ::   :: eq_typexpr
+        {{ ichl ([[typexpr]] = [[typexpr']]) }}
+    | typescheme = typescheme'                          ::   :: eq_typescheme
+        {{ ichl ([[typescheme]] = [[typescheme']]) }}
+    | type_params_opt = type_params_opt'                ::   :: eq_type_params_opt
+        {{ ichl ([[type_params_opt]] = [[type_params_opt']]) }}
+    | letrec_bindings = letrec_bindings'                ::   :: eq_letrec_bindings
+        {{ ichl ([[letrec_bindings]] = [[letrec_bindings']]) }}
+        {{ tex [[letrec_bindings]] = ([[letrec_bindings']]) }}
+    | length ( tp1 ) .. ( tpn ) = m                     ::   :: length_list_type_param_eq
+        {{ coq ([[m]] = length [[tp1..tpn]]) }}
+        {{ hol ([[m]] = LENGTH ([[tp1..tpn]])) }}
+        {{ lem ([[m]] = List.length ([[tp1..tpn]])) }}
+        {{ isa ([[m]] = length ([[tp1..tpn]])) }}
+    | length ( t1 ) .. ( tn ) = num                     ::   :: length_list_typexpr_eq
+        {{ coq ([[num]] = length [[t1..tn]]) }}
+        {{ hol ([[num]] = LENGTH ([[t1..tn]])) }}
+        {{ lem ([[num]] = List.length ([[t1..tn]])) }}
+        {{ isa ([[num]] = length ([[t1..tn]])) }}
+    | length ( t1 ) .. ( tn ) <= num                    ::   :: length_list_typexpr_le
+        {{ coq (length [[t1..tn]] <= [[num]]) }}
+        {{ hol (LENGTH ([[t1..tn]]) <= [[num]]) }}
+        {{ lem (List.length ([[t1..tn]]) <= [[num]]) }}
+        {{ isa (length ([[t1..tn]]) <= [[num]]) }}
+    | length ( t1 ) .. ( tn ) >= num                    ::   :: length_list_typexpr_ge
+        {{ coq (length [[t1..tn]] >= [[num]]) }}
+        {{ hol (LENGTH ([[t1..tn]]) >= [[num]]) }}
+        {{ lem (List.length ([[t1..tn]]) >= [[num]]) }}
+        {{ isa (length ([[t1..tn]]) >= [[num]]) }}
+    | length ( pat1 ) .. ( patn ) >= m                  ::   :: length_list_pattern_ge
+        {{ coq (length [[pat1..patn]] >= [[m]]) }}
+        {{ hol (LENGTH ([[pat1..patn]]) >= [[m]]) }}
+        {{ lem (List.length ([[pat1..patn]]) >= [[m]]) }}
+        {{ isa (length ([[pat1..patn]]) >= [[m]]) }}
+    | length ( e1 ) .. ( en ) >= m                      ::   :: length_list_expr_ge
+        {{ coq (length [[e1..en]] >= [[m]]) }}
+        {{ hol (LENGTH ([[e1..en]]) >= [[m]]) }}
+        {{ lem (List.length ([[e1..en]]) >= [[m]]) }}
+        {{ isa (length ([[e1..en]]) >= [[m]]) }}
+    | name notin names                                  ::   :: name_notin
+        {{ coq (~In [[name]] [[names]]) }}
+        {{ hol (~MEM [[name]] [[names]]) }}
+        {{ lem (not (List.elem [[name]] [[names]])) }}
+        {{ isa (~( [[name]] mem [[names]])) }}
+%d  | field_name in field_name1 .. field_namen          :: d :: fn_in_fns
+%d      {{ coq (In [[field_name]] [[field_name1..field_namen]]) }}
+%d      {{ hol (MEM [[field_name]] [[field_name1..field_namen]]) }}
+%d      {{ lem (List.elem [[field_name]] [[field_name1..field_namen]]) }}
+%d      {{ isa ([[field_name]] mem [[field_name1..field_namen]]) }}
+    | type_param in type_params_opt                     ::   :: typevar_in_typevars
+        {{ coq (In [[type_param]] (match [[type_params_opt]] with TPS_nary x => x end)) }}
+        {{ hol (MEM [[type_param]] (case [[type_params_opt]] of TPS_nary x => x)) }}
+        {{ lem (List.elem [[type_param]] (match [[type_params_opt]] with TPS_nary x -> x end)) }}
+        {{ isa ([[type_param]] mem (case [[type_params_opt]] of TPS_nary x => x)) }}
+    | name1 .. namen distinct                           ::   :: distinct_names
+        {{ coq (NoDup [[name1..namen]]) }}
+        {{ hol (ALL_DISTINCT ([[name1..namen]])) }}
+        {{ lem (list_distinct ([[name1..namen]])) }}
+        {{ isa (distinct ([[name1..namen]])) }}
+    | tp1 .. tpn distinct                               ::   :: distinct_type_param
+        {{ coq (NoDup [[tp1..tpn]]) }}
+        {{ hol (ALL_DISTINCT ([[tp1..tpn]])) }}
+        {{ lem (list_distinct ([[tp1..tpn]])) }}
+        {{ isa (distinct ([[tp1..tpn]])) }}
+    | E PERMUTES E'                                     ::   :: permutes_env
+        {{ coq (Permutation [[E]] [[E']]) }}
+        {{ hol (PERM ([[E]]) ([[E']])) }}
+        {{ lem (list_perm ([[E]]) ([[E']])) }}
+        {{ isa (List.perm ([[E]]) ([[E']])) }}
+%d  | fn1 .. fnn PERMUTES fn1' .. fnm'                  :: d :: permutes_field_name
+%d      {{ coq (Permutation [[fn1..fnn]] [[fn1'..fnm']]) }}
+%d      {{ hol (PERM ([[fn1..fnn]]) ([[fn1'..fnm']])) }}
+%d      {{ lem (list_perm ([[fn1..fnn]]) ([[fn1'..fnm']])) }}
+%d      {{ isa (perm ([[fn1..fnn]]) ([[fn1'..fnm']])) }}
+%d  | fn1 = e1 .. fnn = en PERMUTES fn1' = e1' .. fnm' = em' :: d :: permutes_field_name_expr
+%d      {{ coq (Permutation [[fn1 e1..fnn en]] [[fn1' e1'..fnm' em']]) }}
+%d      {{ hol (PERM ([[fn1 e1..fnn en]]) ([[fn1' e1'..fnm' em']])) }}
+%d      {{ lem (list_perm ([[fn1 e1..fnn en]]) ([[fn1' e1'..fnm' em']])) }}
+%d      {{ isa (perm ([[fn1 e1..fnn en]]) ([[fn1' e1'..fnm' em']])) }}
+    | |- value notmatches pattern                       ::   :: does_not_match
+        {{ tex \neg([[value]]~\ottkw{matches}~[[pattern]]) }}
+        {{ coq (~JM_matchP [[value]] [[pattern]]) }}
+        {{ hol (~JM_matchP [[value]] [[pattern]]) }}
+        {{ lem (not (JM_matchP [[value]] [[pattern]])) }}
+        {{ isa (~(([[value]], [[pattern]]) : JM_matchP)) }}
+    | constant noteq constant'                          ::   :: different_consts
+        {{ isa (~([[constant]] = [[constant']])) }}
+        {{ coq (~([[constant]] = [[constant']])) }}
+        {{ hol (~([[constant]] = [[constant']])) }}
+        {{ lem (not ([[constant]] = [[constant']])) }}
+    | name noteq name'                                  ::   :: different_names
+        {{ isa (~([[name]] = [[name']])) }}
+        {{ coq (~([[name]] = [[name']])) }}
+        {{ hol (~([[name]] = [[name']])) }}
+        {{ lem (not ([[name]] = [[name']])) }}
+    | store ( location ) unallocated                    ::   :: store_unallocated
+        {{ coq (forall v8, ~JSlookup [[store]] [[location]] v8) }}
+        {{ hol (!v8. ~JSlookup [[store]] [[location]] v8) }}
+        {{ lem (forall v8. not (JSlookup [[store]] [[location]] v8)) }}
+        {{ isa (! v8. ~(([[store]], [[location]], v8) : JSlookup )) }}
+    | type_vars ( let_binding ) gives typevar1 , .. , typevarn  ::   :: typevars_of_let_gives
+        {{ ichl (ftv_let_binding [[let_binding]] = [[typevar1..typevarn]]) }}
+    | type_vars ( letrec_bindings ) gives typevar1 , .. , typevarn  ::   :: typevars_of_letrec_gives
+        {{ ichl (ftv_letrec_bindings [[letrec_bindings]] = [[typevar1..typevarn]]) }}
+
+grammar
+  terminals :: terminals_ ::=
+      {{ com prettyprinting specifications }}
+    | %prim           :: :: prim         {{ tex \ottkw{\%prim} }}
+    | *               :: :: star         {{ tex \ast }}
+    | --->            :: :: vararrow     {{ tex \rightarrow }}
+    | -->             :: :: red          {{ tex \longrightarrow }}
+    | ->              :: :: arrow        {{ tex \rightarrow }}
+    | <-              :: :: leftarrow    {{ tex \!\!\leftarrow\!\! }}
+    | '<<'            :: :: substl       {{ tex \{\!\!\{ }}
+    | <=              :: :: le           {{ tex \leq }}
+    | ==              :: :: equiv        {{ tex \equiv }}
+    | >=              :: :: ge           {{ tex \geq }}
+    | '>>'            :: :: substr       {{ tex \}\!\!\} }}
+    | forall          :: :: forall       {{ tex \forall }}
+    | gives           :: :: gives        {{ tex \;\vartriangleright\;\ottmaybebreakline }}
+    | notin           :: :: notin        {{ tex \notin }}
+    | noteq           :: :: noteq        {{ tex \not = }}
+    | |-              :: :: turnstile    {{ tex \vdash }}
+    | |->             :: :: mapsto       {{ tex  \mapsto }}
+    | ~-              :: :: uminus       {{ tex \mathrel{\sim\!\!-} }}
+
+embed {{ hol
+
+val _ = Define
+`fold_pat pats expr = FOLDR (\p e. Expr_function (PM_pm [PE_inj p e])) expr pats`; 
+
+val _ = ottDefine "shiftt"
+`([[:user_syntax__typexpr:shift m n typevar]] = [[:user_syntax__typexpr:typevar]]) /\
+ ([[:user_syntax__typexpr:shift m n <idx, num>]] = 
+  if [[idx < m]] then [[:user_syntax__typexpr:<idx, num>]] else [[:user_syntax__typexpr:<idx+n, num>]]) /\
+ ([[:user_syntax__typexpr:shift m n _]] = [[:user_syntax__typexpr:_]]) /\
+ ([[:user_syntax__typexpr:shift m n (typexpr1->typexpr2)]] =
+  [[:user_syntax__typexpr:(shift m n typexpr1)->(shift m n typexpr2)]]) /\
+ (shiftt m n (TE_tuple typexprs) = TE_tuple (MAP (shiftt m n) typexprs)) /\
+ (shiftt m n (TE_constr typexprs tc) = TE_constr (MAP (shiftt m n) typexprs) tc)`;
+
+val _ = Define
+`(shifttes m n (Typexprs_inj tes) = Typexprs_inj (MAP (shiftt m n) tes))`;
+
+val _ = Define
+`([[shift m n forall typexpr]] = [[forall shift (m + 1) n typexpr]])`;
+
+val _ = Define 
+`([[:user_syntax__environment_binding:shift m n TV]] = [[:user_syntax__environment_binding:TV]]) /\
+ ([[:user_syntax__environment_binding:shift m n value_name:typescheme]] =
+  [[:user_syntax__environment_binding:value_name : shift m n typescheme]]) /\
+ ([[:user_syntax__environment_binding:shift m n constr_name of typeconstr]] = 
+  [[:user_syntax__environment_binding:constr_name of typeconstr]]) /\
+ ([[:user_syntax__environment_binding:shift m n constr_name of forall type_params_opt, (typexprs) : typeconstr]] =
+  [[:user_syntax__environment_binding:constr_name of forall type_params_opt, (shift m n typexprs) : typeconstr]]) /\
+ ([[:user_syntax__environment_binding:shift m n field_name:forall type_params_opt, typeconstr_name -> typexpr]] =
+  [[:user_syntax__environment_binding:field_name:forall type_params_opt, typeconstr_name -> shift m n typexpr]]) /\
+ ([[:user_syntax__environment_binding:shift m n typeconstr_name:kind]] = 
+  [[:user_syntax__environment_binding:typeconstr_name:kind]]) /\
+ (shiftEB m n (EB_tr tcn k field_names) = EB_tr tcn k field_names) /\
+ ([[:user_syntax__environment_binding:shift m n type_params_opt typeconstr_name = typexpr]] =
+  [[:user_syntax__environment_binding:type_params_opt typeconstr_name = shift m n typexpr]]) /\
+ ([[:user_syntax__environment_binding:shift m n location: typexpr]] = 
+  [[:user_syntax__environment_binding:location: shift m n typexpr]])`;
+
+val num_tv_def = Define
+`(num_tv [] = 0:num) /\
+ (num_tv (EB_tv::E) = 1 + num_tv E) /\
+ (num_tv (EB::E) = num_tv E)`;
+
+val _ = Define
+`(shiftE m n [] = []) /\
+ (shiftE m n (EB::E) = shiftEB (m + num_tv E) n EB::shiftE m n E)`;
+
+val _ = Define
+`(shiftTsig m n Tsig = MAP (\(tv, t). (tv, shiftt m n t)) Tsig)`;
+
+val _ = Define
+`(definitions_snoc Ds_nil d = Ds_cons d Ds_nil) /\
+ (definitions_snoc (Ds_cons d ds) d' = Ds_cons d (definitions_snoc ds d'))`;
+
+val _ = ottDefine "remv_tyvar_typexpr"
+`(remv_tyvar_typexpr (TE_var typevar) = TE_any) /\
+ (remv_tyvar_typexpr (TE_idxvar idx num) = TE_idxvar idx num) /\
+ (remv_tyvar_typexpr TE_any = TE_any) /\
+ (remv_tyvar_typexpr (TE_arrow typexpr1 typexpr2) = 
+    TE_arrow (remv_tyvar_typexpr typexpr1) (remv_tyvar_typexpr typexpr2)) /\
+ (remv_tyvar_typexpr (TE_tuple (typexpr_list)) =
+    TE_tuple (MAP (\typexpr_. (remv_tyvar_typexpr typexpr_)) typexpr_list)) /\
+ (remv_tyvar_typexpr (TE_constr (typexpr_list) typeconstr) = 
+    TE_constr (MAP (\typexpr_. (remv_tyvar_typexpr typexpr_)) typexpr_list) typeconstr)`;
+
+val _ = ottDefine "remv_tyvar_pattern"
+`(remv_tyvar_pattern (P_var value_name) = P_var value_name) /\
+ (remv_tyvar_pattern P_any = P_any) /\
+ (remv_tyvar_pattern (P_constant constant) = P_constant constant) /\
+ (remv_tyvar_pattern (P_alias pattern value_name) =
+     P_alias (remv_tyvar_pattern pattern) value_name) /\  
+ (remv_tyvar_pattern (P_typed pattern typexpr) = 
+     P_typed (remv_tyvar_pattern pattern) (remv_tyvar_typexpr typexpr)) /\
+ (remv_tyvar_pattern (P_or pattern1 pattern2) = 
+     P_or (remv_tyvar_pattern pattern1) (remv_tyvar_pattern pattern2)) /\
+ (remv_tyvar_pattern (P_construct constr (pattern_list)) = 
+     P_construct constr (MAP (\pattern_. (remv_tyvar_pattern pattern_)) pattern_list)) /\
+ (remv_tyvar_pattern (P_construct_any constr) = P_construct_any constr) /\
+ (remv_tyvar_pattern (P_tuple (pattern_list)) = 
+     P_tuple (MAP (\pattern_. (remv_tyvar_pattern pattern_)) pattern_list)) /\
+ (remv_tyvar_pattern (P_record (field_pattern_list)) = 
+     P_record (MAP (\(field_,pattern_). (field_,(remv_tyvar_pattern pattern_))) field_pattern_list)) /\
+ (remv_tyvar_pattern (P_cons pattern1 pattern2) = 
+     P_cons (remv_tyvar_pattern pattern1) (remv_tyvar_pattern pattern2))`;
+
+val _ = ottDefine "remv_tyvar_letrec_binding"
+`(remv_tyvar_letrec_binding (LRB_simple value_name pattern_matching) = 
+     LRB_simple value_name (remv_tyvar_pattern_matching pattern_matching)) /\
+ (remv_tyvar_letrec_bindings (LRBs_inj (letrec_binding_list)) = 
+     LRBs_inj (MAP (\letrec_binding_. (remv_tyvar_letrec_binding letrec_binding_)) letrec_binding_list)) /\
+ (remv_tyvar_let_binding (LB_simple pattern expr) = 
+     LB_simple (remv_tyvar_pattern pattern) (remv_tyvar_expr expr)) /\
+ (remv_tyvar_pat_exp (PE_inj pattern expr) = 
+     PE_inj (remv_tyvar_pattern pattern) (remv_tyvar_expr expr)) /\
+ (remv_tyvar_pattern_matching (PM_pm (pat_exp_list)) = 
+     PM_pm (MAP (\pat_exp_. (remv_tyvar_pat_exp pat_exp_)) pat_exp_list)) /\
+ (remv_tyvar_expr (Expr_uprim unary_prim) = Expr_uprim unary_prim) /\
+ (remv_tyvar_expr (Expr_bprim binary_prim) = Expr_bprim binary_prim) /\
+ (remv_tyvar_expr (Expr_ident value_name) = Expr_ident value_name) /\
+ (remv_tyvar_expr (Expr_constant constant) = Expr_constant constant) /\
+ (remv_tyvar_expr (Expr_typed expr typexpr) = 
+     Expr_typed (remv_tyvar_expr expr) (remv_tyvar_typexpr typexpr)) /\
+ (remv_tyvar_expr (Expr_tuple (expr_list)) = 
+     Expr_tuple (MAP (\expr_. (remv_tyvar_expr expr_)) expr_list)) /\
+ (remv_tyvar_expr (Expr_construct constr (expr_list)) =
+     Expr_construct constr (MAP (\expr_. (remv_tyvar_expr expr_)) expr_list)) /\
+ (remv_tyvar_expr (Expr_cons expr1 expr2) = 
+     Expr_cons (remv_tyvar_expr expr1) (remv_tyvar_expr expr2)) /\
+ (remv_tyvar_expr (Expr_record (field_expr_list)) = 
+     Expr_record (MAP (\(field_,expr_). (field_,(remv_tyvar_expr expr_))) field_expr_list)) /\
+ (remv_tyvar_expr (Expr_override expr (field_expr_list)) = 
+     Expr_override (remv_tyvar_expr expr) 
+                   (MAP (\(field_,expr_). (field_,(remv_tyvar_expr expr_))) field_expr_list)) /\
+ (remv_tyvar_expr (Expr_apply expr1 expr2) = 
+     Expr_apply (remv_tyvar_expr expr1) (remv_tyvar_expr expr2)) /\
+ (remv_tyvar_expr (Expr_and expr1 expr2) = 
+     Expr_and (remv_tyvar_expr expr1) (remv_tyvar_expr expr2)) /\
+ (remv_tyvar_expr (Expr_or expr1 expr2) = 
+     Expr_or (remv_tyvar_expr expr1) (remv_tyvar_expr expr2)) /\
+ (remv_tyvar_expr (Expr_field expr field) = Expr_field (remv_tyvar_expr expr) field) /\
+ (remv_tyvar_expr (Expr_ifthenelse expr0 expr1 expr2) = 
+     Expr_ifthenelse (remv_tyvar_expr expr0) (remv_tyvar_expr expr1) (remv_tyvar_expr expr2)) /\
+ (remv_tyvar_expr (Expr_while expr1 expr2) = 
+     Expr_while (remv_tyvar_expr expr1) (remv_tyvar_expr expr2)) /\
+ (remv_tyvar_expr (Expr_for x expr1 for_dirn expr2 expr3) = 
+     Expr_for x (remv_tyvar_expr expr1) for_dirn (remv_tyvar_expr expr2) (remv_tyvar_expr expr3))/\
+ (remv_tyvar_expr (Expr_sequence expr1 expr2) = 
+     Expr_sequence (remv_tyvar_expr expr1) (remv_tyvar_expr expr2)) /\
+ (remv_tyvar_expr (Expr_match expr pattern_matching) = 
+     Expr_match (remv_tyvar_expr expr) (remv_tyvar_pattern_matching pattern_matching)) /\
+ (remv_tyvar_expr (Expr_function pattern_matching) = 
+     Expr_function (remv_tyvar_pattern_matching pattern_matching)) /\
+ (remv_tyvar_expr (Expr_try expr pattern_matching) = 
+     Expr_try (remv_tyvar_expr expr) (remv_tyvar_pattern_matching pattern_matching)) /\
+ (remv_tyvar_expr (Expr_let let_binding expr) = 
+     Expr_let (remv_tyvar_let_binding let_binding) (remv_tyvar_expr expr)) /\
+ (remv_tyvar_expr (Expr_letrec letrec_bindings expr) = 
+     Expr_letrec (remv_tyvar_letrec_bindings letrec_bindings) (remv_tyvar_expr expr)) /\
+ (remv_tyvar_expr (Expr_assert expr) = Expr_assert (remv_tyvar_expr expr)) /\
+ (remv_tyvar_expr (Expr_location location) = Expr_location location)`;
+
+ 
+}}
+
+embed {{ lem
+
+let rec list_distinct xs = 
+  match xs with
+    | [] -> true
+    | [x] -> true
+    | x::xs -> not(List.elem x xs) && list_distinct xs
+  end
+
+(* insert x at all positions into l and return the list of results *)
+let rec insert x l = match l with
+| [] -> [ [x] ]
+| a::m -> (x::l) :: (List.map (fun y -> a::y) (insert x m))
+end
+
+(* list of all permutations of l *)
+let rec perms l = match l with
+| a::m -> List.concat (List.map (insert a) (perms m))
+| _ -> [l]
+end
+(* nb this is very inefficient *)
+let rec list_perm xs ys = List.elem xs (perms ys)
+
+
+let fold_pat pats expr = List.foldr (fun p e -> Expr_function (PM_pm [PE_inj p e])) expr pats
+
+let rec
+shiftt m n (TE_var typevar) = TE_var typevar
+and
+shiftt m n (TE_idxvar idx num) = 
+  if (idx < m) then TE_idxvar idx num else TE_idxvar (idx + n) num
+and
+shiftt m n TE_any = TE_any
+and
+shiftt m n (TE_arrow typexpr1 typexpr2) =
+  TE_arrow (shiftt m n typexpr1) (shiftt m n typexpr2)
+and
+shiftt m n (TE_tuple typexprs) = TE_tuple (List.map (shiftt m n) typexprs)
+and
+shiftt m n (TE_constr typexprs tc) = TE_constr (List.map (shiftt m n) typexprs) tc
+
+
+let shifttes m n (Typexprs_inj tes) = Typexprs_inj (List.map (shiftt m n) tes)
+
+let shiftts m n (TS_forall typexpr) = TS_forall (shiftt (m + 1) n typexpr)
+
+let rec
+shiftEB m n EB_tv = EB_tv
+and
+shiftEB m n (EB_vn value_name typescheme) =
+  EB_vn value_name (shiftts m n typescheme)
+and
+shiftEB m n (EB_cc constr_name typeconstr) = 
+  EB_cc constr_name typeconstr
+and
+shiftEB m n (EB_pc constr_name type_params_opt typexprs typeconstr) =
+  EB_pc constr_name type_params_opt (shifttes m n typexprs ) typeconstr
+and
+shiftEB m n (EB_fn field_name type_params_opt typeconstr_name typexpr) =
+  EB_fn field_name type_params_opt typeconstr_name (shiftt m n typexpr)
+and
+shiftEB m n (EB_td typeconstr_name kind) =
+  EB_td typeconstr_name kind
+and
+shiftEB m n (EB_tr tcn k field_names) = EB_tr tcn k field_names
+and
+shiftEB m n (EB_ta type_params_opt typeconstr_name typexpr) =
+  EB_ta type_params_opt typeconstr_name (shiftt m n typexpr) 
+and
+shiftEB m n (EB_l location typexpr) = 
+  EB_l location (shiftt m n typexpr)
+
+let rec
+num_tv [] = (0:nat)
+and
+num_tv (EB_tv::E) = 1 + num_tv E
+and
+num_tv (EB::E) = num_tv E
+
+let rec
+shiftE m n [] = []
+and
+shiftE m n (EB::E) = shiftEB (m + num_tv E) n EB::shiftE m n E
+
+let shiftTsig m n Tsig = List.map (fun (tv, t) -> (tv, shiftt m n t)) Tsig
+
+let rec
+definitions_snoc Ds_nil d = Ds_cons d Ds_nil
+and
+definitions_snoc (Ds_cons d ds) d' = Ds_cons d (definitions_snoc ds d')
+
+let rec
+remv_tyvar_typexpr (TE_var typevar) = TE_any
+and
+remv_tyvar_typexpr (TE_idxvar idx num) = TE_idxvar idx num
+and
+remv_tyvar_typexpr TE_any = TE_any
+and
+remv_tyvar_typexpr (TE_arrow typexpr1 typexpr2) = 
+    TE_arrow (remv_tyvar_typexpr typexpr1) (remv_tyvar_typexpr typexpr2)
+and
+remv_tyvar_typexpr (TE_tuple (typexpr_list)) =
+    TE_tuple (List.map (fun typexpr_ -> (remv_tyvar_typexpr typexpr_)) typexpr_list)
+and
+remv_tyvar_typexpr (TE_constr (typexpr_list) typeconstr) = 
+    TE_constr (List.map (fun typexpr_ -> (remv_tyvar_typexpr typexpr_)) typexpr_list) typeconstr
+
+let rec
+remv_tyvar_pattern (P_var value_name) = P_var value_name
+and
+remv_tyvar_pattern P_any = P_any
+and
+remv_tyvar_pattern (P_constant constantl) = P_constant constantl
+and
+remv_tyvar_pattern (P_alias patternl value_name) =
+     P_alias (remv_tyvar_pattern patternl) value_name
+and 
+remv_tyvar_pattern (P_typed patternl typexpr) = 
+     P_typed (remv_tyvar_pattern patternl) (remv_tyvar_typexpr typexpr)
+and
+remv_tyvar_pattern (P_or pattern1 pattern2) = 
+     P_or (remv_tyvar_pattern pattern1) (remv_tyvar_pattern pattern2)
+and
+remv_tyvar_pattern (P_construct constr (pattern_list)) = 
+     P_construct constr (List.map (fun pattern_ -> (remv_tyvar_pattern pattern_)) pattern_list)
+and
+remv_tyvar_pattern (P_construct_any constr) = P_construct_any constr
+and
+remv_tyvar_pattern (P_tuple (pattern_list)) = 
+     P_tuple (List.map (fun pattern_ -> (remv_tyvar_pattern pattern_)) pattern_list)
+and
+remv_tyvar_pattern (P_record (field_pattern_list)) = 
+     P_record (List.map (fun (field_,pattern_) -> (field_,(remv_tyvar_pattern pattern_))) field_pattern_list)
+and
+remv_tyvar_pattern (P_cons pattern1 pattern2) = 
+     P_cons (remv_tyvar_pattern pattern1) (remv_tyvar_pattern pattern2)
+
+let rec
+remv_tyvar_letrec_binding (LRB_simple value_name pattern_matching) = 
+     LRB_simple value_name (remv_tyvar_pattern_matching pattern_matching)
+and
+remv_tyvar_letrec_bindings (LRBs_inj (letrec_binding_list)) = 
+     LRBs_inj (List.map (fun letrec_binding_ -> (remv_tyvar_letrec_binding letrec_binding_)) letrec_binding_list)
+and
+remv_tyvar_let_binding (LB_simple patternl expr) = 
+     LB_simple (remv_tyvar_pattern patternl) (remv_tyvar_expr expr)
+and
+remv_tyvar_pat_exp (PE_inj patternl expr) = 
+     PE_inj (remv_tyvar_pattern patternl) (remv_tyvar_expr expr)
+and
+remv_tyvar_pattern_matching (PM_pm (pat_exp_list)) = 
+     PM_pm (List.map (fun pat_exp_ -> (remv_tyvar_pat_exp pat_exp_)) pat_exp_list)
+and
+remv_tyvar_expr (Expr_uprim unary_prim) = Expr_uprim unary_prim
+and
+remv_tyvar_expr (Expr_bprim binary_prim) = Expr_bprim binary_prim
+and
+remv_tyvar_expr (Expr_ident value_name) = Expr_ident value_name
+and
+remv_tyvar_expr (Expr_constant constantl) = Expr_constant constantl
+and
+remv_tyvar_expr (Expr_typed expr typexpr) = 
+     Expr_typed (remv_tyvar_expr expr) (remv_tyvar_typexpr typexpr)
+and
+remv_tyvar_expr (Expr_tuple (expr_list)) = 
+     Expr_tuple (List.map (fun expr_ -> (remv_tyvar_expr expr_)) expr_list)
+and
+remv_tyvar_expr (Expr_construct constr (expr_list)) =
+     Expr_construct constr (List.map (fun expr_ -> (remv_tyvar_expr expr_)) expr_list)
+and
+remv_tyvar_expr (Expr_cons expr1 expr2) = 
+     Expr_cons (remv_tyvar_expr expr1) (remv_tyvar_expr expr2)
+and
+remv_tyvar_expr (Expr_record (field_expr_list)) = 
+     Expr_record (List.map (fun (field_,expr_) -> (field_,(remv_tyvar_expr expr_))) field_expr_list)
+and
+remv_tyvar_expr (Expr_override expr (field_expr_list)) = 
+     Expr_override (remv_tyvar_expr expr) 
+                   (List.map (fun (field_,expr_) -> (field_,(remv_tyvar_expr expr_))) field_expr_list)
+and
+remv_tyvar_expr (Expr_apply expr1 expr2) = 
+     Expr_apply (remv_tyvar_expr expr1) (remv_tyvar_expr expr2)
+and
+remv_tyvar_expr (Expr_and expr1 expr2) = 
+     Expr_and (remv_tyvar_expr expr1) (remv_tyvar_expr expr2)
+and
+remv_tyvar_expr (Expr_or expr1 expr2) = 
+     Expr_or (remv_tyvar_expr expr1) (remv_tyvar_expr expr2)
+and
+remv_tyvar_expr (Expr_field expr fieldl) = Expr_field (remv_tyvar_expr expr) fieldl
+and
+remv_tyvar_expr (Expr_ifthenelse expr0 expr1 expr2) = 
+     Expr_ifthenelse (remv_tyvar_expr expr0) (remv_tyvar_expr expr1) (remv_tyvar_expr expr2)
+and
+remv_tyvar_expr (Expr_while expr1 expr2) = 
+     Expr_while (remv_tyvar_expr expr1) (remv_tyvar_expr expr2)
+and
+remv_tyvar_expr (Expr_for x expr1 for_dirn expr2 expr3) = 
+     Expr_for x (remv_tyvar_expr expr1) for_dirn (remv_tyvar_expr expr2) (remv_tyvar_expr expr3)
+and
+remv_tyvar_expr (Expr_sequence expr1 expr2) = 
+     Expr_sequence (remv_tyvar_expr expr1) (remv_tyvar_expr expr2)
+and
+remv_tyvar_expr (Expr_match expr pattern_matching) = 
+     Expr_match (remv_tyvar_expr expr) (remv_tyvar_pattern_matching pattern_matching)
+and
+remv_tyvar_expr (Expr_function pattern_matching) = 
+     Expr_function (remv_tyvar_pattern_matching pattern_matching)
+and
+remv_tyvar_expr (Expr_try expr pattern_matching) = 
+     Expr_try (remv_tyvar_expr expr) (remv_tyvar_pattern_matching pattern_matching)
+and
+remv_tyvar_expr (Expr_let let_binding expr) = 
+     Expr_let (remv_tyvar_let_binding let_binding) (remv_tyvar_expr expr)
+and
+remv_tyvar_expr (Expr_letrec letrec_bindings expr) = 
+     Expr_letrec (remv_tyvar_letrec_bindings letrec_bindings) (remv_tyvar_expr expr)
+and
+remv_tyvar_expr (Expr_assert expr) = Expr_assert (remv_tyvar_expr expr)
+and
+remv_tyvar_expr (Expr_location location) = Expr_location location
+
+ 
+}}
+
+
+embed {{ isa
+
+constdefs fold_pat :: "pattern list => expr => expr"
+"fold_pat pats expr == foldr (% p e. Expr_function (PM_pm [PE_inj p e])) pats expr" 
+
+consts shiftt :: "nat => nat => typexpr => typexpr"
+(*
+primrec 
+"([[:user_syntax__typexpr:shift m n typevar]] = [[:user_syntax__typexpr:typevar]])"
+" ([[:user_syntax__typexpr:shift m n <idx, num>]] = 
+  (if [[idx < m]] then [[:user_syntax__typexpr:<idx, num>]] else [[:user_syntax__typexpr:<idx+n, num>]]) "
+" ([[:user_syntax__typexpr:shift m n _]] = [[:user_syntax__typexpr:_]])) "
+" ([[:user_syntax__typexpr:shift m n (typexpr1->typexpr2)]] =
+  [[:user_syntax__typexpr:(shift m n typexpr1)->(shift m n typexpr2)]]) "
+" (shiftt m n (TE_tuple typexprs) = TE_tuple (map (shiftt m n) typexprs)) "
+" (shiftt m n (TE_constr typexprs tc) = TE_constr (map (shiftt m n) typexprs) tc)"
+FIXMEdoesn't like recursive call in last clause
+*)
+
+consts shifttes :: "nat => nat => typexprs => typexprs"
+(*
+primrec
+"(shifttes m n (typexprs_inj tes) == typexprs_inj (map (shiftt m n) tes))"
+FIXME doesn't like rec call 
+*)
+
+consts shiftts :: "nat => nat => typescheme => typescheme"
+(*
+primrec
+"([[shift m n forall typexpr]] = [[forall shift (m + 1) n typexpr]])"
+FIXME
+*)
+
+consts shiftEB :: "nat => nat => environment_binding => environment_binding"
+primrec
+"([[:user_syntax__environment_binding:shift m n TV]] = [[:user_syntax__environment_binding:TV]])"
+"([[:user_syntax__environment_binding:shift m n value_name:typescheme]] =
+  [[:user_syntax__environment_binding:value_name : shift m n typescheme]])"
+" ([[:user_syntax__environment_binding:shift m n constr_name of typeconstr]] = 
+  [[:user_syntax__environment_binding:constr_name of typeconstr]]) "
+" ([[:user_syntax__environment_binding:shift m n constr_name of forall type_params_opt, (typexprs) : typeconstr]] =
+  [[:user_syntax__environment_binding:constr_name of forall type_params_opt, (shift m n typexprs) : typeconstr]]) "
+" ([[:user_syntax__environment_binding:shift m n field_name:forall type_params_opt, typeconstr_name -> typexpr]] =
+  [[:user_syntax__environment_binding:field_name:forall type_params_opt, typeconstr_name -> shift m n typexpr]]) "
+" ([[:user_syntax__environment_binding:shift m n typeconstr_name:kind]] = 
+  [[:user_syntax__environment_binding:typeconstr_name:kind]]) "
+" (shiftEB m n (EB_tr tcn k field_names) = EB_tr tcn k field_names) "
+" ([[:user_syntax__environment_binding:shift m n type_params_opt typeconstr_name = typexpr]] =
+  [[:user_syntax__environment_binding:type_params_opt typeconstr_name = shift m n typexpr]]) "
+" ([[:user_syntax__environment_binding:shift m n location: typexpr]] = 
+  [[:user_syntax__environment_binding:location: shift m n typexpr]])"
+
+consts num_tv :: "environment => nat"
+primrec
+"(num_tv [] = (0::nat)) "
+"(num_tv (eb#e) = (if eb = EB_tv then 1 else 0) + num_tv e)"
+
+consts shiftE :: "nat => nat => environment => environment"
+primrec
+"(shiftE m n [] = []) "
+" (shiftE m n (EB#E) = shiftEB (m + num_tv E) n EB#shiftE m n E)"
+
+constdefs shiftTsig :: "nat => nat => ('a * typexpr) list => ('a * typexpr) list"
+"(shiftTsig m n Tsig == map (%(tv, t). (tv, shiftt m n t)) Tsig)"
+
+consts definitions_snoc :: "definitions => caml_definition => definitions"
+primrec
+"(definitions_snoc Ds_nil d = Ds_cons d Ds_nil) "
+"(definitions_snoc (Ds_cons d ds) d' = Ds_cons d (definitions_snoc ds d'))"
+
+consts remv_tyvar_typexpr :: "typexpr => typexpr"
+(*
+val _ = ottDefine "remv_tyvar_typexpr"
+`(remv_tyvar_typexpr (TE_var typevar) = TE_any) /\
+ (remv_tyvar_typexpr (TE_idxvar idx num) = TE_idxvar idx num) /\
+ (remv_tyvar_typexpr TE_any = TE_any) /\
+ (remv_tyvar_typexpr (TE_arrow typexpr1 typexpr2) = 
+    TE_arrow (remv_tyvar_typexpr typexpr1) (remv_tyvar_typexpr typexpr2)) /\
+ (remv_tyvar_typexpr (TE_tuple (typexpr_list)) =
+    TE_tuple (MAP (\typexpr_. (remv_tyvar_typexpr typexpr_)) typexpr_list)) /\
+ (remv_tyvar_typexpr (TE_constr (typexpr_list) typeconstr) = 
+    TE_constr (MAP (\typexpr_. (remv_tyvar_typexpr typexpr_)) typexpr_list) typeconstr)`;
+*)
+
+consts remv_tyvar_pattern :: "pattern => pattern"
+(*
+`(remv_tyvar_pattern (P_var value_name) = P_var value_name) /\
+ (remv_tyvar_pattern P_any = P_any) /\
+ (remv_tyvar_pattern (P_constant constant) = P_constant constant) /\
+ (remv_tyvar_pattern (P_alias pattern value_name) =
+     P_alias (remv_tyvar_pattern pattern) value_name) /\  
+ (remv_tyvar_pattern (P_typed pattern typexpr) = 
+     P_typed (remv_tyvar_pattern pattern) (remv_tyvar_typexpr typexpr)) /\
+ (remv_tyvar_pattern (P_or pattern1 pattern2) = 
+     P_or (remv_tyvar_pattern pattern1) (remv_tyvar_pattern pattern2)) /\
+ (remv_tyvar_pattern (P_construct constr (pattern_list)) = 
+     P_construct constr (MAP (\pattern_. (remv_tyvar_pattern pattern_)) pattern_list)) /\
+ (remv_tyvar_pattern (P_construct_any constr) = P_construct_any constr) /\
+ (remv_tyvar_pattern (P_tuple (pattern_list)) = 
+     P_tuple (MAP (\pattern_. (remv_tyvar_pattern pattern_)) pattern_list)) /\
+ (remv_tyvar_pattern (P_record (field_pattern_list)) = 
+     P_record (MAP (\(field_,pattern_). (field_,(remv_tyvar_pattern pattern_))) field_pattern_list)) /\
+ (remv_tyvar_pattern (P_cons pattern1 pattern2) = 
+     P_cons (remv_tyvar_pattern pattern1) (remv_tyvar_pattern pattern2))`;
+*)
+
+consts remv_tyvar_letrec_binding :: "letrec_binding => letrec_binding"
+(*
+`(remv_tyvar_letrec_binding (LRB_simple value_name pattern_matching) = 
+     LRB_simple value_name (remv_tyvar_pattern_matching pattern_matching)) /\
+ (remv_tyvar_letrec_bindings (LRBs_inj (letrec_binding_list)) = 
+     LRBs_inj (MAP (\letrec_binding_. (remv_tyvar_letrec_binding letrec_binding_)) letrec_binding_list)) /\
+ (remv_tyvar_let_binding (LB_simple pattern expr) = 
+     LB_simple (remv_tyvar_pattern pattern) (remv_tyvar_expr expr)) /\
+ (remv_tyvar_pat_exp (PE_inj pattern expr) = 
+     PE_inj (remv_tyvar_pattern pattern) (remv_tyvar_expr expr)) /\
+ (remv_tyvar_pattern_matching (PM_pm (pat_exp_list)) = 
+     PM_pm (MAP (\pat_exp_. (remv_tyvar_pat_exp pat_exp_)) pat_exp_list)) /\
+ (remv_tyvar_expr (Expr_uprim unary_prim) = Expr_uprim unary_prim) /\
+ (remv_tyvar_expr (Expr_bprim binary_prim) = Expr_bprim binary_prim) /\
+ (remv_tyvar_expr (Expr_ident value_name) = Expr_ident value_name) /\
+ (remv_tyvar_expr (Expr_constant constant) = Expr_constant constant) /\
+ (remv_tyvar_expr (Expr_typed expr typexpr) = 
+     Expr_typed (remv_tyvar_expr expr) (remv_tyvar_typexpr typexpr)) /\
+ (remv_tyvar_expr (Expr_tuple (expr_list)) = 
+     Expr_tuple (MAP (\expr_. (remv_tyvar_expr expr_)) expr_list)) /\
+ (remv_tyvar_expr (Expr_construct constr (expr_list)) =
+     Expr_construct constr (MAP (\expr_. (remv_tyvar_expr expr_)) expr_list)) /\
+ (remv_tyvar_expr (Expr_cons expr1 expr2) = 
+     Expr_cons (remv_tyvar_expr expr1) (remv_tyvar_expr expr2)) /\
+ (remv_tyvar_expr (Expr_record (field_expr_list)) = 
+     Expr_record (MAP (\(field_,expr_). (field_,(remv_tyvar_expr expr_))) field_expr_list)) /\
+ (remv_tyvar_expr (Expr_override expr (field_expr_list)) = 
+     Expr_override (remv_tyvar_expr expr) 
+                   (MAP (\(field_,expr_). (field_,(remv_tyvar_expr expr_))) field_expr_list)) /\
+ (remv_tyvar_expr (Expr_apply expr1 expr2) = 
+     Expr_apply (remv_tyvar_expr expr1) (remv_tyvar_expr expr2)) /\
+ (remv_tyvar_expr (Expr_and expr1 expr2) = 
+     Expr_and (remv_tyvar_expr expr1) (remv_tyvar_expr expr2)) /\
+ (remv_tyvar_expr (Expr_or expr1 expr2) = 
+     Expr_or (remv_tyvar_expr expr1) (remv_tyvar_expr expr2)) /\
+ (remv_tyvar_expr (Expr_field expr field) = Expr_field (remv_tyvar_expr expr) field) /\
+ (remv_tyvar_expr (Expr_ifthenelse expr0 expr1 expr2) = 
+     Expr_ifthenelse (remv_tyvar_expr expr0) (remv_tyvar_expr expr1) (remv_tyvar_expr expr2)) /\
+ (remv_tyvar_expr (Expr_while expr1 expr2) = 
+     Expr_while (remv_tyvar_expr expr1) (remv_tyvar_expr expr2)) /\
+ (remv_tyvar_expr (Expr_for x expr1 for_dirn expr2 expr3) = 
+     Expr_for x (remv_tyvar_expr expr1) for_dirn (remv_tyvar_expr expr2) (remv_tyvar_expr expr3))/\
+ (remv_tyvar_expr (Expr_sequence expr1 expr2) = 
+     Expr_sequence (remv_tyvar_expr expr1) (remv_tyvar_expr expr2)) /\
+ (remv_tyvar_expr (Expr_match expr pattern_matching) = 
+     Expr_match (remv_tyvar_expr expr) (remv_tyvar_pattern_matching pattern_matching)) /\
+ (remv_tyvar_expr (Expr_function pattern_matching) = 
+     Expr_function (remv_tyvar_pattern_matching pattern_matching)) /\
+ (remv_tyvar_expr (Expr_try expr pattern_matching) = 
+     Expr_try (remv_tyvar_expr expr) (remv_tyvar_pattern_matching pattern_matching)) /\
+ (remv_tyvar_expr (Expr_let let_binding expr) = 
+     Expr_let (remv_tyvar_let_binding let_binding) (remv_tyvar_expr expr)) /\
+ (remv_tyvar_expr (Expr_letrec letrec_bindings expr) = 
+     Expr_letrec (remv_tyvar_letrec_bindings letrec_bindings) (remv_tyvar_expr expr)) /\
+ (remv_tyvar_expr (Expr_assert expr) = Expr_assert (remv_tyvar_expr expr)) /\
+ (remv_tyvar_expr (Expr_location location) = Expr_location location)`;
+*)
+
+}}
+
+{{ coq
+(*** Coercions and syntactic sugar ***)
+
+(* Names *)
+Coercion VP_name : value_name >-> value_path.
+Coercion C_name : constr_name >-> constr.
+Coercion TC_name : typeconstr_name >-> typeconstr.
+
+(* Constants *)
+Coercion CONST_int : intn >-> constant.
+Definition CONST_int' : Z -> constant := CONST_int.
+Coercion CONST_int' : Z >-> constant.
+Definition CONST_bool (b:bool) := if b then CONST_true else CONST_false.
+Coercion CONST_bool : bool >-> constant.
+Definition CONST_unit' (_:unit) := CONST_unit.
+Coercion CONST_unit' : unit >-> constant.
+
+(* Types *)
+Definition TPS_proj (tpo:type_params_opt) := let (tvs) := tpo in tvs.
+Coercion TPS_proj : type_params_opt >-> list.
+Coercion TE_var : typevar >-> typexpr.
+Definition TE_constr0 := TE_constr nil.
+Coercion TE_constr0 : typeconstr >-> typexpr.
+Definition typexprs_proj (tes:typexprs) := let (ts) := tes in ts.
+Coercion typexprs_proj : typexprs >-> list.
+
+(* Patterns *)
+Coercion P_var : value_name >-> pattern.
+Coercion P_constant : constant >-> pattern.
+
+(* Expressions *)
+Coercion Expr_uprim : unary_prim >-> expr.
+Coercion Expr_bprim : binary_prim >-> expr.
+Coercion Expr_ident : value_name >-> expr.
+Coercion Expr_constant : constant >-> expr.
+Definition subst_x x e := substs_x_xs (cons (x, e) nil).
+
+(* Definitions *)
+Fixpoint Ds_proj (ds:definitions) : list definition :=
+  match ds with
+    | Ds_nil => nil
+    | Ds_cons d dt => cons d (Ds_proj dt)
+  end.
+Coercion Ds_proj : definitions >-> list.
+Fixpoint Ds_list (ds:list definition) : definitions :=
+  match ds with
+    | nil => Ds_nil
+    | cons d dt => Ds_cons d (Ds_list dt)
+  end.
+
+(* Semantic objects *)
+Definition substs_x_proj (z:substs_x) := let (y) := z in y.
+Coercion substs_x_proj : substs_x >-> list.
+Coercion TE_te : typexpr >-> type_equation.
+Coercion TI_eq : type_equation >-> type_information.
+Coercion TI_def : type_representation >-> type_information.
+
+
+
+(*** Strings ***)
+
+Section string_literals.
+Import String.
+Open Local Scope string_scope.
+Definition string_equal_functional_value := "equal: functional value".
+End string_literals.
+
+
+
+
+(*** Auxiliary functions ***)
+
+
+Definition fold_pats pats e0 :=
+  fold_right (fun p e => Expr_function (PM_pm (PE_inj p e :: nil))) e0 pats.
+
+Definition definitions_snoc (ds:definitions) (d:definition) : definitions :=
+  Ds_list (ds ++ d :: nil).
+
+Fixpoint remv_tyvar_typexpr (t:typexpr) : typexpr :=
+  match t with
+    | TE_var tv => TE_any
+    | TE_idxvar k p => TE_idxvar k p
+    | TE_any => TE_any
+    | TE_arrow t1 t2 => TE_arrow (remv_tyvar_typexpr t1) (remv_tyvar_typexpr t2)
+    | TE_tuple ts => TE_tuple (map remv_tyvar_typexpr ts)
+    | TE_constr ts tc => TE_constr (map remv_tyvar_typexpr ts) tc
+  end.
+Fixpoint remv_tyvar_pattern (p:pattern) : pattern :=
+  match p with
+    | P_var vn => P_var vn
+    | P_any => P_any
+    | P_constant c => P_constant c
+    | P_alias p vn => P_alias (remv_tyvar_pattern p) vn
+    | P_typed p t => P_typed (remv_tyvar_pattern p) (remv_tyvar_typexpr t)
+    | P_or p1 p2 => P_or (remv_tyvar_pattern p1) (remv_tyvar_pattern p2)
+    | P_construct cr ps => P_construct cr (map remv_tyvar_pattern ps)
+    | P_construct_any cr => P_construct_any cr
+    | P_tuple ps => P_tuple (map remv_tyvar_pattern ps)
+    | P_record fps => P_record (map (fun tmp => match tmp with (fi,pi) => (fi, remv_tyvar_pattern pi) end) fps)
+    | P_cons p1 p2 => P_cons (remv_tyvar_pattern p1) (remv_tyvar_pattern p2)
+  end.
+Fixpoint remv_tyvar_letrec_binding (lrb:letrec_binding) : letrec_binding :=
+  match lrb with
+    | LRB_simple vn pm => LRB_simple vn (remv_tyvar_pattern_matching pm)
+  end
+with remv_tyvar_letrec_bindings (lrbs:letrec_bindings) : letrec_bindings :=
+  match lrbs with
+    | LRBs_inj lrbs => LRBs_inj (map remv_tyvar_letrec_binding lrbs)
+  end
+with remv_tyvar_let_binding (lb:let_binding) : let_binding :=
+  match lb with
+    | LB_simple p e => LB_simple (remv_tyvar_pattern p) (remv_tyvar_expr e)
+  end
+with remv_tyvar_pat_exp (pe:pat_exp) : pat_exp :=
+  match pe with
+    | PE_inj p e => PE_inj (remv_tyvar_pattern p) (remv_tyvar_expr e)
+  end
+with remv_tyvar_pattern_matching (pm:pattern_matching) : pattern_matching :=
+  match pm with
+    | PM_pm pes => PM_pm (map remv_tyvar_pat_exp pes)
+  end
+with remv_tyvar_expr (e:expr) : expr :=
+  match e with
+    | Expr_uprim uprim => Expr_uprim uprim
+    | Expr_bprim bprim => Expr_bprim bprim
+    | Expr_ident vn => Expr_ident vn
+    | Expr_constant c => Expr_constant c
+    | Expr_typed e t => Expr_typed (remv_tyvar_expr e) (remv_tyvar_typexpr t)
+    | Expr_tuple es => Expr_tuple (map remv_tyvar_expr es)
+    | Expr_construct cr es => Expr_construct cr (map remv_tyvar_expr es)
+    | Expr_cons e1 e2 => Expr_cons (remv_tyvar_expr e1) (remv_tyvar_expr e2)
+    | Expr_record fes => Expr_record (map (fun tmp => match tmp with (fi, ei) => (fi, remv_tyvar_expr ei) end) fes)
+    | Expr_override e fes => Expr_override (remv_tyvar_expr e) (map (fun tmp => match tmp with (fi, ei) => (fi, remv_tyvar_expr ei) end) fes)
+    | Expr_apply e1 e2 => Expr_apply (remv_tyvar_expr e1) (remv_tyvar_expr e2)
+    | Expr_and e1 e2 => Expr_and (remv_tyvar_expr e1) (remv_tyvar_expr e2)
+    | Expr_or e1 e2 => Expr_or (remv_tyvar_expr e1) (remv_tyvar_expr e2)
+    | Expr_field e f => Expr_field (remv_tyvar_expr e) f
+    | Expr_ifthenelse e0 e1 e2 => Expr_ifthenelse (remv_tyvar_expr e0) (remv_tyvar_expr e1) (remv_tyvar_expr e2)
+    | Expr_while e1 e2 => Expr_while (remv_tyvar_expr e1) (remv_tyvar_expr e2)
+    | Expr_for x e1 fdn e2 e3 => Expr_for x (remv_tyvar_expr e1) fdn (remv_tyvar_expr e2) (remv_tyvar_expr e3)
+    | Expr_sequence e1 e2 => Expr_sequence (remv_tyvar_expr e1) (remv_tyvar_expr e2)
+    | Expr_match e pm => Expr_match (remv_tyvar_expr e) (remv_tyvar_pattern_matching pm)
+    | Expr_function pm => Expr_function (remv_tyvar_pattern_matching pm)
+    | Expr_try e pm => Expr_try (remv_tyvar_expr e) (remv_tyvar_pattern_matching pm)
+    | Expr_let lb e => Expr_let (remv_tyvar_let_binding lb) (remv_tyvar_expr e)
+    | Expr_letrec lrbs e => Expr_letrec (remv_tyvar_letrec_bindings lrbs) (remv_tyvar_expr e)
+    | Expr_assert e => Expr_assert (remv_tyvar_expr e)
+    | Expr_location loc => Expr_location loc
+  end.
+
+
+
+(*** De Bruijn indices ***)
+
+Fixpoint shiftt (m n:nat) (te:typexpr) {struct te} : typexpr :=
+  match te with
+    | TE_var tv => TE_var tv
+    | TE_idxvar k p => TE_idxvar (if le_lt_dec m k then n + k else k) p
+    | TE_any => TE_any
+    | TE_arrow te1 te2 => TE_arrow (shiftt m n te1) (shiftt m n te2)
+    | TE_tuple tes => TE_tuple (map (shiftt m n) tes)
+    | TE_constr tes tc => TE_constr (map (shiftt m n) tes) tc
+  end.
+Definition shifttes m n (tes:typexprs) :=
+  typexprs_inj (map (shiftt m n) tes).
+Definition shiftts m n (ts:typescheme) :=
+  match ts with
+    | TS_forall te => TS_forall (shiftt (S m) n te)
+  end.
+Definition shiftEB m n (EB:environment_binding) :=
+  match EB with
+    | EB_tv => EB_tv
+    | EB_vn vn ts => EB_vn vn (shiftts m n ts)
+    | EB_cc cn tc => EB_cc cn tc
+    | EB_pc cn tpo tes tc => EB_pc cn tpo (shifttes m n tes) tc
+    | EB_fn fn tpo tcn te => EB_fn fn tpo tcn (shiftt m n te)
+    | EB_td tcn K => EB_td tcn K
+    | EB_tr tcn K fns => EB_tr tcn K fns
+    | EB_ta tpo tcn te => EB_ta tpo tcn (shiftt m n te)
+    | EB_l loc te => EB_l loc (shiftt m n te)
+  end.
+Fixpoint count_E_typevars E :=
+  match E with
+    | nil => 0
+    | EB_tv :: E' => S (count_E_typevars E')
+    | _ :: E' => count_E_typevars E'
+  end.
+Fixpoint shiftE (m n:nat) (E:environment) {struct E} : environment :=
+  match E with
+    | nil => nil
+    | EB :: E' => shiftEB (count_E_typevars E + m) n EB :: shiftE m n E'
+  end.
+Definition shiftTsig m n (sigma:Tsigma) :=
+  map (fun tmp => match tmp with (tv, t) => (tv, shiftt m n t) end) sigma.
+
+}}

@@ -1,0 +1,1547 @@
+grammar
+embed
+{{ tex
+\section{Type system}
+\label{sec.typing}
+
+The Objective Caml manual does not describe the type system. Therefore our
+semantics is driven by an attempt to mirror what the Objective Caml
+implementation does, drawing inspiration from various presentations of type
+systems for ML.  Some notable aspects of the formalization follow:
+\begin{itemize}
+\item
+We give a declarative presentation of polymorphic typing, i.e., without
+unification.
+\item
+Polymorphic $\ottkw{let}$ introduces type variables which are encoded with de
+Bruijn indices.
+\item
+Several rules have premises that state there are at least 1 (or 2) elements of
+a list, despite there being 3 or 4 dots.  This is because Ott does not use dot
+imposed length restrictions in the theorem prover models.
+\item
+Occasionally, we state that some list X1 .. Xm has length m.  Ott does not
+impose this restriction in the theorem prover models either.
+\end{itemize}
+
+}}
+
+defns
+JdomEB :: J ::= 
+
+defn
+dom ( EB ) gives name :: :: domEB :: domEB_ {{ com Environment binding domain }} {{ lemwcf  witness type JdomEBwitness; 
+check JdomEBcheck;
+ }} by
+
+{{ com
+Gets the name of an environment entry.
+}}
+
+------------------------------------------------------- :: type_param
+dom(TV) gives TV
+
+------------------------------------------------------- :: value_name
+dom(value_name:typescheme) gives value_name
+
+%d----------------------------------------------------- :: const_constr_name
+%d dom(constr_name of typeconstr) gives constr_name
+
+%d----------------------------------------------------- :: constr_name
+%d dom(constr_name of forall type_params_opt, (t1, ..., tn) : typeconstr) gives constr_name
+
+%d----------------------------------------------------- :: opaque_typeconstr_name
+%d dom(typeconstr_name:kind) gives typeconstr_name
+
+%d----------------------------------------------------- :: trans_typeconstr_name
+%d dom(type_params_opt typeconstr_name = t) gives typeconstr_name
+
+%d----------------------------------------------------- :: record_typeconstr_name
+%d dom(typeconstr_name : kind {field_name1; ...; field_namen}) gives typeconstr_name
+%d
+%d----------------------------------------------------- :: record_field_name
+%d dom(field_name:forall type_params_opt, typeconstr_name -> typexpr) gives field_name
+
+------------------------------------------------------- :: location
+dom(location:t) gives location
+
+defns
+JdomE :: J ::=
+
+defn
+dom ( E ) gives names :: :: domE :: domE_ {{ com Environment domain }}  {{ lemwcf  witness type JdomEwitness; 
+check JdomE_check; 
+}} by
+
+{{ com
+Gets all of the names in an environment.
+}}
+
+------------------------------------------------------- :: empty
+dom(empty) gives 
+
+dom(E) gives name1..namen
+:JdomEB:dom(EB) gives name
+------------------------------------------------------- :: cons
+dom(E,EB) gives name name1..namen
+
+defns
+Jlookup :: Jlookup_ ::=
+
+defn
+E |- name gives EB :: :: EB :: EB_ {{ com Environment lookup }}  {{ lemwcf  witness type JlookupEBwitness; 
+check Jlookup_EB_check; 
+}} by
+
+{{ com
+Returns the rightmost binding that matches the given name. 
+}}
+
+:JdomEB:dom(EB) gives name'
+name noteq name'
+name' noteq TV
+E |- name gives EB'
+------------------------------------------------------- :: rec1
+E,EB |- name gives EB'
+
+name noteq TV
+E |- name gives EB'
+------------------------------------------------------- :: rec2
+E,TV |- name gives shift 0 1 EB'
+
+:JdomEB:dom(EB) gives name
+------------------------------------------------------- :: head
+E,EB |- name gives EB
+
+defns
+Jidx :: Jidx_ ::=
+
+defn
+E |- idx bound :: :: bound :: bound_ {{ com Well-formed index }}  {{ lemwcf  witness type Jidx_boundwitness; 
+check Jidx_bound_check; 
+}} by
+
+{{ com
+Determines whether an index is bound by an environment.
+}} 
+
+E |- idx bound
+:JdomEB:dom(EB) gives name
+name noteq TV
+------------------------------------------------------- :: skip1
+E, EB |- idx bound 
+
+E |- idx bound
+------------------------------------------------------- :: skip2
+E, TV |- idx + 1 bound 
+
+------------------------------------------------------- :: found
+E, TV |- 0 bound
+
+
+defns
+JTtps_kind :: JT ::=
+
+defn
+|- type_params_opt : kind :: :: tps_kind :: tps_kind_ {{ com Type parameter kinding }}  {{ lemwcf  witness type JTtps_kindwitness; 
+check JTtps_kind_check; 
+}} by
+
+{{ com
+Counts the number of parameters and ensures that none is repeated.
+}}
+
+tp1 ... tpn distinct 
+length (tp1)...(tpn) = n
+------------------------------------------------------- :: kind
+|- (tp1, ..., tpn) : n -> Type
+
+
+defns
+JTEok :: JT ::=
+
+defn
+E |- ok :: :: Eok :: Eok_ {{ com Environment validity }}  {{ lemwcf  witness type JTEok_witness; 
+check JTEok_check; 
+}}by
+      
+{{ com
+Asserts that the various components of the environment are well-formed
+(including that there are no free type references), and regulates name
+shadowing.  Environments contain identifiers related to type definitions and
+type variables as well as expression-level variables (i.e., value names), so
+they are dependent from left to right.  Shadowing of type, constructor, field
+and label names is forbidden, but shadowing of value names is allowed.
+}} 
+
+------------------------------------------------------- :: empty
+empty |- ok
+
+E |- ok
+------------------------------------------------------- :: typevar
+E , TV |- ok
+
+E |- forall t : Type
+------------------------------------------------------- :: value_name
+E, (value_name : forall t) |- ok
+
+%d E |- ok
+%d E |- typeconstr_name gives typeconstr_name : kind
+%d dom(E) gives names
+%d constr_name notin names
+%d----------------------------------------------------- :: constr_name_c
+%d E,(constr_name of typeconstr_name) |- ok
+
+%d E |- ok
+%d dom(E) gives names
+%d constr_name notin names
+%d----------------------------------------------------- :: exn_constr_name_c
+%d E,(constr_name of exn) |- ok
+
+%d type_params_opt = (tv1, ..., tvm)
+%d E |- forall type_params_opt, t1 : Type ... E |- forall type_params_opt, tn : Type
+%d E |- typeconstr_name gives typeconstr_name : m -> Type
+%d dom(E) gives names
+%d constr_name notin names
+%d length (t1) ... (tn) >= 1
+%d :formula_length_list_type_param_eq:length (tv1) ... (tvm) = m
+%d----------------------------------------------------- :: constr_name_p
+%d E,(constr_name of forall (tv1, ..., tvm), (t1, ..., tn) : typeconstr_name) |- ok
+
+%d E |- t1 : Type ... E |- tn : Type 
+%d dom(E) gives names
+%d constr_name notin names
+%d length (t1) ... (tn) >= 1
+%d----------------------------------------------------- :: exn_constr_name_p
+%d E,(constr_name of forall , (t1, ..., tn) : exn) |- ok
+
+
+%d E |- forall (tv1, ..., tvm), t : Type
+%d dom(E) gives names
+%d field_name notin names
+%d E |- typeconstr_name gives typeconstr_name:m->Type {field_name1; ...; field_namen}
+%d :formula_length_list_type_param_eq:length (tv1) ... (tvm) = m
+%d field_name in field_name1...field_namen
+%d ---------------------------------------------------- :: record_destr
+%d E, (field_name:forall (tv1, ..., tvm), typeconstr_name -> t) |- ok
+
+%d E |- ok
+%d dom(E) gives names
+%d typeconstr_name notin names
+%d----------------------------------------------------- :: typeconstr_name
+%d E,(typeconstr_name : kind) |- ok
+
+%d dom(E) gives names
+%d typeconstr_name notin names
+%d E |- forall (tv1, ..., tvm), t : Type
+%d----------------------------------------------------- :: typeconstr_eqn
+%d E, ((tv1, ..., tvm) typeconstr_name = t) |- ok
+
+%d E |- ok
+%d dom(E) gives names
+%d typeconstr_name notin names
+%d field_name1...field_namen distinct
+%d ---------------------------------------------------- :: typeconstr_record
+%d E, (typeconstr_name:kind {field_name1; ...; field_namen}) |- ok
+
+E |- t : Type
+dom(E) gives names
+location notin names
+------------------------------------------------------- :: location
+E,(location : t) |- ok
+
+
+defn
+E |- typeconstr : kind :: :: typeconstr :: typeconstr_ {{ com Type constructor kinding }}  {{ lemwcf  witness type JTtypeconstrwitness; 
+check JTtypeconstr_check;
+ }} by
+
+{{ com
+Ensures that the type constructor is either defined in the environment or
+built-in.  The result kind indicates how many parameters the type constructor
+expects.
+}}
+
+%d E |- ok
+%d E |- typeconstr_name gives typeconstr_name:kind
+%d----------------------------------------------------- :: abstract
+%d E |- typeconstr_name:kind
+
+%d E |- ok
+%d E |- typeconstr_name gives type_params_opt typeconstr_name=t
+%d |- type_params_opt : kind
+%d----------------------------------------------------- :: concrete
+%d E |- typeconstr_name:kind
+
+%d E|- ok
+%d E |- typeconstr_name gives typeconstr_name:kind{field_name1; ...; field_namen}
+%d----------------------------------------------------- :: record
+%d E |- typeconstr_name:kind
+
+E |- ok
+------------------------------------------------------- :: int
+E |- int : Type
+
+E |- ok
+------------------------------------------------------- :: char
+E |- char : Type
+
+E |- ok
+------------------------------------------------------- :: string
+E |- string : Type
+
+E |- ok
+------------------------------------------------------- :: float
+E |- float : Type
+
+E |- ok
+------------------------------------------------------- :: bool
+E |- bool : Type
+
+E |- ok
+------------------------------------------------------- :: unit
+E |- unit : Type
+
+E |- ok
+------------------------------------------------------- :: exn
+E |- exn : Type
+
+E |- ok
+------------------------------------------------------- :: list
+E |- list : 1 -> Type
+
+E |- ok
+------------------------------------------------------- :: option
+E |- option : 1 -> Type
+
+E |- ok
+------------------------------------------------------- :: ref
+E |- ref : 1 -> Type
+
+defn
+E |- typescheme : kind :: :: ts :: ts_ {{ com de Bruijn type scheme well-formedness }} {{ lemwcf  witness type JTtswitness; 
+check JTts_check; 
+}} by
+
+{{ com
+Ensures that the type is well-formed in an extended environment.
+}}
+
+E,TV |- t : Type
+------------------------------------------------------- :: forall
+E |- forall t : Type
+
+defn
+E |- forall type_params_opt , t : kind :: :: tsnamed :: tsnamed_ {{ com Named type scheme well-formedness }}  {{ lemwcf  witness type JTtsnamedwitness; 
+check JTtsnamed_check; 
+}}by
+
+{{ com
+Ensures that the named type paramaters are distinct, and that the type is
+well-formed.  Instead of extending the environment, this simply substitutes a
+collection of well-formed types, here $\ottkw{unit}$.  This works because the
+type well-formedness judgment below only depends on well-formedness of
+sub-expressions, and not on the exact form of sub-expressions.
+}}
+
+E |- <<tv1<-unit, ..., tvn<-unit>>t : Type
+tv1...tvn distinct
+------------------------------------------------------- :: forall
+E |- forall (tv1, ..., tvn), t : Type
+
+defn
+E |- typexpr : kind :: :: t :: t_ {{ com Type expression well-formedness }}  {{ lemwcf  witness type t_witness; 
+ check t_check; 
+}} by
+
+{{ com
+Ensures that all of the indices and constructors that appear in a type are
+bound in the environment.
+}}
+
+E |- ok
+E |- idx bound
+------------------------------------------------------- :: var
+E |- <idx, num> : Type
+
+E |- t : Type
+E |- t' : Type
+------------------------------------------------------- :: arrow
+E |- t->t' : Type
+
+E |- t1 : Type .... E |- tn : Type
+length (t1)....(tn) >= 2
+------------------------------------------------------- :: tuple
+E |- t1*....*tn : Type
+
+:JTtypeconstr: E |- typeconstr : n -> Type
+E |- t1 : Type ... E |- tn : Type
+length (t1)...(tn) = n
+------------------------------------------------------- :: constr
+E |- (t1,...,tn) typeconstr : Type
+
+
+
+defns
+JTeq :: JT ::=
+
+defn
+E |- typexpr == typexpr' :: :: eq :: eq_ {{ com Type equivalence }} {{ lemwcf  witness type JTeq_witness; 
+ check JTeq_check; 
+}} by
+
+{{ com
+Checks whether two types are related (potentially indirectly) by the type
+abbreviations in the environment.  The system does not allow recursive types
+that do not pass through an opaque (generative) type constructor, i.e., a
+variant or record.  Therefore all type expressions have a canonical form
+obtained by expanding all type abbreviations.
+}}
+
+%d E |- t : Type
+%d----------------------------------------------------- :: refl
+%d E |- t == t
+
+%d E |- t' == t
+%d----------------------------------------------------- :: sym
+%d E |- t == t'
+
+%d E |- t == t'
+%d E |- t' == t''
+%d----------------------------------------------------- :: trans
+%d E |- t == t''
+
+%d E |- ok
+%d E |- typeconstr_name gives (typevar1, ..., typevarn) typeconstr_name=t
+%d E |- t1 : Type ... E |- tn : Type
+%d----------------------------------------------------- :: expand
+%d E |- (t1, ..., tn) typeconstr_name == <<typevar1<-t1, ..., typevarn<-tn>>t
+
+%d E |- t1 == t1'
+%d E |- t2 == t2'
+%d----------------------------------------------------- :: arrow
+%d E |- t1 -> t2 == t1' -> t2'
+
+%d E |- t1 == t1' ....  E |- tn == tn'
+%d length (t1)....(tn) >= 2
+%d----------------------------------------------------- :: tuple
+%d E |- t1 * .... * tn == t1' * .... * tn'
+
+%d :JTtypeconstr: E |- typeconstr : n -> Type
+%d E |- t1 == t1' ...  E |- tn == tn'
+%d length (t1)...(tn) = n
+%d----------------------------------------------------- :: constr
+%d E |- (t1, ..., tn) typeconstr == (t1', ..., tn') typeconstr
+
+defns
+JTidxsub :: JT ::=
+
+defn
+'<<' typexpr1 , .. , typexprn '>>' typexpr' gives typexpr'' :: :: idxsub :: inxsub_ {{ com de Bruin type substitution }} {{ lemwcf  witness type JTidxsub_witness; 
+check JTidxsub_check; 
+}} by
+
+{{ com
+Replaces index 0 position $n$ with the $n$th type in the list, and reduces all
+other indices by 1.
+}}
+
+------------------------------------------------------- :: alpha
+<<t1, .., tn>> typevar gives typevar
+
+
+length (t1)..(tm) = num
+------------------------------------------------------- :: idx0
+<<t1, .., tm, t', t1'', .., tn''>> <0, num> gives t'
+
+length (t1)..(tn) <= num
+------------------------------------------------------- :: idx1
+<<t1, .., tn>> <0, num> gives unit
+
+------------------------------------------------------- :: idx2
+<<t1, .., tn>> <idx + 1, num> gives <idx, num>
+
+------------------------------------------------------- :: any
+<<t1, .., tn>> _ gives _
+
+<<t1, .., tn>> t1' gives t1''
+<<t1, .., tn>> t2' gives t2''
+------------------------------------------------------- :: arrow
+<<t1, .., tn>> (t1' -> t2') gives t1'' -> t2''
+
+<<t1, .., tn>> t1' gives t1'' .... <<t1, .., tn>> tm' gives tm''
+------------------------------------------------------- :: tuple
+<<t1, .., tn>> (t1' * .... * tm') gives (t1'' * .... * tm'')
+
+<<t1, .., tn>> t1' gives t1'' ... <<t1, .., tn>> tm' gives tm''
+------------------------------------------------------- :: tc
+<<t1, .., tn>> (t1', ..., tm') typeconstr gives (t1'', ..., tm'') typeconstr
+
+
+defns
+JTinst :: JT ::=
+
+defn
+E |- typexpr <= typescheme :: :: inst :: inst_ {{ com de Bruijn type scheme instantiation }} {{ lemwcf  witness type JTinst_witness; 
+check JTinst_check; 
+}} by
+
+{{ com
+Replaces all of the bound variables of a type scheme.
+}}
+
+E |- forall t' : Type
+E |- t1 : Type .. E |- tn : Type
+<<t1, .., tn>>t' gives t''
+------------------------------------------------------- :: idx
+E |- t'' <= forall t'
+
+defns
+JTinst_named :: JT ::=
+
+defn
+E |- typexpr <= forall type_params_opt , typexpr' :: :: inst_named :: inst_named_ {{ com Named type scheme instantiation }} {{ lemwcf  witness type JTinst_named_witness; 
+check JTinst_named_check; 
+}} by
+
+{{ com
+Replaces all of the bound variables of a named type scheme.
+}}
+
+E |- forall (typevar1, ..., typevarn), t : Type
+E |- t1 : Type ... E |- tn : Type
+------------------------------------------------------- :: named
+E |- <<typevar1<-t1, ..., typevarn<-tn>>t <= forall (typevar1, ..., typevarn), t
+
+defns
+JTinst_any :: JT ::=
+
+defn
+E |- typexpr <= typexpr' :: :: inst_any :: inst_any_ {{ com Wildcard type instantiation }} {{ lemwcf  witness type JTinst_any_witness; 
+check JTinst_any_check; 
+}} by
+
+{{ com
+Replaces $\ottkw{\_}$ type variables with arbitrary types.
+}}
+
+E |- <idx, num> : Type 
+------------------------------------------------------- :: tyvar
+E |- <idx, num> <= <idx, num> 
+
+E |- t : Type
+------------------------------------------------------- :: any
+E |- t <= _
+
+E |- t1 <= t1'
+E |- t2 <= t2'
+------------------------------------------------------- :: arrow
+E |- t1 -> t2 <= t1' -> t2'
+
+E |- t1 <= t1' .... E |- tn <= tn'
+length (t1)....(tn) >= 2
+------------------------------------------------------- :: tuple
+E |- t1 * .... * tn <= t1' * .... * tn'
+
+E |- t1 <= t1' ... E |- tn <= tn'
+:JTtypeconstr: E |- typeconstr : n -> Type
+length (t1)...(tn) = n
+------------------------------------------------------- :: ctor
+E |- (t1, ..., tn) typeconstr <= (t1', ..., tn') typeconstr
+
+defns
+JTval :: JT ::=
+
+defn
+E |- value_name : typexpr :: :: value_name :: value_name_ {{ com Variable typing }} {{ lemwcf  witness type JTval_witness; 
+check JTval_check; 
+}} by
+
+{{ com
+Determines if a variable can have a specified type.
+}}
+
+E |- value_name gives value_name:ts
+E |- t <= ts
+------------------------------------------------------- :: value_name
+E |- value_name:t
+
+>>
+%d<<
+
+defns
+JTfield :: JT ::=
+defn
+E |- field_name : typexpr -> typexpr' :: :: field :: field_ {{ com Field name typing }} {{ lemwcf  witness type JTfield_witness; 
+check JTfield_check; 
+}} by
+
+{{ com
+Determines the type constructor associated with a given field name.  Since
+field names are used to destructure record data, the type is a function type
+from a record to the type of the corresponding position.
+}}
+
+E |- field_name gives field_name:forall (tv1, ..., tvm), typeconstr_name -> t
+E |- (t1', ..., tm') typeconstr_name -> t'' <= forall (tv1, ..., tvm), (tv1, ..., tvm) typeconstr_name -> t
+------------------------------------------------------- :: name
+E |- field_name : (t1', ..., tm') typeconstr_name -> t''
+
+%d>>
+<<
+
+defns
+JTconstr_p :: JT ::=
+
+defn
+E |- constr : typexpr1 ... typexprn -> typexpr' :: :: constr_p :: constr_p_ {{ com Non-constant constructor typing }} {{ lemwcf  witness type JTconstr_p_witness; 
+check JTconstr_p_check; 
+}} by
+
+{{ com
+Determines the type constructor associated with a given value constructor.
+Non-constant constructors are attributed types for each argument as
+well as a return type.
+}}
+
+%d E |- constr_name gives constr_name of forall (tv1, ..., tvm), (t1,....,tn):typeconstr
+%d E |- (t1' * .... * tn') -> (t1'', ..., tm'') typeconstr <= forall (tv1, ..., tvm), (t1 * .... * tn) -> (tv1, ..., tvm) typeconstr
+%d----------------------------------------------------- :: name
+%d E |- constr_name : t1' .... tn' -> (t1'', ..., tm'') typeconstr
+
+E |- ok
+------------------------------------------------------- :: invarg
+E |- Invalid_argument : string -> exn
+
+E |- t : Type
+------------------------------------------------------- :: some
+E |- Some : t -> (t option) 
+
+
+
+defns
+JTconstr_c :: JT ::=
+
+defn
+E |- constr : typexpr :: :: constr_c :: constr_c_ {{ com Constant constructor typing }} {{ lemwcf  witness type JTconstr_c_witness; 
+check JTconstr_c_check; 
+}} by
+
+{{ com
+Constant constructors are typed like non-constant constructors without
+arguments.
+}}
+
+%d E |- ok
+%d E |- constr_name gives constr_name of typeconstr_name
+%d E |- typeconstr_name gives typeconstr_name : n -> Type
+%d E |- t1 : Type ... E |- tn : Type
+%d length (t1) ... (tn) = n
+%d----------------------------------------------------- :: constr
+%d E |- constr_name : (t1, ..., tn) typeconstr_name
+
+%d E |- ok
+%d E |- constr_name gives constr_name of exn
+%d----------------------------------------------------- :: exn_constr
+%d E |- constr_name : exn 
+
+E |- ok
+------------------------------------------------------- :: notfound
+E |- Not_found : exn
+
+E |- ok
+------------------------------------------------------- :: assert_fail
+E |- Assert_failure : exn
+
+E |- ok
+------------------------------------------------------- :: match_fail
+E |- Match_failure : exn
+
+{{ com
+Dropping the source location arguments for $\ottkw{Assert\_failure}$ and
+$\ottkw{Match\_failure}$.
+}}
+
+E |- ok
+------------------------------------------------------- :: div_by_0
+E |- Division_by_zero : exn
+
+E |- t : Type
+------------------------------------------------------- :: none
+E |- None : t option
+
+
+
+
+defns
+JTconst :: JT ::=
+
+defn
+E |- constant : typexpr :: :: const :: const_ {{ com Constant typing }} {{ lemwcf  witness type JTconst_witness; 
+check JTconst_check; 
+}} by
+
+{{ com
+Determines the type of a constant.
+}}
+
+E |- ok
+------------------------------------------------------- :: int
+E |- integer_literal : int
+
+E |- ok
+------------------------------------------------------- :: float
+E |- float_literal   : float
+
+E |- ok
+------------------------------------------------------- :: char
+E |- char_literal    : char
+
+E |- ok
+------------------------------------------------------- :: string
+E |- string_literal  : string
+
+:JTconstr_c: E |- constr : t
+------------------------------------------------------- :: constr
+E |- constr : t
+
+E |- ok
+------------------------------------------------------- :: false
+E |- false : bool
+
+E |- ok
+------------------------------------------------------- :: true
+E |- true : bool
+
+E |- ok
+------------------------------------------------------- :: unit
+E |- () : unit
+
+E |- t : Type
+------------------------------------------------------- :: nil
+E |- [] : t list
+
+defns
+JTpat :: JT ::=
+
+defn
+Tsigma & E |- pattern : typexpr gives E' :: :: pat :: pat_ {{ com Pattern typing and binding collection }} {{ lemwcf  witness type JTpat_witness; 
+check JTpat_check; 
+}} by
+
+{{ com
+Determines if a pattern matches a value of a certain type, and calculates the
+types of the variables it binds.  A pattern must bind any given variable at
+most once, except that the two alternatives of an or-pattern must bind the same
+set of variables.  $[[Tsigma]]$ gives the types that should replace type
+variables in explicitly type-annotated patterns.
+}}
+
+E |- t : Type
+------------------------------------------------------- :: var
+Tsigma & E |- x : t gives empty,x:t
+
+E |- t : Type
+------------------------------------------------------- :: any
+Tsigma & E |- _ : t gives empty
+
+:JTconst: E |- constant : t
+------------------------------------------------------- :: constant
+Tsigma & E |- constant : t gives empty
+
+Tsigma & E |- pattern : t gives E'
+dom(E',x:t) gives name1..namen
+name1..namen distinct
+------------------------------------------------------- :: alias
+Tsigma & E |- pattern as x : t gives E',x:t
+
+Tsigma & E |- pattern : t gives E'
+E |- t' <= Tsigma src_t
+E |- t == t'
+------------------------------------------------------- :: typed
+Tsigma & E |- ( pattern : src_t ) : t gives E'
+
+
+Tsigma & E |- pattern : t gives E'
+Tsigma & E |- pattern' : t gives E''
+E' PERMUTES E''
+------------------------------------------------------- :: or
+Tsigma & E |- pattern | pattern' : t gives E'
+
+:JTconstr_p:E |- constr : t1 ... tn -> t
+Tsigma & E |- pattern1 : t1 gives E1  ...  Tsigma & E |- patternn : tn gives En
+dom(E1@...@En) gives name1..namem
+name1..namem distinct
+------------------------------------------------------- :: construct
+Tsigma & E |- constr (pattern1,...,patternn) : t gives E1@...@En
+
+:JTconstr_p:E |- constr : t1...tn->t
+------------------------------------------------------- :: construct_any
+Tsigma & E |- constr _ : t gives empty
+
+Tsigma & E |- pattern1:t1 gives E1 .... Tsigma & E |- patternn:tn gives En
+length (pattern1)....(patternn) >= 2
+dom(E1@....@En) gives name1..namem
+name1..namem distinct
+------------------------------------------------------- :: tuple
+Tsigma & E |- pattern1,....,patternn : t1*....*tn gives E1@....@En
+
+%d Tsigma & E |- pattern1:t1 gives E1 ... Tsigma & E |- patternn:tn gives En
+%d E |- field_name1 : t->t1 ... E |- field_namen : t->tn
+%d length (pattern1)...(patternn) >= 1
+%d dom(E1@...@En) gives name1..namem
+%d name1..namem distinct
+%d----------------------------------------------------- :: record
+%d Tsigma & E |- {field_name1=pattern1; ...; field_namen=patternn} : t gives E1@...@En
+
+Tsigma & E |- pattern : t gives E'
+Tsigma & E |- pattern' : t list gives E''
+dom(E') gives name1..namem
+dom(E'') gives name1'..namen'
+name1..namem name1'..namen' distinct
+------------------------------------------------------- :: cons
+Tsigma & E |- pattern :: pattern' : t list gives E'@E''
+
+
+
+defns
+JTuprim :: JT ::=
+
+defn
+E |- unary_prim : typexpr :: :: uprim :: uprim_ {{ com Unary primitive typing }} {{ lemwcf  witness type JTuprim_witness; 
+check JTuprim_check; 
+}} by
+
+{{ com
+Determines if a unary primitive has a given type.
+}}
+
+E |- t : Type
+---------------------------------------------------------------- :: raise
+E |- raise : exn -> t
+
+E |- ok
+---------------------------------------------------------------- :: not
+E |- not : bool -> bool
+
+E |- ok
+---------------------------------------------------------------- :: uminus
+E |- ~- : int -> int
+
+E |- t : Type
+---------------------------------------------------------------- :: ref
+E |- ref : t->(t ref)
+
+E |- t : Type
+---------------------------------------------------------------- :: deref
+E |- ! : (t ref) -> t
+
+
+
+defns
+JTbprim :: JT ::=
+
+defn
+E |- binary_prim : typexpr :: :: bprim :: bprim_ {{ com Binary primitive typing }} {{ lemwcf  witness type JTbprim_witness; 
+check JTbprim_check; 
+}} by
+
+{{ com
+Determines if a binary primitive has a given type.
+}}
+
+E |- t : Type
+---------------------------------------------------------------- :: equal
+E |- = : t -> (t -> bool)
+
+E |- ok
+---------------------------------------------------------------- :: plus
+E |- + : int->(int->int)
+
+E |- ok
+---------------------------------------------------------------- :: minus
+E |- - : int->(int->int)
+
+E |- ok
+---------------------------------------------------------------- :: times
+E |- * : int->(int->int)
+
+E |- ok
+---------------------------------------------------------------- :: div
+E |- / : int->(int->int)
+
+E |- t : Type
+---------------------------------------------------------------- :: assign
+E |- := : t ref -> (t -> unit)
+
+
+
+defns
+JTe :: JT ::=
+
+defn
+Tsigma & E |- expr : typexpr :: :: e :: e_ {{ com Expression typing }} {{ lemwcf  witness type JTe_witness; 
+check JTe_check; 
+}} by
+
+{{ com
+Detremines if an expression has a given type.  Note that
+$[[:user_syntax__typexpr: t]]$ is a type, not a type scheme, but it may contain
+type variables (which are recorded in $[[E]]$).  $[[Tsigma]]$ gives the types
+that should replace type variables in explicitly type-annotated patterns.
+
+While the choice of a rule is mostly syntax-directed (for any given
+constructor, a single rule applies, except for $\ottkw{let}$ and
+$\ottkw{assert}$), polymorphism is handled in a purely declarative manner. The
+choice of instantiation for a polymorphic bound variable or primitive is free,
+as is the number of variables introduced by a polymorphic $\ottkw{let}$.
+}}
+
+E |- unary_prim : t
+E |- t == t'
+------------------------------------------------------- :: uprim
+Tsigma & E |- (%prim unary_prim) : t'
+
+E |- binary_prim : t
+E |- t == t'
+------------------------------------------------------- :: bprim
+Tsigma & E |- (%prim binary_prim) : t'
+
+:JTvalue_name: E |- value_name : t
+E |- t == t'
+------------------------------------------------------- :: ident
+Tsigma & E |- value_name : t'
+
+:JTconst: E |- constant : t
+E |- t == t'
+------------------------------------------------------- :: constant
+Tsigma & E |- constant : t'
+
+Tsigma & E |- e : t
+E |- t' <= Tsigma src_t
+E |- t == t'
+------------------------------------------------------- :: typed
+Tsigma & E |- (e:src_t) : t
+
+Tsigma & E |- e1:t1 .... Tsigma & E |- en:tn
+length (e1)....(en) >= 2
+E |- t1*....*tn == t'
+------------------------------------------------------- :: tuple
+Tsigma & E |- e1,....,en : t'
+
+
+:JTconstr_p:E |- constr : t1...tn->t
+Tsigma & E |- e1 : t1    ...   Tsigma & E |- en : tn
+E |- t == t'
+------------------------------------------------------- :: construct
+Tsigma & E |- :Expr_construct: constr (e1,...,en) : t'
+
+Tsigma & E |- e1 : t
+Tsigma & E |- e2 : t list
+E |- t list == t'
+------------------------------------------------------- :: cons
+Tsigma & E |- e1 :: e2 : t'
+
+%d Tsigma & E |- e1 : t1 ... Tsigma & E |- en : tn
+%d E |- field_name1 : t->t1 ... E |- field_namen : t->tn
+%d t = (t1', ..., tl') typeconstr_name
+%d E |- typeconstr_name gives typeconstr_name:kind {field_name1'; ...; field_namem'}
+%d field_name1...field_namen PERMUTES field_name1'...field_namem'
+%d length (e1)...(en)>=1
+%d E |- t == t'
+%d----------------------------------------------------- :: record_constr
+%d Tsigma & E |- {field_name1=e1; ...; field_namen=en} : t'
+
+%d Tsigma & E |- expr : t
+%d E |- field_name1 : t->t1 ... E |- field_namen : t->tn
+%d Tsigma & E |- e1 : t1 ... Tsigma & E |- en : tn
+%d field_name1...field_namen distinct
+%d length (e1) ... (en) >= 1
+%d E |- t == t'
+%d----------------------------------------------------- :: record_with
+%d Tsigma & E |- {expr with field_name1=e1; ...; field_namen=en} : t'
+
+Tsigma & E |- e : t1 -> t
+Tsigma & E |- e1 : t1
+------------------------------------------------------- :: apply
+Tsigma & E |- e e1 : t
+
+%d Tsigma & E |- e : t
+%d E |- field_name : t->t'
+%d E |- t' == t''
+%d----------------------------------------------------- :: record_proj
+%d Tsigma & E |- e.field_name : t''
+
+Tsigma & E |- e1 : bool
+Tsigma & E |- e2 : bool
+E |- bool == t
+------------------------------------------------------- :: and
+Tsigma & E |- e1 && e2 : t
+
+Tsigma & E |- e1 : bool
+Tsigma & E |- e2 : bool
+E |- bool == t
+------------------------------------------------------- :: or
+Tsigma & E |- e1 || e2 : t
+
+Tsigma & E |- e1:bool
+Tsigma & E |- e2:t
+Tsigma & E |- e3:t
+------------------------------------------------------- :: ifthenelse
+Tsigma & E |- if e1 then e2 else e3 : t
+
+Tsigma & E |- e1 : bool
+Tsigma & E |- e2 : unit
+E |- unit == t
+------------------------------------------------------- :: while
+Tsigma & E |- while e1 do e2 done : t
+
+Tsigma & E |- e1 : int
+Tsigma & E |- e2 : int
+Tsigma & E,:VN_id:lowercase_ident:int |- e3 : unit
+E |- unit == t
+------------------------------------------------------- :: for
+Tsigma & E |- for lowercase_ident = e1 for_dirn e2 do e3 done : t
+
+Tsigma & E |- e1 : unit
+Tsigma & E |- e2 : t
+------------------------------------------------------- :: sequence
+Tsigma & E |- e1; e2 : t
+
+{{ com
+In the above rule, $[[e1]]$ must have type $[[:user_syntax__typeconstr: unit]]$.
+Ocaml lets the programmer off with a warning, unless \texttt{-warn-error~S} is
+passed on the compiler command line.
+}}
+
+Tsigma & E |- e:t
+Tsigma & E |- pattern_matching : t -> t'
+------------------------------------------------------- :: match
+Tsigma & E |- match e with pattern_matching:t'
+
+Tsigma & E |- pattern_matching : t -> t'
+E |- t -> t' == t''
+------------------------------------------------------- :: function
+Tsigma & E |- function pattern_matching : t''
+
+Tsigma & E |- e : t
+Tsigma & E |- pattern_matching : exn -> t
+------------------------------------------------------- :: try
+Tsigma & E |- try e with pattern_matching : t
+
+{{ com
+We give three rules for $\ottkw{let}$ expressions. The rule
+\ottdruleref{JTe\_let\_mono} describes ``monomorphic let'': it does not allow the
+type of $[[expr]]$ to be generalised. The rule \ottdruleref{JTe\_let\_poly}
+describes ``polymorphic let'': it allows any number of type variables in the
+type of $[[:user_syntax__non_expansive: nexp]]$ to be generalised (more
+precisely, this generalisation applies simultaneously to the types of all the
+variables bound by $[[pat]]$), at the cost of requiring
+$[[:user_syntax__non_expansive: nexp]]$ to be non-expansive (which is described
+syntactically through the grammar for $[[:user_syntax__non_expansive: nexp]]$).
+The rule \ottdruleref{JTe\_letrec} allows mutually recursive functions to be
+defined; since immediate functions are values, thus nonexpansive, there is no
+need for a monomorphic $\ottkw{let\:rec}$ rule.
+}}
+
+Tsigma & E |- pat=expr gives x1:t1, .., xn:tn
+Tsigma & E@ x1:t1, .., xn:tn |- e : t
+------------------------------------------------------- :: let_mono
+Tsigma & E |- let pat=expr in e : t
+
+shift 0 1 Tsigma & E,TV |- pat=nexp gives x1:t1, .., xn:tn
+Tsigma & E@ x1:forall t1, .., xn:forall tn |- e : t
+------------------------------------------------------- :: let_poly
+Tsigma & E |- let pat=nexp in e : t
+
+shift 0 1 Tsigma & E,TV |- letrec_bindings gives x1:t1, ..., xn:tn
+Tsigma & E@(x1:forall t1), ..., (xn:forall tn) |- e : t
+------------------------------------------------------- :: letrec
+Tsigma & E |- let rec letrec_bindings in e : t
+
+Tsigma & E |- e : bool
+E |- unit == t
+------------------------------------------------------- :: assert
+Tsigma & E |- assert e : t
+
+E |- t : Type
+------------------------------------------------------- :: assertfalse
+Tsigma & E |- assert false : t
+
+E |- ok
+E |- location gives location:t
+E |- t ref == t'
+------------------------------------------------------- :: location
+Tsigma & E |- location : t'
+
+
+
+defn
+Tsigma & E |- pattern_matching : typexpr -> typexpr' :: :: pat_matching :: pat_matching_ {{ com Pattern matching/expression pair typing }} {{ lemwcf  witness type JTepat_witness; 
+check JTepat_check; 
+}} by
+
+{{ com
+Determines the function type of a sequence of pattern/expression pairs.  The
+function type desribes the type of the value matched by all of the patterns and
+the type of the value returned by all of the expressions. $[[Tsigma]]$ gives
+the types that should replace type variables in explicitly type-annotated
+patterns.
+}}
+
+Tsigma & E |- pattern1:t gives E1   ...   Tsigma & E |- patternn:t gives En
+Tsigma & E@E1 |- e1:t'              ...   Tsigma & E@En |- en:t'
+length (pattern1)...(patternn) >= 1
+------------------------------------------------------- :: pm
+Tsigma & E |-  pattern1  -> e1 | ... | patternn  -> en    : t -> t'
+
+defn
+Tsigma & E |- let_binding gives E' :: :: let_binding :: let_binding_ {{ com Let binding typing }} {{ lemwcf  witness type JTeletb_witness; 
+check JTeletb_check; 
+}} by
+
+{{ com
+Determines the types bound by a let bindings pattern.
+}}
+
+Tsigma & E |- pattern : t gives x1:t1, .., xn:tn
+Tsigma & E |- expr : t
+------------------------------------------------------- :: poly
+Tsigma & E |- pattern = expr gives (x1:t1), .., (xn:tn)
+
+
+defn
+Tsigma & E |- letrec_bindings gives E' :: :: letrec_binding :: letrec_binding_ {{ com Recursive let binding typing }} {{ lemwcf  witness type JTelrb_witness; 
+check JTelrb_check; 
+}} by
+
+{{ com
+Determines the types bound by a recursive let's patterns (which are always just variables).
+}}
+
+{{ com
+\ottbreakconclusionlinetrue
+}}
+
+%%WIDTH: >~a4/landscape/normalsize
+E' = E@value_name1:t1->t1',...,value_namen:tn->tn'
+Tsigma & E' |- pattern_matching1 : t1->t1' ... Tsigma & E' |- pattern_matchingn : tn->tn'
+value_name1 ... value_namen distinct
+------------------------------------------------------- :: equal_function
+Tsigma & E |- value_name1 = function pattern_matching1 and ... and value_namen = function pattern_matchingn gives value_name1:t1->t1', ..., value_namen:tn->tn'
+
+{{ com
+\ottbreakconclusionlinefalse
+}}
+
+>>
+%d<<
+
+defns 
+JTconstr_decl :: JT ::=
+
+defn
+type_params_opt typeconstr |- constr_decl gives EB :: :: constr_decl :: constr_decl_ {{ com Variant constructor declaration }} {{ lemwcf  witness type JTconstr_decl_witness; 
+check JTconstr_decl_check; 
+}} by
+
+{{ com
+Collects the constructors of a variant type declaration using named type
+schemes for the type parameters.
+}}
+
+------------------------------------------------------- :: nullary
+(tv1, ..., tvn) typeconstr |- constr_name gives constr_name of typeconstr
+
+------------------------------------------------------- :: nary
+(tv1, ..., tvn) typeconstr |- constr_name of t1*...*tn gives constr_name of forall (tv1, ..., tvn), (t1,...,tn) : typeconstr
+
+
+
+defns
+JTfield_decl :: JT ::=
+
+defn
+type_params_opt typeconstr_name |- field_decl gives EB :: :: field_decl :: field_decl_ {{ com Record field declaration }} {{ lemwcf  witness type JTfield_decl_witness; 
+check JTfield_decl_check; 
+}} by
+
+
+{{ com
+Collects the fields of a record type using named type schemes for the type
+parameters.
+}}
+
+------------------------------------------------------- :: only
+(tv1, ..., tvn) typeconstr_name |- fn:t gives fn:forall (tv1, ..., tvn), typeconstr_name -> t
+
+
+
+defns
+JTtypedef :: JT ::=
+
+defn
+|- typedef1 and .. and typedefn gives E' and E'' and E''' :: :: typedef :: typedef_ {{ com Type definitions collection }} {{ lemwcf  witness type JTtypedef_witness; 
+check JTtypedef_check; 
+}} by
+
+{{ com
+A type definition declares several sorts of names: type constructors
+(some of them corresponding to freshly generated types, others to type
+abbreviations), and data constructors and destructors. These names are
+collected into three environments:
+\begin{itemize}
+\item $[[E']]$ contains generative type definitions (variant and record types);
+\item $[[E'']]$ contains type abbreviations;
+\item $[[E''']]$ contains constructors and destructors for generative datatypes.
+\end{itemize}
+
+The order $[[E']]$, $[[E'']]$, $[[E''']]$ is chosen so that their
+concatenation is well-formed, because no component may refer to a
+subsequent one. The first component $[[E']]$, only contains
+declarations of names which do not depend on anything. The second
+component $[[E'']]$ contains type abbreviations topologically sorted
+according to their dependency order, which is possible since we
+do not allow recursive type abbreviations (in Objective Caml,
+without the \texttt{-rectypes} compiler option, recursive type
+abbreviations are only allowed when guarded polymorphic variants and
+object types) --- recursive types must be guarded by a generative
+datatype. Finally $[[E''']]$ declares constructors and destructors for
+the types declared in $[[E']]$; $[[E''']]$ may refer to types declared
+in $[[E']]$ or $[[E'']]$ in the types of the arguments to these
+constructors and destructors.
+
+This judgement form does not directly assert the correctness of the
+definitions: this is performed by the rule
+\ottdruleref{JTtype\_definition\_list} below, which states that the
+environment assembled here must be well-formed.
+}}
+
+------------------------------------------------------- :: empty
+|- gives empty and empty and empty
+
+|- </typedefi//i/> gives E and E' and E''
+------------------------------------------------------- :: eq
+|- type_params_opt typeconstr_name = t and </typedefi//i/> gives E and E',(type_params_opt typeconstr_name = t) and E''
+
+{{ com
+\ottbreakconclusionlinetrue
+}}
+
+%%WIDTH: >~a4/landscape/normalsize
+|- </typedefi//i/> gives E and E' and E''
+|- type_params_opt : kind
+type_params_opt typeconstr_name |- constr_decl1 gives EB1 ... type_params_opt typeconstr_name |- constr_decln gives EBn
+------------------------------------------------------- :: def_sum
+|- type_params_opt typeconstr_name = constr_decl1 | ... | constr_decln and </typedefi//i/> gives E, (typeconstr_name : kind) and E' and E''@EB1,...,EBn
+
+{{ com
+A variant type definition yields two sorts of bindings: one for the type
+constructor name and one for each constructor.
+}}
+
+%%WIDTH: >>a4/landscape/normalsize
+|- </typedefi//i/> gives E and E' and E''
+|- type_params_opt : kind
+type_params_opt typeconstr_name |- field_name1:t1 gives EB1 ... type_params_opt typeconstr_name |- field_namen:tn gives EBn
+------------------------------------------------------- :: def_record
+|- type_params_opt typeconstr_name = {field_name1:t1; ...; field_namen:tn} and </typedefi//i/> gives E, (typeconstr_name : kind {field_name1; ...; field_namen}) and E' and E''@EB1,...,EBn
+
+{{ com 
+A record type definition yields two sorts of bindings: one for the type
+constructor name and one for each field.  The field names are also recorded
+with the type constructor binding; this information is used in the rule
+\ottdruleref{JTe\_record\_constr} to make sure that record expressions
+specify all fields. (We would similarly tag type constructor bindings for
+variant types with their constructor names if we wanted to check the
+exhaustivity of pattern matching.)
+}}
+
+{{ com
+\ottbreakconclusionlinefalse
+}}
+
+defns 
+JTtype_definition :: JT ::=
+
+defn
+E |- type_definition gives E' :: :: type_definition :: type_definition_ {{ com Type definition well-formedness and binding collection }} {{ lemwcf  witness type JTtype_definition_witness; 
+check JTtype_definition_check; 
+}} by
+
+{{ com 
+Collects the bindings of a type definition and ensures that they are
+well-formed.  Any given name may be defined at most once, and all names used
+must have been bound previously or earlier in the same type definition phrase.
+The conditions are checked by the premise $[[E@E'''' |- ok]]$ in the rule
+\ottdruleref{JTtype\_definition\_list} and the assembly is performed by the
+type definitions collection rules above. This implies that the type
+abbreviations must be topologically sorted in their dependency order.
+(Generative type definitions are exempt from such constraints.) Programmers do
+not have to abide by this constraint: they may order type abbreviations in any
+way. Therefore the rule \ottdruleref{JTtype_definition_swap} allows an
+arbitrary reordering of type definitions --- it suffices for a type definition
+to be correct that there exist a reordering that makes the type abbreviations
+properly ordered. 
+}}
+
+|- typedef1 and ... and typedefn gives E' and E'' and E'''
+E'''' = E'@E''@E'''
+E@E'''' |- ok
+------------------------------------------------------- :: list
+E |- type typedef1 and ... and typedefn gives E''''
+
+
+E |- type </typedefi//i/> and typedef' and typedef and </typedefj''//j/> gives E'
+------------------------------------------------------- :: swap
+E |- type </typedefi//i/> and typedef and typedef' and </typedefj''//j/> gives E'
+
+{{ com
+}}
+
+defns 
+JTdefinition :: JT ::=
+
+defn
+E |- definition : E' :: :: definition :: definition_ {{ com Definition typing }} {{ lemwcf  witness type JTdefinition_witness; 
+check JTdefinition_check; 
+}} by
+
+
+{{ com
+Collects the bindings of a definition and ensures that they are well-formed.
+Each definition can bind zero, one or more names.  Type variables that are
+mentionned by the programmer in type annotations are scoped at this level.
+Thus, the $[[Tsigma]]$ substitution is arbitrarily created for each definition
+to ensure that each type variable is used consistently in the definition.  
+}}
+
+Tsigma & E,TV |- pat=nexp gives (x1:t1'),..,(xk:tk')
+------------------------------------------------------- :: let_poly
+E |- let pat = nexp : (x1:forall t1'),..,(xk:forall tk')
+
+Tsigma & E |- pat=expr gives (x1:t1'),..,(xk:tk')
+------------------------------------------------------- :: let_mono
+E |- let pat = expr : (x1:t1'),..,(xk:tk')
+
+Tsigma & E,TV |- letrec_bindings gives (x1:t1'),..,(xk:tk')
+------------------------------------------------------- :: letrec
+E |- let rec letrec_bindings : (x1:forall t1'),..,(xk:forall tk')
+
+E |- type typedef1 and ... and typedefn gives E'
+------------------------------------------------------- :: typedef
+E |- type typedef1 and ... and typedefn : E'
+
+E |- ok
+exn |- constr_decl gives EB
+------------------------------------------------------- :: exndef
+E |- exception constr_decl : EB
+
+defns 
+JTdefinitions :: JT ::=
+
+defn
+E |- definitions : E' :: :: definitions :: definitions_ {{ com Definition sequence typing }} {{ lemwcf  witness type JTdefinitions_witness; 
+check JTdefinitions_check; 
+}} by
+
+{{ com
+Collects the bindings of a definition and ensures that they are well-typed.
+}}
+
+E |- ok
+---------------------------------------------------------------- :: empty
+E |- : :Env_list:
+
+:JTdefinition:E |- definition : E'
+:JTdefinitions:E@ E' |- definitions' : E''
+---------------------------------------------------------------- :: item
+E |- definition definitions' : E'@E''
+
+defns
+JTprog :: JT ::=
+
+defn
+E |- program : E' :: :: prog :: prog_ {{ com Program typing }} {{ lemwcf  witness type JTprog_witness; 
+check JTprog_check; 
+}} by
+
+{{ com
+Checks a progam.
+}}
+
+:JTdefinitions: E |- definitions : E'
+----------------------------------------------------- :: defs
+E |- definitions : E'
+
+Tsigma & E |- v : t
+-------------------------------------------- :: raise
+E |- (%prim raise) v : :Env_list:
+
+%d>>
+<<
+
+defns
+JTstore :: JT ::=
+
+defn
+E |- store : E' :: :: store :: store_ {{ com Store typing }} {{ lemwcf  witness type JTstore_witness; 
+check JTstore_check; 
+}} by
+
+{{ com
+Checks that the values in a store have types.
+}}
+
+------------------------------------------------------- :: empty
+E |- empty : :Env_list:
+
+E |- store : E'
+<<>> & E |- v : t
+------------------------------------------------------- :: map
+E |- store, l |-> v : E',(l:t)
+
+>>
+%d<<
+
+defns
+JTtop :: JT ::=
+
+defn
+E |- < program , store > : E' :: :: top :: top_ {{ com Top-level typing }} 
+{{ tex [[E]] \vdash \langle [[program]], [[store]] \rangle }} {{ lemwcf  witness type JTtop_witness; 
+check JTtop_check; 
+}} by
+
+{{ com
+Checks the combination of a program with a store.  The store is typed in an
+environment that includes its bindings, so that it can contain cyclic
+structures.
+}}
+
+E@E' |- store : E'
+:JTprog:E@E' |- program : E''
+------------------------------------------------------- :: defs
+E |- <program, store> : E'@E''
+
+%d>>
+<<
+
+
+defns
+JTLin :: JT ::=
+defn
+Tsigma & E |- L      	:: :: Lin :: Lin_ {{ com Label-to-environment extraction }} {{ lemwcf  witness type JTLin_witness; 
+check JTLin_check; 
+}} by
+
+{{ com
+Used in the proof only
+}}
+
+------------------------------------------------------- :: nil
+Tsigma & E |-
+
+dom(E) gives names
+location notin names
+------------------------------------------------------- :: alloc
+Tsigma & E |- ref v = location
+
+Tsigma & E |- v : t
+E |- location gives (location:t)
+------------------------------------------------------- :: deref
+Tsigma & E |- !location = v 
+
+------------------------------------------------------- :: assign
+Tsigma & E |- location := v
+
+defns
+JTLout :: JT ::=
+defn
+Tsigma & E |- L gives E'	:: :: Lout :: Lout_ {{ com Label-to-environment extraction }} {{ lemwcf  witness type JTLout_witness; 
+check JTLout_check; 
+}} by
+
+{{ com
+Used in the proof only
+}}
+
+------------------------------------------------------- :: nil
+Tsigma & E |- gives :Env_list:
+
+Tsigma & E |- v : t
+------------------------------------------------------- :: alloc
+Tsigma & E |- ref v = location gives (location:t)
+
+------------------------------------------------------- :: deref
+Tsigma & E |- !location = v gives :Env_list:
+
+Tsigma & E |- v : t
+E |- location gives (location:t)
+------------------------------------------------------- :: assign
+Tsigma & E |- location := v gives :Env_list:
+
+
+%% The next com is a hack to get the title in the right place when
+%% typesetting the reduction rules after the typing rules.
+
+{{ com
+\section{Operational Semantics}
+\label{sec.runtime}
+
+The operational semantics is a labelled transition system that lifts imperative
+and non-deterministic behavior our of the core evaluation rules.
+Notable aspects of the formalization include:
+\begin{itemize}
+\item
+explicit rules for evaluation in context (instead of a grammar of evaluation contexts),
+
+\item
+small-step propogation of exceptions,
+
+\item
+substitution-based function application,
+
+\item
+right-to-left evaluation ordering, which is overspecified compared to the OCaml
+manual; furthermore, this choice of evaluation ordering for record expressions
+differs from the implementation's choice, which is based on the type
+declaration,
+
+\item
+unlike the implementation, we do not treat curried functions specially, the
+difference can be seen in this program:
+$[[:user_syntax__program: :Ds_cons_semi:let f = function 1 -> function _ -> 10;; :Ds_cons_semi:let _ = f 2;;]]$
+which does not raise an exception in the implementation.
+
+\item
+As in the type system, several rules have premises that state there are at
+least 1 (or 2) elements of a list, despite there being 3 or 4 dots.  This is
+because Ott does not use dot imposed length restrictions in the theorem prover
+models.
+
+\end{itemize}
+
+}}
+
+embed
+{{ coq
+Hint Constructors JdomEB JdomE Jlookup_EB Jidx_bound
+                  JTtps_kind
+                  JTEok JTtypeconstr JTts JTtsnamed JTt
+                  JTeq JTidxsub JTinst JTinst_named JTinst_any
+                  JTvalue_name JTfield
+                  JTconstr_p JTconstr_c
+                  JTconst
+                  JTpat
+                  JTuprim JTbprim
+                  JTe JTpat_matching JTlet_binding JTletrec_binding
+                  JTstore JTLin JTLout
+                  : rules.
+}}
+%d{{ coq
+%dHint Constructors JTconstr_decl JTfield_decl JTtypedef JTtype_definition
+%d                  JTdefinition JTdefinitions
+%d                  JTprog JTtop
+%d                  : rules.
+%d}}
