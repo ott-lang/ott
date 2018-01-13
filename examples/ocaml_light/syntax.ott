@@ -429,14 +429,14 @@ grammar
         {{ ichl [[typevar1 typexpr1..typevarn typexprn]] }}
     | shift num num' Tsigma                             :: M I :: shift
         {{ ichl (shiftTsig [[num]] [[num']] [[Tsigma]]) }}
-        {{ com shift the indices in the types in [[Tsigma]] by [[num]], ignoring indices lower than [[num']] }}
+        {{ com shift the indices in the types in $[[Tsigma]]$ by $[[num]]$, ignoring indices lower than $[[num']]$ }}
 
   %% 6.4 (Type expressions) http://caml.inria.fr/pub/docs/manual-ocaml/manual012.html#typexpr
 
   typexpr , t :: TE_ ::=
     | typevar                                           ::   :: var
     | < idx , num >                                     :: I :: idxvar
-        {{ com de Bruijn represenataion of type variables.  [[num]] allows each binder (\ie a polymorphic $\ottkw{let}$) to introduce an arbitrary number of binders }}
+        {{ com de Bruijn represenataion of type variables.  $[[num]]$ allows each binder (\ie a polymorphic $\ottkw{let}$) to introduce an arbitrary number of binders }}
     | _                                                 ::   :: any
     | ( typexpr )                                       :: S :: paren
         {{ ichl [[typexpr]] }}
@@ -982,7 +982,7 @@ typexprs :: typexprs_ ::=
     | typexpr1 , ... , typexprn                         :: I :: inj
     | shift num num' typexprs				:: M I ::   shift
         {{ ichl (shifttes [[num]] [[num']] [[typexprs]]) }}
-        {{ com shift the indices in the types in [[typexprs]] by [[num]], ignoring indices lower than [[num']] }}
+        {{ com shift the indices in the types in $[[typexprs]]$ by $[[num]]$, ignoring indices lower than $[[num']]$ }}
 
 environment_binding , EB :: EB_ ::=
     | TV                                                :: I :: tv
@@ -1013,7 +1013,7 @@ environment_binding , EB :: EB_ ::=
         {{ ichl [[EB]] }}
     | shift num num' EB					:: M I :: shift
         {{ ichl (shiftEB [[num]] [[num']] [[EB]]) }}
-        {{ com shift the indices in the types in [[EB]] by [[num]], ignoring indices lower than [[num']] }}
+        {{ com shift the indices in the types in $[[EB]]$ by $[[num]]$, ignoring indices lower than $[[num']]$ }}
 
 environment , E :: Env_ ::=
       {{ coq (list environment_binding) }}
