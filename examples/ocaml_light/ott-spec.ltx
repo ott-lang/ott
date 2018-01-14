@@ -1,5 +1,24 @@
 %% Redefinitions of ott macros to improve the typeset caml specification.
 
+
+\newcommand{\ottenvironmentappend}[2]{%
+  \begingroup%
+  \def\@tempa{#1}\def\@tempb{ \ottkw{empty} }%
+  \ifx\@tempa\@tempb\def\@tempc{}\else\def\@tempc{#1,}\fi%
+  \expandafter\endgroup%
+  \@tempc#2%
+}
+\newcommand{\ie}{%
+i.e.,
+}
+\newcommand{\eg}{%
+e.g.,
+}
+
+% tt that was \verb in syntax.ott
+\newcommand{\vtexttt}[1]{\texttt{#1}}
+
+
 %% \ott@regularize@underscores{\command}{FOO_BAR\_QUUX}
 %% Run "\command{FOO_BAR_QUUX}" where "_" characters of category 8 and "\_"
 %% control sequences have been replaced by a "_" of category 11.

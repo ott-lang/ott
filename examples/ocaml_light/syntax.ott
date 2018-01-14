@@ -10,23 +10,15 @@
 %% be in the first TeX embedding which must come before anything else that
 %% ott doesn't ignore.
 embed
-{{ tex
+{{ tex-preamble
 \makeatletter
 \input ott-spec.ltx
-\newcommand{\ottenvironmentappend}[2]{%
-  \begingroup%
-  \def\@tempa{#1}\def\@tempb{ \ottkw{empty} }%
-  \ifx\@tempa\@tempb\def\@tempc{}\else\def\@tempc{#1,}\fi%
-  \expandafter\endgroup%
-  \@tempc#2%
-}
-\newcommand{\ie}{%
-i.e.,
-}
-\newcommand{\eg}{%
-e.g.,
-}
 \makeatother
+}}
+
+embed 
+{{ tex
+
 \newif\ifHAVEtypedefinitions \newif\ifHAVEmodules
 %d\HAVEtypedefinitionstrue
 %m\HAVEmodulestrue
@@ -66,9 +58,9 @@ fragment presented in Chapter 1 of the Objective Caml manual.
 Supported features include:
 \begin{itemize}
 \item 
-the following primitive types and type constructors: \verb|int|, \verb|char|,
-\verb|string|, \verb|float|, \verb|bool|, \verb|unit|, \verb|exn|, \verb|list|,
-\verb|option|, \verb|ref|;
+the following primitive types and type constructors: \vtexttt{int}, \vtexttt{char},
+\vtexttt{string}, \vtexttt{float}, \vtexttt{bool}, \vtexttt{unit}, \vtexttt{exn}, \vtexttt{list},
+\vtexttt{option}, \vtexttt{ref};
 \item
 tuple and function types
 \ifHAVEtypedefinitions
@@ -76,11 +68,11 @@ tuple and function types
 type and type constructor definitions, including:
 \begin{itemize}
 \item
-type abbreviations (\eg \verb|type t = int|),
+type abbreviations (\eg \vtexttt{type t = int}),
 \item
-variant data and record types (\eg \verb$type t = I of int | D of char$ and \verb|type t = {f:int}|),
+variant data and record types (\eg \vtexttt{type t = I of int $\|$ D of char} and \vtexttt{type t = \{f:int\} }),
 \item
-parametric type constructors (\eg \verb|type 'a t = 'a -> 'a|),
+parametric type constructors (\eg \vtexttt{type 'a t = 'a -> 'a}),
 \item
 recursive and mutually recursive combinations of the above (although all
 recursion must go through a variant data or record type);
@@ -92,22 +84,22 @@ let-based polymorphism (with the traditional ML-style value restriction);
 31-bit word semantics for integers and IEEE-754 semantics for floating point
 numbers (in the version of the system generated for HOL);
 \item
-type annotations (\eg \verb|3:int|), list notation (\eg [1; 2; 3]), record
-\verb|with| expressions, \verb|if| expressions, \verb|while| expressions, 
-\verb|for| expressions, sequencing (\verb|;|), \verb|assert| expressions;
+type annotations (\eg \vtexttt{3:int}), list notation (\eg [1; 2; 3]), record
+\vtexttt{with} expressions, \vtexttt{if} expressions, \vtexttt{while} expressions, 
+\vtexttt{for} expressions, sequencing (\vtexttt{;}), \vtexttt{assert} expressions;
 \item 
 (potentially) mutually-recursive function definitions;
 \item
-pattern matching with nested patterns and \verb$|$ patterns;
+pattern matching with nested patterns and \vtexttt{\} } patterns;
 \item 
-mutable references through \verb|ref|, \verb|:=|, and \verb|!|;
+mutable references through \vtexttt{ref}, \vtexttt{:=}, and \vtexttt{!};
 \ifHAVEmodules
 %% ?
 \fi
 \item
-exception definitions and handling (\verb|try|, \verb|raise|, \verb|exception|);
+exception definitions and handling (\vtexttt{try}, \vtexttt{raise}, \vtexttt{exception});
 \item
-polymorphic equality (the \verb|=| operator).
+polymorphic equality (the \vtexttt{=} operator).
 \end{itemize}
 
 The following features are not supported:

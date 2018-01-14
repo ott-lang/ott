@@ -202,6 +202,7 @@ clean:
 	rm -f *Theory.sig *Theory.sml
 	rm -f *.tmp tmp.* hol_caml
 	rm -rf .HOLMK
+	rm -rf *~
 
 #### Dependencies ####
 ## Ott preprocessed sources
