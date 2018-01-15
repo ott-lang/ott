@@ -1,12 +1,13 @@
 A formal specification for OCaml: the Core Language
 Scott Owens and Gilles Peskine and Peter Sewell
 
-This was described in 
+This is described in 
 
   A Sound Semantics for OCaml light, Scott Owens, ESOP 2008.
+  https://www.cs.kent.ac.uk/people/staff/sao/documents/esop08.pdf
 
-In 2013 it was updated to add Lem generation, by Kathryn E. Gray and
-Scott Owens, in 2018 to build with the current version of Ott, by Peter Sewell.
+The doc/built_doc directory contains an annotated version of the
+semantics and posters that summarise the project and the semantics.
 
 
 Quick start
@@ -77,3 +78,11 @@ modified to produce the AST for the HOL representation of OCaml programs
 
 The "hol/testing" subdirectory contains the test cases for the operational
 semantics (see hol/testing/README).
+
+
+Revision history
+================
+2013 updated to add Lem generation, by Kathryn E. Gray and Scott Owens
+
+2018-01 made build with the current version of Ott, Peter Sewell
+
