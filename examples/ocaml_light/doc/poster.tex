@@ -1,0 +1,409 @@
+\documentclass[11pt]{article}
+
+\usepackage{poster}
+\usepackage{pstricks}
+\usepackage{pst-node}
+
+\usepackage{alltt}
+\usepackage{url}
+\usepackage{verbatim}
+\newlength{\shorttextwidth}
+\setlength{\shorttextwidth}{\textwidth}
+\addtolength{\shorttextwidth}{-2.0cm}
+\newlength{\longtextwidth}
+\setlength{\longtextwidth}{\textwidth}
+\addtolength{\longtextwidth}{1.5cm}
+\newlength{\longertextwidth}
+\setlength{\longertextwidth}{\textwidth}
+\addtolength{\longertextwidth}{6.5cm}
+
+
+\newcommand{\mybf}[1]{{\pmb{\texttt{#1}}}}
+%\newcommand{\mybackslash}{\mbox{$\backslash$}}
+%\newcommand{\mybackslash}{\mbox{\tt\char'134}}
+%\newcommand{\mylb}{\mbox{\tt\char'173}}
+%\newcommand{\myrb}{\mbox{\tt\char'175}}
+
+\newcommand{\mykw}[1]{{\color{Mahogany}{\pmb{\texttt{#1}}}}}
+\newcommand{\mysym}[1]{{\color{RoyalBlue}{{\texttt{#1}}}}}
+%\newcommand{\mybackslash}{\mbox{$\backslash$}}
+\newcommand{\mybackslash}{\mbox{\tt\char'134}}
+\newcommand{\mylb}{\mbox{\tt\char'173}}
+\newcommand{\myrb}{\mbox{\tt\char'175}}
+
+
+
+{
+\newcommand{\ottdrule}[4][]{\frac{\begin{array}{l}#2\end{array}}{#3}\quad\ottdrulename{#4}}
+\newcommand{\ottusedrule}[1]{\[#1\]}
+\newcommand{\ottpremise}[1]{ #1 \\}
+\newenvironment{ottdefnblock}[2]{ \framebox{\mbox{#1}} \quad #2 \\[0pt]}{}
+\newcommand{\ottnt}[1]{\mathit{#1}}
+\newcommand{\ottmv}[1]{\mathit{#1}}
+\newcommand{\ottkw}[1]{\mathbf{#1}}
+\newcommand{\ottcom}[1]{\text{#1}}
+\newcommand{\ottdrulename}[1]{\textsc{#1}}
+\newcommand{\ottcomplu}[5]{\overline{#1}^{\,#2\in #3 #4 #5}}
+\newcommand{\ottcompu}[3]{\overline{#1}^{\,#2<#3}}
+\newcommand{\ottcomp}[2]{\overline{#1}^{\,#2}}
+\makeatletter
+\newcommand{\ottenvironmentappend}[2]{%
+  \begingroup%
+  \def\@tempa{#1}\def\@tempb{ \ottkw{empty} }%
+  \ifx\@tempa\@tempb\def\@tempc{}\else\def\@tempc{#1,}\fi%
+  \expandafter\endgroup%
+  \@tempc#2%
+}
+\makeatother
+
+\newcommand{\ottdruleJTeXXrecordXXconstr}[1]{\ottdrule[#1]{
+  \ottpremise{\ottnt{E} \, \vdash \, \ottnt{e_{{\mathrm{1}}}} \, : \, \ottnt{t_{{\mathrm{1}}}} \quad ... \quad \ottnt{E} \, \vdash \, \ottnt{e_{\ottmv{n}}} \, : \, \ottnt{t_{\ottmv{n}}}}
+  \ottpremise{\ottnt{E} \, \vdash \, \ottnt{field\_name_{{\mathrm{1}}}} \, : \, \ottnt{t} \, \rightarrow \, \ottnt{t_{{\mathrm{1}}}} \quad ... \quad \ottnt{E} \, \vdash \, \ottnt{field\_name_{\ottmv{n}}} \, : \, \ottnt{t} \, \rightarrow \, \ottnt{t_{\ottmv{n}}}}
+  \ottpremise{\ottnt{t} \, = \, ( \, \ottnt{t'_{{\mathrm{1}}}} \, , \, ... \, , \, \ottnt{t'_{\ottmv{l}}} \, ) \, \ottnt{typeconstr\_name}}
+  \ottpremise{\ottnt{E} \, \vdash \, \ottnt{typeconstr\_name} \, \;\vartriangleright\; \, \ottnt{typeconstr\_name} \, : \, \ottnt{kind} \, \ottkw{\{} \, \ottnt{field\_name'_{{\mathrm{1}}}} \, ; \, ... \, ; \, \ottnt{field\_name'_{\ottmv{m}}} \, \ottkw{\}}}
+  \ottpremise{\ottnt{field\_name_{{\mathrm{1}}}} \, ... \, \ottnt{field\_name_{\ottmv{n}}} \, \ottkw{PERMUTES} \, \ottnt{field\_name'_{{\mathrm{1}}}} \, ... \, \ottnt{field\_name'_{\ottmv{m}}}}
+  \ottpremise{\ottkw{length} \, ( \, \ottnt{e_{{\mathrm{1}}}} \, ) \, ... \, ( \, \ottnt{e_{\ottmv{n}}} \, ) \, \geq \, 1}}{
+\ottnt{E} \, \vdash \, \ottkw{\{} \, \ottnt{field\_name_{{\mathrm{1}}}} \, = \, \ottnt{e_{{\mathrm{1}}}} \, ; \, ... \, ; \, \ottnt{field\_name_{\ottmv{n}}} \, = \, \ottnt{e_{\ottmv{n}}} \, \ottkw{\}} \, : \, \ottnt{t}}{
+{\ottdrulename{JTe\_record\_constr}}{}
+}}
+
+\newcommand{\ottdruleJRXXexprXXtupleXXctx}[1]{\ottdrule[#1]{
+  \ottpremise{\vdash \, \ottnt{e} \,  \stackrel{ \ottnt{L} }{\longrightarrow}  \, \ottnt{e'}}}{
+\vdash \,  \, ( \, \ottnt{e_{{\mathrm{1}}}} \, ,\, \, .. \, ,\, \, \ottnt{e_{\ottmv{m}}} \, ,\, \, \ottnt{e} \, ,\, \, \ottnt{v_{{\mathrm{1}}}} \, ,\, \, .. \, ,\, \, \ottnt{v_{\ottmv{n}}} \, ) \,  \stackrel{ \ottnt{L} }{\longrightarrow}  \,  \, ( \, \ottnt{e_{{\mathrm{1}}}} \, ,\, \, .. \, ,\, \, \ottnt{e_{\ottmv{m}}} \, ,\, \, \ottnt{e'} \, ,\, \, \ottnt{v_{{\mathrm{1}}}} \, ,\, \, .. \, ,\, \, \ottnt{v_{\ottmv{n}}} \, )}{
+{\ottdrulename{JR\_expr\_tuple\_ctx}}{}
+}}
+
+
+\newcommand{\OCL}{OCaml$_\textit{light}$}
+
+\begin{document}
+
+\vspace*{0.6cm}
+
+\postersubtitle{\huge A Sound Semantics for \OCL{}}
+
+%{\rm\large\url{http://www.cl.cam.ac.uk/users/pes20/ott}}
+
+ 
+ 
+
+%\postertitle{\Huge}{Skeleton Title}
+
+%\postersubtitle{and maybe a subtitle}
+
+\posterpeople{Scott Owens}
+
+\sf
+
+\scalebox{.52}{
+\begin{minipage}{16.5cm}
+\huge
+
+\noindent \OCL{} (ESOP '08) is a formal semantics for a substantial subset of the Objective Caml
+core language, suitable for writing and verifying real programs.  It includes:
+\vspace{10pt}
+\Large
+\begin{itemize}
+\item
+definitions
+\begin{itemize}
+\item
+variant data types (e.g., \texttt{type t = I of int | C of char}),
+\item
+record types (e.g., \texttt{type t = \{f : int; g : bool\}}),
+\item
+parametric type constructors (e.g., \texttt{type 'a t = C of 'a}),
+\item
+type abbreviations (e.g., \texttt{type 'a t = 'a * int}),
+\item
+mutually recursive combinations of the above (excepting abbreviations),
+\item
+exceptions, and values;
+\end{itemize}
+\item
+expressions for type annotations, sequencing, and primitive values\\
+(functions, lists, tuples, and records);
+\item
+\texttt{with} (record update), \texttt{if}, \texttt{while}, \texttt{for}, \texttt{assert}, \texttt{try}, and \texttt{raise} expressions;
+\item
+let-based polymorphism with an SML-style value restriction;
+\item
+mutually-recursive function definitions via \texttt{let rec};
+\item
+pattern matching, with nested patterns, \texttt{as} patterns, and ``or'' (\texttt{|})patterns;
+\item
+mutable references with \texttt{ref}, \texttt{!}, and \texttt{:=};
+\item
+polymorphic equality (the Objective Caml \texttt{=} operator);
+\item
+31-bit word semantics for \texttt{int}s (using an existing HOL library); and
+\item
+IEEE-754 semantics for \texttt{float}s (using an existing HOL library).
+\end{itemize}
+\end{minipage}
+}
+%
+\hspace{1.5cm}
+%
+\scalebox{.5}{
+\begin{minipage}{15cm}
+\huge
+{\color{blue}\OCL{} key points}
+\begin{itemize}
+\item
+Faithful to Objective Caml (very nearly)
+\item
+Type soundness proof mechanized in HOL
+\item
+Operational semantics validated on test programs
+\item
+Written in Ott
+\item
+Small-step operational semantics
+\begin{itemize}
+\Large
+\item
+Inductively defined relations
+\item
+SOS-style
+\item
+Labelled transitions for state
+\item
+Substution-based
+\end{itemize}
+\item
+Type system
+\begin{itemize}
+\Large
+\item
+Inductively defined relations
+\item
+Syntactic
+\item
+Declarative (non-algorithmic)
+\end{itemize}
+
+\end{itemize}
+\end{minipage}
+}
+
+\vspace{1cm}
+
+\scalebox{.5}{
+\begin{minipage}[t]{11cm}
+\huge 
+{\color{blue}Proof Effort}
+
+A typical type soundness proof\\
+\Large
+\begin{itemize}
+  \item $\approx$ 7--8 man-months (including testing)
+  \item Specification: 3.2K lines of HOL (from 4.0K Ott)
+  \begin{itemize}
+   \item 143 constructors in 42 datatypes
+   \item 310 rules in 46 relations
+  \end{itemize}
+  \item Proof: 9.5K lines of HOL
+  \begin{itemize}
+  \item 17 files
+  \item 653 lemmas
+  \item 48 definitions
+  \end{itemize}
+\end{itemize}
+
+\vspace{.25cm}
+Challenges:
+\begin{itemize}
+\item Finding the right lemma using
+\begin{itemize}
+\item my memory
+\item lemma naming conventions
+\item documentation (for library lemmas)
+\item term matching on the theorem database
+\end{itemize}
+\item
+Nested inductions
+\begin{itemize}
+\item $\mathit{expr} = \ldots \ottkw{|}\ \mathit{Expr\_tuple}\ \ottkw{of}\ \mathit{expr}\ \ottkw{list}\ \ottkw{|}\ \ldots$
+\item ``Pointwise'' reasoning vs.\ using separate lemmas
+\end{itemize}
+\item Proof assistant generated names
+\end{itemize}
+\vspace{12pt}
+Non-challenges:
+\begin{itemize}
+\item Managing De Bruijn indices
+\end{itemize}
+\end{minipage}
+}
+\hspace{.5cm}
+\scalebox{.5}{
+\begin{minipage}[t]{9.5cm}
+\huge 
+{\color{blue}Testing}\\
+Executable small-step semantics 
+\Large
+(Type soundness is insufficient)
+
+\begin{itemize}
+  \item 145 tests
+  \item Full coverage
+  \item 540 line HOL definition of the executable semantics
+  \item 1K line HOL proof of equivalence between declatative and executable semantics
+\end{itemize}
+
+
+\vspace{.25cm}
+%\[
+%\ottdrule[#1]{%
+%\ottpremise{\vdash \, \ottnt{e_{{\mathrm{1}}}} \,  \stackrel{ \ottnt{L} }{\longrightarrow}\, \ottnt{e'_{{\mathrm{1}}}}}%
+%}{
+%\vdash \, \ottnt{e_{{\mathrm{1}}}} \, \ottnt{v_{{\mathrm{0}}}} \,  \stackrel{ \ottnt{L} }{\longrightarrow}\, \ottnt{e'_{{\mathrm{1}}}} \, \ottnt{v_{{\mathrm{0}}}}}{
+%{}{}
+%}\]
+
+%becomes
+
+%\begin{tabular}{@{}l@{}}
+%\\
+%\texttt{red (Expr\_apply expr1 expr2) =}\\
+%\texttt{  red\_2 expr1 expr2 Expr\_apply eval\_apply}
+%\end{tabular}
+\vspace{-.5cm}
+\[\begin{array}{@{}l@{}}
+\mathit{red} : \mathit{expr}\rightarrow \mathit{result}\\
+\ottkw{type}\  \mathit{result} =\\
+~~\mathit{Stuck}\\
+|~\mathit{Step}\ \ottkw{of}\ \mathit{expr}\\
+|~\mathit{StepAlloc}\ \ottkw{of}\ (\mathit{expr} \rightarrow \mathit{expr})\ \ottkw{*}\ \mathit{expr}\\
+|~\mathit{StepLookup}\ \ottkw{of}\ (\mathit{expr} \rightarrow \mathit{expr} )\ \ottkw{*}\ \mathit{location}\\
+|~\mathit{StepAssign}\ \ottkw{of}\ \mathit{expr}\ \ottkw{*}\ \mathit{location}\ \ottkw{*}\ \mathit{expr}
+\end{array}\]
+
+\vspace{.25cm}
+
+\begin{tabular}{@{}l@{}}
+\texttt{match [] with}\\
+\texttt{    x::y -> 1}\\
+\texttt{  | [] -> 2}\\
+\texttt{EXPECT}\\
+\texttt{2}\\
+\\
+\texttt{TESTSTUCK}\\
+\texttt{x}\\
+\texttt{END}\\
+\end{tabular}
+
+
+\end{minipage}
+}
+\hspace{.5cm}
+\scalebox{.5}{
+\begin{minipage}[t]{10cm}
+\huge 
+{\color{blue}Related Work}
+\Large
+
+Mechanized metatheory for real-world languages
+
+\begin{itemize}
+  \item Standard ML
+  \begin{itemize}
+  \item Lee, Crary, Harper (POPL 2007)\\ internal language
+  \item van Inwegen (1996)
+  \item Maharaj, Gunter (1994)
+  \item Syme (1993)
+  \end{itemize}
+  \item Java
+  \begin{itemize}
+  \item Java: Klein, Nipkow (TOPLAS 2006)
+  \item Syme (1999)
+  \item Nipkow, van Oheimb (POPL 1998)
+  \end{itemize}
+  \item C
+  \begin{itemize}
+  \item Norrish (1998)
+  \end{itemize}
+\end{itemize}
+
+\end{minipage}
+}
+
+
+\vspace{1cm}
+
+\scalebox{.5}{
+\begin{minipage}{35.2cm}
+\huge 
+\centering {\color{blue}Representing Binding} (straightforward)
+
+\Large
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+User type variables & \texttt{'a} & concrete&
+\texttt{let f (x : 'a) : 'a = x \&\& true;;}&
+\texttt{f : bool -> bool}\\
+\hline
+Value names & \texttt{x} & fully concrete (only need closed substs)&
+\begin{tabular}{@{}l@{}}
+\texttt{let v = function x -> x;;}\\
+\texttt{let x = 1;;}\\
+\texttt{let w = v 9;;}\\
+\end{tabular}&
+\begin{tabular}{@{}l@{}}
+\texttt{let x = 1;;}\\
+\texttt{let w = (function x -> x) 9;;}\\
+\end{tabular}\\
+\hline
+Let-bound type variables & & De Bruijn&
+\begin{tabular}{@{}l@{}}
+\texttt{let f x =}\\
+\texttt{  \ldots\ (let g x = \ldots\ in \ldots) \ldots}\\
+\texttt{in}\\
+\texttt{let h x = \ldots\ f \ldots}\\
+\texttt{in}\\
+\texttt{\ldots}
+\end{tabular}&\\
+\hline
+Type names & \texttt{int} & fully concrete + no shadowing (following OCaml)&
+\begin{tabular}{@{}l@{}}
+\texttt{type t = \{ f : int \};;}\\
+\texttt{let v = \{ f = 1 \};;}\\
+\\
+\texttt{type t = \{ g : bool \};;}\\
+\texttt{let \_ = v.g;;}
+\end{tabular}&
+\begin{tabular}{@{}l@{}}
+\texttt{type t = \{ f : int \};;}\\
+\texttt{type t = \{ g : bool \};;}\\
+\texttt{let \_ = \{ f = 1 \}.g;;}
+\end{tabular}\\
+\hline
+\begin{tabular}{@{}l@{}}
+Constructor names\\
+Field names
+\end{tabular}
+ & \texttt{None} & fully concrete + no shadowing (a slight restriction)&
+\begin{tabular}{@{}l@{}}
+\texttt{type t = C of int;;}\\
+\texttt{let v = C 1;;}\\
+\\
+\texttt{type u = C of bool;;}\\
+\texttt{let \_ = v;;}
+\end{tabular}&
+\begin{tabular}{@{}l@{}}
+\texttt{type t = C of int;;}\\
+\texttt{type u = C of bool;;}\\
+\texttt{let \_ = C 1;;}
+\end{tabular}\\
+\hline
+\end{tabular}
+\end{minipage}
+}
+
+
+\scriptsize{\begin{minipage}{5cm}University of Cambridge\end{minipage}}
+{\hfill{\scriptsize{\textsf{http://www.cl.cam.ac.uk/users/so294/ocaml}}}}
+
+
+\end{document}

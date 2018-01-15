@@ -1,0 +1,77 @@
+%% Redefinitions of ott macros to improve the typeset caml specification.
+
+%% \ott@regularize@underscores{\command}{FOO_BAR\_QUUX}
+%% Run "\command{FOO_BAR_QUUX}" where "_" characters of category 8 and "\_"
+%% control sequences have been replaced by a "_" of category 11.
+\def\ott@regularize@underscores#1#2{%
+  \begingroup%
+  \escapechar=-1 %
+  \expandafter\def\expandafter\_\expandafter{\string\_}%
+  \def\@tempa{#1}%
+  \expandafter\expandafter\expandafter\def%
+  \expandafter\expandafter\expandafter\@tempb%
+  \expandafter\expandafter\expandafter{%
+    \expandafter\string\csname#2\endcsname}%
+  \expandafter\expandafter\expandafter\def%
+  \expandafter\expandafter\expandafter\@tempc%
+  \expandafter\expandafter\expandafter{%
+    \expandafter\@tempa\expandafter{\@tempb}}%
+  \expandafter\endgroup\@tempc%
+}
+
+\def\ottdrulelabel@z#1{\label{defn.#1}}
+\def\ottdrulelabel@b#1{\ott@regularize@underscores\ottdrulelabel@z}
+\def\ottdrulelabel@a#1#2{\ottdrulelabel@b#1}
+\def\ottdruleref@a#1{%
+  \expandafter\@setref\csname r@defn.#1\endcsname%
+  {\ottdrulename{#1}\@gobbletwo}%
+  {#1}
+}
+
+\newcommand\ottdruleref{\ott@regularize@underscores\ottdruleref@a}
+\renewcommand{\ottdrule}[4][]{%
+  \frac{\begin{array}{l}#2\end{array}}%
+       {\ottconclusion{#3}}%
+  \def\@tempa{#4}%
+  \ifx\@tempa\empty\else \quad #4\ottdrulelabel@a#4\fi}
+%\renewcommand{\ottusedrule}[1]{\[#1\]}
+%\renewcommand{\ottpremise}[1]{ #1 \\}
+
+%% Put \ottmaybebreakline in the TeX rendering to signal a potential
+%% breakpoint.
+%% Set \ottbreakconclusionlinetrue to break the conclusion of subsequent rules
+%% at all declared breakpoints.
+\newif\ifottbreakconclusionline \ottbreakconclusionlinefalse
+\newcommand\ottmaybebreakline{}
+\newcommand{\ottconclusion}[1]{%
+  \ifottbreakconclusionline%
+    \def\ottmaybebreakline{\qquad$\\$\hfill\qquad}%
+    \begin{tabular}{l}$#1$\end{tabular}%
+  \else%
+    #1%
+  \fi%
+}
+
+%% Put each defn block in a subsection
+\renewenvironment{ottdefnblock}[3][]{%
+  \vspace{1em}\par%
+  \subsection*{\protect\framebox{\mbox{#2}} \quad #3}%
+}{%
+}
+
+%\renewcommand{\ottnt}[1]{\mathit{#1}}
+%\renewcommand{\ottmv}[1]{\mathit{#1}}
+%\renewcommand{\ottkw}[1]{\mathbf{#1}}
+%\renewcommand{\ottcom}[1]{\text{#1}}
+
+%% Changed the font for rule names
+\renewcommand{\ottdrulename}[1]{\textsf{#1}}
+
+%\renewcommand{\ottcomplu}[5]{\overline{#1}^{\,#2\in #3 #4 #5}}
+%\renewcommand{\ottcompu}[3]{\overline{#1}^{\,#2<#3}}
+%\renewcommand{\ottcomp}[2]{\overline{#1}^{\,#2}}
+%\renewcommand{\ottgrammartabular}[1]{\begin{supertabular}{llcllllll}#1\end{supertabular}}
+%\renewcommand{\ottrulehead}[3]{$#1$ & & $#2$ & & & \multicolumn{2}{l}{#3}}
+\renewcommand{\ottprodline}[6]{& & $#1$ & $#2$ & $#3 #4$ & $#5$ & \def\ottprodlinetmp{#6}\ifx\ottprodlinetmp\empty\else\def\ottprodlinetmp{\\ & & & \multicolumn{3}{l}{$~~#6$}}\fi\ottprodlinetmp}
+%\renewcommand{\ottinterrule}{\\[5.0mm]}
+%\renewcommand{\ottafterlastrule}{\\}

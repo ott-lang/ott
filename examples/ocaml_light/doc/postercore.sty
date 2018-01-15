@@ -1,0 +1,41 @@
+\newcommand{\postertitle}[2]{
+  \newlength{\cuniw} %
+  \settowidth{\cuniw}{%
+    \includegraphics{CUni4.eps}}%
+
+{\setlength{\arraycolsep}{0pt}
+ \renewcommand{\arraystretch}{1.0}
+ \setlength{\extrarowheight}{0pt}
+ #1
+ {\sf\pmc #2} %
+\hfill %\raisebox{-0.65mm}{\epsfig{file=/home/pes20/Posters/col.exstuf/CUni4.eps}}
+%
+\makebox[\cuniw][l]{
+  \large
+  \raisebox{-0.65mm}[\height][0pt]{$
+  \begin{array}{l}%
+    \raisebox{-\depth}[\totalheight][0pt]{
+      \includegraphics{CUni4.eps} }\\
+    \raisebox{-2.0mm}[0.0cm][0.0cm]{
+      \makebox[\cuniw][l]{$
+        \begin{array}{l}
+        \resizebox{\cuniw}{!}{\large Computer Laboratory}\\
+        \resizebox{\cuniw}{!}{\large Theory and Semantics Group}
+        \end{array}$}}
+  \end{array}$}}
+}}
+
+
+
+\newcommand{\postersubtitle}[1]{
+ \vspace{1.0mm} {\large\sf\pmc #1}}
+
+\newcommand{\posterpeople}[1]{
+
+{\large\sf\pmc#1}\vspace{2.0mm}}
+
+
+\newcommand{\posterfooter}[1]{\hfill{\scriptsize{\textsf{#1}}}}
+
+\newcommand{\posterTSGfooter}{\posterfooter{http://www.cl.cam.ac.uk/Research/TSG}}
+

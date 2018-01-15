@@ -1,0 +1,78 @@
+\documentclass{llncs}
+
+\newcommand{\OCL}{OCaml$_\mathit{light}$}
+\renewcommand{\refname}{}
+
+\title{A Sound Semantics for \OCL{}\\\emph{\normalsize Poster Abstract}}
+\author{Scott Owens}
+\institute{University of Cambridge}
+
+
+\usepackage{times}
+\usepackage{url}
+
+\begin{document}
+\maketitle
+
+\OCL{}~\cite{ocl,oclweb} is a formal semantics for a substantial subset of the
+Objective Caml core language. It is written in Ott~\cite{ott}, which generates
+\LaTeX, HOL, Coq, and Isabelle/HOL definitions, and it comprises a small-step
+operational semantics and a syntactic, non-algorithmic type system. A type
+soundness theorem has been proved and mechanized in HOL-4. To ensure that the
+operational semantics accurately models Objective Caml, an executable version
+of the semantics has been created (and proved equivalent in HOL to the
+original, relational version) and tested on a number of small test cases.
+
+We take a straightforward approach, formalizing the syntax of \OCL{} as a
+collection of inductive datatypes, and the \OCL{} type system and operational
+semantics as a collection of inductive relations and recursive functions
+directly over the source syntax.  We hypothesize that this clear connection
+between the source language and its semantics will facilitate verification
+about \OCL{} programs, in addition to the present verification of type
+soundness.  \OCL{} covers a large part of Objective Caml, but excludes the
+language's module and object systems.  It includes:
+\begin{itemize}
+\item
+definitions
+\begin{itemize}
+\item
+variant data types (e.g., \verb+type t = I of int | C of char+),
+\item
+record types (e.g., \verb+type t = {f : int; g : bool}+),
+\item
+parametric type constructors (e.g., \verb+type 'a t = C of 'a+),
+\item
+type abbreviations (e.g., \verb+type 'a t = 'a * int+),
+\item
+mutually recursive combinations of the above (excepting abbreviations),
+\item
+exceptions, and values;
+\end{itemize}
+\item
+expressions for type annotations, sequencing, and primitive values (functions, lists, tuples, and records);
+\item
+\verb+with+ (record update), \verb+if+, \verb+while+, \verb+for+, \verb+assert+, \verb+try+, and \verb+raise+ expressions;
+\item
+let-based polymorphism with an SML-style value restriction;
+\item
+mutually-recursive function definitions via \verb+let rec+;
+\item
+pattern matching, with nested patterns, \verb+as+ patterns, and ``or'' (\verb+|+)patterns;
+\item
+mutable references with \verb+ref+, \verb+!+, and \verb+:=+;
+\item
+polymorphic equality (the Objective Caml \verb+=+ operator);
+\item
+31-bit word semantics for \texttt{int}s (using an existing HOL library); and
+\item
+IEEE-754 semantics for \texttt{float}s (using an existing HOL library).
+\end{itemize}
+
+Most of the proof effort is a straightforward application of HOL's tactic-based proof mechanisms.  The entire proof is around 11000 lines of tactic scripts.
+The poster will present the \OCL{} semantics and also lessons from the verification process.
+\bibliographystyle{splncs}
+\vspace{-30pt}
+{\tiny
+\bibliography{bib}
+}
+\end{document}
