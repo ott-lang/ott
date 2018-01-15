@@ -1,0 +1,204 @@
+
+metavar n ::=
+  {{ com Numeric literals }}
+  {{ phantom }}
+  {{ lex numeric }}
+  {{ lem integer }}
+
+metavar location, l ::= 
+  {{ com Store locations }}
+  {{ lem string }}
+
+grammar 
+b :: 'B_' ::=              {{ com booleans }}  {{ phantom }} {{ lem bool }}
+  | true                    ::   :: true      {{ lem true }}
+  | false                   ::   :: false     {{ lem false }}
+
+operations, op :: 'Op_' ::=            {{ com operations }}
+  | +                       ::   :: plus
+  | >=                      ::   :: gteq
+
+e :: 'E_'  ::=	           {{ com expressions }}
+  | n                       ::   :: num
+  | b                       ::   :: bool
+  | e1 op e2                ::   :: op
+  | if e1 then e2 else e3   ::   :: if
+  | l := e                  ::   :: assign
+  | ! l                     ::   :: ref
+  | skip                    ::   :: skip
+  | e1 ; e2                 ::   :: sequence
+  | while e1 do e2          ::   :: while
+  | ( e )                   :: M :: paren  {{ ichlo ([[e]]) }}
+
+v :: 'V_' ::=              {{ com values }}
+  | n                       ::   :: num
+  | b                       ::   :: bool
+  | skip                    ::   :: skip    
+
+store , s :: 'Store_' ::=  {{ com stores }} {{ phantom }} {{ lem list (location * integer) }}
+   | empty                  ::   :: empty {{ lem [] }}
+   | s , l |-> n            ::   :: extend  {{ lem (([[l]],[[n]])::[[s]]) }}
+
+typ, T :: 'T_' ::=         {{ com types }}
+  | int                     ::   :: int
+  | bool                    ::   :: bool
+  | unit                    ::   :: unit
+
+Tloc {{ isa tloc }} {{ coq tloc }} {{ hol tloc }} {{ lem tloc }} {{ ocaml tloc }} :: 'TLoc_' ::=        {{ com types of locations }}
+  | intref                  ::   :: intref	
+
+
+type_assumption, ta :: 'TA_' ::= {{ com type assumption }}
+  | l : Tloc                ::   :: loc
+
+G {{ tex \Gamma }} :: G_ ::=     {{ com type environments }} {{ phantom }} {{ lem list type_assumption }}
+  | empty                   ::   :: empty {{ lem [] }}
+  | G , ta                  ::   :: extend {{ lem ([[ta]]::[[G]]) }}
+
+
+terminals :: terminals_ ::=
+  | +    :: :: plus
+  | >=   :: :: leq       {{ tex \geq }}
+  | |-   :: :: turnstile {{ tex \vdash }}
+  | |->  :: :: mapsto    {{ tex \mapsto }}
+  | ;    :: :: seq
+  | ->   :: :: red       {{ tex \longrightarrow }}
+  | <    :: :: la        {{ tex \langle }}
+  | >    :: :: ra        {{ tex \rangle }}
+
+subrules
+  v <:: e
+
+grammar 
+formula :: formula_ ::=
+  | judgement              :: :: judgement
+  | n1 + n2 = n3           :: :: sum         {{ lem ([[n1]]+[[n2]]=[[n3]]) }}
+  | n1 >= n2 = b           :: :: leq         {{ lem ([[n1]]>=[[n2]]=[[b]]) }}
+  | s ( l ) = n            :: :: lookup      {{ lem (List.lookup [[l]] [[s]] =Just ([[n]])) }}   
+  | G ( l ) = Tloc         :: :: type_lookup {{ lem (lookup_location_type [[l]] [[G]] = Just ([[Tloc]])) }}   
+
+
+% this is a bit ugly - to capture the different use of Gamma in L1 and L2 we have a list of a Lem variant type and two special-purpose lookup functions, with a wildcard pattern match in each.
+
+embed {{ lem
+let rec lookup_location_type l g =
+    match g with
+    | [] -> Nothing
+    | TA_loc l' tloc' :: g' -> if l=l' then Just tloc' else lookup_location_type l g'
+    | _ :: g' -> lookup_location_type l g'
+    end
+}}
+
+defns
+
+Jop :: '' ::=
+
+% Reductions. Want to allow lem hom to specify witness and animation info
+
+defn
+< e , s > -> < e' , s' > :: :: reduce :: ''  {{ com $\langle[[e]],\,[[s]]\rangle$ reduces to $\langle[[e']],\,[[s']]\rangle$ }} by
+
+  n1 + n2 = n
+----------------------   :: op_plus
+<n1 + n2, s> -> <n, s>
+
+  n1 >= n2 = b
+----------------------   :: op_gteq
+<n1 >= n2, s> -> <b, s>
+
+  <e1,s> -> <e1',s'>
+------------------------------- :: op1
+<e1 op e2,s> -> <e1' op e2,s'>
+
+  <e2,s> -> <e2',s'>
+------------------------------- :: op2
+<e1 op e2,s> -> <e1 op e2',s'>
+
+  s(l) = n
+------------------------------ :: deref
+<!l,s> -> <n,s>
+
+-------------------------------------- :: assign1
+< l := n, s > -> <skip, s, l |-> n >
+
+  <e,s> -> <e',s'>
+-------------------------------------- :: assign2
+< l := e, s > -> < l := e', s' >
+
+-------------------------------------- :: seq1
+< skip ; e, s > -> <e,s>
+
+   <e1,s> -> <e1',s'>
+-------------------------------------- :: seq2
+< e1 ; e2, s > -> < e1' ; e2, s' >
+
+---------------------------------------------- :: if1
+< if true then e1 else e2, s > -> < e1, s >
+
+---------------------------------------------- :: if2
+< if false then e1 else e2, s > -> < e2, s >
+
+  <e,s> -> <e',s'>
+------------------------------------------------------------ :: if3
+< if e then e1 else e2, s > -> < if e' then e1 else e2, s' >
+
+--------------------------------------------------------------------------- :: while
+< while e1 do e2, s> -> < if e1 then ( e2 ; while e1 do e2 ) else skip, s >
+
+
+
+defn
+G |- e : T :: :: typing :: Ty_ by
+
+------------------  :: int
+  G |- n : int
+
+------------------  :: bool
+  G |- b : bool
+
+
+  G |- e1 : int
+  G |- e2 : int
+-------------------------------  :: op_plus
+  G |- e1 + e2 : int
+
+
+  G |- e1 : int
+  G |- e2 : int
+-------------------------------  :: op_gteq
+  G |- e1 >= e2 : bool
+
+
+  G |- e1 : bool
+  G |- e2 : T
+  G |- e3 : T
+----------------------------------  :: if
+  G |- if e1 then e1 else e3 : T
+
+
+  G(l) = intref
+  G |- e : int
+----------------------- :: assign
+  G |- l := e : unit
+
+
+  G(l) = intref
+----------------------- :: deref
+  G |- !l : int
+
+
+-------------------------------  :: skip
+   G |- skip : unit
+
+  G |- e1 : unit
+  G |- e2 : T
+-------------------------------  :: seq
+  G |- e1 ; e2  : T
+
+
+  G |- e1 : bool
+  G |- e2 : unit
+-------------------------------  :: while
+  G |- while e1 do e2  : unit
+
+

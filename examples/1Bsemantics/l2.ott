@@ -1,0 +1,85 @@
+% with -merge true, Ott does not generate a Lem "open import
+% Pervasives".  Maybe that's just an Ott bug.  We work around it in
+% the Makefile.
+
+metavar variable, x ::= 
+  {{ com Variables }}
+  {{ lem string }}
+
+grammar 
+e :: 'E_'  ::=	           {{ com expressions }}
+  | fn x : T => e           ::   :: fn  (+ bind x in e +)
+  | e1 e2                   ::   :: app
+  | x                       ::   :: var
+  | { e / x } e'            :: M :: subst {{ ichlo (subst_e [[e]] [[x]] [[e']]) }}
+
+v :: 'V_' ::=              {{ com values }}
+  | fn x : T => e           ::   :: fn
+
+typ, t :: 'T_' ::=         {{ com types }}
+  | T1 -> T2                ::   :: fn
+
+type_assumption :: 'TA_' ::= {{ com type assumption }}
+  | x : T                   ::   :: var
+
+substitutions
+    single e x :: subst  
+
+grammar
+terminals :: terminals_ ::=
+  | =>    :: :: Rightarrow {{ tex \Rightarrow }}
+
+
+grammar 
+formula :: formula_ ::=
+  | G ( x ) = T          :: :: type_lookup_var {{ lem (lookup_var_type [[x]] [[G]] = Just ([[T]])) }}   
+
+embed {{ lem
+let rec lookup_var_type x g =
+    match g with
+    | [] -> Nothing
+    | TA_var x' t' :: g' -> if x=x' then Just t' else lookup_var_type x g'
+    | _ :: g' -> lookup_var_type x g'
+    end
+}}
+
+
+defns
+
+Jop :: '' ::=
+
+defn
+< e , s > -> < e' , s' > :: :: reduce :: ''  {{ com $\langle$[[e]],\,[[s]]$\rangle$ reduces to $\langle$[[e']],\,[[s']]$\rangle$ }} by
+
+  <e1,s> -> <e1',s'>
+------------------------------- :: app1
+<e1 e2,s> -> <e1' e2,s'>
+
+  <e2,s> -> <e2',s'>
+------------------------------- :: app2
+<v e2,s> -> <v e2',s'>
+
+
+------------------------------ :: fn
+<(fn x:T=>e) v,s> -> <{v/x}e,s>
+
+
+defn
+G |- e : T :: :: typing :: Ty_ by
+
+  G(x)=T
+------------------  :: var
+  G |- x:T
+
+
+%TODO: add disjointness condition?
+  G,x:T |- e:T'
+-------------------------------  :: fn
+  G |- fn x:T=>e : T->T' 
+
+  G |- e1 : T->T'
+  G |- e2 : T
+-------------------------------  :: app
+  G |- e1 e2 : T'
+
+
