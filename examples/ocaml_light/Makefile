@@ -32,6 +32,9 @@ hol: hol-def
 isa: isa-def
 hol-proof: hol/definitionsTheory.uo hol/defs_red_funTheory.uo
 
+install_doc: caml_typedef.pdf
+	cp caml_typedef.pdf doc/built_doc
+
 #### Directories ####
 ############ CHANGE topdir TO REFER TO YOUR TOP LEVEL OTT INSTALLATION ########
 topdir = ../..
