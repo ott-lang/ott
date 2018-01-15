@@ -42,7 +42,8 @@ poly_lib = /Users/so294/polyml.5.1/lib
 
 #### Programs and their arguments ####
 COQC = coqc
-COQ_INCLUDE = -I $(ott_coq_lib_dir)
+#COQ_INCLUDE = -I $(ott_coq_lib_dir)
+COQ_INCLUDE = -R $(ott_coq_lib_dir) Ott
 COQ_FLAGS =
 DVIPS = dvips
 DVIPSFLAGS = -Ppdf -j0 -G0
