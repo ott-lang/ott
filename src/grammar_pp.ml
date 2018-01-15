@@ -2667,17 +2667,19 @@ and pp_rule m xd r = (* returns a string option *)
 		     (pp_prod m xd r.rule_ntr_name r.rule_pn_wrapper) 
                      r.rule_ps))
            ^ "")
-  | Coq co -> 
-      if r.rule_meta || r.rule_phantom 
+  | Coq co ->
+      pp_internal_coq_buffer := !pp_internal_coq_buffer ^
+        coq_maybe_decide_equality m xd r.rule_homs (Ntr r.rule_ntr_name);
+      if r.rule_meta || r.rule_phantom
       then None
       else
         let universe = try pp_hom_spec m xd (List.assoc "coq-universe" r.rule_homs) with Not_found -> "Set" in
-        Some 
-          (pp_nontermroot_ty m xd r.rule_ntr_name ^ " : "^universe^ " := "^pp_com^"\n" 
-           ^ String.concat "\n" 
-               (Auxl.option_map 
-		  (pp_prod m xd r.rule_ntr_name r.rule_pn_wrapper)
-                  r.rule_ps))
+        Some
+          (pp_nontermroot_ty m xd r.rule_ntr_name ^ " : "^universe^ " := "^pp_com^"\n"
+           ^ String.concat "\n"
+             (Auxl.option_map
+                (pp_prod m xd r.rule_ntr_name r.rule_pn_wrapper)
+                r.rule_ps))
   | Rdx ro ->
       if r.rule_meta || r.rule_phantom 
       then None
