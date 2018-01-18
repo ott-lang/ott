@@ -617,7 +617,7 @@ let pp_systemdefn_core_tex m sd lookup oi =
         match Auxl.option_map is_wrap_post sd.syntax.xd_embed_preamble with
         | [] ->
             Printf.fprintf fd 
-              ("\\TESTBROKENbegin{document}\n%s\n\n\\begin{verbatim}\n%s\\end{verbatim}\n\\end{document}\n")
+              ("\\begin{document}\n%s\n\n\\begin{verbatim}\n%s\\end{verbatim}\n\\end{document}\n")
               (Grammar_pp.pp_tex_ALL_NAME m)
               (snd (Defns.pp_counts sd))
         | post_wrap -> Embed_pp.pp_embeds fd m sd.syntax lookup post_wrap
