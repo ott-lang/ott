@@ -600,7 +600,7 @@ let pp_systemdefn_core_tex m sd lookup oi =
         (Grammar_pp.pp_tex_FIRST_LONG_PROD_NAME m ) (Grammar_pp.pp_tex_LONG_PROD_NAME m);
       Printf.fprintf fd ("\\newcommand{%s}[6]{%s{#1}{#2}{#3}{#4}{#5}{#6}}\n")
         (Grammar_pp.pp_tex_BINDSPEC_PROD_NAME m ) (Grammar_pp.pp_tex_PROD_NAME m);
-      Printf.fprintf fd ("\\newcommand{%s}{\\\\}\n") (Grammar_pp.pp_tex_PROD_NEWLINE_NAME m );
+      Printf.fprintf fd ("\\newcommand{%s}{\\\\\\shrinkheight{1pt}}\n") (Grammar_pp.pp_tex_PROD_NEWLINE_NAME m );
       Printf.fprintf fd ("\\newcommand{%s}{\\\\[5.0mm]}\n") (Grammar_pp.pp_tex_INTERRULE_NAME m );
       Printf.fprintf fd ("\\newcommand{%s}{\\\\}\n") (Grammar_pp.pp_tex_AFTERLASTRULE_NAME m );
       Embed_pp.pp_embeds fd m sd.syntax lookup sd.syntax.xd_embed_preamble;
