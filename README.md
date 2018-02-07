@@ -33,7 +33,7 @@ directory                | description
 `Makefile`               | a Makefile for the examples
 `LICENCE`                | the BSD-style licence terms
 `README.md`              | this file (Section 2 of the user guide)
-`revisionhistory.txt`    | the revision history
+`revision_history.txt`   | the revision history
 
 
 
