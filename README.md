@@ -95,8 +95,8 @@ from files `test10.ott`, `test8.ott`, etc., in `tests/`.
 
 ## Manual
 
-* in the [Ott github](https://github.com/ott-lang/ott) built_doc directory, or 
-* [here (html)](http://www.cl.cam.ac.uk/~pes20/ott/ott_manual_0.27.html)
+* in the [Ott github](https://github.com/ott-lang/ott) built_doc directory, or
+* [here (html)](http://www.cl.cam.ac.uk/~pes20/ott/top2.html)
 
 ## Emacs mode
 
