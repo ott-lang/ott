@@ -98,7 +98,9 @@ from files `test10.ott`, `test8.ott`, etc., in `tests/`.
 * in the [Ott github](https://github.com/ott-lang/ott) built_doc directory, or
 * [here (html)](http://www.cl.cam.ac.uk/~pes20/ott/top2.html)
 
-## Emacs mode
+## Editor Plugins
+
+### Emacs mode
 
 The file `emacs/ott-mode.el` defines a very simple Emacs mode for syntax
 highlighting of Ott source files.  It can be used by, for example,
@@ -109,6 +111,10 @@ Ott Emacs directory.
 (setq load-path (cons (expand-file-name "PATH") load-path))
 (require 'ott-mode)
 ```
+
+### Visual Studio Code
+
+There is a [plugin for VSCode](https://marketplace.visualstudio.com/items?itemName=JoeyEremondi.ott), which features syntax highlighting and inline error reporting. 
 
 ## Mailing lists
 
