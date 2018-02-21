@@ -115,10 +115,8 @@ Ott Emacs directory.
 For installations using OPAM on \*nix systems, it is sufficient to use the following code, which will call `opam config var prefix` at load-time.
 
 ```ELisp
-(add-to-list 'load-path
-              (concat (let ((coding-system-for-read 'utf-8))
-                        (shell-command-to-string "printf %s \"$(opam config var prefix)\""))
-                      "/share/emacs/site-lisp"))
+(setq opam-share (substring (shell-command-to-string "opam config var share") 0 -1))
+(add-to-list 'load-path (concat opam-share "/emacs/site-lisp"))
 (require 'ott-mode)
 ```
 
