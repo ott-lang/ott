@@ -112,6 +112,14 @@ Ott Emacs directory.
 (require 'ott-mode)
 ```
 
+For installations using OPAM on \*nix systems, it is sufficient to use the following code, which will call `opam config var prefix` at load-time.
+
+```ELisp
+(setq opam-share (substring (shell-command-to-string "opam config var share") 0 -1))
+(add-to-list 'load-path (concat opam-share "/emacs/site-lisp"))
+(require 'ott-mode)
+```
+
 ### Visual Studio Code
 
 There is a [plugin for VSCode](https://marketplace.visualstudio.com/items?itemName=JoeyEremondi.ott), which features syntax highlighting and inline error reporting. 
