@@ -33,15 +33,15 @@
 
 topdir = ..
 
-OTTVER=0.27
+OTTVER=0.28
 
 # for us
-OCAMLC	 	= ocamlc -g -dtypes  # -w p disables partial match warnings
-OCAMLOPT	= ocamlopt -w y -g -dtypes -unsafe -inline 9
+#OCAMLC	 	= ocamlc -g -dtypes  # -w p disables partial match warnings
+#OCAMLOPT	= ocamlopt -w y -g -dtypes -unsafe -inline 9
 
 # for releases
-#OCAMLC	 	= ocamlc -g -w p -w y
-#OCAMLOPT	= ocamlopt -w p -w y -unsafe -inline 9
+OCAMLC	 	= ocamlc -g -w p -w y
+OCAMLOPT	= ocamlopt -w p -w y -unsafe -inline 9
 
 OCAMLDEP 	= ocamldep
 OCAMLLEX        = ocamllex

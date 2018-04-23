@@ -212,7 +212,7 @@ test10st.tex: ../src/ott  ../tests/test10st.ott
 #	       -o test10.v 						\
 
 test7.tex: ../src/ott ../tests/test7.ott ../tests/test7tt.mng
-	cd ../src; make tmp_test7_clean.ott
+	cd ../src; $(MAKE) tmp_test7_clean.ott
 	../src/ott                                 			\
 	       -o test7.tex						\
 	       -tex_show_meta false                                     \
@@ -368,7 +368,7 @@ top2.tex: top2.mng
 
 
 grammar_parser.tex: ../src/grammar_parser.mly
-	cd ../src; make grammar_parser.tex
+	cd ../src; $(MAKE) grammar_parser.tex
 	cp -f ../src/grammar_parser.tex .
 
 grammar_parser_hevea.tex: grammar_parser.tex
@@ -394,7 +394,7 @@ top2.html: $(TOP2DEPS)
 
 
 top2: 
-	make top2.ps  && make top2.html && make top2.pdf
+	$(MAKE) top2.ps  && $(MAKE) top2.html && $(MAKE) top2.pdf
 
 
 quick2: $(TOP2DEPS)
