@@ -47,7 +47,7 @@ let pp_list_filter_coq =
   ^ "  | nil => nil\n"
   ^ "  | cons h t => if (f h) then cons h (list_filter A f t) else (list_filter A f t)\n"
   ^ "end.\n"
-  ^ "Implicit Arguments list_filter.\n\n")
+  ^ "Arguments list_filter [A] _ _.\n\n")
 
 let pp_list_minus_caml = 
   ( "let rec list_minus (l1:'a list) (l2:'a list) : 'a list =\n"
@@ -81,7 +81,7 @@ let pp_list_minus_coq =
   ^ "  | nil => nil\n"
   ^ "  | cons h t => if (list_mem (A:=A) eq h l2) then list_minus A eq t l2 else cons h (list_minus A eq t l2)\n"
   ^ "end.\n"
-  ^ "Implicit Arguments list_minus.\n\n")
+  ^ "Arguments list_minus [A] _ _ _.\n\n")
 
 let pp_list_minus2_coq =
   ( "Fixpoint list_minus2 A B (eq:forall a b:A,{a=b}+{a<>b}) (l1:list (A*B)) (l2:list A) {struct l1} : list (A*B) :=\n"
@@ -89,7 +89,7 @@ let pp_list_minus2_coq =
   ^ "  | nil => nil\n"
   ^ "  | cons a t => if (list_mem (A:=A) eq (@fst A B a) l2) then list_minus2 A B eq t l2 else cons a (list_minus2 A B eq t l2)\n"
   ^ "end.\n"
-  ^ "Implicit Arguments list_minus2.\n\n")
+  ^ "Arguments list_minus2 [A B] _ _ _.\n\n")
 
 let pp_list_mem_coq =
   ( "Fixpoint list_mem A (eq:forall a b:A,{a=b}+{a<>b}) (x:A) (l:list A) {struct l} : bool :=\n"
@@ -97,7 +97,7 @@ let pp_list_mem_coq =
   ^ "  | nil => false\n"
   ^ "  | cons h t => if eq h x then true else list_mem A eq x t\n"
   ^ "end.\n"
-  ^ "Implicit Arguments list_mem.\n\n")
+  ^ "Arguments list_mem [A] _ _ _.\n\n")
 
 let pp_list_assoc_isa =
   ( "primrec\n"
@@ -118,7 +118,7 @@ let pp_list_assoc_coq =
   ^ "  | nil => None\n"
   ^ "  | cons (a,b) t => if (eq a x) then Some b else list_assoc A B eq x t\n"
   ^ "end.\n"
-  ^ "Implicit Arguments list_assoc.\n\n")
+  ^ "Arguments list_assoc [A B] _ _ _.\n\n")
 
 (* this is a temporary workaround, to be replaced when the Lem library
 List.assoc have been updated to return an option type *)
