@@ -1830,7 +1830,7 @@ Coercion TI_def : type_representation >-> type_information.
 
 Section string_literals.
 Import String.
-Open Local Scope string_scope.
+Open Scope string_scope.
 Definition string_equal_functional_value := "equal: functional value".
 End string_literals.
 
