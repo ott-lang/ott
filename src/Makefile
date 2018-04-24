@@ -180,11 +180,11 @@ dependency.cmx: dependency.ml
 #	cat tmp_version1.ml tmp_version2.ml tmp_date.txt tmp_version3.ml > version.ml
 #	rm tmp_version1.ml tmp_version2.ml tmp_version3.ml
 
-version.ml: tmp_date.txt #Makefile-core
+version.ml: tmp_date.txt Makefile #Makefile-core
 	echo 'let n="$(OTTVER)"' >version.ml
 	echo let d=\"$$(cat tmp_date.txt)\" >>version.ml
 
-version.tex: tmp_date.txt version_src.tex
+version.tex: tmp_date.txt version_src.tex Makefile
 	sed -e 's/__VERSION__/$(OTTVER)/' \
 	    -e '/__DATE__/r tmp_date.txt' \
 	    -e '/__DATE__/d' <version_src.tex >version.tex

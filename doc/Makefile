@@ -9,6 +9,14 @@ FIGURES=ich_fig0 ich_fig1
 FIGURE_PSTEX_TS=$(addsuffix .pstex_t, $(FIGURES))
 
 
+# to make manual for new release:
+#     bump new version in ../Makefile
+#     date > tmp_date.txt  in ../src/
+#     make in .. to rebuild version.tex
+#     make install-top2-built
+#     make install-web-files
+
+
 
 all: top2.html top2.ps top2.pdf
 
