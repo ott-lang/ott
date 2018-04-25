@@ -179,7 +179,7 @@ Qed.
 (*** End of the Lists section ***)
 
 End Lists.
-Implicit Arguments lt_length [A].
+Arguments lt_length [A] _ _.
 
 Hint Resolve length_app length_map length_rev : datatypes.
 Hint Rewrite length_app length_map length_rev : lists.

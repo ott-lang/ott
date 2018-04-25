@@ -5,6 +5,7 @@ Require Ascii.
 Require Import Bool.
 Require Import List.
 Require String.
+Require Import ZArith.
 Set Implicit Arguments.
 
 Hint Resolve Ascii.ascii_dec bool_dec String.string_dec : ott_coq_equality.
@@ -13,11 +14,9 @@ Hint Resolve Ascii.ascii_dec bool_dec String.string_dec : ott_coq_equality.
 
 Section ZArith_extra.
 
-Require Import ZArith.
-
 Lemma positive_eq_dec: forall (x y : positive), {x = y} + {x <> y}.
 Proof.
-  intros. destruct (Z_eq_dec (Zpos x) (Zpos y)).
+  intros. destruct (Z.eq_dec (Zpos x) (Zpos y)).
   injection e; auto.
   assert (x <> y). intro. rewrite H in n; auto. auto.
 Qed.
