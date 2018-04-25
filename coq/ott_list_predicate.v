@@ -12,7 +12,7 @@ Require Import Ott.ott_list_takedrop.
 Section List_predicate_inductive.
 (* Properties of [Forall_list] and [Exists_list] *)
 
-Variables A : Set.
+Variables A : Type.
 Implicit Types x : A.
 Implicit Types xs l : list A.
 Implicit Types p : A -> bool.
@@ -184,7 +184,7 @@ Hint Resolve Forall_list_implies Exists_list_implies : lists.
 Section List_predicate_fold.
 (* Properties of [forall_list] and [exists_list] *)
 
-Variables A : Set.
+Variables A : Type.
 Implicit Types x : A.
 Implicit Types xs l : list A.
 Implicit Types p : A -> bool.
@@ -265,7 +265,7 @@ End List_predicate_fold.
 
 Section List_predicate_relationship.
 
-Variables A : Set.
+Variables A : Type.
 Implicit Types x : A.
 Implicit Types xs l : list A.
 Implicit Types p : A -> bool.
@@ -296,7 +296,7 @@ End List_predicate_relationship.
 
 Section List_predicate_map.
 
-Variables A B C : Set.
+Variables A B C : Type.
 Implicit Types x : A.
 Implicit Types y : B.
 Implicit Types z : C.

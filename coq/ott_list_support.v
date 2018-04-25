@@ -24,7 +24,7 @@ End List_lib_Arith.
 
 Section functions.
   Set Implicit Arguments.
-  Variables A B C D : Set.
+  Variables A B C D : Type.
   Definition compose (g:B->C) (f:A->B) x := g (f x).
   Definition compose2 (h:B->C->D) (f:A->B) (g:A->C) x y := h (f x) (g y).
 End functions.
@@ -34,7 +34,7 @@ Hint Unfold compose compose2.
 
 Section option.
   Set Implicit Arguments.
-  Variables A B : Set.
+  Variables A B : Type.
 
   Definition map_option (f:A->B) (xo:option A) : option B :=
     match xo with

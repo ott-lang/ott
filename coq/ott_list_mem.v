@@ -14,7 +14,7 @@ Set Implicit Arguments.
 (*** Membership predicate ***)
 
 Section In.
-Variable A : Set.
+Variable A : Type.
 Implicit Types x : A.
 Implicit Types xs l : list A.
 
@@ -58,14 +58,14 @@ Hint Resolve nth_error_In nth_safe_In : datatypes.
 (*** Membership predicate and map ***)
 
 Lemma image_In_map :
-  forall (A B:Set) x l (f:A->B),
+  forall (A B:Type) x l (f:A->B),
     In x l -> In (f x) (map f l).
 Proof.
   intros. induction l; simpl in * . tauto. destruct H; subst; tauto.
 Qed.
 
 Lemma In_map_exists :
-  forall (A B:Set) l y (f:A->B),
+  forall (A B:Type) l y (f:A->B),
     In y (map f l) -> exists x, y = f x /\ In x l.
 Proof.
   intros. induction l; simpl in * . tauto. destruct H. eauto. firstorder.
@@ -93,7 +93,7 @@ Ltac elim_all_In_map :=
 (*** Membership function ***)
 
 Section list_mem.
-Variable A : Set.
+Variable A : Type.
 Variable (eq_dec : forall (a b:A), {a=b} + {a<>b}).
 Implicit Types x : A.
 Implicit Types xs l : list A.
@@ -169,7 +169,7 @@ Hint Rewrite list_mem_app : lists.
 (*** Removing an element ***)
 
 Section list_minus.
-Variable A : Set.
+Variable A : Type.
 Variable (eq_dec : forall (a b:A), {a=b} + {a<>b}).
 Implicit Types x : A.
 Implicit Types xs l : list A.

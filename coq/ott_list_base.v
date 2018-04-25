@@ -27,7 +27,7 @@ Ltac reverse_list l l' :=
 
 Section Lists.
 
-Variables A B C : Set.
+Variables A B C : Type.
 Implicit Types x : A.
 Implicit Types y : B.
 Implicit Types z : C.
@@ -44,8 +44,8 @@ Set Implicit Arguments.
 
 (*** Length ***)
 
-Definition lt_length (A:Set) := ltof _ (@length A).
-Definition well_founded_lt_length (A:Set) := (well_founded_ltof _ (@length A)).
+Definition lt_length (A:Type) := ltof _ (@length A).
+Definition well_founded_lt_length (A:Type) := (well_founded_ltof _ (@length A)).
 
 Lemma length_app : forall l l', length (l ++ l') = length l + length l'.
 Proof.
