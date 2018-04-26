@@ -8,7 +8,7 @@ Require Import Ott.ott_list_base.
 
 Section Lists.
 
-Variables A B C : Set.
+Variables A B C : Type.
 Implicit Types x : A.
 Implicit Types y : B.
 Implicit Types z : C.

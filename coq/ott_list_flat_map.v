@@ -9,7 +9,7 @@ Require Import Ott.ott_list_base.
 
 
 Section Flat_map.
-Variables A B C : Set.
+Variables A B C : Type.
 Implicit Types x : A.
 Implicit Types y : B.
 Implicit Types l xs : list A.

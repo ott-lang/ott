@@ -14,7 +14,7 @@ Require Import Omega.
 
 Section All_distinct.
 Set Implicit Arguments.
-Variable A : Set.
+Variable A : Type.
 Variable eq_dec : forall (x y:A), {x=y} + {x<>y}.
 
 Notation one_distinct := (fun x xs => negb (list_mem eq_dec x xs)).
