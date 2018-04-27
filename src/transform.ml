@@ -67,11 +67,11 @@ let make_aux_list_funcs (b : Buffer.t) xd t s =
   let t_arrow = String.concat "->" t in
   let t' = if List.length t = 1 then t_arrow else "(" ^ String.concat " * " t ^ ")" in
   (* map *)
-  Printf.bprintf b "Fixpoint map_%s (A:Set) (f:%s->A) (%s:%s) : list A :=\n" s t_arrow l s;
+  Printf.bprintf b "Fixpoint map_%s (A:Type) (f:%s->A) (%s:%s) : list A :=\n" s t_arrow l s;
   Printf.bprintf b "  match %s with\n" l;
   Printf.bprintf b "  | Nil_%s => nil\n" s;
   Printf.bprintf b "  | Cons_%s %s tl_ => cons (f %s) (map_%s A f tl_)\n  end.\n" s h h s;
-  Printf.bprintf b "Implicit Arguments map_%s.\n\n" s;
+  Printf.bprintf b "Arguments map_%s [A] _ _.\n\n" s;
   (* make *)
   Printf.bprintf b "Fixpoint make_%s (%s: list %s): %s :=\n" s l t' s;
   Printf.bprintf b "  match %s with\n" l;
