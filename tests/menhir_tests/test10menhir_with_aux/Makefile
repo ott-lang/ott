@@ -24,11 +24,11 @@ $(ROOT)_ast.ml  $(ROOT)_lexer.mll $(ROOT)_parser.mly $(ROOT)_parser_pp.ml $(ROOT
 
 
 $(ROOT)_quotiented.pdf: $(ROOT).ott Makefile
-	$(OTT) -quotient_rules true -i $(ROOT).ott -o $(ROOT)_quotiented.tex
+	$(OTT) -quotient_rules true -generate_aux_rules false -i $(ROOT).ott -o $(ROOT)_quotiented.tex
 	pdflatex $(ROOT)_quotiented.tex
 
 $(ROOT)_unquotiented.pdf: $(ROOT).ott Makefile
-	$(OTT) -quotient_rules false -i $(ROOT).ott -o $(ROOT)_unquotiented.tex
+	$(OTT) -quotient_rules false -generate_aux_rules false  -aux_style_rules false -i $(ROOT).ott -o $(ROOT)_unquotiented.tex
 	pdflatex $(ROOT)_unquotiented.tex
 
 clean:
