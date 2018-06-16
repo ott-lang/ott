@@ -473,7 +473,7 @@ type ('t,'v) parser = ('t list -> 'v -> unit) -> 't list -> unit
 
 type made_parser = nontermroot -> bool -> string -> symterm list
 
-exception My_parse_error of string
+exception My_parse_error of loc option * string
 
 
 (** ************************ *)

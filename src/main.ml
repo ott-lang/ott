@@ -544,10 +544,10 @@ let process source_filenames =
               output_string c' (Grammar_lexer.de_lex_tex t); flush c';
               process_input ()
         with 
-          My_parse_error s->
+          My_parse_error (loc, s)->
           (* TODO *)
          (*  Auxl.error ("\n"^s^" in file: "^filter_filename^"\n") in*)
-            Auxl.error None ("\n"^s^"\n") in
+            Auxl.error loc ("\n"^s^"\n") in
       process_input ();
       output_string c' "\\end{alltt}\n";
       let _ = close_in c in
@@ -565,9 +565,9 @@ let process source_filenames =
           (try
             Grammar_parser.main (Grammar_lexer.my_lexer true Grammar_lexer.metalang) lexbuf
           with 
-            My_parse_error s->
+            My_parse_error (loc,s)->
 (*      Auxl.error ("\n"^s^" in file: "^filter_filename^"\n") in*)
-              Auxl.error None ("\n"^s^"\n")) in
+              Auxl.error loc ("\n"^s^"\n")) in
         let _ = close_in c in
         ris
     | _ -> 
@@ -820,7 +820,7 @@ let output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux) =
     | Parsing.Parse_error ->
         Auxl.error None ("unfiltered document "^src_filename^" cannot be parsed\n") 
         (* TODO *)
-    | My_parse_error s -> Auxl.error None s
+    | My_parse_error (loc,s) -> Auxl.error loc s
     in
     Embed_pp.pp_embed_spec fd_dst m sd.syntax lookup (Auxl.collapse_embed_spec_el_list unfiltered_document);
     let _ = close_in fd_src in
