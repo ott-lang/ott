@@ -231,7 +231,7 @@ let sort (l : ('b * 'b list * 'a) list) : ('b * 'a) list list * 'b list =
       let tnv = find_vertex tn g_vertex_info in
       if (not (G.mem_edge g snv tnv)) then G.add_edge g snv tnv 
     with Not_found -> 
-      Auxl.warning ("internal: sort: cannot connect " ^ sn ^ " to " ^ tn ^"\n") in
+      Auxl.warning None ("internal: sort: cannot connect " ^ sn ^ " to " ^ tn ^"\n") in
   
   (* adding vertexes *)
   let vl = List.map (function (x,_,_) -> x) l in
@@ -310,7 +310,7 @@ let isa_primrec_collapse m xd (funcs:int_funcs) : int_funcs_collapsed =
   let collapse_clause m id (_, lhs, rhs) =
     match m with
     | Isa _ -> "\"" ^ id ^ " " ^ lhs ^ " = (" ^ rhs ^ ")\"\n"
-    | _ -> Auxl.error "internal: isa_collapse called with wrong target\n" in
+    | _ -> Auxl.error None "internal: isa_collapse called with wrong target\n" in
 
   let collapse_clauses m id clauses =
     String.concat "| " (List.map (collapse_clause m id) clauses) in
@@ -341,19 +341,19 @@ let isa_primrec_collapse m xd (funcs:int_funcs) : int_funcs_collapsed =
       let rx_inp_type = Str.regexp ".*\"\\(.*\\) =>.*" in
       if Str.string_match rx_inp_type header 0 
       then Str.matched_group 1 header 
-      else Auxl.error "internal: cannot extract the inp type from the header\n" in
+      else Auxl.error None "internal: cannot extract the inp type from the header\n" in
     let (inp_type,inp_type_list) =
       ( match List.map (fun x -> extract_inp_type x.r_fun_header) g with
       | h::t -> (h,t)
       | _ -> raise Auxl.ThisCannotHappen ) in
     if not (List.for_all (fun t -> String.compare inp_type t = 0) inp_type_list) 
-    then Auxl.error "internal: collapsing functions over different types\n";
+    then Auxl.error None "internal: collapsing functions over different types\n";
 
     let extract_ret_type (header,_,_) =
       let rx_ret_type = Str.regexp ".*=> \\(.*\\)\"" in
       if Str.string_match rx_ret_type header 0 
       then Str.matched_group 1 header 
-      else Auxl.error "internal: cannot extract the out type from the header\n" in
+      else Auxl.error None "internal: cannot extract the out type from the header\n" in
     let ret_types = List.map (fun x -> extract_ret_type x.r_fun_header) g in
    
     let output_type =
@@ -373,7 +373,7 @@ let isa_primrec_collapse m xd (funcs:int_funcs) : int_funcs_collapsed =
     let compare_lhs l1 l2 =
       List.for_all2 (fun lc1 lc2 -> String.compare lc1 lc2 = 0) l1 l2 in
     if not (List.for_all (fun f -> compare_lhs lhs (extract_lhs f)) (List.tl g))
-    then Auxl.error "internal: non equal lhs when collapsing";
+    then Auxl.error None "internal: non equal lhs when collapsing";
 
     (* 5- the rhs *)
     let extract_rhs f =
@@ -576,13 +576,13 @@ let collapse m xd (funcs:int_funcs) : int_funcs_collapsed =
   | Coq _ -> coq_collapse m xd funcs
   | Twf _ -> twf_collapse m xd funcs
   | Caml _ -> caml_collapse m xd funcs
-  | Tex _ | Ascii _ -> Auxl.error "internal: collapse of Tex-Ascii\n"
+  | Tex _ | Ascii _ -> Auxl.error None "internal: collapse of Tex-Ascii\n"
 
 (* *** the printer *)
 
 let print m xd (sorting,refl) =
   match m with
-  | Tex _ | Ascii _ -> Auxl.error "internal: print of Tex-Ascii\n"
+  | Tex _ | Ascii _ -> Auxl.error None "internal: print of Tex-Ascii\n"
   | Isa io ->
       let print_lemma block = 
 	if ( List.exists 

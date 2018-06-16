@@ -323,7 +323,7 @@ and pp_raw_dots n =
   | 0 -> pp_DOTDOT 
   | 1 -> pp_DOTDOTDOT
   | 2 -> pp_DOTDOTDOTDOT 
-  | _ -> Auxl.error "internal: >2 in pp_raw_dots"
+  | _ -> Auxl.error None "internal: >2 in pp_raw_dots"
 
 and pp_raw_prod p = 
   pad 60 ((match p.raw_prod_flavour with Bar -> pp_BAR)    
@@ -757,7 +757,7 @@ let pp_tex_DOTDOTDOTDOT       = "...."
 let pp_tex_NAME_PREFIX m       = 
   match m with
   | Tex xo -> xo.ppt_name_prefix
-  |  _ -> Auxl.error "internal: pp_tex_NAME_PREFIX"
+  |  _ -> Auxl.error None "internal: pp_tex_NAME_PREFIX"
 
 let pp_tex_METAVARS_NAME m     = "\\"^pp_tex_NAME_PREFIX m^"metavars"
 let pp_tex_RULES_NAME m        = "\\"^pp_tex_NAME_PREFIX m^"grammar"
@@ -1246,7 +1246,8 @@ and coq_maybe_decide_equality m xd homs ntmvr =
       ^ ( match eh with
         | [ ] -> "  decide equality; auto with ott_coq_equality arith."
         | [ Hom_string s ] -> s 
-        | _ -> Auxl.error "malformed coq-equality homomorphism\n" )
+        (* TODO *)
+        | _ -> Auxl.error None "malformed coq-equality homomorphism\n" )
       ^ "\nDefined.\n"
       ^ "Hint Resolve eq_" ^ type_name  ^ " : ott_coq_equality.\n"
 
@@ -3169,7 +3170,7 @@ and extract_nonterms s =
 
 and pp_symterm_node_body_fancy_formula m xd sie de stnb : string =
   (* pull out the real symterm list *)
-  let sts = Auxl.option_map (function ste -> match ste with Ste_st(_,st) -> Some st | _ -> Auxl.error "internal: non Ste_st found in pp_symterm_node_body_fancy_formula") stnb.st_es in
+  let sts = Auxl.option_map (function ste -> match ste with Ste_st(_,st) -> Some st | _ -> Auxl.error None "internal: non Ste_st found in pp_symterm_node_body_fancy_formula") stnb.st_es in
   let pp_sts = List.map (pp_symterm m xd sie de) sts in
   let strings = Str.full_split (Str.regexp_string "-ARG-") stnb.st_prod_name in
   let pp_string s = match m with
@@ -3191,7 +3192,7 @@ and pp_symterm_node_body m xd sie de stnb : string =
     try
       let ntrt,pps = List.assoc stnb.st_rule_ntr_name xd.xd_srd.srd_subrule_pn_promotion in
       try List.assoc stnb.st_prod_name pps with
-        Not_found -> Auxl.error ("internal error: pp_symterm_node_body \""^stnb.st_prod_name^"\" Not_found in pps "^pp_plain_pps pps)
+        Not_found -> Auxl.error None ("internal error: pp_symterm_node_body \""^stnb.st_prod_name^"\" Not_found in pps "^pp_plain_pps pps)
     with
       Not_found -> stnb.st_prod_name in 
   let p = Auxl.prod_of_prodname xd promoted_pn in
@@ -3248,7 +3249,7 @@ and pp_symterm_node_body m xd sie de stnb : string =
                       | Lem lo -> 
                           pp_symterm_element_judge_lem_plain m xd sie de p'' stnb''
                       | Ascii _ | Tex _ | Lex _ | Menhir _ -> raise ThisCannotHappen
-                      | Caml _ -> Auxl.error "internal: Caml pp_symterm for proper symterms not supported"
+                      | Caml _ -> Auxl.error None "internal: Caml pp_symterm for proper symterms not supported"
                       )
                   | _ -> raise (Invalid_argument ("pp_symterm_node_body2: strange production in formula_judgement")))
               | _ -> raise (Invalid_argument ("pp_symterm_node_body3: strange production in formula judgement ")))
@@ -3268,7 +3269,7 @@ and pp_symterm_node_body m xd sie de stnb : string =
 	     
               (match m with
               | Ascii _ | Tex _ | Lex _ | Menhir _ -> Auxl.errorm m "formula_dots"
-              | Caml _ -> Auxl.error "internal: Caml pp_symterm for proper symterms not supported"
+              | Caml _ -> Auxl.error None "internal: Caml pp_symterm for proper symterms not supported"
               | Isa io ->
                   (match isa_fancy_syntax_hom_for_prod m xd io p with
                   | None -> 
@@ -4263,8 +4264,8 @@ and make_name_element m xd typ e =
   match e with
   | Ste_st (_,st) -> make_name_symterm m xd typ st 
   | Ste_metavar (_,mvr,_) -> if typ then pp_metavarroot_ty m xd mvr else pp_metavarroot m xd mvr
-  | Ste_var (_,mvr,_) -> (* mvr *) Auxl.error "internal: Ste_var in make_name_element"
-  | Ste_list (_,stlil) -> Auxl.error "internal: Ste_list in make_name_element"
+  | Ste_var (_,mvr,_) -> (* mvr *) Auxl.error None "internal: Ste_var in make_name_element"
+  | Ste_list (_,stlil) -> Auxl.error None "internal: Ste_list in make_name_element"
 and make_name_elements m xd typ es = 
   let sep = if typ then "*" else "_" in
   let lst = List.map (make_name_element m xd typ) es in
@@ -4285,7 +4286,7 @@ and make_dep_element e =
   | Ste_st (_,st) -> make_dep_symterm st
   | Ste_metavar (_,mvr,_) -> [ mvr ]
   | Ste_var (_,mvr,_) -> [ mvr ]
-  | Ste_list (_,stlil) -> Auxl.error "internal: Ste_list in make_dep_element"
+  | Ste_list (_,stlil) -> Auxl.error None "internal: Ste_list in make_dep_element"
 and make_dep_elements es = 
   List.concat (List.map make_dep_element es) 
 

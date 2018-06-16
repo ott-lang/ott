@@ -488,7 +488,8 @@ let pp_subrules m xd srs : int_funcs_collapsed =
 	    ( Auxl.pp_is srl sru ^ " : " 
 	      ^ Grammar_pp.pp_nontermroot_ty m xd sru
 	      ^ " -> type.\n", "","")
-        | Tex _ | Ascii _ | Lex _ | Menhir _ -> Auxl.error "pp_subprod"
+        (* TODO *)
+        | Tex _ | Ascii _ | Lex _ | Menhir _ -> Auxl.error None "pp_subprod"
          ) in
 
 

@@ -452,7 +452,7 @@ let parse_dots_with_length_constraint length_constraint =
   | None | Some 0 -> f ["..";"...";"...."]
   | Some 1 -> f ["...";"...."]
   | Some 2 -> f ["...."]
-  | _ -> Auxl.error "internal: parse_dots with length_constraint > 2"
+  | _ -> Auxl.error None "internal: parse_dots with length_constraint > 2"
 
 let parse_dots_without_length_constraint =
   let f ds = parse_map (function s -> String.length s - 2)

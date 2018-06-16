@@ -975,7 +975,7 @@ let lemTODOmo m s1 s2o = match s2o with None -> None | Some s2 -> Some (lemTODOm
 
 (* from grammar_typecheck *)
 
-exception Typecheck_error of string*string;;
+exception Typecheck_error of loc option*string*string;;
 
-let ty_error s1 s2 = raise (Typecheck_error(s1,s2))
-let ty_error2 l s1 s2 = raise (Typecheck_error(s1^" at "^Location.pp_loc l,s2))
+let ty_error s1 s2 = raise (Typecheck_error(None, s1,s2))
+let ty_error2 l s1 s2 = raise (Typecheck_error(Some l, s1,s2))

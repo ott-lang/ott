@@ -561,8 +561,8 @@ let rec cd_hom hu c (es : element list) ((hn,hs,l0):raw_homomorphism): homomorph
 (* hmm - maybe we should check that this s is in fact one of the terminals *)
 (* of the grammar.  But that info isn't to hand (eg in c) at present *)
               if not (rule_has_terminal (snd id) es) then begin
-                Auxl.warning ("Free variables in hom element " ^ Grammar_pp.pp_raw_hom_spec_el hse 
-                              ^ " at " ^ Location.pp_loc l0)
+                Auxl.warning l0 ("Free variables in hom element " ^ Grammar_pp.pp_raw_hom_spec_el hse 
+                              )
               end;
               Hom_terminal (snd id) )
 	with 
@@ -1118,7 +1118,7 @@ and cd_element c (e:raw_element) : semiraw_element =
                   elb_es = es' } in
       Sr_el(Lang_list elb)
   | (Raw_sugaroption (_, _)|Raw_nelist (_, _)|Raw_list (_, _)|Raw_option (_, _))
-      -> Auxl.error "internal: sugaroption, nelist, list and option not supported"
+      -> Auxl.error None "internal: sugaroption, nelist, list and option not supported"
 
 and cd_comp_bound : cd_env -> raw_comp_bound -> bound * metavarroot
     = fun c rcb -> match rcb with
@@ -2741,13 +2741,13 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
       | (Struct_axs l1,Struct_axs l2) -> Struct_axs (l1@l2)
       | (Struct_sbs l1,Struct_sbs l2) -> Struct_sbs (l1@l2)
       | (Struct_fvs l1,Struct_fvs l2) -> Struct_fvs (l1@l2)
-      | _ -> Auxl.error "internal: collapsing incompatible structure elements.\n" in
+      | _ -> Auxl.error None "internal: collapsing incompatible structure elements.\n" in
 
     let out_c_a current auxfns =
       match current,auxfns with
       | None, [] -> []
       | Some (l,rsec), [] -> [(l,rsec)]
-      | None, xs -> Auxl.error "internal: out_c_a, auxfns but undefined current"
+      | None, xs -> Auxl.error None "internal: out_c_a, auxfns but undefined current"
       | Some (l,rsec), xs -> (l,rsec)::[(l,Struct_axs xs)]
     in
 

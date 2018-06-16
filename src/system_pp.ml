@@ -110,7 +110,8 @@ let pp_functions_locally_nameless fd m sd xd_transformed =
 let set_locally_nameless m =
   match m with
   | Coq co -> co.coq_locally_nameless := true
-  | _ -> Auxl.error "locally-nameless: only the Coq backend understand {{ repr-locally-nameless }}.\n"
+  (* TODO *)
+  | _ -> Auxl.error None "locally-nameless: only the Coq backend understand {{ repr-locally-nameless }}.\n"
 
 let pp_systemdefn_core_locally_nameless fd m sd lookup = 
   set_locally_nameless m;
@@ -427,7 +428,7 @@ let pp_systemdefn_core_io m sd lookup oi merge_fragments =
   if merge_fragments
   then begin
     let o = match oi with (o,is)::[] -> o 
-    | _ -> Auxl.error "must specify only one output file .\n" in
+    | _ -> Auxl.error None "must specify only one output file .\n" in
     let fn = Auxl.filename_check m o in
     let fd = open_out o in
     pp_systemdefn fd m sd lookup fn;
@@ -450,7 +451,7 @@ let pp_systemdefn_core_io m sd lookup oi merge_fragments =
 			| false -> ["Bool"; "Metatheory"; "List"; "Ott.ott_list_core"]);
         pp_systemdefn_core_locally_nameless fd m sd lookup;
         close_out fd
-    | _ -> Auxl.error "must specify only one output file in the Coq locally-nameless backend.\n" )
+    | _ -> Auxl.error None  "must specify only one output file in the Coq locally-nameless backend.\n" )
 
   else
     begin
@@ -554,7 +555,7 @@ let is_wrap_pre (l,hn,es) = if hn = "tex-wrap-pre" then Some (l,"tex",es) else N
 let is_wrap_post (l,hn,es) = if hn = "tex-wrap-post" then Some (l,"tex",es) else None
 
 let pp_systemdefn_core_tex m sd lookup oi =
-  let xo = match m with | Tex xo -> xo | _ -> Auxl.error "internal: pp_systemdefn_core_tex on non-tex pp_mode\n" in
+  let xo = match m with | Tex xo -> xo | _ -> Auxl.error None "internal: pp_systemdefn_core_tex on non-tex pp_mode\n" in
   match oi with
   | (o,is)::[] ->
       let fd = open_out o in
@@ -623,6 +624,5 @@ let pp_systemdefn_core_tex m sd lookup oi =
         | post_wrap -> Embed_pp.pp_embeds fd m sd.syntax lookup post_wrap
       end;
       close_out fd;
-              
-  | _ -> Auxl.error "must specify only one output file in the TeX backend.\n"
+  | _ -> Auxl.error None "must specify only one output file in the TeX backend.\n"
 

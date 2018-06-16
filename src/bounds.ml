@@ -31,12 +31,12 @@
 (*  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                         *)
 (**************************************************************************)
 
-exception NotImplementedYet;;
+exception NotImplementedYet;; 
 
 open Types;;
 open Location;;
 
-exception Bounds of string
+exception Bounds of loc option * string
 
 
 (** ******************************** *)
@@ -66,7 +66,8 @@ let findbounds (be : bound list) (suff : suffix) : bound option
     | [] -> None
     | [i] -> (*print_string ("<<<< "^string_of_int i^" >>>>");flush stdout;*)
         Some(List.nth be i)
-    | _ -> raise (Bounds "findbounds: multiple suffix indices in a suffix")
+        (* TODO *)
+    | _ -> raise (Bounds (None, "findbounds: multiple suffix indices in a suffix"))
 
 (* collect all the nonterms/metavars in a symterm *)
 (* (and their nontermsub-lower-and-top data if they have it), *)
@@ -115,7 +116,8 @@ let check_length_consistency :
                 (try  (
                   let i=List.assoc (bd.bd_lower,bd.bd_upper) acc in
                   if i=bd.bd_length then f acc bounds' 
-                  else raise (Bounds ("bound "^Grammar_pp.pp_plain_bound b^" has inconsistent length constraints, \""^Grammar_pp.pp_plain_dots i ^"\" and \""^ Grammar_pp.pp_plain_dots bd.bd_length ^ "\"")))
+                  (* TODO *)
+                  else raise (Bounds (None, "bound "^Grammar_pp.pp_plain_bound b^" has inconsistent length constraints, \""^Grammar_pp.pp_plain_dots i ^"\" and \""^ Grammar_pp.pp_plain_dots bd.bd_length ^ "\"")))
                 with
                   Not_found -> f (((bd.bd_lower,bd.bd_upper),bd.bd_length)::acc) bounds' )
             | b::bounds' -> f acc bounds' in
@@ -154,8 +156,9 @@ let check_bounds_consistency :
                 | None -> f ((x,bo)::acc) xbos'
                 | Some bo' -> 
                     (if bo=bo' then f acc xbos'
-                    else 
-                      raise (Bounds ("inconsistent bounds for "^Grammar_pp.pp_plain_nt_or_mv (fst x)^": "^Grammar_pp.pp_plain_bound_option bo ^" and "^Grammar_pp.pp_plain_bound_option bo'  )))) in
+                    else
+                    (* TODO *)
+                      raise (Bounds (None, "inconsistent bounds for "^Grammar_pp.pp_plain_nt_or_mv (fst x)^": "^Grammar_pp.pp_plain_bound_option bo ^" and "^Grammar_pp.pp_plain_bound_option bo'  )))) in
           f [] xbos
 
 (* split into those without a bound and those with one *)
@@ -347,7 +350,7 @@ let bound_extraction m xd loc sts : dotenv * dotenv3 * string =
         ^ Grammar_pp.pp_plain_dotenv de in
     de, de3, s
   with 
-    Bounds s' -> raise (Bounds (s'^" at "^Location.pp_loc loc))
+    Bounds (_, s') -> raise (Bounds (Some loc, s'))
 (*  with e ->  *)
  (*   "exception in bound_extraction" *)
 

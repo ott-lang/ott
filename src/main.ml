@@ -108,13 +108,13 @@ let options = Arg.align [
     Arg.String (fun s -> 
       match !write_systemdefn_filename_opt with
       | None -> write_systemdefn_filename_opt  := Some s
-      | Some _ -> Auxl.error "\nError: multiple -writesys <filename> not suppported\n"),
+      | Some _ -> Auxl.error None "\nError: multiple -writesys <filename> not suppported\n"),
     "<filename>        Output system definition" ); 
   ( "-readsys", 
     Arg.String (fun s -> 
       match !read_systemdefn_filename_opt with
       | None -> read_systemdefn_filename_opt  := Some s
-      | Some _ -> Auxl.error "\nError: multiple -readsys <filename> not suppported\n"),
+      | Some _ -> Auxl.error None "\nError: multiple -readsys <filename> not suppported\n"),
     "<filename>        Input system definition" ); 
 
 (* filter filenames *)
@@ -295,7 +295,7 @@ let _ =
   Arg.parse options 
     (fun s -> 
       if !i_arguments 
-      then Auxl.error "\nError: must either use -i <filename> or specify filenames at the end\n"
+      then Auxl.error None "\nError: must either use -i <filename> or specify filenames at the end\n"
       else extra_arguments := (In,s) ::(!extra_arguments))
     usage_msg;
   file_arguments :=  !file_arguments @ !extra_arguments 
@@ -343,14 +343,14 @@ let classify_file_argument arg =
       (match file_type name with
       | Some e when (List.mem e input_types) -> 
           (In,e,name)
-      | _ -> Auxl.error 
+      | _ -> Auxl.error None
             ("\nError: unrecognised extension of input file \""^name
              ^ "\" (must be one of " ^ String.concat "," (List.map extension_of_type input_types) ^")\n"))
   | (Out,name) -> 
       (match file_type name with
       | Some e when (List.mem e output_types) -> 
           (Out,e,name)
-      | _ -> Auxl.error 
+      | _ -> Auxl.error None
             ("\nError: unrecognised extension of output file \""^name
              ^ "\" (must be one of "^String.concat "," (List.map extension_of_type output_types) ^")\n"))
 
@@ -446,7 +446,7 @@ let target_ocaml_ast_module =
         all_file_arguments in
     match target_ocaml_filenames with
     | [n] -> String.capitalize (Filename.chop_extension n)
-    | _ -> Auxl.error "\n if there is a menhir output file, there must be exactly one ocaml output file"
+    | _ -> Auxl.error None "\n if there is a menhir output file, there must be exactly one ocaml output file"
   else
     ""
 
@@ -465,7 +465,7 @@ let target_ocaml_parser_module =
         all_file_arguments in
     match target_menhir_filenames with
     | [n] -> String.capitalize (Filename.chop_extension n)
-    | _ -> Auxl.error "\n if there is an ocamllex output file, there must be exactly one menhir output file"
+    | _ -> Auxl.error None "\n if there is an ocamllex output file, there must be exactly one menhir output file"
   else
     ""
 
@@ -526,7 +526,7 @@ let process source_filenames =
   (match !alltt_filename_opt,source_filenames with
   | None,_ -> ()
   | Some alltt_filename,([] | _::_::_) -> 
-      Auxl.error ("\nUsage: -alltt option can only be used with exactly one source file at a time\n");
+      Auxl.error None ("\nUsage: -alltt option can only be used with exactly one source file at a time\n");
   | Some alltt_filename,[(source_filetype,source_filename)] ->
       let c = open_in source_filename in
       let c' = open_out alltt_filename in
@@ -545,8 +545,9 @@ let process source_filenames =
               process_input ()
         with 
           My_parse_error s->
+          (* TODO *)
          (*  Auxl.error ("\n"^s^" in file: "^filter_filename^"\n") in*)
-            Auxl.error ("\n"^s^"\n") in
+            Auxl.error None ("\n"^s^"\n") in
       process_input ();
       output_string c' "\\end{alltt}\n";
       let _ = close_in c in
@@ -566,7 +567,7 @@ let process source_filenames =
           with 
             My_parse_error s->
 (*      Auxl.error ("\n"^s^" in file: "^filter_filename^"\n") in*)
-              Auxl.error ("\n"^s^"\n")) in
+              Auxl.error None ("\n"^s^"\n")) in
         let _ = close_in c in
         ris
     | _ -> 
@@ -605,8 +606,9 @@ let process source_filenames =
     try 
       Grammar_typecheck.check_and_disambiguate m_tex quotient generate_aux targets_non_tex (List.map snd source_filenames) (!merge_fragments) document 
     with
-    | Typecheck_error (s1,s2) ->
-        Auxl.error ("(in checking and disambiguating "^(if quotient then "quotiented " else "") ^ "syntax)\n"^s1
+    | Typecheck_error (loc,s1,s2) ->
+    (* TODO *)
+        Auxl.error loc ("(in checking and disambiguating "^(if quotient then "quotiented " else "") ^ "syntax)\n"^s1
                     ^ (if s2<>"" then " ("^s2^")" else "")
                     ^ "\n")
   in
@@ -642,8 +644,8 @@ let process source_filenames =
   begin try
     Grammar_typecheck.check_with_parser lookup xd
   with
-  | Typecheck_error (s1,s2) ->
-      Auxl.error ("(in checking syntax)\n"^s1
+  | Typecheck_error (loc,s1,s2) ->
+      Auxl.error loc ("(in checking syntax)\n"^s1
               ^ (if s2<>"" then " ("^s2^")\n" else "\n"))
   end;
 
@@ -659,8 +661,10 @@ let process source_filenames =
                     sources = sources} in
          sd
        with
-       | Bounds.Bounds s | Defns.Rule_parse_error s | Typecheck_error (s,_)->
-           Auxl.error ("\nError in processing definitions:\n"^s^"\n")
+       | Defns.Rule_parse_error (loc,s) ->
+       Auxl.error (Some loc) ("\nError in processing definitions:\n"^s^"\n")
+       | Bounds.Bounds (loc,s)  | Typecheck_error (loc,s,_)->
+       Auxl.error loc ("\nError in processing definitions:\n"^s^"\n")    
       )
     else
       (print_endline "********** NOT PROCESSING DEFINITIONS *************\n"; flush stdout;
@@ -684,7 +688,7 @@ let read_systemdefn read_systemdefn_filename =
   let fd = open_in_bin read_systemdefn_filename in
   let sd,lookup ,sd_unquotiented, sd_quotiented_unaux = 
     try Marshal.from_channel fd 
-    with Failure s -> Auxl.error ("Cannot read dumped systemdefn\n   " ^ s ^"\n")
+    with Failure s -> Auxl.error None ("Cannot read dumped systemdefn\n   " ^ s ^"\n")
   in
   close_in fd;
   sd,lookup,sd_unquotiented,sd_quotiented_unaux
@@ -730,7 +734,7 @@ let output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux) =
       | [] -> []
       | (In,ft,fn)::xs -> compute_output (fn::ib) xs
       | (Out,ft,fn)::xs -> (
-          if ib = [] then Auxl.warning ("warning: no input files for the output file: "^fn^".\n");
+          if ib = [] then Auxl.warning None ("warning: no input files for the output file: "^fn^".\n");
           (fn,ib)::(compute_output [] xs))
     in
     List.map (fun (t,fs) -> t, compute_output [] fs) sources_per_target 
@@ -749,7 +753,8 @@ let output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux) =
             | 0 -> sd
             | 1 -> Auxl.avoid_primaries_systemdefn false sd
             | 2 -> Auxl.avoid_primaries_systemdefn true sd
-            | _ -> Auxl.error "coq type-name avoidance must be in {0,1,2}" ) in
+            (* TODO? *)
+            | _ -> Auxl.error None "coq type-name avoidance must be in {0,1,2}" ) in
           System_pp.pp_systemdefn_core_io m_coq sd lookup fi !merge_fragments
       | "isa" ->
           System_pp.pp_systemdefn_core_io m_isa sd lookup fi !merge_fragments
@@ -813,8 +818,9 @@ let output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux) =
       Grammar_parser.unfiltered_spec_el_list (Grammar_lexer.my_lexer true Grammar_lexer.filter) lexbuf
     with 
     | Parsing.Parse_error ->
-        Auxl.error ("unfiltered document "^src_filename^" cannot be parsed\n") 
-    | My_parse_error s -> Auxl.error s
+        Auxl.error None ("unfiltered document "^src_filename^" cannot be parsed\n") 
+        (* TODO *)
+    | My_parse_error s -> Auxl.error None s
     in
     Embed_pp.pp_embed_spec fd_dst m sd.syntax lookup (Auxl.collapse_embed_spec_el_list unfiltered_document);
     let _ = close_in fd_src in
@@ -854,5 +860,5 @@ let _ = match source_filenames, !read_systemdefn_filename_opt with
     output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux)
 | [],None -> 
     Arg.usage options usage_msg;
-    Auxl.error "\nError: must specify either some source filenames or a readsys option\n"
-| (_::_),Some _ -> Auxl.error "\nError: must not specify both source filenames and a readsys option\n"
+    Auxl.error None "\nError: must specify either some source filenames or a readsys option\n"
+| (_::_),Some _ -> Auxl.error None "\nError: must not specify both source filenames and a readsys option\n"

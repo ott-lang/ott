@@ -56,9 +56,9 @@ let debug_on = false
 
 let debug s = if debug_on then begin print_string s; flush stdout end
 
-let warning s = print_endline ("warning: " ^ s); flush stdout
+let warning l s = print_endline ("warning: " ^ s); flush stdout
 
-let error s = print_endline ("error: " ^ s); flush stdout; exit 2
+let error l s = print_endline ("error: " ^ s); flush stdout; exit 2
 
 let int_error s = print_endline("internal: " ^ s); flush stdout; exit 2
 
@@ -301,7 +301,7 @@ let prod_of_prodname ?(warn=true) (xd:syntaxdefn) (pn:prodname) : prod =
       List.find 
 	(fun r -> List.exists (fun p -> p.prod_name=pn) r.rule_ps)
 	xd.xd_rs
-    with Not_found -> if warn then warning ("internal: prod_of_prodname: searching pn = "^pn^"\n"); raise Not_found in
+    with Not_found -> if warn then warning None ("internal: prod_of_prodname: searching pn = "^pn^"\n"); raise Not_found in
   List.find (fun p -> p.prod_name=pn) r.rule_ps
 (*        let prod_of_prod_name : prodname -> prod  *)
 (*            = fun prod_name' ->  *)
@@ -1265,7 +1265,7 @@ let avoid xd mvs0 nts0 =
         match mvd.mvd_indexvar with
         | true ->
             if mvr=mvd.mvd_name then 
-              warning ("warning: indexvar \""^mvr^"\" is primary so may give a name-clash\n") ;
+              warning None ("warning: indexvar \""^mvr^"\" is primary so may give a name-clash\n") ;
             None
         | false ->
             if mvr=mvd.mvd_name then Some mv else None
@@ -1350,7 +1350,7 @@ let secondaryify xd mvs0 nts0 =
         match mvd.mvd_indexvar with
         | true ->
             if mvr=mvd.mvd_name then 
-              warning ("indexvar \""^mvr^"\" is primary so may give a name-clash\n") ;
+              warning None ("indexvar \""^mvr^"\" is primary so may give a name-clash\n") ;
             Some mv
         | false ->
             Some mv
@@ -1492,7 +1492,7 @@ let capitalize_prodnames sd =
   let map_prod_names = List.map (fun pn -> (pn,String.capitalize pn)) prod_name_list in
   let (conflict,err_msg) = detect_conflicts map_prod_names in
   if conflict
-  then error ("Renaming of production name \""^err_msg^"\" generates a conflict\n")
+  then error None ("Renaming of production name \""^err_msg^"\" generates a conflict\n")
   else map_prod_names
 
 let uncapitalize_prodnames sd =
@@ -1502,7 +1502,7 @@ let uncapitalize_prodnames sd =
   let map_prod_names = List.map (fun pn -> (pn,String.uncapitalize pn)) prod_name_list in
   let (conflict,err_msg) = detect_conflicts map_prod_names in
   if conflict
-  then error ("Renaming of production name \""^err_msg^"\" generates a conflict\n")
+  then error None ("Renaming of production name \""^err_msg^"\" generates a conflict\n")
   else map_prod_names
 
 let uncapitalize_primary_nontermroots sd = 
@@ -1511,7 +1511,7 @@ let uncapitalize_primary_nontermroots sd =
   let map_nontermroots = List.map (fun ntr -> (ntr,String.uncapitalize ntr)) nontermroots_list in
   let (conflict,err_msg) = detect_conflicts map_nontermroots in
   if conflict
-  then error ("Renaming of primary nontermroot \""^err_msg^"\" generates a conflict\n")
+  then error None ("Renaming of primary nontermroot \""^err_msg^"\" generates a conflict\n")
   else map_nontermroots
 
 let uncapitalize_primary_metavarroots sd =
@@ -1520,7 +1520,7 @@ let uncapitalize_primary_metavarroots sd =
   let map_metavarroots = List.map (fun mvr -> (mvr,String.uncapitalize mvr)) metavarroots_list in
   let (conflict,err_msg) = detect_conflicts map_metavarroots in
   if conflict
-  then error ("Renaming of primary metavar \""^err_msg^"\" generates a conflict\n")
+  then error None ("Renaming of primary metavar \""^err_msg^"\" generates a conflict\n")
   else map_metavarroots 
 
 let caml_rename sd =
@@ -1741,7 +1741,7 @@ let rec pp_tex_escape_alltt s =
 
 let isa_filename_check s =
   match string_remove_suffix s ".thy" with
-  | None -> error ("Isabelle filenames must end with .thy\n")
+  | None -> error None ("Isabelle filenames must end with .thy\n")
   | Some s1 -> s1
 
 let hol_filename_check s =

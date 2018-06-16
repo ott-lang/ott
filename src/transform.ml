@@ -124,7 +124,7 @@ let expand_element (m:pp_mode) (xd:syntaxdefn) (bs:bindspec list) (e:element) :
 	    | Lang_nonterm (ntr,_) -> Some (Ntr (Auxl.promote_ntr xd ntr))
 	    | Lang_metavar (mvr,_) -> Some (Mvr mvr)
             | Lang_terminal t -> None
-	    | _ -> Auxl.error "internal: expand element, cannot happen.\n" )
+	    | _ -> Auxl.error None "internal: expand element, cannot happen.\n" )
 	  elb.elb_es in
 
       let id = (*Auxl.pp_coq_type_name*)
@@ -208,7 +208,7 @@ let expand_element (m:pp_mode) (xd:syntaxdefn) (bs:bindspec list) (e:element) :
 	  | Lang_nonterm (ntr,(ntr',_)) -> Lang_nonterm (ntr,(ntr',[]))
 	  | Lang_metavar (mvr,(mvr',_)) -> Lang_metavar (mvr,(mvr',[])) 
           | Lang_terminal t -> Lang_terminal t
-          | _ -> Auxl.error "internal: remove suffix, cannot happen\n" ) in
+          | _ -> Auxl.error None "internal: remove suffix, cannot happen\n" ) in
 	{ prod_name = "Cons_" ^ id;  
 	  prod_flavour = Bar;
 	  prod_meta = false;

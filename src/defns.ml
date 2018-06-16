@@ -31,12 +31,13 @@
 (*  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                         *)
 (**************************************************************************)
 
-exception NotImplementedYet;;
 
-exception Rule_parse_error of string
 
 open Types;;
 open Location;;
+
+exception NotImplementedYet;;
+exception Rule_parse_error of loc * string
 
 let rec iter_nosep f l =
   match l with [] -> () | x::l -> let _ = f x in iter_nosep f l
@@ -508,7 +509,8 @@ let pp_defn fd (m:pp_mode) (xd:syntaxdefn) lookup (defnclass_wrapper:string) (un
       Printf.fprintf fd "\n  #:mode (%s %s)\n\n"
         d.d_name
         (match mode with [Hom_string s] -> s
-        | _ -> Auxl.error ("rdx backend: cannot print mode for declaration: "^d.d_name))
+        (* TODO *)
+        | _ -> Auxl.error None ("rdx backend: cannot print mode for declaration: "^d.d_name))
     with Not_found -> ());
     iter_sep (pp_processed_semiraw_rule fd m xd) "\n\n" d.d_rules
 
@@ -1034,7 +1036,7 @@ let process_semiraw_rule (m: pp_mode) (xd: syntaxdefn) (lookup: made_parser)
           Grammar_parser.drule_line_annot (Grammar_lexer.my_lexer true Grammar_lexer.metalang)  lexbuf 
         with 
         |  Parsing.Parse_error | My_parse_error _ ->
-            raise (Rule_parse_error ("bad annotation in \""^s^"\" at "^Location.pp_loc l))
+            raise (Rule_parse_error (l, "bad annotation in \""^s^"\" "))
         |  e ->
             (print_string ("exception in parsing \""^s^"\" at "^Location.pp_loc l^"\n");
              flush stdout;
@@ -1108,8 +1110,9 @@ let process_semiraw_rule (m: pp_mode) (xd: syntaxdefn) (lookup: made_parser)
             let unfiltered_string = try
               Grammar_parser.unfiltered_spec_el_list (Grammar_lexer.my_lexer true Grammar_lexer.filter) lexbuf
             with 
-              Parsing.Parse_error ->
-                Auxl.error ("unfiltered premise "^s^" cannot be parsed\n") in
+              Parsing.Parse_error  ->
+              (* TODO, Parse_error takes loc? *)
+                Auxl.error None ("unfiltered premise "^s^" cannot be parsed\n") in
             let collapsed_string = Auxl.collapse_embed_spec_el_list unfiltered_string in 
             (*let filtered_string = Embed_pp.pp_embed_spec m xd lookup collapsed_string in*)
             (* walk over collapsed_string, building a new string (with -ARG- replacing each [[.]]) and a list of symterms (one for each [[.]]) *)
@@ -1138,9 +1141,9 @@ let process_semiraw_rule (m: pp_mode) (xd: syntaxdefn) (lookup: made_parser)
         let premises = List.map fancy_parse lss1 in
         let conclusion =
           match lss2 with
-          | [] -> raise (Rule_parse_error ("rule with no conclusion at " ^ Location.pp_loc l))
+          | [] -> raise (Rule_parse_error (l, "rule with no conclusion at "))
           | [(l,s)] -> Term_parser.just_one_parse ~transform:(Term_parser.defn_transform prod_name) xd lookup rn_formula false l s
-          | _ -> raise (Rule_parse_error ("rule with multiple conclusions at " ^ Location.pp_loc l))
+          | _ -> raise (Rule_parse_error (l, "rule with multiple conclusions at "))
         in
         let c = Term_parser.cd_env_of_syntaxdefn xd in
         let dr = {drule_name = defnclass_wrapper^defn_wrapper^annot.dla_name;
@@ -1230,7 +1233,8 @@ let process_raw_funclause
           let rhs = 
 	    match e with 
 	    | Ste_st(_,st) -> st 
-	    | _ -> Auxl.error "process_raw_funclause internal error - bad rhs" in
+      (* TODO *)
+	    | _ -> Auxl.error None "process_raw_funclause internal error - bad rhs" in
 (*       print_string ("lhs symterm: "^ Grammar_pp.pp_plain_symterm lhs ^ "\n");flush stdout;  *)
 (*       print_string ("rhs symterm: "^ Grammar_pp.pp_plain_symterm rhs ^ "\n");flush stdout;  *)
 

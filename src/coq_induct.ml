@@ -50,7 +50,7 @@ let need_induction m xd r =
 	      | _ -> false)
 	    elb.elb_es
       | Lang_option _ | Lang_sugaroption _ -> 
-	  Auxl.error "interal: option types not implemented in pp_induction\n"
+	  Auxl.error None "interal: option types not implemented in pp_induction\n"
       | Lang_nonterm (_,_) | Lang_metavar (_,_) | Lang_terminal _ -> false
     in List.exists element_uses_list_nt p.prod_es in
   (not r.rule_meta) && (List.exists uses_list_nt r.rule_ps)

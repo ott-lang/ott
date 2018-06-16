@@ -58,7 +58,7 @@ let rec collect_mv_in_mse mse =
   match mse with
   | MetaVarExp mv -> [mv]
   | Union (mse1,mse2) -> (collect_mv_in_mse mse1) @ (collect_mv_in_mse mse2) 
-  | _ -> Auxl.warning "internal: collect ln bindspec not implemented\n"; [] 
+  | _ -> Auxl.warning None "internal: collect ln bindspec not implemented\n"; [] 
 
 (* LIBRARY *)
 
@@ -97,7 +97,7 @@ let binders p =
 	 match bs with
 	 | Bind (MetaVarExp mv,_) -> Some [mv]
 	 | AuxFnDef (_,mse) -> Some (collect_mv_in_mse mse)
-	 | Bind _ -> Auxl.warning "internal: binders not implemented - 1\n"; None
+	 | Bind _ -> Auxl.warning None "internal: binders not implemented - 1\n"; None
 	 | _ -> None )
        p.prod_bs)
 
@@ -109,7 +109,7 @@ let binders_for_nt p nt =
 	 match bs with
 	 | Bind (MetaVarExp mv,nt1) when compare nt nt1 = 0 -> Some [mv]
 	 | Bind (MetaVarExp mv,nt1) when not (compare nt nt1 = 0) -> None
-	 | Bind _ -> Auxl.warning "internal: binders not implemented - 2\n"; None
+	 | Bind _ -> Auxl.warning None "internal: binders not implemented - 2\n"; None
 	 | _ -> None )
        p.prod_bs)
 
@@ -125,7 +125,7 @@ let is_bindable xd mv p =
 
 (* for a ln mvr, record the rules where it has been splitted *)
 let rules_with_bindable_mvr (xd:syntaxdefn) (mvr:metavarroot) : rule list =
-  if not((Auxl.mvd_of_mvr xd mvr).mvd_locally_nameless) then Auxl.error ("internal: rules_with_bindable_mvr: "^mvr^" does not have a ln repr.\n");
+  if not((Auxl.mvd_of_mvr xd mvr).mvd_locally_nameless) then Auxl.error None ("internal: rules_with_bindable_mvr: "^mvr^" does not have a ln repr.\n");
   List.filter
     (fun r -> 
       (not r.rule_meta) && 
@@ -200,20 +200,20 @@ let check_single_binder xd =
     List.iter (fun bs ->
       match bs with
       | AuxFnDef _ -> 
-	  Auxl.warning "locally-nameless: auxfns are not supported by the locally-nameless backend\n"
+	  (* TODO *) Auxl.warning None "locally-nameless: auxfns are not supported by the locally-nameless backend\n"
       | Bind (NonTermExp _,_) -> 
-	  Auxl.warning "locally-nameless: bindspec binding a nonterminal are not supported by the locally-nameless backend\n"
+	  (* TODO *) Auxl.warning None "locally-nameless: bindspec binding a nonterminal are not supported by the locally-nameless backend\n"
       | Bind (MetaVarListExp _,_) ->
-	  Auxl.warning "locally-nameless: bindspec binding a list of metavars are not supported by the locally-nameless backend\n"
+	  (* TODO *) Auxl.warning None "locally-nameless: bindspec binding a list of metavars are not supported by the locally-nameless backend\n"
       | Bind (NonTermListExp _,_) ->
-	  Auxl.warning "locally-nameless: bindspec binding a list of nonterminals are not supported by the locally-nameless backend\n"
+	  (* TODO *) Auxl.warning None "locally-nameless: bindspec binding a list of nonterminals are not supported by the locally-nameless backend\n"
       | Bind (MetaVarExp mv,_) ->
           (* check if mv has a locally nameless representation *)
           let mvd = Auxl.mvd_of_mvr xd (Auxl.primary_mvr_of_mvr xd (fst mv)) in
           if mvd.mvd_locally_nameless then
 	    if !one_bind
 	    then 
-	      Auxl.warning "locally-nameless: multiple bind declaration on the same production are not supported by the locally-nameless backend\n"
+	      (* TODO *) Auxl.warning None "locally-nameless: multiple bind declaration on the same production are not supported by the locally-nameless backend\n"
 	    else one_bind := true
           else ()
       | _ -> ())
@@ -682,7 +682,7 @@ let pp_open_prod m xd mvr wrt (ov:string) (rule_ntr_name:nontermroot) (p:prod) :
 	  let mv1_s = Grammar_pp.pp_metavar_with_de_with_sie m xd sie de mv1 in
 	  let mv2_s = Grammar_pp.pp_metavar_with_de_with_sie m xd sie de mv2 in
 	  ( "if (k === "^mv1_s^") then (List.nth "^mv2_s^" "^ov^" "^"("^p.prod_name^" 0 0)"^") else (" ^ s^ " "^mv1_s^" "^mv2_s^")" , [] )
-      | _ -> Auxl.error "internal: weird lhs_stnb in pp_open_prod\n" )
+      | _ -> Auxl.error None "internal: weird lhs_stnb in pp_open_prod\n" )
       
     else (
       let unshifted_nonterms = 
@@ -778,7 +778,7 @@ let pp_open m xd : int_funcs_collapsed =
 	{ i_funcs = ifuncs;
 	  i_funcs_proof = None }
 
-  | _ -> Auxl.warning "internal: pp_open implemented only for Coq\n"; []
+  | _ -> Auxl.warning None "internal: pp_open implemented only for Coq\n"; []
 
 (* ******************************************************************** *)
 (* lc (locally closed)                                                  *)
@@ -849,7 +849,8 @@ let pp_lcs fd m xd : unit =
 	    ("lcs, rule "^r.rule_ntr_name^", binders in prod "
 	     ^ p.prod_name^ " for ntr "^ntr ^ " = "^String.concat " , " (List.map Grammar_pp.pp_plain_metavar mvs));
 
-	  if List.length mvs > 1 then Auxl.error "locally_nameless - not implemented: several mvs bind the same nt\n";
+(* TODO *)
+	  if List.length mvs > 1 then Auxl.error None "locally_nameless - not implemented: several mvs bind the same nt\n";
 
 	  if List.length mvs = 1 
 	      (* build premise with cofinite quantification *)
@@ -870,7 +871,7 @@ let pp_lcs fd m xd : unit =
 		in
 		p.prod_name
 	      with Not_found -> 
-		Auxl.error ("internal: lns, make_premises, cannot find singleton production for "
+		Auxl.error None ("internal: lns, make_premises, cannot find singleton production for "
 			    ^ (fst (List.hd mvs)) ^ " starting from rule " ^ r.rule_ntr_name ^ "\n")
 	    in
 	    let st_rule_name_s = 
@@ -1163,14 +1164,14 @@ let build_open_symterm m xd open_wrt st =
     match st with
     | St_nonterm (_,ntr,_) -> Auxl.primary_ntr_of_ntr xd ntr
     | St_nontermsub (_,_,ntr,_) -> Auxl.primary_ntr_of_ntr xd ntr
-    | _ -> Auxl.error "internal: build_open_symterm, not a nonterm\n" in
+    | _ -> Auxl.error None "internal: build_open_symterm, not a nonterm\n" in
   let r = Auxl.rule_of_ntr xd ntr in
   let find_var_prod mv =
     let mv1 = 
       match mv with
       | Ste_metavar (_,mv1,_) -> mv1
       | Ste_var (_,mv1,_) -> mv1
-      | _ -> Auxl.error "internal: find_var_prod ln not ste_metavar\n" in
+      | _ -> Auxl.error None "internal: find_var_prod ln not ste_metavar\n" in
     let p = List.find
 	( fun p ->
 	  match p.prod_es with
@@ -1187,7 +1188,7 @@ let build_open_symterm m xd open_wrt st =
       match mv with
       | Ste_metavar (_,mv1,_) -> mv1
       | Ste_var (_,mv1,_) -> mv1
-      | _ -> Auxl.error "internal: find_var_prod ln not ste_metavar\n" in
+      | _ -> Auxl.error None "internal: find_var_prod ln not ste_metavar\n" in
 
     let r = List.find
 	(fun r ->
@@ -1351,7 +1352,7 @@ let ln_transform_symterms (m:pp_mode) (xd:syntaxdefn) (stlp:(string option * sym
 	then None
 	else Some (Ste_var (l,mvrp,var))
     | (Ste_list (l,stlis),_) -> 
-	(* Auxl.warning "internal: remove_binders_symterm_element ste_list not implemented\n"; *)
+	(* Auxl.warning None "internal: remove_binders_symterm_element ste_list not implemented\n"; *)
 	Some (Ste_list (l,stlis)) (* FZ *)
   in
 
@@ -1457,7 +1458,7 @@ let ln_transform_symterms (m:pp_mode) (xd:syntaxdefn) (stlp:(string option * sym
 	   ( fun ste ->
 	     match ste with
 	     | Ste_metavar (_,mvr,mv) -> (ste,(Ste_var (dummy_loc,mvr, ((*"TX_"^*)(Grammar_pp.pp_plain_metavar mv)))))
-	     | _ -> Auxl.error "internal: nt_longest" )
+	     | _ -> Auxl.error None "internal: nt_longest" )
 	   stel ))
       nt_longest in
 
@@ -1519,7 +1520,8 @@ let ln_transform_symterms (m:pp_mode) (xd:syntaxdefn) (stlp:(string option * sym
 			     let current_str = List.map Grammar_pp.pp_plain_symterm_element current_binding in
 			     List.iter
 			       (fun str -> if List.mem str current_str 
-			       then Auxl.error ("locally-nameless: a rule definition contains a repeated binder: "^str^";\n  try alpha-converting one of the occurrences.\n"))
+             (* TODO *)
+			       then Auxl.error None ("locally-nameless: a rule definition contains a repeated binder: "^str^";\n  try alpha-converting one of the occurrences.\n"))
 			       (List.map Grammar_pp.pp_plain_symterm_element extra_binders);
 			       
 			       let binders = 
@@ -1577,7 +1579,7 @@ let ln_transform_symterms (m:pp_mode) (xd:syntaxdefn) (stlp:(string option * sym
       match mvsr with
       | [] -> st
       | mv::tl ->
-	  let mvr = match mv with Ste_metavar (_,mvr,_) -> mvr | Ste_var (_,mvr,_) -> mvr | _ -> Auxl.error "internal: cofinite quantify not metavar" in
+	  let mvr = match mv with Ste_metavar (_,mvr,_) -> mvr | Ste_var (_,mvr,_) -> mvr | _ -> Auxl.error None "internal: cofinite quantify not metavar" in
 	  let cq_st =
 	    St_node ( dummy_loc,
 		      { st_rule_ntr_name = "formula";
@@ -1637,7 +1639,7 @@ let ln_transform_defn m xd d =
     List.map 
       (fun psr -> match psr with 
       | PSR_Rule dr -> PSR_Rule (ln_transform_drule m xd dr)
-      | PSR_Defncom _ -> Auxl.error "internal: ln transform defncom not implemented" )
+      | PSR_Defncom _ -> Auxl.error None "internal: ln transform defncom not implemented" )
       d.d_rules }
 
 let ln_transform_reln_defnclass m xd dc =
@@ -1648,7 +1650,7 @@ let ln_transform_fun_or_reln_defnclass_list
     m (xd:syntaxdefn) (frdcs:fun_or_reln_defnclass list) : fun_or_reln_defnclass list =
   List.map 
     ( fun frdc -> match frdc with
-    | FDC fdc -> Auxl.error "internal: fdc transform not implemented" 
+    | FDC fdc -> Auxl.error None "internal: fdc transform not implemented" 
     | RDC dc -> RDC (ln_transform_reln_defnclass m xd dc)
     ) frdcs
 
