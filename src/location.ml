@@ -50,7 +50,10 @@ let loc_of_filename name len  =
       Lexing.pos_cnum =len }
 } ]
 
-let pp_position 
+(* We don't use these anymore,
+since all errors/warnings should be converting
+their positiosn into locations *)
+(* let pp_position 
     { Lexing.pos_fname = f;
       Lexing.pos_lnum = l;
       Lexing.pos_bol = b;
@@ -58,13 +61,13 @@ let pp_position
   "fname=" ^ f ^ "  lnum=" ^ string_of_int l
   ^ "  bol="^string_of_int b^"  cnum=" ^string_of_int c
 
-let pp_position2  
+let pp_position2'  
     { Lexing.pos_fname = f;
       Lexing.pos_lnum = l;
       Lexing.pos_bol = b;
       Lexing.pos_cnum = c } = 
   (if f="" then "" else "file=" ^ f ^ "  ")
-  ^ "line=" ^ string_of_int l ^ "  char=" ^ string_of_int (c-b)
+  ^ "line=" ^ string_of_int l ^ "  char=" ^ string_of_int (c-b) *)
 
 let pp_t {loc_start=ls;loc_end=le} = 
   if ls.Lexing.pos_fname = le.Lexing.pos_fname 

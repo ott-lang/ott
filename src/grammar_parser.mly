@@ -52,8 +52,8 @@ let mkp () =
 (*   {desc=x; loc=l} *)
     
 let parse_error s = 
-  raise (My_parse_error (Some (mkl ()), "Parse error: " ^ s ^ " " 
-	   ^ Location.pp_position2 (Parsing.symbol_end_pos () )))
+  raise (My_parse_error (Some (mkl ()), "Parse error: " ^ s 
+	    ))
 
 (* %token EQUAL             *)
 %}
