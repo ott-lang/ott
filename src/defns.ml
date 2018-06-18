@@ -35,6 +35,7 @@
 
 open Types;;
 open Location;;
+open Auxl;;
 
 exception NotImplementedYet;;
 exception Rule_parse_error of loc * string
@@ -1038,7 +1039,7 @@ let process_semiraw_rule (m: pp_mode) (xd: syntaxdefn) (lookup: made_parser)
         |  Parsing.Parse_error | My_parse_error _ ->
             raise (Rule_parse_error (l, "bad annotation in \""^s^"\" "))
         |  e ->
-            (print_string ("exception in parsing \""^s^"\" at "^Location.pp_loc l^"\n");
+            (report_error (Some l) ("exception in parsing \""^s^"\\n");
              flush stdout;
              raise e) in
         (* let categories = List.map del c in *)

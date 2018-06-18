@@ -37,6 +37,8 @@ rules, ie with metavars and nonterms, as well as object-level vars).
 *)
 
 open Types;;
+open Auxl;;
+open String;;
 
 exception ThisCannotHappen;;
 exception Parse_error of loc * string;;
@@ -1140,7 +1142,7 @@ let just_one_parse ?(transform : symterm list -> symterm list = user_syntax_tran
     [st] -> st
   | [] -> 
       let error_str = no_parses_error_string s in
-      Format.printf "\nno parses of \"%s\" at %s:\n%s\n" s (Location.pp_loc l) error_str;
+      report_error (Some l) (Format.sprintf "\nno parses of \"%s\":\n%s\n" s  error_str);
       St_uninterpreted (l, error_str)
   | hs::ts ->
       if 
@@ -1152,16 +1154,20 @@ let just_one_parse ?(transform : symterm list -> symterm list = user_syntax_tran
               List.for_all (fun st -> s = (Grammar_pp.pp_symterm pp_mode xd [] de_empty st)) ts)
               pp_list
       then hs
-      else begin
-        Format.printf "\nmultiple parses of \"%s\" at %s:\n" s  (Location.pp_loc l);
-        List.iter 
-          (fun st -> 
-            Format.printf "%s\n or plain:%s\n"
-              (Grammar_pp.pp_symterm pp_ascii_opts_default xd [] de_empty st)
-              (Grammar_pp.pp_plain_symterm st))  
-          sts;
-        St_uninterpreted(l, "multiple parses")
-      end
+      else
+        let 
+          sstart = Format.sprintf "\nmultiple parses of \"%s\":\n" s
+          and intermed : string list =  (List.map 
+            (fun st -> 
+              Format.sprintf "%s\n or plain:%s\n"
+                (Grammar_pp.pp_symterm pp_ascii_opts_default xd [] de_empty st)
+                (Grammar_pp.pp_plain_symterm st))  
+            sts)
+        in
+        begin  
+          report_error (Some l) (concat "" intermed);
+          St_uninterpreted(l, "multiple parses")
+        end
 
 (*----------------------------------------------------------------------------*)
 (** {2 Make parser} *)

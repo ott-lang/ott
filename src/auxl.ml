@@ -58,6 +58,9 @@ let debug s = if debug_on then begin print_string s; flush stdout end
 
 let warning l s = print_endline ("warning: " ^ s); flush stdout
 
+let report_error l s = print_endline ("error: " ^ s); flush stdout
+
+
 let error l s = print_endline ("error: " ^ s); flush stdout; exit 2
 
 let int_error s = print_endline("internal: " ^ s); flush stdout; exit 2

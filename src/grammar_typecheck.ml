@@ -2075,7 +2075,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
     | (pn,l)::pnls' -> 
         (try 
           let l' = List.assoc pn pnls' in
-          ty_error ("production name \""^pn^"\" is used for multiple productions, at "^Location.pp_loc l^" and "^Location.pp_loc l') ""
+          ty_error2 (l@l') ("production name \""^pn^"\" is used for multiple productions, at "^Location.pp_loc l^" and "^Location.pp_loc l') ""
         with Not_found ->
           find_first_duplicate2 pnls')
     | [] -> () in

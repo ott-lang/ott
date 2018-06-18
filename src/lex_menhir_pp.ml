@@ -657,6 +657,7 @@ let pp_menhir_prod yo generate_aux_info_here xd ts r p =
         let pp_menhir_hse hse = 
           match hse with
           | Hom_string s ->  s
+          (* TODO, arbitrary failure? *)
           | Hom_index i -> let e = List.nth es'' (*or es? *) i  in let d=element_data_of_element ts true e in (match d.semantic_action with Some s -> s | None -> raise (Failure ("pp_menhir_hse Hom_index " ^ string_of_int i ^ " at " ^ Location.pp_loc p.prod_loc)))
           | Hom_terminal s -> s
           | Hom_ln_free_index (mvs,s) -> raise (Failure "Hom_ln_free_index not implemented")  in

@@ -3115,6 +3115,7 @@ and pp_symterm m xd sie de st : string =
           ^ (if xo.ppt_colour then "}" else "")
           ^ "}"
       | _ ->
+      
           Printf.sprintf "(PARSE_ERROR \"%s\" \"%s\")"
             (Location.pp_loc l) (String.escaped s)
 
