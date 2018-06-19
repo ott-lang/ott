@@ -692,7 +692,7 @@ let pp_menhir_prod yo generate_aux_info_here xd ts r p =
 
 
 
-        | None -> ignore(Auxl.error ("no ocaml hom for production "^p.prod_name));"")
+        | None -> ignore(Auxl.error (*TODO*) None ("no ocaml hom for production "^p.prod_name));"")
     in
 
     let aux_wrapper_l, aux_wrapper_r = 

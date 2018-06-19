@@ -1318,6 +1318,7 @@ and pp_metavardefn m xd mvd =
 	| Ascii _ | Tex _ -> raise Auxl.ThisCannotHappen ))
 
 and pp_metavarrep m xd mvd_rep type_name =
+  (* TODO report locations for these warnings? *)
   match m with
   | Ascii ao ->
       pp_homomorphism_list m xd mvd_rep
@@ -1327,37 +1328,37 @@ and pp_metavarrep m xd mvd_rep type_name =
       ( try
 	let hs = List.assoc "isa" mvd_rep in
 	pp_hom_spec m xd hs
-      with Not_found -> Auxl.warning ("undefined isa metavarrep for "^type_name^"\n"); "UNDEFINED" )
+      with Not_found -> Auxl.warning None ("undefined isa metavarrep for "^type_name^"\n"); "UNDEFINED" )
   | Hol ho ->
       ( try
 	let hs = List.assoc "hol" mvd_rep in
 	pp_hom_spec m xd hs
-      with Not_found -> Auxl.warning ("undefined hol metavarrep for "^type_name^"\n"); "UNDEFINED" )
+      with Not_found -> Auxl.warning None ("undefined hol metavarrep for "^type_name^"\n"); "UNDEFINED" )
   | Lem lo ->
       ( try
 	let hs = List.assoc "lem" mvd_rep in
 	pp_hom_spec m xd hs
-      with Not_found -> Auxl.warning ("undefined lem metavarrep for "^type_name^"\n"); "UNDEFINED" )
+      with Not_found -> Auxl.warning None ("undefined lem metavarrep for "^type_name^"\n"); "UNDEFINED" )
   | Coq co ->
       ( try
 	let hs = List.assoc "coq" mvd_rep in
 	pp_hom_spec m xd hs
-      with Not_found -> Auxl.warning ("undefined coq metavarrep for "^type_name^"\n"); "UNDEFINED" )
+      with Not_found -> Auxl.warning None ("undefined coq metavarrep for "^type_name^"\n"); "UNDEFINED" )
   | Rdx ro ->
       ( try
 	let hs = List.assoc "rdx" mvd_rep in
 	pp_hom_spec m xd hs
-      with Not_found -> Auxl.warning ("undefined rdx metavarrep for "^type_name^"\n"); "UNDEFINED" )
+      with Not_found -> Auxl.warning None ("undefined rdx metavarrep for "^type_name^"\n"); "UNDEFINED" )
   | Twf wo ->
       ( try
 	let hs = List.assoc "twf" mvd_rep in
 	pp_hom_spec m xd hs
-      with Not_found -> Auxl.warning ("undefined Twelf metavarrep for "^type_name^"\n"); "UNDEFINED" )
+      with Not_found -> Auxl.warning None ("undefined Twelf metavarrep for "^type_name^"\n"); "UNDEFINED" )
   | Caml oo ->
       ( try
 	let hs = List.assoc "ocaml" mvd_rep in
 	pp_hom_spec m xd hs
-      with Not_found -> Auxl.warning ("undefined OCaml metavarrep for "^type_name^"\n"); "UNDEFINED" )
+      with Not_found -> Auxl.warning None ("undefined OCaml metavarrep for "^type_name^"\n"); "UNDEFINED" )
 	
 and pp_prodname m xd pn =  (* FZ this is never called *)
   match m with
@@ -3115,7 +3116,6 @@ and pp_symterm m xd sie de st : string =
           ^ (if xo.ppt_colour then "}" else "")
           ^ "}"
       | _ ->
-      
           Printf.sprintf "(PARSE_ERROR \"%s\" \"%s\")"
             (Location.pp_loc l) (String.escaped s)
 
@@ -3141,7 +3141,8 @@ and extract_nonterms_deep_ste_list slil =
   | [] -> []
   | Stli_single (_,stel)::tl -> (extract_nonterms_deep stel) @ (extract_nonterms_deep_ste_list tl)
   | Stli_listform _::tl -> 
-      Auxl.warning "<<internal: extract_nonterms_deep_ste_list not implemented over listforms>>>";
+      (* TODO location? *)
+      Auxl.warning None "<<internal: extract_nonterms_deep_ste_list not implemented over listforms>>>";
       extract_nonterms_deep_ste_list tl )
   
 and extract_nonterms_deep s =
@@ -3153,7 +3154,8 @@ and extract_nonterms_deep s =
   | (Ste_st (_,St_node (_,stnb)))::t -> (extract_nonterms_deep stnb.st_es) @ (extract_nonterms_deep t)
   | (Ste_list (_,slil))::t -> (extract_nonterms_deep_ste_list slil) @ (extract_nonterms_deep t)
   | h::t ->
-      Auxl.warning
+      (* TODO *)
+      Auxl.warning None
         ("internal: extract_nonterms_deep case failure\n "
          ^ (pp_plain_symterm_element h) ^ "\n\n"); (extract_nonterms_deep t)
 
@@ -3165,7 +3167,8 @@ and extract_nonterms s =
   | (Ste_st (_,St_node (_,stnb)))::t -> (stnb.st_rule_ntr_name,[]) :: (extract_nonterms t)
   (* | (Ste_st (_,St_node (_,stnb)))::t -> (extract_nonterms stnb.st_es) @ (extract_nonterms t)  *)
   | h::t ->
-      Auxl.warning
+      (* TODO *)
+      Auxl.warning None
         ("internal: extract_nonterms case failure\n "
          ^ (pp_plain_symterm_element h) ^ "\n\n"); (extract_nonterms t)
 
@@ -3699,7 +3702,7 @@ and pp_symterm_list_items m xd sie (de :dotenv) tmopt prod_es stlis : (string * 
       | (Lang_nonterm(ntr,_))::t -> ntr :: (intern t)
       | (Lang_metavar(mvr,_))::t -> mvr :: (intern t)
       | (Lang_terminal _)::t -> intern t
-      | _::t -> Auxl.warning "internal: elements_to_string never happen\n"; intern t )
+      | _::t -> Auxl.warning None "internal: elements_to_string never happen\n"; intern t )
     in (* List.rev *) (intern ls) in
 
   let include_terminals = 
@@ -3800,7 +3803,7 @@ and pp_symterm_list_item m xd sie (de :dotenv) tmopt include_terminals prod_es s
       | (Lang_nonterm(ntr,_))::t -> ntr :: (intern t)
       | (Lang_metavar(mvr,_))::t -> mvr :: (intern t)
       | (Lang_terminal _)::t -> intern t
-      | _::t -> Auxl.warning "internal: elements_to_string never happen\n"; intern t )
+      | _::t -> Auxl.warning None "internal: elements_to_string never happen\n"; intern t )
     in (* List.rev *) (intern ls) in
 
   match stli with
@@ -3993,7 +3996,7 @@ and pp_symterm_list_body m xd sie (de :dotenv) tmopt include_terminals prod_es s
                     (Auxl.promote_ntr xd ntr,b) :: (intern t)
                 | (Lang_metavar(mvr,_))::t -> (mvr,false) :: (intern t)
                 | (Lang_terminal _)::t -> intern t
-                | _::t -> Auxl.warning "internal: elements_to_string never happen\n"; intern t )
+                | _::t -> Auxl.warning None "internal: elements_to_string never happen\n"; intern t )
               in (* List.rev *) (intern ls) in
 
 	    let ty_list = Str.split (Str.regexp "(\\|*\\|)") de1i.de1_coq_type_of_pattern in

@@ -382,7 +382,8 @@ let subrule (xd:syntaxdefn) (include_meta_prods:bool)
 	      ^ " cannot be matched in rule " ^ ru.rule_ntr_name) ""
       | [pu] -> (pl.prod_name,pu.prod_name)
       | pu::pu'::pus' -> 
-          Auxl.warning 
+          (* TIDI get loc *)
+          Auxl.warning  None
             ("production \""^pl.prod_name^"\" is a subproduction of more than one production: "^String.concat ", " (List.map (function pu -> "\""^pu.prod_name^"\"") pus) ^" (taking the first)\n");
           (pl.prod_name,pu.prod_name)
     )
@@ -561,7 +562,7 @@ let rec cd_hom hu c (es : element list) ((hn,hs,l0):raw_homomorphism): homomorph
 (* hmm - maybe we should check that this s is in fact one of the terminals *)
 (* of the grammar.  But that info isn't to hand (eg in c) at present *)
               if not (rule_has_terminal (snd id) es) then begin
-                Auxl.warning l0 ("Free variables in hom element " ^ Grammar_pp.pp_raw_hom_spec_el hse 
+                Auxl.warning (Some l0) ("Free variables in hom element " ^ Grammar_pp.pp_raw_hom_spec_el hse 
                               )
               end;
               Hom_terminal (snd id) )

@@ -31,7 +31,8 @@
 (*  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                         *)
 (**************************************************************************)
 
-open Types
+open Types;;
+open Location
 
 (* exceptions ************************************************************ *)
 
@@ -52,16 +53,22 @@ let mode_name m = match m with
   | Lex _ -> "Lex"
   | Menhir _ -> "Menhir"
 
+let maybe_pp_loc l = 
+  match l with
+    | None -> ""
+    | Some l -> pp_loc l ^ ": "
+  ;;
+
 let debug_on = false
 
 let debug s = if debug_on then begin print_string s; flush stdout end
 
-let warning l s = print_endline ("warning: " ^ s); flush stdout
+let warning l s = print_endline ("warning: " ^ maybe_pp_loc l ^ s); flush stdout
 
-let report_error l s = print_endline ("error: " ^ s); flush stdout
+let report_error l s = print_endline ("error: " ^ maybe_pp_loc l ^ s); flush stdout
 
 
-let error l s = print_endline ("error: " ^ s); flush stdout; exit 2
+let error l s = print_endline ("error: " ^ maybe_pp_loc l ^ s); flush stdout; exit 2
 
 let int_error s = print_endline("internal: " ^ s); flush stdout; exit 2
 

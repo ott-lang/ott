@@ -84,7 +84,7 @@ let context_app_rhs m xd lookup (hole:nonterm) (target:nontermroot) (r:rule) (p:
 	( match m with
 	| Caml _ -> Auxl.capitalize_prodnames_in_symterm (List.hd sts)
 	| _ -> List.hd sts )
-      | _ -> Auxl.warning ("internal: multiple parses context fake rhs: "^fake_rhs^"\n"); List.hd sts in
+      | _ -> Auxl.warning None ("internal: multiple parses context fake rhs: "^fake_rhs^"\n"); List.hd sts in
     let sie = [] in
     let ((de1,de2) as de,de3,pptbe) = Bounds.bound_extraction m xd dummy_loc [sts_e]  in
     (true, Some (Grammar_pp.pp_symterm m xd sie de sts_e))

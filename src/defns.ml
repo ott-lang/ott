@@ -757,7 +757,7 @@ let fundefn_to_int_func (m:pp_mode) (xd:syntaxdefn) (deps:string list) (fd:funde
 	  match Auxl.hom_spec_for_hom_name "coq-struct" fd.fd_homs with
 	  | Some ([Hom_index i]) -> "{struct x" ^ string_of_int (i+1) ^ "} "
 	  | Some _ -> 
-	      Auxl.warning "malformed coq-struct homomorphism"; 
+     Auxl.warning (* TODO *) None "malformed coq-struct homomorphism"; 
 	      "{struct <<<malformed term in coq-struct hom>>>}"
 	  | None -> "" in
 
@@ -921,7 +921,8 @@ let pp_fundefnclass (m:pp_mode) (xd:syntaxdefn) lookup (fdc:fundefnclass) : stri
 	  ( match h with 
 	  | Some ([Hom_string s]) -> Some s
 	  | None -> None
-	  | _ -> Auxl.warning "malformed isa-proof/hol-proof hom"; Some "<<<malformed isa-proof/hol-proof hom>>>" ) in 
+   | _ -> Auxl.warning None  "malformed isa-proof/hol-proof hom"; Some "<<<malformed isa-proof/hol-proof hom>>>" ) in 
+(* TODO *)
 	( match m with
 	| Coq _ | Caml _ | Lem _ -> None
 	| Isa _ -> pp_proof (Auxl.hom_spec_for_hom_name "isa-proof" fdc.fdc_homs) 
@@ -935,7 +936,7 @@ let pp_fundefnclass (m:pp_mode) (xd:syntaxdefn) lookup (fdc:fundefnclass) : stri
       Auxl.print_with_comment m "\n" ("funs "^fdc.fdc_name) 
 	(Dependency.compute m xd int_funcs_collapsed)
 
-  | Twf _ -> Auxl.warning "internal: fundefnclass not implemented for Twelf"; ""
+  | Twf _ -> Auxl.warning None (*TODO*) "internal: fundefnclass not implemented for Twelf"; ""
   | Lex _ | Menhir _ -> ""
 
 
@@ -1241,7 +1242,7 @@ let process_raw_funclause
 
           { fc_lhs = lhs; fc_rhs = rhs; fc_loc = l }
       | _ -> 
-	  Auxl.warning ("process_raw_funclause lost symterm: "
+	Auxl.warning None (*TODO*) ("process_raw_funclause lost symterm: "
 			^ Grammar_pp.pp_plain_symterm st ^ "\n"); 
           let lhs = St_uninterpreted(l, "error") in
           let rhs = St_uninterpreted(l, Grammar_pp.pp_plain_symterm st) in 

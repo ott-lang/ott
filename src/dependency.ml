@@ -216,7 +216,7 @@ let sort (l : ('b * 'b list * 'a) list) : ('b * 'a) list list * 'b list =
       List.assoc n (List.map (fun (x,y) -> (y,x)) !info) 
     with Not_found -> 
       (* Auxl.error ("internal: sort: cannot find a node labelled " ^ n ^ "\n") *) 
-      Auxl.warning ("internal: sort: cannot find a node labelled " ^ n ^ "\n");
+      Auxl.warning None ("internal: sort: cannot find a node labelled " ^ n ^ "\n");
       raise Not_found in
 
   let add_vertex g i c v =
