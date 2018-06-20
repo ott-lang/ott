@@ -375,7 +375,7 @@ let subrule (xd:syntaxdefn) (include_meta_prods:bool)
           (fun pu -> (include_meta_prods || not(pu.prod_meta)) && subprod subrule_graph pl pu) ru.rule_ps in
       match pus with 
       | [] -> 
-          ty_error
+          ty_error2 pl.prod_loc
 	    ( "subrule check failed: production "
 	      ^ Auxl.the (Grammar_pp.pp_prod error_opts xd "" "" pl) 
 	      ^ " of rule " ^ rl.rule_ntr_name
@@ -1204,7 +1204,8 @@ and cd_subrules c (rsrs:raw_subrule list) : subrule list * subrule_data=
   (* report error if there is a cycle *)
   let ntrs_in_cycles = Auxl.option_map (fun (ntr,ntr') -> if ntr=ntr' then Some ntr else None) tc_edges in
   if ntrs_in_cycles <> [] then 
-      ty_error ("subrule order has a cycle containing: "^String.concat " " (List.map (fun ntr -> "\""^Grammar_pp.pp_plain_nontermroot ntr^"\"") ntrs_in_cycles)) "";
+    ty_error2 (List.hd srs0).sr_loc
+      ("subrule order has a cycle containing: "^String.concat " " (List.map (fun ntr -> "\""^Grammar_pp.pp_plain_nontermroot ntr^"\"") ntrs_in_cycles)) "";
 
   let top_nodes = List.filter (fun ntr -> not (List.exists (fun (ntr',ntr'')-> ntr=ntr') tc_edges )) nodes0 in
 
@@ -1212,7 +1213,7 @@ and cd_subrules c (rsrs:raw_subrule list) : subrule list * subrule_data=
 
   List.iter 
     (fun ntr -> match tops_above ntr with [] | [_] -> () | ntrs -> 
-      ty_error ("subrule order has multiple tops above \""^ntr^"\", ie "^String.concat " " (List.map (fun ntr -> "\""^Grammar_pp.pp_plain_nontermroot ntr^"\"") ntrs)) "") 
+      ty_error2 (List.hd srs0).sr_loc ("subrule order has multiple tops above \""^ntr^"\", ie "^String.concat " " (List.map (fun ntr -> "\""^Grammar_pp.pp_plain_nontermroot ntr^"\"") ntrs)) "") 
     nodes0;
       
   let promote_to_top ntr = 
@@ -1360,7 +1361,7 @@ let check_structure (xd:syntaxdefn) (str:structure) : unit =
 		    | Mvr _ -> ()
 		    | Ntr rd -> 
 			if not (List.mem rd (rgtosee@rgseen)) 
-			then ty_error ("rule \""^r^"\" depends on rule \"" ^rd
+			then ty_error2 (Auxl.loc_of_ntr xd r) ("rule \""^r^"\" depends on rule \"" ^rd
 				       ^"\" which belongs to a future group of rules.\n") "")
 		  r_deps; 
 	      end;
@@ -1867,11 +1868,11 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
 		      (fun rr -> (List.map fst rr.raw_rule_ntr_names)) 
 		      rsd'.raw_sd_rs)) in
   (* collect together all the nontermroots, primaried, that occur on the left of a <::  *)
-  let wrapped_primary_ntr_of_ntr ntr = try
+  let wrapped_primary_ntr_of_ntr rsr ntr = try
     primary_ntr_of_ntr ntr 
   with
-  | Not_found -> ty_error ("\""^ntr^"\" in subrule declaration is not a nonterminal root ") "" in
-  let srs_lowers = List.map (fun sr -> (wrapped_primary_ntr_of_ntr sr.raw_sr_lower)) rsd'.raw_sd_srs in
+  | Not_found -> ty_error2 rsr.raw_sr_loc ("\""^ntr^"\" in subrule declaration is not a nonterminal root ") "" in
+  let srs_lowers = List.map (fun sr -> (wrapped_primary_ntr_of_ntr sr sr.raw_sr_lower)) rsd'.raw_sd_srs in
 (*  let srs_uppers = List.map (fun sr -> (wrapped_primary_ntr_of_ntr sr.raw_sr_upper)) rsd'.raw_sd_srs in *)
   
   (* 6- make a preliminary ident_lexer that doesn't know about any terminals *)
@@ -2240,7 +2241,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
       if (List.sort compare (fs_actually_here p.prod_bs) <>
 	       List.sort compare fs_should_be_here)  
       then 
-        ty_error
+        ty_error2 p.prod_loc
           ("auxiliaries are not uniquely defined in production " ^ p.prod_name) 
           "t_production 1";
       mse_tys);
@@ -2267,7 +2268,9 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
     let ns = List.map (fun p -> p.prod_name) r.rule_ps in
     ( match firstdup ns with 
     | None -> () 
-    | Some x -> ty_error ("Repeated production name \"" ^ x^"\"") "t_productions 1");
+    | Some x ->
+      let badprods = List.filter (fun p -> p.prod_name == x) r.rule_ps
+      in ty_error2 (List.hd badprods).prod_loc ("Repeated production name \"" ^ x^"\"") "t_productions 1");
     let mse_tys = 
       if r.rule_meta 
       then []
@@ -2480,6 +2483,8 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
   (* VV: We do not check that contextrules with the hole filled are of the
      right type right now, but later when a parser has been constructed. *)
 
+
+  (*TODO get loc*)
   let rec count_holes_element (el:element) : int =
     match el with
     | Lang_nonterm _ -> 0
@@ -2498,7 +2503,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
   let count_holes_prod (pl:prod) : unit =
     let n = count_holes_elements pl.prod_es in
     if n <> 1 then
-      ty_error( "count_holes_rule check failed: hole __ found nonlinearly "
+      ty_error2 pl.prod_loc ( "count_holes_rule check failed: hole __ found nonlinearly "
 		^ "(" ^ string_of_int n ^ " times) in production "
 		^ Auxl.the (Grammar_pp.pp_prod error_opts xd "" "" pl)) ""
     else () in
@@ -2831,7 +2836,7 @@ let check_with_parser (lookup : made_parser) (xd: syntaxdefn) : unit =
         ( match Context_pp.context_app_rhs error_opts xd lookup (hole,[]) target rl pl with  
                 (* FZ think about error_opts and the empty suffix *)
         | (false, _) -> 
-            ty_error
+            ty_error2 pl.prod_loc
               ( "ctxrule check failed: production\n"
        	        ^ Auxl.the (Grammar_pp.pp_prod error_opts xd "" "" pl)
        	        ^ "\n of rule " ^ ntr

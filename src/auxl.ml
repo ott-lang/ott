@@ -636,7 +636,12 @@ let loc_of_symterm st = match st with
   | St_nonterm (l,_,_) -> l
   | St_nontermsub (l,_,_,_) -> l 
   | St_uninterpreted (l,_) -> l
-   
+
+let loc_of_ntr (xd:syntaxdefn) (ntr:nontermroot) =
+  (rule_of_ntr xd ntr).rule_loc 
+
+let loc_of_prodname ?(warn=true) (xd:syntaxdefn) (pn:prodname) =
+  (prod_of_prodname xd pn).prod_loc 
 
 let loc_of_raw_element e = 
   match e with
