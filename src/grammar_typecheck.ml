@@ -1119,7 +1119,7 @@ and cd_element c (e:raw_element) : semiraw_element =
                   elb_es = es' } in
       Sr_el(Lang_list elb)
   | (Raw_sugaroption (_, _)|Raw_nelist (_, _)|Raw_list (_, _)|Raw_option (_, _))
-      -> Auxl.error None "internal: sugaroption, nelist, list and option not supported"
+      -> Auxl.error (Some (Auxl.loc_of_raw_element e))  "internal: sugaroption, nelist, list and option not supported"
 
 and cd_comp_bound : cd_env -> raw_comp_bound -> bound * metavarroot
     = fun c rcb -> match rcb with

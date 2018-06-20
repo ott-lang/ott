@@ -692,7 +692,7 @@ let pp_menhir_prod yo generate_aux_info_here xd ts r p =
 
 
 
-        | None -> ignore(Auxl.error (*TODO*) None ("no ocaml hom for production "^p.prod_name));"")
+        | None -> ignore(Auxl.error (Some (r.rule_loc)) ("no ocaml hom for production "^p.prod_name));"")
     in
 
     let aux_wrapper_l, aux_wrapper_r = 
@@ -809,8 +809,7 @@ let pp_pp_raw_rule yo generate_aux_info xd ts r =
     (match Auxl.hom_spec_for_hom_name "pp-raw" r.rule_homs with 
     | Some hs -> 
         Some (pp_pp_raw_name r.rule_ntr_name ^ " " ^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs ^"\n\n")
-        (* TODO *)
-    | None -> (Auxl.error None ("no pp-raw hom for phantom production "^r.rule_ntr_name));
+    | None -> (Auxl.error (Some r.rule_loc) ("no pp-raw hom for phantom production "^r.rule_ntr_name));
     )
   else 
     let generate_aux_info_here = generate_aux_info_for_rule generate_aux_info r in 
@@ -852,8 +851,7 @@ let pp_pp_rule yo generate_aux_info xd ts r =
     (match Auxl.hom_spec_for_hom_name "pp" r.rule_homs with 
     | Some hs -> 
         Some (pp_pp_name r.rule_ntr_name ^ " " ^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs ^"\n\n")
-        (* TODO *)
-    | None -> (Auxl.error None ("no pp hom for phantom production "^r.rule_ntr_name));
+    | None -> (Auxl.error (Some r.rule_loc) ("no pp hom for phantom production "^r.rule_ntr_name));
     )
   else 
     let generate_aux_info_here = generate_aux_info_for_rule generate_aux_info r in 
