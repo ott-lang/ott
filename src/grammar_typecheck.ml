@@ -49,6 +49,13 @@ let rec firstdup xs = match xs with
   [] -> None 
 | x::xs -> if (List.mem x xs) then Some x else firstdup xs 
 
+let rec firstdup_with f xs =
+  let rec helper xs keys =
+    match (xs,keys) with
+    | ([],[]) -> None
+    | (x::xs, key::keys) -> if (List.mem key keys) then Some x else helper xs keys 
+    in helper xs (List.map f xs)
+
 
 (* synthesising a raw aux-annotated rule *)
 
@@ -2265,12 +2272,11 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
 (*             | Some nt -> tcheck' false  ("Repeated nonterminal "^Grammar_pp.pp_nonterm m nt^" in production "^p.prod_name) "t_production 2"  *)
 
   and t_rule (r:rule) : mse_type list =
-    let ns = List.map (fun p -> p.prod_name) r.rule_ps in
-    ( match firstdup ns with 
+    ( match firstdup_with (fun x -> x.prod_name) r.rule_ps with 
     | None -> () 
     | Some x ->
-      let badprods = List.filter (fun p -> p.prod_name == x) r.rule_ps
-      in ty_error2 (List.hd badprods).prod_loc ("Repeated production name \"" ^ x^"\"") "t_productions 1");
+      (* TODO report both locs *)
+      ty_error2 x.prod_loc ("Repeated production name \"" ^ x.prod_name^"\"") "t_productions 1");
     let mse_tys = 
       if r.rule_meta 
       then []
@@ -2408,11 +2414,11 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
   let xd = { xd with xd_axs = axs } in
 
 (* hack: to allow repeated secondary nonterm roots, comment out the second of these *)
-  let ns = List.flatten 
-      (List.map (fun r -> List.map fst r.rule_ntr_names) xd.xd_rs) in
-  ( match firstdup ns with 
+  let ns = List.flatten (*TODO also highlight conflicting name*)
+      (List.map (fun r -> List.map (fun pr -> (fst pr, r)) r.rule_ntr_names) xd.xd_rs) in
+  ( match firstdup_with (fun pr -> fst pr) ns with 
   | None -> () 
-  | Some v -> ty_error ("repeated rule name "^v^"") "t_grammar 1");
+  | Some (v,r) -> ty_error2 r.rule_loc ("repeated rule name "^v^"") "t_grammar 1");
   
   (* check that subrules don't involve any semi-meta rules. *)
   (* TODO: should also check that they don't involve any rules with type homs *)
@@ -2421,7 +2427,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
   List.iter 
     (fun ntr -> 
       if (Auxl.rule_of_ntr xd ntr).rule_semi_meta 
-      then ty_error ("cannot have semi-meta rule \""^ntr^"\" in a subrule relationship") "") 
+      then ty_error2 (Auxl.loc_of_ntr xd ntr) ("cannot have semi-meta rule \""^ntr^"\" in a subrule relationship") "") 
     nodes0 ;
 
 
@@ -2485,23 +2491,23 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
 
 
   (*TODO get loc*)
-  let rec count_holes_element (el:element) : int =
+  let rec count_holes_element prod (el:element) : int =
     match el with
     | Lang_nonterm _ -> 0
     | Lang_terminal "__" -> 1
     | Lang_terminal _ -> 0
     | Lang_metavar _ -> 0
-    | Lang_list elb -> count_holes_elements elb.elb_es
+    | Lang_list elb -> count_holes_elements prod elb.elb_es
     | Lang_option _  | Lang_sugaroption _ ->
-        ty_error
+        ty_error2 prod.prod_loc
 	  ( "count_holes_rule check failed: hole __ found in an"
 	    ^ " option or sugaroption form") ""
 
-  and count_holes_elements (els:element list) : int =
-      List.fold_left (+) 0 (List.map count_holes_element els) in
+  and count_holes_elements prod (els:element list) : int =
+      List.fold_left (+) 0 (List.map (count_holes_element prod) els) in
       
   let count_holes_prod (pl:prod) : unit =
-    let n = count_holes_elements pl.prod_es in
+    let n = count_holes_elements pl pl.prod_es in
     if n <> 1 then
       ty_error2 pl.prod_loc ( "count_holes_rule check failed: hole __ found nonlinearly "
 		^ "(" ^ string_of_int n ^ " times) in production "
