@@ -631,6 +631,13 @@ let hom_spec_for_hom_name hn homs =
 let hom_spec_for_pp_mode m homs = 
   hom_spec_for_hom_name (hom_name_for_pp_mode m) homs
 
+let loc_of_symterm st = match st with
+  | St_node (l,_) -> l  
+  | St_nonterm (l,_,_) -> l
+  | St_nontermsub (l,_,_,_) -> l 
+  | St_uninterpreted (l,_) -> l
+   
+
 let loc_of_raw_element e = 
   match e with
   | Raw_ident (l,_) 
