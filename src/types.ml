@@ -292,7 +292,7 @@ and xd_dependencies = (* xddep *)
 and embed = (* embed *)
     embedmorphism 
 
-and parsing_annotation = (prodname*parsing_annotation_type*prodname) (* pa *)
+and parsing_annotation = (prodname*parsing_annotation_type*prodname*loc) (* pa *)
 
 and parsing_annotations = (* pas *)
     { pa_data : parsing_annotation list; }

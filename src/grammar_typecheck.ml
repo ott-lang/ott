@@ -1324,7 +1324,7 @@ and cd_parsing_annotation all_prod_names (par:raw_parsing_annotations) : parsing
       (fun (raw_pn1,pa,raw_pn2) -> 
         check_prod_name raw_pn1;
         check_prod_name raw_pn2;
-        (raw_pn1, pa, raw_pn2)) 
+        (raw_pn1, pa, raw_pn2,par.raw_pa_loc)) 
     par.raw_pa_data
     
 and cd_parsing_annotations c pars =
