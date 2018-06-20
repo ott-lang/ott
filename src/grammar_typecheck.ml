@@ -2590,7 +2590,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
     List.iter (fun ntr1 -> let idx1 = vertex_of_ntr ntr1 in 
     List.iter (fun ntr2 ->
       if ntr2 = ntr1 then
-        ty_error ("non-terminal " ^ ntr1 ^ " has a non-productive self-loop.") ""
+        ty_error2 (Auxl.loc_of_ntr xd ntr1) ("non-terminal " ^ ntr1 ^ " has a non-productive self-loop.") ""
       else
         G.add_edge g idx1 (vertex_of_ntr ntr2))
       tos)
@@ -2628,7 +2628,8 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
   let (scc_vertex_sets : G.V.t list list) = G.Components.scc_list g in
   List.iter (fun x ->
                if List.length x > 1 then
-                 ty_error ("There is a non-productive cycle among the following non-terminals: " ^ ntrs_to_string x) ""
+                 ty_error2 (Auxl.loc_of_ntr xd (ntr_of_vertex (List.hd x)))
+                   ("There is a non-productive cycle among the following non-terminals: " ^ ntrs_to_string x) ""
                else
                  ())
             scc_vertex_sets;
@@ -2653,7 +2654,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
     else 
       ( match Auxl.find_first_duplicate2 (fun (_,s1) -> fun (_,s2) -> (compare s1 s2) = 0 ) (List.rev candidate) with
       | None -> candidate 
-      | Some s -> ty_error ("duplicated subrule: "^(Auxl.dump_structure_entry s)) "" ) in
+      | Some s -> ty_error2 (fst s) ("duplicated subrule: "^(Auxl.dump_structure_entry s)) "" ) in
   let structure_crs = 
     List.map
       (fun cr -> (cr.cr_loc, (Struct_crs [(cr.cr_ntr, cr.cr_target, cr.cr_hole)])))
