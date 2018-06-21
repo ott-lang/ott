@@ -849,7 +849,6 @@ let pp_lcs fd m xd : unit =
 	    ("lcs, rule "^r.rule_ntr_name^", binders in prod "
 	     ^ p.prod_name^ " for ntr "^ntr ^ " = "^String.concat " , " (List.map Grammar_pp.pp_plain_metavar mvs));
 
-(* TODO *)
 	  if List.length mvs > 1 then Auxl.error None "locally_nameless - not implemented: several mvs bind the same nt\n";
 
 	  if List.length mvs = 1 

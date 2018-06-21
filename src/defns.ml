@@ -1233,7 +1233,6 @@ let process_raw_funclause
           let rhs = 
 	    match e with 
 	    | Ste_st(_,st) -> st 
-      (* TODO *)
 	    | _ -> Auxl.error (Some (Auxl.loc_of_symterm st)) "process_raw_funclause internal error - bad rhs" in
 (*       print_string ("lhs symterm: "^ Grammar_pp.pp_plain_symterm lhs ^ "\n");flush stdout;  *)
 (*       print_string ("rhs symterm: "^ Grammar_pp.pp_plain_symterm rhs ^ "\n");flush stdout;  *)
