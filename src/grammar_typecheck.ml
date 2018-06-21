@@ -2315,7 +2315,11 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
       add_vertices fs (n+1) ((f,n,v)::acc) in
 
   let auxfn_names = Auxl.remove_duplicates 
-      (List.map (function (f,ntr,_)->f) auxfns) in
+      (List.map (function (f,ntr,loc)->f) auxfns) in
+
+  (*TODO make faster*)
+  let auxfn_loc f = (fun (_,_,l) -> l) (List.hd (List.filter (fun (ff,_,_) -> ff == f ) auxfns ) ) in
+  
 
   let vertex_info =  add_vertices auxfn_names 0 [] in
 
@@ -2372,11 +2376,11 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
       let ntmvrs = ntmvrs_of_component vs in
       match ntmvrs with
       | [ntmvr] -> (vs,ntmvr)
-      | [] -> ty_error (
+      | [] -> ty_error2 (auxfn_loc (auxfn_of_vertex (List.hd vs)) ) (
           "auxfns "
           ^ String.concat " " (List.map (function v->auxfn_of_vertex v) vs)
           ^ " have unconstrained result type") ""
-      | _ -> ty_error (
+      | _ -> ty_error2 (auxfn_loc (auxfn_of_vertex (List.hd vs)) ) (
           "auxfns "
           ^ String.concat " " (List.map (function v->auxfn_of_vertex v) vs)
           ^ " have overconstrained result type: "
@@ -2524,7 +2528,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
   let ctxrule_can_promote_hole ntr =
     let ntr_p = Auxl.promote_ntr xd (Auxl.primary_ntr_of_ntr xd ntr) in 
     if not (String.compare ntr ntr_p = 0)
-    then ty_error( "ctxrule_can_promote check failed: the type of hole "
+    then ty_error2 (Auxl.loc_of_ntr xd ntr) ( "ctxrule_can_promote check failed: the type of hole "
 		   ^ ntr ^ " can be promoted to " ^ ntr_p ) ""
     else () in
   List.iter (fun cr -> ctxrule_can_promote_hole cr.cr_hole) xd.xd_crs;
