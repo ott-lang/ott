@@ -53,22 +53,27 @@ let mode_name m = match m with
   | Lex _ -> "Lex"
   | Menhir _ -> "Menhir"
 
+let colour = ref true
+
 let maybe_pp_loc l = 
   match l with
     | None -> ""
-    | Some l -> pp_loc l ^ ": "
-  ;;
+    | Some l -> if !colour then "\027[1m" ^ pp_loc l ^ ":\027[0m\n" else pp_loc l ^ ":\n"
+
+let warning_string () = if !colour then "\027[1m\027[35mWarning: \027[0m" else "Warning: "
+
+let error_string () = if !colour then "\027[1m\027[31mError: \027[0m" else "Error: "
 
 let debug_on = false
 
 let debug s = if debug_on then begin print_string s; flush stdout end
 
-let warning l s = print_endline ("warning: " ^ maybe_pp_loc l ^ s); flush stdout
+let warning l s = print_endline (maybe_pp_loc l ^ warning_string () ^ s); flush stdout
 
-let report_error l s = print_endline ("error: " ^ maybe_pp_loc l ^ s); flush stdout
+let report_error l s = print_endline (maybe_pp_loc l ^ error_string () ^ s); flush stdout
 
 
-let error l s = print_endline ("error: " ^ maybe_pp_loc l ^ s); flush stdout; exit 2
+let error l s = print_endline (maybe_pp_loc l ^ error_string () ^ s); flush stdout; exit 2
 
 let int_error s = print_endline("internal: " ^ s); flush stdout; exit 2
 

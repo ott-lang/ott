@@ -179,7 +179,7 @@ let options = Arg.align [
 
 (* options for ascii output *)
   ( "-colour", 
-    Arg.Bool (fun b -> colour := b), 
+    Arg.Bool (fun b -> Auxl.colour := b; colour := b), 
     "<"^string_of_bool !colour ^">         Use (vt220) colour for ASCII pretty print" ); 
   ( "-show_sort", 
     Arg.Bool (fun b -> show_sort := b), 
