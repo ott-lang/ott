@@ -545,8 +545,6 @@ let process source_filenames =
               process_input ()
         with 
           My_parse_error (loc, s)->
-          (* TODO *)
-         (*  Auxl.error ("\n"^s^" in file: "^filter_filename^"\n") in*)
             Auxl.error loc ("\n"^s^"\n") in
       process_input ();
       output_string c' "\\end{alltt}\n";
@@ -607,8 +605,7 @@ let process source_filenames =
       Grammar_typecheck.check_and_disambiguate m_tex quotient generate_aux targets_non_tex (List.map snd source_filenames) (!merge_fragments) document 
     with
     | Typecheck_error (loc,s1,s2) ->
-    (* TODO *)
-        Auxl.error loc ("(in checking and disambiguating "^(if quotient then "quotiented " else "") ^ "syntax)\n"^s1
+        Auxl.error (Some loc) ("(in checking and disambiguating "^(if quotient then "quotiented " else "") ^ "syntax)\n"^s1
                     ^ (if s2<>"" then " ("^s2^")" else "")
                     ^ "\n")
   in
@@ -645,7 +642,7 @@ let process source_filenames =
     Grammar_typecheck.check_with_parser lookup xd
   with
   | Typecheck_error (loc,s1,s2) ->
-      Auxl.error loc ("(in checking syntax)\n"^s1
+      Auxl.error (Some loc) ("(in checking syntax)\n"^s1
               ^ (if s2<>"" then " ("^s2^")\n" else "\n"))
   end;
 
@@ -664,7 +661,7 @@ let process source_filenames =
        | Defns.Rule_parse_error (loc,s) ->
        Auxl.error (Some loc) ("\nError in processing definitions:\n"^s^"\n")
        | Bounds.Bounds (loc,s)  | Typecheck_error (loc,s,_)->
-       Auxl.error loc ("\nError in processing definitions:\n"^s^"\n")    
+       Auxl.error (Some loc) ("\nError in processing definitions:\n"^s^"\n")    
       )
     else
       (print_endline "********** NOT PROCESSING DEFINITIONS *************\n"; flush stdout;
@@ -753,7 +750,6 @@ let output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux) =
             | 0 -> sd
             | 1 -> Auxl.avoid_primaries_systemdefn false sd
             | 2 -> Auxl.avoid_primaries_systemdefn true sd
-            (* TODO? *)
             | _ -> Auxl.error None "coq type-name avoidance must be in {0,1,2}" ) in
           System_pp.pp_systemdefn_core_io m_coq sd lookup fi !merge_fragments
       | "isa" ->
@@ -819,7 +815,6 @@ let output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux) =
     with 
     | Parsing.Parse_error ->
         Auxl.error None ("unfiltered document "^src_filename^" cannot be parsed\n") 
-        (* TODO *)
     | My_parse_error (loc,s) -> Auxl.error loc s
     in
     Embed_pp.pp_embed_spec fd_dst m sd.syntax lookup (Auxl.collapse_embed_spec_el_list unfiltered_document);
