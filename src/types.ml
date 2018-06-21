@@ -166,11 +166,11 @@ and dotenv3 = (nt_or_mv*subntr_data) list
 and dotenv = dotenv1 * dotenv2 (* (de1,de2) as de *) 
 
 and bindspec = (* bs *)
-  | Bind of mse * nonterm
-  | AuxFnDef of auxfn * mse
-  | NamesEqual of mse * mse      (* not currently implemented *)
-  | NamesDistinct of mse * mse   (* not currently implemented *)
-  | AllNamesDistinct of mse      (* not currently implemented *)
+  | Bind of loc * mse * nonterm
+  | AuxFnDef of loc * auxfn * mse
+  | NamesEqual of loc * mse * mse      (* not currently implemented *)
+  | NamesDistinct of loc * mse * mse   (* not currently implemented *)
+  | AllNamesDistinct of loc * mse      (* not currently implemented *)
 and mse =  (* mse *) (* mse stands for `metavar set expression', but includes nonterms too *)
   | MetaVarExp of metavar 
   | NonTermExp of nonterm

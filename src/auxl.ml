@@ -1062,11 +1062,11 @@ and rename_bound map b = match b with
                           bclu_upper = rename_suffix_item map bclu.bclu_upper }
                         
 and rename_bindspec map bs = match bs with
-| Bind(mse,nt)->Bind(rename_mse map mse,rename_nonterm map nt)
-| AuxFnDef(auxfn,mse)->AuxFnDef(auxfn, rename_mse map mse)
-| NamesEqual(mse,mse')->NamesEqual(rename_mse map mse,rename_mse map mse')
-| NamesDistinct(mse,mse')->NamesDistinct(rename_mse map mse,rename_mse map mse')
-| AllNamesDistinct(mse)->AllNamesDistinct(rename_mse map mse)
+| Bind(loc,mse,nt)->Bind(loc,rename_mse map mse,rename_nonterm map nt)
+| AuxFnDef(loc,auxfn,mse)->AuxFnDef(loc,auxfn, rename_mse map mse)
+| NamesEqual(loc,mse,mse')->NamesEqual(loc,rename_mse map mse,rename_mse map mse')
+| NamesDistinct(loc,mse,mse')->NamesDistinct(loc,rename_mse map mse,rename_mse map mse')
+| AllNamesDistinct(loc,mse)->AllNamesDistinct(loc,rename_mse map mse)
 
 and rename_mse map mse = match mse with
 | MetaVarExp(mv)->MetaVarExp(rename_metavar map mv)
@@ -1803,7 +1803,7 @@ let prod_require_nominal m xd p =
   List.exists
     ( fun bs -> 
       match bs with
-      | Bind (MetaVarExp (mvr,_), nt) -> 
+      | Bind (_, MetaVarExp (mvr,_), nt) -> 
 	  is_nominal_atom m xd (mvd_of_mvr xd (primary_mvr_of_mvr xd mvr) )
       | _ -> false )
     p.prod_bs

@@ -787,16 +787,16 @@ and cd_mse c (mse:raw_mse) : mse =
     
 and cd_bindspec c (bs:raw_bindspec) : bindspec =
   ( match bs with    
-  | Raw_Bind (_,mse,(_,nt)) -> 
+  | Raw_Bind (loc,mse,(_,nt)) -> 
       ( match c.ident_lexer nt Location.dummy_pos  (* TODO more useful pos *) with
-      | OP_Some (Tok_nonterm (_,ntr)) -> Bind (cd_mse c mse, ntr) 
+      | OP_Some (Tok_nonterm (_,ntr)) -> Bind (loc,cd_mse c mse, ntr) 
       | _ -> 
           ty_error2 (Auxl.loc_of_raw_bindspec bs)
             ("bindspec must have a nonterminal on the right hand side, not \""^nt^"\"") "" )
-  | Raw_AuxFnDef(_,(_,f),mse) -> AuxFnDef(f, cd_mse c mse)
-  | Raw_NamesEqual(_,mse,mse') -> NamesEqual(cd_mse c mse, cd_mse c mse')
-  | Raw_NamesDistinct(_,mse,mse') -> NamesDistinct(cd_mse c mse, cd_mse c mse')
-  | Raw_AllNamesDistinct(_,mse) -> AllNamesDistinct(cd_mse c mse) )
+  | Raw_AuxFnDef(loc,(_,f),mse) -> AuxFnDef(loc,f, cd_mse c mse)
+  | Raw_NamesEqual(loc,mse,mse') -> NamesEqual(loc,cd_mse c mse, cd_mse c mse')
+  | Raw_NamesDistinct(loc,mse,mse') -> NamesDistinct(loc,cd_mse c mse, cd_mse c mse')
+  | Raw_AllNamesDistinct(loc,mse) -> AllNamesDistinct(loc,cd_mse c mse) )
 
 and cd_metavarrep c (raw_mvd_name: string) (mvr:raw_metavarrep) : metavarrep =
   List.map 
@@ -2034,11 +2034,11 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
 
   let rec extract_auxfns_bindspec ntr b = 
     ( match b with
-    | Bind (mse,nt) -> []
-    | AuxFnDef (f,mse) -> [(f,ntr)]
-    | NamesEqual (mse,mse') -> []
-    | NamesDistinct (mse,mse') -> []
-    | AllNamesDistinct (mse) -> [] )
+    | Bind (loc, mse,nt) -> []
+    | AuxFnDef (loc,f,mse) -> [(f,ntr,loc)]
+    | NamesEqual (loc,mse,mse') -> []
+    | NamesDistinct (loc,mse,mse') -> []
+    | AllNamesDistinct (loc,mse) -> [] )
             
   and extract_auxfns_production ntr p = 
     Auxl.setlist_list_union 
@@ -2054,12 +2054,12 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
     let auxfns0 = Auxl.setlist_list_union 
 	(List.map extract_auxfns_rule 
            (List.filter (fun r -> not r.rule_meta) xd.xd_rs)) in
-    let comp (f,ntr) (f',ntr') = 
+    let comp (f,ntr,_) (f',ntr',_) = 
       let x = String.compare f f' in
       if x <> 0 then x else compare ntr ntr' in
     List.sort comp auxfns0 in
 
-  let (auxfns : (auxfn * nontermroot) list) = extract_auxfns_syntaxdefn xd in
+  let (auxfns : (auxfn * nontermroot * loc) list) = extract_auxfns_syntaxdefn xd in
 
    (* print_string "extracted auxfns:\n"; *)
    (* List.iter (function (f,ntr) -> print_string (f^": "^ntr^" -> "^"?"^"\n")) auxfns; *)
@@ -2145,7 +2145,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
 (*           ( "Auxiliary " ^ f ^ " in MSE not defined for nonterminal root "  *)
 (* 	    ^ Grammar_pp.pp_nontermroot error_opts xd ntr') "t_mse Aux2" ; *)
         if not (List.exists
-                     (fun (f'',ntr'') -> f=f'' && Auxl.promote_ntr xd (primary_ntr_of_ntr ntr)=ntr'')
+                     (fun (f'',ntr'',_) -> f=f'' && Auxl.promote_ntr xd (primary_ntr_of_ntr ntr)=ntr'')
                      auxfns) 
         then
           ty_error2
@@ -2168,7 +2168,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
 (*           ( "Auxiliary " ^ f ^ " in MSE not defined for nonterminal root "  *)
 (* 	    ^ Grammar_pp.pp_nontermroot error_opts xd ntr') "t_mse Aux2" ; *)
         if not(List.exists
-                     (fun (f'',ntr'') -> f=f'' && Auxl.promote_ntr xd (primary_ntr_of_ntr ntr)=ntr'')
+                     (fun (f'',ntr'',loc) -> f=f'' && Auxl.promote_ntr xd (primary_ntr_of_ntr ntr)=ntr'')
                      auxfns)
         then
           ty_error2
@@ -2182,7 +2182,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
 
   and t_bindspec ntr (es : element list) (l : loc) (b : bindspec) : mse_type = 
     match b with
-    | Bind(mse,((ntr,suff) as nt)) -> 
+    | Bind(loc,mse,((ntr,suff) as nt)) -> 
         let mse_ty = (t_mse ntr es mse l) in
         if not (nt_in_es (Auxl.primary_ntr_of_ntr xd ntr,nt,[]) es) 
         then 
@@ -2208,12 +2208,12 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
             "manifestly null mse"  
             "t_bindspec Bind2";
         mse_ty 
-    | AuxFnDef(f,mse) -> 
+    | AuxFnDef(loc,f,mse) -> 
         let mse_ty = t_mse ntr es mse l in
         (Mse_ty_aux f)::mse_ty 
-    | NamesEqual(mse,mse') -> t_mse ntr es mse l @ t_mse ntr es mse' l
-    | NamesDistinct(mse,mse') -> t_mse ntr es mse l @ t_mse ntr es mse' l
-    | AllNamesDistinct(mse) -> t_mse ntr es mse l
+    | NamesEqual(loc,mse,mse') -> t_mse ntr es mse l @ t_mse ntr es mse' l
+    | NamesDistinct(loc,mse,mse') -> t_mse ntr es mse l @ t_mse ntr es mse' l
+    | AllNamesDistinct(loc,mse) -> t_mse ntr es mse l
 
       (* there is no t_element as anything that isn't recognised as a nonterminal or
       metavar is treated as a terminal *)
@@ -2241,10 +2241,10 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
         | [] -> []
         | b :: bs -> 
 	    ( match b with
-            | AuxFnDef(f,mse) -> f :: fs_actually_here bs
+            | AuxFnDef(loc,f,mse) -> f :: fs_actually_here bs
             | _ -> fs_actually_here bs ) ) in
       let fs_should_be_here = 
-        List.map fst (List.filter (fun (f',ntr') -> ntr=ntr') auxfns) in          
+        List.map (fun (x,y,z) -> x) (List.filter (fun (f',ntr' ,_) -> ntr=ntr') auxfns) in          
       if (List.sort compare (fs_actually_here p.prod_bs) <>
 	       List.sort compare fs_should_be_here)  
       then 
@@ -2315,7 +2315,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
       add_vertices fs (n+1) ((f,n,v)::acc) in
 
   let auxfn_names = Auxl.remove_duplicates 
-      (List.map (function (f,ntr)->f) auxfns) in
+      (List.map (function (f,ntr,_)->f) auxfns) in
 
   let vertex_info =  add_vertices auxfn_names 0 [] in
 
@@ -2393,7 +2393,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
                (function (vs,ntmvr) -> List.mem v vs) 
                components_with_ntmvr) in
         let ntrs = Auxl.option_map 
-            (function (f',ntr')-> if f'=f then Some ntr' else None) 
+            (function (f',ntr',_)-> if f'=f then Some ntr' else None) 
             auxfns in
         (f,(ntrs,ntmvr)))
       auxfn_names in

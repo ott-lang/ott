@@ -1680,15 +1680,15 @@ and pp_plain_dotenv3 de3 =
 
 and pp_plain_bindspec bs =
   match bs with
-  | Bind (mse, nonterm) -> "Bind ("^pp_plain_mse mse^", "^pp_plain_nonterm nonterm^")"
-  | AuxFnDef (f,mse) -> "AuxFnDef ("^f^", "^pp_plain_mse mse^")"
-  | NamesEqual (_,_) -> "NamesEqual"
-  | NamesDistinct (_,_) -> "NamesDistinct"
+  | Bind (loc, mse, nonterm) -> "Bind ("^pp_plain_mse mse^", "^pp_plain_nonterm nonterm^")"
+  | AuxFnDef (loc, f,mse) -> "AuxFnDef ("^f^", "^pp_plain_mse mse^")"
+  | NamesEqual (loc,_,_) -> "NamesEqual"
+  | NamesDistinct (loc,_,_) -> "NamesDistinct"
   | AllNamesDistinct _ -> "AllNamesDistinct"
 
 and pp_bindspec m xd sie de bs = 
   match bs with
-  | Bind (mse,nt) -> 
+  | Bind (loc,mse,nt) -> 
       ( match m with 
       | Ascii ao -> 
           pp_BIND^" " ^  pp_mse_string m xd sie de mse ^ " " 
@@ -1697,12 +1697,12 @@ and pp_bindspec m xd sie de bs =
           pp_tex_BIND ^ "\\; " ^  pp_mse_string m xd sie de mse ^ "\\; "
 	  ^ pp_tex_IN ^ "\\; " ^ pp_nonterm m xd nt
       | Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Caml _ | Lex _ | Menhir _ -> raise ThisCannotHappen )
-  | AuxFnDef (f,mse) -> 
+  | AuxFnDef (loc,f,mse) -> 
       ( match m with 
       | Ascii ao -> pp_auxfn m xd f ^ "" ^ pp_EQ ^ "" ^ pp_mse_string m xd sie de mse
       | Tex xo -> pp_auxfn m xd f ^ "" ^ pp_tex_EQ ^ "" ^ pp_mse_string m xd sie de mse
       | Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Caml _ | Lex _ | Menhir _ -> raise ThisCannotHappen )
-  | NamesEqual (mse,mse') -> 
+  | NamesEqual (loc,mse,mse') -> 
       ( match m with 
       | Ascii ao -> 
           pp_NAMES ^ "" ^ pp_LPAREN ^ "" ^ pp_mse_string m xd sie de mse ^ "" ^ pp_RPAREN 
@@ -1713,7 +1713,7 @@ and pp_bindspec m xd sie de bs =
 	  ^ "" ^ pp_tex_RPAREN ^ "\\," ^ pp_tex_EQ ^ "\\," ^ pp_tex_NAMES
 	  ^ "" ^ pp_tex_LPAREN ^ "" ^ pp_mse_string m xd sie de mse' ^ "" ^ pp_tex_RPAREN
       | Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Caml _ | Lex _ | Menhir _ -> raise ThisCannotHappen )
-  | NamesDistinct (mse,mse') -> 
+  | NamesDistinct (loc,mse,mse') -> 
       ( match m with 
       | Ascii ao -> 
           pp_NAMES ^ "" ^ pp_LPAREN ^ "" ^ pp_mse_string m xd sie de mse ^ "" ^ pp_RPAREN
@@ -1725,7 +1725,7 @@ and pp_bindspec m xd sie de bs =
 	  ^ pp_tex_NAMES ^ "" ^ pp_tex_LPAREN ^ "" ^ pp_mse_string m xd sie de mse' 
 	  ^ ""^pp_tex_RPAREN
       | Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Caml _ | Lex _ | Menhir _ -> raise ThisCannotHappen )
-  | AllNamesDistinct mse -> 
+  | AllNamesDistinct (loc,mse) -> 
       ( match m with 
       | Ascii ao -> 
           pp_DISTINCTNAMES ^ "" ^ pp_LPAREN ^ "" ^ pp_mse_string m xd sie de mse 
@@ -2400,7 +2400,7 @@ and pp_nominal_prod m xd rnn rpw p =
   let rec arrange np bs =
     match bs with
     | [] -> np
-    | (Bind (MetaVarExp mv, nt)) :: bst ->
+    | (Bind (loc, MetaVarExp mv, nt)) :: bst ->
 	let rnp =
 	  Auxl.option_map
 	    ( fun (bl,el) ->

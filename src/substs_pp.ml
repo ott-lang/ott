@@ -245,7 +245,7 @@ let auxfn_usages (bs : bindspec list) : (auxfn * nonterm) list =
   let all_binding_mses = 
     Auxl.option_map 
       (function b -> match b with
-      | Bind(mse,nt) -> Some(mse)
+      | Bind(loc,mse,nt) -> Some(mse)
       | _ -> None)
       bs in
   Auxl.remove_duplicates 
@@ -286,7 +286,7 @@ let pp_auxfn_clauses m xd f ntr ntmvr =
         Auxl.option_map 
           ( fun b -> 
 	    match b with 
-	    | AuxFnDef(f',mse) when f'=f -> Some mse
+	    | AuxFnDef(loc,f',mse) when f'=f -> Some mse
 	    | _ -> None ) 
           p.prod_bs with
       | [mse] -> mse
@@ -456,7 +456,7 @@ let glommed_bound_things_for_nonterm
   let relevant_bind_clauses_around_this_nonterm : (mse * nonterm) list = 
     Auxl.option_map 
       (function b -> match b with
-      | Bind(mse',nt') -> 
+      | Bind(loc,mse',nt') -> 
           if nt'=nt &&
             Auxl.result_type_of_mse xd mse'= that_var_root then Some (mse',nt)
           else None
@@ -492,7 +492,7 @@ let glommed_bound_things_for_nonterm
     | Empty -> false in
     List.exists
       (function bs -> match bs with
-      | Bind (mse'',nt'') -> nt_occurs mse''
+      | Bind (loc,mse'',nt'') -> nt_occurs mse''
       | _ -> false)
       (p.prod_bs) in 
 
@@ -533,7 +533,7 @@ let directly_binding_usages_of_this_metavar
   | Empty -> false in
   List.exists
     (function bs -> match bs with
-    | Bind (mse'',nt'') -> mv_occurs mse''
+    | Bind (loc,mse'',nt'') -> mv_occurs mse''
     | _ -> false)
     (p.prod_bs) 
 

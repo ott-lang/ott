@@ -95,8 +95,8 @@ let binders p =
        ( fun bs -> 
 	 (* print_endline (Grammar_pp.pp_plain_bindspec bs); *)
 	 match bs with
-	 | Bind (MetaVarExp mv,_) -> Some [mv]
-	 | AuxFnDef (_,mse) -> Some (collect_mv_in_mse mse)
+	 | Bind (loc,MetaVarExp mv,_) -> Some [mv]
+	 | AuxFnDef (loc,_,mse) -> Some (collect_mv_in_mse mse)
 	 | Bind _ -> Auxl.warning None "internal: binders not implemented - 1\n"; None
 	 | _ -> None )
        p.prod_bs)
@@ -107,8 +107,8 @@ let binders_for_nt p nt =
        ( fun bs -> 
 	 (* print_endline (Grammar_pp.pp_plain_bindspec bs); *)
 	 match bs with
-	 | Bind (MetaVarExp mv,nt1) when compare nt nt1 = 0 -> Some [mv]
-	 | Bind (MetaVarExp mv,nt1) when not (compare nt nt1 = 0) -> None
+	 | Bind (loc,MetaVarExp mv,nt1) when compare nt nt1 = 0 -> Some [mv]
+	 | Bind (loc,MetaVarExp mv,nt1) when not (compare nt nt1 = 0) -> None
 	 | Bind _ -> Auxl.warning None "internal: binders not implemented - 2\n"; None
 	 | _ -> None )
        p.prod_bs)
@@ -199,15 +199,15 @@ let check_single_binder xd =
     let one_bind = ref false in
     List.iter (fun bs ->
       match bs with
-      | AuxFnDef _ -> 
-	  (* TODO *) Auxl.warning None "locally-nameless: auxfns are not supported by the locally-nameless backend\n"
-      | Bind (NonTermExp _,_) -> 
-	  (* TODO *) Auxl.warning None "locally-nameless: bindspec binding a nonterminal are not supported by the locally-nameless backend\n"
-      | Bind (MetaVarListExp _,_) ->
-	  (* TODO *) Auxl.warning None "locally-nameless: bindspec binding a list of metavars are not supported by the locally-nameless backend\n"
-      | Bind (NonTermListExp _,_) ->
-	  (* TODO *) Auxl.warning None "locally-nameless: bindspec binding a list of nonterminals are not supported by the locally-nameless backend\n"
-      | Bind (MetaVarExp mv,_) ->
+      | AuxFnDef (loc,_,_) -> 
+	  (* TODO *) Auxl.warning (Some loc) "locally-nameless: auxfns are not supported by the locally-nameless backend\n"
+      | Bind (loc,NonTermExp _,_) -> 
+	  (* TODO *) Auxl.warning (Some loc) "locally-nameless: bindspec binding a nonterminal are not supported by the locally-nameless backend\n"
+      | Bind (loc,MetaVarListExp _,_) ->
+	  (* TODO *) Auxl.warning (Some loc) "locally-nameless: bindspec binding a list of metavars are not supported by the locally-nameless backend\n"
+      | Bind (loc,NonTermListExp _,_) ->
+	  (* TODO *) Auxl.warning (Some loc) "locally-nameless: bindspec binding a list of nonterminals are not supported by the locally-nameless backend\n"
+      | Bind (loc,MetaVarExp mv,_) ->
           (* check if mv has a locally nameless representation *)
           let mvd = Auxl.mvd_of_mvr xd (Auxl.primary_mvr_of_mvr xd (fst mv)) in
           if mvd.mvd_locally_nameless then
@@ -689,7 +689,7 @@ let pp_open_prod m xd mvr wrt (ov:string) (rule_ntr_name:nontermroot) (p:prod) :
 	Auxl.option_map
 	  ( fun bs -> 
 	    match bs with 
-	    | Bind (MetaVarExp (mvr1,_),nt) -> 
+	    | Bind (loc, MetaVarExp (mvr1,_),nt) -> 
 		let mvr1 = Auxl.primary_mvr_of_mvr xd mvr1 in
 		if (String.compare mvr mvr1 = 0) then Some nt else None
 	    | _ -> None )
@@ -1051,7 +1051,7 @@ let pp_arity_prod m xd_transformed f ntr p =
       (Auxl.option_map
 	 ( fun bs -> 
 	   match bs with
-	   | AuxFnDef (f',mse) when String.compare f f' = 0 -> Some mse
+	   | AuxFnDef (loc,f',mse) when String.compare f f' = 0 -> Some mse
 	   | _ -> None )
 	 p.prod_bs) in
   let rec mse_to_rhs mse =
@@ -1368,7 +1368,7 @@ let ln_transform_symterms (m:pp_mode) (xd:syntaxdefn) (stlp:(string option * sym
 	  Auxl.option_map
 	    ( fun bs -> 
 	      match bs with
-	      | Bind (MetaVarExp mv, nt) -> 
+	      | Bind (loc,MetaVarExp mv, nt) -> 
 		  let mvo = List.nth stnb.st_es (find_occurrence_mv p.prod_es 0 mv) in
 		  let o = find_occurrence_nt nt p.prod_es 1 in
 		  Some (mvo,nt,o,(St_node (l,stnb)))     
@@ -1484,7 +1484,7 @@ let ln_transform_symterms (m:pp_mode) (xd:syntaxdefn) (stlp:(string option * sym
 	  Auxl.option_map
 	    ( fun bs -> 
 	      match bs with
-	      | Bind (MetaVarExp mv, nt) -> 
+	      | Bind (loc,MetaVarExp mv, nt) -> 
 		  let mvo = List.nth stnb.st_es (find_occurrence_mv p.prod_es 0 mv) in
 		  let o = find_occurrence_nt nt p.prod_es 1 in
 		  Some (mvo,nt,o) 

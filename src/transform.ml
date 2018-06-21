@@ -151,32 +151,32 @@ let expand_element (m:pp_mode) (xd:syntaxdefn) (bs:bindspec list) (e:element) :
       let rec update_bs bs ss =
         ( match bs with
 
-        | AuxFnDef (f,AuxList (g,(nt,s),b)) :: t ->
+        | AuxFnDef (loc,f,AuxList (g,(nt,s),b)) :: t ->
             if List.mem (Ntr nt) ss   (* FZ add primary? *)
-            then ((AuxFnDef (f,Aux (g,id_nt))), Ic_Aux (g,nt,dummy_ret_type)) :: (update_bs t ss)
-            else ((AuxFnDef (f,AuxList (g,(nt,s),b))), Ic_None) :: (update_bs t ss) 
+            then ((AuxFnDef (loc,f,Aux (g,id_nt))), Ic_Aux (g,nt,dummy_ret_type)) :: (update_bs t ss)
+            else ((AuxFnDef (loc,f,AuxList (g,(nt,s),b))), Ic_None) :: (update_bs t ss) 
 
-        | AuxFnDef (f,NonTermListExp ((ntr,s),b)) :: t -> 
+        | AuxFnDef (loc,f,NonTermListExp ((ntr,s),b)) :: t -> 
             if List.mem (Ntr (Auxl.primary_ntr_of_ntr xd ntr)) ss
-            then ((AuxFnDef (f,Aux (f,id_nt))), Ic_NonTermListExp (f,ntr,dummy_ret_type) ) :: (update_bs t ss)
-            else ((AuxFnDef (f,NonTermListExp ((ntr,s),b))), Ic_None) :: (update_bs t ss) 
+            then ((AuxFnDef (loc,f,Aux (f,id_nt))), Ic_NonTermListExp (f,ntr,dummy_ret_type) ) :: (update_bs t ss)
+            else ((AuxFnDef (loc,f,NonTermListExp ((ntr,s),b))), Ic_None) :: (update_bs t ss) 
 
-        | AuxFnDef (f,MetaVarListExp ((mvr,s),b)) :: t -> 
+        | AuxFnDef (loc,f,MetaVarListExp ((mvr,s),b)) :: t -> 
             if List.mem (Mvr (Auxl.primary_mvr_of_mvr xd mvr)) ss
-            then ((AuxFnDef (f,Aux (f,id_nt))), Ic_MetaVarListExp (f,mvr,dummy_ret_type) ) :: (update_bs t ss)
-            else ((AuxFnDef (f,MetaVarListExp ((mvr,s),b))), Ic_None) :: (update_bs t ss) 
+            then ((AuxFnDef (loc,f,Aux (f,id_nt))), Ic_MetaVarListExp (f,mvr,dummy_ret_type) ) :: (update_bs t ss)
+            else ((AuxFnDef (loc,f,MetaVarListExp ((mvr,s),b))), Ic_None) :: (update_bs t ss) 
 
-        | Bind ((NonTermListExp ((ntr,s),b)), nt) :: t ->  
+        | Bind (loc,(NonTermListExp ((ntr,s),b)), nt) :: t ->  
             let auxfnname= "bind_"^id in
             if List.mem (Ntr (Auxl.primary_ntr_of_ntr xd ntr)) ss
-            then (Bind ((Aux (auxfnname,id_nt)),nt), Ic_NonTermListExp (auxfnname,ntr,Ntr ntr)) :: (update_bs t ss)
-            else (Bind ((NonTermListExp ((ntr,s),b)),nt), Ic_None) :: (update_bs t ss) 
+            then (Bind (loc,(Aux (auxfnname,id_nt)),nt), Ic_NonTermListExp (auxfnname,ntr,Ntr ntr)) :: (update_bs t ss)
+            else (Bind (loc,(NonTermListExp ((ntr,s),b)),nt), Ic_None) :: (update_bs t ss) 
 
-        | Bind ((MetaVarListExp ((mvr,s),b)), nt) :: t ->  
+        | Bind (loc,(MetaVarListExp ((mvr,s),b)), nt) :: t ->  
             let auxfnname= "bind_"^id in
             if List.mem (Mvr (Auxl.primary_mvr_of_mvr xd mvr)) ss
-            then (Bind ((Aux (auxfnname,id_nt)),nt), Ic_MetaVarListExp (auxfnname,mvr,Mvr mvr)) :: (update_bs t ss)
-            else (Bind ((MetaVarListExp ((mvr,s),b)),nt), Ic_None) :: (update_bs t ss) 
+            then (Bind (loc,(Aux (auxfnname,id_nt)),nt), Ic_MetaVarListExp (auxfnname,mvr,Mvr mvr)) :: (update_bs t ss)
+            else (Bind (loc,(MetaVarListExp ((mvr,s),b)),nt), Ic_None) :: (update_bs t ss) 
                 
         | b :: t -> (b,Ic_None)::(update_bs t ss)
         | [] -> [] ) in
@@ -196,9 +196,9 @@ let expand_element (m:pp_mode) (xd:syntaxdefn) (bs:bindspec list) (e:element) :
             ( fun i -> 
               match i with 
               | Ic_None -> None
-              | Ic_Aux (f,_,_) -> Some (AuxFnDef (f,Empty))
-              | Ic_MetaVarListExp (f,_,_) -> Some (AuxFnDef (f,Empty))
-              | Ic_NonTermListExp (f,_,_) -> Some (AuxFnDef (f,Empty)) )
+              | Ic_Aux (f,_,_) -> Some (AuxFnDef (dummy_loc,f,Empty))
+              | Ic_MetaVarListExp (f,_,_) -> Some (AuxFnDef (dummy_loc,f,Empty))
+              | Ic_NonTermListExp (f,_,_) -> Some (AuxFnDef (dummy_loc,f,Empty)) )
             aux_to_def;
 	  prod_loc = dummy_loc } in
 
@@ -223,13 +223,13 @@ let expand_element (m:pp_mode) (xd:syntaxdefn) (bs:bindspec list) (e:element) :
               | Ic_None -> None
               | Ic_Aux (f,nt,_) ->         (* FZ simple suffixes only *)
                   let mse = Union (Aux (f,(nt,[])), Aux (f,id_nt)) in
-                  Some (AuxFnDef (f,mse))
+                  Some (AuxFnDef (dummy_loc,f,mse))
               | Ic_MetaVarListExp (f,mvr,_) -> 
                   let mse = Union ((MetaVarExp (mvr,[])), Aux (f,id_nt) ) in
-                  Some (AuxFnDef (f,mse)) 
+                  Some (AuxFnDef (dummy_loc,f,mse)) 
               | Ic_NonTermListExp (f,ntr,_) -> 
                   let mse = Union ((NonTermExp (ntr,[])), Aux (f,id_nt) ) in
-                  Some (AuxFnDef (f,mse)) )
+                  Some (AuxFnDef (dummy_loc,f,mse)) )
             aux_to_def;
 	  prod_loc = dummy_loc } in
 
