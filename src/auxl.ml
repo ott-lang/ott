@@ -637,6 +637,14 @@ let loc_of_symterm st = match st with
   | St_nontermsub (l,_,_,_) -> l 
   | St_uninterpreted (l,_) -> l
 
+let loc_of_symterm_element ste = match ste with
+  | Types.Ste_st (loc,_) -> loc
+  | Types.Ste_metavar (loc,_,_) -> loc
+  | Types.Ste_var (loc,_,_) -> loc
+  | Types.Ste_list (loc,_) -> loc
+
+let loc_of_mvr xd mvr = (mvd_of_mvr_nonprimary xd mvr).mvd_loc
+
 let loc_of_ntr (xd:syntaxdefn) (ntr:nontermroot) =
   (rule_of_ntr xd ntr).rule_loc 
 

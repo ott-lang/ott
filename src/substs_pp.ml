@@ -1435,8 +1435,7 @@ let pp_subst_rule : subst -> pp_mode -> syntaxdefn -> nontermroot list -> rule -
                ^ Grammar_pp.pp_nontermroot_ty m xd r.rule_ntr_name ^ " -> "
 	       ^ Grammar_pp.pp_nontermroot_ty m xd r.rule_ntr_name ^ " -> type.\n")
 	    )  , "", "")
-      (* TODO *)
-      | Ascii _ | Tex _ | Lex _ | Menhir _ -> Auxl.error None "pp_subst_rule")
+      | Ascii _ | Tex _ | Lex _ | Menhir _ -> Auxl.error (Some r.rule_loc) "pp_subst_rule")
   
     in 
     
@@ -1746,8 +1745,7 @@ and pp_fv_symterm_list_body
                  | _ -> Some "[]"), funcs
       | _ -> 
 	  ( match m with 
-    (* TODO *)
-          | Ascii _ | Tex _ | Lex _ | Menhir _ -> Auxl.error None "pp_fv_symterm_list_body"
+          | Ascii _ | Tex _ | Lex _ | Menhir _ -> Auxl.error (Some p.prod_loc) "pp_fv_symterm_list_body"
 	  | Isa io when io.ppi_isa_primrec ->
               let args = 
 	        String.concat "_" 

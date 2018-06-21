@@ -256,7 +256,7 @@ let token_names_of_syntaxdefn yo xd : token_data =
 	      let hs = List.assoc "ocaml" mvd.mvd_rep in
 	      Grammar_pp.pp_hom_spec m xd hs
         (* TODO *)
-            with Not_found -> Auxl.error None ("ocamllex output: undefined ocaml hom for "^mvd.mvd_name^"\n")) in
+            with Not_found -> Auxl.error (Some mvd.mvd_loc) ("ocamllex output: undefined ocaml hom for "^mvd.mvd_name^"\n")) in
           let ocamllex_hom_opt = 
             (try
 	      let hs = List.assoc "ocamllex" mvd.mvd_rep in
@@ -272,10 +272,10 @@ let token_names_of_syntaxdefn yo xd : token_data =
               Some (token_name_of mvd.mvd_name, mvd.mvd_name, TK_metavar(ocaml_type, Some ocamllex_hom))
           | None, false -> 
           (* TODO *)
-              Auxl.error None ("ocamllex output: no ocamllex or ocamllex-remove hom for "^mvd.mvd_name^"\n")
+              Auxl.error (Some mvd.mvd_loc) ("ocamllex output: no ocamllex or ocamllex-remove hom for "^mvd.mvd_name^"\n")
           | Some ocamllex_hom, false -> 
           (* TODO *)
-              Auxl.error None ("ocamllex output: both ocamllex and ocamllex-remove hom for "^mvd.mvd_name^"\n")
+              Auxl.error (Some mvd.mvd_loc) ("ocamllex output: both ocamllex and ocamllex-remove hom for "^mvd.mvd_name^"\n")
           | None, true -> 
               Some (token_name_of mvd.mvd_name, mvd.mvd_name, TK_metavar(ocaml_type, None))
           )

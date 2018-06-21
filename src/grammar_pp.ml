@@ -1225,7 +1225,7 @@ and pp_nt_or_mv_root_ty m xd ntmvr =
   | Ntr ntr -> pp_nontermroot_ty m xd ntr
   | Mvr mvr -> pp_metavarroot_ty m xd mvr
 
-and coq_maybe_decide_equality m xd homs ntmvr = 
+and coq_maybe_decide_equality m xd homs ntmvr loc = 
   match
     try Some (List.assoc "coq-equality" homs) with Not_found -> None
   with
@@ -1247,7 +1247,7 @@ and coq_maybe_decide_equality m xd homs ntmvr =
         | [ ] -> "  decide equality; auto with ott_coq_equality arith."
         | [ Hom_string s ] -> s 
         (* TODO *)
-        | _ -> Auxl.error None "malformed coq-equality homomorphism\n" )
+        | _ -> Auxl.error (Some loc) "malformed coq-equality homomorphism\n" )
       ^ "\nDefined.\n"
       ^ "Hint Resolve eq_" ^ type_name  ^ " : ott_coq_equality.\n"
 
@@ -1275,7 +1275,7 @@ and pp_metavardefn m xd mvd =
 	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in
 	    "Definition " ^  type_name ^ " := " 
 	    ^ pp_metavarrep m xd mvd.mvd_rep type_name ^ "." ^ pp_com ^ "\n"
-	    ^ coq_maybe_decide_equality m xd mvd.mvd_rep (Mvr mvd.mvd_name)
+	    ^ coq_maybe_decide_equality m xd mvd.mvd_rep (Mvr mvd.mvd_name) mvd.mvd_loc
 	| Rdx ro -> ""
 	    (* let type_name = pp_metavarroot_ty m xd mvd.mvd_name in *)
 	    (* ";; grammar_pp, 1279: " ^  type_name ^ " := "  *)
@@ -2671,7 +2671,7 @@ and pp_rule m xd r = (* returns a string option *)
            ^ "")
   | Coq co ->
       pp_internal_coq_buffer := !pp_internal_coq_buffer ^
-        coq_maybe_decide_equality m xd r.rule_homs (Ntr r.rule_ntr_name);
+        coq_maybe_decide_equality m xd r.rule_homs (Ntr r.rule_ntr_name) r.rule_loc;
       if r.rule_meta || r.rule_phantom
       then None
       else
@@ -3140,9 +3140,9 @@ and extract_nonterms_deep_ste_list slil =
   ( match slil with
   | [] -> []
   | Stli_single (_,stel)::tl -> (extract_nonterms_deep stel) @ (extract_nonterms_deep_ste_list tl)
-  | Stli_listform _::tl -> 
+  | Stli_listform hd::tl -> 
       (* TODO location? *)
-      Auxl.warning None "<<internal: extract_nonterms_deep_ste_list not implemented over listforms>>>";
+      Auxl.warning (Some hd.stl_loc) "<<internal: extract_nonterms_deep_ste_list not implemented over listforms>>>";
       extract_nonterms_deep_ste_list tl )
   
 and extract_nonterms_deep s =
@@ -3155,7 +3155,7 @@ and extract_nonterms_deep s =
   | (Ste_list (_,slil))::t -> (extract_nonterms_deep_ste_list slil) @ (extract_nonterms_deep t)
   | h::t ->
       (* TODO *)
-      Auxl.warning None
+      Auxl.warning (Some (Auxl.loc_of_symterm_element h))
         ("internal: extract_nonterms_deep case failure\n "
          ^ (pp_plain_symterm_element h) ^ "\n\n"); (extract_nonterms_deep t)
 
@@ -3168,7 +3168,7 @@ and extract_nonterms s =
   (* | (Ste_st (_,St_node (_,stnb)))::t -> (extract_nonterms stnb.st_es) @ (extract_nonterms t)  *)
   | h::t ->
       (* TODO *)
-      Auxl.warning None
+      Auxl.warning (Some (Auxl.loc_of_symterm_element h))
         ("internal: extract_nonterms case failure\n "
          ^ (pp_plain_symterm_element h) ^ "\n\n"); (extract_nonterms t)
 
@@ -3196,7 +3196,7 @@ and pp_symterm_node_body m xd sie de stnb : string =
     try
       let ntrt,pps = List.assoc stnb.st_rule_ntr_name xd.xd_srd.srd_subrule_pn_promotion in
       try List.assoc stnb.st_prod_name pps with
-        Not_found -> Auxl.error None ("internal error: pp_symterm_node_body \""^stnb.st_prod_name^"\" Not_found in pps "^pp_plain_pps pps)
+        Not_found -> Auxl.error (Some stnb.st_loc) ("internal error: pp_symterm_node_body \""^stnb.st_prod_name^"\" Not_found in pps "^pp_plain_pps pps)
     with
       Not_found -> stnb.st_prod_name in 
   let p = Auxl.prod_of_prodname xd promoted_pn in
@@ -3253,7 +3253,7 @@ and pp_symterm_node_body m xd sie de stnb : string =
                       | Lem lo -> 
                           pp_symterm_element_judge_lem_plain m xd sie de p'' stnb''
                       | Ascii _ | Tex _ | Lex _ | Menhir _ -> raise ThisCannotHappen
-                      | Caml _ -> Auxl.error None "internal: Caml pp_symterm for proper symterms not supported"
+                      | Caml _ -> Auxl.error (Some p''.prod_loc) "internal: Caml pp_symterm for proper symterms not supported"
                       )
                   | _ -> raise (Invalid_argument ("pp_symterm_node_body2: strange production in formula_judgement")))
               | _ -> raise (Invalid_argument ("pp_symterm_node_body3: strange production in formula judgement ")))
@@ -3273,7 +3273,7 @@ and pp_symterm_node_body m xd sie de stnb : string =
 	     
               (match m with
               | Ascii _ | Tex _ | Lex _ | Menhir _ -> Auxl.errorm m "formula_dots"
-              | Caml _ -> Auxl.error None "internal: Caml pp_symterm for proper symterms not supported"
+              | Caml _ -> Auxl.error (Some stnb.st_loc) "internal: Caml pp_symterm for proper symterms not supported"
               | Isa io ->
                   (match isa_fancy_syntax_hom_for_prod m xd io p with
                   | None -> 

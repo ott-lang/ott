@@ -390,7 +390,7 @@ let subrule (xd:syntaxdefn) (include_meta_prods:bool)
       | [pu] -> (pl.prod_name,pu.prod_name)
       | pu::pu'::pus' -> 
           (* TIDI get loc *)
-          Auxl.warning  None
+          Auxl.warning  (Some pl.prod_loc)
             ("production \""^pl.prod_name^"\" is a subproduction of more than one production: "^String.concat ", " (List.map (function pu -> "\""^pu.prod_name^"\"") pus) ^" (taking the first)\n");
           (pl.prod_name,pu.prod_name)
     )

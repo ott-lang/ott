@@ -511,7 +511,7 @@ let pp_defn fd (m:pp_mode) (xd:syntaxdefn) lookup (defnclass_wrapper:string) (un
         d.d_name
         (match mode with [Hom_string s] -> s
         (* TODO *)
-        | _ -> Auxl.error None ("rdx backend: cannot print mode for declaration: "^d.d_name))
+        | _ -> Auxl.error (Some d.d_loc) ("rdx backend: cannot print mode for declaration: "^d.d_name))
     with Not_found -> ());
     iter_sep (pp_processed_semiraw_rule fd m xd) "\n\n" d.d_rules
 
@@ -921,8 +921,7 @@ let pp_fundefnclass (m:pp_mode) (xd:syntaxdefn) lookup (fdc:fundefnclass) : stri
 	  ( match h with 
 	  | Some ([Hom_string s]) -> Some s
 	  | None -> None
-   | _ -> Auxl.warning None  "malformed isa-proof/hol-proof hom"; Some "<<<malformed isa-proof/hol-proof hom>>>" ) in 
-(* TODO *)
+   | _ -> Auxl.warning (Some fdc.fdc_loc)  "malformed isa-proof/hol-proof hom"; Some "<<<malformed isa-proof/hol-proof hom>>>" ) in 
 	( match m with
 	| Coq _ | Caml _ | Lem _ -> None
 	| Isa _ -> pp_proof (Auxl.hom_spec_for_hom_name "isa-proof" fdc.fdc_homs) 
@@ -936,7 +935,7 @@ let pp_fundefnclass (m:pp_mode) (xd:syntaxdefn) lookup (fdc:fundefnclass) : stri
       Auxl.print_with_comment m "\n" ("funs "^fdc.fdc_name) 
 	(Dependency.compute m xd int_funcs_collapsed)
 
-  | Twf _ -> Auxl.warning None (*TODO*) "internal: fundefnclass not implemented for Twelf"; ""
+  | Twf _ -> Auxl.warning (Some fdc.fdc_loc) "internal: fundefnclass not implemented for Twelf"; ""
   | Lex _ | Menhir _ -> ""
 
 
@@ -1114,7 +1113,7 @@ let process_semiraw_rule (m: pp_mode) (xd: syntaxdefn) (lookup: made_parser)
             with 
               Parsing.Parse_error  ->
               (* TODO, Parse_error takes loc? *)
-                Auxl.error None ("unfiltered premise "^s^" cannot be parsed\n") in
+                Auxl.error (Some l) ("unfiltered premise "^s^" cannot be parsed\n") in
             let collapsed_string = Auxl.collapse_embed_spec_el_list unfiltered_string in 
             (*let filtered_string = Embed_pp.pp_embed_spec m xd lookup collapsed_string in*)
             (* walk over collapsed_string, building a new string (with -ARG- replacing each [[.]]) and a list of symterms (one for each [[.]]) *)
@@ -1236,13 +1235,13 @@ let process_raw_funclause
 	    match e with 
 	    | Ste_st(_,st) -> st 
       (* TODO *)
-	    | _ -> Auxl.error None "process_raw_funclause internal error - bad rhs" in
+	    | _ -> Auxl.error (Some (Auxl.loc_of_symterm st)) "process_raw_funclause internal error - bad rhs" in
 (*       print_string ("lhs symterm: "^ Grammar_pp.pp_plain_symterm lhs ^ "\n");flush stdout;  *)
 (*       print_string ("rhs symterm: "^ Grammar_pp.pp_plain_symterm rhs ^ "\n");flush stdout;  *)
 
           { fc_lhs = lhs; fc_rhs = rhs; fc_loc = l }
       | _ -> 
-	Auxl.warning None (*TODO*) ("process_raw_funclause lost symterm: "
+	Auxl.warning (Some (loc_of_symterm st)) ("process_raw_funclause lost symterm: "
 			^ Grammar_pp.pp_plain_symterm st ^ "\n"); 
           let lhs = St_uninterpreted(l, "error") in
           let rhs = St_uninterpreted(l, Grammar_pp.pp_plain_symterm st) in 

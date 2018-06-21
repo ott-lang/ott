@@ -125,7 +125,7 @@ let is_bindable xd mv p =
 
 (* for a ln mvr, record the rules where it has been splitted *)
 let rules_with_bindable_mvr (xd:syntaxdefn) (mvr:metavarroot) : rule list =
-  if not((Auxl.mvd_of_mvr xd mvr).mvd_locally_nameless) then Auxl.error None ("internal: rules_with_bindable_mvr: "^mvr^" does not have a ln repr.\n");
+  if not((Auxl.mvd_of_mvr xd mvr).mvd_locally_nameless) then Auxl.error (Some (Auxl.loc_of_mvr xd mvr)) ("internal: rules_with_bindable_mvr: "^mvr^" does not have a ln repr.\n");
   List.filter
     (fun r -> 
       (not r.rule_meta) && 
@@ -213,7 +213,7 @@ let check_single_binder xd =
           if mvd.mvd_locally_nameless then
 	    if !one_bind
 	    then 
-	      (* TODO *) Auxl.warning None "locally-nameless: multiple bind declaration on the same production are not supported by the locally-nameless backend\n"
+	      (* TODO *) Auxl.warning (Some mvd.mvd_loc) "locally-nameless: multiple bind declaration on the same production are not supported by the locally-nameless backend\n"
 	    else one_bind := true
           else ()
       | _ -> ())
@@ -682,7 +682,7 @@ let pp_open_prod m xd mvr wrt (ov:string) (rule_ntr_name:nontermroot) (p:prod) :
 	  let mv1_s = Grammar_pp.pp_metavar_with_de_with_sie m xd sie de mv1 in
 	  let mv2_s = Grammar_pp.pp_metavar_with_de_with_sie m xd sie de mv2 in
 	  ( "if (k === "^mv1_s^") then (List.nth "^mv2_s^" "^ov^" "^"("^p.prod_name^" 0 0)"^") else (" ^ s^ " "^mv1_s^" "^mv2_s^")" , [] )
-      | _ -> Auxl.error None "internal: weird lhs_stnb in pp_open_prod\n" )
+      | _ -> Auxl.error (Some (lhs_stnb.st_loc)) "internal: weird lhs_stnb in pp_open_prod\n" )
       
     else (
       let unshifted_nonterms = 
@@ -871,7 +871,7 @@ let pp_lcs fd m xd : unit =
 		in
 		p.prod_name
 	      with Not_found -> 
-		Auxl.error None ("internal: lns, make_premises, cannot find singleton production for "
+		Auxl.error (Some r.rule_loc) ("internal: lns, make_premises, cannot find singleton production for "
 			    ^ (fst (List.hd mvs)) ^ " starting from rule " ^ r.rule_ntr_name ^ "\n")
 	    in
 	    let st_rule_name_s = 
@@ -1164,14 +1164,14 @@ let build_open_symterm m xd open_wrt st =
     match st with
     | St_nonterm (_,ntr,_) -> Auxl.primary_ntr_of_ntr xd ntr
     | St_nontermsub (_,_,ntr,_) -> Auxl.primary_ntr_of_ntr xd ntr
-    | _ -> Auxl.error None "internal: build_open_symterm, not a nonterm\n" in
+    | _ -> Auxl.error (Some (Auxl.loc_of_symterm st)) "internal: build_open_symterm, not a nonterm\n" in
   let r = Auxl.rule_of_ntr xd ntr in
   let find_var_prod mv =
     let mv1 = 
       match mv with
       | Ste_metavar (_,mv1,_) -> mv1
       | Ste_var (_,mv1,_) -> mv1
-      | _ -> Auxl.error None "internal: find_var_prod ln not ste_metavar\n" in
+      | _ -> Auxl.error (Some (Auxl.loc_of_symterm st)) "internal: find_var_prod ln not ste_metavar\n" in
     let p = List.find
 	( fun p ->
 	  match p.prod_es with
@@ -1188,7 +1188,7 @@ let build_open_symterm m xd open_wrt st =
       match mv with
       | Ste_metavar (_,mv1,_) -> mv1
       | Ste_var (_,mv1,_) -> mv1
-      | _ -> Auxl.error None "internal: find_var_prod ln not ste_metavar\n" in
+      | _ -> Auxl.error (Some (Auxl.loc_of_symterm_element mv)) "internal: find_var_prod ln not ste_metavar\n" in
 
     let r = List.find
 	(fun r ->
@@ -1458,7 +1458,7 @@ let ln_transform_symterms (m:pp_mode) (xd:syntaxdefn) (stlp:(string option * sym
 	   ( fun ste ->
 	     match ste with
 	     | Ste_metavar (_,mvr,mv) -> (ste,(Ste_var (dummy_loc,mvr, ((*"TX_"^*)(Grammar_pp.pp_plain_metavar mv)))))
-	     | _ -> Auxl.error None "internal: nt_longest" )
+	     | _ -> Auxl.error (Some (Auxl.loc_of_symterm_element ste)) "internal: nt_longest" )
 	   stel ))
       nt_longest in
 
@@ -1519,10 +1519,10 @@ let ln_transform_symterms (m:pp_mode) (xd:syntaxdefn) (stlp:(string option * sym
 
 			     let current_str = List.map Grammar_pp.pp_plain_symterm_element current_binding in
 			     List.iter
-			       (fun str -> if List.mem str current_str 
-             (* TODO *)
-			       then Auxl.error None ("locally-nameless: a rule definition contains a repeated binder: "^str^";\n  try alpha-converting one of the occurrences.\n"))
-			       (List.map Grammar_pp.pp_plain_symterm_element extra_binders);
+	  (fun ste -> let str = Grammar_pp.pp_plain_symterm_element ste in
+     if List.mem str current_str 
+			       then Auxl.error (Some (Auxl.loc_of_symterm_element ste)) ("locally-nameless: a rule definition contains a repeated binder: "^str^";\n  try alpha-converting one of the occurrences.\n"))
+			       extra_binders;
 			       
 			       let binders = 
 (* 				 print_endline ("removed = " ^ String.concat " " (List.map Grammar_pp.pp_plain_symterm_element removed_binders)); *)
@@ -1579,7 +1579,8 @@ let ln_transform_symterms (m:pp_mode) (xd:syntaxdefn) (stlp:(string option * sym
       match mvsr with
       | [] -> st
       | mv::tl ->
-	  let mvr = match mv with Ste_metavar (_,mvr,_) -> mvr | Ste_var (_,mvr,_) -> mvr | _ -> Auxl.error None "internal: cofinite quantify not metavar" in
+	let mvr = match mv with Ste_metavar (_,mvr,_) -> mvr | Ste_var (_,mvr,_) -> mvr | _ ->
+   Auxl.error (Some (Auxl.loc_of_symterm st) ) "internal: cofinite quantify not metavar" in
 	  let cq_st =
 	    St_node ( dummy_loc,
 		      { st_rule_ntr_name = "formula";
