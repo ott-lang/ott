@@ -1246,7 +1246,6 @@ and coq_maybe_decide_equality m xd homs ntmvr loc =
       ^ ( match eh with
         | [ ] -> "  decide equality; auto with ott_coq_equality arith."
         | [ Hom_string s ] -> s 
-        (* TODO *)
         | _ -> Auxl.error (Some loc) "malformed coq-equality homomorphism\n" )
       ^ "\nDefined.\n"
       ^ "Hint Resolve eq_" ^ type_name  ^ " : ott_coq_equality.\n"
@@ -1260,7 +1259,7 @@ and pp_metavardefn m xd mvd =
                                (function (mvr,homs)->pp_metavarroot m xd mvr)
                                mvd.mvd_names)) 
       ^ " " ^ pp_CCE ^ " " 
-      ^ pp_metavarrep m xd mvd.mvd_rep "" ^ "\n"
+      ^ pp_metavarrep m xd mvd.mvd_rep ("" ^ "\n") mvd.mvd_loc
   | Tex xo -> 
       " $ "
       ^ (String.concat " ,\\, "(List.map 
@@ -1274,7 +1273,7 @@ and pp_metavardefn m xd mvd =
 	| Coq co ->
 	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in
 	    "Definition " ^  type_name ^ " := " 
-	    ^ pp_metavarrep m xd mvd.mvd_rep type_name ^ "." ^ pp_com ^ "\n"
+	    ^ pp_metavarrep m xd mvd.mvd_rep (type_name ^ "." ^ pp_com ^ "\n") mvd.mvd_loc
 	    ^ coq_maybe_decide_equality m xd mvd.mvd_rep (Mvr mvd.mvd_name) mvd.mvd_loc
 	| Rdx ro -> ""
 	    (* let type_name = pp_metavarroot_ty m xd mvd.mvd_name in *)
@@ -1285,7 +1284,7 @@ and pp_metavardefn m xd mvd =
 	    "type "
 	    ^ type_name 
 	    ^ " = " 
-	    ^ pp_metavarrep m xd mvd.mvd_rep type_name
+	    ^ pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc
 	    ^ pp_com ^ "\n"
 	| Isa io ->
 	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in 
@@ -1294,20 +1293,20 @@ and pp_metavardefn m xd mvd =
 	      "atom_decl \"" ^ type_name ^ "\"" ^ pp_com ^ "\n"
 	    else
 	      "type_synonym \"" ^ type_name ^ "\" = \"" 
-	      ^ pp_metavarrep m xd mvd.mvd_rep type_name^ "\"" ^ pp_com ^ "\n"
+	      ^ pp_metavarrep m xd mvd.mvd_rep (type_name^ "\"" ^ pp_com ^ "\n") mvd.mvd_loc
 	| Hol ho -> 
 	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in 
 	    "val _ = type_abbrev(\""
 	    ^ type_name
 	    ^ "\", ``:"
-	    ^ pp_metavarrep m xd mvd.mvd_rep type_name ^ "``);"
+	    ^ pp_metavarrep m xd mvd.mvd_rep (type_name ^ "``);") mvd.mvd_loc
 	    ^ pp_com ^ "\n"
 	| Lem lo -> 
 	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in 
 	    "type "
 	    ^ type_name
 	    ^ " = "
-	    ^ pp_metavarrep m xd mvd.mvd_rep type_name
+	    ^ pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc
 	    ^ pp_com ^ "\n"
 	| Twf _ -> 
 	    "%abbrev "
@@ -1317,8 +1316,7 @@ and pp_metavardefn m xd mvd =
         | Menhir _ -> ""
 	| Ascii _ | Tex _ -> raise Auxl.ThisCannotHappen ))
 
-and pp_metavarrep m xd mvd_rep type_name =
-  (* TODO report locations for these warnings? *)
+and pp_metavarrep m xd mvd_rep type_name loc =
   match m with
   | Ascii ao ->
       pp_homomorphism_list m xd mvd_rep
@@ -1328,37 +1326,37 @@ and pp_metavarrep m xd mvd_rep type_name =
       ( try
 	let hs = List.assoc "isa" mvd_rep in
 	pp_hom_spec m xd hs
-      with Not_found -> Auxl.warning None ("undefined isa metavarrep for "^type_name^"\n"); "UNDEFINED" )
+      with Not_found -> Auxl.warning (Some loc) ("undefined isa metavarrep for "^type_name^"\n"); "UNDEFINED" )
   | Hol ho ->
       ( try
 	let hs = List.assoc "hol" mvd_rep in
 	pp_hom_spec m xd hs
-      with Not_found -> Auxl.warning None ("undefined hol metavarrep for "^type_name^"\n"); "UNDEFINED" )
+      with Not_found -> Auxl.warning (Some loc) ("undefined hol metavarrep for "^type_name^"\n"); "UNDEFINED" )
   | Lem lo ->
       ( try
 	let hs = List.assoc "lem" mvd_rep in
 	pp_hom_spec m xd hs
-      with Not_found -> Auxl.warning None ("undefined lem metavarrep for "^type_name^"\n"); "UNDEFINED" )
+      with Not_found -> Auxl.warning (Some loc) ("undefined lem metavarrep for "^type_name^"\n"); "UNDEFINED" )
   | Coq co ->
       ( try
 	let hs = List.assoc "coq" mvd_rep in
 	pp_hom_spec m xd hs
-      with Not_found -> Auxl.warning None ("undefined coq metavarrep for "^type_name^"\n"); "UNDEFINED" )
+      with Not_found -> Auxl.warning (Some loc) ("undefined coq metavarrep for "^type_name^"\n"); "UNDEFINED" )
   | Rdx ro ->
       ( try
 	let hs = List.assoc "rdx" mvd_rep in
 	pp_hom_spec m xd hs
-      with Not_found -> Auxl.warning None ("undefined rdx metavarrep for "^type_name^"\n"); "UNDEFINED" )
+      with Not_found -> Auxl.warning (Some loc) ("undefined rdx metavarrep for "^type_name^"\n"); "UNDEFINED" )
   | Twf wo ->
       ( try
 	let hs = List.assoc "twf" mvd_rep in
 	pp_hom_spec m xd hs
-      with Not_found -> Auxl.warning None ("undefined Twelf metavarrep for "^type_name^"\n"); "UNDEFINED" )
+      with Not_found -> Auxl.warning (Some loc) ("undefined Twelf metavarrep for "^type_name^"\n"); "UNDEFINED" )
   | Caml oo ->
       ( try
 	let hs = List.assoc "ocaml" mvd_rep in
 	pp_hom_spec m xd hs
-      with Not_found -> Auxl.warning None ("undefined OCaml metavarrep for "^type_name^"\n"); "UNDEFINED" )
+      with Not_found -> Auxl.warning (Some loc) ("undefined OCaml metavarrep for "^type_name^"\n"); "UNDEFINED" )
 	
 and pp_prodname m xd pn =  (* FZ this is never called *)
   match m with
@@ -3141,7 +3139,6 @@ and extract_nonterms_deep_ste_list slil =
   | [] -> []
   | Stli_single (_,stel)::tl -> (extract_nonterms_deep stel) @ (extract_nonterms_deep_ste_list tl)
   | Stli_listform hd::tl -> 
-      (* TODO location? *)
       Auxl.warning (Some hd.stl_loc) "<<internal: extract_nonterms_deep_ste_list not implemented over listforms>>>";
       extract_nonterms_deep_ste_list tl )
   
@@ -3154,7 +3151,6 @@ and extract_nonterms_deep s =
   | (Ste_st (_,St_node (_,stnb)))::t -> (extract_nonterms_deep stnb.st_es) @ (extract_nonterms_deep t)
   | (Ste_list (_,slil))::t -> (extract_nonterms_deep_ste_list slil) @ (extract_nonterms_deep t)
   | h::t ->
-      (* TODO *)
       Auxl.warning (Some (Auxl.loc_of_symterm_element h))
         ("internal: extract_nonterms_deep case failure\n "
          ^ (pp_plain_symterm_element h) ^ "\n\n"); (extract_nonterms_deep t)
@@ -3167,7 +3163,6 @@ and extract_nonterms s =
   | (Ste_st (_,St_node (_,stnb)))::t -> (stnb.st_rule_ntr_name,[]) :: (extract_nonterms t)
   (* | (Ste_st (_,St_node (_,stnb)))::t -> (extract_nonterms stnb.st_es) @ (extract_nonterms t)  *)
   | h::t ->
-      (* TODO *)
       Auxl.warning (Some (Auxl.loc_of_symterm_element h))
         ("internal: extract_nonterms case failure\n "
          ^ (pp_plain_symterm_element h) ^ "\n\n"); (extract_nonterms t)

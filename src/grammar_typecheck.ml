@@ -2494,7 +2494,6 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
      right type right now, but later when a parser has been constructed. *)
 
 
-  (*TODO get loc*)
   let rec count_holes_element prod (el:element) : int =
     match el with
     | Lang_nonterm _ -> 0

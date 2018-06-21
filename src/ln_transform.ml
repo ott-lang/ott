@@ -200,20 +200,20 @@ let check_single_binder xd =
     List.iter (fun bs ->
       match bs with
       | AuxFnDef (loc,_,_) -> 
-	  (* TODO *) Auxl.warning (Some loc) "locally-nameless: auxfns are not supported by the locally-nameless backend\n"
+	  Auxl.warning (Some loc) "locally-nameless: auxfns are not supported by the locally-nameless backend\n"
       | Bind (loc,NonTermExp _,_) -> 
-	  (* TODO *) Auxl.warning (Some loc) "locally-nameless: bindspec binding a nonterminal are not supported by the locally-nameless backend\n"
+	  Auxl.warning (Some loc) "locally-nameless: bindspec binding a nonterminal are not supported by the locally-nameless backend\n"
       | Bind (loc,MetaVarListExp _,_) ->
-	  (* TODO *) Auxl.warning (Some loc) "locally-nameless: bindspec binding a list of metavars are not supported by the locally-nameless backend\n"
+	  Auxl.warning (Some loc) "locally-nameless: bindspec binding a list of metavars are not supported by the locally-nameless backend\n"
       | Bind (loc,NonTermListExp _,_) ->
-	  (* TODO *) Auxl.warning (Some loc) "locally-nameless: bindspec binding a list of nonterminals are not supported by the locally-nameless backend\n"
+	  Auxl.warning (Some loc) "locally-nameless: bindspec binding a list of nonterminals are not supported by the locally-nameless backend\n"
       | Bind (loc,MetaVarExp mv,_) ->
           (* check if mv has a locally nameless representation *)
           let mvd = Auxl.mvd_of_mvr xd (Auxl.primary_mvr_of_mvr xd (fst mv)) in
           if mvd.mvd_locally_nameless then
 	    if !one_bind
 	    then 
-	      (* TODO *) Auxl.warning (Some mvd.mvd_loc) "locally-nameless: multiple bind declaration on the same production are not supported by the locally-nameless backend\n"
+	      Auxl.warning (Some mvd.mvd_loc) "locally-nameless: multiple bind declaration on the same production are not supported by the locally-nameless backend\n"
 	    else one_bind := true
           else ()
       | _ -> ())

@@ -1112,7 +1112,6 @@ let process_semiraw_rule (m: pp_mode) (xd: syntaxdefn) (lookup: made_parser)
               Grammar_parser.unfiltered_spec_el_list (Grammar_lexer.my_lexer true Grammar_lexer.filter) lexbuf
             with 
               Parsing.Parse_error  ->
-              (* TODO, Parse_error takes loc? *)
                 Auxl.error (Some l) ("unfiltered premise "^s^" cannot be parsed\n") in
             let collapsed_string = Auxl.collapse_embed_spec_el_list unfiltered_string in 
             (*let filtered_string = Embed_pp.pp_embed_spec m xd lookup collapsed_string in*)

@@ -166,11 +166,8 @@ let my_lexer : bool -> lexer -> lexer =
             next_token ()
         with
           ex -> 
-            (* TODO call error here *)
             let loc = mkloc lexbuf.Lexing.lex_curr_p in
             (error (Some loc) ("Lexing error");
-             (* flush stdout;
-             raise ex *)
              )
           
 let trim : string -> string =

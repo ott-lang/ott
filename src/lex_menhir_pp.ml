@@ -255,7 +255,6 @@ let token_names_of_syntaxdefn yo xd : token_data =
             (try
 	      let hs = List.assoc "ocaml" mvd.mvd_rep in
 	      Grammar_pp.pp_hom_spec m xd hs
-        (* TODO *)
             with Not_found -> Auxl.error (Some mvd.mvd_loc) ("ocamllex output: undefined ocaml hom for "^mvd.mvd_name^"\n")) in
           let ocamllex_hom_opt = 
             (try
@@ -271,10 +270,8 @@ let token_names_of_syntaxdefn yo xd : token_data =
           | Some ocamllex_hom, false -> 
               Some (token_name_of mvd.mvd_name, mvd.mvd_name, TK_metavar(ocaml_type, Some ocamllex_hom))
           | None, false -> 
-          (* TODO *)
               Auxl.error (Some mvd.mvd_loc) ("ocamllex output: no ocamllex or ocamllex-remove hom for "^mvd.mvd_name^"\n")
           | Some ocamllex_hom, false -> 
-          (* TODO *)
               Auxl.error (Some mvd.mvd_loc) ("ocamllex output: both ocamllex and ocamllex-remove hom for "^mvd.mvd_name^"\n")
           | None, true -> 
               Some (token_name_of mvd.mvd_name, mvd.mvd_name, TK_metavar(ocaml_type, None))
@@ -353,7 +350,6 @@ let pp_lex_systemdefn m sd oi =
 ;
       output_string fd "\n\n{\n}\n\n";
       close_out fd
-      (* TODO *)
   | _ -> Auxl.error None "must specify only one output file in the lex backend.\n"
 
 
@@ -483,7 +479,6 @@ let rec element_data_of_element ts (allow_lists:bool) e : element_data =
           | (1,None)   -> "nonempty_list(" ^ body ^ ")"
           | (2,Some t) -> "separated_nonempty2_list(" ^ t ^ "," ^ body ^ ")"
           | (2,None)   -> "nonempty2_list(" ^ body ^ ")"
-          (* TODO *)
           | (_,_)      -> Auxl.error None ("unexpected length in pp_menhir_element") 
         in
         let body0 = 
