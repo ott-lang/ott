@@ -74,10 +74,10 @@ let pp_t {loc_start=ls;loc_end=le} =
       && ls.Lexing.pos_lnum = le.Lexing.pos_lnum 
   then 
     (* start and end are in the same file and line *)
-    (if ls.Lexing.pos_fname="" then "" else "file " ^ ls.Lexing.pos_fname ^ "  ")
+    (if ls.Lexing.pos_fname="" then "" else "File " ^ ls.Lexing.pos_fname ^ " on ")
     ^ "line "
     ^ string_of_int ls.Lexing.pos_lnum
-    ^ " char "
+    ^ ", column "
     ^ string_of_int (ls.Lexing.pos_cnum - ls.Lexing.pos_bol)
     ^ " - "
     ^ string_of_int (le.Lexing.pos_cnum - le.Lexing.pos_bol)
@@ -86,22 +86,22 @@ let pp_t {loc_start=ls;loc_end=le} =
       && le.Lexing.pos_cnum - le.Lexing.pos_bol = 0 
   then
     (* start and end are in the same file but different lines, at the starts of those lines *)
-    (if ls.Lexing.pos_fname="" then "" else "file " ^ ls.Lexing.pos_fname ^ "  ")
+    (if ls.Lexing.pos_fname="" then "" else "File " ^ ls.Lexing.pos_fname ^ " on ")
     ^ "line "
     ^ string_of_int ls.Lexing.pos_lnum
     ^ " - "
     ^ string_of_int le.Lexing.pos_lnum
   else 
     (* start and end are in the same file but different lines, at some non-start chars *)
-    (if ls.Lexing.pos_fname="" then "" else "file " ^ ls.Lexing.pos_fname ^ "  ")
+    (if ls.Lexing.pos_fname="" then "" else "File " ^ ls.Lexing.pos_fname ^ " on ")
     ^ "line "
     ^ string_of_int ls.Lexing.pos_lnum
-    ^ " char "
+    ^ ", column "
     ^ string_of_int (ls.Lexing.pos_cnum - ls.Lexing.pos_bol)
     ^ " - " 
     ^ "line "
     ^ string_of_int le.Lexing.pos_lnum
-    ^ " char "
+    ^ ", column "
     ^ string_of_int (le.Lexing.pos_cnum - le.Lexing.pos_bol)
 
 

@@ -1141,9 +1141,9 @@ let process_semiraw_rule (m: pp_mode) (xd: syntaxdefn) (lookup: made_parser)
         let premises = List.map fancy_parse lss1 in
         let conclusion =
           match lss2 with
-          | [] -> raise (Rule_parse_error (l, "rule with no conclusion at "))
+          | [] -> raise (Rule_parse_error (l, "rule with no conclusion"))
           | [(l,s)] -> Term_parser.just_one_parse ~transform:(Term_parser.defn_transform prod_name) xd lookup rn_formula false l s
-          | _ -> raise (Rule_parse_error (l, "rule with multiple conclusions at "))
+          | _ -> raise (Rule_parse_error (l, "rule with multiple conclusions"))
         in
         let c = Term_parser.cd_env_of_syntaxdefn xd in
         let dr = {drule_name = defnclass_wrapper^defn_wrapper^annot.dla_name;
