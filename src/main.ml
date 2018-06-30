@@ -846,7 +846,7 @@ let _ =
            Gc.minor_heap_size = 2*1024*1024      (*  8/16 MB in 32/64bit machines *); 
            Gc.major_heap_increment = 5*1024*1024 (* 40/80 MB in 32/64bit machines *)};;
 
-let _ = match source_filenames, !read_systemdefn_filename_opt with
+let _ = try ( match source_filenames, !read_systemdefn_filename_opt with
 | (_::_),None -> 
     let (sd,lookup,sd_unquotiented,sd_quotiented_unaux) = process source_filenames in
     output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux)
@@ -857,3 +857,6 @@ let _ = match source_filenames, !read_systemdefn_filename_opt with
     Arg.usage options usage_msg;
     Auxl.error None "\nError: must specify either some source filenames or a readsys option\n"
 | (_::_),Some _ -> Auxl.error None "\nError: must not specify both source filenames and a readsys option\n"
+                      
+  ) with 
+  | Auxl.Located_Failure (l, s) -> Auxl.exit_with l s

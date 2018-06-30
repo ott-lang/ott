@@ -37,6 +37,7 @@ open Location
 (* exceptions ************************************************************ *)
 
 exception ThisCannotHappen
+exception Located_Failure of (loc option)*string
 
 (* debug, warning and error report *************************************** *)
 
@@ -73,11 +74,13 @@ let warning l s = print_endline (maybe_pp_loc l ^ warning_string () ^ s); flush 
 let report_error l s = print_endline (maybe_pp_loc l ^ error_string () ^ s); flush stdout
 
 
-let error l s = print_endline (maybe_pp_loc l ^ error_string () ^ s); flush stdout; exit 2
+let error l s = raise (Located_Failure (l, maybe_pp_loc l ^ error_string () ^ s))
 
-let int_error s = print_endline("internal: " ^ s); flush stdout; exit 2
+let exit_with l s = (maybe_pp_loc l ^ error_string () ^ s);  flush stdout; exit 2
 
-let errorm m s = print_endline ("internal (" ^ mode_name m ^ "): " ^ s); flush stdout; exit 2
+let int_error s = raise (Located_Failure (None, "internal: " ^ s))
+
+let errorm m s = raise (Located_Failure (None, "internal (" ^ mode_name m ^ "): " ^ s))
 
 
 (* ***************** *)
