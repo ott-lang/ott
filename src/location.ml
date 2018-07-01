@@ -129,7 +129,7 @@ let dummy_t =
   { loc_start=dummy_pos;
     loc_end=dummy_pos }
 
-let pp_loc l = String.concat " " ((List.map pp_t) l)
+let pp_loc l = String.concat " ; " ((List.map pp_t) l)
 
 let pos_plus_offset pos n = {pos with
                              Lexing.pos_bol = pos.Lexing.pos_bol + n;
