@@ -74,9 +74,9 @@ let warning l s = print_endline (maybe_pp_loc l ^ warning_string () ^ s); flush 
 let report_error l s = print_endline (maybe_pp_loc l ^ error_string () ^ s); flush stdout
 
 
-let error l s = raise (Located_Failure (l, maybe_pp_loc l ^ error_string () ^ s))
+let error l s = raise (Located_Failure (l, s))
 
-let exit_with l s = (maybe_pp_loc l ^ error_string () ^ s);  flush stdout; exit 2
+let exit_with l s = print_endline (maybe_pp_loc l ^ error_string () ^ s);  flush stdout; exit 2
 
 let int_error s = raise (Located_Failure (None, "internal: " ^ s))
 
