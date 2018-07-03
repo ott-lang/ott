@@ -1165,7 +1165,7 @@ let just_one_parse ?(transform : symterm list -> symterm list = user_syntax_tran
             sts)
         in
         begin  
-          report_error (Some l) (concat "" intermed);
+          report_error (Some l) (sstart ^ concat "" intermed);
           St_uninterpreted(l, "multiple parses")
         end
 

@@ -545,7 +545,7 @@ let process source_filenames =
               process_input ()
         with 
           My_parse_error (loc, s)->
-            Auxl.error loc ("\n"^s^"\n") in
+            Auxl.error loc (s) in
       process_input ();
       output_string c' "\\end{alltt}\n";
       let _ = close_in c in
