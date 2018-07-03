@@ -1144,7 +1144,7 @@ let just_one_parse ?(transform : symterm list -> symterm list = user_syntax_tran
     [st] -> st
   | [] -> 
       let error_str = no_parses_error_string s in
-      report_error (Some l) (Format.sprintf "\nno parses of \"%s\":\n%s\n" s  error_str);
+      report_error (Some l) (Format.sprintf "no parses of \"%s\":\n%s\n" s  error_str);
       St_uninterpreted (l, error_str)
   | hs::ts ->
       if 
@@ -1158,7 +1158,7 @@ let just_one_parse ?(transform : symterm list -> symterm list = user_syntax_tran
       then hs
       else
         let 
-          sstart = Format.sprintf "\nmultiple parses of \"%s\":\n" s
+          sstart = Format.sprintf "multiple parses of \"%s\":\n" s
           and intermed : string list =  (List.map 
             (fun st -> 
               Format.sprintf "%s\n or plain:%s\n"
