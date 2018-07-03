@@ -255,7 +255,7 @@ let token_names_of_syntaxdefn yo xd : token_data =
             (try
 	      let hs = List.assoc "ocaml" mvd.mvd_rep in
 	      Grammar_pp.pp_hom_spec m xd hs
-            with Not_found -> Auxl.error ("ocamllex output: undefined ocaml hom for "^mvd.mvd_name^"\n")) in
+            with Not_found -> Auxl.error (Some mvd.mvd_loc) ("ocamllex output: undefined ocaml hom for "^mvd.mvd_name^"\n")) in
           let ocamllex_hom_opt = 
             (try
 	      let hs = List.assoc "ocamllex" mvd.mvd_rep in
@@ -270,9 +270,9 @@ let token_names_of_syntaxdefn yo xd : token_data =
           | Some ocamllex_hom, false -> 
               Some (token_name_of mvd.mvd_name, mvd.mvd_name, TK_metavar(ocaml_type, Some ocamllex_hom))
           | None, false -> 
-              Auxl.error ("ocamllex output: no ocamllex or ocamllex-remove hom for "^mvd.mvd_name^"\n")
+              Auxl.error (Some mvd.mvd_loc) ("ocamllex output: no ocamllex or ocamllex-remove hom for "^mvd.mvd_name^"\n")
           | Some ocamllex_hom, false -> 
-              Auxl.error ("ocamllex output: both ocamllex and ocamllex-remove hom for "^mvd.mvd_name^"\n")
+              Auxl.error (Some mvd.mvd_loc) ("ocamllex output: both ocamllex and ocamllex-remove hom for "^mvd.mvd_name^"\n")
           | None, true -> 
               Some (token_name_of mvd.mvd_name, mvd.mvd_name, TK_metavar(ocaml_type, None))
           )
@@ -350,7 +350,7 @@ let pp_lex_systemdefn m sd oi =
 ;
       output_string fd "\n\n{\n}\n\n";
       close_out fd
-  | _ -> Auxl.error "must specify only one output file in the lex backend.\n"
+  | _ -> Auxl.error None "must specify only one output file in the lex backend.\n"
 
 
 (** ******************************************************************** *)
@@ -479,7 +479,7 @@ let rec element_data_of_element ts (allow_lists:bool) e : element_data =
           | (1,None)   -> "nonempty_list(" ^ body ^ ")"
           | (2,Some t) -> "separated_nonempty2_list(" ^ t ^ "," ^ body ^ ")"
           | (2,None)   -> "nonempty2_list(" ^ body ^ ")"
-          | (_,_)      -> Auxl.error ("unexpected length in pp_menhir_element") 
+          | (_,_)      -> Auxl.error None ("unexpected length in pp_menhir_element") 
         in
         let body0 = 
           (match element_data with
@@ -652,6 +652,7 @@ let pp_menhir_prod yo generate_aux_info_here xd ts r p =
         let pp_menhir_hse hse = 
           match hse with
           | Hom_string s ->  s
+          (* TODO, arbitrary failure? *)
           | Hom_index i -> let e = List.nth es'' (*or es? *) i  in let d=element_data_of_element ts true e in (match d.semantic_action with Some s -> s | None -> raise (Failure ("pp_menhir_hse Hom_index " ^ string_of_int i ^ " at " ^ Location.pp_loc p.prod_loc)))
           | Hom_terminal s -> s
           | Hom_ln_free_index (mvs,s) -> raise (Failure "Hom_ln_free_index not implemented")  in
@@ -686,7 +687,7 @@ let pp_menhir_prod yo generate_aux_info_here xd ts r p =
 
 
 
-        | None -> ignore(Auxl.error ("no ocaml hom for production "^p.prod_name));"")
+        | None -> ignore(Auxl.error (Some (r.rule_loc)) ("no ocaml hom for production "^p.prod_name));"")
     in
 
     let aux_wrapper_l, aux_wrapper_r = 
@@ -803,7 +804,7 @@ let pp_pp_raw_rule yo generate_aux_info xd ts r =
     (match Auxl.hom_spec_for_hom_name "pp-raw" r.rule_homs with 
     | Some hs -> 
         Some (pp_pp_raw_name r.rule_ntr_name ^ " " ^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs ^"\n\n")
-    | None -> (Auxl.error ("no pp-raw hom for phantom production "^r.rule_ntr_name));
+    | None -> (Auxl.error (Some r.rule_loc) ("no pp-raw hom for phantom production "^r.rule_ntr_name));
     )
   else 
     let generate_aux_info_here = generate_aux_info_for_rule generate_aux_info r in 
@@ -845,7 +846,7 @@ let pp_pp_rule yo generate_aux_info xd ts r =
     (match Auxl.hom_spec_for_hom_name "pp" r.rule_homs with 
     | Some hs -> 
         Some (pp_pp_name r.rule_ntr_name ^ " " ^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs ^"\n\n")
-    | None -> (Auxl.error ("no pp hom for phantom production "^r.rule_ntr_name));
+    | None -> (Auxl.error (Some r.rule_loc) ("no pp hom for phantom production "^r.rule_ntr_name));
     )
   else 
     let generate_aux_info_here = generate_aux_info_for_rule generate_aux_info r in 
@@ -914,7 +915,7 @@ let pp_menhir_syntaxdefn m sources _(*xd_quotiented*) xd_unquotiented lookup gen
       List.iter (function r -> output_string fd (pp_menhir_rule yo generate_aux_info xd_unquotiented ts r)) xd_unquotiented.xd_rs;
       close_out fd
 
-  | _ -> Auxl.error "must specify only one output file in the menhir backend.\n"
+  | _ -> Auxl.error None "must specify only one output file in the menhir backend.\n"
 
 (* output pp source file (should be called with quotiented syntaxdefn file) *)
 let pp_pp_syntaxdefn m sources xd_quotiented xd_unquotiented xd_quotiented_unaux generate_aux_info oi =
@@ -938,5 +939,5 @@ let pp_pp_syntaxdefn m sources xd_quotiented xd_unquotiented xd_quotiented_unaux
                         );
       close_out fd;
 
-  | _ -> Auxl.error "must specify only one output file in the menhir backend.\n"
+  | _ -> Auxl.error None "must specify only one output file in the menhir backend.\n"
 
