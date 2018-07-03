@@ -28,7 +28,7 @@
 (*  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER  *)
 (*  IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR       *)
 (*  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN   *)
-(*  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                         *)
+(*  IF ADVISED OF THE POSSIBILITY OF SUCH DAMGE.                         *)
 (**************************************************************************)
 
 (* 
@@ -1136,6 +1136,8 @@ about multiple parses *)
 let just_one_parse ?(transform : symterm list -> symterm list = user_syntax_transform)
       (xd: syntaxdefn) (lookup: made_parser) 
       (ntr: nontermroot) (concrete: bool) (l: loc) (s: string): symterm =
+  let Ascii oldopts = pp_ascii_opts_default in
+  let opts = Ascii {oldopts with ppa_colour = !Auxl.colour} in
   let sts = parse_complete lookup ntr concrete s in
   let sts = transform sts in
   match sts with
@@ -1160,7 +1162,7 @@ let just_one_parse ?(transform : symterm list -> symterm list = user_syntax_tran
           and intermed : string list =  (List.map 
             (fun st -> 
               Format.sprintf "%s\n or plain:%s\n"
-                (Grammar_pp.pp_symterm pp_ascii_opts_default xd [] de_empty st)
+                (Grammar_pp.pp_symterm opts xd [] de_empty st)
                 (Grammar_pp.pp_plain_symterm st))  
             sts)
         in
