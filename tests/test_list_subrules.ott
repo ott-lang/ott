@@ -1,0 +1,44 @@
+% Mixing list bounds with subrules
+% Should pass on all targets, but previous versions failed
+% in Coq with "The variable tau_ is bound several times in pattern"
+% due to an error in how bound were calculated for sub-non-terminals
+
+metavar var, X ::= {{coq nat}} {{isa nat}} {{hol nat}} {{ocaml int}}
+
+indexvar n ::=  {{coq nat}} {{isa nat}} {{hol nat}} {{ocaml int}}
+
+grammar
+
+Kind, K :: kind_ ::= 
+  | KindStar :: :: KindStar 
+ 
+typexpr, T :: T_ ::=                  
+    | X                   ::   :: var                     
+    | ForAll << X1 , .. , Xn >> .  T            ::   :: polyarrow
+    |  [ X1 |-> tau1 .. Xn |-> taun ] T        :: M :: tsub  {{icho  [[T]]  }}
+
+tau :: tau_ ::=    
+    | X                   ::   :: var   
+    
+    formula :: 'formula_' ::=
+      | judgement           ::   :: judgement
+      | formula1 .. formulan :: :: dots
+
+    subrules
+      tau <:: T
+
+    defns
+      Jtype :: '' ::=
+
+    defn
+        |- T : K :: :: kind :: Kind by
+       
+        ------------------------------------ :: Var
+        |- T : KindStar
+
+    defn
+        |- T <: T' :: :: sub :: Sub by
+ 
+        </ |-  taun : KindStar // n />
+        ------------------------------------------ :: InstL
+        |-  ForAll << </ Xn // n /> >> .  T  <: [ </ Xn |-> taun // n /> ] T 
