@@ -324,10 +324,27 @@ let dotenv23 ntmvsn_without_bounds ntmvsn_with_bounds  =
   de2,de3
 
 
+let coalesce_bounds x : ((Types.nt_or_mv * Types.subntr_data) * Types.bound option) list =
+  let merge_data d1 d2 = d1
+  in let merge_bounds b1 b2 = match (b1, b2) with
+      | (None, b) -> b
+      | (b, None) -> b
+      | (Some b1, Some b2) ->
+        if b1 == b2 then (Some b1) else
+          raise (Bounds ("incompatible bounds " ))
+  in let names = Auxl.remove_duplicates (List.map (fun ((a,b),c) -> a) x)
+  in let namesMatching nm =  List.filter (fun  ((ntmv, _),_) -> ntmv == nm) x
+  in let merge_pairs ((nm,d1),b1) ((_,d2),b2) =
+       ((nm, merge_data d1 d2), merge_bounds b1 b2)
+  in List.map (fun nm ->
+       let matching = (namesMatching nm )
+       in List.fold_right merge_pairs matching (List.hd matching)) names
+
 
 let bound_extraction m xd loc sts : dotenv * dotenv3 * string = 
   try  
-    let x = nt_or_mv_of_symterms sts in
+    let x_unc =  nt_or_mv_of_symterms sts in
+    let x = coalesce_bounds x_unc in
     let bounds = check_length_consistency x in
     let pp_bounds = String.concat "  " 
         (List.map Grammar_pp.pp_plain_bound bounds) in
