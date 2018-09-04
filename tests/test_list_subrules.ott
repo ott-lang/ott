@@ -3,9 +3,9 @@
 % in Coq with "The variable tau_ is bound several times in pattern"
 % due to an error in how bound were calculated for sub-non-terminals
 
-metavar var, X ::= {{coq nat}} {{isa nat}} {{hol nat}} {{ocaml int}}
+metavar var, X ::= {{coq nat}} 
 
-indexvar n ::=  {{coq nat}} {{isa nat}} {{hol nat}} {{ocaml int}}
+indexvar n ::=  {{coq nat}}
 
 grammar
 
