@@ -50,7 +50,10 @@ let loc_of_filename name len  =
       Lexing.pos_cnum =len }
 } ]
 
-let pp_position 
+(* We don't use these anymore,
+since all errors/warnings should be converting
+their positiosn into locations *)
+(* let pp_position 
     { Lexing.pos_fname = f;
       Lexing.pos_lnum = l;
       Lexing.pos_bol = b;
@@ -58,23 +61,23 @@ let pp_position
   "fname=" ^ f ^ "  lnum=" ^ string_of_int l
   ^ "  bol="^string_of_int b^"  cnum=" ^string_of_int c
 
-let pp_position2  
+let pp_position2'  
     { Lexing.pos_fname = f;
       Lexing.pos_lnum = l;
       Lexing.pos_bol = b;
       Lexing.pos_cnum = c } = 
   (if f="" then "" else "file=" ^ f ^ "  ")
-  ^ "line=" ^ string_of_int l ^ "  char=" ^ string_of_int (c-b)
+  ^ "line=" ^ string_of_int l ^ "  char=" ^ string_of_int (c-b) *)
 
 let pp_t {loc_start=ls;loc_end=le} = 
   if ls.Lexing.pos_fname = le.Lexing.pos_fname 
       && ls.Lexing.pos_lnum = le.Lexing.pos_lnum 
   then 
     (* start and end are in the same file and line *)
-    (if ls.Lexing.pos_fname="" then "" else "file " ^ ls.Lexing.pos_fname ^ "  ")
+    (if ls.Lexing.pos_fname="" then "" else "File " ^ ls.Lexing.pos_fname ^ " on ")
     ^ "line "
     ^ string_of_int ls.Lexing.pos_lnum
-    ^ " char "
+    ^ ", column "
     ^ string_of_int (ls.Lexing.pos_cnum - ls.Lexing.pos_bol)
     ^ " - "
     ^ string_of_int (le.Lexing.pos_cnum - le.Lexing.pos_bol)
@@ -83,22 +86,22 @@ let pp_t {loc_start=ls;loc_end=le} =
       && le.Lexing.pos_cnum - le.Lexing.pos_bol = 0 
   then
     (* start and end are in the same file but different lines, at the starts of those lines *)
-    (if ls.Lexing.pos_fname="" then "" else "file " ^ ls.Lexing.pos_fname ^ "  ")
+    (if ls.Lexing.pos_fname="" then "" else "File " ^ ls.Lexing.pos_fname ^ " on ")
     ^ "line "
     ^ string_of_int ls.Lexing.pos_lnum
     ^ " - "
     ^ string_of_int le.Lexing.pos_lnum
   else 
     (* start and end are in the same file but different lines, at some non-start chars *)
-    (if ls.Lexing.pos_fname="" then "" else "file " ^ ls.Lexing.pos_fname ^ "  ")
+    (if ls.Lexing.pos_fname="" then "" else "File " ^ ls.Lexing.pos_fname ^ " on ")
     ^ "line "
     ^ string_of_int ls.Lexing.pos_lnum
-    ^ " char "
+    ^ ", column "
     ^ string_of_int (ls.Lexing.pos_cnum - ls.Lexing.pos_bol)
     ^ " - " 
     ^ "line "
     ^ string_of_int le.Lexing.pos_lnum
-    ^ " char "
+    ^ ", column "
     ^ string_of_int (le.Lexing.pos_cnum - le.Lexing.pos_bol)
 
 
@@ -126,7 +129,7 @@ let dummy_t =
   { loc_start=dummy_pos;
     loc_end=dummy_pos }
 
-let pp_loc l = String.concat " " ((List.map pp_t) l)
+let pp_loc l = String.concat " ; " ((List.map pp_t) l)
 
 let pos_plus_offset pos n = {pos with
                              Lexing.pos_bol = pos.Lexing.pos_bol + n;

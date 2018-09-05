@@ -31,7 +31,9 @@
 (*  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                         *)
 (**************************************************************************)
 
-exception Bounds of string
+open Types;;
+
+exception Bounds of loc * string 
 val nt_or_mv_of_symterms : 
     Types.symterm list ->	 
     ((Types.nt_or_mv * Types.subntr_data) * Types.bound option) list

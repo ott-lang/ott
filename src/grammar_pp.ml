@@ -323,7 +323,7 @@ and pp_raw_dots n =
   | 0 -> pp_DOTDOT 
   | 1 -> pp_DOTDOTDOT
   | 2 -> pp_DOTDOTDOTDOT 
-  | _ -> Auxl.error "internal: >2 in pp_raw_dots"
+  | _ -> Auxl.error None "internal: >2 in pp_raw_dots"
 
 and pp_raw_prod p = 
   pad 60 ((match p.raw_prod_flavour with Bar -> pp_BAR)    
@@ -757,7 +757,7 @@ let pp_tex_DOTDOTDOTDOT       = "...."
 let pp_tex_NAME_PREFIX m       = 
   match m with
   | Tex xo -> xo.ppt_name_prefix
-  |  _ -> Auxl.error "internal: pp_tex_NAME_PREFIX"
+  |  _ -> Auxl.error None "internal: pp_tex_NAME_PREFIX"
 
 let pp_tex_METAVARS_NAME m     = "\\"^pp_tex_NAME_PREFIX m^"metavars"
 let pp_tex_RULES_NAME m        = "\\"^pp_tex_NAME_PREFIX m^"grammar"
@@ -1225,7 +1225,7 @@ and pp_nt_or_mv_root_ty m xd ntmvr =
   | Ntr ntr -> pp_nontermroot_ty m xd ntr
   | Mvr mvr -> pp_metavarroot_ty m xd mvr
 
-and coq_maybe_decide_equality m xd homs ntmvr = 
+and coq_maybe_decide_equality m xd homs ntmvr loc = 
   match
     try Some (List.assoc "coq-equality" homs) with Not_found -> None
   with
@@ -1246,7 +1246,7 @@ and coq_maybe_decide_equality m xd homs ntmvr =
       ^ ( match eh with
         | [ ] -> "  decide equality; auto with ott_coq_equality arith."
         | [ Hom_string s ] -> s 
-        | _ -> Auxl.error "malformed coq-equality homomorphism\n" )
+        | _ -> Auxl.error (Some loc) "malformed coq-equality homomorphism\n" )
       ^ "\nDefined.\n"
       ^ "Hint Resolve eq_" ^ type_name  ^ " : ott_coq_equality.\n"
 
@@ -1259,7 +1259,7 @@ and pp_metavardefn m xd mvd =
                                (function (mvr,homs)->pp_metavarroot m xd mvr)
                                mvd.mvd_names)) 
       ^ " " ^ pp_CCE ^ " " 
-      ^ pp_metavarrep m xd mvd.mvd_rep "" ^ "\n"
+      ^ (pp_metavarrep m xd mvd.mvd_rep "" mvd.mvd_loc) ^ "\n"
   | Tex xo -> 
       " $ "
       ^ (String.concat " ,\\, "(List.map 
@@ -1273,8 +1273,8 @@ and pp_metavardefn m xd mvd =
 	| Coq co ->
 	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in
 	    "Definition " ^  type_name ^ " := " 
-	    ^ pp_metavarrep m xd mvd.mvd_rep type_name ^ "." ^ pp_com ^ "\n"
-	    ^ coq_maybe_decide_equality m xd mvd.mvd_rep (Mvr mvd.mvd_name)
+	    ^ (pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc) ^ "." ^ pp_com ^ "\n" 
+	    ^ coq_maybe_decide_equality m xd mvd.mvd_rep (Mvr mvd.mvd_name) mvd.mvd_loc
 	| Rdx ro -> ""
 	    (* let type_name = pp_metavarroot_ty m xd mvd.mvd_name in *)
 	    (* ";; grammar_pp, 1279: " ^  type_name ^ " := "  *)
@@ -1284,7 +1284,7 @@ and pp_metavardefn m xd mvd =
 	    "type "
 	    ^ type_name 
 	    ^ " = " 
-	    ^ pp_metavarrep m xd mvd.mvd_rep type_name
+	    ^ pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc
 	    ^ pp_com ^ "\n"
 	| Isa io ->
 	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in 
@@ -1293,20 +1293,20 @@ and pp_metavardefn m xd mvd =
 	      "atom_decl \"" ^ type_name ^ "\"" ^ pp_com ^ "\n"
 	    else
 	      "type_synonym \"" ^ type_name ^ "\" = \"" 
-	      ^ pp_metavarrep m xd mvd.mvd_rep type_name^ "\"" ^ pp_com ^ "\n"
+	      ^ (pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc)^ "\"" ^ pp_com ^ "\n"
 	| Hol ho -> 
 	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in 
 	    "val _ = type_abbrev(\""
 	    ^ type_name
 	    ^ "\", ``:"
-	    ^ pp_metavarrep m xd mvd.mvd_rep type_name ^ "``);"
+	    ^ (pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc) ^ "``);" 
 	    ^ pp_com ^ "\n"
 	| Lem lo -> 
 	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in 
 	    "type "
 	    ^ type_name
 	    ^ " = "
-	    ^ pp_metavarrep m xd mvd.mvd_rep type_name
+	    ^ pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc
 	    ^ pp_com ^ "\n"
 	| Twf _ -> 
 	    "%abbrev "
@@ -1316,7 +1316,7 @@ and pp_metavardefn m xd mvd =
         | Menhir _ -> ""
 	| Ascii _ | Tex _ -> raise Auxl.ThisCannotHappen ))
 
-and pp_metavarrep m xd mvd_rep type_name =
+and pp_metavarrep m xd mvd_rep type_name loc =
   match m with
   | Ascii ao ->
       pp_homomorphism_list m xd mvd_rep
@@ -1326,37 +1326,37 @@ and pp_metavarrep m xd mvd_rep type_name =
       ( try
 	let hs = List.assoc "isa" mvd_rep in
 	pp_hom_spec m xd hs
-      with Not_found -> Auxl.warning ("undefined isa metavarrep for "^type_name^"\n"); "UNDEFINED" )
+      with Not_found -> Auxl.warning (Some loc) ("undefined isa metavarrep for "^type_name^"\n"); "UNDEFINED" )
   | Hol ho ->
       ( try
 	let hs = List.assoc "hol" mvd_rep in
 	pp_hom_spec m xd hs
-      with Not_found -> Auxl.warning ("undefined hol metavarrep for "^type_name^"\n"); "UNDEFINED" )
+      with Not_found -> Auxl.warning (Some loc) ("undefined hol metavarrep for "^type_name^"\n"); "UNDEFINED" )
   | Lem lo ->
       ( try
 	let hs = List.assoc "lem" mvd_rep in
 	pp_hom_spec m xd hs
-      with Not_found -> Auxl.warning ("undefined lem metavarrep for "^type_name^"\n"); "UNDEFINED" )
+      with Not_found -> Auxl.warning (Some loc) ("undefined lem metavarrep for "^type_name^"\n"); "UNDEFINED" )
   | Coq co ->
       ( try
 	let hs = List.assoc "coq" mvd_rep in
 	pp_hom_spec m xd hs
-      with Not_found -> Auxl.warning ("undefined coq metavarrep for "^type_name^"\n"); "UNDEFINED" )
+      with Not_found -> Auxl.warning (Some loc) ("undefined coq metavarrep for "^type_name^"\n"); "UNDEFINED" )
   | Rdx ro ->
       ( try
 	let hs = List.assoc "rdx" mvd_rep in
 	pp_hom_spec m xd hs
-      with Not_found -> Auxl.warning ("undefined rdx metavarrep for "^type_name^"\n"); "UNDEFINED" )
+      with Not_found -> Auxl.warning (Some loc) ("undefined rdx metavarrep for "^type_name^"\n"); "UNDEFINED" )
   | Twf wo ->
       ( try
 	let hs = List.assoc "twf" mvd_rep in
 	pp_hom_spec m xd hs
-      with Not_found -> Auxl.warning ("undefined Twelf metavarrep for "^type_name^"\n"); "UNDEFINED" )
+      with Not_found -> Auxl.warning (Some loc) ("undefined Twelf metavarrep for "^type_name^"\n"); "UNDEFINED" )
   | Caml oo ->
       ( try
 	let hs = List.assoc "ocaml" mvd_rep in
 	pp_hom_spec m xd hs
-      with Not_found -> Auxl.warning ("undefined OCaml metavarrep for "^type_name^"\n"); "UNDEFINED" )
+      with Not_found -> Auxl.warning (Some loc) ("undefined OCaml metavarrep for "^type_name^"\n"); "UNDEFINED" )
 	
 and pp_prodname m xd pn =  (* FZ this is never called *)
   match m with
@@ -1678,15 +1678,15 @@ and pp_plain_dotenv3 de3 =
 
 and pp_plain_bindspec bs =
   match bs with
-  | Bind (mse, nonterm) -> "Bind ("^pp_plain_mse mse^", "^pp_plain_nonterm nonterm^")"
-  | AuxFnDef (f,mse) -> "AuxFnDef ("^f^", "^pp_plain_mse mse^")"
-  | NamesEqual (_,_) -> "NamesEqual"
-  | NamesDistinct (_,_) -> "NamesDistinct"
+  | Bind (loc, mse, nonterm) -> "Bind ("^pp_plain_mse mse^", "^pp_plain_nonterm nonterm^")"
+  | AuxFnDef (loc, f,mse) -> "AuxFnDef ("^f^", "^pp_plain_mse mse^")"
+  | NamesEqual (loc,_,_) -> "NamesEqual"
+  | NamesDistinct (loc,_,_) -> "NamesDistinct"
   | AllNamesDistinct _ -> "AllNamesDistinct"
 
 and pp_bindspec m xd sie de bs = 
   match bs with
-  | Bind (mse,nt) -> 
+  | Bind (loc,mse,nt) -> 
       ( match m with 
       | Ascii ao -> 
           pp_BIND^" " ^  pp_mse_string m xd sie de mse ^ " " 
@@ -1695,12 +1695,12 @@ and pp_bindspec m xd sie de bs =
           pp_tex_BIND ^ "\\; " ^  pp_mse_string m xd sie de mse ^ "\\; "
 	  ^ pp_tex_IN ^ "\\; " ^ pp_nonterm m xd nt
       | Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Caml _ | Lex _ | Menhir _ -> raise ThisCannotHappen )
-  | AuxFnDef (f,mse) -> 
+  | AuxFnDef (loc,f,mse) -> 
       ( match m with 
       | Ascii ao -> pp_auxfn m xd f ^ "" ^ pp_EQ ^ "" ^ pp_mse_string m xd sie de mse
       | Tex xo -> pp_auxfn m xd f ^ "" ^ pp_tex_EQ ^ "" ^ pp_mse_string m xd sie de mse
       | Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Caml _ | Lex _ | Menhir _ -> raise ThisCannotHappen )
-  | NamesEqual (mse,mse') -> 
+  | NamesEqual (loc,mse,mse') -> 
       ( match m with 
       | Ascii ao -> 
           pp_NAMES ^ "" ^ pp_LPAREN ^ "" ^ pp_mse_string m xd sie de mse ^ "" ^ pp_RPAREN 
@@ -1711,7 +1711,7 @@ and pp_bindspec m xd sie de bs =
 	  ^ "" ^ pp_tex_RPAREN ^ "\\," ^ pp_tex_EQ ^ "\\," ^ pp_tex_NAMES
 	  ^ "" ^ pp_tex_LPAREN ^ "" ^ pp_mse_string m xd sie de mse' ^ "" ^ pp_tex_RPAREN
       | Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Caml _ | Lex _ | Menhir _ -> raise ThisCannotHappen )
-  | NamesDistinct (mse,mse') -> 
+  | NamesDistinct (loc,mse,mse') -> 
       ( match m with 
       | Ascii ao -> 
           pp_NAMES ^ "" ^ pp_LPAREN ^ "" ^ pp_mse_string m xd sie de mse ^ "" ^ pp_RPAREN
@@ -1723,7 +1723,7 @@ and pp_bindspec m xd sie de bs =
 	  ^ pp_tex_NAMES ^ "" ^ pp_tex_LPAREN ^ "" ^ pp_mse_string m xd sie de mse' 
 	  ^ ""^pp_tex_RPAREN
       | Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Caml _ | Lex _ | Menhir _ -> raise ThisCannotHappen )
-  | AllNamesDistinct mse -> 
+  | AllNamesDistinct (loc,mse) -> 
       ( match m with 
       | Ascii ao -> 
           pp_DISTINCTNAMES ^ "" ^ pp_LPAREN ^ "" ^ pp_mse_string m xd sie de mse 
@@ -2398,7 +2398,7 @@ and pp_nominal_prod m xd rnn rpw p =
   let rec arrange np bs =
     match bs with
     | [] -> np
-    | (Bind (MetaVarExp mv, nt)) :: bst ->
+    | (Bind (loc, MetaVarExp mv, nt)) :: bst ->
 	let rnp =
 	  Auxl.option_map
 	    ( fun (bl,el) ->
@@ -2669,7 +2669,7 @@ and pp_rule m xd r = (* returns a string option *)
            ^ "")
   | Coq co ->
       pp_internal_coq_buffer := !pp_internal_coq_buffer ^
-        coq_maybe_decide_equality m xd r.rule_homs (Ntr r.rule_ntr_name);
+        coq_maybe_decide_equality m xd r.rule_homs (Ntr r.rule_ntr_name) r.rule_loc;
       if r.rule_meta || r.rule_phantom
       then None
       else
@@ -3138,8 +3138,8 @@ and extract_nonterms_deep_ste_list slil =
   ( match slil with
   | [] -> []
   | Stli_single (_,stel)::tl -> (extract_nonterms_deep stel) @ (extract_nonterms_deep_ste_list tl)
-  | Stli_listform _::tl -> 
-      Auxl.warning "<<internal: extract_nonterms_deep_ste_list not implemented over listforms>>>";
+  | Stli_listform hd::tl -> 
+      Auxl.warning (Some hd.stl_loc) "<<internal: extract_nonterms_deep_ste_list not implemented over listforms>>>";
       extract_nonterms_deep_ste_list tl )
   
 and extract_nonterms_deep s =
@@ -3151,7 +3151,7 @@ and extract_nonterms_deep s =
   | (Ste_st (_,St_node (_,stnb)))::t -> (extract_nonterms_deep stnb.st_es) @ (extract_nonterms_deep t)
   | (Ste_list (_,slil))::t -> (extract_nonterms_deep_ste_list slil) @ (extract_nonterms_deep t)
   | h::t ->
-      Auxl.warning
+      Auxl.warning (Some (Auxl.loc_of_symterm_element h))
         ("internal: extract_nonterms_deep case failure\n "
          ^ (pp_plain_symterm_element h) ^ "\n\n"); (extract_nonterms_deep t)
 
@@ -3163,13 +3163,13 @@ and extract_nonterms s =
   | (Ste_st (_,St_node (_,stnb)))::t -> (stnb.st_rule_ntr_name,[]) :: (extract_nonterms t)
   (* | (Ste_st (_,St_node (_,stnb)))::t -> (extract_nonterms stnb.st_es) @ (extract_nonterms t)  *)
   | h::t ->
-      Auxl.warning
+      Auxl.warning (Some (Auxl.loc_of_symterm_element h))
         ("internal: extract_nonterms case failure\n "
          ^ (pp_plain_symterm_element h) ^ "\n\n"); (extract_nonterms t)
 
 and pp_symterm_node_body_fancy_formula m xd sie de stnb : string =
   (* pull out the real symterm list *)
-  let sts = Auxl.option_map (function ste -> match ste with Ste_st(_,st) -> Some st | _ -> Auxl.error "internal: non Ste_st found in pp_symterm_node_body_fancy_formula") stnb.st_es in
+  let sts = Auxl.option_map (function ste -> match ste with Ste_st(_,st) -> Some st | _ -> Auxl.error None "internal: non Ste_st found in pp_symterm_node_body_fancy_formula") stnb.st_es in
   let pp_sts = List.map (pp_symterm m xd sie de) sts in
   let strings = Str.full_split (Str.regexp_string "-ARG-") stnb.st_prod_name in
   let pp_string s = match m with
@@ -3191,7 +3191,7 @@ and pp_symterm_node_body m xd sie de stnb : string =
     try
       let ntrt,pps = List.assoc stnb.st_rule_ntr_name xd.xd_srd.srd_subrule_pn_promotion in
       try List.assoc stnb.st_prod_name pps with
-        Not_found -> Auxl.error ("internal error: pp_symterm_node_body \""^stnb.st_prod_name^"\" Not_found in pps "^pp_plain_pps pps)
+        Not_found -> Auxl.error (Some stnb.st_loc) ("internal error: pp_symterm_node_body \""^stnb.st_prod_name^"\" Not_found in pps "^pp_plain_pps pps)
     with
       Not_found -> stnb.st_prod_name in 
   let p = Auxl.prod_of_prodname xd promoted_pn in
@@ -3248,7 +3248,7 @@ and pp_symterm_node_body m xd sie de stnb : string =
                       | Lem lo -> 
                           pp_symterm_element_judge_lem_plain m xd sie de p'' stnb''
                       | Ascii _ | Tex _ | Lex _ | Menhir _ -> raise ThisCannotHappen
-                      | Caml _ -> Auxl.error "internal: Caml pp_symterm for proper symterms not supported"
+                      | Caml _ -> Auxl.error (Some p''.prod_loc) "internal: Caml pp_symterm for proper symterms not supported"
                       )
                   | _ -> raise (Invalid_argument ("pp_symterm_node_body2: strange production in formula_judgement")))
               | _ -> raise (Invalid_argument ("pp_symterm_node_body3: strange production in formula judgement ")))
@@ -3268,7 +3268,7 @@ and pp_symterm_node_body m xd sie de stnb : string =
 	     
               (match m with
               | Ascii _ | Tex _ | Lex _ | Menhir _ -> Auxl.errorm m "formula_dots"
-              | Caml _ -> Auxl.error "internal: Caml pp_symterm for proper symterms not supported"
+              | Caml _ -> Auxl.error (Some stnb.st_loc) "internal: Caml pp_symterm for proper symterms not supported"
               | Isa io ->
                   (match isa_fancy_syntax_hom_for_prod m xd io p with
                   | None -> 
@@ -3697,7 +3697,7 @@ and pp_symterm_list_items m xd sie (de :dotenv) tmopt prod_es stlis : (string * 
       | (Lang_nonterm(ntr,_))::t -> ntr :: (intern t)
       | (Lang_metavar(mvr,_))::t -> mvr :: (intern t)
       | (Lang_terminal _)::t -> intern t
-      | _::t -> Auxl.warning "internal: elements_to_string never happen\n"; intern t )
+      | _::t -> Auxl.warning None "internal: elements_to_string never happen\n"; intern t )
     in (* List.rev *) (intern ls) in
 
   let include_terminals = 
@@ -3798,7 +3798,7 @@ and pp_symterm_list_item m xd sie (de :dotenv) tmopt include_terminals prod_es s
       | (Lang_nonterm(ntr,_))::t -> ntr :: (intern t)
       | (Lang_metavar(mvr,_))::t -> mvr :: (intern t)
       | (Lang_terminal _)::t -> intern t
-      | _::t -> Auxl.warning "internal: elements_to_string never happen\n"; intern t )
+      | _::t -> Auxl.warning None "internal: elements_to_string never happen\n"; intern t )
     in (* List.rev *) (intern ls) in
 
   match stli with
@@ -3991,7 +3991,7 @@ and pp_symterm_list_body m xd sie (de :dotenv) tmopt include_terminals prod_es s
                     (Auxl.promote_ntr xd ntr,b) :: (intern t)
                 | (Lang_metavar(mvr,_))::t -> (mvr,false) :: (intern t)
                 | (Lang_terminal _)::t -> intern t
-                | _::t -> Auxl.warning "internal: elements_to_string never happen\n"; intern t )
+                | _::t -> Auxl.warning None "internal: elements_to_string never happen\n"; intern t )
               in (* List.rev *) (intern ls) in
 
 	    let ty_list = Str.split (Str.regexp "(\\|*\\|)") de1i.de1_coq_type_of_pattern in
@@ -4263,8 +4263,8 @@ and make_name_element m xd typ e =
   match e with
   | Ste_st (_,st) -> make_name_symterm m xd typ st 
   | Ste_metavar (_,mvr,_) -> if typ then pp_metavarroot_ty m xd mvr else pp_metavarroot m xd mvr
-  | Ste_var (_,mvr,_) -> (* mvr *) Auxl.error "internal: Ste_var in make_name_element"
-  | Ste_list (_,stlil) -> Auxl.error "internal: Ste_list in make_name_element"
+  | Ste_var (_,mvr,_) -> (* mvr *) Auxl.error None "internal: Ste_var in make_name_element"
+  | Ste_list (_,stlil) -> Auxl.error None "internal: Ste_list in make_name_element"
 and make_name_elements m xd typ es = 
   let sep = if typ then "*" else "_" in
   let lst = List.map (make_name_element m xd typ) es in
@@ -4285,7 +4285,7 @@ and make_dep_element e =
   | Ste_st (_,st) -> make_dep_symterm st
   | Ste_metavar (_,mvr,_) -> [ mvr ]
   | Ste_var (_,mvr,_) -> [ mvr ]
-  | Ste_list (_,stlil) -> Auxl.error "internal: Ste_list in make_dep_element"
+  | Ste_list (_,stlil) -> Auxl.error None "internal: Ste_list in make_dep_element"
 and make_dep_elements es = 
   List.concat (List.map make_dep_element es) 
 
