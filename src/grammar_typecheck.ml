@@ -2032,7 +2032,17 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
 
   (* TODO: should check the bindspecs are consistent across subrules *)
 
-  let rec extract_auxfns_bindspec ntr b = 
+  let rec merge_auxfns auxfns =
+    let fns = List.sort_uniq compare (List.map (fun (f,ntr,_) -> (f,ntr)) auxfns)
+    in let fnLocs = List.map
+           (fun fntr -> (fntr,
+                         List.map (fun (_,_,l) -> l)
+                         (List.filter (fun (f,ntr,_) -> (f,ntr) = fntr) auxfns) )) fns
+    in List.map (fun ((f,ntr),locs) -> (f,ntr,List.fold_right List.append locs [] )) fnLocs
+
+  and auxfn_list_list_union lsts = merge_auxfns (Auxl.setlist_list_union lsts)
+
+  and extract_auxfns_bindspec ntr b = 
     ( match b with
     | Bind (loc, mse,nt) -> []
     | AuxFnDef (loc,f,mse) -> [(f,ntr,loc)]
@@ -2041,19 +2051,20 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
     | AllNamesDistinct (loc,mse) -> [] )
             
   and extract_auxfns_production ntr p = 
-    Auxl.setlist_list_union 
+    auxfn_list_list_union
       (List.map (extract_auxfns_bindspec ntr) (p.prod_bs))
           
   and extract_auxfns_rule r = 
-    Auxl.setlist_list_union 
+    auxfn_list_list_union
       (List.map 
          (extract_auxfns_production r.rule_ntr_name) 
          r.rule_ps)
           
   and extract_auxfns_syntaxdefn sd =
-    let auxfns0 = Auxl.setlist_list_union 
-	(List.map extract_auxfns_rule 
+    let auxfns00 = (List.map extract_auxfns_rule 
            (List.filter (fun r -> not r.rule_meta) xd.xd_rs)) in
+    let auxfns0 = Auxl.setlist_list_union auxfns00
+	 in
     let comp (f,ntr,_) (f',ntr',_) = 
       let x = String.compare f f' in
       if x <> 0 then x else compare ntr ntr' in
