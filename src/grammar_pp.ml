@@ -1259,7 +1259,7 @@ and pp_metavardefn m xd mvd =
                                (function (mvr,homs)->pp_metavarroot m xd mvr)
                                mvd.mvd_names)) 
       ^ " " ^ pp_CCE ^ " " 
-      ^ (pp_metavarrep m xd mvd.mvd_rep "" mvd.mvd_loc) ^ "\n"
+      ^ pp_metavarrep m xd mvd.mvd_rep ("" ^ "\n") mvd.mvd_loc
   | Tex xo -> 
       " $ "
       ^ (String.concat " ,\\, "(List.map 
@@ -1273,7 +1273,7 @@ and pp_metavardefn m xd mvd =
 	| Coq co ->
 	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in
 	    "Definition " ^  type_name ^ " := " 
-	    ^ (pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc) ^ "." ^ pp_com ^ "\n" 
+	    ^ pp_metavarrep m xd mvd.mvd_rep (type_name ^ "." ^ pp_com ^ "\n") mvd.mvd_loc
 	    ^ coq_maybe_decide_equality m xd mvd.mvd_rep (Mvr mvd.mvd_name) mvd.mvd_loc
 	| Rdx ro -> ""
 	    (* let type_name = pp_metavarroot_ty m xd mvd.mvd_name in *)
@@ -1293,13 +1293,13 @@ and pp_metavardefn m xd mvd =
 	      "atom_decl \"" ^ type_name ^ "\"" ^ pp_com ^ "\n"
 	    else
 	      "type_synonym \"" ^ type_name ^ "\" = \"" 
-	      ^ (pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc)^ "\"" ^ pp_com ^ "\n"
+	      ^ pp_metavarrep m xd mvd.mvd_rep (type_name^ "\"" ^ pp_com ^ "\n") mvd.mvd_loc
 	| Hol ho -> 
 	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in 
 	    "val _ = type_abbrev(\""
 	    ^ type_name
 	    ^ "\", ``:"
-	    ^ (pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc) ^ "``);" 
+	    ^ pp_metavarrep m xd mvd.mvd_rep (type_name ^ "``);") mvd.mvd_loc
 	    ^ pp_com ^ "\n"
 	| Lem lo -> 
 	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in 
