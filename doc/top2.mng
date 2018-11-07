@@ -238,7 +238,8 @@ other things.
 \end{figure}
 The figure is colourised,  with Ott keywords like \mykw{this} and Ott
 symbols such as \mysym{|} and \mysym{::}.  Other user-specific input
-appears like \texttt{this}.
+appears like \texttt{this}. Any text between \% and the next newline is
+discarded as a comment.
 
 At the top of the figure, the \mykw{metavar} declaration introduces
 a sort of \emph{metavariables} \texttt{termvar} (with synonym \texttt{x}), for term
