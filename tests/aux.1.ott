@@ -1,0 +1,48 @@
+%
+% Testing Auxilary Rules.
+%    Both modes for -aux_style_rules work and constructor style puts the aux part in the correct place.
+%    Auxing in both modes is generating correct subst and free variable functions.
+%
+
+metavar value_name, x ::=
+  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ ocaml int }}
+  {{ lex alphanum }}   {{ ocamllex [a-z]+ }}
+
+metavar integer_literal ::=
+  {{ isa int }} {{ coq nat }} {{ lex numeral }} {{ ocaml int }}
+
+
+grammar
+
+loc :: '' ::=
+  | unknown :: :: unknown
+
+annot :: '' ::=
+	   {{ phantom }}
+           {{ ocaml 'a annot }}
+           {{ lem annot 'a }}
+           {{ hol unit }}
+	   {{ pp a = "annot" }}
+	   {{ pp-raw a = "annot" }}
+
+
+constant, c :: CONST_ ::= {{ aux loc _ }}
+  | integer_literal                    ::   :: int
+  | false                              ::   :: false
+  | true                               ::   :: true
+  | ()                                 ::   :: unit
+  | (&&)                               ::   :: and
+  | not                                ::   :: not
+
+expr, e :: E_ ::= {{ aux _ loc }}
+  | value_name                         ::   :: ident        {{ com Identifier }}
+  | constant                           ::   :: constant
+  | { c / x } e                        :: M :: subst
+       {{ icho ( subst_expr [[c]] [[x]] [[e]] ) }}
+
+
+substitutions
+  single expr value_name :: subst
+
+freevars
+  e x :: fvs

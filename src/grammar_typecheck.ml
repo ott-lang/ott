@@ -154,10 +154,11 @@ let auxed_rule (rr:raw_rule) : raw_rule =
 let auxed_constructors_rule (rr:raw_rule) ((before :string list),(after : string list), (l :loc)) : raw_rule =
   let auxify_prod p = 
     { p with 
-      raw_prod_es = p.raw_prod_es @
+      raw_prod_es = 
       begin
 	let raw_ident_of_string s = Raw_ident(l,(l,s)) in
 	List.map raw_ident_of_string before
+        @ p.raw_prod_es 
 	@ List.map raw_ident_of_string after
       end } in
   { rr with raw_rule_ps = List.map auxify_prod rr.raw_rule_ps }
