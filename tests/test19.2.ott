@@ -1,11 +1,12 @@
 % cut-down version of POPLmark language with records and record patterns but without type variables, abstraction and application
-metavar termvar, x ::=
+% Based on test19.0.ott but with rules tweaked a little so that code_pred in Isabelle works
+metavar x , termvar ::=
  {{ isa string }} {{ coq nat }} {{ hol string }}  {{ coq-equality }} {{ lex alphanum }}  
  {{ tex \mathit{[[termvar]]} }} {{ com  term variable  }} 
  {{ isavar ''[[termvar]]'' }} {{ holvar "[[termvar]]" }} {{ texvar \mathrm{[[termvar]]} }} 
  {{ ocamlvar "[[termvar]]" }}
 
-metavar label, l, k ::=
+metavar l, label, k ::=
  {{ isa string }} {{ coq nat }} {{ hol string }} {{ lex alphanum }}  {{ tex \mathit{[[label]]} }} 
  {{ com  field label  }}  {{ isavar ''[[label]]'' }} {{ holvar "[[label]]" }}
  {{ ocamlvar "[[label]]" }}
@@ -20,6 +21,7 @@ T {{ hol Typ }}, S, U :: 'T_' ::=                                     {{ com typ
   | T -> T'                          ::   :: Fun                        {{ com type of functions }}
   | { l1 : T1 , .. , ln : Tn }       ::   :: Rec                        {{ com record }}           
   | ( T )                            :: M :: paren                      {{ ich [[T]] }}
+  | < T1 , .. , Tn >                 :: :: Tup 
 
 t :: 't_' ::=                                                         {{ com  term  }}
   | x                                ::   :: Var                        {{ com variable }}         
@@ -31,7 +33,8 @@ t :: 't_' ::=                                                         {{ com  te
   | ( t )                            :: M :: paren                      {{ ich [[t]] }} 
   | [ x |-> t ] t'                   :: M :: tsub                       {{ ich ( tsubst_t [[t]] [[x]] [[t']] ) }}
   | s t                              :: M :: tsubs                      {{ ich ( m_t_subst_t [[s]] [[t]] ) }}
-
+  | < t1 , .. , tn >                 ::   :: Tup
+  
 p :: 'P_' ::=                                                         {{ com  pattern }}
   | x : T                            ::   :: Var  (+ b = x  +)          {{ com variable pattern }}
   | { l1 = p1 , .. , ln = pn }       ::   :: Rec  (+ b = b(p1 .. pn) +) {{ com  record pattern  }}
@@ -97,9 +100,9 @@ formula :: formula_ ::=
    | formula1 ... formulan   :: :: dots
 
 
-subrules
-
-  v <:: t
+%subrules
+%
+%  v <:: t
 
 
 substitutions
@@ -161,178 +164,25 @@ where
  end.  }}
 
 defns
-Judgement_in :: '' ::=
-
-
-defn
-x isin dom ( G ) :: :: xinG :: xinG_ {{ tex [[x]] \in [[dom]]([[G]])}} by 
-
--------------- :: 1
-x isin dom(G,x:T)
-
-x isin dom(G)
---------------- :: 3
-x isin dom(G,x':T')
-
-
-
-defn
-x : T isin G :: :: tin :: tin_ {{ tex [[x]] [[:]] [[T]] \in [[G]] }} by
-
----------------- :: 1
-x:T isin G,x:T
-
-x:T isin G
------------------ :: 3
-x:T isin G,x':T'
-
-
-
-defns
 Jtype :: '' ::=
-
-defn
-G |- ok :: :: Gok :: Gok_ {{ com type environment $[[G]]$ is well-formed }} by
-
------------ :: 1
-empty |- ok
-
-G |- T 
-not(x isin dom(G))
------------------- :: 2
-G,x:T |- ok
-
-
-defn
-G |- T :: :: GT :: GT_ {{ com type $[[T]]$ is well-formed in type environment $[[G]]$ }} by
-
-G |- ok
--------------- :: Top
-G |- Top
-
-G |- T
-G |- T'
--------------- :: Fun
-G |- T->T'
-
-G |- T1 .. G |- Tn
-% and distinctness, if not in the syntax
---------------------- :: Rcd
-G |- {l1:T1,..,ln:Tn}
-
-
-
-defn
-G |- S <: T ::  :: SA :: SA_  {{ com $[[S]]$ is a subtype of $[[T]]$ }} by 
-
-G |- ok
----------- :: Top
-G |- S <: Top
-
-G |- T1<:S1
-G |- S2<:T2
----------------------- :: Arrow 
-G |- S1->S2 <: T1->T2
-
-forall i isin 1 -- m. exists j isin 1 -- n. (ki=lj /\ G |- Si<:Tj)
---------------------------------------------------------------------------- :: Rcd
-G |- {k1:S1 , .. , km:Sm} <: {l1:T1,..,ln:Tn}
 
 
 defn
 G |- t : T ::  :: Ty :: Ty_  {{ com term $[[t]]$ has type $[[T]]$ }} by 
 
-G |- ok
-x:T isin G
--------------- :: Var
-G |- x:T
-
-G,x:T1 |- t2:T2
------------------------ :: Abs
-G |- \x:T1.t2 : T1->T2
-
-G|- t1:T11->T12
-G|- t2:T11
--------------------- :: App
-G|- t1 t2 : T12
-
-G|- t1:T1
-|- p:T1=>D
-G,D |- t2:T2
------------------------- :: Let
-G|- let p=t1 in t2 : T2
 
 G|-t1:T1 .. G|-tn:Tn
-% and distinctness, if not in the syntax
 ------------------------------------- :: Rcd
 G|- {l1=t1,..,ln=tn}:{l1:T1,..,ln:Tn}
 
-G|- t:{l1:T1,..,ln:Tn}
------------------------ :: Proj
-G|- t.lj : Tj
+
+G |- x1:T1 .. G |- xn : Tn
+------------------------------------------- :: Tup
+G |- < x1 , .. , xn > : < T1 , .. , Tn >
 
 
+embed {{ isa
 
-G|- t:S
-G|- S<:T
---------- :: Sub
-G|- t:T
+code_pred   (modes: i ⇒ i ⇒ o  ⇒  bool ) [show_steps,  show_mode_inference,  show_invalid_clauses] Ty .
 
-
-defn
- |- p : T => D ::  :: Pat :: Pat_  {{ com pattern $[[p]]$ matches type $[[T]]$ giving bindings $[[D]]$ }} by 
- 
- ------------------ :: Var
- |- x:T : T => empty,x:T
- 
- |- p1:T1=>D1 .. |- pn:Tn=>Dn
- % and distinctness, if not in the syntax
- ------------------------------------------------ :: Rcd
- |- {l1=p1,..,ln=pn}:{l1:T1,..,ln:Tn} => D1,..,Dn
-
-
-defns
-Jop :: '' ::=
-
-
-defn
-t1 --> t2 ::  :: reduce :: reduce_  {{ com $[[t1]]$ reduces to $[[t2]]$ }} by 
-
------------------------------------------  :: AppAbs
-(\x:T11.t12) v2 -->  :t_tsub: [x|->v2]t12
-
-match(p,v1)=s
--------------------------  :: LetV
-let p=v1 in t2 -->  s t2
-
---------------------------- :: ProjRcd
-{l'1=v1,..,l'n=vn}.l'j --> vj
-
-t1 --> t1'
----------------- :: Ctx_app_fun
-t1 t --> t1' t
-
-t1 --> t1'
----------------- :: Ctx_app_arg
-v t1 --> v t1'
-
-t --> t'
--------------- :: Ctx_record
-{l1=v1,..,lm=vm,l=t,l1'=t1',..,ln'=tn'} --> {l1=v1,..,lm=vm,l=t',l1'=t1',..,ln'=tn'}
-
-t1 --> t1'
----------------------------------- :: Ctx_let_binding
-let p=t1 in t2 --> let p=t1' in t2
-
-defn
-match ( p , v ) = s ::  :: M :: M_  by 
-
------------------------ :: Var
-match(x:T,v) = [x|->v]
-
-forall i isin 1 -- m. exists j isin 1 -- n. (li=kj /\ match(pi,vj)=si)
----------------------------------------------------------------------- :: Rcd
-match({l1=p1,..,lm=pm},{k1=v1,..,kn=vn}) = s1,..,sm
-
-
-
+}}

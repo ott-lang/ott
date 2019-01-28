@@ -281,7 +281,7 @@ let mvd_of_mvr (xd:syntaxdefn) (mvr:metavarroot) : metavardefn =
 let mvd_of_mvr_nonprimary (xd:syntaxdefn) (mvr:metavarroot) : metavardefn =
   List.find (fun mvd -> has_assoc mvr mvd.mvd_names) xd.xd_mds
 
-let rule_of_ntr (xd:syntaxdefn) (ntr:nontermroot) : rule = 
+let rule_of_ntr (xd:syntaxdefn) (ntr:nontermroot) : rule =
   let rec search_ntr ntr rs = match rs with
     | [] -> raise Not_found
     | r::_ when r.rule_ntr_name = ntr -> r
@@ -295,7 +295,8 @@ let rule_of_ntr_nonprimary (xd:syntaxdefn) (ntr:nontermroot) : rule =
     | _::rs -> search_ntr2 ntr rs in
   search_ntr2 ntr xd.xd_rs 
 
-let prod_of_prodname ?(warn=true) (xd:syntaxdefn) (pn:prodname) : prod = 
+let prod_of_prodname ?(warn=true) (xd:syntaxdefn) (pn:prodname) : prod =
+  Printf.eprintf "prod_of_prodname %s\n" pn;
   let r = 
     try
       List.find 

@@ -86,6 +86,7 @@ let isa_syntax = ref false
 let isa_primrec = ref true 
 let isa_inductive = ref true
 let isa_generate_lemmas = ref true
+let isa_rewrite_list_defns = ref false
 let coq_avoid = ref 1
 let coq_expand_lists = ref true
 let coq_lngen = ref false
@@ -228,6 +229,9 @@ let options = Arg.align [
   ( "-isa_generate_lemmas", 
     Arg.Bool (fun b -> isa_generate_lemmas := b),
     "<"^string_of_bool !isa_syntax ^">       Lemmas for collapsed functions in Isabelle" ); 
+  ( "-isa_rewrite_defns", 
+    Arg.Bool (fun b -> isa_rewrite_list_defns := b),
+    "<"^string_of_bool !isa_rewrite_list_defns ^">       Experimental rewrite for Isabelel mode check" ); 
 
 (* options for coq output *)
   ( "-coq_avoid", 
@@ -690,6 +694,9 @@ let read_systemdefn read_systemdefn_filename =
   sd,lookup,sd_unquotiented,sd_quotiented_unaux
   
 let output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux) = 
+
+  let sd = if !isa_rewrite_list_defns then 
+             Isa_rules_rewrite.isa_rewrite sd else sd in
   
   (** output of systemdefn *)
   ( match !write_systemdefn_filename_opt with
