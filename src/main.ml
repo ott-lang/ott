@@ -95,7 +95,9 @@ let coq_use_filter_fn = ref false
 let merge_fragments = ref false
 let picky_multiple_parses = ref false
 let caml_include_terminals = ref false
+let cgen_filename_opt = ref (None : string option )
 
+                                 
 let options = Arg.align [
 
 (* main output stages *)
@@ -281,7 +283,13 @@ let options = Arg.align [
     "<"^string_of_bool !Substs_pp.no_rbcatn^">      (debug) remove relevant bind clauses" ); 
   ( "-lem_debug", 
     Arg.Bool (fun b -> Types.lem_debug := b),
-    "        (debug) print lem debug locations" ); 
+    "        (debug) print lem debug locations" );
+
+  (* Experimental *)
+  ("-cgen",
+   Arg.String (fun s -> cgen_filename_opt := Some s),
+   "<filename>  (experimental) Name of file to output containing Crowbar generator code for grammar");
+
 ] 
 
 let usage_msg = 
@@ -836,7 +844,12 @@ let output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux) =
   (List.iter (filter m_lem) (!lem_filter_filenames));
   (List.iter (filter m_twf) (!twf_filter_filenames));
   (List.iter (filter m_caml) (!caml_filter_filenames));
-   
+
+  (* Generate Crowbar generator code for AST *)
+  (match !cgen_filename_opt with
+    None -> ()
+  | Some s -> Crowbar.generate_cgen sd.syntax s);
+  
 (*  let xd,rdcs = Grammar_typecheck.check_and_disambiguate targets document in  *)
 
   if !process_defns then begin

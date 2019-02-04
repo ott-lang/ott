@@ -1352,6 +1352,18 @@ let isa_rewrite1 (sd : systemdefn) =
      mapI *)
 
     
+let rec remove_dup_defns ds = match ds with
+  | [] -> []
+  | (d:: ds) -> let ds2 = remove_dup_defns ds in
+                if  (List.exists (fun d' -> d.d_name = d'.d_name) ds) then ds2 else (d::ds2)
+    
+let remove_duplicate_relations relations = List.map (fun rel ->
+                                               match rel with
+                                               | FDC fdc -> rel
+                                               | RDC dc -> RDC { dc with dc_defns = remove_dup_defns dc.dc_defns } ) relations
+                                                    
+                                                 
+    
 
 let isa_rewrite (sd : systemdefn) =
 
@@ -1424,6 +1436,9 @@ let isa_rewrite (sd : systemdefn) =
         and replace dotted judgements with use of auxilary predicates *)
   let (new_relations,new_jop_prods, new_form_prods, map_specs ) = rewrite_relations sd.relations new_xd in
 
+  (* Remove duplicates *)
+  let new_relations = remove_duplicate_relations new_relations in 
+  
   let new_xd = List.fold_left (fun xd ms  -> update_list_rule xd ms ) new_xd map_specs in 
   let new_xd = List.fold_left (fun xd (cname,new_jop_prods ) -> update_grammar_rule xd cname new_jop_prods) new_xd new_jop_prods in
   

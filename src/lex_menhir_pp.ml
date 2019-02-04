@@ -574,15 +574,32 @@ let aux_constructor_element : element_data =
     pp_raw_rhs = None;
     pp_pretty_rhs = ""; }
 
+let rec take_until f xs = match xs with
+  | (x::xs) -> if f x then [] else (x :: (take_until f xs ))
+  | [] -> []
+
+let rec drop_until f xs = match xs with
+  | x :: xs -> if f x then xs else drop_until f xs
+  | _ -> []
+            
+let rec split_at xs x =
+  (take_until (fun y -> x = y) xs, drop_until (fun y -> x = y) xs)
+    
 let generate_aux_info_for_prod generate_aux_info r p = 
   generate_aux_info && not(!Global_option.aux_style_rules) && 
   (match Auxl.hom_spec_for_hom_name "aux" r.rule_homs with 
-  | Some hs -> true
+   | Some [Hom_string hs] ->
+      let hs = String.split_on_char ' ' hs in (*List.map  (fun hs -> match hs with Hom_string s ->  s) hs in *)
+      let (a,b) = split_at hs "_" in
+      List.iter (Printf.eprintf " a=<%s> ") a ;
+      List.iter (Printf.eprintf " b=<%s> ") b ;
+      Printf.eprintf "\n";
+      true
   | None -> false)
 
 
 let pp_pattern_prod r p generate_aux_info_here element_data = 
-  let element_data' = element_data @ if generate_aux_info_for_prod generate_aux_info_here r p then [aux_constructor_element] else [] in
+  let element_data' = (if generate_aux_info_for_prod generate_aux_info_here r p then [aux_constructor_element] else []) @ element_data in
   let inner_pattern = 
     String.capitalize p.prod_name 
     ^ 
@@ -592,7 +609,7 @@ let pp_pattern_prod r p generate_aux_info_here element_data =
       | _ -> "("^ String.concat "," args ^ ")" )
   in
   match aux_constructor generate_aux_info_here r p with
-  | Some aux_con -> aux_con ^ "(" ^ inner_pattern ^ "," ^ ott_menhir_loc^")"
+  | Some aux_con -> aux_con ^ "(" ^ inner_pattern ^ "," ^ ott_menhir_loc ^ ")"
   | None -> inner_pattern
 
 
@@ -633,14 +650,14 @@ let pp_menhir_prod yo generate_aux_info_here xd ts r p =
 
     (* now the real work *)
     let element_data = element_data_of_prod ts p in 
-    let element_data' = element_data @ if generate_aux_info_for_prod generate_aux_info_here r p then [aux_constructor_element] else [] in
+    let element_data' = (if generate_aux_info_for_prod generate_aux_info_here r p then [aux_constructor_element] else []) @ element_data in
     let ppd_action = 
       let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in
       if p.prod_sugar || (has_hom "quotient-remove" p.prod_homs && has_hom "ocaml" p.prod_homs) || r.rule_phantom then 
         (* ocaml hom case *)
         (* to do the proper escaping of nonterms within the hom, we need to pp here, not reuse the standard machinery *)
 "(*Case 1*) " ^ 
-        let hs = (match Auxl.hom_spec_for_hom_name "ocaml" p.prod_homs with Some hs -> hs | None -> raise (Failure "no ocaml hom")) in
+        let hs = (match Auxl.hom_spec_for_hom_name "ocaml" p.prod_homs with Some hs -> hs | None -> raise (Failure ("no ocaml hom for " ^ p.prod_name))) in
         let es'' =  (* remove terminals from es to get Hom_index indexing right *)
       	(List.filter
            (function 
@@ -781,7 +798,7 @@ let pp_pp_raw_prod yo generate_aux_info_here xd ts r p =
 
     let ppd_rhs = 
       (match aux_constructor generate_aux_info_here r p with
-      | Some _ -> " string \"[\" ^^ string (pp_raw_l "^ott_menhir_loc^") ^^ string \"]\" ^^ "
+      | Some s -> " string \"[\" ^^ string (pp_raw_l "^ott_menhir_loc^") ^^ string \"]\" ^^ "
       | None -> "") 
       ^
       "string \"" ^ String.capitalize p.prod_name ^ "\"" 
