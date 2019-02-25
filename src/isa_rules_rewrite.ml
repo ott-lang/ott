@@ -573,6 +573,14 @@ let make_list_singleton ( name : string ) ( x : symterm_element list ) : symterm
                               st_es = head_forms ;
                               st_loc=dummy_loc})) 
 
+let make_list_empty ( name : string ) : symterm_element =
+  Ste_st(dummy_loc, St_node(dummy_loc, {
+                          st_rule_ntr_name = name;
+                          st_prod_name = name ^ "_empty";
+                          st_es = [] ;
+                          st_loc=dummy_loc}))
+
+
             
 
 let map_name_from ( cname : string ) ( stes : symterm_element list ) : (string list * string * suffix ) =
@@ -635,7 +643,7 @@ and update_ste xd (cname : string) (ste  : symterm_element ) ( le : element ): (
                           let list_name = (String.concat "_" nts ) ^ "_list" in (* FIXME Do something with suffixes *)
                           Printf.eprintf "  list_name=%s\n" list_name; 
                           (* Walk over list elements and build up list making use of cons, concat and singleton *)
-                          let (Some bob) = List.fold_right (fun x xs -> match x with
+                          let new_st  = List.fold_right (fun x xs -> match x with
                                                          Stli_single (_, stes ) -> (match xs with
                                                                                    | None -> Some (make_list_singleton list_name stes)
                                                                                    | Some xs -> Some (make_list_cons list_name stes xs))
@@ -657,7 +665,11 @@ and update_ste xd (cname : string) (ste  : symterm_element ) ( le : element ): (
                                                     stlis None
                                           
                           in
-                          Printf.eprintf "BOB = %s\n" (Grammar_pp.pp_plain_symterm_element bob);
+                          let new_st = (match new_st with
+                              Some new_st -> new_st
+                            | None -> make_list_empty list_name)
+                          in
+                          Printf.eprintf "BOB = %s\n" (Grammar_pp.pp_plain_symterm_element new_st);
                           
                           (* le is a Lang_list and nonterm/metavar will give us the list type G_list or t_T_list etc, this is 
                              then use in the construction of the St_node below  *)
@@ -676,7 +688,7 @@ and update_ste xd (cname : string) (ste  : symterm_element ) ( le : element ): (
                                                                             None
                                                                        | _ -> None
                                                           ) stlis in
-                          ( [bob] , map_specs )
+                          ( [new_st] , map_specs )
                                     
   | _ -> process_ste xd cname ste
 
