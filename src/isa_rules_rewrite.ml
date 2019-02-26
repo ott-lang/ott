@@ -69,7 +69,7 @@ type 'a fold_functions = {
 
 let rec fold_drule  (f : 'a fold_functions) (base : 'a) (dr : drule ) : 'a =
   let base = fold_st f base dr.drule_conclusion
-  in List.fold_left (fun x (_, p) -> fold_st f x p) base dr.drule_premises
+  in List.fold_left (fun x (_, p, _) -> fold_st f x p) base dr.drule_premises
                            
 and  fold_defnclass  (f : 'a fold_functions) (base : 'a) (dc : defnclass ) : 'a =
   List.fold_left (fun x d -> List.fold_left (fun x r -> match r with
@@ -871,8 +871,8 @@ let create_aux_defns (dss : defn_spec list) : ((defn*prod) list ) =
                                                      PSR_Rule {
                                                          drule_name = new_dname ^ "_cons";
                                                          drule_categories = StringSet.empty;
-                                                         drule_premises = [ (None, make_aux_call_original st );
-                                                                            (None,make_aux_call st) ];
+                                                         drule_premises = [ (None, make_aux_call_original st,[] );
+                                                                            (None,make_aux_call st,[]) ];
                                                          drule_conclusion = make_aux_call_cons st ;
                                                          drule_homs = [];
                                                          drule_loc = dummy_loc } 
@@ -985,24 +985,24 @@ let find_defns stnb = if stnb.st_prod_name = "formula_dots" then
                    else []
                        
            
-let rewrite_premise cname (prem : (string option * symterm)) : ( (string option * symterm) * (defn_spec list) * (map_spec list)  ) =
-  Printf.eprintf "rewrite_premise: %s\n" (Grammar_pp.pp_plain_symterm (snd prem));
+let rewrite_premise cname (prem : (string option * symterm * (homomorphism list))) : ( (string option * symterm * (homomorphism list)) * (defn_spec list) * (map_spec list)  ) =
+  Printf.eprintf "rewrite_premise: %s\n" (Grammar_pp.pp_plain_symterm ((fun (_,st,_) -> st) prem));
   match prem with
-    (_,St_node (l,stnb)) -> Printf.eprintf "PRODNAME %s\n" stnb.st_prod_name;
-                            ((let (_,new_prem) = (if stnb.st_prod_name = "formula_dots" then
+    (_,St_node (l,stnb),hl) -> Printf.eprintf "PRODNAME %s\n" stnb.st_prod_name;
+                            ((let (_,new_prem,_) = (if stnb.st_prod_name = "formula_dots" then
                                                     (match stnb.st_es with
                                                        [Ste_list (_ ,[stli]) ] -> let _ = Printf.eprintf "HERE\n" in
                                                                                   (match stli with
                                                                                    | Stli_listform stlb -> Printf.eprintf "HERE2\n";
                                                                                               (match stlb.stl_elements with
-                                                                                               | (Ste_st (_,st)::_) -> Printf.eprintf "HERE3\n"; (None,rename_st st)
+                                                                                               | (Ste_st (_,st)::_) -> Printf.eprintf "HERE3\n"; (None,rename_st st,[])
                                                                                                | _ -> prem)
                                                                                    | _ -> prem))
                                                   else
                                                     prem)
                               in
                               Printf.eprintf "NEWPREM %s\n" (Grammar_pp.pp_plain_symterm new_prem);
-                              (None,new_prem)),
+                              (None,new_prem,hl)),
                              find_defns stnb , [] )
 
                               
@@ -1058,9 +1058,9 @@ let make_map_premise ((cname, name, (lhs,suff) , lhs2, rhs, _) : map_spec ) ( us
                    st_rule_ntr_name = cname;
                    st_prod_name = name;
                    st_es = Ste_st( l , St_nonterm(l,lhs,(lhs2, if usesuff then suff else [])))::new_es;
-                   st_loc =dummy_loc }))
+                   st_loc =dummy_loc }), [])
     
-let create_map_premises ( mss : map_spec list ) : (string option * symterm) list * (prod list) =
+let create_map_premises ( mss : map_spec list ) : (string option * symterm * (homomorphism list)) list * (prod list) =
   (List.map (fun ms -> make_map_premise ms true) mss, create_map_prods mss )
 
 
@@ -1242,7 +1242,7 @@ let update_grammar_rules xd prods =
 
 
 
-let pp_drule dr = (String.concat "\n" (List.map (fun (_,st) -> Grammar_pp.pp_plain_symterm st) dr.drule_premises)) ^ "\n"
+let pp_drule dr = (String.concat "\n" (List.map (fun (_,st,_) -> Grammar_pp.pp_plain_symterm st) dr.drule_premises)) ^ "\n"
                   ^ "------------------------------------------------------------- :: " ^ dr.drule_name ^ "\n"
                   ^ (Grammar_pp.pp_plain_symterm dr.drule_conclusion) ^ "\n"
                                      

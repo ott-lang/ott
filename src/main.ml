@@ -96,7 +96,7 @@ let merge_fragments = ref false
 let picky_multiple_parses = ref false
 let caml_include_terminals = ref false
 let cgen_filename_opt = ref (None : string option )
-
+let error_defn_rewrite = ref false
                                  
 let options = Arg.align [
 
@@ -289,7 +289,9 @@ let options = Arg.align [
   ("-cgen",
    Arg.String (fun s -> cgen_filename_opt := Some s),
    "<filename>  (experimental) Name of file to output containing Crowbar generator code for grammar");
-
+  ("-error_defn_rewrite",
+   Arg.Bool (fun b -> error_defn_rewrite := b),
+   "         (experimental) Perform rewrite of rules to generate a new set that includes error handling")
 ] 
 
 let usage_msg = 
@@ -703,6 +705,9 @@ let read_systemdefn read_systemdefn_filename =
   
 let output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux) = 
 
+  let sd = if !error_defn_rewrite then
+             Error_defn_rewrite.do_rewrite sd else sd in
+  
   let sd = if !isa_rewrite_list_defns then 
              Isa_rules_rewrite.isa_rewrite sd else sd in
   

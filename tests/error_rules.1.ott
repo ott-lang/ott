@@ -1,0 +1,46 @@
+metavar x ::=   
+
+grammar
+t :: 't_' ::=                               {{ com term    }}
+  | x            ::  :: Var                   {{ com variable}}
+  | \ x . t      ::  :: Lam                   {{ com lambda  }}
+  | t t'         ::  :: App                   {{ com app     }}
+  | ( t )        :: S:: Paren      
+  | { t / x } t' :: M:: Tsub
+
+T :: 'T_' ::=
+  | T1 -> T2 :: :: arrow
+  | b        :: :: base
+
+
+G :: 'G_' ::=
+  | empty     :: :: empty
+  | x : T , G :: :: cons
+
+
+error_reason :: 'Error_' ::=
+  | var_not_in_scope :: :: var_not_in_scope
+  | wrong_fn_args    :: :: wrong_fn_args
+
+either_error :: 'Either_error_' ::=
+  | Ok T               :: :: ok
+  | Error error_reason :: :: error
+
+formula :: formula_ ::=
+  | judgement :: :: judgement
+  | x : T INN G  :: :: lookup   {{ fail_error lookup_fail }}
+  | x NOTIN G :: :: lookup_fail
+
+defns
+typing :: '' ::=
+
+defn
+  G |- t : T :: :: type :: type_
+  {{ fail G |- t : either_error }}
+  {{ fail_ok G |- t : Ok T }}
+  {{ fail_error G |- t : Error error_reason }}
+by
+
+x : T INN G  {{ fail var_not_in_scope }}
+---------------- :: var 
+G |- x : T

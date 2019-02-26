@@ -991,7 +991,7 @@ let pp_lcs fd m xd : unit =
       Some (PSR_Rule
 	      { drule_name = "lc"^"_"^p.prod_name;
 		drule_categories = StringSet.empty;
-		drule_premises = List.map (fun st -> None,st) premises; (*HNAMING *)
+		drule_premises = List.map (fun st -> (None,st,[])) premises; (*HNAMING *)
 		drule_conclusion = conclusion;
 		drule_homs = [];
 		drule_loc = dummy_loc }) in
@@ -1310,7 +1310,7 @@ let ln_add_lc_premise m xd nts_premises nts_conclusion =
   List.map (build_premise xd) nts_lc
 
 (* (ln_transform_symterm xd stl) returns symterms valid in (ln_transform_syntaxdefn xd) *)
-let ln_transform_symterms (m:pp_mode) (xd:syntaxdefn) (stlp:(string option * symterm) list) (stlc:symterm) (* : symterm list * symterm *) =
+let ln_transform_symterms (m:pp_mode) (xd:syntaxdefn) (stlp:(string option * symterm * (homomorphism list)) list) (stlc:symterm) (* : symterm list * symterm *) =
   (* 1- functions to erase all binders, update names of productions - done at the end *)
   let rec remove_binders_symterm xd st =
     match st with
@@ -1423,7 +1423,7 @@ let ln_transform_symterms (m:pp_mode) (xd:syntaxdefn) (stlp:(string option * sym
 (*   print_endline ((String.concat "\n\n" (List.map Grammar_pp.pp_plain_symterm stlp)) *)
 (* 		^ "\n\n" ^ (Grammar_pp.pp_plain_symterm stlc)); *)
 
-  let nt_bound_p = List.concat (List.map (fun st -> collect_binders_symterm xd [] None st) (List.map snd stlp)) in
+  let nt_bound_p = List.concat (List.map (fun st -> collect_binders_symterm xd [] None st) (List.map (fun (_,st,_) -> st) stlp)) in
   let nt_bound_c = collect_binders_symterm xd [] None stlc in
   let nt_bound = nt_bound_p @ nt_bound_c in
 
@@ -1590,13 +1590,13 @@ let ln_transform_symterms (m:pp_mode) (xd:syntaxdefn) (stlp:(string option * sym
     internal mvsr st in
 
   (* *** all together *)
-  let opened_p = List.map (fun (hn,st) -> (hn, open_nonterm m xd st)) stlp in
+  let opened_p = List.map (fun (hn,st,hl) -> (hn, open_nonterm m xd st,hl)) stlp in
   let opened_c = open_nonterm m xd stlc in 
 
-  let quantified_p = List.map (fun (hn,st) -> (hn, cofinite_quantify st)) opened_p in
+  let quantified_p = List.map (fun (hn,st,hl) -> (hn, cofinite_quantify st,hl)) opened_p in
   let quantified_c = cofinite_quantify opened_c in           (* FZ TODO *)
 
-  let stlp_t = List.map (fun (hn,st) -> (hn, remove_binders_symterm xd st)) quantified_p in
+  let stlp_t = List.map (fun (hn,st,hl) -> (hn, remove_binders_symterm xd st,hl)) quantified_p in
   let stlc_t = remove_binders_symterm xd quantified_c in
   let nt_bound_p =
     Auxl.remove_duplicates 
@@ -1617,7 +1617,7 @@ let ln_transform_symterms (m:pp_mode) (xd:syntaxdefn) (stlp:(string option * sym
 
 let ln_transform_drule m xd dr =
   let (non_fancy_premises, fancy_premises) =
-    List.partition ( fun (hn,st) ->
+    List.partition ( fun (hn,st,_) ->
       match st with
       | St_node (l,stnb) when (String.compare stnb.st_rule_ntr_name "fancy_formula" = 0) -> false
       | _ -> true ) dr.drule_premises in
@@ -1628,7 +1628,7 @@ let ln_transform_drule m xd dr =
   let extra_premises =
     ln_add_lc_premise m xd nt_bound_p nt_bound_c in
   { dr with
-    drule_premises = fancy_premises @ List.map (fun st -> None,st) (extra_premises) @ t_symterms_p;
+    drule_premises = fancy_premises @ List.map (fun st -> (None,st,[])) (extra_premises) @ t_symterms_p;
     drule_conclusion = t_symterm_c }
    
 let ln_transform_defn m xd d =

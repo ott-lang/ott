@@ -86,7 +86,7 @@ let compute_dependencies (xd:syntaxdefn) (m:string) : xd_dependencies =
     g_vertex_count = ref [], ref 0 in
 
   let vertex_associated_to_ntr_or_mvr m = 
-    Printf.eprintf "%s\n" ("***"^Grammar_pp.pp_plain_metavarroot m); 
+    (*Printf.eprintf "%s\n" ("***"^Grammar_pp.pp_plain_metavarroot m); *)
     fst (List.find 
 	   ( fun (_,n) -> match n with
 	   | Mvrlist ml -> List.mem m ml

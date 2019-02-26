@@ -296,7 +296,7 @@ let rule_of_ntr_nonprimary (xd:syntaxdefn) (ntr:nontermroot) : rule =
   search_ntr2 ntr xd.xd_rs 
 
 let prod_of_prodname ?(warn=true) (xd:syntaxdefn) (pn:prodname) : prod =
-  Printf.eprintf "prod_of_prodname %s\n" pn;
+  (*Printf.eprintf "prod_of_prodname %s\n" pn;*)
   let r = 
     try
       List.find 
@@ -1155,7 +1155,7 @@ and rename_defn map d =
 
 and rename_drule map dr = 
   { dr with 
-    drule_premises = List.map (fun (hn,st) -> (hn,rename_symterm map st)) dr.drule_premises;
+    drule_premises = List.map (fun (hn,st,hl) -> (hn,rename_symterm map st,hl)) dr.drule_premises;
     drule_conclusion = rename_symterm map dr.drule_conclusion; }
 
 and rename_processed_semiraw_rule map psr = 
@@ -1418,12 +1418,12 @@ and avoid_primaries_defn xd s d =
   {d with d_rules = List.map (avoid_primaries_processed_semiraw_rule xd s) d.d_rules }
 
 and avoid_primaries_drule xd s dr = 
-  let sts = dr.drule_conclusion :: (List.map snd dr.drule_premises) in
+  let sts = dr.drule_conclusion :: (List.map (fun (_,st,_) -> st ) dr.drule_premises) in
   let nts = nts_of_symterms sts in
   let mvs = mvs_of_symterms sts in
   let map = if s then secondaryify xd mvs nts else avoid xd mvs nts in
   {dr with 
-   drule_premises = List.map (fun (hn,st) -> (hn,rename_symterm map st)) dr.drule_premises;
+   drule_premises = List.map (fun (hn,st,hl) -> (hn,rename_symterm map st,hl)) dr.drule_premises;
    drule_conclusion = rename_symterm map dr.drule_conclusion;}
 
 and avoid_primaries_processed_semiraw_rule xd s psr = 

@@ -353,7 +353,7 @@ and defn =  (* d *)
 and drule =  (* dr *)
     { drule_name : defnrulename;                (* eg Eet_value_name *)
       drule_categories : StringSet.t;
-      drule_premises : (string option * symterm) list;
+      drule_premises : (string option * symterm * (homomorphism list) ) list;
       drule_conclusion : symterm;
       drule_homs : homomorphism list;
       drule_loc : loc }

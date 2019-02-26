@@ -37,7 +37,7 @@ exception ThisCannotHappen
 
 let c = ref 100 (* FZ *)
 
-let debug s = () (* print_string s; flush stdout*)
+let debug s = Printf.eprintf "%s" ; flush stderr
 
 (* 
 
@@ -4147,8 +4147,29 @@ and isa_fancy_syntax_clause_for_prod m xd io p =
       let rec list_make s i = if i=0 then [] else s::list_make s (i-1) in
       "(\""
       ^ String.concat "" (apply_hom_spec m xd hs (list_make "_" arity)) 
-      ^ "\" "^ prec ^")" 
-          
+      ^ "\" "^ prec ^")"
+
+and isa_fancy_syntax_clause_for_defn_new m xd io dc_name dc_wrapper d = 
+  let prod_name = dc_wrapper ^ d.d_name in
+  let p = Auxl.prod_of_prodname xd prod_name in
+  match isa_fancy_syntax_hom_for_prod m xd io p with
+  | None -> ""
+  | Some(hs,arity,prec) ->
+      let rec list_make s i = if i=0 then [] else s::list_make s (i-1) in
+
+      let isa_syntax_type_of_defn : syntaxdefn -> defn -> string = 
+        fun xd d ->  
+          let ss = (Auxl.option_map (pp_element m xd [] false) p.prod_es) in
+          String.concat "" (List.map (function s->s^" => ") ss) ^ " bool" in
+      let isa_syntax_prod_name = prod_name^"'" in
+      let syntax_part = 
+        "(\""
+        ^ String.concat "" (apply_hom_spec m xd hs (list_make "_" arity)) 
+        ^ "\" "^prec^")" in
+     syntax_part
+
+
+                                                                          
 and isa_fancy_syntax_clause_for_defn m xd io dc_name dc_wrapper d = 
 
 (* we generate things like this:

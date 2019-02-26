@@ -70,7 +70,7 @@ SOURCES_NON_LEXER_PARSER2 = grammar_pp.ml parse_table.ml glr.ml new_term_parser.
 	                    quotient_rules.ml grammar_typecheck.ml 		  \
 			    transform.ml substs_pp.ml subrules_pp.ml				  \
 			    embed_pp.ml defns.ml ln_transform.ml coq_induct.ml	  		  \
-                            system_pp.ml lex_menhir_pp.ml align.ml isa_rules_rewrite.ml crowbar.ml main.ml
+                            system_pp.ml lex_menhir_pp.ml align.ml isa_rules_rewrite.ml crowbar.ml error_defn_rewrite.ml main.ml
 
 
 

@@ -164,7 +164,7 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
   if !Global_option.output_source_locations >=1 then Printf.fprintf fd "\n%s" (Grammar_pp.pp_source_location m dr.drule_loc);
 
   let (((de1:dotenv1),de2) as de,de3,pptbe) = 
-    Bounds.bound_extraction m xd dr.drule_loc (dr.drule_conclusion::List.map snd dr.drule_premises) in
+    Bounds.bound_extraction m xd dr.drule_loc (dr.drule_conclusion::List.map (fun (_,st,_) -> st) dr.drule_premises) in
 
   (* FZ hack to get the right quantification when pp formula_dots in Coq using native lists *)
   ( match m with
@@ -180,21 +180,21 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
     match m with
     | Coq _ ->
         (Auxl.option_map 
-           (fun (hn,p) -> 
+           (fun (hn,p,_) -> 
              match hn with 
              | Some hn ->
                  Some ("("^hn^": "^(Grammar_pp.pp_symterm m xd [] de p)^")")
              | None -> None)
            dr.drule_premises,
          Auxl.option_map 
-           (fun (hn,p) -> 
+           (fun (hn,p,_) -> 
              match hn with 
              | None ->
                  Some (Grammar_pp.pp_symterm m xd [] de p)
              | Some _ -> None)
            dr.drule_premises)
     | _ ->
-        ([], List.map (fun (hn,p) -> Grammar_pp.pp_symterm m xd [] de p)
+        ([], List.map (fun (hn,p,_) -> Grammar_pp.pp_symterm m xd [] de p)
       (* print_endline (Grammar_pp.pp_plain_symterm p); *)
            dr.drule_premises) in
 
@@ -207,7 +207,7 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
       let m0 = Ascii {ao with ppa_colour=false } in
       let ppd_premises0 = List.map 
           (Grammar_pp.pp_symterm m0 xd [] de) 
-          (List.map snd dr.drule_premises) in
+          (List.map (fun (_,st,_) -> st) dr.drule_premises) in
       let ppd_conclusion0
           = Grammar_pp.pp_symterm m0 xd [] de dr.drule_conclusion in
       let length = List.fold_left max 0 
@@ -493,7 +493,7 @@ let pp_defn fd (m:pp_mode) (xd:syntaxdefn) lookup (defnclass_wrapper:string) (un
       output_string fd "\n\n"
   | Isa io ->
       Printf.fprintf fd "(* defn %s *)\n\n" d.d_name;
-      ( match (Grammar_pp.isa_fancy_syntax_clause_for_defn m xd io "foo" defnclass_wrapper d) with
+      ( match (None) with (*Grammar_pp.isa_fancy_syntax_clause_for_defn m xd io "foo" defnclass_wrapper d) with*)
         | None -> ()
 	| Some _ -> output_string fd "| " );
       iter_sep (pp_processed_semiraw_rule fd m xd) "\n| " d.d_rules
@@ -602,15 +602,15 @@ let pp_defnclass fd (m:pp_mode) (xd:syntaxdefn) lookup (dc:defnclass) =
       List.iter (fun d -> pp_defn fd m xd lookup dc.dc_wrapper universe d) dc.dc_defns
 
   | Isa io ->
-      let fancy_syntax_clauses = 
-        Auxl.option_map
+      let fancy_syntax_clauses = [] in
+(*        Auxl.option_map
 	  (Grammar_pp.isa_fancy_syntax_clause_for_defn m xd io dc.dc_name dc.dc_wrapper)
-	  dc.dc_defns in
+	  dc.dc_defns in*)
       Printf.fprintf fd "(* defns %s *)\n%s " dc.dc_name 
         (if io.ppi_isa_inductive then "inductive" else "inductive_set");
       iter_asep fd "\n and "
-        (fun d -> Printf.fprintf fd "%s%s :: \"%s\"" dc.dc_wrapper d.d_name
-                    (isa_type_of_defn m xd d))
+        (fun d -> Printf.fprintf fd "%s%s :: \"%s\" %s" dc.dc_wrapper d.d_name
+                    (isa_type_of_defn m xd d) (Grammar_pp.isa_fancy_syntax_clause_for_defn_new m xd io dc.dc_name dc.dc_wrapper d))
          dc.dc_defns; 
       ( match fancy_syntax_clauses with
         | [] -> ()
@@ -951,7 +951,7 @@ let pp_auxiliary_list_rules fd m xd frdcs = match m with
     let list_types_drule dr = 
       let (((de1:dotenv1),_),_,_) =
         Bounds.bound_extraction m xd dr.drule_loc
-          (dr.drule_conclusion::List.map snd dr.drule_premises) in
+          (dr.drule_conclusion::List.map (fun (_,st,_) -> st) dr.drule_premises) in
       List.iter (fun (_,de1i) ->
         Buffer.clear b;
         Buffer.add_string b "list";
@@ -1094,11 +1094,19 @@ let process_semiraw_rule (m: pp_mode) (xd: syntaxdefn) (lookup: made_parser)
                           ((rightmost_char_index-2) - leftmost_char_index + 1)))
         in
 
+        let extract_hom s =
+          let re = Str.regexp "\\(.*\\){{\\(.*\\)}} *" in
+          if not(Str.string_match re s 0) then s
+          else (Printf.eprintf "Hom is %s\n" (Str.matched_group 2 s);
+                Str.matched_group 1 s)
+        in
+        
         let fancy_parse (l, s) = 
           let (s,hn) = rule_name_parse s in
           let re = Str.regexp " *{{ *\\(.*\\)}} *" in
-          if not(Str.string_match re s 0) then 
-            (hn,Term_parser.just_one_parse xd lookup rn_formula false l s )
+          if not(Str.string_match re s 0) then
+            let s = extract_hom s in
+            (hn,Term_parser.just_one_parse xd lookup rn_formula false l s ,[])
           else 
             let s' = Str.matched_group 1 s in
 
@@ -1131,7 +1139,7 @@ let process_semiraw_rule (m: pp_mode) (xd: syntaxdefn) (lookup: made_parser)
                                 st_es = List.map (function st -> Ste_st(l,st)) sts;
                                 st_loc = l}) in
             (* print_string ("CONSTRUCTED "^Grammar_pp.pp_plain_symterm st^"\n"); *)
-            (hn,st) in
+            (hn,st,[]) in
 
 
 
@@ -1335,7 +1343,7 @@ let sum_pairs xys =
 
 let count_good_clauses_drule : drule -> int*int
     = fun dr -> 
-      let sts = dr.drule_conclusion::List.map snd dr.drule_premises in
+      let sts = dr.drule_conclusion::List.map (fun (_,st,_) -> st) dr.drule_premises in
       let n_all = List.length sts in
       let n_good = 
 	List.length ((List.filter no_uninterpreted_symterm) sts) in
