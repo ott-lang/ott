@@ -37,8 +37,8 @@ typing :: '' ::=
 defn
   G |- t : T :: :: type :: type_
   {{ fail G |- t : either_error }}
-  {{ fail_ok G |- t : Ok T }}
-  {{ fail_error G |- t : Error error_reason }}
+  {{ fail_ok [[G]] |- [[t]] : Ok [[T]] }}
+  {{ fail_error [[G]] |- [[t]] : Error error_reason }}
 by
 
 x : T INN G  {{ fail var_not_in_scope }}
