@@ -1,4 +1,9 @@
-metavar x ::=   
+
+indexvar i, j, k, l, m, n ::=
+
+metavar x ::=
+
+metavar f ::=
 
 grammar
 t :: 't_' ::=                               {{ com term    }}
@@ -7,29 +12,35 @@ t :: 't_' ::=                               {{ com term    }}
   | t t'         ::  :: App                   {{ com app     }}
   | ( t )        :: S:: Paren      
   | { t / x } t' :: M:: Tsub
+  | if t1 then t2 else t3 :: :: If
+  | < f1 : t1 , .. , fn : tn > :: :: record	
 
 T :: 'T_' ::=
   | T1 -> T2 :: :: arrow
   | b        :: :: base
-
+  | < f1 : T1 , .. , fn : Tn > :: :: record
 
 G :: 'G_' ::=
   | empty     :: :: empty
   | x : T , G :: :: cons
 
 
-error_reason :: 'Error_' ::=
+err_reason :: 'Error_' ::=
   | var_not_in_scope :: :: var_not_in_scope
   | wrong_fn_args    :: :: wrong_fn_args
+  | guard_wrong_type :: :: guard_wrong_type
+  | then_branch_wrong_type :: :: then_branch_wrong_type
+  | else_branch_wrong_type :: :: else_branch_wrong_type
 
 either_error :: 'Either_error_' ::=
   | Ok T               :: :: ok
-  | Error error_reason :: :: error
+  | Error err_reason :: :: error
 
 formula :: formula_ ::=
   | judgement :: :: judgement
-  | x : T INN G  :: :: lookup   {{ fail_error lookup_fail }}
-  | x NOTIN G :: :: lookup_fail
+  | formula1 .. formulan :: :: dots	
+  | x : T INN G  :: :: lookup   {{ fail_error lookup_notin }}
+  | x NOTIN G :: :: lookup_notin
 
 defns
 typing :: '' ::=
@@ -38,9 +49,36 @@ defn
   G |- t : T :: :: type :: type_
   {{ fail G |- t : either_error }}
   {{ fail_ok [[G]] |- [[t]] : Ok [[T]] }}
-  {{ fail_error [[G]] |- [[t]] : Error error_reason }}
+  {{ fail_error [[G]] |- [[t]] : Error  }}
 by
 
-x : T INN G  {{ fail var_not_in_scope }}
----------------- :: var 
-G |- x : T
+%x : T INN G  {{ fail var_not_in_scope }}
+%---------------- :: var 
+%G |- x : T
+
+%G |- t1 : T1 {{ fail guard_wrong_type }}
+%G |- t2 : T  {{ fail then_branch_wrong_type  }}
+%G |- t3 : T  {{ fail else_branch_wrong_type }}
+%-------------------------------- :: if
+%G |- if t1 then t2 else t3 : T
+
+
+G |- t1 : T1 .. G |- tn : Tn
+---------------------------- :: record
+G |- < f1 : t1 , .. , fn : tn > : < f1 : T1 , .. , fn : Tn >  
+
+% For the record typing we want to output
+% G |- t1 : Ok T1 .. G |- tm : Ok Tm
+% G |- t' : Error err_reason
+% G |- t'1 : T'1 .. G |- t'n : T'n
+% -------------- :: type_record_err_reason
+% G  |-  < f1 : t1 , .. , fm : tm , f' : t' , f'1 : t'1 , .. , f'n : t'n >  : Error err_reason
+
+% Split a list premise into 3 parts. Will also need to split the list in the conclusion
+% ie split any other list with the same indexvar ??
+% 
+
+%TODO - transfer error tag on premise into conclusion and name of new rule
+%think more about lists - add record typing example
+
+%process minisail ...

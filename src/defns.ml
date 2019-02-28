@@ -1095,18 +1095,18 @@ let process_semiraw_rule (m: pp_mode) (xd: syntaxdefn) (lookup: made_parser)
         in
 
         let extract_hom s =
-          let re = Str.regexp "\\(.*\\){{\\(.*\\)}} *" in
-          if not(Str.string_match re s 0) then s
+          let re = Str.regexp "\\(.*\\){{ *fail *\\(.*\\)}} *" in
+          if not(Str.string_match re s 0) then (s,[])
           else (Printf.eprintf "Hom is %s\n" (Str.matched_group 2 s);
-                Str.matched_group 1 s)
+                (Str.matched_group 1 s, [("fail", [Hom_string (Str.matched_group 2 s)]) ]))
         in
         
         let fancy_parse (l, s) = 
           let (s,hn) = rule_name_parse s in
           let re = Str.regexp " *{{ *\\(.*\\)}} *" in
           if not(Str.string_match re s 0) then
-            let s = extract_hom s in
-            (hn,Term_parser.just_one_parse xd lookup rn_formula false l s ,[])
+            let (s,hs) = extract_hom s in
+            (hn,Term_parser.just_one_parse xd lookup rn_formula false l s ,hs)
           else 
             let s' = Str.matched_group 1 s in
 
