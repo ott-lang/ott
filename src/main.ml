@@ -97,6 +97,8 @@ let picky_multiple_parses = ref false
 let caml_include_terminals = ref false
 let cgen_filename_opt = ref (None : string option )
 let error_defn_rewrite = ref false
+let mode_check = ref ( None : string option )
+let auxify = ref false
                                  
 let options = Arg.align [
 
@@ -291,7 +293,13 @@ let options = Arg.align [
    "<filename>  (experimental) Name of file to output containing Crowbar generator code for grammar");
   ("-error_defn_rewrite",
    Arg.Bool (fun b -> error_defn_rewrite := b),
-   "         (experimental) Perform rewrite of rules to generate a new set that includes error handling")
+   "         (experimental) Perform rewrite of rules to generate a new set that includes error handling");
+  ( "-mode_check" ,
+    Arg.String (fun s -> mode_check := Some s),
+    "<defn_name_mode>   (debug) Perform mode analysis on rules starting with definition indicated" );
+  ("-auxify",
+   Arg.Bool (fun b -> auxify := b),
+   "         (experimental) Perform rewrite of grammar and definitions to include auxes");
 ] 
 
 let usage_msg = 
@@ -652,8 +660,7 @@ let process source_filenames =
   (* make parser for symbolic terms *)
 
   let lookup = Term_parser.make_parser xd in 
-  
-  begin try
+  begin try  
     Grammar_typecheck.check_with_parser lookup xd
   with
   | Typecheck_error (s1,s2) ->
@@ -705,11 +712,23 @@ let read_systemdefn read_systemdefn_filename =
   
 let output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux) = 
 
+  let sd = if !auxify then
+             Aux_rewrite.auxify sd else sd in
+  if !show_sort then (
+    print_endline "********** AFTER AUXIFY  *********************\n"; 
+    print_endline (Grammar_pp.pp_syntaxdefn m_ascii sd.syntax);
+    print_endline (Isa_rules_rewrite.pp_relations sd.syntax sd.relations));
+  
+
   let sd = if !error_defn_rewrite then
              Error_defn_rewrite.do_rewrite sd else sd in
   
   let sd = if !isa_rewrite_list_defns then 
              Isa_rules_rewrite.isa_rewrite sd else sd in
+
+  let _ = match !mode_check with
+           | Some file_name -> Mode_check.do_check sd file_name
+           | _ -> () in
   
   (** output of systemdefn *)
   ( match !write_systemdefn_filename_opt with

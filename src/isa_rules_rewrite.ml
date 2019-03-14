@@ -5,9 +5,11 @@
       2. Handles using of secondary names for nonterms badly. ie if 
            label, l 
          then will won't find l_T_list; only label_T_list will have been used as name of label_T_list nonterm
+         Doesn't realise that D and G are from the same nonterm - or maybe mode check is causing the problem
+
  *)
 open Types;;
-
+open Grammar_rewrite
 
 let xd_ref = ref (None : syntaxdefn option)  
 
@@ -19,131 +21,11 @@ let rec unzip4 (s  : ('a * 'b * 'c * 'd) list ) : ( ('a list) * ('b list) * ('c 
   | [] -> ([],[],[],[])
   | ((x,y,z,w)::s) -> let (xs,ys,zs,ws) = unzip4 s in (x::xs,y::ys,z::zs,w::ws)
 
+let bound_length b = match b with
+    Bound_dotform b -> b.bd_length
+  | _ -> 0
 
                  
-(*---------------------------------------------------------
- 
-   Facilities for mapping and folding over symterm trees
-
------------------------------------------------------------ *)  
-                                           
-type map_functions = {
-    f_st : symterm -> symterm;
-    f_stnb : symterm_node_body -> symterm_node_body;
-    f_nt : (nontermroot*nonterm) -> (nontermroot*nonterm);
-    f_mv : (metavarroot*metavar) -> (metavarroot*metavar);
-    f_stlb : symterm_list_body -> symterm_list_body;
-  }
-
-let id_map_functions = {
-    f_st = (fun x -> x);
-    f_stnb = (fun x -> x);
-    f_nt = (fun x -> x);
-    f_mv = (fun x -> x);
-    f_stlb = (fun x -> x)
-  }
-
-let rec map_st (f : map_functions) st = match st with
-  | St_node (l,stnb) ->  St_node(l, { (f.f_stnb stnb) with st_es = List.map (map_ste f) stnb.st_es })
-  | St_nonterm (l,ntr,nt) -> let (ntr,nt) = f.f_nt (ntr,nt) in St_nonterm(l,ntr,nt)
-and map_ste (f : map_functions) ste = match ste with
-  | Ste_st(l,st) -> Ste_st (l, map_st f st)
-  | Ste_metavar(l,mvr,mv) -> let (mvr,mv) = f.f_mv (mvr,mv) in Ste_metavar(l,mvr,mv)
-  | Ste_list (l,stlis) -> Ste_list(l,List.map (map_stli f) stlis)
-and map_stli f stli = match stli with
-  | Stli_single(l,stes) -> Stli_single(l,List.map (map_ste f) stes)
-  | Stli_listform stlb -> Stli_listform (f.f_stlb stlb)
-and map_stes f stes = List.map (fun ste -> map_ste f ste ) stes
-
-                         
-type 'a fold_functions = {
-    f_st : symterm -> 'a -> 'a;
-    f_stnb : symterm_node_body -> 'a -> 'a;
-    f_stlb : symterm_list_body -> 'a -> 'a;
-    f_ste : symterm_element -> 'a -> 'a;
-    f_stli : symterm_list_item -> 'a -> 'a;
-    f_nt : (nontermroot*nonterm) -> 'a -> 'a;
-    f_mv : (metavarroot*metavar) -> 'a -> 'a;
-  }
-
-
-let rec fold_drule  (f : 'a fold_functions) (base : 'a) (dr : drule ) : 'a =
-  let base = fold_st f base dr.drule_conclusion
-  in List.fold_left (fun x (_, p, _) -> fold_st f x p) base dr.drule_premises
-                           
-and  fold_defnclass  (f : 'a fold_functions) (base : 'a) (dc : defnclass ) : 'a =
-  List.fold_left (fun x d -> List.fold_left (fun x r -> match r with
-                                                        | PSR_Rule dr -> fold_drule f x dr
-                                                        | _  -> x) x d.d_rules) base dc.dc_defns
-
-and  fold_rel (f : 'a fold_functions) (base : 'a) (rels : relationsdefn ) : 'a =
-  List.fold_left (fun x r -> match r with
-                             | FDC _ -> x
-                             | RDC dc -> fold_defnclass f x dc) base rels
-                          
-and fold_st (f : 'a fold_functions) (base : 'a) (st : symterm) : 'a =
-  let b = match st with
-    | St_node (l,stnb) ->  fold_stes f base stnb.st_es
-    | St_nonterm (l,ntr,nt) ->  f.f_nt (ntr,nt) base
-    | St_nontermsub _ -> base
-    | St_uninterpreted _ -> base
-  in f.f_st st b
-          
-and  fold_ste (f : 'a fold_functions)  (base : 'a)  (ste : symterm_element) : 'a =
-  let b = match ste with
-    | Ste_st(l,st) -> fold_st f base st
-    | Ste_metavar(l,mvr,mv) -> f.f_mv (mvr,mv) base
-    | Ste_list (l,stlis) -> List.fold_left (fun b stli -> fold_stli f b stli) base stlis
-  in f.f_ste ste b
-           
-and fold_stli f base stli =
-  let b = match stli with
-    | Stli_single(l,stes) -> List.fold_left (fun b ste -> fold_ste f b ste) base stes
-    | Stli_listform stlb  -> fold_stes f base stlb.stl_elements
-  in f.f_stli stli b
-
-and fold_stes f base stes = List.fold_left (fun b ste -> fold_ste f b ste) base stes
-
-let id_fold_functions = {
-    f_st = (fun _ a -> a);
-    f_stnb = (fun _ a -> a);
-    f_nt  = (fun _ a -> a);
-    f_mv  = (fun _ a -> a);
-    f_stlb  = (fun _ a -> a);
-    f_ste = (fun _ a -> a);
-    f_stli = (fun _ a -> a);
-  }
-
-let rec map_drule  (f : drule -> drule)  (dr : drule ) : drule = f dr
-                           
-and  map_defnclass  (f : drule -> drule ) (dc : defnclass ) : defnclass =
-  { dc with dc_defns = List.map (fun d -> { d with d_rules = List.map (fun r -> match r with
-                                                                                      | PSR_Rule dr -> PSR_Rule (map_drule f dr)
-                                                                                      | _  -> r ) d.d_rules }) dc.dc_defns}
-
-and  map_rel (f : drule -> drule ) (rels : relationsdefn )  =
-  List.map (fun r -> match r with
-                             | FDC _ -> r
-                             | RDC dc -> RDC (map_defnclass f dc)) rels
-
-                          
-
-type 'a syntax_fold_functions = {
-         f_element : element -> 'a -> 'a
-       }
-
-
-let sd_id_fold_fn = {
-    f_element = (fun _ a -> a)
-  }
-                                  
-let rec fold_xd f b xd = List.fold_left (fun b r -> fold_rule f b r ) b xd.xd_rs
-
-and fold_rule f b r = List.fold_left (fun b p -> fold_prod f b p ) b r.rule_ps
-
-and fold_prod f b p = List.fold_left (fun b e -> f.f_element e b ) b p.prod_es
-
-and fold_es f b es = List.fold_left (fun b e -> f.f_element e b ) b es
                           
 (*-----------------------------------------------------------------------
   
@@ -153,7 +35,7 @@ and fold_es f b es = List.fold_left (fun b e -> f.f_element e b ) b es
                           
 let jdots_judgement stnb = if stnb.st_rule_ntr_name = "judgement" then stnb else stnb
                           
-let jdots st = map_st { id_map_functions with f_stnb = jdots_judgement } st
+let jdots st = map_st { id_mf with f_stnb = jdots_judgement } st
 
 let m_ascii = Ascii { ppa_colour = false; 
 		      ppa_lift_cons_prefixes = false; 
@@ -164,8 +46,6 @@ let m_ascii = Ascii { ppa_colour = false;
   
 let debugln s = Printf.eprintf s
 
-let has_num_suffix suffix = (List.length (Auxl.option_map (fun s -> match s with Si_num _ -> Some s | _ -> None) suffix)) > 0
-let has_index_suffix suffix = (List.length (Auxl.option_map (fun s -> match s with Si_index _ -> Some s | _ -> None) suffix)) > 0
 
                               
 let pp_plain_prod p = "Prod: name: " ^ (p.prod_name) ^ (String.concat " " (List.map Grammar_pp.pp_plain_element p.prod_es))
@@ -191,17 +71,6 @@ let rec map_sep (f : 'a -> 'b) (sep : 'b)  (xs : 'a list) : 'b list  = match xs 
   | [x] -> [f x]
   | x1::x2::xs -> (f x1) :: (sep :: (map_sep f sep (x2::xs)))
                                                         
-let newprod nme es homs = { prod_name = nme;     
-	               prod_flavour = Bar;
-	               prod_meta = false;
-	               prod_sugar = false;
-                       prod_categories = StringSet.empty;
-	               prod_es = es;
-	               prod_homs = homs;
-                       prod_disambiguate = None;
-	               prod_bs = [];
-                       prod_loc = dummy_loc }
-
     
 (** Functions for creating new names **)                            
 let extract_names es = Auxl.option_map (fun e -> match e with
@@ -232,10 +101,8 @@ let as_list_ntmv (xs : (string * suffix_item list) list) : (string * suffix_item
 
                                                         
   
-
-let strip_index2 (nt,suff) = (nt, Auxl.option_map (fun s -> match s with Si_index _ -> None | _ -> Some s) suff)
                                          
-let as_strings  es : string list = List.map (fun e -> as_string (strip_index2 e) ) (extract_names es)
+let as_strings  es : string list = List.map (fun e -> as_string (strip_index_suffix e) ) (extract_names es)
 
 let distinguish_dups es = List.mapi (fun i x -> match x with
                                                   Lang_nonterm (ntr1,(ntr2,suffx)) -> let ntr3 =  ntr1 ^ (string_of_int i)
@@ -269,17 +136,6 @@ let remove_index (suff : suffix ) : suffix  = Auxl.option_map (fun s ->
 ------------------------------------------------------------------------*)
 
 
-let rename_nt (base, (root, suffix )) = let new_suffs = Auxl.option_map (fun s -> match s with Si_index _ -> None | _ -> Some s) suffix in
-                                  if suffix = new_suffs then
-                                    Lang_nonterm (base ,(root,suffix))
-                                  else
-                                    Lang_nonterm (base ^ "_list" , (root ^ "_list", new_suffs))
-
-let rename_mv (base, (root, suffix )) = let new_suffs = Auxl.option_map (fun s -> match s with Si_index _ -> None | _ -> Some s) suffix in
-                                  if suffix = new_suffs then
-                                    Lang_metavar (base ,(root,suffix))
-                                  else
-                                    Lang_nonterm (base ^ "_list" , (root ^ "_list", new_suffs))
                                                  
 let rename_nt_as_st (base, (root, suffix )) = let new_suffs = Auxl.option_map (fun s -> match s with Si_index _ -> None | _ -> Some s) suffix in
                                   if suffix = new_suffs then
@@ -349,6 +205,53 @@ let make_cons_form_mv ntr1 ntr2 suff = if has_index_suffix suff then
                                    else
                                      Ste_metavar(dummy_loc,ntr1,(ntr2,suff))
 
+let make_single_form_nt (ntr1 : nontermroot) ntr2 suff  = if has_index_suffix suff then
+                                     Ste_st(dummy_loc, St_node (dummy_loc, { st_rule_ntr_name = ntr1 ^ "_list";
+                                                           st_prod_name = ntr1 ^ "_list_cons";
+                                                           st_es = [ Ste_st (dummy_loc,
+                                                                             St_nonterm(dummy_loc, ntr1, (ntr2,remove_index suff)));
+                                                                     Ste_st(dummy_loc,
+                                                                            St_node(dummy_loc,
+                                                                                    { st_rule_ntr_name = ntr1 ^ "_list";
+                                                                                      st_prod_name = ntr1 ^ "_list_empty";
+                                                                                      st_es = [];
+                                                                                      st_loc = dummy_loc
+                                                                              }))
+                                                                   ];
+                                                           st_loc = dummy_loc }))
+                                else
+                                  Ste_st(dummy_loc,St_nonterm(dummy_loc,ntr1,(ntr2,suff)))
+
+                                        
+let make_single_form_mv ntr1 ntr2 suff = if has_index_suffix suff then
+                                     Ste_st( dummy_loc, St_node (dummy_loc, { st_rule_ntr_name = ntr1 ^ "_list";
+                                                            st_prod_name = ntr1 ^ "_list_cons";
+                                                            st_es = [ Ste_metavar (dummy_loc, ntr1, (ntr2,remove_index suff));
+                                                                      Ste_st(dummy_loc,
+                                                                             St_node(dummy_loc,
+                                                                                     { st_rule_ntr_name = ntr1 ^ "_list";
+                                                                                       st_prod_name = ntr1 ^ "_list_empty";
+                                                                                       st_es = [];
+                                                                                       st_loc = dummy_loc
+                                                                                     }))
+                                                                    ];
+                                                            st_loc = dummy_loc }))
+                                   else
+                                     Ste_metavar(dummy_loc,ntr1,(ntr2,suff))
+
+                                                
+let make_aux_call_singleton st =   match st with
+  | St_node (l,stnb) -> let args = make_args_from_st st in
+                        let aux_name = stnb.st_prod_name ^ "_" ^ (String.concat "_" args) in
+                        let new_es = fold_st { id_fold_functions with
+                                f_nt = (fun (ntr1,(ntr2,suff)) base -> List.append base [ make_single_form_nt ntr1 ntr2 suff ] );
+                                f_mv = (fun (ntr1,(ntr2,suff)) base -> List.append base [ make_single_form_mv ntr1 ntr2 suff ]) } [] st in
+                        St_node (l,{ stnb with 
+                                     st_prod_name = aux_name;
+                                     st_es = new_es 
+                                })
+  | _ -> st
+
            
 let make_aux_call_cons st =   match st with
   | St_node (l,stnb) -> let args = make_args_from_st st in
@@ -365,7 +268,7 @@ let make_aux_call_cons st =   match st with
 
 let apply2 (f : 'b -> 'c) ( (x,y) : 'a * 'b) : ('a * 'c) = (x,f x)
 
-let make_aux_call_original st = map_st {id_map_functions with
+let make_aux_call_original st = map_st {id_mf with
                                          f_nt = (fun (ntr1, (ntr2,suff)) -> (ntr1, (ntr2, remove_index suff)));
                                          f_mv = (fun (ntr1, (ntr2,suff)) -> (ntr1, (ntr2, remove_index suff))) } st
                                    
@@ -461,8 +364,8 @@ let create_new_rules  ( xd : syntaxdefn ) (ess : element list list) : (rule list
 let create_new_rules2  ( xd : syntaxdefn ) ( new_rules : (string *element) list) : (rule list) * (string list) = List.map (fun new_rule ->
                       let (name,Lang_list elb) = new_rule in
                       let es = List.map (fun e -> match e with
-                                                    Lang_nonterm(ntr,nt) -> Lang_nonterm(ntr, strip_index2 nt)
-                                                  | Lang_metavar (ntr,nt) -> Lang_metavar(ntr, strip_index2 nt)
+                                                    Lang_nonterm(ntr,nt) -> Lang_nonterm(ntr, strip_index_suffix nt)
+                                                  | Lang_metavar (ntr,nt) -> Lang_metavar(ntr, strip_index_suffix nt)
                                                   | _ -> e) elb.elb_es in
                       ({ rule_ntr_name = name;
                                 rule_ntr_names = [ (name,[])];
@@ -517,10 +420,11 @@ let has_list_form stnb = List.exists (fun ste -> match ste with
    Specification of auxilary predicates that we need to add to handle lists of tuples in dotted judgements. 
    First component of tuple is the defnclass and name of the judgement,
    second is the list of parameters. Left  is for paramters that are not list; Right is for parameters that are a list of tuples 
+   Last is the size length of the dotted form. Only 0 and 1 are handled.
  *)
 (* defn class name, new name, original name, args to auxilary predicate, term for the call back to original predicate *)
 (*type defn_spec = (string * string * string) * ((string*suffix_item list ) list) * symterm*)
-type defn_spec = (string * string * string) * symterm
+type defn_spec = (string * string * string) * int * symterm
 
 
 type ntmv = (string * suffix_item list)
@@ -544,7 +448,7 @@ let pp_without_index (ntr,suff) = let new_suff = Auxl.option_map (fun s ->
 let remove_terminal_e es = Auxl.option_map (fun e -> match e with Lang_terminal _ -> None | _ -> Some e) es
 
 let make_list_cons (name : string ) (x : symterm_element list) (xs : symterm_element ) : symterm_element =
-      let head_forms = map_stes { id_map_functions with
+      let head_forms = map_stes { id_mf with
                                 f_nt = (fun (ntr1,(ntr2,suff)) -> (ntr1, (ntr2, remove_index suff)));
                                 f_mv = (fun (ntr1,(ntr2,suff)) -> (ntr1, (ntr2, remove_index suff ))) } x in
 
@@ -563,7 +467,7 @@ let make_list_concat ( name : string) ( xs : symterm_element ) ( ys : symterm_el
                               st_loc=dummy_loc}))
         
 let make_list_singleton ( name : string ) ( x : symterm_element list ) : symterm_element =
-  let head_forms = map_stes { id_map_functions with
+  let head_forms = map_stes { id_mf with
                               f_nt = (fun (ntr1,(ntr2,suff)) -> (ntr1, (ntr2, remove_index suff)));
                               f_mv = (fun (ntr1,(ntr2,suff)) -> (ntr1, (ntr2, remove_index suff ))) } x in
   
@@ -634,62 +538,62 @@ and update_stli cname (stli : symterm_list_item ) : symterm_element list  = matc
 (* Turn something like t1 : T1 .. tn : Tn into t_T_list and return [t,T] to indicate we want a zip function - zipI t_T_list t_list T_list *)
 and update_ste xd (cname : string) (ste  : symterm_element ) ( le : element ): (symterm_element list * map_spec list ) = match ste with
   | Ste_list (l,stlis) -> Printf.eprintf "update_ste (%s) %s lang element=%s \n" (Location.pp_loc l) (Grammar_pp.pp_plain_symterm_element ste) (Grammar_pp.pp_plain_element le);
-
-                          let (Lang_list elb) = le in
-                          let nts = Auxl.option_map (fun e -> match e with
-                                                         Lang_nonterm (s1,(s2,_)) -> Some s2
-                                                       | Lang_metavar (s1,(s2,_)) -> Some s2  
-                                                       | _ -> None ) elb.elb_es in
-                          let list_name = (String.concat "_" nts ) ^ "_list" in (* FIXME Do something with suffixes *)
-                          Printf.eprintf "  list_name=%s\n" list_name; 
-                          (* Walk over list elements and build up list making use of cons, concat and singleton *)
-                          let new_st  = List.fold_right (fun x xs -> match x with
-                                                         Stli_single (_, stes ) -> (match xs with
-                                                                                   | None -> Some (make_list_singleton list_name stes)
-                                                                                   | Some xs -> Some (make_list_cons list_name stes xs))
-                                                       | Stli_listform stlb ->
-                                                          let ste = Ste_st (dummy_loc, St_nonterm( dummy_loc, list_name, (list_name,[]))) in
-                                                          (* FIXME - Do something with suffix here *)
-                                                          let (names1,names2,suffs) =  fold_stes { id_fold_functions with
-                                                                                   f_nt = (fun (ntr1,(ntr2,suff)) base -> List.append base [ (ntr1,ntr2,suff)  ] );
-                                                                                   f_mv = (fun (ntr1,(ntr2,suff)) base -> List.append base [ (ntr1,ntr2,suff)  ] )} [] stlb.stl_elements |> unzip3 in
-                                                          let name1 = (String.concat "_" names1 ) ^ "_list" in
-                                                          let name2 = (String.concat "_" names2 ) ^ "_list" in
-                                                          let all_suffs = List.concat suffs |> Auxl.option_map (fun s -> match s with Si_index _ -> None | _ -> Some s) in 
-                                                          let ste = Ste_st (dummy_loc, St_nonterm( dummy_loc, list_name, (name2, all_suffs))) in
-                                                          Printf.eprintf "names = %s %s\n" name1 name2; 
-                                                          (match xs with
-                                                          | None -> Some ste
-                                                          | Some xs -> Some (make_list_concat list_name (Ste_metavar (dummy_loc, name1, (name2,[]))) xs))
-                                                       | _ -> None)
-                                                    stlis None
+        let (Lang_list elb) = le in
+        let nts = Auxl.option_map (fun e -> match e with
+                                              Lang_nonterm (s1,(s2,_)) -> Some s1
+                                            | Lang_metavar (s1,(s2,_)) -> Some s1  
+                                            | _ -> None ) elb.elb_es in
+        let list_name = (String.concat "_" nts ) ^ "_list" in (* FIXME Do something with suffixes *)
+        Printf.eprintf "  list_name=%s\n" list_name;
+        
+        (* Walk over list elements and build up list making use of cons, concat and singleton *)
+        let new_st  = List.fold_right (fun x xs -> match x with
+                                                     Stli_single (_, stes ) -> (match xs with
+                                                                                | None -> Some (make_list_singleton list_name stes)
+                                                                                | Some xs -> Some (make_list_cons list_name stes xs))
+                                                   | Stli_listform stlb ->
+                                                      let ste = Ste_st (dummy_loc, St_nonterm( dummy_loc, list_name, (list_name,[]))) in
+                                                      (* FIXME - Do something with suffix here *)
+                                                      let (names1,names2,suffs) =  fold_stes { id_fold_functions with
+                                                               f_nt = (fun (ntr1,(ntr2,suff)) base -> List.append base [ (ntr1,ntr2,suff)  ] );
+                                                               f_mv = (fun (ntr1,(ntr2,suff)) base -> List.append base [ (ntr1,ntr2,suff)  ] )} [] stlb.stl_elements |> unzip3 in
+                                                      let name1 = (String.concat "_" names1 ) ^ "_list" in
+                                                      let name2 = (String.concat "_" names2 ) ^ "_list" in
+                                                      let all_suffs = List.concat suffs |> Auxl.option_map (fun s -> match s with Si_index _ -> None | _ -> Some s) in 
+                                                      let ste = Ste_st (dummy_loc, St_nonterm( dummy_loc, list_name, (name2, all_suffs))) in
+                                                      Printf.eprintf "names = %s %s\n" name1 name2; 
+                                                      (match xs with
+                                                       | None -> Some ste
+                                                       | Some xs -> Some (make_list_concat list_name (Ste_metavar (dummy_loc, name1, (name2,[]))) xs))
+                                                   | _ -> None)
+                        stlis None
                                           
-                          in
-                          let new_st = (match new_st with
-                              Some new_st -> new_st
-                            | None -> make_list_empty list_name)
-                          in
-                          Printf.eprintf "BOB = %s\n" (Grammar_pp.pp_plain_symterm_element new_st);
-                          
-                          (* le is a Lang_list and nonterm/metavar will give us the list type G_list or t_T_list etc, this is 
+        in
+        let new_st = (match new_st with
+                        Some new_st -> new_st
+                      | None -> make_list_empty list_name)
+        in
+        Printf.eprintf "BOB = %s\n" (Grammar_pp.pp_plain_symterm_element new_st);
+        
+        (* le is a Lang_list and nonterm/metavar will give us the list type G_list or t_T_list etc, this is 
                              then use in the construction of the St_node below  *)
-                          (* FIXME should be looking over stlis just for Stli_listform and replacing just those;
+        (* FIXME should be looking over stlis just for Stli_listform and replacing just those;
                              take the relements we are replacing and use these to make mapI predicate *)
-
-                          let map_specs = Auxl.option_map (fun stli -> match stli with
-                                                                       | Stli_listform stlb -> 
-                                                                          (*let ste = Ste_st (dummy_loc, St_nonterm( dummy_loc, list_name, (list_name,[]))) in*)
-                                                                          let (names,map_name,suffs) = map_name_from cname stlb.stl_elements in
-                                                                          Printf.eprintf "names = %s\n" (String.concat " " names);
-                                                                          let list_name2 = (String.concat "_" names ) ^ "_list" in
-                                                                          if List.length names > 1 then 
-                                                                            Some ( cname, map_name, (list_name,suffs), list_name2 , stlb.stl_elements, stlb.stl_bound)
-                                                                          else
-                                                                            None
-                                                                       | _ -> None
-                                                          ) stlis in
-                          ( [new_st] , map_specs )
-                                    
+        
+        let map_specs = Auxl.option_map (fun stli -> match stli with
+                                                     | Stli_listform stlb -> 
+                                                        (*let ste = Ste_st (dummy_loc, St_nonterm( dummy_loc, list_name, (list_name,[]))) in*)
+                                                        let (names,map_name,suffs) = map_name_from cname stlb.stl_elements in
+                                                        Printf.eprintf "names = %s\n" (String.concat " " names);
+                                                        let list_name2 = (String.concat "_" names ) ^ "_list" in
+                                                        if List.length names > 1 then 
+                                                          Some ( cname, map_name, (list_name,suffs), list_name2 , stlb.stl_elements, stlb.stl_bound)
+                                                        else
+                                                          None
+                                                     | _ -> None
+                          ) stlis in
+        ( [new_st] , map_specs )
+          
   | _ -> process_ste xd cname ste
 
                      
@@ -779,9 +683,6 @@ let conflate (args : (string, suffix_item list) list) = List.concat (List.map (f
 
 
 (* Create production for new auxilary predicate *)
-let create_defn_prod (cname : string ) (dname : string) (st : symterm) = newprod ( dname ) (Lang_terminal (dname ) ::
-                   (fold_st { id_fold_functions with f_nt = (fun nt base -> List.append base [ rename_nt nt ]);
-                                                     f_mv = (fun mv base -> List.append base [ rename_mv mv ]) } [] st)) []
 
                                   (*List.map (fun s -> 
                                                                                         let (s,_) = rename_mvnt s in Lang_nonterm (s,(s,[]))) args
@@ -843,7 +744,8 @@ let make_args_from (st : symterm) : ( nontermroot * nonterm) list  = fold_st { i
 
 let rec remove_dup_defn_spec (dss : defn_spec list) : defn_spec list = match dss with
     [] -> []
-  | (d::dss) -> if  List.exists (fun (k,_) -> k = fst d) dss then
+  | (d::dss) -> let (n,_,_) = d
+                in if  List.exists (fun (k,_,_) -> k = n) dss then
                   remove_dup_defn_spec dss
                 else
                   d :: (remove_dup_defn_spec dss)
@@ -857,26 +759,37 @@ let create_aux_defns (dss : defn_spec list) : ((defn*prod) list ) =
                                                                        Left s -> "(Left " ^ s ^ ")"
                                                                      | Right ss -> "(Right " ^ (String.concat "| " ss)) args))) dss ));*)
 
-  List.map (fun ( (cname,new_dname,old_dname), st ) -> ({
+  List.map (fun ( (cname,new_dname,old_dname), bnd_len, st ) -> ({
                                          d_name = new_dname ;
                                          d_form = create_formula cname (new_dname) [];
                                          d_wrapper = new_dname ^ "_";
-                                         d_rules = [ PSR_Rule {
-                                                         drule_name = new_dname ^ "_empty";
-                                                         drule_categories = StringSet.empty;
-                                                         drule_premises = [];
-                                                         drule_conclusion = make_aux_call_empty st ;
-                                                         drule_homs = [];
-                                                         drule_loc = dummy_loc };
-                                                     PSR_Rule {
-                                                         drule_name = new_dname ^ "_cons";
-                                                         drule_categories = StringSet.empty;
-                                                         drule_premises = [ (None, make_aux_call_original st,[] );
-                                                                            (None,make_aux_call st,[]) ];
-                                                         drule_conclusion = make_aux_call_cons st ;
-                                                         drule_homs = [];
-                                                         drule_loc = dummy_loc } 
-                                                   ];
+                                         d_rules = [
+                                             if bnd_len > 0 then
+                                               PSR_Rule {
+                                                   drule_name = new_dname ^ "_singleton";
+                                                   drule_categories = StringSet.empty;
+                                                   drule_premises = [ (None, make_aux_call_original st,[] )];
+                                                   drule_conclusion = make_aux_call_singleton st ;
+                                                   drule_homs = [];
+                                                   drule_loc = dummy_loc }
+                                             else
+                                               PSR_Rule {
+                                                   drule_name = new_dname ^ "_empty";
+                                                   drule_categories = StringSet.empty;
+                                                   drule_premises = [];
+                                                   drule_conclusion = make_aux_call_empty st ;
+                                                   drule_homs = [];
+                                                   drule_loc = dummy_loc }
+                                           ;
+                                             PSR_Rule {
+                                                 drule_name = new_dname ^ "_cons";
+                                                 drule_categories = StringSet.empty;
+                                                 drule_premises = [ (None, make_aux_call_original st,[] );
+                                                                    (None,make_aux_call st,[]) ];
+                                                 drule_conclusion = make_aux_call_cons st ;
+                                                 drule_homs = [];
+                                                 drule_loc = dummy_loc } 
+                                           ];
                                          d_homs = [];
                                          d_loc = dummy_loc }, create_defn_prod cname new_dname st )) (remove_dup_defn_spec dss)
 
@@ -901,7 +814,7 @@ let create_aux_name base_name args = base_name ^ "_" ^
                                                   | Ste_var _ -> raise (Failure "Unexpected Ste_var")
                                                   | Ste_list _ -> raise (Failure "Unexpected Ste_list")
                                                 in
-                                                 let (_,new_suffix) = strip_index2 (ntr,suffix) in
+                                                 let (_,new_suffix) = strip_index_suffix (ntr,suffix) in
                                                  if new_suffix = suffix then
                                                    Left ntr
                                                  else
@@ -959,7 +872,7 @@ let rec rename_st (st : symterm)  = match st with
 let find_defns_st' (st : symterm) : (defn_spec list)  =  match st with
   | St_node (l,stnb) -> let args = make_args_from st
  in
-                          [ (( stnb.st_rule_ntr_name, create_aux_name stnb.st_prod_name args, stnb.st_prod_name ), st)]
+                          [ (( stnb.st_rule_ntr_name, create_aux_name stnb.st_prod_name args, stnb.st_prod_name ), 0, st)]
 
   | _ -> []
            
@@ -978,8 +891,11 @@ let find_defns stnb = if stnb.st_prod_name = "formula_dots" then
                      match stnb.st_es with
                      | [Ste_list (_ ,[stli]) ] ->
                         (match stli with
-                        | Stli_listform stlb -> (match stlb.stl_elements with
-                                                 | (Ste_st (_,st)::_) -> find_defns_st st
+                         | Stli_listform stlb -> let b_len = bound_length stlb.stl_bound in
+                                                 (match stlb.stl_elements with
+                                                  | (Ste_st (_,st)::_) -> let ds = find_defns_st st in
+                                                                          List.map (fun (x,y,z) -> (x,b_len,z)) ds
+                                                                                                 
                                                  | _ -> [])
                         | _ -> [])
                    else []
@@ -1082,7 +998,7 @@ let make_map_call_empty cname name lhs rhs =
              st_loc = dummy_loc
           })
 
-(*    let head_forms = map_stes { id_map_functions with
+(*    let head_forms = map_stes { id_mf with
                                 f_nt = (fun (ntr1,(ntr2,suff)) -> (ntr1, (ntr2, remove_index suff)));
                                 f_mv = (fun (ntr1,(ntr2,suff)) -> (ntr1, (ntr2, remove_index suff ))) } rhs in
 
@@ -1131,9 +1047,6 @@ let make_map_call_single cname name lhs rhs =
             })
 
 
-let bound_length b = match b with
-    Bound_dotform b -> b.bd_length
-  | _ -> 0
             
 let create_map_defns ( mss : map_spec list ) : defn list =
   Printf.eprintf "** create_map_defns |mss|=%d\n" (List.length mss);
@@ -1193,7 +1106,7 @@ let rewrite_rule xd cname (dr:drule) : (drule * (defn_spec list) * (prod list) *
   let zip_specs = (zip_spec1@ (List.concat zip_spec2)) in
   let (zip_premises, form_prods)  = create_map_premises zip_specs  in
   ( { dr with drule_conclusion = new_conc;
-              drule_premises = new_premises @ zip_premises }, List.concat defn_specs, form_prods,zip_specs )
+              drule_premises = zip_premises @ new_premises  }, List.concat defn_specs, form_prods,zip_specs )
 
     
 let rewrite_defn xd (cname:string) (d:defn) : (defn * ((defn*prod) list) * (prod list) * (defn list) * (map_spec list))  =
@@ -1231,31 +1144,27 @@ let update_list_rule xd (_,_,(lhs1,_), lhs2, _ ,_) =
                           r) xd.xd_rs }
                         
         
-let update_grammar_rule xd name prods = 
-  { xd with xd_rs = List.map (fun r ->
-                        if r.rule_ntr_name = name  then
-                          { r with rule_ps = r.rule_ps @  prods }
-                        else r) xd.xd_rs }
-
-let update_grammar_rules xd prods =
-  List.fold_left (fun xd (name,prods)  -> update_grammar_rule xd name prods) xd prods
 
 
-
-let pp_drule dr = (String.concat "\n" (List.map (fun (_,st,_) -> Grammar_pp.pp_plain_symterm st) dr.drule_premises)) ^ "\n"
+let pp_raw_drule xd dr = (String.concat "\n" (List.map (fun (_,st,_) -> Grammar_pp.pp_plain_symterm st) dr.drule_premises)) ^ "\n"
                   ^ "------------------------------------------------------------- :: " ^ dr.drule_name ^ "\n"
                   ^ (Grammar_pp.pp_plain_symterm dr.drule_conclusion) ^ "\n"
-                                     
-let pp_defn defn = "defn " ^ defn.d_name ^ " :: \n"
+
+let pp_drule xd dr = (String.concat "\n" (List.map (fun (_,st,_) -> Grammar_pp.pp_symterm m_ascii xd [] de_empty st) dr.drule_premises)) ^ "\n"
+                  ^ "------------------------------------------------------------- :: " ^ dr.drule_name ^ "\n"
+                  ^ (Grammar_pp.pp_symterm m_ascii xd [] de_empty dr.drule_conclusion) ^ "\n"
+
+                                                                          
+let pp_defn xd defn = "defn " ^ defn.d_name ^ " :: \n"
                    ^ (String.concat "\n" (List.map (fun psr -> match psr with
-                                                                 PSR_Rule dr -> pp_drule dr
+                                                                 PSR_Rule dr -> pp_drule xd dr
                                                                | _ -> "") defn.d_rules))
                    ^ "\n"
                        
                                      
-let pp_relations rels = String.concat "\n" (List.map (fun rel -> match rel with
+let pp_relations xd rels = String.concat "\n" (List.map (fun rel -> match rel with
                                                                  | FDC _ -> "<fundefnclass>"
-                                                                 | RDC dc -> String.concat "\n\n" (List.map pp_defn dc.dc_defns)) rels)
+                                                                 | RDC dc -> String.concat "\n\n" (List.map (pp_defn xd) dc.dc_defns)) rels)
 
 (* FIXME Will need to build this programmatically based on dimension of zips we need *)
 let zip_embeds = Struct_embed (dummy_loc, "isa", [ Embed_string (dummy_loc, "inductive zipI :: \"('a*'b) list => 'a list => 'b list => bool\" where\n\"zipI [] [] []\"\n|\"zipI xys xs ys ==> zipI ((x,y)#xys)  (x#xs)  (y#ys)\"" ) ] )
@@ -1353,7 +1262,7 @@ let isa_rewrite1 (sd : systemdefn) =
   Printf.eprintf "*** FINISHED ISABELE REWRITING *** \n";
   Printf.eprintf "%s\n" (Auxl.dump_structure_fn updated_structure);
   Printf.eprintf "%s\n" (Grammar_pp.pp_syntaxdefn m_ascii new_xd);
-  Printf.eprintf "%s\n" (pp_relations new_relations);
+  Printf.eprintf "%s\n" (pp_relations new_xd new_relations);
   
   { sd with syntax = new_xd;
             structure = updated_structure;
@@ -1383,7 +1292,7 @@ let isa_rewrite (sd : systemdefn) =
   else ();
 
   Printf.eprintf "Step 0 - Relations before rewrite\n";
-  Printf.eprintf "%s\n" (pp_relations sd.relations);
+  Printf.eprintf "%s\n" (pp_relations sd.syntax sd.relations);
   
   (* 1. Go over grammar rules and add a new production for each list form that uses the list version. For example, if there is a record 
         production like  | l1 = e1 .. ln = en then we add  a production  | l_e_list  *)
@@ -1460,7 +1369,7 @@ let isa_rewrite (sd : systemdefn) =
   let new_xd = update_grammar_rules new_xd new_form_prods in (* FIXME - generalise Jopp *)
 
   Printf.eprintf "*** Step 5 - Updated inductive predicates ***\n";
-  Printf.eprintf "%s\n" (pp_relations new_relations);
+  Printf.eprintf "%s\n" (pp_relations new_xd new_relations);
   
   let new_deps = Dependency.compute_dependencies new_xd "isa" in
   let new_xd = { new_xd with xd_dep = [ ( "isa", new_deps); ("ascii", new_deps) ] } in
@@ -1468,7 +1377,7 @@ let isa_rewrite (sd : systemdefn) =
   Printf.eprintf "*** FINISHED ISABELE REWRITING *** \n";
   Printf.eprintf "%s\n" (Auxl.dump_structure_fn updated_structure);
   Printf.eprintf "%s\n" (Grammar_pp.pp_syntaxdefn m_ascii new_xd);
-  Printf.eprintf "%s\n" (pp_relations new_relations);
+  Printf.eprintf "%s\n" (pp_relations new_xd new_relations);
 
   List.iter (fun xs -> Printf.eprintf "[%s]\n" (String.concat "," (List.map string_of_int xs))) (product [ [1;2]; [3;4] ] );
   

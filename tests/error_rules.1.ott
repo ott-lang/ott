@@ -67,6 +67,13 @@ G |- t1 : T1 .. G |- tn : Tn
 ---------------------------- :: record
 G |- < f1 : t1 , .. , fn : tn > : < f1 : T1 , .. , fn : Tn >  
 
+%G |- t1 : T1 .. G |- tn : Tn
+%G |- t' : T'
+%G |- t'1 : T'1 .. G |- t'm : T'm
+%--------------- :: type_record_err_reason
+%G  |-  < f1 : t1 , .. , fn : tn , f' : t' , f'1 : t'1 , .. , f'm : t'm >  : < f1 : T1 , .. , fn : Tn , f' : T' , f'1 : T'1 , .. , f'm : T'm >
+
+
 % For the record typing we want to output
 % G |- t1 : Ok T1 .. G |- tm : Ok Tm
 % G |- t' : Error err_reason
@@ -74,6 +81,12 @@ G |- < f1 : t1 , .. , fn : tn > : < f1 : T1 , .. , fn : Tn >
 % -------------- :: type_record_err_reason
 % G  |-  < f1 : t1 , .. , fm : tm , f' : t' , f'1 : t'1 , .. , f'n : t'n >  : Error err_reason
 
+% If formula_dots
+%    Split listform [1..n] into 3 parts
+%         First part is same listform and [1..n] - so just copy
+%	 Middle part is nonlist form - just de-index all nonters
+%	 First part of 'transform' of [1..n] to [1..m] and adding ticks to nonterms
+   
 % Split a list premise into 3 parts. Will also need to split the list in the conclusion
 % ie split any other list with the same indexvar ??
 % 

@@ -2,7 +2,7 @@
 % Testing Auxilary Rules.
 %    Both modes for -aux_style_rules work and constructor style puts the aux part in the correct place.
 %    Auxing in both modes is generating correct subst and free variable functions.
-%
+%    
 
 metavar value_name, x ::=
   {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ ocaml int }}
@@ -34,15 +34,33 @@ constant, c :: CONST_ ::= {{ aux loc _ }}
   | (&&)                               ::   :: and
   | not                                ::   :: not
 
-expr, e :: E_ ::= {{ aux _ loc }}
+expr , e :: E_ ::= {{ aux loc _ }}
   | value_name                         ::   :: ident        {{ com Identifier }}
   | constant                           ::   :: constant
+  | ( e1 , e2 )                        ::   :: pair
   | { c / x } e                        :: M :: subst
        {{ icho ( subst_expr [[c]] [[x]] [[e]] ) }}
 
+formula :: 'formula_' ::=          
+ | judgement           ::   :: judgement
+
 
 substitutions
-  single expr value_name :: subst
+  single e value_name :: subst
 
 freevars
   e x :: fvs
+
+
+
+defns
+Jop :: '' ::=
+
+defn
+|- e ok :: :: wellformed :: wf_
+by
+
+|- e1 ok
+|- ( e2 , e3 ) ok
+--------------- :: pair
+|- (e1,e2) ok
