@@ -652,10 +652,10 @@ and update_ste (ste  : symterm_element ) : (symterm_element * zip_spec list ) = 
                                                      else None )ls*)
                      
 let rewrite_st xd (cname:string) (st : symterm) : symterm * (map_spec  list) =
-  Printf.eprintf "STOld: %s\n" (Grammar_pp.pp_plain_symterm st) ;
+  Printf.eprintf "rewrite_st before: %s\n" (Grammar_pp.pp_plain_symterm st) ;
   let (st,ls) = process_st' xd cname  st in (* FIXME *)
-  Printf.eprintf "STNew: %s\n" (Grammar_pp.pp_plain_symterm st) ;
-  Printf.eprintf "MAPS for: %s\n" (String.concat " " (List.map (fun ( _, name, (lhs,_),lhs2, rhs, _) -> "MAPI name=" ^ name ^ " lhs=" ^ lhs ^ " lhs2= " ^ lhs2 ^ " "  ^ (String.concat " " (List.map Grammar_pp.pp_plain_symterm_element rhs))) ls)) ;
+  Printf.eprintf "            after: %s\n" (Grammar_pp.pp_plain_symterm st) ;
+  Printf.eprintf "  maps for: %s\n" (String.concat " " (List.map (fun ( _, name, (lhs,_),lhs2, rhs, _) -> "MAPI name=" ^ name ^ " lhs=" ^ lhs ^ " lhs2= " ^ lhs2 ^ " "  ^ (String.concat " " (List.map Grammar_pp.pp_plain_symterm_element rhs))) ls)) ;
   (st,ls)
                       
 
@@ -1101,6 +1101,7 @@ let create_map_defns ( mss : map_spec list ) : defn list =
  *)
   
 let rewrite_rule xd cname (dr:drule) : (drule * (defn_spec list) * (prod list) * (map_spec list)) =
+  Printf.eprintf "rewrite_rule %s\n" dr.drule_name;
   let (new_conc,zip_spec1) = rewrite_st xd cname dr.drule_conclusion  in
   let (new_premises, defn_specs, zip_spec2) = List.map (fun p -> rewrite_premise cname p ) dr.drule_premises |> unzip3 in
   let zip_specs = (zip_spec1@ (List.concat zip_spec2)) in
@@ -1110,7 +1111,7 @@ let rewrite_rule xd cname (dr:drule) : (drule * (defn_spec list) * (prod list) *
 
     
 let rewrite_defn xd (cname:string) (d:defn) : (defn * ((defn*prod) list) * (prod list) * (defn list) * (map_spec list))  =
-  let _ = Printf.eprintf "rewrite_defn\n%s\n\n" (Grammar_pp.pp_plain_symterm d.d_form) in
+  let _ = Printf.eprintf "** rewrite_defn\n%s\n\n" (Grammar_pp.pp_plain_symterm d.d_form) in
   let (ds,defn_specs,form_prods,map_specs) = (List.map (fun r -> match r with
                                                                  | PSR_Rule r -> let (r, dss,fps , mss) = rewrite_rule xd cname r in
                                                                                  (PSR_Rule r, dss,fps, mss)
