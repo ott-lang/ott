@@ -794,6 +794,7 @@ let big_line_comment m s =
   | Coq _ | Hol _ | Lem _ | Isa _ | Caml _ -> "(** "^s^" *)\n"
   | Twf _ -> "%%% "^s^" %%%\n\n"
   | Tex _ -> "% "^s^"\n"
+  | Rst _ -> ".. "^s^"\n"
   | Menhir _ | Lex _ | Ascii _ -> errorm m "big_line_comment"
 
 (* print only if not empty *)

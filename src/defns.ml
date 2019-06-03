@@ -243,6 +243,7 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
         (Grammar_pp.pp_tex_DRULE_NAME_NAME m)
         (Auxl.pp_tex_escape dr.drule_name)
         pp_com
+  | Rst _ -> print_endline "rule" (* TODO *)
   | Isa _ | Hol _ | Lem _ | Coq _ | Twf _ | Rdx _ ->
       let non_free_ntrs = Subrules_pp.non_free_ntrs m xd xd.xd_srs in
 
@@ -561,6 +562,26 @@ let pp_defn fd (m:pp_mode) (xd:syntaxdefn) lookup (defnclass_wrapper:string) (un
         | PSR_Defncom es -> Embed_pp.pp_embed_spec fd m xd lookup es)
         d.d_rules;
       Printf.fprintf fd "\\end{%s}}\n\n" (Grammar_pp.pp_tex_DEFN_BLOCK_NAME m)
+  | Rst _ ->
+    Printf.fprintf fd ".. defn %s\n" d.d_name;
+    List.iter (function
+        | PSR_Rule dr ->
+          let ascii_mode = (Ascii {ppa_colour = false;
+                                   ppa_ugly = false;
+                                   ppa_lift_cons_prefixes = false;
+                                   ppa_show_deps = false;
+                                   ppa_show_defns = false; }) in
+          Printf.fprintf fd "%s::\n\n" dr.drule_name;
+          let premises_str = List.map (fun (_, p) -> Grammar_pp.pp_symterm ascii_mode xd [] de_empty p) dr.drule_premises
+          and conclusion_str = (Grammar_pp.pp_symterm ascii_mode xd [] de_empty dr.drule_conclusion) in
+          let len = List.fold_left (fun m s -> max m (String.length s)) 0 premises_str in
+          let len = max len (String.length conclusion_str) in
+          List.iter (Printf.fprintf fd "\t%s\n") premises_str;
+          Printf.fprintf fd "\t%s\n" (String.make len '-');
+          Printf.fprintf fd "\t%s\n\n" conclusion_str
+        | PSR_Defncom es -> Embed_pp.pp_embed_spec fd m xd lookup es)
+      d.d_rules;
+    Printf.fprintf fd "\n"
   | Caml _ | Lex _ | Menhir _ -> Auxl.errorm m "pp_defn"
 
             
@@ -693,7 +714,10 @@ let pp_defnclass fd (m:pp_mode) (xd:syntaxdefn) lookup (dc:defnclass) =
       List.iter (fun d -> output_string fd (Grammar_pp.tex_defn_name m dc.dc_wrapper d.d_name);
                           output_string fd "{}") dc.dc_defns;
       output_string fd "}\n\n"
-  | Rst _ -> () (* TODO *)
+  | Rst _ ->
+    Printf.fprintf fd ".. defns %s\n" dc.dc_name;
+    List.iter (fun d -> pp_defn fd m xd lookup dc.dc_wrapper universe d) dc.dc_defns
+    (* TODO *)
 
 (**********************************************)
 (* pp of fundefns                             *)
@@ -1008,7 +1032,10 @@ let pp_fun_or_reln_defnclass_list
                        | FDC fdc -> Printf.fprintf fd "%s\n" (Grammar_pp.tex_fundefnclass_name m fdc.fdc_name)
                        | RDC dc -> Printf.fprintf fd "%s\n" (Grammar_pp.tex_defnclass_name m dc.dc_name)) frdcs;
           output_string fd "}\n\n"
-      | Rst _ -> () (* TODO *)
+      | Rst _ ->
+        (* output_string fd ".. defnss\n"; *)
+        List.iter (fun frdc -> pp_fun_or_reln_defnclass fd m xd lookup frdc) frdcs;
+        output_string fd "\n\n"
       | Lex _ | Menhir _ -> () 
 
 
