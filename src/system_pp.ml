@@ -334,8 +334,32 @@ let pp_struct_entry fd m sd xd_expanded lookup stre : unit =
       Embed_pp.pp_embeds fd m sd.syntax lookup [embed] (* FIXME should be a list *)
    )
 
+(* Pull the grammar rules at the top of the list *)
+let rec select_struct l = match l with
+  | [] -> (None, [])
+  | (Struct_rs e)::l -> (Some (Struct_rs e), l)
+  | (Struct_srs e)::l -> (Some (Struct_srs e), l)
+  | (Struct_crs e)::l -> (Some (Struct_crs e), l)
+  | t::l -> let (res, l) = select_struct l in (res, t::l)
+
+let rec select_sort_struct l = match l with
+  | [] -> []
+  (* Keep grammar rules ar the beginning *)
+  | (Struct_rs e)::l -> (Struct_rs e)::(select_sort_struct l)
+  | (Struct_srs e)::l -> (Struct_srs e)::(select_sort_struct l)
+  | (Struct_crs e)::l -> (Struct_crs e)::(select_sort_struct l)
+  | t::l -> let (e, l) = select_struct l in match e with
+    | Some e -> e::(select_sort_struct (t::l))
+    | None -> t::l
+(* *)
+
 let pp_systemdefn_structure fd m sd xd_expanded structure_expanded lookup =
-  List.iter (fun (_,x) -> pp_struct_entry fd m sd xd_expanded lookup x) structure_expanded
+  let structure_expanded = match m with
+    | Rst _ -> (
+        select_sort_struct (List.map (fun (_, x) -> x) structure_expanded)
+      )
+    | _ -> List.map (fun (_, x) -> x) structure_expanded
+  in List.iter (pp_struct_entry fd m sd xd_expanded lookup) structure_expanded
 
 (* old algorithm that ignores the structure informations: core for isa/hol/coq/twf output *)
 let pp_systemdefn_core fd m sd lookup = 
