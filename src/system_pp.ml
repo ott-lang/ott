@@ -190,7 +190,7 @@ let pp_library fd m =
     | Twf wo -> pp_lib wo.twf_library
     | Caml oo-> pp_lib oo.caml_library
     | Rdx ro -> ()
-    | Rst _ -> () (* TODO *)
+    | Rst _ -> ()
     | Ascii _ | Tex _ | Lex _ | Menhir _ -> Auxl.errorm m "pp_library"
 
 let pp_struct_entry fd m sd xd_expanded lookup stre : unit =

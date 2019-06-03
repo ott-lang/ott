@@ -838,9 +838,6 @@ and pp_tex_terminal m xd tm =
     if (*(String.length es > 1) ||*) (Auxl.is_alpha tm)
     then pp_tex_KW_NAME m ^ "{"^es^"}" else pp_tex_SYM_NAME m ^"{"^es ^"}"  
 
-(* rst stuff *)
-and rst_rule_name m ntr = ntr
-
 and pp_isa_terminal m xd tm =
   try (* firstcheck if this terminal is defined in the terminalsproduction *)
     let term_rule = Auxl.rule_of_ntr xd "terminals" in
@@ -902,12 +899,12 @@ and pp_uninterpreted m xd s =
 
 and pp_maybe_quote_ident m xd s = 
   match m with 
-  | Ascii ao -> quote_ident s
+  | Ascii _ | Rst _ -> quote_ident s
   | Tex _ | Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Caml _ | Lex _ | Menhir _ -> s
 
 and pp_prod_flavour m xd pf = 
   match m with
-  | Ascii _ -> pp_BAR
+  | Ascii _ | Rst _ -> pp_BAR
   | Tex _ -> pp_tex_BAR
   | Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Caml _ | Lex _ | Menhir _ -> raise ThisCannotHappen
 
@@ -2492,6 +2489,24 @@ and pp_prod m xd rnn rpw p = (* returns a string option *)
 (*      ^ pp_categories_and_name m xd pcs pn *)
          ^ pn 
          ^ " " ^String.concat " " (List.map (pp_homomorphism m xd) p.prod_homs))
+  | Rst ro ->
+      let pn = p.prod_name in
+      let pp_prod m'=
+        let stnb = canonical_symterm_node_body_of_prod rnn p in
+        let st = St_node(dummy_loc,stnb) in
+        pp_symterm m' xd [] de_empty st
+      in
+      let ascii_mode = (Ascii {ppa_colour = false;
+                               ppa_ugly = false;
+                               ppa_lift_cons_prefixes = false;
+                               ppa_show_deps = false;
+                               ppa_show_defns = false; }) in
+      Some
+        ((pad2 60
+            (pp_prod_flavour ascii_mode xd p.prod_flavour ^ " "
+	     ^ (pp_prod (ascii_mode)))
+            (pp_prod_flavour ascii_mode xd p.prod_flavour ^ " "
+	     ^ (pp_prod ascii_mode ))))
   | Isa io ->
       if p.prod_meta then
         None
@@ -2741,9 +2756,12 @@ and pp_rule m xd r = (* returns a string option *)
                            r.rule_ps)))
 (*            ^"[5.0mm]" *)
 	       ^ "}\n"  ))
-  | Rst ro -> Some ("::\n\n"^
-                    "\t"^(rst_rule_name m r.rule_ntr_name)^" ::= "^
-                    "\n") (* TODO *)
+  | Rst ro ->
+    let names = (String.concat ", " (List.map fst r.rule_ntr_names)) in
+    let name = ("::\n\n\t"^names^" ::= ") in
+    let prods = (List.fold_left (fun a so -> match so with | Some s -> a^"\n\t"^(String.make (String.length names + 1) ' ')^s | None -> a) ""
+        (List.map (pp_prod m xd r.rule_ntr_name r.rule_pn_wrapper) r.rule_ps)) in
+    Some (name^prods^"\n\n")
   in 
   match result with
   | Some s -> Some (if !Global_option.output_source_locations >= 2 then "\n"^pp_source_location m r.rule_loc  ^ s else s)
@@ -2888,7 +2906,8 @@ and pp_rule_list m xd rs =
              rs)
       ^ (match rs with []-> "" | _ -> pp_tex_AFTERLASTRULE_NAME m)
       ^ "\n"^pp_tex_END_RULES ^ "}\n\n"
-  | Rst ro -> "" (* String.concat "\n" (Auxl.option_map (pp_rule m xd) rs) *) (* TODO do we want to display all these pesky rules ? *)
+  | Rst ro ->
+    (String.concat "\n" (Auxl.option_map (pp_rule m xd) rs))
   | Lex _ | Menhir _ ->
       String.concat "\n" (Auxl.option_map (pp_rule m xd) rs) 
  

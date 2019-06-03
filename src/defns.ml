@@ -243,7 +243,7 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
         (Grammar_pp.pp_tex_DRULE_NAME_NAME m)
         (Auxl.pp_tex_escape dr.drule_name)
         pp_com
-  | Rst _ -> print_endline "rule" (* TODO *)
+  | Rst _ -> () (* TODO *)
   | Isa _ | Hol _ | Lem _ | Coq _ | Twf _ | Rdx _ ->
       let non_free_ntrs = Subrules_pp.non_free_ntrs m xd xd.xd_srs in
 
@@ -563,14 +563,14 @@ let pp_defn fd (m:pp_mode) (xd:syntaxdefn) lookup (defnclass_wrapper:string) (un
         d.d_rules;
       Printf.fprintf fd "\\end{%s}}\n\n" (Grammar_pp.pp_tex_DEFN_BLOCK_NAME m)
   | Rst _ ->
-    Printf.fprintf fd ".. defn %s\n" d.d_name;
+    let ascii_mode = (Ascii {ppa_colour = false;
+                             ppa_ugly = false;
+                             ppa_lift_cons_prefixes = false;
+                             ppa_show_deps = false;
+                             ppa_show_defns = false; }) in
+    Printf.fprintf fd "**defn %s :** ``%s``\n\n" d.d_name (Grammar_pp.pp_symterm ascii_mode xd [] de_empty d.d_form);
     List.iter (function
         | PSR_Rule dr ->
-          let ascii_mode = (Ascii {ppa_colour = false;
-                                   ppa_ugly = false;
-                                   ppa_lift_cons_prefixes = false;
-                                   ppa_show_deps = false;
-                                   ppa_show_defns = false; }) in
           Printf.fprintf fd "%s::\n\n" dr.drule_name;
           let premises_str = List.map (fun (_, p) -> Grammar_pp.pp_symterm ascii_mode xd [] de_empty p) dr.drule_premises
           and conclusion_str = (Grammar_pp.pp_symterm ascii_mode xd [] de_empty dr.drule_conclusion) in
@@ -715,9 +715,8 @@ let pp_defnclass fd (m:pp_mode) (xd:syntaxdefn) lookup (dc:defnclass) =
                           output_string fd "{}") dc.dc_defns;
       output_string fd "}\n\n"
   | Rst _ ->
-    Printf.fprintf fd ".. defns %s\n" dc.dc_name;
+    Printf.fprintf fd "defns %s:\n%s\n\n" dc.dc_name (String.make (String.length dc.dc_name + 10) '^');
     List.iter (fun d -> pp_defn fd m xd lookup dc.dc_wrapper universe d) dc.dc_defns
-    (* TODO *)
 
 (**********************************************)
 (* pp of fundefns                             *)
