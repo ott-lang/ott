@@ -1027,6 +1027,7 @@ and pp_nonterm_with_sie_internal as_type m xd sie (ntr,suff) =
             String.concat "" 
               (apply_hom_spec m xd hs 
                  [Auxl.pp_tex_escape ntr^(pp_suffix_with_sie m xd sie suff)]))
+    | Rst ro -> "" (* TODO *)
     | Coq _ | Isa _ | Hol _ | Lem _ | Rdx _ | Twf _ | Caml _ | Lex _ | Menhir _ -> 
         let s0 = pp_ntr ^ (pp_suffix_with_sie m xd sie suff) in
         let s1 = 
@@ -1075,7 +1076,7 @@ and pp_metavar_with_sie_internal as_type m xd sie (mvr,suff) =
             String.concat "" 
               (apply_hom_spec m xd hs 
                  [Auxl.pp_tex_escape mvr^(pp_suffix_with_sie m xd sie suff)]))
-
+    | Rst _ -> "" (* TODO *)
     | Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Rdx _ | Caml _ | Lex _ | Menhir _ -> 
         let s = pp_mvr ^ (pp_suffix_with_sie m xd sie suff) in
         if as_type then s
@@ -1312,9 +1313,10 @@ and pp_metavardefn m xd mvd =
 	    "%abbrev "
 	    ^ pp_metavarroot_ty m xd mvd.mvd_name 
 	    ^ " : type = nat.\n"
-        | Lex _ -> "" 
-        | Menhir _ -> ""
-	| Ascii _ | Tex _ -> raise Auxl.ThisCannotHappen ))
+ | Lex _ -> "" 
+ | Menhir _ -> ""
+ | Rst _ -> ""
+ | Ascii _ | Tex _ -> raise Auxl.ThisCannotHappen ))
 
 and pp_metavarrep m xd mvd_rep type_name =
   match m with
@@ -2810,7 +2812,7 @@ and pp_rule_list m xd rs =
                     ^ strip_surrounding_parens (pp_nontermroot_ty m xd ntr) ^ " = "
                     ^ pp_hom_spec m xd hs
                     ^ "\n\n"
-                | Ascii _ | Tex _ | Lex _ | Menhir _ -> Auxl.errorm m "int_rule_list_dep" )
+                | Ascii _ | Tex _ | Rst _ | Lex _ | Menhir _ -> Auxl.errorm m "int_rule_list_dep" )
             (* or not, in which case we generate an inductive type definition *)
             | b ->    
                 let b = List.rev b in (* FZ this ensures that the output follows the source order *)
@@ -2878,6 +2880,7 @@ and pp_rule_list m xd rs =
              rs)
       ^ (match rs with []-> "" | _ -> pp_tex_AFTERLASTRULE_NAME m)
       ^ "\n"^pp_tex_END_RULES ^ "}\n\n"
+  | Rst ro -> "" (* TODO *)
   | Lex _ | Menhir _ ->
       String.concat "\n" (Auxl.option_map (pp_rule m xd) rs) 
  
@@ -4366,4 +4369,5 @@ let pp_pp_mode m = match m with
   | Caml _ -> "Caml"
   | Lex _  -> "Lex"
   | Menhir _ -> "Menhir"
+  | Rst _ -> "ReStructuredText"
 

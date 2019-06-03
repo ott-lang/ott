@@ -51,6 +51,7 @@ let mode_name m = match m with
   | Rdx _ -> "Redex"
   | Lex _ -> "Lex"
   | Menhir _ -> "Menhir"
+  | Rst _ -> "ReStructuredText"
 
 let debug_on = false
 
@@ -599,6 +600,7 @@ let hom_name_for_pp_mode m
     | Caml _ -> "ocaml"
     | Lex _ -> "lex"
     | Menhir _ -> "menhir"
+    | Rst _ -> "rst"
 
 (* select dependencies *)
 

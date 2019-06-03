@@ -693,6 +693,7 @@ let pp_defnclass fd (m:pp_mode) (xd:syntaxdefn) lookup (dc:defnclass) =
       List.iter (fun d -> output_string fd (Grammar_pp.tex_defn_name m dc.dc_wrapper d.d_name);
                           output_string fd "{}") dc.dc_defns;
       output_string fd "}\n\n"
+  | Rst _ -> () (* TODO *)
 
 (**********************************************)
 (* pp of fundefns                             *)
@@ -708,6 +709,7 @@ let pp_funclause (m:pp_mode) (xd:syntaxdefn) (fc:funclause) : string =
       ppd_lhs ^ " === " ^ ppd_rhs ^ "\n"
   | Tex _ ->                                  
       Grammar_pp.pp_tex_FUNCLAUSE_NAME m^"{"^ppd_lhs^"}"^"{"^ppd_rhs^"}%\n"
+  | Rst _ -> "" (* TODO *)
   | Isa _ | Hol _ | Lem _ | Coq _ | Caml _ | Twf _ | Lex _ | Menhir _ -> 
       Auxl.errorm m "pp_funclause"
 
@@ -735,7 +737,7 @@ let pp_symterm_node_lhs m xd sie de st =
 	match m with
 	| Coq _ | Caml _ | Lem _ (* LemTODO4: really? *) -> (insert_commas hom)
 	| Hol _ | Isa _  -> hom
-	| Twf _ | Ascii _ | Tex _ | Lex _ | Menhir _ -> raise Auxl.ThisCannotHappen
+	| Twf _ | Ascii _ | Tex _ | Rst _ | Lex _ | Menhir _ -> raise Auxl.ThisCannotHappen
       in String.concat " " (Grammar_pp.apply_hom_spec m xd hom pes)
 
   | _ -> Auxl.int_error "pp_symterm_node_lhs"
@@ -839,7 +841,7 @@ let fundefn_to_int_func (m:pp_mode) (xd:syntaxdefn) (deps:string list) (fd:funde
 	      (v,ms) 
 	in
 	Some ( fd.fd_name ^ " " ^ type_defn ^ ": " ^ result_type_name ^ "=\n", "", match_string)
-    | Tex _ | Ascii _ | Twf _ | Lex _ | Menhir _ -> raise Auxl.ThisCannotHappen 
+    | Tex _ | Rst _ | Ascii _ | Twf _ | Lex _ | Menhir _ -> raise Auxl.ThisCannotHappen 
 
   in
   match header with None -> None | Some header -> 
@@ -888,7 +890,7 @@ let pp_fundefn (m:pp_mode) (xd:syntaxdefn) lookup (fd:fundefn) : string =
           (List.map (pp_funclause m xd) fd.fd_clauses)
       ^ "\\end{"^Grammar_pp.pp_tex_FUNDEFN_BLOCK_NAME m ^"}" 
       ^ "}\n\n"
-
+  | Rst ro -> "" (* TODO *)
   | Isa _ | Hol _ | Lem _ | Coq _ | Twf _ | Caml _ | Lex _ | Menhir _ -> 
       Auxl.errorm m "pp_fundefn"
 
@@ -911,6 +913,7 @@ let pp_fundefnclass (m:pp_mode) (xd:syntaxdefn) lookup (fdc:fundefnclass) : stri
            "\n" 
            (List.map (function fd -> Grammar_pp.tex_fundefn_name m fd.fd_name^"{}") fdc.fdc_fundefns))
       ^ "}\n\n"
+  | Rst _ -> "" (* TODO *)
  
   | Isa _ | Coq _ | Hol _ | Lem _ | Caml _ ->
       let proof = 
@@ -1005,6 +1008,7 @@ let pp_fun_or_reln_defnclass_list
                        | FDC fdc -> Printf.fprintf fd "%s\n" (Grammar_pp.tex_fundefnclass_name m fdc.fdc_name)
                        | RDC dc -> Printf.fprintf fd "%s\n" (Grammar_pp.tex_defnclass_name m dc.dc_name)) frdcs;
           output_string fd "}\n\n"
+      | Rst _ -> () (* TODO *)
       | Lex _ | Menhir _ -> () 
 
 

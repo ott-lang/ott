@@ -61,6 +61,7 @@ and pp_embedmorphism fd m xd lookup (l,hn,es) =
   | (Lem _, "lem") 
   | (Twf _, "twf") 
   | (Tex _, "tex") 
+  | (Rst _, "rst")
   | (Caml _, "ocaml")
   | (Rdx _, "rdx")
   | (Menhir _, "menhir")
@@ -73,7 +74,7 @@ and pp_embedmorphism fd m xd lookup (l,hn,es) =
   | (Isa io, "isa-lib") -> 
       let x = io.isa_library in
       x := (fst !x, embed_strings (snd !x) es)
-  | (Coq _, _) | (Isa _, _) | (Hol _,_) | (Lem _,_) | (Twf _,_) | (Tex _,_) | (Caml _,_) | (Lex _, _) | (Menhir _, _) -> ()
+  | (Coq _, _) | (Isa _, _) | (Hol _,_) | (Lem _,_) | (Twf _,_) | (Tex _,_) | (Caml _,_) | (Lex _, _) | (Menhir _, _) | (Rst _, _) -> ()
 
 and pp_embed_spec fd m xd lookup es = 
   List.iter (pp_embed_spec_el fd m xd lookup) es
@@ -89,7 +90,7 @@ and pp_embed_spec_el fd m xd lookup ese =
           output_string fd Grammar_pp.pp_DOUBLERIGHTBRACKET )
   | Tex xo when (match ese with Embed_inner (_,"TEX_NAME_PREFIX")->true | _->false) -> 
       output_string fd xo.ppt_name_prefix
-  | Tex _ | Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Rdx _ | Caml _ | Lex _ | Menhir _ -> 
+  | Tex _ | Rst _ | Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Rdx _ | Caml _ | Lex _ | Menhir _ -> 
       ( match ese with
       | Embed_string (l,s) -> output_string fd s
 

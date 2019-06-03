@@ -860,6 +860,8 @@ type pp_menhir_opts =
       ppm_caml_ast_module : string;
       ppm_caml_parser_module : string;
     } (* yo *)
+
+type pp_rst_opts = unit (* TODO *)
     
 type pp_mode =  (* m *)
   | Coq of pp_coq_opts
@@ -873,6 +875,7 @@ type pp_mode =  (* m *)
   | Caml of pp_caml_opts
   | Lex  of pp_menhir_opts (* NB: same as pp_menhir_opts *)
   | Menhir of pp_menhir_opts
+  | Rst of pp_rst_opts
       
 let pp_ascii_opts_default =
   Ascii { ppa_colour = true;
