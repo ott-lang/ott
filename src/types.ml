@@ -861,8 +861,9 @@ type pp_menhir_opts =
       ppm_caml_parser_module : string;
     } (* yo *)
 
-type pp_rst_opts = unit (* TODO *)
-    
+type pp_rst_opts =
+  { split_output : bool; }
+
 type pp_mode =  (* m *)
   | Coq of pp_coq_opts
   | Isa of pp_isa_opts

@@ -94,6 +94,7 @@ let coq_expand_lists = ref true
 let coq_lngen = ref false
 let coq_names_in_rules = ref true
 let coq_use_filter_fn = ref false
+let rst_split_output = ref false
 let merge_fragments = ref false
 let picky_multiple_parses = ref false
 let caml_include_terminals = ref false
@@ -257,6 +258,11 @@ let options = Arg.align [
     Arg.Bool (fun b -> caml_include_terminals := b),
     "<"^string_of_bool !caml_include_terminals^">  Include terminals in OCaml output (experimental!)" );
 
+  (* options for rst output *)
+  ( "-rst_split_output",
+    Arg.Bool (fun b -> rst_split_output := b),
+    ("<"^string_of_bool !rst_split_output^"> Split ReStructuredText output (one file per rule)" ));
+
 (* options for debugging *)
   ( "-pp_grammar", 
     Arg.Set Global_option.do_pp_grammar,
@@ -414,7 +420,7 @@ let m_tex = Tex {ppt_colour= !tex_colour;
                  ppt_suppressed_ntrs= !tex_suppressed_ntrs;
                  ppt_wrap= !tex_wrap;
                  ppt_name_prefix= !tex_name_prefix } 
-let m_rst = Rst ()
+let m_rst = Rst { split_output = !rst_split_output; }
 let m_isa = Isa { ppi_isa_primrec = !isa_primrec;
 		  ppi_isa_inductive = !isa_inductive;
                   isa_library = ref ("",[]); 
@@ -785,7 +791,7 @@ let output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux) =
           (Lex_menhir_pp.pp_menhir_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented lookup !generate_aux_rules fi;
            Lex_menhir_pp.pp_pp_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented xd_quotiented_unaux !generate_aux_rules fi )
       | "rst" ->
-        System_pp.pp_systemdefn_core_io m_rst sd lookup fi false
+        System_pp.pp_systemdefn_core_rst m_rst sd lookup fi
 
      | _ -> Auxl.int_error("unknown target "^t))
 
