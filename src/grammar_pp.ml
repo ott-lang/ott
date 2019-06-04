@@ -2759,7 +2759,7 @@ and pp_rule m xd r = (* returns a string option *)
   | Rst ro ->
     let names = (String.concat ", " (List.map fst r.rule_ntr_names)) in
     let name = ("::\n\n\t"^names^" ::= ") in
-    let prods = (List.fold_left (fun a so -> match so with | Some s -> a^"\n\t"^(String.make (String.length names + 1) ' ')^s | None -> a) ""
+    let prods = (List.fold_left (fun a so -> match so with | Some s -> a^"\n\t  "^s | None -> a) ""
         (List.map (pp_prod m xd r.rule_ntr_name r.rule_pn_wrapper) r.rule_ps)) in
     Some (name^prods^"\n\n")
   in 
