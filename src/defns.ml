@@ -478,6 +478,17 @@ let pp_processed_semiraw_rule fd (m:pp_mode) (xd:syntaxdefn) (s: string) (psr:pr
   | PSR_Rule dr -> output_string fd s; pp_drule fd m xd dr; true
   | PSR_Defncom _ -> false
 
+let pp_drule_rst fd m dr xd =
+  Printf.fprintf fd "::\n\n";
+  let premises_str = List.map (fun (_, p) -> Grammar_pp.pp_symterm m xd [] de_empty p) dr.drule_premises
+  and conclusion_str = (Grammar_pp.pp_symterm m xd [] de_empty dr.drule_conclusion) in
+  let len = List.fold_left (fun m s -> max m (String.length s)) 0 premises_str in
+  let len = max len (String.length conclusion_str) in
+  List.iter (Printf.fprintf fd "\t%s\n") premises_str;
+  Printf.fprintf fd "\t%s" (String.make len '-');
+  Printf.fprintf fd " (%s)\n" dr.drule_name;
+  Printf.fprintf fd "\t%s\n\n" conclusion_str
+
 let pp_defn fd (m:pp_mode) (xd:syntaxdefn) lookup (defnclass_wrapper:string) (universe:string) (d:defn) =
   match m with
   | Ascii _ ->
@@ -571,20 +582,12 @@ let pp_defn fd (m:pp_mode) (xd:syntaxdefn) lookup (defnclass_wrapper:string) (un
     Printf.fprintf fd "**defn %s :** ``%s``\n\n" d.d_name (Grammar_pp.pp_symterm ascii_mode xd [] de_empty d.d_form);
     List.iter (function
         | PSR_Rule dr ->
-          Printf.fprintf fd "%s::\n\n" dr.drule_name;
-          let premises_str = List.map (fun (_, p) -> Grammar_pp.pp_symterm ascii_mode xd [] de_empty p) dr.drule_premises
-          and conclusion_str = (Grammar_pp.pp_symterm ascii_mode xd [] de_empty dr.drule_conclusion) in
-          let len = List.fold_left (fun m s -> max m (String.length s)) 0 premises_str in
-          let len = max len (String.length conclusion_str) in
-          List.iter (Printf.fprintf fd "\t%s\n") premises_str;
-          Printf.fprintf fd "\t%s\n" (String.make len '-');
-          Printf.fprintf fd "\t%s\n\n" conclusion_str
+          pp_drule_rst fd ascii_mode dr xd;
         | PSR_Defncom es -> Embed_pp.pp_embed_spec fd m xd lookup es)
       d.d_rules;
     Printf.fprintf fd "\n"
   | Caml _ | Lex _ | Menhir _ -> Auxl.errorm m "pp_defn"
 
-            
 let pp_defnclass fd (m:pp_mode) (xd:syntaxdefn) lookup (dc:defnclass) =
   let universe = try Grammar_pp.pp_hom_spec m xd (List.assoc "coq-universe" dc.dc_homs) with Not_found -> "Prop" in
   let isa_type_of_defn (m: pp_mode) (xd: syntaxdefn) (d: defn) : string = 
@@ -715,7 +718,7 @@ let pp_defnclass fd (m:pp_mode) (xd:syntaxdefn) lookup (dc:defnclass) =
                           output_string fd "{}") dc.dc_defns;
       output_string fd "}\n\n"
   | Rst _ ->
-    Printf.fprintf fd "defns %s:\n%s\n\n" dc.dc_name (String.make (String.length dc.dc_name + 10) '^');
+    Printf.fprintf fd "%s\n%s\n\n" dc.dc_name (String.make (String.length dc.dc_name + 5) '^');
     List.iter (fun d -> pp_defn fd m xd lookup dc.dc_wrapper universe d) dc.dc_defns
 
 (**********************************************)

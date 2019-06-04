@@ -45,3 +45,4 @@ val process_raw_defnclasss :
   Types.syntaxdefn ->
   Types.made_parser -> Types.raw_fun_or_reln_defnclass list -> Types.fun_or_reln_defnclass list
 val pp_counts : Types.systemdefn -> bool * string
+val pp_drule_rst : out_channel -> Types.pp_mode -> Types.drule -> Types.syntaxdefn -> unit

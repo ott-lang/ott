@@ -717,14 +717,7 @@ let pp_systemdefn_core_rst m sd lookup oi =
                        List.iter (function
                            | PSR_Rule dr ->
                              let fd = open_out (fn^"/"^dr.drule_name^".rst") in
-                             Printf.fprintf fd "%s::\n\n" dr.drule_name;
-                             let premises_str = List.map (fun (_, p) -> Grammar_pp.pp_symterm ascii_mode xd_expanded [] de_empty p) dr.drule_premises
-                             and conclusion_str = (Grammar_pp.pp_symterm ascii_mode xd_expanded [] de_empty dr.drule_conclusion) in
-                             let len = List.fold_left (fun m s -> max m (String.length s)) 0 premises_str in
-                             let len = max len (String.length conclusion_str) in
-                             List.iter (Printf.fprintf fd "\t%s\n") premises_str;
-                             Printf.fprintf fd "\t%s\n" (String.make len '-');
-                             Printf.fprintf fd "\t%s\n\n" conclusion_str;
+                             Defns.pp_drule_rst fd ascii_mode dr xd_expanded;
                              close_out fd
                            | PSR_Defncom es -> Auxl.warning "PSR_Defncom not supported in rst output-splitting")
                          d.d_rules;
