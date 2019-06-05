@@ -64,6 +64,9 @@ let twf_filter_filename_dsts = ref ([] :  string list)
 let caml_filter_filenames = ref ([] : (string * string) list)
 let caml_filter_filename_srcs = ref ([] : string list)
 let caml_filter_filename_dsts = ref ([] :  string list)
+let rst_filter_filenames = ref ([] : (string * string) list)
+let rst_filter_filename_srcs = ref ([] : string list)
+let rst_filter_filename_dsts = ref ([] :  string list)
 let lift_cons_prefixes = ref false
 let test_parse_list = ref ([] : string list)
 let sort = ref true
@@ -91,6 +94,7 @@ let coq_expand_lists = ref true
 let coq_lngen = ref false
 let coq_names_in_rules = ref true
 let coq_use_filter_fn = ref false
+let rst_split_output = ref false
 let merge_fragments = ref false
 let picky_multiple_parses = ref false
 let caml_include_terminals = ref false
@@ -146,6 +150,10 @@ let options = Arg.align [
     Arg.Tuple[Arg.String (fun s -> caml_filter_filename_srcs := s :: !caml_filter_filename_srcs);
               Arg.String (fun s -> caml_filter_filename_dsts := s :: !caml_filter_filename_dsts)],
     "<src><dst>  Files to OCaml filter" ); 
+  ( "-rst_filter",
+    Arg.Tuple[Arg.String (fun s -> rst_filter_filename_srcs := s :: !rst_filter_filename_srcs);
+              Arg.String (fun s -> rst_filter_filename_dsts := s :: !rst_filter_filename_dsts)],
+    "<src><dst>  Files to ReStructuredText filter" );
   ( "-merge", 
     Arg.Bool (fun b -> merge_fragments := b), 
     "<"^string_of_bool !merge_fragments ^">         merge grammar and definition rules" ); 
@@ -250,6 +258,11 @@ let options = Arg.align [
     Arg.Bool (fun b -> caml_include_terminals := b),
     "<"^string_of_bool !caml_include_terminals^">  Include terminals in OCaml output (experimental!)" );
 
+  (* options for rst output *)
+  ( "-rst_split_output",
+    Arg.Bool (fun b -> rst_split_output := b),
+    ("<"^string_of_bool !rst_split_output^"> Split ReStructuredText output (one file per rule)" ));
+
 (* options for debugging *)
   ( "-pp_grammar", 
     Arg.Set Global_option.do_pp_grammar,
@@ -307,6 +320,7 @@ let _ = isa_filter_filenames := List.combine (!isa_filter_filename_srcs) (!isa_f
 let _ = coq_filter_filenames := List.combine (!coq_filter_filename_srcs) (!coq_filter_filename_dsts)
 let _ = twf_filter_filenames := List.combine (!twf_filter_filename_srcs) (!twf_filter_filename_dsts)
 let _ = caml_filter_filenames := List.combine (!caml_filter_filename_srcs) (!caml_filter_filename_dsts)
+let _ = rst_filter_filenames := List.combine (!rst_filter_filename_srcs) (!rst_filter_filename_dsts)
 
 let types_of_extensions =
     [ "ott","ott";
@@ -319,7 +333,8 @@ let types_of_extensions =
       "ml", "ocaml";
       "mll", "lex"; 
       "mly", "menhir";
-      "rkt", "rdx"] 
+      "rkt", "rdx";
+      "rst", "rst"] 
 
 let extension_of_type t = List.assoc t (List.map (function (a,b)->(b,a)) types_of_extensions)
 
@@ -334,7 +349,7 @@ let file_type name =
     _ -> None 
 
 let non_tex_output_types = ["coq"; "isa"; "hol"; "lem"; "twf"; "ocaml"; "rdx"]
-let output_types =  "tex" :: "lex" :: "menhir" :: non_tex_output_types
+let output_types =  "tex" :: "lex" :: "menhir" :: "rst" :: non_tex_output_types
 let input_types = "ott" :: output_types
 
 let classify_file_argument arg =
@@ -405,6 +420,7 @@ let m_tex = Tex {ppt_colour= !tex_colour;
                  ppt_suppressed_ntrs= !tex_suppressed_ntrs;
                  ppt_wrap= !tex_wrap;
                  ppt_name_prefix= !tex_name_prefix } 
+let m_rst = Rst { split_output = !rst_split_output; }
 let m_isa = Isa { ppi_isa_primrec = !isa_primrec;
 		  ppi_isa_inductive = !isa_inductive;
                   isa_library = ref ("",[]); 
@@ -515,7 +531,8 @@ let m_rdx = Rdx pp_rdx_opts_default
              "twf",m_twf;
              "coq",m_coq;
              "tex",m_tex;
-             "rdx",m_rdx]) 
+             "rdx",m_rdx;
+             "rst",m_rst]) 
         targets_for_non_picky)
 
 (* process *)
@@ -773,6 +790,8 @@ let output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux) =
           let xd_quotiented_unaux = sd_quotiented_unaux.syntax in
           (Lex_menhir_pp.pp_menhir_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented lookup !generate_aux_rules fi;
            Lex_menhir_pp.pp_pp_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented xd_quotiented_unaux !generate_aux_rules fi )
+      | "rst" ->
+        System_pp.pp_systemdefn_core_rst m_rst sd lookup fi
 
      | _ -> Auxl.int_error("unknown target "^t))
 

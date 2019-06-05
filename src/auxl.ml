@@ -51,6 +51,7 @@ let mode_name m = match m with
   | Rdx _ -> "Redex"
   | Lex _ -> "Lex"
   | Menhir _ -> "Menhir"
+  | Rst _ -> "ReStructuredText"
 
 let debug_on = false
 
@@ -599,6 +600,7 @@ let hom_name_for_pp_mode m
     | Caml _ -> "ocaml"
     | Lex _ -> "lex"
     | Menhir _ -> "menhir"
+    | Rst _ -> "rst"
 
 (* select dependencies *)
 
@@ -792,6 +794,7 @@ let big_line_comment m s =
   | Coq _ | Hol _ | Lem _ | Isa _ | Caml _ -> "(** "^s^" *)\n"
   | Twf _ -> "%%% "^s^" %%%\n\n"
   | Tex _ -> "% "^s^"\n"
+  | Rst _ -> ".. "^s^"\n"
   | Menhir _ | Lex _ | Ascii _ -> errorm m "big_line_comment"
 
 (* print only if not empty *)

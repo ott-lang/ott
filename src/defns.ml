@@ -243,6 +243,7 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
         (Grammar_pp.pp_tex_DRULE_NAME_NAME m)
         (Auxl.pp_tex_escape dr.drule_name)
         pp_com
+  | Rst _ -> () (* TODO *)
   | Isa _ | Hol _ | Lem _ | Coq _ | Twf _ | Rdx _ ->
       let non_free_ntrs = Subrules_pp.non_free_ntrs m xd xd.xd_srs in
 
@@ -477,6 +478,17 @@ let pp_processed_semiraw_rule fd (m:pp_mode) (xd:syntaxdefn) (s: string) (psr:pr
   | PSR_Rule dr -> output_string fd s; pp_drule fd m xd dr; true
   | PSR_Defncom _ -> false
 
+let pp_drule_rst fd m dr xd =
+  Printf.fprintf fd "::\n\n";
+  let premises_str = List.map (fun (_, p) -> Grammar_pp.pp_symterm m xd [] de_empty p) dr.drule_premises
+  and conclusion_str = (Grammar_pp.pp_symterm m xd [] de_empty dr.drule_conclusion) in
+  let len = List.fold_left (fun m s -> max m (String.length s)) 0 premises_str in
+  let len = max len (String.length conclusion_str) in
+  List.iter (Printf.fprintf fd "\t%s\n") premises_str;
+  Printf.fprintf fd "\t%s" (String.make len '-');
+  Printf.fprintf fd " (%s)\n" dr.drule_name;
+  Printf.fprintf fd "\t%s\n\n" conclusion_str
+
 let pp_defn fd (m:pp_mode) (xd:syntaxdefn) lookup (defnclass_wrapper:string) (universe:string) (d:defn) =
   match m with
   | Ascii _ ->
@@ -561,9 +573,21 @@ let pp_defn fd (m:pp_mode) (xd:syntaxdefn) lookup (defnclass_wrapper:string) (un
         | PSR_Defncom es -> Embed_pp.pp_embed_spec fd m xd lookup es)
         d.d_rules;
       Printf.fprintf fd "\\end{%s}}\n\n" (Grammar_pp.pp_tex_DEFN_BLOCK_NAME m)
+  | Rst _ ->
+    let ascii_mode = (Ascii {ppa_colour = false;
+                             ppa_ugly = false;
+                             ppa_lift_cons_prefixes = false;
+                             ppa_show_deps = false;
+                             ppa_show_defns = false; }) in
+    Printf.fprintf fd "**defn %s :** ``%s``\n\n" d.d_name (Grammar_pp.pp_symterm ascii_mode xd [] de_empty d.d_form);
+    List.iter (function
+        | PSR_Rule dr ->
+          pp_drule_rst fd ascii_mode dr xd;
+        | PSR_Defncom es -> Embed_pp.pp_embed_spec fd m xd lookup es)
+      d.d_rules;
+    Printf.fprintf fd "\n"
   | Caml _ | Lex _ | Menhir _ -> Auxl.errorm m "pp_defn"
 
-            
 let pp_defnclass fd (m:pp_mode) (xd:syntaxdefn) lookup (dc:defnclass) =
   let universe = try Grammar_pp.pp_hom_spec m xd (List.assoc "coq-universe" dc.dc_homs) with Not_found -> "Prop" in
   let isa_type_of_defn (m: pp_mode) (xd: syntaxdefn) (d: defn) : string = 
@@ -693,6 +717,9 @@ let pp_defnclass fd (m:pp_mode) (xd:syntaxdefn) lookup (dc:defnclass) =
       List.iter (fun d -> output_string fd (Grammar_pp.tex_defn_name m dc.dc_wrapper d.d_name);
                           output_string fd "{}") dc.dc_defns;
       output_string fd "}\n\n"
+  | Rst _ ->
+    Printf.fprintf fd "%s\n%s\n\n" dc.dc_name (String.make (String.length dc.dc_name + 5) '^');
+    List.iter (fun d -> pp_defn fd m xd lookup dc.dc_wrapper universe d) dc.dc_defns
 
 (**********************************************)
 (* pp of fundefns                             *)
@@ -708,6 +735,7 @@ let pp_funclause (m:pp_mode) (xd:syntaxdefn) (fc:funclause) : string =
       ppd_lhs ^ " === " ^ ppd_rhs ^ "\n"
   | Tex _ ->                                  
       Grammar_pp.pp_tex_FUNCLAUSE_NAME m^"{"^ppd_lhs^"}"^"{"^ppd_rhs^"}%\n"
+  | Rst _ -> "" (* TODO *)
   | Isa _ | Hol _ | Lem _ | Coq _ | Caml _ | Twf _ | Lex _ | Menhir _ -> 
       Auxl.errorm m "pp_funclause"
 
@@ -735,7 +763,7 @@ let pp_symterm_node_lhs m xd sie de st =
 	match m with
 	| Coq _ | Caml _ | Lem _ (* LemTODO4: really? *) -> (insert_commas hom)
 	| Hol _ | Isa _  -> hom
-	| Twf _ | Ascii _ | Tex _ | Lex _ | Menhir _ -> raise Auxl.ThisCannotHappen
+	| Twf _ | Ascii _ | Tex _ | Rst _ | Lex _ | Menhir _ -> raise Auxl.ThisCannotHappen
       in String.concat " " (Grammar_pp.apply_hom_spec m xd hom pes)
 
   | _ -> Auxl.int_error "pp_symterm_node_lhs"
@@ -839,7 +867,7 @@ let fundefn_to_int_func (m:pp_mode) (xd:syntaxdefn) (deps:string list) (fd:funde
 	      (v,ms) 
 	in
 	Some ( fd.fd_name ^ " " ^ type_defn ^ ": " ^ result_type_name ^ "=\n", "", match_string)
-    | Tex _ | Ascii _ | Twf _ | Lex _ | Menhir _ -> raise Auxl.ThisCannotHappen 
+    | Tex _ | Rst _ | Ascii _ | Twf _ | Lex _ | Menhir _ -> raise Auxl.ThisCannotHappen 
 
   in
   match header with None -> None | Some header -> 
@@ -888,7 +916,7 @@ let pp_fundefn (m:pp_mode) (xd:syntaxdefn) lookup (fd:fundefn) : string =
           (List.map (pp_funclause m xd) fd.fd_clauses)
       ^ "\\end{"^Grammar_pp.pp_tex_FUNDEFN_BLOCK_NAME m ^"}" 
       ^ "}\n\n"
-
+  | Rst ro -> "" (* TODO *)
   | Isa _ | Hol _ | Lem _ | Coq _ | Twf _ | Caml _ | Lex _ | Menhir _ -> 
       Auxl.errorm m "pp_fundefn"
 
@@ -911,6 +939,7 @@ let pp_fundefnclass (m:pp_mode) (xd:syntaxdefn) lookup (fdc:fundefnclass) : stri
            "\n" 
            (List.map (function fd -> Grammar_pp.tex_fundefn_name m fd.fd_name^"{}") fdc.fdc_fundefns))
       ^ "}\n\n"
+  | Rst _ -> "" (* TODO *)
  
   | Isa _ | Coq _ | Hol _ | Lem _ | Caml _ ->
       let proof = 
@@ -1005,6 +1034,10 @@ let pp_fun_or_reln_defnclass_list
                        | FDC fdc -> Printf.fprintf fd "%s\n" (Grammar_pp.tex_fundefnclass_name m fdc.fdc_name)
                        | RDC dc -> Printf.fprintf fd "%s\n" (Grammar_pp.tex_defnclass_name m dc.dc_name)) frdcs;
           output_string fd "}\n\n"
+      | Rst _ ->
+        (* output_string fd ".. defnss\n"; *)
+        List.iter (fun frdc -> pp_fun_or_reln_defnclass fd m xd lookup frdc) frdcs;
+        output_string fd "\n\n"
       | Lex _ | Menhir _ -> () 
 
 

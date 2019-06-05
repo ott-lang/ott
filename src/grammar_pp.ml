@@ -899,12 +899,12 @@ and pp_uninterpreted m xd s =
 
 and pp_maybe_quote_ident m xd s = 
   match m with 
-  | Ascii ao -> quote_ident s
+  | Ascii _ | Rst _ -> quote_ident s
   | Tex _ | Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Caml _ | Lex _ | Menhir _ -> s
 
 and pp_prod_flavour m xd pf = 
   match m with
-  | Ascii _ -> pp_BAR
+  | Ascii _ | Rst _ -> pp_BAR
   | Tex _ -> pp_tex_BAR
   | Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Caml _ | Lex _ | Menhir _ -> raise ThisCannotHappen
 
@@ -914,6 +914,7 @@ and pp_terminal m xd tm =
   match m with 
   | Ascii ao -> col_green ao (quote_ident tm)
   | Tex _ -> pp_tex_terminal m xd tm
+  | Rst _ -> tm
   | Coq _ -> tm
   | Isa _ -> pp_isa_terminal m xd tm
   | Hol _ -> tm
@@ -927,6 +928,7 @@ and pp_terminal_unquoted m xd tm =
   match m with 
   | Ascii ao -> col_green ao tm
   | Tex _ -> pp_tex_terminal m xd tm
+  | Rst _ -> tm
   | Coq _ -> tm
   | Isa _ -> pp_isa_terminal m xd tm
   | Hol _ -> tm
@@ -1027,6 +1029,7 @@ and pp_nonterm_with_sie_internal as_type m xd sie (ntr,suff) =
             String.concat "" 
               (apply_hom_spec m xd hs 
                  [Auxl.pp_tex_escape ntr^(pp_suffix_with_sie m xd sie suff)]))
+    | Rst ro -> "" (* TODO *)
     | Coq _ | Isa _ | Hol _ | Lem _ | Rdx _ | Twf _ | Caml _ | Lex _ | Menhir _ -> 
         let s0 = pp_ntr ^ (pp_suffix_with_sie m xd sie suff) in
         let s1 = 
@@ -1075,7 +1078,7 @@ and pp_metavar_with_sie_internal as_type m xd sie (mvr,suff) =
             String.concat "" 
               (apply_hom_spec m xd hs 
                  [Auxl.pp_tex_escape mvr^(pp_suffix_with_sie m xd sie suff)]))
-
+    | Rst _ -> "" (* TODO *)
     | Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Rdx _ | Caml _ | Lex _ | Menhir _ -> 
         let s = pp_mvr ^ (pp_suffix_with_sie m xd sie suff) in
         if as_type then s
@@ -1089,7 +1092,7 @@ and pp_nt_or_mv_with_sie_internal as_type m xd sie (ntmv,suff) =
   
 and pp_nt_or_mv_with_de_with_sie_internal as_type m xd sie (de :dotenv) ((ntmvr,suff0) as ntmv) =
   match m with
-  | Ascii _ | Tex _ -> pp_nt_or_mv_with_sie_internal as_type m xd sie ntmv
+  | Ascii _ | Tex _ | Rst _ -> pp_nt_or_mv_with_sie_internal as_type m xd sie ntmv
   | Isa _ | Coq _ | Hol _ | Lem _ | Twf _ | Caml _ | Rdx _ | Lex _ | Menhir _ -> 
       let (de1,de2) = de in
       match try Some(List.assoc ntmv de2) with Not_found -> None with
@@ -1266,6 +1269,7 @@ and pp_metavardefn m xd mvd =
 				  (function (mvr,homs)->pp_metavarroot m xd mvr)
 				  mvd.mvd_names)) 
       ^ " $ & " ^ pp_com ^ " \\\\"
+  | Rst _ -> "" (* TODO do we need to show metavariables ? *)
   | _ ->
       ( match mvd.mvd_phantom with
       | true -> ""
@@ -1312,9 +1316,9 @@ and pp_metavardefn m xd mvd =
 	    "%abbrev "
 	    ^ pp_metavarroot_ty m xd mvd.mvd_name 
 	    ^ " : type = nat.\n"
-        | Lex _ -> "" 
-        | Menhir _ -> ""
-	| Ascii _ | Tex _ -> raise Auxl.ThisCannotHappen ))
+ | Lex _ -> "" 
+ | Menhir _ -> ""
+ | Ascii _ | Tex _ | Rst _ -> raise Auxl.ThisCannotHappen ))
 
 and pp_metavarrep m xd mvd_rep type_name =
   match m with
@@ -2485,6 +2489,24 @@ and pp_prod m xd rnn rpw p = (* returns a string option *)
 (*      ^ pp_categories_and_name m xd pcs pn *)
          ^ pn 
          ^ " " ^String.concat " " (List.map (pp_homomorphism m xd) p.prod_homs))
+  | Rst ro ->
+      let pn = p.prod_name in
+      let pp_prod m'=
+        let stnb = canonical_symterm_node_body_of_prod rnn p in
+        let st = St_node(dummy_loc,stnb) in
+        pp_symterm m' xd [] de_empty st
+      in
+      let ascii_mode = (Ascii {ppa_colour = false;
+                               ppa_ugly = false;
+                               ppa_lift_cons_prefixes = false;
+                               ppa_show_deps = false;
+                               ppa_show_defns = false; }) in
+      Some
+        ((pad2 60
+            (pp_prod_flavour ascii_mode xd p.prod_flavour ^ " "
+	     ^ (pp_prod (ascii_mode)))
+            (pp_prod_flavour ascii_mode xd p.prod_flavour ^ " "
+	     ^ (pp_prod ascii_mode ))))
   | Isa io ->
       if p.prod_meta then
         None
@@ -2734,6 +2756,12 @@ and pp_rule m xd r = (* returns a string option *)
                            r.rule_ps)))
 (*            ^"[5.0mm]" *)
 	       ^ "}\n"  ))
+  | Rst ro ->
+    let names = (String.concat ", " (List.map fst r.rule_ntr_names)) in
+    let name = ("::\n\n\t"^names^" ::= ") in
+    let prods = (List.fold_left (fun a so -> match so with | Some s -> a^"\n\t  "^s | None -> a) ""
+        (List.map (pp_prod m xd r.rule_ntr_name r.rule_pn_wrapper) r.rule_ps)) in
+    Some (name^prods^"\n\n")
   in 
   match result with
   | Some s -> Some (if !Global_option.output_source_locations >= 2 then "\n"^pp_source_location m r.rule_loc  ^ s else s)
@@ -2810,7 +2838,7 @@ and pp_rule_list m xd rs =
                     ^ strip_surrounding_parens (pp_nontermroot_ty m xd ntr) ^ " = "
                     ^ pp_hom_spec m xd hs
                     ^ "\n\n"
-                | Ascii _ | Tex _ | Lex _ | Menhir _ -> Auxl.errorm m "int_rule_list_dep" )
+                | Ascii _ | Tex _ | Rst _ | Lex _ | Menhir _ -> Auxl.errorm m "int_rule_list_dep" )
             (* or not, in which case we generate an inductive type definition *)
             | b ->    
                 let b = List.rev b in (* FZ this ensures that the output follows the source order *)
@@ -2878,6 +2906,8 @@ and pp_rule_list m xd rs =
              rs)
       ^ (match rs with []-> "" | _ -> pp_tex_AFTERLASTRULE_NAME m)
       ^ "\n"^pp_tex_END_RULES ^ "}\n\n"
+  | Rst ro ->
+    (String.concat "\n" (Auxl.option_map (pp_rule m xd) rs))
   | Lex _ | Menhir _ ->
       String.concat "\n" (Auxl.option_map (pp_rule m xd) rs) 
  
@@ -3008,6 +3038,7 @@ and pp_syntaxdefn m xd =
       ^ String.concat "\n" (List.map (pp_metavardefn m xd) xd.xd_mds) 
       ^ "\n"^pp_tex_END_METAVARS ^"}\n\n"  (*  ^ "\\end{array}\\]\n" *)
       ^ pp_rule_list m xd xd.xd_rs
+  | Rst _ -> "" (* TODO *)
   | Lex _ | Menhir _ ->
       "<<TODO>>"
 
@@ -3208,7 +3239,7 @@ and pp_symterm_node_body m xd sie de stnb : string =
   | None -> 
       let include_terminals = 
         match m with
-        | Ascii _ | Tex _ | Lex _ | Menhir _ -> true
+        | Ascii _ | Tex _ | Lex _ | Rst _ | Menhir _ -> true
         | Coq _ | Isa _ | Hol _ | Lem _ | Rdx _ | Twf _  -> false
         | Caml oo -> oo.ppo_include_terminals in
       let pp_es' () = pp_symterm_elements' m xd sie de include_terminals prod_es stnb.st_es in
@@ -3220,6 +3251,7 @@ and pp_symterm_node_body m xd sie de stnb : string =
           ( match stnb.st_prod_name with
           | "formula_dots" -> String.concat " \\quad " (pp_es())
           | _ -> pp_tex_insert_spacing (pp_es'()))
+      | Rst _ -> String.concat " " (pp_es ()) (* TODO *)
       | Isa _ | Hol _ | Lem _ | Coq _ | Twf _ | Rdx _ | Caml _ ->
           ( match stnb.st_prod_name with
 
@@ -3247,7 +3279,7 @@ and pp_symterm_node_body m xd sie de stnb : string =
                           pp_symterm_element_judge_hol_plain m xd sie de p'' stnb''
                       | Lem lo -> 
                           pp_symterm_element_judge_lem_plain m xd sie de p'' stnb''
-                      | Ascii _ | Tex _ | Lex _ | Menhir _ -> raise ThisCannotHappen
+                      | Ascii _ | Tex _ | Lex _ | Rst _ | Menhir _ -> raise ThisCannotHappen
                       | Caml _ -> Auxl.error "internal: Caml pp_symterm for proper symterms not supported"
                       )
                   | _ -> raise (Invalid_argument ("pp_symterm_node_body2: strange production in formula_judgement")))
@@ -3267,7 +3299,7 @@ and pp_symterm_node_body m xd sie de stnb : string =
           | "formula_dots" -> 
 	     
               (match m with
-              | Ascii _ | Tex _ | Lex _ | Menhir _ -> Auxl.errorm m "formula_dots"
+              | Ascii _ | Tex _ | Rst _ | Lex _ | Menhir _ -> Auxl.errorm m "formula_dots"
               | Caml _ -> Auxl.error "internal: Caml pp_symterm for proper symterms not supported"
               | Isa io ->
                   (match isa_fancy_syntax_hom_for_prod m xd io p with
@@ -3702,7 +3734,7 @@ and pp_symterm_list_items m xd sie (de :dotenv) tmopt prod_es stlis : (string * 
 
   let include_terminals = 
     match m with
-    | Ascii _ | Tex _ | Lex _ | Menhir _ -> true
+    | Ascii _ | Tex _ | Rst _ | Lex _ | Menhir _ -> true
     | Coq _ | Isa _ | Hol _ | Lem _ | Twf _  | Rdx _ -> false
     | Caml oo -> oo.ppo_include_terminals in
   let tmopt' = 
@@ -3713,6 +3745,7 @@ and pp_symterm_list_items m xd sie (de :dotenv) tmopt prod_es stlis : (string * 
   | [] -> (match m with
       | Ascii ao -> if ao.ppa_ugly then [col_magenta ao "[empty stlis]",TTC_dummy] else ["",TTC_dummy]
       | Tex _ -> ["\\,",TTC_space]
+      | Rst _ -> ["\\,",TTC_space]
       | Isa _ -> ["[]",TTC_dummy]
       | Caml _ -> ["[]",TTC_dummy]
       | Lem _ -> ["[]",TTC_dummy]
@@ -3727,7 +3760,7 @@ and pp_symterm_list_items m xd sie (de :dotenv) tmopt prod_es stlis : (string * 
   |  _ -> 
       match m with
       | Lex _ | Menhir _ -> assert false
-      | Ascii _ | Tex _ ->
+      | Ascii _ | Tex _ | Rst _ ->
           let ss = 
             Auxl.list_concat tmopt'
               (List.map (pp_symterm_list_item m xd sie de tmopt include_terminals prod_es) stlis) in
@@ -3785,7 +3818,7 @@ and pp_symterm_list_items m xd sie (de :dotenv) tmopt prod_es stlis : (string * 
 	          ^ ")" ]
 	      else [ List.hd l ]
           | Twf _ -> raise TwelfNotImplemented
-          | Lex _ | Menhir _ | Tex _ | Ascii _ -> raise ThisCannotHappen)
+          | Lex _ | Menhir _ | Tex _ | Rst _ | Ascii _ -> raise ThisCannotHappen)
           )
 
 and pp_symterm_list_item m xd sie (de :dotenv) tmopt include_terminals prod_es stli : (string * tex_token_category) list =
@@ -3807,7 +3840,7 @@ and pp_symterm_list_item m xd sie (de :dotenv) tmopt include_terminals prod_es s
       let pp_es = List.map fst pp_es' in
       (match m with
       | Ascii ao -> if ao.ppa_ugly then [col_magenta ao "[stli_single",TTC_dummy] @ pp_es' @ [col_magenta ao "stli_single]",TTC_dummy]  else pp_es'
-      | Tex _ -> pp_es'
+      | Rst _ | Tex _ -> pp_es'
       | Caml _ | Isa _ | Hol _ | Lem _ -> 
           ["[(" ^ String.concat "," pp_es ^ ")]",TTC_dummy]
       | Coq co ->
@@ -4366,4 +4399,5 @@ let pp_pp_mode m = match m with
   | Caml _ -> "Caml"
   | Lex _  -> "Lex"
   | Menhir _ -> "Menhir"
+  | Rst _ -> "ReStructuredText"
 
