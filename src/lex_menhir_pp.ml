@@ -298,7 +298,10 @@ let token_names_of_syntaxdefn yo xd : token_data =
           let same_tname = (tname,t,tk)::List.rev same_tname_prefix in
           let acc' = List.rev (List.mapi (function i -> function (tname'',t'',tk'') -> (tname'' ^ string_of_int (i+1), t'',tk'')) same_tname) @ acc in
           uniqueify acc' ts2 in
-  List.rev (uniqueify [] ts'')
+  List.stable_sort (fun (_,_,tk1) (_,_,tk2) -> match (tk1, tk2) with
+      | TK_terminal, TK_metavar _ -> -1
+      | TK_metavar _, TK_terminal -> 1
+      | _, _ -> 0) (List.rev (uniqueify [] ts''))
     
 
 (** ******************************************************************** *)
