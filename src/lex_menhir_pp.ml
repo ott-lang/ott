@@ -340,12 +340,16 @@ let pp_lex_systemdefn m sd oi =
       output_string fd ("{\n" ^ "open " ^ yo.ppm_caml_parser_module ^ "\n" ^ "exception Error of string\n" ^ "}\n\n");
       output_string fd "rule token = parse\n";
       output_string fd 
-"| [' ' '\\n' '\\t']
+"| [' ' '\\t']
     { token lexbuf }
+";
+      output_string fd
+"| '\n'
+   { Lexing.new_line lexbuf; token lexbuf }
 ";
       output_string fd 
 "| \"//\" [^'\\n']* '\\n'
-    { token lexbuf }
+    { Lexing.new_line lexbuf; token lexbuf }
 ";
       output_string fd 
 "| eof
@@ -371,7 +375,7 @@ let pp_lex_systemdefn m sd oi =
 let pp_menhir_token fd (tname, t, tk) =
   match tk with
   | TK_terminal -> 
-      Printf.fprintf fd "%%token %s  (* %s *)\n" tname t
+      Printf.fprintf fd "%%token %s  (* %s *)\n" tname (if t <> (String.escaped t) then tname else t)
   | TK_metavar(ocaml_type, ocamllex_hom_opt) ->
       Printf.fprintf fd "%%token <%s> %s  (* metavarroot %s *)\n" ocaml_type tname t
 
