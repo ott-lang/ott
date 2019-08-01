@@ -8,7 +8,11 @@
 \usepackage{alltt}
 \usepackage{hevea}
 \usepackage[usenames]{color}
- 
+\usepackage{hyperref}
+\usepackage{booktabs}
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}} % For pandoc lists
+
 %\usepackage{ctable} %for pandoc-generated table
 \newcommand{\ctable}[1][]{}
 \newcommand{\FL}{\begin{center}\begin{tabular}{ll}}
