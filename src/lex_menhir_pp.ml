@@ -298,7 +298,10 @@ let token_names_of_syntaxdefn yo xd : token_data =
           let same_tname = (tname,t,tk)::List.rev same_tname_prefix in
           let acc' = List.rev (List.mapi (function i -> function (tname'',t'',tk'') -> (tname'' ^ string_of_int (i+1), t'',tk'')) same_tname) @ acc in
           uniqueify acc' ts2 in
-  List.rev (uniqueify [] ts'')
+  List.stable_sort (fun (tn1,_,tk1) (tn2,_,tk2) -> match (tk1, tk2) with
+      | TK_terminal, TK_metavar _ -> -1
+      | TK_metavar _, TK_terminal -> 1
+      | _, _ -> compare (String.length tn2) (String.length tn1)) (List.rev (uniqueify [] ts''))
     
 
 (** ******************************************************************** *)
@@ -314,7 +317,13 @@ let pp_lex_token fd (tname, t, tk) =
       Printf.fprintf fd "| \"%s\"\n    { %s }\n" (String.escaped t) tname
   | TK_metavar(ocaml_type, Some ocamllex_hom) ->
       let tv = lex_token_argument_variable_of_mvr t in
-      Printf.fprintf fd "| %s as %s\n    { %s (%s) }\n" ocamllex_hom tv tname tv
+      Printf.fprintf fd "| %s as %s\n    { %s (%s) }\n" ocamllex_hom tv tname
+        (match ocaml_type with
+         | "int" -> "int_of_string "^tv
+         | "float" -> "float_of_string "^tv
+         | "bool" -> "bool_of_string "^tv
+         (* TODO the user should be able to use their own xxxxxx_of_string (anonymous) functions *)
+         | _ -> tv)
   | TK_metavar(ocaml_type, None) ->
       Printf.fprintf fd "(* lexer rule for %s suppressed by ocamllex-remove *)\n" tname
 
@@ -331,12 +340,16 @@ let pp_lex_systemdefn m sd oi =
       output_string fd ("{\n" ^ "open " ^ yo.ppm_caml_parser_module ^ "\n" ^ "exception Error of string\n" ^ "}\n\n");
       output_string fd "rule token = parse\n";
       output_string fd 
-"| [' ' '\\n' '\\t']
+"| [' ' '\\t']
     { token lexbuf }
+";
+      output_string fd
+"| '\n'
+   { Lexing.new_line lexbuf; token lexbuf }
 ";
       output_string fd 
 "| \"//\" [^'\\n']* '\\n'
-    { token lexbuf }
+    { Lexing.new_line lexbuf; token lexbuf }
 ";
       output_string fd 
 "| eof
@@ -362,7 +375,7 @@ let pp_lex_systemdefn m sd oi =
 let pp_menhir_token fd (tname, t, tk) =
   match tk with
   | TK_terminal -> 
-      Printf.fprintf fd "%%token %s  (* %s *)\n" tname t
+      Printf.fprintf fd "%%token %s  (* %s *)\n" tname (if t <> (String.escaped t) then tname else t)
   | TK_metavar(ocaml_type, ocamllex_hom_opt) ->
       Printf.fprintf fd "%%token <%s> %s  (* metavarroot %s *)\n" ocaml_type tname t
 
@@ -640,7 +653,7 @@ let pp_menhir_prod yo generate_aux_info_here xd ts r p =
         (* ocaml hom case *)
         (* to do the proper escaping of nonterms within the hom, we need to pp here, not reuse the standard machinery *)
 "(*Case 1*) " ^ 
-        let hs = (match Auxl.hom_spec_for_hom_name "ocaml" p.prod_homs with Some hs -> hs | None -> raise (Failure "no ocaml hom")) in
+        let hs = (match Auxl.hom_spec_for_hom_name "ocaml" p.prod_homs with Some hs -> hs | None -> raise (Failure ("no ocaml hom for "^p.prod_name))) in
         let es'' =  (* remove terminals from es to get Hom_index indexing right *)
       	(List.filter
            (function 
