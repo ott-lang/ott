@@ -31,7 +31,11 @@
 (*  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                         *)
 (**************************************************************************)
 
-exception Rule_parse_error of string
+
+open Types;;
+open Location;;
+
+exception Rule_parse_error of loc * string
 val pp_fun_or_reln_defnclass :
   out_channel ->
   Types.pp_mode ->

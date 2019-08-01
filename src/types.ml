@@ -166,11 +166,11 @@ and dotenv3 = (nt_or_mv*subntr_data) list
 and dotenv = dotenv1 * dotenv2 (* (de1,de2) as de *) 
 
 and bindspec = (* bs *)
-  | Bind of mse * nonterm
-  | AuxFnDef of auxfn * mse
-  | NamesEqual of mse * mse      (* not currently implemented *)
-  | NamesDistinct of mse * mse   (* not currently implemented *)
-  | AllNamesDistinct of mse      (* not currently implemented *)
+  | Bind of loc * mse * nonterm
+  | AuxFnDef of loc * auxfn * mse
+  | NamesEqual of loc * mse * mse      (* not currently implemented *)
+  | NamesDistinct of loc * mse * mse   (* not currently implemented *)
+  | AllNamesDistinct of loc * mse      (* not currently implemented *)
 and mse =  (* mse *) (* mse stands for `metavar set expression', but includes nonterms too *)
   | MetaVarExp of metavar 
   | NonTermExp of nonterm
@@ -292,7 +292,7 @@ and xd_dependencies = (* xddep *)
 and embed = (* embed *)
     embedmorphism 
 
-and parsing_annotation = (prodname*parsing_annotation_type*prodname) (* pa *)
+and parsing_annotation = (prodname*parsing_annotation_type*prodname*loc) (* pa *)
 
 and parsing_annotations = (* pas *)
     { pa_data : parsing_annotation list; }
@@ -473,7 +473,7 @@ type ('t,'v) parser = ('t list -> 'v -> unit) -> 't list -> unit
 
 type made_parser = nontermroot -> bool -> string -> symterm list
 
-exception My_parse_error of string
+exception My_parse_error of loc option * string
 
 
 (** ************************ *)
@@ -975,7 +975,7 @@ let lemTODOmo m s1 s2o = match s2o with None -> None | Some s2 -> Some (lemTODOm
 
 (* from grammar_typecheck *)
 
-exception Typecheck_error of string*string;;
+exception Typecheck_error of loc*string*string;;
 
-let ty_error s1 s2 = raise (Typecheck_error(s1,s2))
-let ty_error2 l s1 s2 = raise (Typecheck_error(s1^" at "^Location.pp_loc l,s2))
+(* let ty_error s1 s2 = raise (Typecheck_error(None, s1,s2)) *)
+let ty_error2 l s1 s2 = raise (Typecheck_error(l, s1,s2))
