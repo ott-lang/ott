@@ -504,15 +504,8 @@ let pp_defn fd (m:pp_mode) (xd:syntaxdefn) lookup (defnclass_wrapper:string) (un
       iter_sep (pp_processed_semiraw_rule fd m xd) "/\\ " d.d_rules
 
   | Rdx _ ->
-    (* Printf.fprintf fd "       ;;; defn %s\n" d.d_name; *)
-    (try
-      let mode = List.assoc "rdx-mode" d.d_homs in
-      Printf.fprintf fd "\n  #:mode (%s)\n\n"
-        (match mode with [Hom_string s] -> s
-        (* TODO *)
-        | _ -> Auxl.error (Some d.d_loc) ("rdx backend: cannot print mode for declaration: "^d.d_name))
-    with Not_found -> ());
-    iter_sep (pp_processed_semiraw_rule fd m xd) "\n\n" d.d_rules
+      Printf.fprintf fd "       ;;; defn %s\n\n" d.d_name;
+      iter_sep (pp_processed_semiraw_rule fd m xd) "\n\n" d.d_rules
 
   | Lem _ ->
       Printf.fprintf fd "(* defn %s *)\n\n" d.d_name;
@@ -662,10 +655,10 @@ let pp_defnclass fd (m:pp_mode) (xd:syntaxdefn) lookup (dc:defnclass) =
 
   | Rdx ro -> 
     Printf.fprintf fd "\n(define-judgment-form\n  %s" ro.ppr_default_language;
-    iter_asep fd "\nwithDFNS655 "
-      (fun d -> pp_defn fd m xd lookup dc.dc_wrapper universe d)
-      dc.dc_defns;
-      output_string fd ")\n"
+      iter_asep fd "\nwith "
+        (fun d -> pp_defn fd m xd lookup dc.dc_wrapper universe d)
+	dc.dc_defns;
+      output_string fd "\n"
 
   | Twf wo -> 
       let twf_type_of_defn : syntaxdefn -> defn -> string = 

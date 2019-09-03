@@ -16,7 +16,7 @@ e :: '' ::=                               {{ com term    }}
   | if e1 e2 e3  ::   :: if                    {{ com if_then_else }}
   | fix e        ::   :: fix                   {{ com fix }}
 
-  | ( e )        :: S :: eparen                 {{ rdx [[e]] }}
+  | ( e )        :: S :: eparen                 {{ rdx [[t]] }}
   | { e / x } e' :: M :: sub                    {{ rdx XXX }}  
                           
 t :: '' ::=                                           {{ com type }}
@@ -47,9 +47,8 @@ terminals :: 'terminals_' ::=
 
 
 formula :: formula_ ::=  
-  | judgement              ::  :: judgement
-  | formula1 .. formulan   :: :: dots
-  | x1 != x2               ::  :: diff_var {{ rdx (side-condition (different[[x1]][[x2]]))}}
+  | judgement     ::  :: judgement
+  | x1 != x2      ::  :: diff_var {{ rdx different [[x1]] [[x2]]}}
   
 embed
 {{ rdx
@@ -63,8 +62,7 @@ defns
   Jtype :: '' ::= 
 
 defn
-    G |- e : t :: :: types :: types {{ rdx-mode I I O }}
-  by
+    G |- e : t :: :: types :: types  by
         
     -------------- :: value_name_found
     G,x:t |- x:t
@@ -76,15 +74,19 @@ defn
     G,x1:t |- x2:t
 
 
-    G |- e1 : t1->t2
-    G |- e2 : t1 
+    G |- e : t1->t2
+    G |- e' : t1 
     ---------------- :: apply
-    G |- e1 e2 : t2
+    G |- e e' : t2
 
+<<<<<<< HEAD
 
     G,x:t1 |- e : t2
+=======
+    G,x1: t1 |- e : t
+>>>>>>> parent of 5987793... a bit more redex - generates reasonable output for the grammar and type-check definitions from test10rdx.ott
     ------------------ :: lambda
-    G |- \x.e : t1->t2
+    G |- \x1.e : t1->t
 
 
 G |- e1:num .. G |- en:num
