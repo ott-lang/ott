@@ -318,7 +318,7 @@ let types_of_extensions =
       "twf","twf"; 
       "ml", "ocaml";
       "mll", "lex"; 
-      "mly", "menhir";
+      "mly", "menhir"]
 
 let extension_of_type t = List.assoc t (List.map (function (a,b)->(b,a)) types_of_extensions)
 
@@ -332,13 +332,8 @@ let file_type name =
   with
     _ -> None 
 
-<<<<<<< HEAD
-let non_tex_output_types = ["coq"; "isa"; "hol"; "lem"; "twf"; "ocaml"; "rdx"]
-let output_types =  "tex" :: "lex" :: "menhir" :: non_tex_output_types
-=======
 let non_tex_output_types = ["coq"; "isa"; "hol"; "lem"; "twf"; "ocaml"]
-let output_types =  "tex" :: "lex" :: "yacc" :: non_tex_output_types
->>>>>>> parent of fa0ecce... Experiments with a redex backend.
+let output_types =  "tex" :: "lex" :: "menhir" :: non_tex_output_types
 let input_types = "ott" :: output_types
 
 let classify_file_argument arg =
@@ -429,7 +424,6 @@ let m_coq = Coq { coq_expand_lists = !coq_expand_lists;
 		  coq_locally_nameless = ref false;
                   coq_lngen = !coq_lngen;
                   coq_use_filter_fn = !coq_use_filter_fn;
-<<<<<<< HEAD
                   coq_names_in_rules = !coq_names_in_rules }
 
 let oo =  { ppo_include_terminals = !caml_include_terminals; caml_library = ref ("",[]) } 
@@ -486,9 +480,6 @@ let yo = {
 let m_menhir = Menhir yo 
 let m_lex = Lex yo
   
-=======
-                  coq_names_in_rules = !coq_names_in_rules }  
->>>>>>> parent of fa0ecce... Experiments with a redex backend.
 let reset_m_coq m = 
   match m with
   | Coq co ->
@@ -503,21 +494,16 @@ let reset_m_coq m =
   | _ ->
       Auxl.errorm m "reset_m_coq"  
 
-<<<<<<< HEAD
-let m_rdx = Rdx pp_rdx_opts_default
-  
-=======
 let m_caml = Caml { ppo_include_terminals = !caml_include_terminals; caml_library = ref ("",[]) } 
-let m_lex = Lex ()
-let m_yacc = Yacc ()
->>>>>>> parent of fa0ecce... Experiments with a redex backend.
+
+
 (* finally compute the set of modes used in this run of Ott -- used
    when non-picky about multiple parses *)
 (* here we used also to record the suffix-stripped filenames for hol
    and isa, for the non-picky checking, but now we feed dummy filenames
    into the m_... functions *)
 
-   let _ =
+let _ =
   Global_option.is_picky := 
     ( !picky_multiple_parses,
       List.map 

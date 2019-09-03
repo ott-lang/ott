@@ -1526,11 +1526,7 @@ and pp_suffix_with_sie m xd sie suff =
           "_{"
           ^ String.concat "\\," (List.map (pp_suffix_item_with_sie m xd sie true) suff_subscript)
           ^ "}")
-<<<<<<< HEAD
-  | (Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Rdx _ | Caml _ | Lex _ | Menhir _) ->
-=======
-  | (Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Caml _ | Lex _ | Yacc _) ->
->>>>>>> parent of fa0ecce... Experiments with a redex backend.
+  | (Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Caml _ | Lex _ | Menhir _) ->
       (String.concat "" (List.map (pp_suffix_item_with_sie m xd sie false) suff)) 
 
 
@@ -1546,11 +1542,7 @@ and pp_suffix_item_with_sie m xd sie nosubscript suffi =
             ( (*List.nth sie i*) try List.nth sie i with Failure _ -> Si_num "999")) 
       in
       if ao.ppa_ugly then "["^s^"]" else s
-<<<<<<< HEAD
-  | (Coq _ | Isa _ | Hol _ | Lem _ | Rdx _ | Twf _ | Caml _ | Lex _ | Menhir _) -> 
-=======
-  | (Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Caml _ | Lex _ | Yacc _) -> 
->>>>>>> parent of fa0ecce... Experiments with a redex backend.
+  | (Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Caml _ | Lex _ | Menhir _) -> 
       ( match suffi with
       |	Si_num s -> s
       | Si_punct s -> s
@@ -2639,7 +2631,6 @@ and pp_rule m xd r = (* returns a string option *)
 		     (pp_prod m xd r.rule_ntr_name r.rule_pn_wrapper) 
                      r.rule_ps))
            ^ "")
-<<<<<<< HEAD
   | Coq co ->
       pp_internal_coq_buffer := !pp_internal_coq_buffer ^
         coq_maybe_decide_equality m xd r.rule_homs (Ntr r.rule_ntr_name) r.rule_loc;
@@ -2653,37 +2644,6 @@ and pp_rule m xd r = (* returns a string option *)
              (Auxl.option_map
                 (pp_prod m xd r.rule_ntr_name r.rule_pn_wrapper)
                 r.rule_ps))
-  | Rdx ro ->
-      if r.rule_meta || r.rule_phantom 
-      then None
-      else
-        let prods =
-          Auxl.option_map 
-	    (pp_prod m xd r.rule_ntr_name r.rule_pn_wrapper)
-            r.rule_ps in
-        Some 
-          ("  ("
-           ^pp_nontermroot_ty m xd r.rule_ntr_name (* ^ " "^pp_com *) ^"\n" 
-           ^ String.concat "\n" prods 
-           ^")")
- 
-      
-=======
-  | Coq co -> 
-      pp_internal_coq_buffer :=
-        !pp_internal_coq_buffer ^
-        coq_maybe_decide_equality m xd r.rule_homs (Ntr r.rule_ntr_name);
-      if r.rule_meta || r.rule_phantom 
-      then None
-      else
-        let universe = try pp_hom_spec m xd (List.assoc "coq-universe" r.rule_homs) with Not_found -> "Set" in
-        Some 
-          (pp_nontermroot_ty m xd r.rule_ntr_name ^ " : "^universe^ " := "^pp_com^"\n" 
-           ^ String.concat "\n" 
-               (Auxl.option_map 
-		  (pp_prod m xd r.rule_ntr_name r.rule_pn_wrapper)
-                  r.rule_ps))
->>>>>>> parent of fa0ecce... Experiments with a redex backend.
   | Twf wo -> 
       if r.rule_meta || r.rule_phantom 
       then None
@@ -3195,13 +3155,8 @@ and pp_symterm_node_body m xd sie de stnb : string =
   | None -> 
       let include_terminals = 
         match m with
-<<<<<<< HEAD
         | Ascii _ | Tex _ | Lex _ | Menhir _ -> true
-        | Coq _ | Isa _ | Hol _ | Lem _ | Rdx _ | Twf _  -> false
-=======
-        | Ascii _ | Tex _ | Lex _ | Yacc _ -> true
         | Coq _ | Isa _ | Hol _ | Lem _ | Twf _  -> false
->>>>>>> parent of fa0ecce... Experiments with a redex backend.
         | Caml oo -> oo.ppo_include_terminals in
       let pp_es' () = pp_symterm_elements' m xd sie de include_terminals prod_es stnb.st_es in
       let pp_es () = pp_symterm_elements m xd sie de include_terminals prod_es stnb.st_es in
@@ -3231,15 +3186,6 @@ and pp_symterm_node_body m xd sie de stnb : string =
                               pp_symterm_element_judge_isa_fancy m xd sie de hs p'' stnb'')
                       | Coq co -> 
                           pp_symterm_element_judge_coq_plain m xd sie de p'' stnb''
-<<<<<<< HEAD
-                      | Rdx ro -> 
-<<<<<<< HEAD
-                          "("^(pp_symterm_element_judge_coq_plain m xd sie de p'' stnb'')^")"
-=======
->>>>>>> parent of fa0ecce... Experiments with a redex backend.
-=======
-                          pp_symterm_element_judge_coq_plain m xd sie de p'' stnb''
->>>>>>> parent of d692d9a... some support for redex lists
                       | Twf wo -> 
                           pp_symterm_element_judge_twf_plain m xd sie de p'' stnb''
                       | Hol ho -> 
@@ -3537,18 +3483,6 @@ and pp_symterm_node_body m xd sie de stnb : string =
                       ^ promoted_pn^" "
                       ^ String.concat  " " (pp_es())
                       ^ ")"  )
-<<<<<<< HEAD
-=======
-              | Rdx _ -> 
-	          ( match stnb.st_es with
-	            | [] -> promoted_pn
-                    | [es] -> List.hd (pp_es())
-	            | _  ->
-		      "("
-                      ^ promoted_pn^" "
-                      ^ String.concat  " " (pp_es())
-                      ^ ")"  )
->>>>>>> parent of d692d9a... some support for redex lists
               | Caml _ -> 
 	          ( match stnb.st_es with
 	          | [] -> (String.capitalize promoted_pn)
@@ -3696,13 +3630,8 @@ and pp_symterm_list_items m xd sie (de :dotenv) tmopt prod_es stlis : (string * 
 
   let include_terminals = 
     match m with
-<<<<<<< HEAD
     | Ascii _ | Tex _ | Lex _ | Menhir _ -> true
-    | Coq _ | Isa _ | Hol _ | Lem _ | Twf _  | Rdx _ -> false
-=======
-    | Ascii _ | Tex _ | Lex _ | Yacc _ -> true
     | Coq _ | Isa _ | Hol _ | Lem _ | Twf _  -> false
->>>>>>> parent of d692d9a... some support for redex lists
     | Caml oo -> oo.ppo_include_terminals in
   let tmopt' = 
     ( match tmopt with 
@@ -3903,13 +3832,8 @@ and pp_symterm_list_body m xd sie (de :dotenv) tmopt include_terminals prod_es s
   | Isa _ | Coq _ | Hol _ | Lem _ | Twf _ | Caml _ -> 
       (List.map (function s -> (s,TTC_dummy))
          (match m with
-<<<<<<< HEAD
          | Ascii _ | Tex _ | Lex _ | Menhir _ ->  raise ThisCannotHappen
-         | Isa _ | Coq _ | Hol _ | Lem _ | Twf _ | Caml _ | Rdx _ -> 
-=======
-         | Ascii _ | Tex _ | Lex _ | Yacc _ ->  raise ThisCannotHappen
          | Isa _ | Coq _ | Hol _ | Lem _ | Twf _ | Caml _ -> 
->>>>>>> parent of d692d9a... some support for redex lists
       (* interim placeholder code - not remotely right *)
       (* FZ I hope that this comment is outdated *) 
       let es = stlb.stl_elements in

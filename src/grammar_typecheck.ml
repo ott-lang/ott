@@ -427,17 +427,10 @@ let allowable_hom_data =
     ( Hu_deadcode, ([], "Internal error: Hu_deadcode"));
   ] 
 
-<<<<<<< HEAD
 let embed_allowable_homs = ["coq";"coq-lib";"coq-preamble";
                             "isa";"isa-import";"isa-auxfn-proof";"isa-subrule-proof";"isa-lib";"isa-preamble";
                             "hol";"hol-preamble";
                             "lem";"lem-preamble";
-                            "rdx";
-=======
-let embed_allowable_homs = ["coq";"coq-lib";
-                            "isa";"isa-import";"isa-auxfn-proof";"isa-subrule-proof";"isa-lib";
-                            "hol";"lem";
->>>>>>> parent of fa0ecce... Experiments with a redex backend.
                             "tex";"tex-preamble";"tex-wrap-pre";"tex-wrap-post";
                             (*"twf";*)
                             "ocaml";"ocaml-preamble";

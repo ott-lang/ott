@@ -88,11 +88,7 @@ and pp_embed_spec_el fd m xd lookup ese =
           output_string fd Grammar_pp.pp_DOUBLERIGHTBRACKET )
   | Tex xo when (match ese with Embed_inner (_,"TEX_NAME_PREFIX")->true | _->false) -> 
       output_string fd xo.ppt_name_prefix
-<<<<<<< HEAD
-  | Tex _ | Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Rdx _ | Caml _ | Lex _ | Menhir _ -> 
-=======
-  | Tex _ | Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Caml _ | Lex _ | Yacc _ -> 
->>>>>>> parent of fa0ecce... Experiments with a redex backend.
+  | Tex _ | Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Caml _ | Lex _ | Menhir _ -> 
       ( match ese with
       | Embed_string (l,s) -> output_string fd s
 
