@@ -50,7 +50,6 @@ let mode_name m = match m with
   | Coq _ -> "Coq"
   | Twf _ -> "Twelf"
   | Caml _ -> "OCaml"
-  | Rdx _ -> "Redex"
   | Lex _ -> "Lex"
   | Menhir _ -> "Menhir"
 
@@ -605,7 +604,6 @@ let hom_name_for_pp_mode m
     | Lem _ -> "lem"
     | Coq _ -> "coq"
     | Twf _ -> "twf"
-    | Rdx _ -> "rdx"
     | Caml _ -> "ocaml"
     | Lex _ -> "lex"
     | Menhir _ -> "menhir"

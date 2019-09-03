@@ -4,7 +4,7 @@
 (*        Peter Sewell, Computer Laboratory, University of Cambridge      *)
 (*      Francesco Zappa Nardelli, Moscova project, INRIA Rocquencourt     *)
 (*                                                                        *)
-(*  Copyright 2005-2017                                                   *)
+(*  Copyright 2005-2010                                                   *)
 (*                                                                        *)
 (*  Redistribution and use in source and binary forms, with or without    *)
 (*  modification, are permitted provided that the following conditions    *)
@@ -32,7 +32,6 @@
 (**************************************************************************)
 
 exception TwelfNotImplemented;;
-exception RacketNotImplemented;;
 
 exception WorkInProgress;;
 
@@ -847,10 +846,6 @@ and pp_tex_opts =
 and pp_caml_opts = 
     { ppo_include_terminals : bool;
       caml_library : (string * string list) ref } (* oo *) 
-and pp_rdx_opts = (* ro *)
-    { ppr_default_language : string;
-      ppr_metavars : string list ref }
-
 type pp_lex_opts = unit (* lo *)
 type pp_menhir_opts = 
     { ppm_show_meta : bool;
@@ -860,20 +855,20 @@ type pp_menhir_opts =
       ppm_caml_ast_module : string;
       ppm_caml_parser_module : string;
     } (* yo *)
-    
+type pp_yacc_opts = unit (* yo *)
+
 type pp_mode =  (* m *)
   | Coq of pp_coq_opts
   | Isa of pp_isa_opts
   | Hol of pp_hol_opts
   | Lem of pp_lem_opts
   | Twf of pp_twf_opts
-  | Rdx of pp_rdx_opts
   | Ascii of pp_ascii_opts
   | Tex of pp_tex_opts
   | Caml of pp_caml_opts
   | Lex  of pp_menhir_opts (* NB: same as pp_menhir_opts *)
   | Menhir of pp_menhir_opts
-      
+
 let pp_ascii_opts_default =
   Ascii { ppa_colour = true;
 	  ppa_ugly = false;
@@ -881,10 +876,6 @@ let pp_ascii_opts_default =
 	  ppa_show_deps = false;
 	  ppa_show_defns = true }
 
-let pp_rdx_opts_default =
-  { ppr_default_language = "L";
-    ppr_metavars = ref [] }
-    
 let ao_default =
   { ppa_colour = true;
     ppa_ugly = false;

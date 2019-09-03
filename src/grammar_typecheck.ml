@@ -4,7 +4,7 @@
 (*        Peter Sewell, Computer Laboratory, University of Cambridge      *)
 (*      Francesco Zappa Nardelli, Moscova project, INRIA Rocquencourt     *)
 (*                                                                        *)
-(*  Copyright 2005-2017                                                   *)
+(*  Copyright 2005-2010                                                   *)
 (*                                                                        *)
 (*  Redistribution and use in source and binary forms, with or without    *)
 (*  modification, are permitted provided that the following conditions    *)
@@ -412,7 +412,6 @@ let allowable_hom_data =
                     "rule"));
     ( Hu_rule_meta, (["com"], "special rule"));
     ( Hu_prod    , (["isa";"coq";"hol";"lem";(*"twf";*)"tex";"texlong";"ocaml";"com";"order";"isasyn";"isaprec";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ic";"ch";"ih";
-                     "rdx";
                      "disambiguate";"prec";"leftassoc";"rightassoc";"menhir";"quotient-remove";"menhir-prec"],
                     "production"));
     ( Hu_prod_tm , (["isa";                      "tex";"lex";  "com"; "prec";"leftassoc";"rightassoc"],"production of the terminals grammar"));
@@ -428,11 +427,17 @@ let allowable_hom_data =
     ( Hu_deadcode, ([], "Internal error: Hu_deadcode"));
   ] 
 
+<<<<<<< HEAD
 let embed_allowable_homs = ["coq";"coq-lib";"coq-preamble";
                             "isa";"isa-import";"isa-auxfn-proof";"isa-subrule-proof";"isa-lib";"isa-preamble";
                             "hol";"hol-preamble";
                             "lem";"lem-preamble";
                             "rdx";
+=======
+let embed_allowable_homs = ["coq";"coq-lib";
+                            "isa";"isa-import";"isa-auxfn-proof";"isa-subrule-proof";"isa-lib";
+                            "hol";"lem";
+>>>>>>> parent of fa0ecce... Experiments with a redex backend.
                             "tex";"tex-preamble";"tex-wrap-pre";"tex-wrap-post";
                             (*"twf";*)
                             "ocaml";"ocaml-preamble";

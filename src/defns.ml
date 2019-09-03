@@ -4,7 +4,7 @@
 (*        Peter Sewell, Computer Laboratory, University of Cambridge      *)
 (*      Francesco Zappa Nardelli, Moscova project, INRIA Rocquencourt     *)
 (*                                                                        *)
-(*  Copyright 2005-2017                                                   *)
+(*  Copyright 2005-2010                                                   *)
 (*                                                                        *)
 (*  Redistribution and use in source and binary forms, with or without    *)
 (*  modification, are permitted provided that the following conditions    *)
@@ -245,7 +245,7 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
         (Grammar_pp.pp_tex_DRULE_NAME_NAME m)
         (Auxl.pp_tex_escape dr.drule_name)
         pp_com
-  | Isa _ | Hol _ | Lem _ | Coq _ | Twf _ | Rdx _ ->
+  | Isa _ | Hol _ | Lem _ | Coq _ | Twf _ ->
       let non_free_ntrs = Subrules_pp.non_free_ntrs m xd xd.xd_srs in
 
       (* find all the nonterms used at non-free types *)
@@ -345,23 +345,6 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
           end;
           output_string fd ppd_conclusion;
           output_string fd "\"\n"
-
-      | Rdx ro ->
-        let make_hline sl =
-          let max = List.fold_left max 0 (List.map String.length sl) in
-          String.make (max+2) '-'
-        in
-        Printf.fprintf fd " [";
-        if (snd ppd_premises)<>[] || ppd_subntrs<>[] then begin
-          (* Printf.fprintf fd "("; *)
-          iter_asep fd "\n  " (output_string fd)          
-	    (ppd_subntrs @ snd ppd_premises);
-          (* Printf.fprintf fd ")\n  "; *)
-          Printf.fprintf fd "\n  ";
-          end;
-          output_string fd ((make_hline [ppd_conclusion])^"\n  ");
-          output_string fd ppd_conclusion;
-          output_string fd "]\n"
 
       | Hol _ ->
           Printf.fprintf fd "( (* %s *) " dr.drule_name; 
@@ -502,11 +485,6 @@ let pp_defn fd (m:pp_mode) (xd:syntaxdefn) lookup (defnclass_wrapper:string) (un
   | Hol _ ->
       Printf.fprintf fd "(* defn %s *)\n\n" d.d_name;
       iter_sep (pp_processed_semiraw_rule fd m xd) "/\\ " d.d_rules
-
-  | Rdx _ ->
-      Printf.fprintf fd "       ;;; defn %s\n\n" d.d_name;
-      iter_sep (pp_processed_semiraw_rule fd m xd) "\n\n" d.d_rules
-
   | Lem _ ->
       Printf.fprintf fd "(* defn %s *)\n\n" d.d_name;
       iter_sep (pp_processed_semiraw_rule fd m xd) "and\n" d.d_rules
@@ -651,14 +629,6 @@ let pp_defnclass fd (m:pp_mode) (xd:syntaxdefn) lookup (dc:defnclass) =
 	dc.dc_defns;
       List.iter (output_string fd) !(co.coq_list_aux_defns.newly_defined);
       output_string fd ".\n"
-
-
-  | Rdx ro -> 
-    Printf.fprintf fd "\n(define-judgment-form\n  %s" ro.ppr_default_language;
-      iter_asep fd "\nwith "
-        (fun d -> pp_defn fd m xd lookup dc.dc_wrapper universe d)
-	dc.dc_defns;
-      output_string fd "\n"
 
   | Twf wo -> 
       let twf_type_of_defn : syntaxdefn -> defn -> string = 
@@ -984,9 +954,6 @@ let pp_fun_or_reln_defnclass_list
           List.iter (fun frdc -> pp_fun_or_reln_defnclass fd m xd lookup frdc) frdcs
       | Twf _ -> 
 	  output_string fd "%%% definitions %%%\n\n";
-          List.iter (fun frdc -> pp_fun_or_reln_defnclass fd m xd lookup frdc) frdcs
-      | Rdx _ -> 
-	  output_string fd "\n;;; definitions \n";
           List.iter (fun frdc -> pp_fun_or_reln_defnclass fd m xd lookup frdc) frdcs
       | Coq co ->
           pp_auxiliary_list_rules fd m xd frdcs;

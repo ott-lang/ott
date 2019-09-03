@@ -4,7 +4,7 @@
 (*        Peter Sewell, Computer Laboratory, University of Cambridge      *)
 (*      Francesco Zappa Nardelli, Moscova project, INRIA Rocquencourt     *)
 (*                                                                        *)
-(*  Copyright 2005-2017                                                   *)
+(*  Copyright 2005-2010                                                   *)
 (*                                                                        *)
 (*  Redistribution and use in source and binary forms, with or without    *)
 (*  modification, are permitted provided that the following conditions    *)
@@ -319,7 +319,6 @@ let types_of_extensions =
       "ml", "ocaml";
       "mll", "lex"; 
       "mly", "menhir";
-      "rkt", "rdx"] 
 
 let extension_of_type t = List.assoc t (List.map (function (a,b)->(b,a)) types_of_extensions)
 
@@ -333,8 +332,13 @@ let file_type name =
   with
     _ -> None 
 
+<<<<<<< HEAD
 let non_tex_output_types = ["coq"; "isa"; "hol"; "lem"; "twf"; "ocaml"; "rdx"]
 let output_types =  "tex" :: "lex" :: "menhir" :: non_tex_output_types
+=======
+let non_tex_output_types = ["coq"; "isa"; "hol"; "lem"; "twf"; "ocaml"]
+let output_types =  "tex" :: "lex" :: "yacc" :: non_tex_output_types
+>>>>>>> parent of fa0ecce... Experiments with a redex backend.
 let input_types = "ott" :: output_types
 
 let classify_file_argument arg =
@@ -380,7 +384,7 @@ let targets_in ts =
 
 let targets_non_tex = targets_in non_tex_output_types
 let targets = targets_in output_types
-let targets_for_non_picky = targets_in [(*"lex";"ocaml";*)"hol";"lem";"isa";"twf";"coq";"tex";"rdx"]
+let targets_for_non_picky = targets_in [(*"lex";"ocaml";*)"hol";"lem";"isa";"twf";"coq";"tex"]
 
 (* collect the source filenames *)
 let source_filenames = 
@@ -425,6 +429,7 @@ let m_coq = Coq { coq_expand_lists = !coq_expand_lists;
 		  coq_locally_nameless = ref false;
                   coq_lngen = !coq_lngen;
                   coq_use_filter_fn = !coq_use_filter_fn;
+<<<<<<< HEAD
                   coq_names_in_rules = !coq_names_in_rules }
 
 let oo =  { ppo_include_terminals = !caml_include_terminals; caml_library = ref ("",[]) } 
@@ -481,6 +486,9 @@ let yo = {
 let m_menhir = Menhir yo 
 let m_lex = Lex yo
   
+=======
+                  coq_names_in_rules = !coq_names_in_rules }  
+>>>>>>> parent of fa0ecce... Experiments with a redex backend.
 let reset_m_coq m = 
   match m with
   | Coq co ->
@@ -495,8 +503,14 @@ let reset_m_coq m =
   | _ ->
       Auxl.errorm m "reset_m_coq"  
 
+<<<<<<< HEAD
 let m_rdx = Rdx pp_rdx_opts_default
   
+=======
+let m_caml = Caml { ppo_include_terminals = !caml_include_terminals; caml_library = ref ("",[]) } 
+let m_lex = Lex ()
+let m_yacc = Yacc ()
+>>>>>>> parent of fa0ecce... Experiments with a redex backend.
 (* finally compute the set of modes used in this run of Ott -- used
    when non-picky about multiple parses *)
 (* here we used also to record the suffix-stripped filenames for hol
@@ -513,9 +527,8 @@ let m_rdx = Rdx pp_rdx_opts_default
              "lem",m_lem;
              "isa",m_isa;
              "twf",m_twf;
-             "coq",m_coq;
-             "tex",m_tex;
-             "rdx",m_rdx]) 
+             "coq",m_coq ;
+             "tex",m_tex ]) 
         targets_for_non_picky)
 
 (* process *)
@@ -758,8 +771,6 @@ let output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux) =
           System_pp.pp_systemdefn_core_io m_hol sd lookup fi !merge_fragments
       | "lem" ->
           System_pp.pp_systemdefn_core_io m_lem sd lookup fi !merge_fragments
-      | "rdx" ->
-          System_pp.pp_systemdefn_core_io m_rdx sd lookup fi !merge_fragments
       | "twf" -> 
           System_pp.pp_systemdefn_core_io m_twf sd lookup fi !merge_fragments
       | "ocaml" -> 
