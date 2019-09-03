@@ -4,7 +4,7 @@
 (*        Peter Sewell, Computer Laboratory, University of Cambridge      *)
 (*      Francesco Zappa Nardelli, Moscova project, INRIA Rocquencourt     *)
 (*                                                                        *)
-(*  Copyright 2005-2017                                                   *)
+(*  Copyright 2005-2010                                                   *)
 (*                                                                        *)
 (*  Redistribution and use in source and binary forms, with or without    *)
 (*  modification, are permitted provided that the following conditions    *)
@@ -287,10 +287,7 @@ let dotenv1 m xd x : dotenv1 =
             (*^"ZZZ"*))
              ntmvsns)
       | _ -> ["dummy"]) in
-      let pp_squished_vars =
-        match m with
-          | Rdx _ -> String.concat "_" pp1_null
-          | _ -> String.concat "_" pp1_null ^"_list" in
+      let pp_squished_vars =  String.concat "_" pp1_null ^"_list" in
       
       let pp_pattern =  
 	let tmp = String.concat "," pp1 in

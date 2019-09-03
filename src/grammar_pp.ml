@@ -1075,11 +1075,7 @@ and pp_metavar_with_sie_internal as_type m xd sie (mvr,suff) =
               (apply_hom_spec m xd hs 
                  [Auxl.pp_tex_escape mvr^(pp_suffix_with_sie m xd sie suff)]))
 
-<<<<<<< HEAD
-    | Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Rdx _ | Caml _ | Lex _ | Menhir _ -> 
-=======
-    | Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Caml _ | Lex _ | Yacc _ -> 
->>>>>>> parent of fa0ecce... Experiments with a redex backend.
+    | Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Caml _ | Lex _ | Menhir _ -> 
         let s = pp_mvr ^ (pp_suffix_with_sie m xd sie suff) in
         if as_type then s
         else Auxl.hide_isa_trailing_underscore m s
@@ -1093,11 +1089,7 @@ and pp_nt_or_mv_with_sie_internal as_type m xd sie (ntmv,suff) =
 and pp_nt_or_mv_with_de_with_sie_internal as_type m xd sie (de :dotenv) ((ntmvr,suff0) as ntmv) =
   match m with
   | Ascii _ | Tex _ -> pp_nt_or_mv_with_sie_internal as_type m xd sie ntmv
-<<<<<<< HEAD
-  | Isa _ | Coq _ | Hol _ | Lem _ | Twf _ | Caml _ | Rdx _ | Lex _ | Menhir _ -> 
-=======
-  | Isa _ | Coq _ | Hol _ | Lem _ | Twf _ | Caml _ | Lex _ | Yacc _ -> 
->>>>>>> parent of fa0ecce... Experiments with a redex backend.
+  | Isa _ | Coq _ | Hol _ | Lem _ | Twf _ | Caml _ | Lex _ | Menhir _ -> 
       let (de1,de2) = de in
       match try Some(List.assoc ntmv de2) with Not_found -> None with
       | None -> pp_nt_or_mv_with_sie m xd sie ntmv
@@ -1280,17 +1272,8 @@ and pp_metavardefn m xd mvd =
 	| Coq co ->
 	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in
 	    "Definition " ^  type_name ^ " := " 
-<<<<<<< HEAD
 	    ^ (pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc) ^ "." ^ pp_com ^ "\n" 
 	    ^ coq_maybe_decide_equality m xd mvd.mvd_rep (Mvr mvd.mvd_name) mvd.mvd_loc
-	| Rdx ro -> ""
-	    (* let type_name = pp_metavarroot_ty m xd mvd.mvd_name in *)
-	    (* ";; grammar_pp, 1279: " ^  type_name ^ " := "  *)
-	    (* ^ pp_metavarrep m xd mvd.mvd_rep type_name ^ "." ^ pp_com ^ "\n" *)
-=======
-	    ^ pp_metavarrep m xd mvd.mvd_rep type_name ^ "." ^ pp_com ^ "\n"
-	    ^ coq_maybe_decide_equality m xd mvd.mvd_rep (Mvr mvd.mvd_name)
->>>>>>> parent of fa0ecce... Experiments with a redex backend.
 	| Caml oo ->
 	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in 
 	    "type "
@@ -1353,16 +1336,7 @@ and pp_metavarrep m xd mvd_rep type_name loc =
       ( try
 	let hs = List.assoc "coq" mvd_rep in
 	pp_hom_spec m xd hs
-<<<<<<< HEAD
       with Not_found -> Auxl.warning (Some loc) ("undefined coq metavarrep for "^type_name^"\n"); "UNDEFINED" )
-  | Rdx ro ->
-      ( try
-	let hs = List.assoc "rdx" mvd_rep in
-	pp_hom_spec m xd hs
-      with Not_found -> Auxl.warning (Some loc) ("undefined rdx metavarrep for "^type_name^"\n"); "UNDEFINED" )
-=======
-      with Not_found -> Auxl.warning ("undefined coq metavarrep for "^type_name^"\n"); "UNDEFINED" )
->>>>>>> parent of fa0ecce... Experiments with a redex backend.
   | Twf wo ->
       ( try
 	let hs = List.assoc "twf" mvd_rep in
@@ -1415,12 +1389,7 @@ and pp_com_es m xd homs es =
     | Isa _ -> " \<comment> \<open>" ^ String.concat "" (apply_hom_spec m xd hs ss) ^ "\<close>"
     | Coq _ -> " (*r " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " *)" 
     | Hol _ | Lem _ | Caml _ | Lex _ ->  " (* " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " *)" 
-<<<<<<< HEAD
-    | Rdx _ -> "  ;; " ^ String.concat "" (apply_hom_spec m xd hs ss) 
     | Menhir _ -> "/* " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " */" 
-=======
-    | Yacc _ -> "/* " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " */" 
->>>>>>> parent of fa0ecce... Experiments with a redex backend.
     | Ascii _ | Twf _ -> ""
 
 and pp_com_strings m xd homs ss =
@@ -1435,12 +1404,7 @@ and pp_com_strings m xd homs ss =
     | Isa _ -> " \<comment> \<open>" ^ String.concat "" (apply_hom_spec m xd hs ss) ^ "\<close>"
     | Coq _ -> " (*r " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " *)"
     | Hol _ | Lem _ | Caml _ | Lex _ ->  " (* " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " *)"
-<<<<<<< HEAD
-    | Rdx _ ->  " ;; " ^ String.concat "" (apply_hom_spec m xd hs ss)
     | Menhir _ -> "/* " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " */" 
-=======
-    | Yacc _ -> "/* " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " */" 
->>>>>>> parent of fa0ecce... Experiments with a redex backend.
     | Ascii _ | Twf _ -> ""
 
 
@@ -3269,9 +3233,13 @@ and pp_symterm_node_body m xd sie de stnb : string =
                           pp_symterm_element_judge_coq_plain m xd sie de p'' stnb''
 <<<<<<< HEAD
                       | Rdx ro -> 
+<<<<<<< HEAD
                           "("^(pp_symterm_element_judge_coq_plain m xd sie de p'' stnb'')^")"
 =======
 >>>>>>> parent of fa0ecce... Experiments with a redex backend.
+=======
+                          pp_symterm_element_judge_coq_plain m xd sie de p'' stnb''
+>>>>>>> parent of d692d9a... some support for redex lists
                       | Twf wo -> 
                           pp_symterm_element_judge_twf_plain m xd sie de p'' stnb''
                       | Hol ho -> 
@@ -3331,14 +3299,6 @@ and pp_symterm_node_body m xd sie de stnb : string =
                       ^ "EVERY (\\ b . b)" ^ " "
                       ^ String.concat " " (pp_es())
                       ^ ")"
-                   )
-              | Rdx _ -> 
-	          ( match stnb.st_es with
-	          | [] -> "GPP3302"^stnb.st_prod_name
-	          | _  -> 
-                    (* "GPP3302"^"(" ^ *)
-                    String.concat " GPP3305 " (pp_es())
-                    (*     ^ ") ..." *)
                    )
               | Lem _ -> 
 	          ( match stnb.st_es with
@@ -3577,6 +3537,18 @@ and pp_symterm_node_body m xd sie de stnb : string =
                       ^ promoted_pn^" "
                       ^ String.concat  " " (pp_es())
                       ^ ")"  )
+<<<<<<< HEAD
+=======
+              | Rdx _ -> 
+	          ( match stnb.st_es with
+	            | [] -> promoted_pn
+                    | [es] -> List.hd (pp_es())
+	            | _  ->
+		      "("
+                      ^ promoted_pn^" "
+                      ^ String.concat  " " (pp_es())
+                      ^ ")"  )
+>>>>>>> parent of d692d9a... some support for redex lists
               | Caml _ -> 
 	          ( match stnb.st_es with
 	          | [] -> (String.capitalize promoted_pn)
@@ -3724,8 +3696,13 @@ and pp_symterm_list_items m xd sie (de :dotenv) tmopt prod_es stlis : (string * 
 
   let include_terminals = 
     match m with
+<<<<<<< HEAD
     | Ascii _ | Tex _ | Lex _ | Menhir _ -> true
     | Coq _ | Isa _ | Hol _ | Lem _ | Twf _  | Rdx _ -> false
+=======
+    | Ascii _ | Tex _ | Lex _ | Yacc _ -> true
+    | Coq _ | Isa _ | Hol _ | Lem _ | Twf _  -> false
+>>>>>>> parent of d692d9a... some support for redex lists
     | Caml oo -> oo.ppo_include_terminals in
   let tmopt' = 
     ( match tmopt with 
@@ -3754,7 +3731,7 @@ and pp_symterm_list_items m xd sie (de :dotenv) tmopt prod_es stlis : (string * 
             Auxl.list_concat tmopt'
               (List.map (pp_symterm_list_item m xd sie de tmopt include_terminals prod_es) stlis) in
           (match m with Ascii ao when  ao.ppa_ugly -> [col_magenta ao "[slb",TTC_dummy] @ ss @ [col_magenta ao "slb]",TTC_dummy]  | _ -> ss)
-      | Isa _ | Caml _ | Coq _ | Hol _ | Lem _ | Twf _ | Rdx _ -> 
+      | Isa _ | Caml _ | Coq _ | Hol _ | Lem _ | Twf _ -> 
           let pp_stlis = List.map (function xs->List.map fst xs)
               (List.map (pp_symterm_list_item m xd sie de tmopt include_terminals prod_es) stlis) in
           (List.map (function s -> (s,TTC_dummy)) (match m with
@@ -3776,13 +3753,6 @@ and pp_symterm_list_items m xd sie (de :dotenv) tmopt prod_es stlis : (string * 
                     (Auxl.list_concat [ "@" ]
                        pp_stlis) 
                 ^ ")"]
-          | Rdx _ -> 
-            [ (* "(GPP3754" ^ *)
-                String.concat " " 
-                  (Auxl.list_concat [ "@GPP3757" ]
-                     pp_stlis) 
-              (*  ^ ")" *)
-              ]
           | Lem _ -> 
               [ lemTODO "13" ("("
                 ^ String.concat " " 
@@ -3845,8 +3815,7 @@ and pp_symterm_list_item m xd sie (de :dotenv) tmopt include_terminals prod_es s
   | Stli_listform stlb -> 
       let pp = pp_symterm_list_body m xd sie de tmopt include_terminals prod_es stlb in
       match m with
-        | Ascii ao -> if ao.ppa_ugly then [col_magenta ao "[stli_listform",TTC_dummy] @ pp @ [col_magenta ao "stli_listform]",TTC_dummy]  else pp
-        | Rdx _ -> List.map (fun (x,y) -> (x^" ...",y)) pp
+      | Ascii ao -> if ao.ppa_ugly then [col_magenta ao "[stli_listform",TTC_dummy] @ pp @ [col_magenta ao "stli_listform]",TTC_dummy]  else pp
       | _ -> pp
 
 and pp_symterm_list_body m xd sie (de :dotenv) tmopt include_terminals prod_es stlb : (string * tex_token_category) list =
@@ -3931,11 +3900,16 @@ and pp_symterm_list_body m xd sie (de :dotenv) tmopt include_terminals prod_es s
            ^ "}",TTC_comp]
       )
         
-  | Isa _ | Coq _ | Hol _ | Lem _ | Twf _ | Caml _ | Rdx _ -> 
+  | Isa _ | Coq _ | Hol _ | Lem _ | Twf _ | Caml _ -> 
       (List.map (function s -> (s,TTC_dummy))
          (match m with
+<<<<<<< HEAD
          | Ascii _ | Tex _ | Lex _ | Menhir _ ->  raise ThisCannotHappen
          | Isa _ | Coq _ | Hol _ | Lem _ | Twf _ | Caml _ | Rdx _ -> 
+=======
+         | Ascii _ | Tex _ | Lex _ | Yacc _ ->  raise ThisCannotHappen
+         | Isa _ | Coq _ | Hol _ | Lem _ | Twf _ | Caml _ -> 
+>>>>>>> parent of d692d9a... some support for redex lists
       (* interim placeholder code - not remotely right *)
       (* FZ I hope that this comment is outdated *) 
       let es = stlb.stl_elements in
@@ -3980,20 +3954,6 @@ and pp_symterm_list_body m xd sie (de :dotenv) tmopt include_terminals prod_es s
             ["(MAP (\\"^de1i.de1_pattern^" . "^pp_body^") "
              ^ de1i.de1_compound_id
 	     ^ ")"]
-        | Rdx _ ->
-          let es = stlb.stl_elements in
-          let (de1,de2)=de in
-          (* print_string ("[[["^pp_plain_dotenv de^"]]]");flush stdout; *)
-          (* let bound = (* was (stlb.stl_lower,stlb.stl_upper) in *) *)
-          let de1i =  de1_lookup de1 stlb.stl_bound in
-
-          let pp_body = 
-	    let tmp = String.concat "," 
-              (pp_symterm_elements m xd ((Si_var ("",0))::sie) de include_terminals prod_es es) in
-	    if (List.length es) > 1 then "("^tmp^")" else tmp in
-
-          [pp_body]
-
         | Caml _ -> 
             ["(List.map (fun "^de1i.de1_pattern^" -> "^pp_body^") "
              ^ de1i.de1_compound_id
