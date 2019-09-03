@@ -3518,7 +3518,7 @@ and pp_symterm_node_body m xd sie de stnb : string =
 		  | _ -> " <<< invalid symterm in formula_dots >>> " ) 
               | Twf _ -> raise TwelfNotImplemented
               )
-
+          
           (* normal case pp for proof assistant term forms *)
           | _ -> 
               (match m with
@@ -3548,9 +3548,8 @@ and pp_symterm_node_body m xd sie de stnb : string =
                       ^ ")"  )
               | Rdx _ -> 
 	          ( match stnb.st_es with
-	            | [] -> promoted_pn
-                    | [es] -> "("^promoted_pn^" "^(List.hd (pp_es()))^")"
-	            | _  ->
+	          | [] -> promoted_pn
+	          | _  -> 
 		      "("
                       ^ promoted_pn^" "
                       ^ String.concat  " " (pp_es())

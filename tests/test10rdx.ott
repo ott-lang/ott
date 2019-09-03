@@ -76,10 +76,6 @@ defn
     G,x1:t |- x2:t
 
 
-    --------------- :: number
-    G |- number:num
-
-
     G |- e1 : t1->t2
     G |- e2 : t1 
     ---------------- :: apply
