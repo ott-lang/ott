@@ -28,7 +28,7 @@ Section functions.
   Definition compose (g:B->C) (f:A->B) x := g (f x).
   Definition compose2 (h:B->C->D) (f:A->B) (g:A->C) x y := h (f x) (g y).
 End functions.
-Hint Unfold compose compose2.
+Hint Unfold compose compose2 : core.
 
 
 
@@ -50,4 +50,4 @@ Section option.
     end.
   Definition fold_error := fold_option.
 End option.
-Hint Unfold map_option map_error fold_option fold_error.
+Hint Unfold map_option map_error fold_option fold_error : core.
