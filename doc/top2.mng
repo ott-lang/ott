@@ -420,7 +420,7 @@ with metavariables in red, nonterminals
 The colourisation uses vt220 control codes; if they do not work on
 your screen add \texttt{-colour false} to the middle of the command
 line. To suppress the echo of the definition, add
-\texttt{-show\_post\_sort false} and \texttt{-show\_defns false}.
+\texttt{-show\_sort false} and \texttt{-show\_defns false}.
 
 
 \subsection{Index variables}
@@ -3123,7 +3123,7 @@ test10: tests/test10.ott
 When \verb+make test10+ is executed, \texttt{ott}:
 \begin{itemize}
 \item reads the source file \verb+tests/test10.ott+
-\item (if one also specifies \texttt{-show\_post\_sort true} and \texttt{-show\_defns
+\item (if one also specifies \texttt{-show\_sort true} and \texttt{-show\_defns
 true}) prints on standard output various diagnostic information,
   including ASCII versions of the grammar and
   inductive definitions.
