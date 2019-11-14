@@ -295,7 +295,7 @@ let _ =
   Arg.parse options 
     (fun s -> 
       if !i_arguments 
-      then Auxl.error None "\nError: must either use -i <filename> or specify filenames at the end\n"
+      then Auxl.exit_with None "must either use -i <filename> or specify all input filenames at the end of the command line"
       else extra_arguments := (In,s) ::(!extra_arguments))
     usage_msg;
   file_arguments :=  !file_arguments @ !extra_arguments 
