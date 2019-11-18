@@ -7,7 +7,7 @@ val list_minus_def = Define
  (list_minus (x::xs) ys = (if ~(MEM x ys) then x::(list_minus xs ys) else list_minus xs ys))`;
 
 val list_minus_thm = Q.store_thm ("list_minus_thm",
-`!l x. MEM x (list_minus l l') = MEM x l /\ ~MEM x l'`,
+`!l x. MEM x (list_minus l l') = (MEM x l /\ ~MEM x l')`,
 Induct THEN RW_TAC list_ss [list_minus_def] THEN METIS_TAC []);
 
 val list_minus_append = Q.store_thm ("list_minus_append",
@@ -20,7 +20,9 @@ val list_assoc_def = Define
 
 val list_assoc_mem = Q.store_thm ("list_assoc_mem",
 `!l x y. (list_assoc x l = SOME y) ==> MEM (x,y) l`,
-Induct THEN FULL_SIMP_TAC list_ss [list_assoc_def] THEN Cases_on `h` THEN RW_TAC list_ss [list_assoc_def]);
+Induct THEN RW_TAC list_ss [list_assoc_def] THEN
+Cases_on `h` THEN RW_TAC list_ss [list_assoc_def] THEN
+Cases_on `x = q` THEN FULL_SIMP_TAC list_ss [list_assoc_def]);
 
 val list_assoc_not_mem = Q.store_thm ("list_assoc_not_mem",
 `!l x y. (list_assoc x l = NONE) ==> ~MEM (x,y) l`,
@@ -67,7 +69,7 @@ val mono_every_id_thm = Q.store_thm ("mono_every_id_thm",
 `(!x. P x ==> Q x) ==> EVERY (\x. x) (MAP P l) ==> EVERY (\x. x) (MAP Q l)`,
 Induct_on `l` THEN RW_TAC list_ss [] THEN METIS_TAC []);
 
-val _ = IndDefLib.export_mono "mono_every_id_thm"
+val _ = IndDefLib.export_mono "mono_every_id_thm";
 
 val filter_size = Q.store_thm ("filter_size",
 `!l f size. list_size size (FILTER f l) <= list_size size l`,
