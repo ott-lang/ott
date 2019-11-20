@@ -1,0 +1,30 @@
+% A Framework for Defining Logics.
+% Harper, Honsell, and Pfenning, 1993.
+
+metavar family_constant, a ::= {{ coq atom }}
+metavar object_constant, c ::= {{ coq atom }}
+metavar var, x, y, z       ::= {{ repr-locally-nameless }}
+
+grammar
+
+kind, K :: kind_ ::=
+  | Type         :: :: type
+  | Pi x : A . K :: :: pi  (+ bind x in K +)
+
+family, A, B, C :: family_ ::=
+  | a            :: :: const
+  | Pi x : A . B :: :: pi  (+ bind x in B +)
+  | \ x : A . B  :: :: abs (+ bind x in B +)
+  | A M          :: :: app
+
+object, M, N :: object_ ::=
+  | c            :: :: const
+  | x            :: :: var
+  | \ x : A . M  :: :: abs (+ bind x in M +)
+  | M N          :: :: app
+
+substitutions
+  single M x :: subst
+
+freevars
+  M x :: fv
