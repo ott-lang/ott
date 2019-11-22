@@ -1271,7 +1271,8 @@ and pp_metavardefn m xd mvd =
       | false -> ( match m with
 	| Coq co ->
 	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in
-	    "Definition " ^  type_name ^ " := " 
+	    let universe = try pp_hom_spec m xd (List.assoc "coq-universe" mvd.mvd_rep) with Not_found -> "Set" in
+	    "Definition " ^  type_name ^ " : " ^ universe ^ " := "
 	    ^ (pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc) ^ "." ^ pp_com ^ "\n" 
 	    ^ coq_maybe_decide_equality m xd mvd.mvd_rep (Mvr mvd.mvd_name) mvd.mvd_loc
 	| Caml oo ->
