@@ -23,5 +23,5 @@ lj_included.tex : $(lj)
 	$(OTT) $(OTT_FLAGS) -tex_name_prefix lj -tex_filter $< $@ empty.ott
 
 clean:
-	@rm -f *~ *.{aux,bbl,blg,dvi,log,ps,pdf,sys,thy} \
-               *_{included,override}.tex
+	rm -f *~ *.aux *.bbl *.blg *.dvi *.log *.ps *.pdf *.sys *.thy \
+               *_included.tex *_override.tex
