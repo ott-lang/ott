@@ -36,15 +36,16 @@ in opam-repository git repository
 12) cd opam-repository/packages/ott ; mkdir ott.$VERSION
 13) cp /path/to/ott/opam ott.$VERSION/opam
 14) for sanity, do a diff between ott.$LATEST/opam and ott.$VERSION/opam
-15) add in ott.$VERSION/opam the archive location and checksum:
+15) curl -o /tmp/ott.tar.gz https://github.com/ott-lang/ott/archive/$VERSION.tar.gz
+16) take checksum from `sha512` (or `sha512sum` or `openssl sha512q) /tmp/ott.tar.gz
+17) add in ott.$VERSION/opam the archive location and checksum:
   url {
     src: "https://github.com/ott-lang/ott/archive/$VERSION.tar.gz"
-    checksum: "md5=bd83649b6ec5a4dbc22ed0de6a3a81f4"
+    checksum: "sha512=bd83649b6ec5a4dbc22ed0de6a3a81f4"
   }
-16) checksum is md5 https://github.com/ott-lang/ott/archive/$VERSION.tar.gz
-17) git add ott.$VERSION; git commit -m "ott $VERSION"; git push mine ott.$VERSION
-18) at https://github.com/ocaml/opam-repository/ click on "New pull request",
+18) git add ott.$VERSION; git commit -m "ott $VERSION"; git push mine ott.$VERSION
+19) at https://github.com/ocaml/opam-repository/ click on "New pull request",
     "compare across forks", and select <my-github-user>/opam-repository as HEAD
-19) done.  now a CI system and maintainers will care about the new release,
+20) done.  now a CI system and maintainers will care about the new release,
     and may suggest enhancements to the opam file (best to be done in the ott
     repository as well)
