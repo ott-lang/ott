@@ -1,0 +1,51 @@
+and i just did that for 0.30...
+
+How to release a new ott version to the opam repository
+
+in ott repository
+1) put ott into a good state, test all the things locally
+2) adjust revision_history.txt to reflect the current state
+3) in src/Makefile, set OTTVER to reflect the next release ($VERSION)
+4) date > src/tmp_date.txt
+5) make clean && make (creates a fresh version.ml!)
+6) once happy with that, commit and push
+7) cd doc && make && make install-top2-built (this generates a top2.pdf and
+   copies it to built_doc)
+
+- someone with access to the ott homepage should run "make install-web-files"
+
+on GitHub
+8) on https://github.com/ott-lang/ott/releases click "Draft a new release"
+   button in the upper right corner (enter again version number, optional
+   title and changes)
+9) this generated a git tag on GitHub, and a tarball
+
+in opam-repository git repository
+10) cd to clone of https://github.com/ocaml/opam-repository.git
+
+ once:
+ a) also needs a fork where you have write access
+    on https://github.com/ocaml/opam-repository/ upper right corner "fork"
+ b) git remote add mine https://github.com/PeterSewell/opam-repository.git
+
+ later:
+ a) git checkout master
+ b) git pull
+
+11) git checkout -b ott.$VERSION
+12) cd opam-repository/packages/ott ; mkdir ott.$VERSION
+13) cp /path/to/ott/opam ott.$VERSION/opam
+14) for sanity, do a diff between ott.$LATEST/opam and ott.$VERSION/opam
+15) curl -o /tmp/ott.tar.gz https://github.com/ott-lang/ott/archive/$VERSION.tar.gz
+16) take checksum from `sha512` (or `sha512sum` or `openssl sha512q) /tmp/ott.tar.gz
+17) add in ott.$VERSION/opam the archive location and checksum:
+  url {
+    src: "https://github.com/ott-lang/ott/archive/$VERSION.tar.gz"
+    checksum: "sha512=bd83649b6ec5a4dbc22ed0de6a3a81f4"
+  }
+18) git add ott.$VERSION; git commit -m "ott $VERSION"; git push mine ott.$VERSION
+19) at https://github.com/ocaml/opam-repository/ click on "New pull request",
+    "compare across forks", and select <my-github-user>/opam-repository as HEAD
+20) done.  now a CI system and maintainers will care about the new release,
+    and may suggest enhancements to the opam file (best to be done in the ott
+    repository as well)
