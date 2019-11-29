@@ -305,9 +305,13 @@ grammar
   formula :: formula_ ::=  {{ com formulas }}
    |  judgement                       ::   :: judgement
           {{ com judgement }}
-   |  </ formulak // k />             :: M :: dots
+%experiment to de-break tex build (leaving isa broken)
+   |  formula1 ... formulak             :: M :: dots
           {{ com conjunction of formulas }}
-          {{ isa list_all (\<lambda>f. f) [[ </ formulak // k /> ]] }}
+%          {{ isa list_all (\<lambda>f. f) [[ </ formulak // k /> ]] }}
+%   |  </ formulak // k />             :: M :: dots
+%          {{ com conjunction of formulas }}
+%          {{ isa list_all (\<lambda>f. f) [[ </ formulak // k /> ]] }}
    |  not formula                     :: M :: not
           {{ com negated formula }} {{ tex \neg [[formula]] }}
           {{ isa \<not> ([[formula]]) }}
