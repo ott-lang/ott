@@ -37,5 +37,5 @@ val pp_menhir_syntaxdefn :
   Types.pp_mode -> string -> Types.syntaxdefn -> Types.syntaxdefn -> Types.made_parser -> bool -> (string * (string list)) list -> unit
 
 val pp_pp_syntaxdefn :
-  Types.pp_mode -> string -> Types.syntaxdefn -> Types.syntaxdefn -> Types.syntaxdefn -> bool -> (string * (string list)) list -> unit
+  Types.pp_mode -> string -> Types.syntaxdefn -> Types.syntaxdefn -> Types.syntaxdefn -> bool -> bool -> (string * (string list)) list -> string -> unit
 

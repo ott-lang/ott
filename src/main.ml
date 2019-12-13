@@ -64,6 +64,7 @@ let twf_filter_filename_dsts = ref ([] :  string list)
 let caml_filter_filenames = ref ([] : (string * string) list)
 let caml_filter_filename_srcs = ref ([] : string list)
 let caml_filter_filename_dsts = ref ([] :  string list)
+let caml_pp_filename = ref (None : string option)
 let lift_cons_prefixes = ref false
 let test_parse_list = ref ([] : string list)
 let sort = ref true
@@ -249,7 +250,10 @@ let options = Arg.align [
   ( "-ocaml_include_terminals",
     Arg.Bool (fun b -> caml_include_terminals := b),
     "<"^string_of_bool !caml_include_terminals^">  Include terminals in OCaml output (experimental!)" );
-
+  ( "-ocaml_pp",
+    Arg.String (fun s -> caml_pp_filename := Some s),
+    "   generate OCaml AST pretty printer files (experimental!) (also included in .mly target)" );
+  
 (* options for debugging *)
   ( "-pp_grammar", 
     Arg.Set Global_option.do_pp_grammar,
@@ -770,13 +774,28 @@ let output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux) =
           let xd_unquotiented = sd_unquotiented.syntax in
           let xd_quotiented_unaux = sd_quotiented_unaux.syntax in
           (Lex_menhir_pp.pp_menhir_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented lookup !generate_aux_rules fi;
-           Lex_menhir_pp.pp_pp_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented xd_quotiented_unaux !generate_aux_rules fi )
+           Lex_menhir_pp.pp_pp_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented xd_quotiented_unaux !generate_aux_rules true fi "")
 
      | _ -> Auxl.int_error("unknown target "^t))
 
 
     output_details;
 
+
+  (** experimental ocaml pp output, in isolation (it's also included in the .mly output *)
+  match !caml_pp_filename with
+  | None -> ()
+  | Some filename ->
+      let sd_quotiented = Auxl.caml_rename sd in
+      let sd_unquotiented = Auxl.caml_rename sd_unquotiented in
+      let xd_quotiented = sd.syntax in
+      let xd_unquotiented = sd_unquotiented.syntax in
+      let xd_quotiented_unaux = sd_quotiented_unaux.syntax in
+(*      (Lex_menhir_pp.pp_menhir_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented lookup !generate_aux_rules fi;*)
+      Lex_menhir_pp.pp_pp_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented xd_quotiented_unaux !generate_aux_rules false [] filename;
+
+  
+  
   (** command-line test parse *)
   (match !test_parse_list with [] -> ()|_ -> print_string "\n");
   (List.iter (function s ->
