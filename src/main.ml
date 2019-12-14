@@ -783,17 +783,19 @@ let output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux) =
 
 
   (** experimental ocaml pp output, in isolation (it's also included in the .mly output *)
-  match !caml_pp_filename with
-  | None -> ()
-  | Some filename ->
-      let sd_quotiented = Auxl.caml_rename sd in
-      let sd_unquotiented = Auxl.caml_rename sd_unquotiented in
-      let xd_quotiented = sd.syntax in
-      let xd_unquotiented = sd_unquotiented.syntax in
-      let xd_quotiented_unaux = sd_quotiented_unaux.syntax in
-(*      (Lex_menhir_pp.pp_menhir_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented lookup !generate_aux_rules fi;*)
-      Lex_menhir_pp.pp_pp_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented xd_quotiented_unaux !generate_aux_rules false [] filename;
-
+  begin
+    match !caml_pp_filename with
+    | None -> ()
+    | Some filename ->
+       let sd_quotiented = Auxl.caml_rename sd in
+       let sd_unquotiented = Auxl.caml_rename sd_unquotiented in
+       let xd_quotiented = sd.syntax in
+       let xd_unquotiented = sd_unquotiented.syntax in
+       let xd_quotiented_unaux = sd_quotiented_unaux.syntax in
+       (*      (Lex_menhir_pp.pp_menhir_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented lookup !generate_aux_rules fi;*)
+       Lex_menhir_pp.pp_pp_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented xd_quotiented_unaux !generate_aux_rules false [] filename
+  end;
+  
   
   
   (** command-line test parse *)
