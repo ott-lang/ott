@@ -233,6 +233,10 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
             "\\text{"
             ^ String.concat "" (Grammar_pp.apply_hom_spec m xd hs [])
             ^ "}") in
+      Printf.fprintf fd "\\newcommand{%sName}[0]{%s{%s}}\n"
+        (Grammar_pp.tex_drule_name m dr.drule_name)
+        (Grammar_pp.pp_tex_DRULE_NAME_NAME m)
+        (Auxl.pp_tex_escape dr.drule_name);
       Printf.fprintf fd "\\newcommand{%s}[1]{%s[#1]{%%\n"
         (Grammar_pp.tex_drule_name m dr.drule_name)
         (Grammar_pp.pp_tex_DRULE_NAME m);
