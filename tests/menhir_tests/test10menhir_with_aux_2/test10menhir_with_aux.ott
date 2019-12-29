@@ -1,0 +1,138 @@
+
+% This is a variant of the test10menhir example using aux productions to 
+% record source location info.  In progress. 
+
+% This example has a non-ambiguous grammar for a lambda calculus, from
+% which Ott generates:
+
+% - ocaml source code for an abstract syntax type (AST), quotiented from the non-ambiguous grammar
+% - ocamllex source code for a simple lexer
+% - menhir source code for a parser, for the non-ambiguous grammar, that constucts values of the ocaml AST type
+% - ocaml source code for a simple pretty printer and raw-term pretty printer, from the ocaml AST type to strings
+
+% - tex for the quotiented grammar
+
+metavar var, x ::=   {{ com  term variable }} 
+{{ isa string}} {{ coq nat}} {{ hol string}} {{ lem string }} {{ coq-equality }}
+{{ ocaml string}} {{ lex alphanum}} {{ tex \mathit{[[var]]} }} {{ ocamllex ['a'-'z''A'-'Z']+ }}
+
+
+% The following is the OCaml type of source locations used in Sail. 
+embed
+{{ ocaml
+
+type l =
+  | Unknown
+  | Int of string * l option
+  | Generated of l
+  | Range of Lexing.position * Lexing.position
+
+type 'a annot = l * 'a
+
+exception Parse_error_locn of l * string
+
+let pp_lexing_position p = 
+  Printf.sprintf  "file \"%s\" line %d char %d"
+    p.Lexing.pos_fname p.Lexing.pos_lnum (p.Lexing.pos_cnum - p.Lexing.pos_bol)
+
+let rec pp_l l =  match l with
+    | Unknown -> "no location information available"
+    | Generated l -> Printf.sprintf "Generated: %s"  (pp_l l)
+    | Range(p1,p2) -> Printf.sprintf "Range: %s to %s" (pp_lexing_position p1) (pp_lexing_position p2)
+    | Int(s,lo) -> Printf.sprintf "Int: %s %s" s (match lo with Some l -> pp_l l | None -> "none")
+}}
+
+grammar
+l :: '' ::=                         {{ phantom }}
+                                    {{ ocaml l }}
+                                    {{ com Source location }}
+{{ pp l = pp_l l }} 
+{{ pp-raw l = pp_l l }}
+  |                                 :: :: Unknown {{ ocaml Unknown }}
+
+
+
+grammar
+%                lhs_of_app  rhs_of_app  lambda_body
+%  | ( t )           y          y            y 
+%  | x               y          y            y
+%  | \ x . t         n          y            y
+%  | t t'            y          n            y
+
+
+term, t, v :: 'T_' ::=               {{ menhir-start }}   {{ aux _ l }}
+  | at             :: :: at          {{ quotient-remove }}   {{ ocaml [[at]] }}
+  | lhs rhs'       :: :: app
+  | lambda         :: :: fn          {{ quotient-remove }}   {{ ocaml [[lambda]] }}
+
+  | { t / x } t' :: M :: sub         {{ ichlo (tsubst_term [[t]] [[x]] [[t']])}}
+  | Foo term :: :: foo
+               
+atomic_term, at :: 'T_' ::=       {{ quotient-with t }}   {{ aux _ l }}
+  | x              :: :: var
+  | ( t )          :: :: paren
+                   
+lhs :: 'T_' ::=                   {{ quotient-with t }}    {{ aux _ l }}
+  | at             :: :: at_lhs       {{ quotient-remove }}   {{ ocaml [[at]] }}
+%  | lhs at'        :: :: app_lhs      {{ quotient-remove }}   {{ ocaml T_aux(T_app([[lhs]], [[at']]), Range($symbolstartpos,$endpos)) }}
+  | lhs at'        :: :: app_lhs      {{ quotient-remove }}   {{ ocaml T_app([[lhs]], [[at']], Range($symbolstartpos,$endpos)) }}
+                   
+rhs :: 'T_' ::=                   {{ quotient-with t }}      {{ aux _ l }}
+  | at             :: :: at_rhs       {{ quotient-remove }}   {{ ocaml [[at]] }}
+  | lambda         :: :: fn_rhs       {{ quotient-remove }}   {{ ocaml [[lambda]] }}
+                   
+lambda :: 'T_' ::=                {{ quotient-with t }}    {{ aux _ l }}
+  | \ x . t        :: :: lambda   
+
+% The aux homs on the rules with a quotient-with hom should really be
+% automatically taken from the target of the latter.  But they're not
+% currently.
+
+% The generated parser supports aux rules only of the form {{ aux _ l }},
+% where l is a type (as in the embed above) that contains a 
+%  | Range of Lexing.position * Lexing.position
+% constructor; it generates menhir rules that insert
+% Range($symbolstartpos,$endpos) in the appropriate places.
+
+% The ocaml production homs, which are used in the parser actions
+% of the removed productions, could be constructed automatically, by
+% reparsing the production wrt the quotiented grammar.  Perhaps one
+% could also quotient by production isomorphism up to the quotient on
+% nonterminal roots.  Neither seems worth the complexity right now,
+% though.
+
+% The parser generation code doesn't currently support subrules
+
+
+% %val,v :: 'v_' ::=                            {{ com value   }} 
+% %  | \ x . t      ::   :: lam                   {{ com lambda  }}
+
+terminals :: 'terminals_' ::=
+  | \            ::   :: lambda  {{ tex \lambda }}
+  | -->          ::   :: red     {{ tex \longrightarrow }}
+
+%subrules
+%  val <:: term
+
+% substitutions
+%   single term var :: tsubst 
+% 
+%  defns
+%  Jop :: '' ::=
+%  
+%   defn
+%   t1 --> t2 :: ::reduce::'' {{ com [[t1]] reduces to [[t2]] }} {{ lemwcf  witness type reduce_witness; check reduce_check; eval : input -> output }} by
+%  
+%  
+%      --------------------------  :: ax_app
+%      (\x.t1) v2 -->  {v2/x}t1
+%  
+%      t1 --> t1'
+%      -------------- :: ctx_app_fun
+%      t1 t --> t1' t
+%  
+%      t1 --> t1'
+%      -------------- :: ctx_app_arg
+%      v t1 --> v t1'
+
+

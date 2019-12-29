@@ -966,6 +966,9 @@ and pp_plain_hom_spec_el hse =
   | Hom_terminal t -> "Hom_terminal "^(pp_plain_terminal t)
   | Hom_ln_free_index _ -> "Hom_ln_free_index"
 
+and pp_plain_hom_spec hs =
+  String.concat ";" (List.map pp_plain_hom_spec_el hs)
+                         
 and capitalize_if_twelf_non_type as_type m s =
   match m,as_type with
   | Twf _,false -> String.capitalize s
@@ -1387,7 +1390,7 @@ and pp_com_es m xd homs es =
       pp_tex_COM_NAME m  ^"{"
       ^ String.concat "" (apply_hom_spec m xd hs ((*List.map (function s -> "$"^s^"$")*) ss))
       ^ "}" 
-    | Isa _ -> " \<comment> \<open>" ^ String.concat "" (apply_hom_spec m xd hs ss) ^ "\<close>"
+    | Isa _ -> " \\<comment> \\<open>" ^ String.concat "" (apply_hom_spec m xd hs ss) ^ "\\<close>"
     | Coq _ -> " (*r " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " *)" 
     | Hol _ | Lem _ | Caml _ | Lex _ ->  " (* " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " *)" 
     | Menhir _ -> "/* " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " */" 
@@ -1402,7 +1405,7 @@ and pp_com_strings m xd homs ss =
       pp_tex_COM_NAME m  ^"{"
       ^ String.concat "" (apply_hom_spec m xd hs (List.map (function s -> "$"^s^"$") ss))
       ^ "}"
-    | Isa _ -> " \<comment> \<open>" ^ String.concat "" (apply_hom_spec m xd hs ss) ^ "\<close>"
+    | Isa _ -> " \\<comment> \\<open>" ^ String.concat "" (apply_hom_spec m xd hs ss) ^ "\\<close>"
     | Coq _ -> " (*r " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " *)"
     | Hol _ | Lem _ | Caml _ | Lex _ ->  " (* " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " *)"
     | Menhir _ -> "/* " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " */" 
