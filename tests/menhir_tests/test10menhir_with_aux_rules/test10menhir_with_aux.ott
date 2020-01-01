@@ -74,8 +74,8 @@ atomic_term, at :: 'T_' ::=       {{ quotient-with t }}   {{ aux _ l }}
                    
 lhs :: 'T_' ::=                   {{ quotient-with t }}    {{ aux _ l }}
   | at             :: :: at_lhs       {{ quotient-remove }}   {{ ocaml [[at]] }}
-%  | lhs at'        :: :: app_lhs      {{ quotient-remove }}   {{ ocaml T_aux(T_app([[lhs]], [[at']]), Range($symbolstartpos,$endpos)) }}
-  | lhs at'        :: :: app_lhs      {{ quotient-remove }}   {{ ocaml T_app([[lhs]], [[at']], Range($symbolstartpos,$endpos)) }}
+  | lhs at'        :: :: app_lhs      {{ quotient-remove }}   {{ ocaml T_aux(T_app([[lhs]], [[at']]), Range($symbolstartpos,$endpos)) }}
+%  | lhs at'        :: :: app_lhs      {{ quotient-remove }}   {{ ocaml T_app([[lhs]], [[at']], Range($symbolstartpos,$endpos)) }}
                    
 rhs :: 'T_' ::=                   {{ quotient-with t }}      {{ aux _ l }}
   | at             :: :: at_rhs       {{ quotient-remove }}   {{ ocaml [[at]] }}

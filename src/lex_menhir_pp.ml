@@ -458,7 +458,7 @@ let rec element_data_of_element ts (allow_lists:bool) e : element_data =
         grammar_body      = menhir_nonterminal_id_of_ntr ntr;
         semantic_action   = Some svi;
         pp_raw_rhs        = Some (pp_pp_raw_name ntr ^ " " ^ svi);
-        pp_pretty_rhs     = pp_pp_name ntr ^ " " ^ svi; }
+        pp_pretty_rhs     = "nest 2 (" ^ pp_pp_name ntr ^ " " ^ svi ^")"; }
 
   | Lang_metavar (mvr,mv) -> (* assuming all metavars map onto string-containing tokens *)
       let svi = menhir_semantic_value_id_of_ntmv mv in 
@@ -581,7 +581,7 @@ let aux_constructor generate_aux_info_here r p : string option =
     Some aux_prod_name
   else
     None
-(* ...for construtors *)
+(* ...for constructors *)
 
 let ott_menhir_loc = "ott_menhir_loc" (* ocaml variable to use for locations *)
 
@@ -830,7 +830,7 @@ let pp_pp_metavar_defn yo generate_aux_info xd ts md =
        let svi = "x" in
        (match Auxl.hom_spec_for_hom_name "ocaml" md.mvd_rep with 
         | Some [Hom_string s] when s="string" -> 
-           Some (pp_pp_name md.mvd_name ^ " "^svi^" = " ^ "string " ^ svi ^ " ^^ string \"\\\"\"\n\n")
+           Some (pp_pp_name md.mvd_name ^ " "^svi^" = " ^ "string " ^ svi ^ " ^^ string \"\"\n\n")
         | Some [Hom_string s] when s="int" -> 
            Some (pp_pp_name md.mvd_name ^ " "^svi^" = " ^ "string_of_int " ^ svi ^ "\n\n")
         | Some [Hom_string s] when s="big_int" -> 
@@ -916,7 +916,7 @@ let pp_pp_raw_metavar_defns_and_rules yo generate_aux_info xd ts mds rs =
 (**  pp                                                                  *)
 (** ******************************************************************** *)
 
-let pp_pp_prod yo generate_aux_info_here xd ts r p = 
+let pp_pp_prod yo generate_aux_info_here prettier xd ts r p = 
   if suppress_prod yo p || p.prod_sugar then 
     ""
   else
@@ -931,14 +931,17 @@ let pp_pp_prod yo generate_aux_info_here xd ts r p =
          match args with
          | [] -> "string \"\""
          | [arg] -> arg
-         | _ -> "string \"(\" ^^ " ^ String.concat " ^^ string \" \" ^^ " args  ^ " ^^ string \")\"" (* full parens*)
+         | _ ->
+            if prettier then 
+              "group(string \"(\" ^^ " ^ String.concat " ^^ break 1 ^^ " args  ^ " ^^ string \")\")" (* full parens*)
+            else                                                                              "string \"(\" ^^ " ^ String.concat " ^^ string \" \" ^^ " args  ^ " ^^ string \")\"" (* full parens*)
                                                                                     (*  | _ -> String.concat " ^ \" \" ^ " args *)
        in
        "| " ^ pp_pattern_prod r p generate_aux_info_here element_data ^ " -> " 
        ^ ppd_rhs
        ^ "\n"
 
-let pp_pp_rule yo generate_aux_info xd ts r = 
+let pp_pp_rule yo generate_aux_info prettier  xd ts r = 
   if suppress_rule yo r then 
     None
   else 
@@ -953,16 +956,17 @@ let pp_pp_rule yo generate_aux_info xd ts r =
        else
          let generate_aux_info_here = generate_aux_info_for_rule generate_aux_info r in 
          Some (pp_pp_name r.rule_ntr_name ^ " x = match x with\n" 
-               ^  String.concat "" (List.map (pp_pp_prod yo generate_aux_info_here xd ts r) r.rule_ps)
+               ^  String.concat "" (List.map (pp_pp_prod yo generate_aux_info_here prettier xd ts r) r.rule_ps)
                ^ "\n")
     )
 
 
 let pp_pp_metavar_defns_and_rules yo generate_aux_info xd ts mds rs = 
+  let prettier = true in
   "let rec "
   ^ String.concat "and "
       ((Auxl.option_map (pp_pp_metavar_defn yo generate_aux_info xd ts) mds)
-      @ (Auxl.option_map (pp_pp_rule yo generate_aux_info xd ts) rs))
+      @ (Auxl.option_map (pp_pp_rule yo generate_aux_info prettier xd ts) rs))
 
 
 
@@ -1046,7 +1050,8 @@ let pp_pp_syntaxdefn m sources xd_quotiented xd_unquotiented xd_quotiented_unaux
 
   let ts = token_names_of_syntaxdefn yo xd_unquotiented in (* from non-quotiented, to match parser *)
 
-  let xd = if !Global_option.aux_style_rules then xd_quotiented else xd_quotiented_unaux in
+  (* for aux_style_rules true, should we generate recursive functions for the ntr and ntr_aux rules, or just for the ntr rules but with an extra Ntr_aux constructor on the lhs? *)
+  let xd = xd_quotiented_unaux (*if !Global_option.aux_style_rules then xd_quotiented else xd_quotiented_unaux in*) in
 (*
   let m_ascii = Ascii { ppa_colour = false; 
 		      ppa_lift_cons_prefixes = false; 
