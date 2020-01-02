@@ -439,10 +439,10 @@ type element_data = {
     grammar_body : string;
     semantic_action : string option;  (* None for terminals *)
     pp_raw_rhs : string option;       (* None for terminals *)
-    pp_pretty_rhs : string;
+    pp_pretty_rhs : string option;
   }
     
-let rec element_data_of_element ts (allow_lists:bool) e : element_data = 
+let rec element_data_of_element xd ts (allow_lists:bool) (indent_nonterms:bool) e : element_data = 
 (*string option(*semantic_value_id*) * string(*grammar body*) * string option (*semantic action*) =*)
   match e with
   | Lang_terminal t -> 
@@ -450,7 +450,7 @@ let rec element_data_of_element ts (allow_lists:bool) e : element_data =
         grammar_body      = token_of_terminal ts t;
         semantic_action   = None;
         pp_raw_rhs        = None;
-        pp_pretty_rhs     = "string \"" ^ String.escaped t ^ "\""; }
+        pp_pretty_rhs     = Some ("string \"" ^ String.escaped t ^ "\""); }
 
   | Lang_nonterm (ntr,nt) ->
       let svi = menhir_semantic_value_id_of_ntmv nt in 
@@ -458,7 +458,15 @@ let rec element_data_of_element ts (allow_lists:bool) e : element_data =
         grammar_body      = menhir_nonterminal_id_of_ntr ntr;
         semantic_action   = Some svi;
         pp_raw_rhs        = Some (pp_pp_raw_name ntr ^ " " ^ svi);
-        pp_pretty_rhs     = "nest 2 (" ^ pp_pp_name ntr ^ " " ^ svi ^")"; }
+        pp_pretty_rhs     
+          = match Auxl.hom_spec_for_hom_name "pp-suppress" (Auxl.rule_of_ntr_nonprimary xd ntr).rule_homs with 
+          | Some hs ->
+              None
+          | None -> 
+              if indent_nonterms then
+                Some ("nest 2 (" ^ pp_pp_name ntr ^ " " ^ svi ^")")
+              else
+                Some ("" ^ pp_pp_name ntr ^ " " ^ svi ^"";) }
 
   | Lang_metavar (mvr,mv) -> (* assuming all metavars map onto string-containing tokens *)
       let svi = menhir_semantic_value_id_of_ntmv mv in 
@@ -466,14 +474,19 @@ let rec element_data_of_element ts (allow_lists:bool) e : element_data =
         grammar_body      = token_of_metavarroot ts mvr;
         semantic_action   = Some svi;
         pp_raw_rhs        = Some (pp_pp_raw_name mvr ^ " " ^ svi);
-        pp_pretty_rhs     = pp_pp_name mvr ^ " " ^ svi; }
+        pp_pretty_rhs     
+          = match Auxl.hom_spec_for_hom_name "pp-suppress" (Auxl.mvd_of_mvr_nonprimary xd mvr).mvd_rep with 
+          | Some hs ->
+              None
+          | None -> 
+              Some (pp_pp_name mvr ^ " " ^ svi); }
 (*        pp_raw_rhs        = Some (" string \"\\\"\" ^^ string " ^ svi ^ " ^^ string \"\\\"\"");
         pp_pretty_rhs     = "string "^ svi ; }
  *)
       
   | Lang_list elb -> 
       if not allow_lists then raise (Failure "unexpected list form");
-      let element_data = List.map (element_data_of_element ts false) elb.elb_es in 
+      let element_data = List.map (element_data_of_element xd ts false indent_nonterms) elb.elb_es in 
       
       let svi = menhir_semantic_value_id_of_list elb.elb_es in      
 
@@ -526,26 +539,26 @@ let rec element_data_of_element ts (allow_lists:bool) e : element_data =
         pper in
 
       let pp_pretty_rhs = 
-        let rhs_data = List.map (function x-> x.pp_pretty_rhs) element_data in
+        let rhs_data = Auxl.option_map (function x-> x.pp_pretty_rhs) element_data in
         let rhs =  String.concat  " ^^ string \" \" ^^ " rhs_data in
         let f = "(function "^pat^" -> "^rhs^")" in
-        let sep = match elb.elb_tmo with Some t -> String.escaped t | None -> " " in
-        let pper = "separate (" ^ "string \""^ sep ^ "\") (List.map " ^ f ^ " " ^ svi ^ ")" in
+        let sep = match elb.elb_tmo with Some t -> "(string \""^String.escaped t^"\")" | None -> "(break 1)" in
+        let pper = "group(separate " ^  sep ^ " (List.map " ^ f ^ " " ^ svi ^ "))" in
         pper in
 
       { semantic_value_id = Some svi;
         grammar_body      = body;
         semantic_action   = Some action;
         pp_raw_rhs        = Some pp_raw_rhs;
-        pp_pretty_rhs     = pp_pretty_rhs ; }
+        pp_pretty_rhs     = Some pp_pretty_rhs ; }
         
   | _ -> raise (Failure "unexpected Lang_ form")
         
 
-let element_data_of_prod ts p =
-  List.map (element_data_of_element ts true) p.prod_es
-  
-
+let element_data_of_prod xd ts p =
+  (* try indenting nonterms iff this production has a top-level terminal *)
+  let indent_nonterms = List.exists (function | Lang_terminal _ -> true | _ -> false) p.prod_es in 
+  List.map (element_data_of_element xd ts true indent_nonterms) p.prod_es
 
 
 let pp_menhir_prod_grammar element_data = 
@@ -590,7 +603,7 @@ let aux_constructor_element : element_data =
     grammar_body = "DUMMY";
     semantic_action = Some "Range($symbolstartpos,$endpos)";
     pp_raw_rhs = None;
-    pp_pretty_rhs = ""; }
+    pp_pretty_rhs = None (* effectively pp-suppress for this element *); }
 
 let generate_aux_info_for_prod generate_aux_info r p = 
   generate_aux_info && not(!Global_option.aux_style_rules) && 
@@ -650,7 +663,7 @@ let pp_menhir_prod yo generate_aux_info_here xd ts r p =
     let ppd_comment = "(* "^ppd_prod ^ " :: " ^ p.prod_name^" *)" in
 
     (* now the real work *)
-    let element_data = element_data_of_prod ts p in 
+    let element_data = element_data_of_prod xd ts p in 
     let element_data' = element_data @ if generate_aux_info_for_prod generate_aux_info_here r p then [aux_constructor_element] else [] in
     let ppd_action = 
       let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in
@@ -671,7 +684,7 @@ let pp_menhir_prod yo generate_aux_info_here xd ts r p =
           match hse with
           | Hom_string s ->  s
           (* TODO, arbitrary failure? *)
-          | Hom_index i -> let e = List.nth es'' (*or es? *) i  in let d=element_data_of_element ts true e in (match d.semantic_action with Some s -> s | None -> raise (Failure ("pp_menhir_hse Hom_index " ^ string_of_int i ^ " at " ^ Location.pp_loc p.prod_loc)))
+          | Hom_index i -> let e = List.nth es'' (*or es? *) i  in let d=element_data_of_element xd ts true false e in (match d.semantic_action with Some s -> s | None -> raise (Failure ("pp_menhir_hse Hom_index " ^ string_of_int i ^ " at " ^ Location.pp_loc p.prod_loc)))
           | Hom_terminal s -> s
           | Hom_ln_free_index (mvs,s) -> raise (Failure "Hom_ln_free_index not implemented")  in
         String.concat "" (List.map pp_menhir_hse hs)
@@ -819,7 +832,7 @@ let pp_pp_raw_metavar_defn yo generate_aux_info xd ts md =
 
 
 let pp_pp_metavar_defn yo generate_aux_info xd ts md = 
-  if suppress_metavar yo md then 
+  if false && suppress_metavar yo md then 
     None
   else 
     (match Auxl.hom_spec_for_hom_name "pp" md.mvd_rep with 
@@ -867,7 +880,7 @@ let pp_pp_raw_prod yo generate_aux_info_here xd ts r p =
        "| " ^ String.capitalize p.prod_name ^ " " ^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs ^"\n"
     | None ->
        (*let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in*)
-       let element_data = element_data_of_prod ts p in 
+       let element_data = element_data_of_prod xd ts p in 
        
        let ppd_rhs = 
          (match aux_constructor generate_aux_info_here r p with
@@ -925,16 +938,18 @@ let pp_pp_prod yo generate_aux_info_here prettier xd ts r p =
        "| " ^ String.capitalize p.prod_name ^ " " ^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs ^"\n"
     | None ->
        (*let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in*)
-       let element_data = element_data_of_prod ts p in 
+       let element_data = element_data_of_prod xd ts p in 
        let ppd_rhs = 
-         let args = List.map (function x -> x.pp_pretty_rhs) element_data in
+         let args = Auxl.option_map (function x -> x.pp_pretty_rhs) element_data in
          match args with
          | [] -> "string \"\""
          | [arg] -> arg
          | _ ->
             if prettier then 
-              "group(string \"(\" ^^ " ^ String.concat " ^^ break 1 ^^ " args  ^ " ^^ string \")\")" (* full parens*)
-            else                                                                              "string \"(\" ^^ " ^ String.concat " ^^ string \" \" ^^ " args  ^ " ^^ string \")\"" (* full parens*)
+(*              "group(string \"(\" ^^ " ^ String.concat " ^^ break 1 ^^ " args  ^ " ^^ string \")\")" (* full parens*)*)
+              "group(string \"\" ^^ " ^ String.concat " ^^ break 1 ^^ " args  ^ " ^^ string \"\")" (* no parens*)
+            else
+              "string \"(\" ^^ " ^ String.concat " ^^ string \" \" ^^ " args  ^ " ^^ string \")\"" (* full parens*)
                                                                                     (*  | _ -> String.concat " ^ \" \" ^ " args *)
        in
        "| " ^ pp_pattern_prod r p generate_aux_info_here element_data ^ " -> " 
@@ -942,7 +957,7 @@ let pp_pp_prod yo generate_aux_info_here prettier xd ts r p =
        ^ "\n"
 
 let pp_pp_rule yo generate_aux_info prettier  xd ts r = 
-  if suppress_rule yo r then 
+  if suppress_rule yo r || has_hom "pp-suppress" r.rule_homs then 
     None
   else 
     (match Auxl.hom_spec_for_hom_name "pp" r.rule_homs with 
