@@ -119,7 +119,7 @@ let suppress_rule yo r =
 (* tokens arise from terminals and metavardefns *)
 type token_kind = 
   | TK_terminal 
-  | TK_metavar of string (* ocamllex hom *) * string option (* ocaml hom, for type*)
+  | TK_metavar of string (* ocamllex hom *) * string option (* ocaml hom, for type*) * string option (* ocamllex_of_string hom, for function to convert from string to ocaml type*)
 (* or other way round?*)
 
 type token_data = 
@@ -261,6 +261,11 @@ let token_names_of_syntaxdefn yo xd : token_data =
 	      let hs = List.assoc "ocamllex" mvd.mvd_rep in
 	      Some (Grammar_pp.pp_hom_spec m xd hs)
             with Not_found -> None) in
+          let ocamllex_of_string_hom_opt = 
+            (try
+	      let hs = List.assoc "ocamllex-of-string" mvd.mvd_rep in
+	      Some (Grammar_pp.pp_hom_spec m xd hs)
+            with Not_found -> None) in
           let ocamllex_remove_hom = 
             (try
 	      let hs = List.assoc "ocamllex-remove" mvd.mvd_rep in
@@ -268,15 +273,15 @@ let token_names_of_syntaxdefn yo xd : token_data =
             with Not_found -> false) in
           (match ocamllex_hom_opt, ocamllex_remove_hom with
           | Some ocamllex_hom, false -> 
-              Some (token_name_of mvd.mvd_name, mvd.mvd_name, TK_metavar(ocaml_type, Some ocamllex_hom))
+              Some (token_name_of mvd.mvd_name, mvd.mvd_name, TK_metavar(ocaml_type, Some ocamllex_hom, ocamllex_of_string_hom_opt))
           | None, false -> 
 (* hack: default to ocamllex-remove *)
 (*              Auxl.error (Some mvd.mvd_loc) ("ocamllex output: no ocamllex or ocamllex-remove hom for "^mvd.mvd_name^"\n")*)
-              Some (token_name_of mvd.mvd_name, mvd.mvd_name, TK_metavar(ocaml_type, None))
+              Some (token_name_of mvd.mvd_name, mvd.mvd_name, TK_metavar(ocaml_type, None, ocamllex_of_string_hom_opt))
           | Some ocamllex_hom, false -> 
               Auxl.error (Some mvd.mvd_loc) ("ocamllex output: both ocamllex and ocamllex-remove hom for "^mvd.mvd_name^"\n")
           | None, true -> 
-              Some (token_name_of mvd.mvd_name, mvd.mvd_name, TK_metavar(ocaml_type, None))
+              Some (token_name_of mvd.mvd_name, mvd.mvd_name, TK_metavar(ocaml_type, None, ocamllex_of_string_hom_opt))
           )
       )
       xd.xd_mds in
@@ -317,16 +322,21 @@ let pp_lex_token fd (tname, t, tk) =
   match tk with
   | TK_terminal -> 
       Printf.fprintf fd "| \"%s\"\n    { %s }\n" (String.escaped t) tname
-  | TK_metavar(ocaml_type, Some ocamllex_hom) ->
+  | TK_metavar(ocaml_type, Some ocamllex_hom, ocamllex_of_string_hom_opt) ->
       let tv = lex_token_argument_variable_of_mvr t in
       Printf.fprintf fd "| %s as %s\n    { %s (%s) }\n" ocamllex_hom tv tname
-        (match ocaml_type with
-         | "int" -> "int_of_string "^tv
-         | "float" -> "float_of_string "^tv
-         | "bool" -> "bool_of_string "^tv
-         (* TODO the user should be able to use their own xxxxxx_of_string (anonymous) functions *)
-         | _ -> tv)
-  | TK_metavar(ocaml_type, None) ->
+        (
+         (match ocamllex_of_string_hom_opt with
+         | None -> 
+             (match ocaml_type with
+             | "string" -> ""
+             | "int" -> "int_of_string"
+             | "float" -> "float_of_string"
+             | "bool" -> "bool_of_string")
+         | Some f -> f)
+         ^ " " ^ tv)
+(*         | _ -> tv)*)
+  | TK_metavar(ocaml_type, None, _) ->
       Printf.fprintf fd "(* lexer rule for %s suppressed by ocamllex-remove *)\n" tname
 
 (* output an ocamllex source file *)
@@ -378,7 +388,7 @@ let pp_menhir_token fd (tname, t, tk) =
   match tk with
   | TK_terminal -> 
       Printf.fprintf fd "%%token %s  (* %s *)\n" tname (if t <> (String.escaped t) then tname else t)
-  | TK_metavar(ocaml_type, ocamllex_hom_opt) ->
+  | TK_metavar(ocaml_type, ocamllex_hom_opt, ocamllex_of_string_opt) ->
       Printf.fprintf fd "%%token <%s> %s  (* metavarroot %s *)\n" ocaml_type tname t
 
 (* construct the ids used in menhir semantic actions to refer to values of production elements *)
