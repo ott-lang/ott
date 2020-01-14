@@ -933,7 +933,8 @@ let pp_pp_prod yo generate_aux_info_here prettier xd ts r p =
          | [arg] -> arg
          | _ ->
             if prettier then 
-              "group(string \"(\" ^^ " ^ String.concat " ^^ break 1 ^^ " args  ^ " ^^ string \")\")" (* full parens*)
+              "group(string \"\" ^^ " ^ String.concat " ^^ break 1 ^^ " args  ^ " ^^ string \"\")" (* no extra parens - even when required*)
+                                                                                   (*              "group(string \"(\" ^^ " ^ String.concat " ^^ break 1 ^^ " args  ^ " ^^ string \")\")" (* full parens*)*)
             else                                                                              "string \"(\" ^^ " ^ String.concat " ^^ string \" \" ^^ " args  ^ " ^^ string \")\"" (* full parens*)
                                                                                     (*  | _ -> String.concat " ^ \" \" ^ " args *)
        in
