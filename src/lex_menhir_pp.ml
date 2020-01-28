@@ -441,6 +441,26 @@ let pp_pp_raw_name ntmvr =
 let pp_pp_name ntmvr =
   "pp_" ^ ntmvr
 
+let string_of_hom_spec_el hse =
+  match hse with
+  | Hom_string s -> s
+  | Hom_index i -> raise (Failure "string_of_hom_spec")
+  | Hom_terminal t -> t
+  | Hom_ln_free_index _ -> raise (Failure "string_of_hom_spec")
+
+let string_of_hom_spec hs =
+  String.concat "" (List.map string_of_hom_spec_el hs)
+
+                                              
+let pp_params r =
+  match Auxl.hom_spec_for_hom_name "pp-params" r.rule_homs with 
+  | Some hs -> 
+      " " ^ string_of_hom_spec hs
+  | None ->
+      ""
+      
+
+            
 (* construct all the data we need, for parsing and pretty printing,
 from an element of an ott production *)
 
@@ -467,16 +487,16 @@ let rec element_data_of_element xd ts (allow_lists:bool) (indent_nonterms:bool) 
       { semantic_value_id = Some svi;
         grammar_body      = menhir_nonterminal_id_of_ntr ntr;
         semantic_action   = Some svi;
-        pp_raw_rhs        = Some (pp_pp_raw_name ntr ^ " " ^ svi);
+        pp_raw_rhs        = Some (pp_pp_raw_name ntr ^ pp_params (Auxl.rule_of_ntr_nonprimary xd ntr) ^ " " ^ svi);
         pp_pretty_rhs     
           = match Auxl.hom_spec_for_hom_name "pp-suppress" (Auxl.rule_of_ntr_nonprimary xd ntr).rule_homs with 
           | Some hs ->
               None
           | None -> 
               if indent_nonterms then
-                Some ("nest 2 (" ^ pp_pp_name ntr ^ " " ^ svi ^")")
+                Some ("nest 2 (" ^ pp_pp_name ntr ^ " " ^ pp_params (Auxl.rule_of_ntr_nonprimary xd ntr) ^ svi ^")")
               else
-                Some ("" ^ pp_pp_name ntr ^ " " ^ svi ^"";) }
+                Some ("" ^ pp_pp_name ntr ^ " " ^ pp_params (Auxl.rule_of_ntr_nonprimary xd ntr) ^ svi ^"";) }
 
   | Lang_metavar (mvr,mv) -> (* assuming all metavars map onto string-containing tokens *)
       let svi = menhir_semantic_value_id_of_ntmv mv in 
@@ -825,6 +845,7 @@ let pp_menhir_start_rules yo xd ts =
 (** raw pp                                                               *)
 (** ******************************************************************** *)
 
+      
 (* all this should really use a more efficient representation than string *)
 
 
@@ -936,7 +957,7 @@ let pp_pp_raw_rule yo generate_aux_info xd ts r =
        else 
          let generate_aux_info_here = generate_aux_info_for_rule generate_aux_info r in 
     
-         Some (pp_pp_raw_name r.rule_ntr_name ^ " x = match x with\n" 
+         Some (pp_pp_raw_name r.rule_ntr_name ^ pp_params r ^ " x = match x with\n" 
                ^  String.concat "" (List.map (pp_pp_raw_prod yo generate_aux_info_here xd ts r) r.rule_ps)
                ^ "\n")
     )
@@ -951,7 +972,7 @@ let pp_pp_raw_metavar_defns_and_rules yo generate_aux_info xd ts mds rs =
 (** ******************************************************************** *)
 (**  pp                                                                  *)
 (** ******************************************************************** *)
-
+      
 let pp_pp_prod yo generate_aux_info_here prettier xd ts r p = 
   if suppress_prod yo p || p.prod_sugar then 
     ""
@@ -992,7 +1013,7 @@ let pp_pp_rule yo generate_aux_info prettier  xd ts r =
          Some (pp_pp_name r.rule_ntr_name ^ "_default " (*^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs *)^"\n\n")
        else
          let generate_aux_info_here = generate_aux_info_for_rule generate_aux_info r in 
-         Some (pp_pp_name r.rule_ntr_name ^ " x = match x with\n" 
+         Some (pp_pp_name r.rule_ntr_name ^ pp_params r ^ " x = match x with\n" 
                ^  String.concat "" (List.map (pp_pp_prod yo generate_aux_info_here prettier xd ts r) r.rule_ps)
                ^ "\n")
     )
