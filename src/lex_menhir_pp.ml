@@ -778,35 +778,48 @@ let pp_menhir_start_rules yo xd ts =
     (List.map (pp_menhir_start_rule yo xd ts)  xd.xd_rs)
                                                                 
 (* construct menhir start symbol declarations *)
-let pp_menhir_start_symbols yo generate_aux_info xd = 
-  String.concat "" 
-    (List.map 
-       (function r -> 
-         if not(is_start_rule yo r) then 
-           ""
-         else
-           let ty0 = 
-             Grammar_pp.strip_surrounding_parens 
-               (Grammar_pp.pp_nontermroot_ty (Caml yo.ppm_caml_opts) xd r.rule_ntr_name) in
-           let (ty1, ty_arg) = 
-           if String.length ty0 >= 3 && String.sub ty0 0 3 = "'a " then 
-             (String.sub ty0 3 (String.length ty0 - 3), "unit ")
+  let pp_menhir_start_symbols yo generate_aux_info xd = 
+    String.concat "" 
+      (List.map 
+         (function r -> 
+           if not(is_start_rule yo r) then 
+             ""
            else
-             (ty0, "") in
-           (*let generate_aux_info_here = generate_aux_info &&
-             (match Auxl.hom_spec_for_hom_name "aux" r.rule_homs with 
-             | Some hs -> true
-             | None -> false) in
-           let ty1 = if generate_aux_info_here then ty1 ^ "_aux" else ty1 in*)
-           "%start <" 
-           ^ ty_arg 
-           ^ yo.ppm_caml_ast_module 
-           ^ "."  
-           ^ ty1
-           ^ "> " 
-           ^ menhir_start (menhir_nonterminal_id_of_ntr r.rule_ntr_name) 
-           ^ "\n")
-       xd.xd_rs)
+             let ty0 = 
+               Grammar_pp.strip_surrounding_parens 
+                 (Grammar_pp.pp_nontermroot_ty (Caml yo.ppm_caml_opts) xd r.rule_ntr_name) in
+             let ty =
+               match Auxl.hom_spec_for_hom_name "menhir-start-type" r.rule_homs with 
+               | Some hs ->
+                   let pp_hse hse = 
+                     match hse with
+                     | Hom_string s ->  s
+                     | Hom_index i -> raise (Failure ("menhir-start-type Hom_index"))
+                     | Hom_terminal s -> s
+                     | Hom_ln_free_index (mvs,s) -> raise (Failure "menhir-start-type Hom_ln_free_index")  in
+                   String.concat "" (List.map pp_hse hs)
+               | None ->
+                   let (ty1, ty_arg) = 
+                     if String.length ty0 >= 3 && String.sub ty0 0 3 = "'a " then 
+                       (String.sub ty0 3 (String.length ty0 - 3), "unit ")
+                     else
+                       (ty0, "") in
+                   ty_arg 
+                   ^ yo.ppm_caml_ast_module 
+                   ^ "."  
+                   ^ ty1
+             in
+             (*let generate_aux_info_here = generate_aux_info &&
+               (match Auxl.hom_spec_for_hom_name "aux" r.rule_homs with 
+               | Some hs -> true
+               | None -> false) in
+               let ty1 = if generate_aux_info_here then ty1 ^ "_aux" else ty1 in*)
+             "%start <" 
+             ^ ty
+             ^ "> " 
+             ^ menhir_start (menhir_nonterminal_id_of_ntr r.rule_ntr_name) 
+             ^ "\n")
+         xd.xd_rs)
 
 (** ******************************************************************** *)
 (** raw pp                                                               *)
