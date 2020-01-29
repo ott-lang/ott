@@ -494,9 +494,9 @@ let rec element_data_of_element xd ts (allow_lists:bool) (indent_nonterms:bool) 
               None
           | None -> 
               if indent_nonterms then
-                Some ("nest 2 (" ^ pp_pp_name ntr ^ " " ^ pp_params (Auxl.rule_of_ntr_nonprimary xd ntr) ^ svi ^")")
+                Some ("nest 2 (" ^ pp_pp_name ntr ^ pp_params (Auxl.rule_of_ntr_nonprimary xd ntr) ^ " " ^ svi ^")")
               else
-                Some ("" ^ pp_pp_name ntr ^ " " ^ pp_params (Auxl.rule_of_ntr_nonprimary xd ntr) ^ svi ^"";) }
+                Some ("" ^ pp_pp_name ntr ^ pp_params (Auxl.rule_of_ntr_nonprimary xd ntr) ^ " " ^ svi ^"";) }
 
   | Lang_metavar (mvr,mv) -> (* assuming all metavars map onto string-containing tokens *)
       let svi = menhir_semantic_value_id_of_ntmv mv in 
