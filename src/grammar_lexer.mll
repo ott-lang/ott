@@ -47,6 +47,10 @@ open Grammar_parser
 exception Eof
 exception CannotHappen
 
+let mkloc p = 
+  [ { Location.loc_start = p;  
+        Location.loc_end = p } ]
+
 let incr_linenum lexbuf =
   let pos = lexbuf.Lexing.lex_curr_p in
   lexbuf.Lexing.lex_curr_p <- 
@@ -162,9 +166,9 @@ let my_lexer : bool -> lexer -> lexer =
             next_token ()
         with
           ex -> 
-            (print_string ("Lexing error at "^pp_position2 lexbuf.Lexing.lex_curr_p^"\n");
-             flush stdout;
-             raise ex)
+            let loc = mkloc lexbuf.Lexing.lex_curr_p in
+            (error (Some loc) ("Lexing error");
+             )
           
 let trim : string -> string =
   fun s ->
@@ -463,10 +467,13 @@ and comments surrounding_lexer level = parse
   | _     
       { comments surrounding_lexer level lexbuf }
   | eof     
-      { warning ("open comment at "
-		 ^ pp_position2 
-		     (match level with p::ps->p | []->raise CannotHappen)
-		 ^ " is not closed");
+      { let 
+          loc = 
+            match level with 
+              | p::ps -> mkloc p
+              | [] -> raise CannotHappen 
+        in 
+          warning None ("open comment is not closed ");
 	raise End_of_file }
 
 and linecomment surrounding_lexer = parse

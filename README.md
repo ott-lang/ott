@@ -43,8 +43,8 @@ directory                | description
 
 If you have [OPAM](https://opam.ocaml.org) installed on your system,
 `opam install ott` will install the latest Ott version.  The Emacs mode
-will be in `` `opam config var prefix`/share/emacs/site-lisp ``, and
-documentation in `` `opam config var prefix`/doc/ott ``.
+will be in `` $(opam config var prefix)/share/emacs/site-lisp ``, and
+documentation in `` $(opam config var prefix)/doc/ott ``.
 
 To install the Ott auxiliary files for Coq, first activate the
 `coq-released` OPAM repository:

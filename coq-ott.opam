@@ -1,18 +1,31 @@
-opam-version: "1.2"
+opam-version: "2.0"
 maintainer: "palmskog@gmail.com"
-authors: [ "Peter Sewell" "Francesco Zappa Nardelli" "Scott Owens" ]
 
 homepage: "http://www.cl.cam.ac.uk/~pes20/ott/"
-dev-repo: "https://github.com/ott-lang/ott.git"
+dev-repo: "git+https://github.com/ott-lang/ott.git"
 bug-reports: "https://github.com/ott-lang/ott/issues"
-license: "part BSD3, part LGPL 2.1"
+license: "BSD-3-Clause"
 
-build: [ make "-j%{jobs}%" "-C" "coq" ]
-install: [ make "-C" "coq" "install" ]
-remove: [ "sh" "-c" "rm -rf '%{lib}%/coq/user-contrib/Ott'" ]
-depends: [ "coq" {(>= "8.5" & < "8.6~") | (>= "8.6" & < "8.7~") | (>= "8.7" & < "8.8~") | (>= "8.8" & < "8.9~") | (>= "8.9" & < "8.10~")} ]
+synopsis: "Auxiliary Coq library for Ott, a tool for writing definitions of programming languages and calculi"
+description: """
+Ott takes as input a definition of a language syntax and semantics, in a concise
+and readable ASCII notation that is close to what one would write in informal
+mathematics. It can then generate a Coq version of the definition, which requires
+this library.
+"""
 
+build: [make "-j%{jobs}%" "-C" "coq"]
+install: [make "-C" "coq" "install"]
+depends: [
+  "coq" {(>= "8.5" & < "8.11~") | (= "dev")}
+]
 tags: [
   "category:Computer Science/Semantics and Compilation/Semantics"
   "keyword:abstract syntax"
+  "logpath:Ott"
+]
+authors: [
+  "Peter Sewell"
+  "Francesco Zappa Nardelli"
+  "Scott Owens"
 ]

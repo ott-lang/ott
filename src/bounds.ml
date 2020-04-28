@@ -4,7 +4,7 @@
 (*        Peter Sewell, Computer Laboratory, University of Cambridge      *)
 (*      Francesco Zappa Nardelli, Moscova project, INRIA Rocquencourt     *)
 (*                                                                        *)
-(*  Copyright 2005-2017                                                   *)
+(*  Copyright 2005-2010                                                   *)
 (*                                                                        *)
 (*  Redistribution and use in source and binary forms, with or without    *)
 (*  modification, are permitted provided that the following conditions    *)
@@ -31,12 +31,12 @@
 (*  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                         *)
 (**************************************************************************)
 
-exception NotImplementedYet;;
+exception NotImplementedYet;; 
 
 open Types;;
 open Location;;
 
-exception Bounds of string
+exception Bounds of loc * string
 
 
 (** ******************************** *)
@@ -55,7 +55,7 @@ let sie_null = [Si_punct ""]
 
 (* given a bounds environment be and a suffix suff, return at most one bound *)
 (* referenced in the suffix. fail if the suffix references >1 bound*)
-let findbounds (be : bound list) (suff : suffix) : bound option
+let findbounds (be : bound list) (suff : suffix) loc : bound option
     = let rec indices suff = 
       match suff with
       | [] -> []
@@ -66,7 +66,7 @@ let findbounds (be : bound list) (suff : suffix) : bound option
     | [] -> None
     | [i] -> (*print_string ("<<<< "^string_of_int i^" >>>>");flush stdout;*)
         Some(List.nth be i)
-    | _ -> raise (Bounds "findbounds: multiple suffix indices in a suffix")
+    | _ -> raise (Bounds (loc, "findbounds: multiple suffix indices in a suffix"))
 
 (* collect all the nonterms/metavars in a symterm *)
 (* (and their nontermsub-lower-and-top data if they have it), *)
@@ -75,13 +75,13 @@ let rec nt_or_mv_of_symterm (be : bound list) st
 : ((nt_or_mv * subntr_data) * bound option ) list = 
   match st with
   | St_node (_,stnb) -> nt_or_mv_of_symterm_node_body be stnb
-  | St_nonterm (_,_,(ntr,sf)) -> [ (((Ntr ntr),sf),None),findbounds be sf ]  
-  | St_nontermsub (_,ntrl,ntrt,(ntr,sf)) -> [(((Ntr ntr),sf),Some(ntrl,ntrt(*ntru*))),findbounds be sf ]
+  | St_nonterm (_,_,(ntr,sf)) -> [ (((Ntr ntr),sf),None),findbounds be sf (Auxl.loc_of_symterm st) ]  
+  | St_nontermsub (_,ntrl,ntrt,(ntr,sf)) -> [(((Ntr ntr),sf),Some(ntrl,ntrt(*ntru*))),findbounds be sf (Auxl.loc_of_symterm st) ]
   | St_uninterpreted (_,_)-> []
 and nt_or_mv_of_symterm_element be ste =
   match ste with
   | Ste_st (_,st) -> nt_or_mv_of_symterm be st
-  | Ste_metavar (_,_,(mvr,sf)) -> [ (((Mvr mvr),sf),None),findbounds be sf ]
+  | Ste_metavar (_,_,(mvr,sf)) -> [ (((Mvr mvr),sf),None),findbounds be sf (Auxl.loc_of_symterm_element ste) ]
   | Ste_var _ -> []
   | Ste_list (_,stlis)  -> 
       List.concat (List.map (nt_or_mv_of_symterm_list_item be) stlis)
@@ -102,7 +102,7 @@ let nt_or_mv_of_symterms sts =
 
 
 (* check for each Bound_dotform bound that it occurs with only one length constraint. Return the bounds without duplicates *)
-let check_length_consistency : 
+let check_length_consistency loc : 
     ((nt_or_mv* subntr_data) * bound option ) list ->  bound list 
         = 
       function xys ->
@@ -115,7 +115,7 @@ let check_length_consistency :
                 (try  (
                   let i=List.assoc (bd.bd_lower,bd.bd_upper) acc in
                   if i=bd.bd_length then f acc bounds' 
-                  else raise (Bounds ("bound "^Grammar_pp.pp_plain_bound b^" has inconsistent length constraints, \""^Grammar_pp.pp_plain_dots i ^"\" and \""^ Grammar_pp.pp_plain_dots bd.bd_length ^ "\"")))
+                  else raise (Bounds (loc, "bound "^Grammar_pp.pp_plain_bound b^" has inconsistent length constraints, \""^Grammar_pp.pp_plain_dots i ^"\" and \""^ Grammar_pp.pp_plain_dots bd.bd_length ^ "\"")))
                 with
                   Not_found -> f (((bd.bd_lower,bd.bd_upper),bd.bd_length)::acc) bounds' )
             | b::bounds' -> f acc bounds' in
@@ -142,7 +142,7 @@ let check_length_consistency :
 
 (* check for each nt_or_mv (and subntr data) that it doesn't appear with *)
 (* multiple different bounds, and return a list without duplicates *)
-let check_bounds_consistency : 
+let check_bounds_consistency loc : 
     ((nt_or_mv*subntr_data) * bound option) list -> 
       ((nt_or_mv*subntr_data) * bound option) list 
         = function xbos ->
@@ -154,8 +154,9 @@ let check_bounds_consistency :
                 | None -> f ((x,bo)::acc) xbos'
                 | Some bo' -> 
                     (if bo=bo' then f acc xbos'
-                    else 
-                      raise (Bounds ("inconsistent bounds for "^Grammar_pp.pp_plain_nt_or_mv (fst x)^": "^Grammar_pp.pp_plain_bound_option bo ^" and "^Grammar_pp.pp_plain_bound_option bo'  )))) in
+                    else
+                    (* TODO *)
+                      raise (Bounds (loc, "inconsistent bounds for "^Grammar_pp.pp_plain_nt_or_mv (fst x)^": "^Grammar_pp.pp_plain_bound_option bo ^" and "^Grammar_pp.pp_plain_bound_option bo'  )))) in
           f [] xbos
 
 (* split into those without a bound and those with one *)
@@ -286,10 +287,7 @@ let dotenv1 m xd x : dotenv1 =
             (*^"ZZZ"*))
              ntmvsns)
       | _ -> ["dummy"]) in
-      let pp_squished_vars =
-        match m with
-          | Rdx _ -> String.concat "_" pp1_null
-          | _ -> String.concat "_" pp1_null ^"_list" in
+      let pp_squished_vars =  String.concat "_" pp1_null ^"_list" in
       
       let pp_pattern =  
 	let tmp = String.concat "," pp1 in
@@ -328,10 +326,10 @@ let dotenv23 ntmvsn_without_bounds ntmvsn_with_bounds  =
 let bound_extraction m xd loc sts : dotenv * dotenv3 * string = 
   try  
     let x = nt_or_mv_of_symterms sts in
-    let bounds = check_length_consistency x in
+    let bounds = check_length_consistency loc x in
     let pp_bounds = String.concat "  " 
         (List.map Grammar_pp.pp_plain_bound bounds) in
-    let ntmvsn_with_boundopts = check_bounds_consistency x in
+    let ntmvsn_with_boundopts = check_bounds_consistency loc x in
     let ntmvsn_without_bounds,ntmvsn_with_bounds = split_bounded ntmvsn_with_boundopts in
     let bound_with_ntmvsnss = nt_or_mv_per_bound ntmvsn_with_bounds in
     let de1 = dotenv1 m xd bound_with_ntmvsnss in
@@ -347,7 +345,7 @@ let bound_extraction m xd loc sts : dotenv * dotenv3 * string =
         ^ Grammar_pp.pp_plain_dotenv de in
     de, de3, s
   with 
-    Bounds s' -> raise (Bounds (s'^" at "^Location.pp_loc loc))
+    Bounds (_, s') -> raise (Bounds (loc, s'))
 (*  with e ->  *)
  (*   "exception in bound_extraction" *)
 

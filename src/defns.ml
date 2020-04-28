@@ -4,7 +4,7 @@
 (*        Peter Sewell, Computer Laboratory, University of Cambridge      *)
 (*      Francesco Zappa Nardelli, Moscova project, INRIA Rocquencourt     *)
 (*                                                                        *)
-(*  Copyright 2005-2017                                                   *)
+(*  Copyright 2005-2010                                                   *)
 (*                                                                        *)
 (*  Redistribution and use in source and binary forms, with or without    *)
 (*  modification, are permitted provided that the following conditions    *)
@@ -31,12 +31,14 @@
 (*  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                         *)
 (**************************************************************************)
 
-exception NotImplementedYet;;
 
-exception Rule_parse_error of string
 
 open Types;;
 open Location;;
+open Auxl;;
+
+exception NotImplementedYet;;
+exception Rule_parse_error of loc * string
 
 let rec iter_nosep f l =
   match l with [] -> () | x::l -> let _ = f x in iter_nosep f l
@@ -243,7 +245,7 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
         (Grammar_pp.pp_tex_DRULE_NAME_NAME m)
         (Auxl.pp_tex_escape dr.drule_name)
         pp_com
-  | Isa _ | Hol _ | Lem _ | Coq _ | Twf _ | Rdx _ ->
+  | Isa _ | Hol _ | Lem _ | Coq _ | Twf _ ->
       let non_free_ntrs = Subrules_pp.non_free_ntrs m xd xd.xd_srs in
 
       (* find all the nonterms used at non-free types *)
@@ -343,23 +345,6 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
           end;
           output_string fd ppd_conclusion;
           output_string fd "\"\n"
-
-      | Rdx ro ->
-        let make_hline sl =
-          let max = List.fold_left max 0 (List.map String.length sl) in
-          String.make (max+2) '-'
-        in
-        Printf.fprintf fd " [";
-        if (snd ppd_premises)<>[] || ppd_subntrs<>[] then begin
-          (* Printf.fprintf fd "("; *)
-          iter_asep fd "\n  " (output_string fd)          
-	    (ppd_subntrs @ snd ppd_premises);
-          (* Printf.fprintf fd ")\n  "; *)
-          Printf.fprintf fd "\n  ";
-          end;
-          output_string fd ((make_hline [ppd_conclusion])^"\n  ");
-          output_string fd ppd_conclusion;
-          output_string fd "]\n"
 
       | Hol _ ->
           Printf.fprintf fd "( (* %s *) " dr.drule_name; 
@@ -500,18 +485,6 @@ let pp_defn fd (m:pp_mode) (xd:syntaxdefn) lookup (defnclass_wrapper:string) (un
   | Hol _ ->
       Printf.fprintf fd "(* defn %s *)\n\n" d.d_name;
       iter_sep (pp_processed_semiraw_rule fd m xd) "/\\ " d.d_rules
-
-  | Rdx _ ->
-    (* Printf.fprintf fd "       ;;; defn %s\n" d.d_name; *)
-    (try
-      let mode = List.assoc "rdx-mode" d.d_homs in
-      Printf.fprintf fd "\n  #:mode (%s %s)\n\n"
-        d.d_name
-        (match mode with [Hom_string s] -> s
-        | _ -> Auxl.error ("rdx backend: cannot print mode for declaration: "^d.d_name))
-    with Not_found -> ());
-    iter_sep (pp_processed_semiraw_rule fd m xd) "\n\n" d.d_rules
-
   | Lem _ ->
       Printf.fprintf fd "(* defn %s *)\n\n" d.d_name;
       iter_sep (pp_processed_semiraw_rule fd m xd) "and\n" d.d_rules
@@ -657,14 +630,6 @@ let pp_defnclass fd (m:pp_mode) (xd:syntaxdefn) lookup (dc:defnclass) =
       List.iter (output_string fd) !(co.coq_list_aux_defns.newly_defined);
       output_string fd ".\n"
 
-
-  | Rdx ro -> 
-    Printf.fprintf fd "\n(define-judgment-form\n  %s" ro.ppr_default_language;
-    iter_asep fd "\nwithDFNS655 "
-      (fun d -> pp_defn fd m xd lookup dc.dc_wrapper universe d)
-      dc.dc_defns;
-      output_string fd ")\n"
-
   | Twf wo -> 
       let twf_type_of_defn : syntaxdefn -> defn -> string = 
         fun xd d ->  
@@ -754,7 +719,7 @@ let fundefn_to_int_func (m:pp_mode) (xd:syntaxdefn) (deps:string list) (fd:funde
 	  match Auxl.hom_spec_for_hom_name "coq-struct" fd.fd_homs with
 	  | Some ([Hom_index i]) -> "{struct x" ^ string_of_int (i+1) ^ "} "
 	  | Some _ -> 
-	      Auxl.warning "malformed coq-struct homomorphism"; 
+     Auxl.warning (* TODO *) None "malformed coq-struct homomorphism"; 
 	      "{struct <<<malformed term in coq-struct hom>>>}"
 	  | None -> "" in
 
@@ -918,7 +883,7 @@ let pp_fundefnclass (m:pp_mode) (xd:syntaxdefn) lookup (fdc:fundefnclass) : stri
 	  ( match h with 
 	  | Some ([Hom_string s]) -> Some s
 	  | None -> None
-	  | _ -> Auxl.warning "malformed isa-proof/hol-proof hom"; Some "<<<malformed isa-proof/hol-proof hom>>>" ) in 
+   | _ -> Auxl.warning (Some fdc.fdc_loc)  "malformed isa-proof/hol-proof hom"; Some "<<<malformed isa-proof/hol-proof hom>>>" ) in 
 	( match m with
 	| Coq _ | Caml _ | Lem _ -> None
 	| Isa _ -> pp_proof (Auxl.hom_spec_for_hom_name "isa-proof" fdc.fdc_homs) 
@@ -932,7 +897,7 @@ let pp_fundefnclass (m:pp_mode) (xd:syntaxdefn) lookup (fdc:fundefnclass) : stri
       Auxl.print_with_comment m "\n" ("funs "^fdc.fdc_name) 
 	(Dependency.compute m xd int_funcs_collapsed)
 
-  | Twf _ -> Auxl.warning "internal: fundefnclass not implemented for Twelf"; ""
+  | Twf _ -> Auxl.warning (Some fdc.fdc_loc) "internal: fundefnclass not implemented for Twelf"; ""
   | Lex _ | Menhir _ -> ""
 
 
@@ -990,9 +955,6 @@ let pp_fun_or_reln_defnclass_list
       | Twf _ -> 
 	  output_string fd "%%% definitions %%%\n\n";
           List.iter (fun frdc -> pp_fun_or_reln_defnclass fd m xd lookup frdc) frdcs
-      | Rdx _ -> 
-	  output_string fd "\n;;; definitions \n";
-          List.iter (fun frdc -> pp_fun_or_reln_defnclass fd m xd lookup frdc) frdcs
       | Coq co ->
           pp_auxiliary_list_rules fd m xd frdcs;
 	  output_string fd "(** definitions *)\n";
@@ -1034,9 +996,9 @@ let process_semiraw_rule (m: pp_mode) (xd: syntaxdefn) (lookup: made_parser)
           Grammar_parser.drule_line_annot (Grammar_lexer.my_lexer true Grammar_lexer.metalang)  lexbuf 
         with 
         |  Parsing.Parse_error | My_parse_error _ ->
-            raise (Rule_parse_error ("bad annotation in \""^s^"\" at "^Location.pp_loc l))
+            raise (Rule_parse_error (l, "bad annotation in \""^s^"\" "))
         |  e ->
-            (print_string ("exception in parsing \""^s^"\" at "^Location.pp_loc l^"\n");
+            (report_error (Some l) ("exception in parsing \""^s^"\\n");
              flush stdout;
              raise e) in
         (* let categories = List.map del c in *)
@@ -1116,8 +1078,8 @@ let process_semiraw_rule (m: pp_mode) (xd: syntaxdefn) (lookup: made_parser)
             let unfiltered_string = try
               Grammar_parser.unfiltered_spec_el_list (Grammar_lexer.my_lexer true Grammar_lexer.filter) lexbuf
             with 
-              Parsing.Parse_error ->
-                Auxl.error ("unfiltered premise "^s^" cannot be parsed\n") in
+              Parsing.Parse_error  ->
+                Auxl.error (Some l) ("unfiltered premise "^s^" cannot be parsed\n") in
             let collapsed_string = Auxl.collapse_embed_spec_el_list unfiltered_string in 
             (*let filtered_string = Embed_pp.pp_embed_spec m xd lookup collapsed_string in*)
             (* walk over collapsed_string, building a new string (with -ARG- replacing each [[.]]) and a list of symterms (one for each [[.]]) *)
@@ -1146,9 +1108,9 @@ let process_semiraw_rule (m: pp_mode) (xd: syntaxdefn) (lookup: made_parser)
         let premises = List.map fancy_parse lss1 in
         let conclusion =
           match lss2 with
-          | [] -> raise (Rule_parse_error ("rule with no conclusion at " ^ Location.pp_loc l))
+          | [] -> raise (Rule_parse_error (l, "rule with no conclusion"))
           | [(l,s)] -> Term_parser.just_one_parse ~transform:(Term_parser.defn_transform prod_name) xd lookup rn_formula false l s
-          | _ -> raise (Rule_parse_error ("rule with multiple conclusions at " ^ Location.pp_loc l))
+          | _ -> raise (Rule_parse_error (l, "rule with multiple conclusions"))
         in
         let c = Term_parser.cd_env_of_syntaxdefn xd in
         let dr = {drule_name = defnclass_wrapper^defn_wrapper^annot.dla_name;
@@ -1238,13 +1200,13 @@ let process_raw_funclause
           let rhs = 
 	    match e with 
 	    | Ste_st(_,st) -> st 
-	    | _ -> Auxl.error "process_raw_funclause internal error - bad rhs" in
+	    | _ -> Auxl.error (Some (Auxl.loc_of_symterm st)) "process_raw_funclause internal error - bad rhs" in
 (*       print_string ("lhs symterm: "^ Grammar_pp.pp_plain_symterm lhs ^ "\n");flush stdout;  *)
 (*       print_string ("rhs symterm: "^ Grammar_pp.pp_plain_symterm rhs ^ "\n");flush stdout;  *)
 
           { fc_lhs = lhs; fc_rhs = rhs; fc_loc = l }
       | _ -> 
-	  Auxl.warning ("process_raw_funclause lost symterm: "
+	Auxl.warning (Some (loc_of_symterm st)) ("process_raw_funclause lost symterm: "
 			^ Grammar_pp.pp_plain_symterm st ^ "\n"); 
           let lhs = St_uninterpreted(l, "error") in
           let rhs = St_uninterpreted(l, Grammar_pp.pp_plain_symterm st) in 

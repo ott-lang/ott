@@ -4,7 +4,7 @@
 (*        Peter Sewell, Computer Laboratory, University of Cambridge      *)
 (*      Francesco Zappa Nardelli, Moscova project, INRIA Rocquencourt     *)
 (*                                                                        *)
-(*  Copyright 2005-2017                                                   *)
+(*  Copyright 2005-2010                                                   *)
 (*                                                                        *)
 (*  Redistribution and use in source and binary forms, with or without    *)
 (*  modification, are permitted provided that the following conditions    *)
@@ -48,6 +48,13 @@ exception ThisCannotHappenC;;
 let rec firstdup xs = match xs with 
   [] -> None 
 | x::xs -> if (List.mem x xs) then Some x else firstdup xs 
+
+let rec firstdup_with f xs =
+  let rec helper xs keys =
+    match (xs,keys) with
+    | ([],[]) -> None
+    | (x::xs, key::keys) -> if (List.mem key keys) then Some x else helper xs keys 
+    in helper xs (List.map f xs)
 
 
 (* synthesising a raw aux-annotated rule *)
@@ -376,14 +383,15 @@ let subrule (xd:syntaxdefn) (include_meta_prods:bool)
           (fun pu -> (include_meta_prods || not(pu.prod_meta)) && subprod subrule_graph pl pu) ru.rule_ps in
       match pus with 
       | [] -> 
-          ty_error
+          ty_error2 pl.prod_loc
 	    ( "subrule check failed: production "
 	      ^ Auxl.the (Grammar_pp.pp_prod error_opts xd "" "" pl) 
 	      ^ " of rule " ^ rl.rule_ntr_name
 	      ^ " cannot be matched in rule " ^ ru.rule_ntr_name) ""
       | [pu] -> (pl.prod_name,pu.prod_name)
       | pu::pu'::pus' -> 
-          Auxl.warning 
+          (* TIDI get loc *)
+          Auxl.warning  (Some pl.prod_loc)
             ("production \""^pl.prod_name^"\" is a subproduction of more than one production: "^String.concat ", " (List.map (function pu -> "\""^pu.prod_name^"\"") pus) ^" (taking the first)\n");
           (pl.prod_name,pu.prod_name)
     )
@@ -425,7 +433,6 @@ let embed_allowable_homs = ["coq";"coq-lib";"coq-preamble";
                             "isa";"isa-import";"isa-auxfn-proof";"isa-subrule-proof";"isa-lib";"isa-preamble";
                             "hol";"hol-preamble";
                             "lem";"lem-preamble";
-                            "rdx";
                             "tex";"tex-preamble";"tex-wrap-pre";"tex-wrap-post";
                             (*"twf";*)
                             "ocaml";"ocaml-preamble";
@@ -563,8 +570,8 @@ let rec cd_hom hu c (es : element list) ((hn,hs,l0):raw_homomorphism): homomorph
 (* hmm - maybe we should check that this s is in fact one of the terminals *)
 (* of the grammar.  But that info isn't to hand (eg in c) at present *)
               if not (rule_has_terminal (snd id) es) then begin
-                Auxl.warning ("Free variables in hom element " ^ Grammar_pp.pp_raw_hom_spec_el hse 
-                              ^ " at " ^ Location.pp_loc l0)
+                Auxl.warning (Some l0) ("Free variables in hom element " ^ Grammar_pp.pp_raw_hom_spec_el hse 
+                              )
               end;
               Hom_terminal (snd id) )
 	with 
@@ -781,16 +788,16 @@ and cd_mse c (mse:raw_mse) : mse =
     
 and cd_bindspec c (bs:raw_bindspec) : bindspec =
   ( match bs with    
-  | Raw_Bind (_,mse,(_,nt)) -> 
+  | Raw_Bind (loc,mse,(_,nt)) -> 
       ( match c.ident_lexer nt Location.dummy_pos  (* TODO more useful pos *) with
-      | OP_Some (Tok_nonterm (_,ntr)) -> Bind (cd_mse c mse, ntr) 
+      | OP_Some (Tok_nonterm (_,ntr)) -> Bind (loc,cd_mse c mse, ntr) 
       | _ -> 
           ty_error2 (Auxl.loc_of_raw_bindspec bs)
             ("bindspec must have a nonterminal on the right hand side, not \""^nt^"\"") "" )
-  | Raw_AuxFnDef(_,(_,f),mse) -> AuxFnDef(f, cd_mse c mse)
-  | Raw_NamesEqual(_,mse,mse') -> NamesEqual(cd_mse c mse, cd_mse c mse')
-  | Raw_NamesDistinct(_,mse,mse') -> NamesDistinct(cd_mse c mse, cd_mse c mse')
-  | Raw_AllNamesDistinct(_,mse) -> AllNamesDistinct(cd_mse c mse) )
+  | Raw_AuxFnDef(loc,(_,f),mse) -> AuxFnDef(loc,f, cd_mse c mse)
+  | Raw_NamesEqual(loc,mse,mse') -> NamesEqual(loc,cd_mse c mse, cd_mse c mse')
+  | Raw_NamesDistinct(loc,mse,mse') -> NamesDistinct(loc,cd_mse c mse, cd_mse c mse')
+  | Raw_AllNamesDistinct(loc,mse) -> AllNamesDistinct(loc,cd_mse c mse) )
 
 and cd_metavarrep c (raw_mvd_name: string) (mvr:raw_metavarrep) : metavarrep =
   List.map 
@@ -1120,7 +1127,7 @@ and cd_element c (e:raw_element) : semiraw_element =
                   elb_es = es' } in
       Sr_el(Lang_list elb)
   | (Raw_sugaroption (_, _)|Raw_nelist (_, _)|Raw_list (_, _)|Raw_option (_, _))
-      -> Auxl.error "internal: sugaroption, nelist, list and option not supported"
+      -> Auxl.error (Some (Auxl.loc_of_raw_element e))  "internal: sugaroption, nelist, list and option not supported"
 
 and cd_comp_bound : cd_env -> raw_comp_bound -> bound * metavarroot
     = fun c rcb -> match rcb with
@@ -1205,7 +1212,8 @@ and cd_subrules c (rsrs:raw_subrule list) : subrule list * subrule_data=
   (* report error if there is a cycle *)
   let ntrs_in_cycles = Auxl.option_map (fun (ntr,ntr') -> if ntr=ntr' then Some ntr else None) tc_edges in
   if ntrs_in_cycles <> [] then 
-      ty_error ("subrule order has a cycle containing: "^String.concat " " (List.map (fun ntr -> "\""^Grammar_pp.pp_plain_nontermroot ntr^"\"") ntrs_in_cycles)) "";
+    ty_error2 (List.hd srs0).sr_loc
+      ("subrule order has a cycle containing: "^String.concat " " (List.map (fun ntr -> "\""^Grammar_pp.pp_plain_nontermroot ntr^"\"") ntrs_in_cycles)) "";
 
   let top_nodes = List.filter (fun ntr -> not (List.exists (fun (ntr',ntr'')-> ntr=ntr') tc_edges )) nodes0 in
 
@@ -1213,7 +1221,7 @@ and cd_subrules c (rsrs:raw_subrule list) : subrule list * subrule_data=
 
   List.iter 
     (fun ntr -> match tops_above ntr with [] | [_] -> () | ntrs -> 
-      ty_error ("subrule order has multiple tops above \""^ntr^"\", ie "^String.concat " " (List.map (fun ntr -> "\""^Grammar_pp.pp_plain_nontermroot ntr^"\"") ntrs)) "") 
+      ty_error2 (List.hd srs0).sr_loc ("subrule order has multiple tops above \""^ntr^"\", ie "^String.concat " " (List.map (fun ntr -> "\""^Grammar_pp.pp_plain_nontermroot ntr^"\"") ntrs)) "") 
     nodes0;
       
   let promote_to_top ntr = 
@@ -1325,7 +1333,7 @@ and cd_parsing_annotation all_prod_names (par:raw_parsing_annotations) : parsing
       (fun (raw_pn1,pa,raw_pn2) -> 
         check_prod_name raw_pn1;
         check_prod_name raw_pn2;
-        (raw_pn1, pa, raw_pn2)) 
+        (raw_pn1, pa, raw_pn2,par.raw_pa_loc)) 
     par.raw_pa_data
     
 and cd_parsing_annotations c pars =
@@ -1361,7 +1369,7 @@ let check_structure (xd:syntaxdefn) (str:structure) : unit =
 		    | Mvr _ -> ()
 		    | Ntr rd -> 
 			if not (List.mem rd (rgtosee@rgseen)) 
-			then ty_error ("rule \""^r^"\" depends on rule \"" ^rd
+			then ty_error2 (Auxl.loc_of_ntr xd r) ("rule \""^r^"\" depends on rule \"" ^rd
 				       ^"\" which belongs to a future group of rules.\n") "")
 		  r_deps; 
 	      end;
@@ -1868,11 +1876,11 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
 		      (fun rr -> (List.map fst rr.raw_rule_ntr_names)) 
 		      rsd'.raw_sd_rs)) in
   (* collect together all the nontermroots, primaried, that occur on the left of a <::  *)
-  let wrapped_primary_ntr_of_ntr ntr = try
+  let wrapped_primary_ntr_of_ntr rsr ntr = try
     primary_ntr_of_ntr ntr 
   with
-  | Not_found -> ty_error ("\""^ntr^"\" in subrule declaration is not a nonterminal root ") "" in
-  let srs_lowers = List.map (fun sr -> (wrapped_primary_ntr_of_ntr sr.raw_sr_lower)) rsd'.raw_sd_srs in
+  | Not_found -> ty_error2 rsr.raw_sr_loc ("\""^ntr^"\" in subrule declaration is not a nonterminal root ") "" in
+  let srs_lowers = List.map (fun sr -> (wrapped_primary_ntr_of_ntr sr sr.raw_sr_lower)) rsd'.raw_sd_srs in
 (*  let srs_uppers = List.map (fun sr -> (wrapped_primary_ntr_of_ntr sr.raw_sr_upper)) rsd'.raw_sd_srs in *)
   
   (* 6- make a preliminary ident_lexer that doesn't know about any terminals *)
@@ -2025,34 +2033,45 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
 
   (* TODO: should check the bindspecs are consistent across subrules *)
 
-  let rec extract_auxfns_bindspec ntr b = 
+  let rec merge_auxfns auxfns =
+    let fns = List.sort_uniq compare (List.map (fun (f,ntr,_) -> (f,ntr)) auxfns)
+    in let fnLocs = List.map
+           (fun fntr -> (fntr,
+                         List.map (fun (_,_,l) -> l)
+                         (List.filter (fun (f,ntr,_) -> (f,ntr) = fntr) auxfns) )) fns
+    in List.map (fun ((f,ntr),locs) -> (f,ntr,List.fold_right List.append locs [] )) fnLocs
+
+  and auxfn_list_list_union lsts = merge_auxfns (Auxl.setlist_list_union lsts)
+
+  and extract_auxfns_bindspec ntr b = 
     ( match b with
-    | Bind (mse,nt) -> []
-    | AuxFnDef (f,mse) -> [(f,ntr)]
-    | NamesEqual (mse,mse') -> []
-    | NamesDistinct (mse,mse') -> []
-    | AllNamesDistinct (mse) -> [] )
+    | Bind (loc, mse,nt) -> []
+    | AuxFnDef (loc,f,mse) -> [(f,ntr,loc)]
+    | NamesEqual (loc,mse,mse') -> []
+    | NamesDistinct (loc,mse,mse') -> []
+    | AllNamesDistinct (loc,mse) -> [] )
             
   and extract_auxfns_production ntr p = 
-    Auxl.setlist_list_union 
+    auxfn_list_list_union
       (List.map (extract_auxfns_bindspec ntr) (p.prod_bs))
           
   and extract_auxfns_rule r = 
-    Auxl.setlist_list_union 
+    auxfn_list_list_union
       (List.map 
          (extract_auxfns_production r.rule_ntr_name) 
          r.rule_ps)
           
   and extract_auxfns_syntaxdefn sd =
-    let auxfns0 = Auxl.setlist_list_union 
-	(List.map extract_auxfns_rule 
+    let auxfns00 = (List.map extract_auxfns_rule 
            (List.filter (fun r -> not r.rule_meta) xd.xd_rs)) in
-    let comp (f,ntr) (f',ntr') = 
+    let auxfns0 = Auxl.setlist_list_union auxfns00
+	 in
+    let comp (f,ntr,_) (f',ntr',_) = 
       let x = String.compare f f' in
       if x <> 0 then x else compare ntr ntr' in
     List.sort comp auxfns0 in
 
-  let (auxfns : (auxfn * nontermroot) list) = extract_auxfns_syntaxdefn xd in
+  let (auxfns : (auxfn * nontermroot * loc) list) = extract_auxfns_syntaxdefn xd in
 
    (* print_string "extracted auxfns:\n"; *)
    (* List.iter (function (f,ntr) -> print_string (f^": "^ntr^" -> "^"?"^"\n")) auxfns; *)
@@ -2077,7 +2096,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
     | (pn,l)::pnls' -> 
         (try 
           let l' = List.assoc pn pnls' in
-          ty_error ("production name \""^pn^"\" is used for multiple productions, at "^Location.pp_loc l^" and "^Location.pp_loc l') ""
+          ty_error2 (l@l') ("production name \""^pn^"\" is used for multiple productions, at "^Location.pp_loc l^" and "^Location.pp_loc l') ""
         with Not_found ->
           find_first_duplicate2 pnls')
     | [] -> () in
@@ -2138,7 +2157,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
 (*           ( "Auxiliary " ^ f ^ " in MSE not defined for nonterminal root "  *)
 (* 	    ^ Grammar_pp.pp_nontermroot error_opts xd ntr') "t_mse Aux2" ; *)
         if not (List.exists
-                     (fun (f'',ntr'') -> f=f'' && Auxl.promote_ntr xd (primary_ntr_of_ntr ntr)=ntr'')
+                     (fun (f'',ntr'',_) -> f=f'' && Auxl.promote_ntr xd (primary_ntr_of_ntr ntr)=ntr'')
                      auxfns) 
         then
           ty_error2
@@ -2161,7 +2180,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
 (*           ( "Auxiliary " ^ f ^ " in MSE not defined for nonterminal root "  *)
 (* 	    ^ Grammar_pp.pp_nontermroot error_opts xd ntr') "t_mse Aux2" ; *)
         if not(List.exists
-                     (fun (f'',ntr'') -> f=f'' && Auxl.promote_ntr xd (primary_ntr_of_ntr ntr)=ntr'')
+                     (fun (f'',ntr'',loc) -> f=f'' && Auxl.promote_ntr xd (primary_ntr_of_ntr ntr)=ntr'')
                      auxfns)
         then
           ty_error2
@@ -2175,7 +2194,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
 
   and t_bindspec ntr (es : element list) (l : loc) (b : bindspec) : mse_type = 
     match b with
-    | Bind(mse,((ntr,suff) as nt)) -> 
+    | Bind(loc,mse,((ntr,suff) as nt)) -> 
         let mse_ty = (t_mse ntr es mse l) in
         if not (nt_in_es (Auxl.primary_ntr_of_ntr xd ntr,nt,[]) es) 
         then 
@@ -2201,12 +2220,12 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
             "manifestly null mse"  
             "t_bindspec Bind2";
         mse_ty 
-    | AuxFnDef(f,mse) -> 
+    | AuxFnDef(loc,f,mse) -> 
         let mse_ty = t_mse ntr es mse l in
         (Mse_ty_aux f)::mse_ty 
-    | NamesEqual(mse,mse') -> t_mse ntr es mse l @ t_mse ntr es mse' l
-    | NamesDistinct(mse,mse') -> t_mse ntr es mse l @ t_mse ntr es mse' l
-    | AllNamesDistinct(mse) -> t_mse ntr es mse l
+    | NamesEqual(loc,mse,mse') -> t_mse ntr es mse l @ t_mse ntr es mse' l
+    | NamesDistinct(loc,mse,mse') -> t_mse ntr es mse l @ t_mse ntr es mse' l
+    | AllNamesDistinct(loc,mse) -> t_mse ntr es mse l
 
       (* there is no t_element as anything that isn't recognised as a nonterminal or
       metavar is treated as a terminal *)
@@ -2234,14 +2253,14 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
         | [] -> []
         | b :: bs -> 
 	    ( match b with
-            | AuxFnDef(f,mse) -> f :: fs_actually_here bs
+            | AuxFnDef(loc,f,mse) -> f :: fs_actually_here bs
             | _ -> fs_actually_here bs ) ) in
       let fs_should_be_here = 
-        List.map fst (List.filter (fun (f',ntr') -> ntr=ntr') auxfns) in          
+        List.map (fun (x,y,z) -> x) (List.filter (fun (f',ntr' ,_) -> ntr=ntr') auxfns) in          
       if (List.sort compare (fs_actually_here p.prod_bs) <>
 	       List.sort compare fs_should_be_here)  
       then 
-        ty_error
+        ty_error2 p.prod_loc
           ("auxiliaries are not uniquely defined in production " ^ p.prod_name) 
           "t_production 1";
       mse_tys);
@@ -2265,10 +2284,11 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
 (*             | Some nt -> tcheck' false  ("Repeated nonterminal "^Grammar_pp.pp_nonterm m nt^" in production "^p.prod_name) "t_production 2"  *)
 
   and t_rule (r:rule) : mse_type list =
-    let ns = List.map (fun p -> p.prod_name) r.rule_ps in
-    ( match firstdup ns with 
+    ( match firstdup_with (fun x -> x.prod_name) r.rule_ps with 
     | None -> () 
-    | Some x -> ty_error ("Repeated production name \"" ^ x^"\"") "t_productions 1");
+    | Some x ->
+      (* TODO report both locs *)
+      ty_error2 x.prod_loc ("Repeated production name \"" ^ x.prod_name^"\"") "t_productions 1");
     let mse_tys = 
       if r.rule_meta 
       then []
@@ -2307,7 +2327,11 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
       add_vertices fs (n+1) ((f,n,v)::acc) in
 
   let auxfn_names = Auxl.remove_duplicates 
-      (List.map (function (f,ntr)->f) auxfns) in
+      (List.map (function (f,ntr,loc)->f) auxfns) in
+
+  (*TODO make faster*)
+  let auxfn_loc f = (fun (_,_,l) -> l) (List.hd (List.filter (fun (ff,_,_) -> ff == f ) auxfns ) ) in
+  
 
   let vertex_info =  add_vertices auxfn_names 0 [] in
 
@@ -2364,11 +2388,11 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
       let ntmvrs = ntmvrs_of_component vs in
       match ntmvrs with
       | [ntmvr] -> (vs,ntmvr)
-      | [] -> ty_error (
+      | [] -> ty_error2 (auxfn_loc (auxfn_of_vertex (List.hd vs)) ) (
           "auxfns "
           ^ String.concat " " (List.map (function v->auxfn_of_vertex v) vs)
           ^ " have unconstrained result type") ""
-      | _ -> ty_error (
+      | _ -> ty_error2 (auxfn_loc (auxfn_of_vertex (List.hd vs)) ) (
           "auxfns "
           ^ String.concat " " (List.map (function v->auxfn_of_vertex v) vs)
           ^ " have overconstrained result type: "
@@ -2385,7 +2409,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
                (function (vs,ntmvr) -> List.mem v vs) 
                components_with_ntmvr) in
         let ntrs = Auxl.option_map 
-            (function (f',ntr')-> if f'=f then Some ntr' else None) 
+            (function (f',ntr',_)-> if f'=f then Some ntr' else None) 
             auxfns in
         (f,(ntrs,ntmvr)))
       auxfn_names in
@@ -2406,11 +2430,11 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
   let xd = { xd with xd_axs = axs } in
 
 (* hack: to allow repeated secondary nonterm roots, comment out the second of these *)
-  let ns = List.flatten 
-      (List.map (fun r -> List.map fst r.rule_ntr_names) xd.xd_rs) in
-  ( match firstdup ns with 
+  let ns = List.flatten (*TODO also highlight conflicting name*)
+      (List.map (fun r -> List.map (fun pr -> (fst pr, r)) r.rule_ntr_names) xd.xd_rs) in
+  ( match firstdup_with (fun pr -> fst pr) ns with 
   | None -> () 
-  | Some v -> ty_error ("repeated rule name "^v^"") "t_grammar 1");
+  | Some (v,r) -> ty_error2 r.rule_loc ("repeated rule name "^v^"") "t_grammar 1");
   
   (* check that subrules don't involve any semi-meta rules. *)
   (* TODO: should also check that they don't involve any rules with type homs *)
@@ -2419,7 +2443,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
   List.iter 
     (fun ntr -> 
       if (Auxl.rule_of_ntr xd ntr).rule_semi_meta 
-      then ty_error ("cannot have semi-meta rule \""^ntr^"\" in a subrule relationship") "") 
+      then ty_error2 (Auxl.loc_of_ntr xd ntr) ("cannot have semi-meta rule \""^ntr^"\" in a subrule relationship") "") 
     nodes0 ;
 
 
@@ -2481,25 +2505,26 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
   (* VV: We do not check that contextrules with the hole filled are of the
      right type right now, but later when a parser has been constructed. *)
 
-  let rec count_holes_element (el:element) : int =
+
+  let rec count_holes_element prod (el:element) : int =
     match el with
     | Lang_nonterm _ -> 0
     | Lang_terminal "__" -> 1
     | Lang_terminal _ -> 0
     | Lang_metavar _ -> 0
-    | Lang_list elb -> count_holes_elements elb.elb_es
+    | Lang_list elb -> count_holes_elements prod elb.elb_es
     | Lang_option _  | Lang_sugaroption _ ->
-        ty_error
+        ty_error2 prod.prod_loc
 	  ( "count_holes_rule check failed: hole __ found in an"
 	    ^ " option or sugaroption form") ""
 
-  and count_holes_elements (els:element list) : int =
-      List.fold_left (+) 0 (List.map count_holes_element els) in
+  and count_holes_elements prod (els:element list) : int =
+      List.fold_left (+) 0 (List.map (count_holes_element prod) els) in
       
   let count_holes_prod (pl:prod) : unit =
-    let n = count_holes_elements pl.prod_es in
+    let n = count_holes_elements pl pl.prod_es in
     if n <> 1 then
-      ty_error( "count_holes_rule check failed: hole __ found nonlinearly "
+      ty_error2 pl.prod_loc ( "count_holes_rule check failed: hole __ found nonlinearly "
 		^ "(" ^ string_of_int n ^ " times) in production "
 		^ Auxl.the (Grammar_pp.pp_prod error_opts xd "" "" pl)) ""
     else () in
@@ -2514,7 +2539,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
   let ctxrule_can_promote_hole ntr =
     let ntr_p = Auxl.promote_ntr xd (Auxl.primary_ntr_of_ntr xd ntr) in 
     if not (String.compare ntr ntr_p = 0)
-    then ty_error( "ctxrule_can_promote check failed: the type of hole "
+    then ty_error2 (Auxl.loc_of_ntr xd ntr) ( "ctxrule_can_promote check failed: the type of hole "
 		   ^ ntr ^ " can be promoted to " ^ ntr_p ) ""
     else () in
   List.iter (fun cr -> ctxrule_can_promote_hole cr.cr_hole) xd.xd_crs;
@@ -2580,7 +2605,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
     List.iter (fun ntr1 -> let idx1 = vertex_of_ntr ntr1 in 
     List.iter (fun ntr2 ->
       if ntr2 = ntr1 then
-        ty_error ("non-terminal " ^ ntr1 ^ " has a non-productive self-loop.") ""
+        ty_error2 (Auxl.loc_of_ntr xd ntr1) ("non-terminal " ^ ntr1 ^ " has a non-productive self-loop.") ""
       else
         G.add_edge g idx1 (vertex_of_ntr ntr2))
       tos)
@@ -2618,7 +2643,8 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
   let (scc_vertex_sets : G.V.t list list) = G.Components.scc_list g in
   List.iter (fun x ->
                if List.length x > 1 then
-                 ty_error ("There is a non-productive cycle among the following non-terminals: " ^ ntrs_to_string x) ""
+                 ty_error2 (Auxl.loc_of_ntr xd (ntr_of_vertex (List.hd x)))
+                   ("There is a non-productive cycle among the following non-terminals: " ^ ntrs_to_string x) ""
                else
                  ())
             scc_vertex_sets;
@@ -2643,7 +2669,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
     else 
       ( match Auxl.find_first_duplicate2 (fun (_,s1) -> fun (_,s2) -> (compare s1 s2) = 0 ) (List.rev candidate) with
       | None -> candidate 
-      | Some s -> ty_error ("duplicated subrule: "^(Auxl.dump_structure_entry s)) "" ) in
+      | Some s -> ty_error2 (fst s) ("duplicated subrule: "^(Auxl.dump_structure_entry s)) "" ) in
   let structure_crs = 
     List.map
       (fun cr -> (cr.cr_loc, (Struct_crs [(cr.cr_ntr, cr.cr_target, cr.cr_hole)])))
@@ -2743,13 +2769,13 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
       | (Struct_axs l1,Struct_axs l2) -> Struct_axs (l1@l2)
       | (Struct_sbs l1,Struct_sbs l2) -> Struct_sbs (l1@l2)
       | (Struct_fvs l1,Struct_fvs l2) -> Struct_fvs (l1@l2)
-      | _ -> Auxl.error "internal: collapsing incompatible structure elements.\n" in
+      | _ -> Auxl.error None "internal: collapsing incompatible structure elements.\n" in
 
     let out_c_a current auxfns =
       match current,auxfns with
       | None, [] -> []
       | Some (l,rsec), [] -> [(l,rsec)]
-      | None, xs -> Auxl.error "internal: out_c_a, auxfns but undefined current"
+      | None, xs -> Auxl.error None "internal: out_c_a, auxfns but undefined current"
       | Some (l,rsec), xs -> (l,rsec)::[(l,Struct_axs xs)]
     in
 
@@ -2832,7 +2858,7 @@ let check_with_parser (lookup : made_parser) (xd: syntaxdefn) : unit =
         ( match Context_pp.context_app_rhs error_opts xd lookup (hole,[]) target rl pl with  
                 (* FZ think about error_opts and the empty suffix *)
         | (false, _) -> 
-            ty_error
+            ty_error2 pl.prod_loc
               ( "ctxrule check failed: production\n"
        	        ^ Auxl.the (Grammar_pp.pp_prod error_opts xd "" "" pl)
        	        ^ "\n of rule " ^ ntr

@@ -31,11 +31,13 @@
 (*  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                         *)
 (**************************************************************************)
 
-open Types
+open Types;;
+open Location
 
 (* exceptions ************************************************************ *)
 
 exception ThisCannotHappen
+exception Located_Failure of (loc option)*string
 
 (* debug, warning and error report *************************************** *)
 
@@ -48,21 +50,36 @@ let mode_name m = match m with
   | Coq _ -> "Coq"
   | Twf _ -> "Twelf"
   | Caml _ -> "OCaml"
-  | Rdx _ -> "Redex"
   | Lex _ -> "Lex"
   | Menhir _ -> "Menhir"
+
+let colour = ref true
+
+let maybe_pp_loc l = 
+  match l with
+    | None -> ""
+    | Some l -> if !colour then "\027[1m" ^ pp_loc l ^ ":\027[0m\n" else pp_loc l ^ ":\n"
+
+let warning_string () = if !colour then "\027[1m\027[35mWarning: \027[0m" else "Warning: "
+
+let error_string () = if !colour then "\027[1m\027[31mError: \027[0m" else "Error: "
 
 let debug_on = false
 
 let debug s = if debug_on then begin print_string s; flush stdout end
 
-let warning s = print_endline ("warning: " ^ s); flush stdout
+let warning l s = print_endline (maybe_pp_loc l ^ warning_string () ^ s); flush stdout
 
-let error s = print_endline ("error: " ^ s); flush stdout; exit 2
+let report_error l s = print_endline (maybe_pp_loc l ^ error_string () ^ s); flush stdout
 
-let int_error s = print_endline("internal: " ^ s); flush stdout; exit 2
 
-let errorm m s = print_endline ("internal (" ^ mode_name m ^ "): " ^ s); flush stdout; exit 2
+let error l s = raise (Located_Failure (l, s))
+
+let exit_with l s = print_endline (maybe_pp_loc l ^ error_string () ^ s);  flush stdout; exit 2
+
+let int_error s = raise (Located_Failure (None, "internal: " ^ s))
+
+let errorm m s = raise (Located_Failure (None, "internal (" ^ mode_name m ^ "): " ^ s))
 
 
 (* ***************** *)
@@ -137,14 +154,6 @@ let paren s =
   then "("^s^")"
   else s
 
-let string_begins s1 s2 =
-  try
-    let len = String.length s2 in
-    if String.sub s1 0 len = s2
-    then true
-    else false
-  with _ -> false
-     
 (* equality testing up-to location data ********************************** *)
 
 let rec eq_raw_element (red,red') = 
@@ -302,7 +311,7 @@ let prod_of_prodname ?(warn=true) (xd:syntaxdefn) (pn:prodname) : prod =
       List.find 
 	(fun r -> List.exists (fun p -> p.prod_name=pn) r.rule_ps)
 	xd.xd_rs
-    with Not_found -> if warn then warning ("internal: prod_of_prodname: searching pn = "^pn^"\n"); raise Not_found in
+    with Not_found -> if warn then warning None ("internal: prod_of_prodname: searching pn = "^pn^"\n"); raise Not_found in
   List.find (fun p -> p.prod_name=pn) r.rule_ps
 (*        let prod_of_prod_name : prodname -> prod  *)
 (*            = fun prod_name' ->  *)
@@ -596,7 +605,6 @@ let hom_name_for_pp_mode m
     | Lem _ -> "lem"
     | Coq _ -> "coq"
     | Twf _ -> "twf"
-    | Rdx _ -> "rdx"
     | Caml _ -> "ocaml"
     | Lex _ -> "lex"
     | Menhir _ -> "menhir"
@@ -621,6 +629,26 @@ let hom_spec_for_hom_name hn homs =
 
 let hom_spec_for_pp_mode m homs = 
   hom_spec_for_hom_name (hom_name_for_pp_mode m) homs
+
+let loc_of_symterm st = match st with
+  | St_node (l,_) -> l  
+  | St_nonterm (l,_,_) -> l
+  | St_nontermsub (l,_,_,_) -> l 
+  | St_uninterpreted (l,_) -> l
+
+let loc_of_symterm_element ste = match ste with
+  | Types.Ste_st (loc,_) -> loc
+  | Types.Ste_metavar (loc,_,_) -> loc
+  | Types.Ste_var (loc,_,_) -> loc
+  | Types.Ste_list (loc,_) -> loc
+
+let loc_of_mvr xd mvr = (mvd_of_mvr_nonprimary xd mvr).mvd_loc
+
+let loc_of_ntr (xd:syntaxdefn) (ntr:nontermroot) =
+  (rule_of_ntr xd ntr).rule_loc 
+
+let loc_of_prodname ?(warn=true) (xd:syntaxdefn) (pn:prodname) =
+  (prod_of_prodname xd pn).prod_loc 
 
 let loc_of_raw_element e = 
   match e with
@@ -1041,11 +1069,11 @@ and rename_bound map b = match b with
                           bclu_upper = rename_suffix_item map bclu.bclu_upper }
                         
 and rename_bindspec map bs = match bs with
-| Bind(mse,nt)->Bind(rename_mse map mse,rename_nonterm map nt)
-| AuxFnDef(auxfn,mse)->AuxFnDef(auxfn, rename_mse map mse)
-| NamesEqual(mse,mse')->NamesEqual(rename_mse map mse,rename_mse map mse')
-| NamesDistinct(mse,mse')->NamesDistinct(rename_mse map mse,rename_mse map mse')
-| AllNamesDistinct(mse)->AllNamesDistinct(rename_mse map mse)
+| Bind(loc,mse,nt)->Bind(loc,rename_mse map mse,rename_nonterm map nt)
+| AuxFnDef(loc,auxfn,mse)->AuxFnDef(loc,auxfn, rename_mse map mse)
+| NamesEqual(loc,mse,mse')->NamesEqual(loc,rename_mse map mse,rename_mse map mse')
+| NamesDistinct(loc,mse,mse')->NamesDistinct(loc,rename_mse map mse,rename_mse map mse')
+| AllNamesDistinct(loc,mse)->AllNamesDistinct(loc,rename_mse map mse)
 
 and rename_mse map mse = match mse with
 | MetaVarExp(mv)->MetaVarExp(rename_metavar map mv)
@@ -1120,8 +1148,8 @@ and rename_freevar map fv =
     fv_that = rename_nt_or_mv_root map fv.fv_that; }
 
 and rename_parsing_annotations map pas =
-  { pa_data = List.map (fun (ntr1,pa_type,ntr2)-> 
-      (rename_nontermroot map ntr1,pa_type,rename_nontermroot map ntr2)) pas.pa_data }
+  { pa_data = List.map (fun (ntr1,pa_type,ntr2,l)-> 
+      (rename_nontermroot map ntr1,pa_type,rename_nontermroot map ntr2,l)) pas.pa_data }
 
 and rename_dependencies map xddep =
   { xd_dep_ts = List.map (List.map (rename_nt_or_mv_root map)) xddep.xd_dep_ts;
@@ -1266,7 +1294,7 @@ let avoid xd mvs0 nts0 =
         match mvd.mvd_indexvar with
         | true ->
             if mvr=mvd.mvd_name then 
-              warning ("warning: indexvar \""^mvr^"\" is primary so may give a name-clash\n") ;
+              warning None ("warning: indexvar \""^mvr^"\" is primary so may give a name-clash\n") ;
             None
         | false ->
             if mvr=mvd.mvd_name then Some mv else None
@@ -1351,7 +1379,7 @@ let secondaryify xd mvs0 nts0 =
         match mvd.mvd_indexvar with
         | true ->
             if mvr=mvd.mvd_name then 
-              warning ("indexvar \""^mvr^"\" is primary so may give a name-clash\n") ;
+              warning None ("indexvar \""^mvr^"\" is primary so may give a name-clash\n") ;
             Some mv
         | false ->
             Some mv
@@ -1480,49 +1508,51 @@ uppercase *)
 
 let rec detect_conflicts l =
   match l with
-  | [] -> (false,"")
-  | (_,x)::tl -> 
-      if List.mem x (List.map (fun x -> snd x) tl)
-      then (true,x)
+  | [] -> (false,"",dummy_loc)
+  | (loc,_,x)::tl -> 
+      if List.mem x (List.map (fun (_,_,x) -> x) tl)
+      then (true,x,loc)
       else detect_conflicts tl
+
+let remove_fst (_,x,y) = (x,y)
+
 
 let capitalize_prodnames sd =
   let rule_list = sd.syntax.xd_rs in
   let prod_list = List.flatten (List.map (fun r -> r.rule_ps) rule_list) in
-  let prod_name_list = List.map (fun p -> p.prod_name) prod_list in
-  let map_prod_names = List.map (fun pn -> (pn,String.capitalize pn)) prod_name_list in
-  let (conflict,err_msg) = detect_conflicts map_prod_names in
+  (* let prod_name_list = List.map (fun p -> p.prod_name) prod_list in *)
+  let map_prod_names = List.map (fun p -> (p.prod_loc, p.prod_name, String.capitalize p.prod_name)) prod_list in
+  let (conflict,err_msg,loc) = detect_conflicts map_prod_names in
   if conflict
-  then error ("Renaming of production name \""^err_msg^"\" generates a conflict\n")
-  else map_prod_names
+  then error (Some loc) ("Renaming of production name \""^err_msg^"\" generates a conflict\n")
+  else List.map remove_fst map_prod_names
 
 let uncapitalize_prodnames sd =
   let rule_list = sd.syntax.xd_rs in
   let prod_list = List.flatten (List.map (fun r -> r.rule_ps) rule_list) in
-  let prod_name_list = List.map (fun p -> p.prod_name) prod_list in
-  let map_prod_names = List.map (fun pn -> (pn,String.uncapitalize pn)) prod_name_list in
-  let (conflict,err_msg) = detect_conflicts map_prod_names in
+  let map_prod_names = List.map (fun p -> (p.prod_loc, p.prod_name, String.uncapitalize p.prod_name)) prod_list in
+  let (conflict,err_msg,loc) = detect_conflicts map_prod_names in
   if conflict
-  then error ("Renaming of production name \""^err_msg^"\" generates a conflict\n")
-  else map_prod_names
+  then error (Some loc) ("Renaming of production name \""^err_msg^"\" generates a conflict\n")
+  else List.map remove_fst map_prod_names
 
 let uncapitalize_primary_nontermroots sd = 
   let rule_list = sd.syntax.xd_rs in
-  let nontermroots_list = List.map (fun r -> r.rule_ntr_name) rule_list in
-  let map_nontermroots = List.map (fun ntr -> (ntr,String.uncapitalize ntr)) nontermroots_list in
-  let (conflict,err_msg) = detect_conflicts map_nontermroots in
+  let nontermroots_list = List.map (fun r -> (r.rule_loc, r.rule_ntr_name)) rule_list in
+  let map_nontermroots = List.map (fun (loc,ntr) -> (loc,ntr,String.uncapitalize ntr)) nontermroots_list in
+  let (conflict,err_msg,loc) = detect_conflicts map_nontermroots in
   if conflict
-  then error ("Renaming of primary nontermroot \""^err_msg^"\" generates a conflict\n")
-  else map_nontermroots
+  then error (Some loc) ("Renaming of primary nontermroot \""^err_msg^"\" generates a conflict\n")
+  else List.map remove_fst map_nontermroots
 
 let uncapitalize_primary_metavarroots sd =
   let metavardefn_list = sd.syntax.xd_mds in
-  let metavarroots_list = List.map (fun mvd -> mvd.mvd_name) metavardefn_list in
-  let map_metavarroots = List.map (fun mvr -> (mvr,String.uncapitalize mvr)) metavarroots_list in
-  let (conflict,err_msg) = detect_conflicts map_metavarroots in
+  let metavarroots_list = List.map (fun mvd -> (mvd.mvd_loc, mvd.mvd_name)) metavardefn_list in
+  let map_metavarroots = List.map (fun (loc,mvr) -> (loc,mvr,String.uncapitalize mvr)) metavarroots_list in
+  let (conflict,err_msg,loc) = detect_conflicts map_metavarroots in
   if conflict
-  then error ("Renaming of primary metavar \""^err_msg^"\" generates a conflict\n")
-  else map_metavarroots 
+  then error (Some loc) ("Renaming of primary metavar \""^err_msg^"\" generates a conflict\n")
+  else List.map remove_fst map_metavarroots 
 
 let caml_rename sd =
   let map_prod_names = capitalize_prodnames sd in
@@ -1742,7 +1772,7 @@ let rec pp_tex_escape_alltt s =
 
 let isa_filename_check s =
   match string_remove_suffix s ".thy" with
-  | None -> error ("Isabelle filenames must end with .thy\n")
+  | None -> error None ("Isabelle filenames must end with .thy\n")
   | Some s1 -> s1
 
 let hol_filename_check s =
@@ -1782,7 +1812,7 @@ let prod_require_nominal m xd p =
   List.exists
     ( fun bs -> 
       match bs with
-      | Bind (MetaVarExp (mvr,_), nt) -> 
+      | Bind (_, MetaVarExp (mvr,_), nt) -> 
 	  is_nominal_atom m xd (mvd_of_mvr xd (primary_mvr_of_mvr xd mvr) )
       | _ -> false )
     p.prod_bs
