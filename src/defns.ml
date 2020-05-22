@@ -201,7 +201,7 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
            dr.drule_premises) in
 
   let ppd_conclusion = 
-    (* print_endline (Grammar_pp.pp_plain_symterm dr.drule_conclusion); *)
+    print_endline (Grammar_pp.pp_plain_symterm dr.drule_conclusion); 
     Grammar_pp.pp_symterm m xd [] de dr.drule_conclusion in
   match m with
   | Ascii ao ->
@@ -652,9 +652,12 @@ let pp_defnclass fd (m:pp_mode) (xd:syntaxdefn) lookup (dc:defnclass) =
   | Caml _ | Lex _ | Menhir _ -> ()
 
   | Tex _ ->
+      let tex_hom = try Grammar_pp.pp_hom_spec m xd (List.assoc "tex" dc.dc_homs) with Not_found -> "" in
+
       Printf.fprintf fd "%% defns %s\n" dc.dc_name;
       List.iter (fun d -> pp_defn fd m xd lookup dc.dc_wrapper universe d) dc.dc_defns;
       Printf.fprintf fd "\n\\newcommand{%s}{\n" (Grammar_pp.tex_defnclass_name m dc.dc_name);
+      if tex_hom <> "" then Printf.fprintf fd "%s\n" tex_hom else ();
       List.iter (fun d -> output_string fd (Grammar_pp.tex_defn_name m dc.dc_wrapper d.d_name);
                           output_string fd "{}") dc.dc_defns;
       output_string fd "}\n\n"

@@ -147,9 +147,9 @@ let aux_rule (rr:raw_rule) ((before :string list),(after : string list), (l :loc
     raw_rule_loc = l }
 
 let auxed_rule (rr:raw_rule) : raw_rule =
-  (match rr.raw_rule_ntr_names with
+(*  (match rr.raw_rule_ntr_names with
   | (_,homs)::_ -> if homs <> [] then ty_error2 rr.raw_rule_loc "rules with aux homs cannot have homs on the principal nonterminal root" ""
-  | _ -> ());
+  | _ -> ());*)
   { rr with 
     raw_rule_ntr_name = auxed_rule_name rr;
     raw_rule_ntr_names = [(auxed_rule_name rr,[])];
@@ -407,19 +407,19 @@ let allowable_hom_data =
   [ 
     ( Hu_root    , (["isa";"coq";"hol";"lem";(*"twf";*)"tex";"ocaml"], 
                     "nonterminal, metavar or indexvar root"));
-    ( Hu_metavar , (["isa";"coq";"hol";"lem";(*"twf";*)"tex";"ocaml";"com";"coq-equality";"coq-universe";"lex";"texvar";"isavar";"holvar";"lemvar";"ocamlvar";"repr-locally-nameless";(*"repr-nominal";*)"phantom";"ocamllex";"ocamllex-remove";"cgen","ocamllex-of-string";"pp";"pp-raw";"pp-suppress"],
+    ( Hu_metavar , (["isa";"coq";"hol";"lem";(*"twf";*)"tex";"ocaml";"com";"coq-equality";"coq-universe";"lex";"texvar";"isavar";"holvar";"lemvar";"ocamlvar";"repr-locally-nameless";(*"repr-nominal";*)"phantom";"ocamllex";"ocamllex-remove";"cgen";"ocamllex-of-string";"pp";"pp-raw";"pp-suppress"],
                     "metavar declaration"));
     ( Hu_rule    , (["isa";"coq";"hol";"lem";(*"twf";*)"tex";"ocaml";"com";"coq-equality";"coq-universe";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ic";"ch";"ih";"phantom";"aux";"auxparam";"menhir-start";"menhir-start-type";"quotient-with";"pp";"pp-raw";"pp-suppress";"pp-params"],
                     "rule"));
     ( Hu_rule_meta, (["com"], "special rule"));
     ( Hu_prod    , (["isa";"coq";"hol";"lem";(*"twf";*)"tex";"texlong";"ocaml";"com";"order";"isasyn";"isaprec";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ic";"ch";"ih";
                      "rdx";"rdx-mode"; 
-                     "disambiguate";"prec";"leftassoc";"rightassoc";"menhir";"quotient-remove";"menhir-prec";"pp";"pp-raw","cgen"; "fail"; "fail_ok"; "fail_error"],
+                     "disambiguate";"prec";"leftassoc";"rightassoc";"menhir";"quotient-remove";"menhir-prec";"pp";"pp-raw";"cgen"; "fail"; "fail_ok"; "fail_error"],
                     "production"));
     ( Hu_prod_tm , (["isa";                      "tex";"lex";  "com"; "prec";"leftassoc";"rightassoc"],"production of the terminals grammar"));
     ( Hu_drule   , ([                                          "com"],"definition rule"));
     ( Hu_defn    , ([                            "tex";        "com";"isasyn";"isaprec";"disambiguate";"lemwcf";"rdx-mode";"fail";"fail_ok";"fail_error"],"definition"));
-    ( Hu_defnclass, (["coq-universe"],"defns block"));
+    ( Hu_defnclass, (["coq-universe";"tex"],"defns block"));
     ( Hu_fundefn , (["isa";"coq";"hol";"lem";(*"twf";*)"tex";        "com";"order";"isasyn";"isaprec";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ic";"ch";"ih";"coq-struct"],"function definition"));
     ( Hu_fundefnclass, ([(* "isa-proof";*)"hol-proof"],"funs block"));
     ( Hu_subrule,  (["isa-proof"],"subrule definition"));

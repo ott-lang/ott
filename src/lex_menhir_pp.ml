@@ -710,7 +710,7 @@ let pp_menhir_prod yo generate_aux_info_here xd ts r p =
     let ppd_comment = "(* "^ppd_prod ^ " :: " ^ p.prod_name^" *)" in
 
     (* now the real work *)
-    let element_data = element_data_of_prod ts p in 
+    let element_data = element_data_of_prod xd ts p in 
     let element_data' = (if generate_aux_info_for_prod generate_aux_info_here r p then [aux_constructor_element] else []) @ element_data in
     let ppd_action = 
       let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in

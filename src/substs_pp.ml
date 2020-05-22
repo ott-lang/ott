@@ -1321,6 +1321,8 @@ let pp_subst_rule_const : subst -> pp_mode -> syntaxdefn -> nontermroot -> strin
 let pp_subst_rule : subst -> pp_mode -> syntaxdefn -> nontermroot list -> rule -> int_func list = 
   fun subst m xd domain r ->
 
+    Printf.fprintf stderr "pp_subst_rule %s\n" subst.sb_name;
+  
     (* TODO!!! this is no longer freshening w.r.t. the right things - need *)
     (* to fresh w.r.t. the secondaryised ntrs and mvrs *)
     (* probably also true elsewhere *)
@@ -1448,6 +1450,9 @@ let pp_subst_rule : subst -> pp_mode -> syntaxdefn -> nontermroot list -> rule -
       r_fun_clauses = clauses } :: list_funcs
 
 let subst_manifestly_needed subst xd ntr p =
+  Printf.fprintf stderr "subst needed name=%s ntr=%s this=%s that=%s\n" subst.sb_name ntr subst.sb_this 
+    (Grammar_pp.pp_plain_nt_or_mv_root subst.sb_that);
+  Printf.fprintf stderr " %s\n" (String.concat " " (List.map Grammar_pp.pp_plain_element p.prod_es));
   if subst.sb_this=ntr then
     List.exists (fun ntmv ->
         match ntmv with

@@ -1004,7 +1004,9 @@ and pp_nonterm_with_sie_internal as_type m xd sie (ntr,suff) =
     let auxparam_opt = try Some (List.assoc "auxparam" r.rule_homs) with Not_found -> None in
     let auxparam_prefix_opt = 
       match as_type,m,auxparam_opt with
-      | true,Caml _,Some hs | true,Lem _,Some hs -> Some (String.concat "" (List.map (function | Hom_string s -> s | Hom_index _ | Hom_terminal _ | Hom_ln_free_index (_,_) -> Auxl.int_error("illegal auxparam hom "^String.concat ""(List.map pp_plain_hom_spec_el hs))) hs))
+      | true,Isa _, Some hs
+      | true,Caml _,Some hs
+      | true,Lem _,Some hs -> Some (String.concat "" (List.map (function | Hom_string s -> s | Hom_index _ | Hom_terminal _ | Hom_ln_free_index (_,_) -> Auxl.int_error("illegal auxparam hom "^String.concat ""(List.map pp_plain_hom_spec_el hs))) hs))
       | _,_,_ -> None in
     
     match m with
@@ -1036,6 +1038,7 @@ and pp_nonterm_with_sie_internal as_type m xd sie (ntr,suff) =
           else Auxl.hide_isa_trailing_underscore m s0 in
         let s = match m with
         | Caml _ -> (match auxparam_prefix_opt with Some p -> p^" "^s1 | None -> s1)
+        | Isa _ -> (match auxparam_prefix_opt with Some p -> p^" "^s1 | None -> s1)
         | Lem _ -> (match auxparam_prefix_opt with Some p -> "("^s1^" "^p^")" | None -> s1)
         | _ -> s1 in
         s
@@ -2613,7 +2616,8 @@ and pp_rule m xd r = (* returns a string option *)
       then None
       else 
         Some 
-          ("\""^pp_nontermroot_ty m xd r.rule_ntr_name ^ "\" = "^pp_com^"\n   " 
+          (*          ("\""^pp_nontermroot_ty m xd r.rule_ntr_name ^ "\" = "^pp_com^"\n   "  *) (* MPW Don't print quotes - new style *)
+         (""^pp_nontermroot_ty m xd r.rule_ntr_name ^ " = "^pp_com^"\n   " 
            ^ String.concat " | " 
                (List.map 
                   (function s -> s^"\n") 

@@ -457,3 +457,7 @@ README.tex: ../README.md
 %.pstex %.pstex_t : %.fig
 	fig2dev -L pstex               $($*_FIG_OPTS) $< $*.pstex
 	fig2dev -L pstex_t -p $*.pstex $($*_FIG_OPTS) $< $*.pstex_t
+
+internals.tex: internals.md
+	pandoc $< -f markdown -t latex --listings -o $@
+
