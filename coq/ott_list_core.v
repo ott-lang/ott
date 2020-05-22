@@ -28,7 +28,7 @@ Inductive Exists_list (P:A->Prop) : list A -> Prop :=
   | Exists_tail : forall x l, Exists_list P l -> Exists_list P (x::l).
 
 End list_predicates.
-Hint Constructors Forall_list Exists_list.
+Hint Constructors Forall_list Exists_list : core.
 
 
 

@@ -21,7 +21,7 @@ Set Implicit Arguments.
 
 Lemma not_Exists_list_nil : forall P, ~(Exists_list P nil).
 Proof. intros P H; inversion H. Qed.
-Hint Resolve not_Exists_list_nil.
+Hint Resolve not_Exists_list_nil : core.
 
 Lemma Forall_list_dec :
   forall P (dec : forall x, {P x} + {~P x}) l,
@@ -87,7 +87,7 @@ Proof.
   intros; induction l; simpl in * . assumption.
   inversion_clear H. auto.
 Qed.
-Hint Resolve app_Forall_list Forall_list_app_left Forall_list_app_right.
+Hint Resolve app_Forall_list Forall_list_app_left Forall_list_app_right : core.
 
 Lemma Exists_list_app_or :
   forall P l l', Exists_list P (l++l') ->
@@ -107,7 +107,7 @@ Lemma app_Exists_list_right :
 Proof.
   intros; induction l; simpl; auto.
 Qed.
-Hint Resolve Exists_list_app_or app_Exists_list_left app_Exists_list_right.
+Hint Resolve Exists_list_app_or app_Exists_list_left app_Exists_list_right : core.
 
 Lemma rev_Forall_list :
   forall P l, Forall_list P l -> Forall_list P (rev l).

@@ -64,6 +64,7 @@ let twf_filter_filename_dsts = ref ([] :  string list)
 let caml_filter_filenames = ref ([] : (string * string) list)
 let caml_filter_filename_srcs = ref ([] : string list)
 let caml_filter_filename_dsts = ref ([] :  string list)
+let caml_pp_filename = ref (None : string option)
 let lift_cons_prefixes = ref false
 let test_parse_list = ref ([] : string list)
 let sort = ref true
@@ -88,7 +89,7 @@ let isa_inductive = ref true
 let isa_generate_lemmas = ref true
 let isa_rewrite_list_defns = ref false
 let coq_avoid = ref 1
-let coq_expand_lists = ref true
+let coq_expand_lists = ref false
 let coq_lngen = ref false
 let coq_names_in_rules = ref true
 let coq_use_filter_fn = ref false
@@ -257,7 +258,15 @@ let options = Arg.align [
   ( "-ocaml_include_terminals",
     Arg.Bool (fun b -> caml_include_terminals := b),
     "<"^string_of_bool !caml_include_terminals^">  Include terminals in OCaml output (experimental!)" );
+  ( "-ocaml_pp",
+    Arg.String (fun s -> caml_pp_filename := Some s),
+    "   <target.ml filename> generate OCaml AST pretty printer files (experimental!) (also included in .mly target)" );
 
+  ( "-ocaml_pp_ast_module",
+    Arg.String (fun s -> Global_option.caml_pp_ast_module := Some s),
+    "   override default OCaml module name for AST module (experimental!)" );
+
+  
 (* options for debugging *)
   ( "-pp_grammar", 
     Arg.Set Global_option.do_pp_grammar,
@@ -317,7 +326,7 @@ let _ =
   Arg.parse options 
     (fun s -> 
       if !i_arguments 
-      then Auxl.error None "\nError: must either use -i <filename> or specify filenames at the end\n"
+      then Auxl.exit_with None "must either use -i <filename> or specify all input filenames at the end of the command line"
       else extra_arguments := (In,s) ::(!extra_arguments))
     usage_msg;
   file_arguments :=  !file_arguments @ !extra_arguments 
@@ -632,7 +641,7 @@ let process source_filenames =
   in
 
   let ((xd,structure,rdcs),xd_unquotiented,xd_quotiented_unaux) = 
-    if List.mem "menhir" targets then 
+    if List.mem "menhir" targets (*|| !caml_pp_filename <> None*) then 
       (f true !generate_aux_rules, (match f false false with (xd,_,_)-> xd), (match f !generate_aux_rules false with (xd,_,_)-> xd))
     else
       match f !quotient_rules !generate_aux_rules with 
@@ -809,13 +818,30 @@ let output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux) =
           let xd_unquotiented = sd_unquotiented.syntax in
           let xd_quotiented_unaux = sd_quotiented_unaux.syntax in
           (Lex_menhir_pp.pp_menhir_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented lookup !generate_aux_rules fi;
-           Lex_menhir_pp.pp_pp_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented xd_quotiented_unaux !generate_aux_rules fi )
+           Lex_menhir_pp.pp_pp_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented xd_quotiented_unaux !generate_aux_rules true fi "")
 
      | _ -> Auxl.int_error("unknown target "^t))
 
 
     output_details;
 
+
+  (** experimental ocaml pp output, in isolation (it's also included in the .mly output *)
+  begin
+    match !caml_pp_filename with
+    | None -> ()
+    | Some filename ->
+       let sd_quotiented = Auxl.caml_rename sd in
+       let sd_unquotiented = Auxl.caml_rename sd_unquotiented in
+       let xd_quotiented = sd.syntax in
+       let xd_unquotiented = sd_unquotiented.syntax in
+       let xd_quotiented_unaux = sd_quotiented_unaux.syntax in
+       (*      (Lex_menhir_pp.pp_menhir_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented lookup !generate_aux_rules fi;*)
+       Lex_menhir_pp.pp_pp_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented xd_quotiented_unaux (!generate_aux_rules && not !Global_option.aux_style_rules) false [] filename
+  end;
+  
+  
+  
   (** command-line test parse *)
   (match !test_parse_list with [] -> ()|_ -> print_string "\n");
   (List.iter (function s ->

@@ -119,7 +119,7 @@ let suppress_rule yo r =
 (* tokens arise from terminals and metavardefns *)
 type token_kind = 
   | TK_terminal 
-  | TK_metavar of string (* ocamllex hom *) * string option (* ocaml hom, for type*)
+  | TK_metavar of string (* ocamllex hom *) * string option (* ocaml hom, for type*) * string option (* ocamllex_of_string hom, for function to convert from string to ocaml type*)
 (* or other way round?*)
 
 type token_data = 
@@ -261,6 +261,11 @@ let token_names_of_syntaxdefn yo xd : token_data =
 	      let hs = List.assoc "ocamllex" mvd.mvd_rep in
 	      Some (Grammar_pp.pp_hom_spec m xd hs)
             with Not_found -> None) in
+          let ocamllex_of_string_hom_opt = 
+            (try
+	      let hs = List.assoc "ocamllex-of-string" mvd.mvd_rep in
+	      Some (Grammar_pp.pp_hom_spec m xd hs)
+            with Not_found -> None) in
           let ocamllex_remove_hom = 
             (try
 	      let hs = List.assoc "ocamllex-remove" mvd.mvd_rep in
@@ -268,13 +273,15 @@ let token_names_of_syntaxdefn yo xd : token_data =
             with Not_found -> false) in
           (match ocamllex_hom_opt, ocamllex_remove_hom with
           | Some ocamllex_hom, false -> 
-              Some (token_name_of mvd.mvd_name, mvd.mvd_name, TK_metavar(ocaml_type, Some ocamllex_hom))
+              Some (token_name_of mvd.mvd_name, mvd.mvd_name, TK_metavar(ocaml_type, Some ocamllex_hom, ocamllex_of_string_hom_opt))
           | None, false -> 
-              Auxl.error (Some mvd.mvd_loc) ("ocamllex output: no ocamllex or ocamllex-remove hom for "^mvd.mvd_name^"\n")
+(* hack: default to ocamllex-remove *)
+(*              Auxl.error (Some mvd.mvd_loc) ("ocamllex output: no ocamllex or ocamllex-remove hom for "^mvd.mvd_name^"\n")*)
+              Some (token_name_of mvd.mvd_name, mvd.mvd_name, TK_metavar(ocaml_type, None, ocamllex_of_string_hom_opt))
           | Some ocamllex_hom, false -> 
               Auxl.error (Some mvd.mvd_loc) ("ocamllex output: both ocamllex and ocamllex-remove hom for "^mvd.mvd_name^"\n")
           | None, true -> 
-              Some (token_name_of mvd.mvd_name, mvd.mvd_name, TK_metavar(ocaml_type, None))
+              Some (token_name_of mvd.mvd_name, mvd.mvd_name, TK_metavar(ocaml_type, None, ocamllex_of_string_hom_opt))
           )
       )
       xd.xd_mds in
@@ -315,16 +322,21 @@ let pp_lex_token fd (tname, t, tk) =
   match tk with
   | TK_terminal -> 
       Printf.fprintf fd "| \"%s\"\n    { %s }\n" (String.escaped t) tname
-  | TK_metavar(ocaml_type, Some ocamllex_hom) ->
+  | TK_metavar(ocaml_type, Some ocamllex_hom, ocamllex_of_string_hom_opt) ->
       let tv = lex_token_argument_variable_of_mvr t in
       Printf.fprintf fd "| %s as %s\n    { %s (%s) }\n" ocamllex_hom tv tname
-        (match ocaml_type with
-         | "int" -> "int_of_string "^tv
-         | "float" -> "float_of_string "^tv
-         | "bool" -> "bool_of_string "^tv
-         (* TODO the user should be able to use their own xxxxxx_of_string (anonymous) functions *)
-         | _ -> tv)
-  | TK_metavar(ocaml_type, None) ->
+        (
+         (match ocamllex_of_string_hom_opt with
+         | None -> 
+             (match ocaml_type with
+             | "string" -> ""
+             | "int" -> "int_of_string"
+             | "float" -> "float_of_string"
+             | "bool" -> "bool_of_string")
+         | Some f -> f)
+         ^ " " ^ tv)
+(*         | _ -> tv)*)
+  | TK_metavar(ocaml_type, None, _) ->
       Printf.fprintf fd "(* lexer rule for %s suppressed by ocamllex-remove *)\n" tname
 
 (* output an ocamllex source file *)
@@ -376,7 +388,7 @@ let pp_menhir_token fd (tname, t, tk) =
   match tk with
   | TK_terminal -> 
       Printf.fprintf fd "%%token %s  (* %s *)\n" tname (if t <> (String.escaped t) then tname else t)
-  | TK_metavar(ocaml_type, ocamllex_hom_opt) ->
+  | TK_metavar(ocaml_type, ocamllex_hom_opt, ocamllex_of_string_opt) ->
       Printf.fprintf fd "%%token <%s> %s  (* metavarroot %s *)\n" ocaml_type tname t
 
 (* construct the ids used in menhir semantic actions to refer to values of production elements *)
@@ -429,6 +441,26 @@ let pp_pp_raw_name ntmvr =
 let pp_pp_name ntmvr =
   "pp_" ^ ntmvr
 
+let string_of_hom_spec_el hse =
+  match hse with
+  | Hom_string s -> s
+  | Hom_index i -> raise (Failure "string_of_hom_spec")
+  | Hom_terminal t -> t
+  | Hom_ln_free_index _ -> raise (Failure "string_of_hom_spec")
+
+let string_of_hom_spec hs =
+  String.concat "" (List.map string_of_hom_spec_el hs)
+
+                                              
+let pp_params r =
+  match Auxl.hom_spec_for_hom_name "pp-params" r.rule_homs with 
+  | Some hs -> 
+      " " ^ string_of_hom_spec hs
+  | None ->
+      ""
+      
+
+            
 (* construct all the data we need, for parsing and pretty printing,
 from an element of an ott production *)
 
@@ -437,10 +469,10 @@ type element_data = {
     grammar_body : string;
     semantic_action : string option;  (* None for terminals *)
     pp_raw_rhs : string option;       (* None for terminals *)
-    pp_pretty_rhs : string;
+    pp_pretty_rhs : string option;
   }
     
-let rec element_data_of_element ts (allow_lists:bool) e : element_data = 
+let rec element_data_of_element xd ts (allow_lists:bool) (indent_nonterms:bool) e : element_data = 
 (*string option(*semantic_value_id*) * string(*grammar body*) * string option (*semantic action*) =*)
   match e with
   | Lang_terminal t -> 
@@ -448,27 +480,43 @@ let rec element_data_of_element ts (allow_lists:bool) e : element_data =
         grammar_body      = token_of_terminal ts t;
         semantic_action   = None;
         pp_raw_rhs        = None;
-        pp_pretty_rhs     = "string \"" ^ String.escaped t ^ "\""; }
+        pp_pretty_rhs     = Some ("string \"" ^ String.escaped t ^ "\""); }
 
   | Lang_nonterm (ntr,nt) ->
       let svi = menhir_semantic_value_id_of_ntmv nt in 
       { semantic_value_id = Some svi;
         grammar_body      = menhir_nonterminal_id_of_ntr ntr;
         semantic_action   = Some svi;
-        pp_raw_rhs        = Some (pp_pp_raw_name ntr ^ " " ^ svi);
-        pp_pretty_rhs     = pp_pp_name ntr ^ " " ^ svi; }
+        pp_raw_rhs        = Some (pp_pp_raw_name ntr ^ pp_params (Auxl.rule_of_ntr_nonprimary xd ntr) ^ " " ^ svi);
+        pp_pretty_rhs     
+          = match Auxl.hom_spec_for_hom_name "pp-suppress" (Auxl.rule_of_ntr_nonprimary xd ntr).rule_homs with 
+          | Some hs ->
+              None
+          | None -> 
+              if indent_nonterms then
+                Some ("nest 2 (" ^ pp_pp_name ntr ^ pp_params (Auxl.rule_of_ntr_nonprimary xd ntr) ^ " " ^ svi ^")")
+              else
+                Some ("" ^ pp_pp_name ntr ^ pp_params (Auxl.rule_of_ntr_nonprimary xd ntr) ^ " " ^ svi ^"";) }
 
   | Lang_metavar (mvr,mv) -> (* assuming all metavars map onto string-containing tokens *)
       let svi = menhir_semantic_value_id_of_ntmv mv in 
       { semantic_value_id = Some svi;
         grammar_body      = token_of_metavarroot ts mvr;
         semantic_action   = Some svi;
-        pp_raw_rhs        = Some (" string \"\\\"\" ^^ string " ^ svi ^ " ^^ string \"\\\"\"");
+        pp_raw_rhs        = Some (pp_pp_raw_name mvr ^ " " ^ svi);
+        pp_pretty_rhs     
+          = match Auxl.hom_spec_for_hom_name "pp-suppress" (Auxl.mvd_of_mvr_nonprimary xd mvr).mvd_rep with 
+          | Some hs ->
+              None
+          | None -> 
+              Some (pp_pp_name mvr ^ " " ^ svi); }
+(*        pp_raw_rhs        = Some (" string \"\\\"\" ^^ string " ^ svi ^ " ^^ string \"\\\"\"");
         pp_pretty_rhs     = "string "^ svi ; }
-        
+ *)
+      
   | Lang_list elb -> 
       if not allow_lists then raise (Failure "unexpected list form");
-      let element_data = List.map (element_data_of_element ts false) elb.elb_es in 
+      let element_data = List.map (element_data_of_element xd ts false indent_nonterms) elb.elb_es in 
       
       let svi = menhir_semantic_value_id_of_list elb.elb_es in      
 
@@ -521,26 +569,26 @@ let rec element_data_of_element ts (allow_lists:bool) e : element_data =
         pper in
 
       let pp_pretty_rhs = 
-        let rhs_data = List.map (function x-> x.pp_pretty_rhs) element_data in
+        let rhs_data = Auxl.option_map (function x-> x.pp_pretty_rhs) element_data in
         let rhs =  String.concat  " ^^ string \" \" ^^ " rhs_data in
         let f = "(function "^pat^" -> "^rhs^")" in
-        let sep = match elb.elb_tmo with Some t -> String.escaped t | None -> " " in
-        let pper = "separate (" ^ "string \""^ sep ^ "\") (List.map " ^ f ^ " " ^ svi ^ ")" in
+        let sep = match elb.elb_tmo with Some t -> "(string \""^String.escaped t^"\")" | None -> "(break 1)" in
+        let pper = "group(separate " ^  sep ^ " (List.map " ^ f ^ " " ^ svi ^ "))" in
         pper in
 
       { semantic_value_id = Some svi;
         grammar_body      = body;
         semantic_action   = Some action;
         pp_raw_rhs        = Some pp_raw_rhs;
-        pp_pretty_rhs     = pp_pretty_rhs ; }
+        pp_pretty_rhs     = Some pp_pretty_rhs ; }
         
   | _ -> raise (Failure "unexpected Lang_ form")
         
 
-let element_data_of_prod ts p =
-  List.map (element_data_of_element ts true) p.prod_es
-  
-
+let element_data_of_prod xd ts p =
+  (* try indenting nonterms iff this production has a top-level terminal *)
+  let indent_nonterms = List.exists (function | Lang_terminal _ -> true | _ -> false) p.prod_es in 
+  List.map (element_data_of_element xd ts true indent_nonterms) p.prod_es
 
 
 let pp_menhir_prod_grammar element_data = 
@@ -576,7 +624,7 @@ let aux_constructor generate_aux_info_here r p : string option =
     Some aux_prod_name
   else
     None
-(* ...for construtors *)
+(* ...for constructors *)
 
 let ott_menhir_loc = "ott_menhir_loc" (* ocaml variable to use for locations *)
 
@@ -585,7 +633,7 @@ let aux_constructor_element : element_data =
     grammar_body = "DUMMY";
     semantic_action = Some "Range($symbolstartpos,$endpos)";
     pp_raw_rhs = None;
-    pp_pretty_rhs = ""; }
+    pp_pretty_rhs = None (* effectively pp-suppress for this element *); }
 
 let rec take_until f xs = match xs with
   | (x::xs) -> if f x then [] else (x :: (take_until f xs ))
@@ -683,7 +731,7 @@ let pp_menhir_prod yo generate_aux_info_here xd ts r p =
           match hse with
           | Hom_string s ->  s
           (* TODO, arbitrary failure? *)
-          | Hom_index i -> let e = List.nth es'' (*or es? *) i  in let d=element_data_of_element ts true e in (match d.semantic_action with Some s -> s | None -> raise (Failure ("pp_menhir_hse Hom_index " ^ string_of_int i ^ " at " ^ Location.pp_loc p.prod_loc)))
+          | Hom_index i -> let e = List.nth es'' (*or es? *) i  in let d=element_data_of_element xd ts true false e in (match d.semantic_action with Some s -> s | None -> raise (Failure ("pp_menhir_hse Hom_index " ^ string_of_int i ^ " at " ^ Location.pp_loc p.prod_loc)))
           | Hom_terminal s -> s
           | Hom_ln_free_index (mvs,s) -> raise (Failure "Hom_ln_free_index not implemented")  in
         String.concat "" (List.map pp_menhir_hse hs)
@@ -767,125 +815,233 @@ let pp_menhir_start_rules yo xd ts =
     (List.map (pp_menhir_start_rule yo xd ts)  xd.xd_rs)
                                                                 
 (* construct menhir start symbol declarations *)
-let pp_menhir_start_symbols yo generate_aux_info xd = 
-  String.concat "" 
-    (List.map 
-       (function r -> 
-         if not(is_start_rule yo r) then 
-           ""
-         else
-           let ty0 = 
-             Grammar_pp.strip_surrounding_parens 
-               (Grammar_pp.pp_nontermroot_ty (Caml yo.ppm_caml_opts) xd r.rule_ntr_name) in
-           let (ty1, ty_arg) = 
-           if String.length ty0 >= 3 && String.sub ty0 0 3 = "'a " then 
-             (String.sub ty0 3 (String.length ty0 - 3), "unit ")
+  let pp_menhir_start_symbols yo generate_aux_info xd = 
+    String.concat "" 
+      (List.map 
+         (function r -> 
+           if not(is_start_rule yo r) then 
+             ""
            else
-             (ty0, "") in
-           (*let generate_aux_info_here = generate_aux_info &&
-             (match Auxl.hom_spec_for_hom_name "aux" r.rule_homs with 
-             | Some hs -> true
-             | None -> false) in
-           let ty1 = if generate_aux_info_here then ty1 ^ "_aux" else ty1 in*)
-           "%start <" 
-           ^ ty_arg 
-           ^ yo.ppm_caml_ast_module 
-           ^ "."  
-           ^ ty1
-           ^ "> " 
-           ^ menhir_start (menhir_nonterminal_id_of_ntr r.rule_ntr_name) 
-           ^ "\n")
-       xd.xd_rs)
+             let ty0 = 
+               Grammar_pp.strip_surrounding_parens 
+                 (Grammar_pp.pp_nontermroot_ty (Caml yo.ppm_caml_opts) xd r.rule_ntr_name) in
+             let ty =
+               match Auxl.hom_spec_for_hom_name "menhir-start-type" r.rule_homs with 
+               | Some hs ->
+                   let pp_hse hse = 
+                     match hse with
+                     | Hom_string s ->  s
+                     | Hom_index i -> raise (Failure ("menhir-start-type Hom_index"))
+                     | Hom_terminal s -> s
+                     | Hom_ln_free_index (mvs,s) -> raise (Failure "menhir-start-type Hom_ln_free_index")  in
+                   String.concat "" (List.map pp_hse hs)
+               | None ->
+                   let (ty1, ty_arg) = 
+                     if String.length ty0 >= 3 && String.sub ty0 0 3 = "'a " then 
+                       (String.sub ty0 3 (String.length ty0 - 3), "unit ")
+                     else
+                       (ty0, "") in
+                   ty_arg 
+                   ^ yo.ppm_caml_ast_module 
+                   ^ "."  
+                   ^ ty1
+             in
+             (*let generate_aux_info_here = generate_aux_info &&
+               (match Auxl.hom_spec_for_hom_name "aux" r.rule_homs with 
+               | Some hs -> true
+               | None -> false) in
+               let ty1 = if generate_aux_info_here then ty1 ^ "_aux" else ty1 in*)
+             "%start <" 
+             ^ ty
+             ^ "> " 
+             ^ menhir_start (menhir_nonterminal_id_of_ntr r.rule_ntr_name) 
+             ^ "\n")
+         xd.xd_rs)
 
 (** ******************************************************************** *)
 (** raw pp                                                               *)
 (** ******************************************************************** *)
 
+      
 (* all this should really use a more efficient representation than string *)
 
+
+(*        pp_raw_rhs        = Some (" string \"\\\"\" ^^ string " ^ svi ^ " ^^ string \"\\\"\"");
+        pp_pretty_rhs     = "string "^ svi ; }
+ *)
+let pp_pp_raw_metavar_defn yo generate_aux_info xd ts md = 
+  if suppress_metavar yo md then 
+    None
+  else 
+    (match Auxl.hom_spec_for_hom_name "pp-raw" md.mvd_rep with 
+    | Some hs -> 
+        Some (pp_pp_raw_name md.mvd_name ^ " " ^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs ^"\n\n")
+    | None ->
+       (*       let svi = menhir_semantic_value_id_of_ntmv (md.mvd_name,[])  in *)
+       let svi = "x" in
+       (match Auxl.hom_spec_for_hom_name "ocaml" md.mvd_rep with 
+        | Some [Hom_string s] when s="string" -> 
+           Some (pp_pp_raw_name md.mvd_name ^ " "^svi^" = " ^ " string \"\\\"\" ^^ string " ^ svi ^ " ^^ string \"\\\"\"\n\n")
+        | Some [Hom_string s] when s="int" -> 
+           Some (pp_pp_raw_name md.mvd_name ^ " "^svi^" = " ^ " string_of_int " ^ svi ^ "\n\n")
+        | Some [Hom_string s] when s="big_int" -> 
+           Some (pp_pp_raw_name md.mvd_name ^ " "^svi^" = " ^ " Big_int.string_of_big_int " ^ svi ^ "\n\n")
+        | Some hs -> Some ("no default for "^md.mvd_name^" ocaml homspec="^Grammar_pp.pp_plain_hom_spec hs ^ "\n\n")
+        | None -> Some ("no pp-raw or ocaml hom for "^md.mvd_name^ "\n\n")
+       )
+    )
+
+
+let pp_pp_metavar_defn yo generate_aux_info xd ts md = 
+  if false && suppress_metavar yo md then 
+    None
+  else 
+    (match Auxl.hom_spec_for_hom_name "pp" md.mvd_rep with 
+    | Some hs -> 
+        Some (pp_pp_name md.mvd_name ^ " " ^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs ^"\n\n")
+    | None ->
+       (*       let svi = menhir_semantic_value_id_of_ntmv (md.mvd_name,[])  in *)
+       let svi = "x" in
+       (match Auxl.hom_spec_for_hom_name "ocaml" md.mvd_rep with 
+        | Some [Hom_string s] when s="string" -> 
+           Some (pp_pp_name md.mvd_name ^ " "^svi^" = " ^ "string " ^ svi ^ " ^^ string \"\"\n\n")
+        | Some [Hom_string s] when s="int" -> 
+           Some (pp_pp_name md.mvd_name ^ " "^svi^" = " ^ "string_of_int " ^ svi ^ "\n\n")
+        | Some [Hom_string s] when s="big_int" -> 
+           Some (pp_pp_name md.mvd_name ^ " "^svi^" = " ^ " Big_int.string_of_big_int " ^ svi ^ "\n\n")
+        | Some hs -> Some ("no pp default for "^md.mvd_name^" ocaml homspec="^Grammar_pp.pp_plain_hom_spec hs ^ "\n\n")
+        | None -> Some ("no pp or ocaml hom for "^md.mvd_name^ "\n\n")
+       )
+    )
+
+
+  
+       (*
+       if r.rule_phantom then
+       (*(Auxl.error (Some r.rule_loc) ("no pp-raw hom for phantom production "^r.rule_ntr_name));*)
+         Some (pp_pp_raw_name r.rule_ntr_name ^ "_default " (*^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs*) ^"\n\n")
+       else 
+ *)
+
+(*
+       
+         Some (pp_pp_raw_name mvd.mvd_name ^ " x = match x with\n" 
+               ^  String.concat "" (List.map (pp_pp_raw_prod yo generate_aux_info_here xd ts r) r.rule_ps)
+               ^ "\n")
+    )
+ *)
+  
+  
 let pp_pp_raw_prod yo generate_aux_info_here xd ts r p = 
   if suppress_prod yo p || p.prod_sugar then 
     ""
   else
-    (*let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in*)
-    let element_data = element_data_of_prod ts p in 
-
-    let ppd_rhs = 
-      (match aux_constructor generate_aux_info_here r p with
-      | Some s -> " string \"[\" ^^ string (pp_raw_l "^ott_menhir_loc^") ^^ string \"]\" ^^ "
-      | None -> "") 
-      ^
-      "string \"" ^ String.capitalize p.prod_name ^ "\"" 
-      ^ 
-        let args = Auxl.option_map (function x->x.pp_raw_rhs) element_data in
-        match args with
-        | [] -> ""
-        | _ -> " ^^ string \"(\" ^^ "^ String.concat " ^^ string \",\" ^^ " args ^ " ^^ string \")\"" 
-    in                                                                   
-    "| " ^ pp_pattern_prod r p generate_aux_info_here element_data ^ " -> " 
-    ^ ppd_rhs
-    ^ "\n"
-
+    match Auxl.hom_spec_for_hom_name "pp-raw" p.prod_homs with 
+    | Some hs -> 
+       "| " ^ String.capitalize p.prod_name ^ " " ^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs ^"\n"
+    | None ->
+       (*let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in*)
+       let element_data = element_data_of_prod xd ts p in 
+       
+       let ppd_rhs = 
+         (match aux_constructor generate_aux_info_here r p with
+          | Some _ -> " string \"[\" ^^ string (pp_raw_l "^ott_menhir_loc^") ^^ string \"]\" ^^ "
+          | None -> "") 
+         ^
+           "string \"" ^ String.capitalize p.prod_name ^ "\"" 
+         ^ 
+           let args = Auxl.option_map (function x->x.pp_raw_rhs) element_data in
+           match args with
+           | [] -> ""
+           | _ -> " ^^ string \"(\" ^^ "^ String.concat " ^^ string \",\" ^^ " args ^ " ^^ string \")\"" 
+       in                                                                   
+       "| " ^ pp_pattern_prod r p generate_aux_info_here element_data ^ " -> " 
+       ^ ppd_rhs
+       ^ "\n"
+       
 
 let pp_pp_raw_rule yo generate_aux_info xd ts r = 
   if suppress_rule yo r then 
     None
-  else if r.rule_phantom then
+  else 
     (match Auxl.hom_spec_for_hom_name "pp-raw" r.rule_homs with 
     | Some hs -> 
         Some (pp_pp_raw_name r.rule_ntr_name ^ " " ^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs ^"\n\n")
-    | None -> (Auxl.error (Some r.rule_loc) ("no pp-raw hom for phantom production "^r.rule_ntr_name));
-    )
-  else 
-    let generate_aux_info_here = generate_aux_info_for_rule generate_aux_info r in 
+    | None ->
+       if r.rule_phantom then
+       (*(Auxl.error (Some r.rule_loc) ("no pp-raw hom for phantom production "^r.rule_ntr_name));*)
+         Some (pp_pp_raw_name r.rule_ntr_name ^ "_default " (*^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs*) ^"\n\n")
+       else 
+         let generate_aux_info_here = generate_aux_info_for_rule generate_aux_info r in 
     
-    Some (pp_pp_raw_name r.rule_ntr_name ^ " x = match x with\n" 
-    ^  String.concat "" (List.map (pp_pp_raw_prod yo generate_aux_info_here xd ts r) r.rule_ps)
-    ^ "\n")
+         Some (pp_pp_raw_name r.rule_ntr_name ^ pp_params r ^ " x = match x with\n" 
+               ^  String.concat "" (List.map (pp_pp_raw_prod yo generate_aux_info_here xd ts r) r.rule_ps)
+               ^ "\n")
+    )
 
-let pp_pp_raw_rules yo generate_aux_info xd ts rs = 
-  "let rec " ^ String.concat "and " (Auxl.option_map (pp_pp_raw_rule yo generate_aux_info xd ts) rs)
+let pp_pp_raw_metavar_defns_and_rules yo generate_aux_info xd ts mds rs = 
+  "let rec "
+  ^ String.concat "and "
+      ((Auxl.option_map (pp_pp_raw_metavar_defn yo generate_aux_info xd ts) mds)
+       @ (Auxl.option_map (pp_pp_raw_rule yo generate_aux_info xd ts) rs))
 
 
 (** ******************************************************************** *)
 (**  pp                                                                  *)
 (** ******************************************************************** *)
-
-let pp_pp_prod yo generate_aux_info_here xd ts r p = 
+      
+let pp_pp_prod yo generate_aux_info_here prettier xd ts r p = 
   if suppress_prod yo p || p.prod_sugar then 
     ""
   else
-    (*let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in*)
-    let element_data = element_data_of_prod ts p in 
-    let ppd_rhs = 
-      let args = List.map (function x -> x.pp_pretty_rhs) element_data in
-      match args with
-      | [] -> "string \"\""
-      | [arg] -> arg
-      | _ -> "string \"(\" ^^ " ^ String.concat " ^^ string \" \" ^^ " args  ^ " ^^ string \")\"" (* full parens*)
-(*  | _ -> String.concat " ^ \" \" ^ " args *)
-    in
-    "| " ^ pp_pattern_prod r p generate_aux_info_here element_data ^ " -> " 
-    ^ ppd_rhs
-    ^ "\n"
+    match Auxl.hom_spec_for_hom_name "pp" p.prod_homs with 
+    | Some hs -> 
+       "| " ^ String.capitalize p.prod_name ^ " " ^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs ^"\n"
+    | None ->
+       (*let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in*)
+       let element_data = element_data_of_prod xd ts p in 
+       let ppd_rhs = 
+         let args = Auxl.option_map (function x -> x.pp_pretty_rhs) element_data in
+         match args with
+         | [] -> "string \"\""
+         | [arg] -> arg
+         | _ ->
+            if prettier then 
+              "group(string \"\" ^^ " ^ String.concat " ^^ break 1 ^^ " args  ^ " ^^ string \"\")" (* no extra parens - even when required*)
+                                                                                   (*              "group(string \"(\" ^^ " ^ String.concat " ^^ break 1 ^^ " args  ^ " ^^ string \")\")" (* full parens*)*)
+            else                                                                              "string \"(\" ^^ " ^ String.concat " ^^ string \" \" ^^ " args  ^ " ^^ string \")\"" (* full parens*)
+                                                                                    (*  | _ -> String.concat " ^ \" \" ^ " args *)
+       in
+       "| " ^ pp_pattern_prod r p generate_aux_info_here element_data ^ " -> " 
+       ^ ppd_rhs
+       ^ "\n"
 
-let pp_pp_rule yo generate_aux_info xd ts r = 
-  if suppress_rule yo r then 
+let pp_pp_rule yo generate_aux_info prettier  xd ts r = 
+  if suppress_rule yo r || has_hom "pp-suppress" r.rule_homs then 
     None
-  else if r.rule_phantom then
+  else 
     (match Auxl.hom_spec_for_hom_name "pp" r.rule_homs with 
     | Some hs -> 
         Some (pp_pp_name r.rule_ntr_name ^ " " ^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs ^"\n\n")
-    | None -> (Auxl.error (Some r.rule_loc) ("no pp hom for phantom production "^r.rule_ntr_name));
+    | None ->
+       if r.rule_phantom then
+         (* hack: default pp hom if missing *)
+         (*(Auxl.error (Some r.rule_loc) ("no pp hom for phantom production "^r.rule_ntr_name));*)
+         Some (pp_pp_name r.rule_ntr_name ^ "_default " (*^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs *)^"\n\n")
+       else
+         let generate_aux_info_here = generate_aux_info_for_rule generate_aux_info r in 
+         Some (pp_pp_name r.rule_ntr_name ^ pp_params r ^ " x = match x with\n" 
+               ^  String.concat "" (List.map (pp_pp_prod yo generate_aux_info_here prettier xd ts r) r.rule_ps)
+               ^ "\n")
     )
-  else 
-    let generate_aux_info_here = generate_aux_info_for_rule generate_aux_info r in 
-    Some (pp_pp_name r.rule_ntr_name ^ " x = match x with\n" 
-    ^  String.concat "" (List.map (pp_pp_prod yo generate_aux_info_here xd ts r) r.rule_ps)
-    ^ "\n")
 
-let pp_pp_rules yo generate_aux_info xd ts rs = 
-  "let rec " ^ String.concat "and " (Auxl.option_map (pp_pp_rule yo generate_aux_info xd ts) rs)
+
+let pp_pp_metavar_defns_and_rules yo generate_aux_info xd ts mds rs = 
+  let prettier = true in
+  "let rec "
+  ^ String.concat "and "
+      ((Auxl.option_map (pp_pp_metavar_defn yo generate_aux_info xd ts) mds)
+      @ (Auxl.option_map (pp_pp_rule yo generate_aux_info prettier xd ts) rs))
 
 
 
@@ -948,26 +1104,45 @@ let pp_menhir_syntaxdefn m sources _(*xd_quotiented*) xd_unquotiented lookup gen
   | _ -> Auxl.error None "must specify only one output file in the menhir backend.\n"
 
 (* output pp source file (should be called with quotiented syntaxdefn file) *)
-let pp_pp_syntaxdefn m sources xd_quotiented xd_unquotiented xd_quotiented_unaux generate_aux_info oi =
+let pp_pp_syntaxdefn m sources xd_quotiented xd_unquotiented xd_quotiented_unaux generate_aux_info hack_filename oi filename =
   let yo = match m with Menhir yo -> yo | _ -> raise (Failure "pp_pp_systemdefn called with bad ppmode") in 
-  match oi with
-  | (o,is)::[] ->
-
-      (* horrid hack to make filename for pp code by removing .mly *)
-      let o_pp = String.sub o 0 (String.length o - 4)  ^ "_pp.ml" in
 
 
-      let ts = token_names_of_syntaxdefn yo xd_unquotiented in (* from non-quotiented, to match parser *)
+  let filename =
+    if hack_filename then    
+      match oi with
+      | (o,is)::[] ->
+          
+          (* horrid hack to make filename for pp code by removing .mly *)
+          let o_pp =
+            String.sub o 0 (String.length o - 4)  ^ "_pp.ml" in
+          o_pp
+      | _ -> Auxl.error None "must specify only one output file in the menhir backend.\n"
+            
+    else
+       filename 
+  in
 
-      let fd = open_out o_pp in
-      Printf.fprintf fd "(* generated by Ott %s from: %s *)\n" Version.n sources;
-      output_string fd "open PPrintEngine\nopen PPrintCombinators\n";
-      output_string fd ("open " ^ yo.ppm_caml_ast_module ^ "\n\n" 
-                        ^ pp_pp_raw_rules yo generate_aux_info xd_quotiented_unaux ts xd_quotiented_unaux.xd_rs
-                        ^ "\n"
-                        ^ pp_pp_rules yo generate_aux_info xd_quotiented_unaux ts xd_quotiented_unaux.xd_rs
-                        );
-      close_out fd;
+  let ts = token_names_of_syntaxdefn yo xd_unquotiented in (* from non-quotiented, to match parser *)
 
-  | _ -> Auxl.error None "must specify only one output file in the menhir backend.\n"
+  (* for aux_style_rules true, should we generate recursive functions for the ntr and ntr_aux rules, or just for the ntr rules but with an extra Ntr_aux constructor on the lhs? *)
+  let xd = xd_quotiented_unaux (*if !Global_option.aux_style_rules then xd_quotiented else xd_quotiented_unaux in*) in
+(*
+  let m_ascii = Ascii { ppa_colour = false; 
+		      ppa_lift_cons_prefixes = false; 
+		      ppa_ugly= false; 
+		      ppa_show_deps = false; 
+		      ppa_show_defns = false } in
+  Printf.printf "%s\n" (Grammar_pp.pp_syntaxdefn m_ascii xd);
+ *)
+  let fd = open_out filename in
+  Printf.fprintf fd "(* generated by Ott %s from: %s *)\n" Version.n sources;
+  output_string fd "open PPrintEngine\nopen PPrintCombinators\n";
+  output_string fd ("open " ^ (match !Global_option.caml_pp_ast_module with None -> yo.ppm_caml_ast_module | Some s -> s)  ^ "\n\n" 
+                    ^ pp_pp_raw_metavar_defns_and_rules yo generate_aux_info xd ts xd.xd_mds xd.xd_rs
+                    ^ "\n"
+                    ^ pp_pp_metavar_defns_and_rules yo generate_aux_info xd ts xd.xd_mds xd.xd_rs
+                   );
+  close_out fd;
+
 
