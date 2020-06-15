@@ -34,6 +34,7 @@
 open Location
 open Types
 
+   
 (* command-line options *)
 let colour = ref true
 let file_arguments = ref ([]:(file_argument*string) list)
