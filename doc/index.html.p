@@ -104,9 +104,9 @@ that used it.  Please send these to Peter Sewell or Francesco Zappa Nardelli
 <h2>Papers and Documentation</h2>
 <ul>
   <li>
-      <a href="ott_manual_OTTVERSION.html">User Guide (html)</a>, 
-      <a href="ott_manual_OTTVERSION.pdf">(pdf)</a>, and
-      <a href="ott_manual_OTTVERSION.ps">(ps)</a></li>
+      <a href="top2.html">User Guide (html)</a>, 
+      <a href="top2.pdf">(pdf)</a>, and
+      <a href="top2.ps">(ps)</a></li>
 </ul>
 
 <ul>

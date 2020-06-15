@@ -2,7 +2,7 @@
 <html >
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<meta name="generator" content="hevea 2.32">
+<meta name="generator" content="hevea 2.30">
 <style type="text/css">
 .li-itemize{margin:1ex 0ex;}
 .li-enumerate{margin:1ex 0ex;}
@@ -57,7 +57,7 @@ User Guide
 </title>
 </head>
 <body >
-<!--HEVEA command line is: hevea -fix top2 -->
+<!--HEVEA command line is: /usr/bin/hevea -fix top2 -->
 <!--CUT STYLE article--><!--CUT DEF section 1 --><table class="title"><tr><td style="padding:1ex"><h1 class="titlemain">Ott: Tool Support for
 Semantics <br>
 User Guide<br>
@@ -242,14 +242,14 @@ then it will aid only a small part of the work (and one might choose
 instead to work just within a single proof assistant), but for larger
 languages the definition is a more substantial problem &#X2014; so much so
 that only a handful of full-scale languages have been given complete definitions. We
-aim to make this more commonplace, less of a heroic task.</p><p><a id="ott"></p>
+aim to make this more commonplace, less of a heroic task.</p>
 <!--TOC section id="sec3" Getting started with Ott (the README)-->
-<h2 id="sec3" class="section">2&#XA0;&#XA0;Getting started with Ott (the README)</h2><!--SEC END --><p></a></p><p>A tool for writing definitions of programming languages and calculi</p><p>by Peter Sewell, Francesco Zappa Nardelli, and Scott Owens.</p><p><a id="repository-and-package"></p>
+<h2 id="sec3" class="section">2&#XA0;&#XA0;Getting started with Ott (the README)</h2><!--SEC END --><p><a id="ott"></a></p><p>A tool for writing definitions of programming languages and calculi</p><p>by Peter Sewell, Francesco Zappa Nardelli, and Scott Owens.</p>
 <!--TOC subsection id="sec4" Repository and Package-->
-<h3 id="sec4" class="subsection">2.1&#XA0;&#XA0;Repository and Package</h3><!--SEC END --><p></a></p><p>Ott is now <a href="https://github.com/ott-lang/ott">available from
-github</a>, and as an <a href="https://opam.ocaml.org">opam</a> package.</p><p>We no longer provide non-github tarballs or a Windows distribution.</p><p><a id="directory-contents"></p>
+<h3 id="sec4" class="subsection">2.1&#XA0;&#XA0;Repository and Package</h3><!--SEC END --><p><a id="repository-and-package"></a></p><p>Ott is now <a href="https://github.com/ott-lang/ott">available from
+github</a>, and as an <a href="https://opam.ocaml.org">opam</a> package.</p><p>We no longer provide non-github tarballs or a Windows distribution.</p>
 <!--TOC subsection id="sec5" Directory contents-->
-<h3 id="sec5" class="subsection">2.2&#XA0;&#XA0;Directory contents</h3><!--SEC END --><p></a></p><p>
+<h3 id="sec5" class="subsection">2.2&#XA0;&#XA0;Directory contents</h3><!--SEC END --><p><a id="directory-contents"></a></p><p>
 
 
 </p><blockquote class="table"><div class="center"><hr style="width:80%;height:2"></div><div class="center"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="text-align:left;white-space:nowrap" >
@@ -280,26 +280,26 @@ guide)</td></tr>
 <tr><td style="text-align:left;white-space:nowrap" >&nbsp;</td></tr>
 </table>
 
-</div><div class="center"><hr style="width:80%;height:2"></div></blockquote><p><a id="to-build"></p>
+</div><div class="center"><hr style="width:80%;height:2"></div></blockquote>
 <!--TOC subsection id="sec6" To build-->
-<h3 id="sec6" class="subsection">2.3&#XA0;&#XA0;To build</h3><!--SEC END --><p></a></p><p><a id="with-opam"></p>
+<h3 id="sec6" class="subsection">2.3&#XA0;&#XA0;To build</h3><!--SEC END --><p><a id="to-build"></a></p>
 <!--TOC subsubsection id="sec7" With OPAM-->
-<h4 id="sec7" class="subsubsection">2.3.1&#XA0;&#XA0;With OPAM</h4><!--SEC END --><p></a></p><p>If you have <a href="https://opam.ocaml.org">OPAM</a> installed on your
+<h4 id="sec7" class="subsubsection">2.3.1&#XA0;&#XA0;With OPAM</h4><!--SEC END --><p><a id="with-opam"></a></p><p>If you have <a href="https://opam.ocaml.org">OPAM</a> installed on your
 system, <span style="font-family:monospace">opam install ott</span> will install the latest Ott version.
 The Emacs mode will be in
 <span style="font-family:monospace">$(opam config var prefix)/share/emacs/site-lisp</span>, and
 documentation in <span style="font-family:monospace">$(opam config var prefix)/doc/ott</span>.</p><p>To install the Ott auxiliary files for Coq, first activate the
-<span style="font-family:monospace">coq-released</span> OPAM repository:</p><p><span style="font-family:monospace">opam repo add coq-released https://coq.inria.fr/opam/released</span></p><p>and then run <span style="font-family:monospace">opam install coq-ott</span>.</p><p><a id="without-opam"></p>
+<span style="font-family:monospace">coq-released</span> OPAM repository:</p><p><span style="font-family:monospace">opam repo add coq-released https://coq.inria.fr/opam/released</span></p><p>and then run <span style="font-family:monospace">opam install coq-ott</span>.</p>
 <!--TOC subsubsection id="sec8" Without OPAM-->
-<h4 id="sec8" class="subsubsection">2.3.2&#XA0;&#XA0;Without OPAM</h4><!--SEC END --><p></a></p><p>Ott depends on OCaml version 4.00.0 or later. It builds with (at least)
+<h4 id="sec8" class="subsubsection">2.3.2&#XA0;&#XA0;Without OPAM</h4><!--SEC END --><p><a id="without-opam"></a></p><p>Ott depends on OCaml version 4.00.0 or later. It builds with (at least)
 OCaml 4.02.3.</p><p>The command <span style="font-family:monospace">make</span> (<span style="font-family:monospace">make world</span>) builds the <span style="font-family:monospace">ott</span>
 binary in the <span style="font-family:monospace">bin/</span> subdirectory.</p><p>This will compile Ott using <span style="font-family:monospace">ocamlopt</span>. To force it to compile
 with <span style="font-family:monospace">ocamlc</span> (which may give significantly slower execution of
 Ott), do <span style="font-family:monospace">make world.byt</span>.</p><p>To build the Ott auxiliary files for Coq, go to the <span style="font-family:monospace">coq/</span>
 subdirectory and run <span style="font-family:monospace">make</span>. To install the resulting files in
-Coq&#X2019;s <span style="font-family:monospace">user-contrib</span>, run <span style="font-family:monospace">make install</span>.</p><p><a id="to-run"></p>
+Coq&#X2019;s <span style="font-family:monospace">user-contrib</span>, run <span style="font-family:monospace">make install</span>.</p>
 <!--TOC subsection id="sec9" To run-->
-<h3 id="sec9" class="subsection">2.4&#XA0;&#XA0;To run</h3><!--SEC END --><p></a></p><p>Ott runs as a command-line tool. Executing <span style="font-family:monospace">bin/ott</span> shows the
+<h3 id="sec9" class="subsection">2.4&#XA0;&#XA0;To run</h3><!--SEC END --><p><a id="to-run"></a></p><p>Ott runs as a command-line tool. Executing <span style="font-family:monospace">bin/ott</span> shows the
 usage and options. To run Ott on the test file
 <span style="font-family:monospace">tests/test10.ott</span>, generating LaTeX in <span style="font-family:monospace">test10.tex</span> and
 Coq in <span style="font-family:monospace">test10.v</span>, type:</p><p><span style="font-family:monospace">bin/ott -i tests/test10.ott -o test10.tex -o test10.v</span></p><p>Isabelle, HOL, and Lem can be generated with options
@@ -321,17 +321,17 @@ filename</td><td style="text-align:left;white-space:nowrap" >description</td></t
 </table>
 
 </div><div class="center"><hr style="width:80%;height:2"></div></blockquote><p>from files <span style="font-family:monospace">test10.ott</span>, <span style="font-family:monospace">test8.ott</span>, etc., in
-<span style="font-family:monospace">tests/</span>.</p><p><a id="manual"></p>
+<span style="font-family:monospace">tests/</span>.</p>
 <!--TOC subsection id="sec10" Manual-->
-<h3 id="sec10" class="subsection">2.5&#XA0;&#XA0;Manual</h3><!--SEC END --><p></a></p><ul class="itemize"><li class="li-itemize">
+<h3 id="sec10" class="subsection">2.5&#XA0;&#XA0;Manual</h3><!--SEC END --><p><a id="manual"></a></p><ul class="itemize"><li class="li-itemize">
 in the <a href="https://github.com/ott-lang/ott">Ott github</a> built_doc
 directory, or
 </li><li class="li-itemize"><a href="http://www.cl.cam.ac.uk/&#XA0;pes20/ott/top2.html">here (html)</a>
-</li></ul><p><a id="editor-plugins"></p>
+</li></ul>
 <!--TOC subsection id="sec11" Editor Plugins-->
-<h3 id="sec11" class="subsection">2.6&#XA0;&#XA0;Editor Plugins</h3><!--SEC END --><p></a></p><p><a id="emacs-mode"></p>
+<h3 id="sec11" class="subsection">2.6&#XA0;&#XA0;Editor Plugins</h3><!--SEC END --><p><a id="editor-plugins"></a></p>
 <!--TOC subsubsection id="sec12" Emacs mode-->
-<h4 id="sec12" class="subsubsection">2.6.1&#XA0;&#XA0;Emacs mode</h4><!--SEC END --><p></a></p><p>The file <span style="font-family:monospace">emacs/ott-mode.el</span> defines a very simple Emacs mode for
+<h4 id="sec12" class="subsubsection">2.6.1&#XA0;&#XA0;Emacs mode</h4><!--SEC END --><p><a id="emacs-mode"></a></p><p>The file <span style="font-family:monospace">emacs/ott-mode.el</span> defines a very simple Emacs mode for
 syntax highlighting of Ott source files. It can be used by, for example,
 adding the following to your <span style="font-family:monospace">.emacs</span> file, replacing
 <span style="font-family:monospace">PATH</span> by a path to your Ott Emacs directory.</p><pre class="verbatim">(setq load-path (cons (expand-file-name "PATH") load-path))
@@ -341,25 +341,25 @@ the following code, which will call <span style="font-family:monospace">opam con
 at load-time.</p><pre class="verbatim">(setq opam-share (substring (shell-command-to-string "opam config var share") 0 -1))
 (add-to-list 'load-path (concat opam-share "/emacs/site-lisp"))
 (require 'ott-mode)
-</pre><p><a id="visual-studio-code"></p>
+</pre>
 <!--TOC subsubsection id="sec13" Visual Studio Code-->
-<h4 id="sec13" class="subsubsection">2.6.2&#XA0;&#XA0;Visual Studio Code</h4><!--SEC END --><p></a></p><p>There is a
+<h4 id="sec13" class="subsubsection">2.6.2&#XA0;&#XA0;Visual Studio Code</h4><!--SEC END --><p><a id="visual-studio-code"></a></p><p>There is a
 <a href="https://marketplace.visualstudio.com/items?itemName=JoeyEremondi.ott">plugin
 for VSCode</a>, which features syntax highlighting and inline error
-reporting.</p><p><a id="mailing-lists"></p>
+reporting.</p>
 <!--TOC subsection id="sec14" Mailing lists-->
-<h3 id="sec14" class="subsection">2.7&#XA0;&#XA0;Mailing lists</h3><!--SEC END --><p></a></p><ul class="itemize"><li class="li-itemize">
+<h3 id="sec14" class="subsection">2.7&#XA0;&#XA0;Mailing lists</h3><!--SEC END --><p><a id="mailing-lists"></a></p><ul class="itemize"><li class="li-itemize">
 <a href="https://lists.cam.ac.uk/mailman/listinfo/cl-ott-announce">cl-ott-announce
 announcement mailing list</a>
 </li><li class="li-itemize"><a href="https://lists.cam.ac.uk/mailman/listinfo/cl-ott-discuss">cl-ott-discuss
 discussion mailing list</a>
-</li></ul><p><a id="web-page-with-examples"></p>
+</li></ul>
 <!--TOC subsection id="sec15" Web page with examples-->
-<h3 id="sec15" class="subsection">2.8&#XA0;&#XA0;Web page with examples</h3><!--SEC END --><p></a></p><ul class="itemize"><li class="li-itemize">
+<h3 id="sec15" class="subsection">2.8&#XA0;&#XA0;Web page with examples</h3><!--SEC END --><p><a id="web-page-with-examples"></a></p><ul class="itemize"><li class="li-itemize">
 <a href="http://www.cl.cam.ac.uk/users/pes20/ott">here</a>
-</li></ul><p><a id="copyright-information"></p>
+</li></ul>
 <!--TOC subsection id="sec16" Copyright information-->
-<h3 id="sec16" class="subsection">2.9&#XA0;&#XA0;Copyright information</h3><!--SEC END --><p></a></p><p>The ocamlgraph library is distributed under the LGPL (from
+<h3 id="sec16" class="subsection">2.9&#XA0;&#XA0;Copyright information</h3><!--SEC END --><p><a id="copyright-information"></a></p><p>The ocamlgraph library is distributed under the LGPL (from
 http://www.lri.fr/~filliatr/ftp/ocamlgraph/); we include
 a snapshot for convenience. For its authorship and copyright information
 see the files therein.</p><p>All other files are distributed under the BSD-style licence in LICENCE.
@@ -2841,7 +2841,7 @@ also targets &#XA0;<code>%.coq.out</code>, &#XA0;<code>%.hol.out</code>, and
 &#XA0;<code>%.isa.out</code>, to generate just LaTeX and the code for one proof
 assistant, and &#XA0;<code>%.tex.out</code>, to generate just LaTeX.</p><p>The <span style="font-family:monospace">ott</span> command-line options (with default values where applicable) are
 shown below. 
-</p><pre class="verbatim">Ott version 0.31   distribution of Mon 15 Jun 2020 09:48:40 UTC
+</p><pre class="verbatim">Ott version 0.31   distribution of Mon 15 Jun 12:00:29 BST 2020
 
 usage: ott &lt;options&gt; &lt;filename1&gt; .. &lt;filenamen&gt; 
   (use "OCAMLRUNPARAM=p  ott ..." to show the ocamlyacc trace)

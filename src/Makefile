@@ -334,7 +334,7 @@ install-www-index: tmp_index.html
 	cp -f ../doc/style.css ~/public_html/ott
 	cp -f ../doc/favicon.ico ~/public_html/ott
 	cp -f ../revision_history.txt ~/public_html/ott
-	cp -f ../README ~/public_html/ott/README.txt
+	cp -f ../README.md ~/public_html/ott/README.txt
 	cp -f tmp_test7_dot.ps ~/public_html/ott/test7.dot.ps
 	cp -f tmp_test7_dot.png ~/public_html/ott/test7.dot.png
 	chmod ugo-w ~/public_html/ott/index.html
