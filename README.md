@@ -39,9 +39,14 @@ directory                | description
 
 ## To build
 
-### With OPAM
+### With OPAM  (released version)
 
-If you have [OPAM](https://opam.ocaml.org) installed on your system,
+First, ensure you have opam (the OCaml package manager) installed. You can use your system's package
+manager e.g. `sudo apt-get install opam` (on Ubuntu 20.04) or follow the [instructions
+from the opam website](https://opam.ocaml.org/doc/Install.html).
+The opam version must be >= 2.0; opam 1 versions of ott are no longer supported. On older Ubuntu versions you will not be able to use opam from the package manager, and will need to install it following the instructions on the opam website.
+
+Then 
 `opam install ott` will install the latest Ott version.  The Emacs mode
 will be in `` $(opam config var prefix)/share/emacs/site-lisp ``, and
 documentation in `` $(opam config var prefix)/doc/ott ``.
@@ -53,10 +58,20 @@ To install the Ott auxiliary files for Coq, first activate the
 
 and then run `opam install coq-ott`.
 
+
+### With OPAM (github checkout)
+
+In the checkout directory, run `opam pin add ott .`.
+
+To rebuild and reinstall after local changes, run `opam upgrade --working-dir ott`  (or `opam upgrade -w ott`).
+
+
+
+
 ### Without OPAM
 
 Ott depends on OCaml version 4.00.0 or later. It builds with (at
-least) OCaml 4.02.3.
+least) OCaml 4.02.3 and 4.10.0. 
 
 The command `make` (`make world`) builds the `ott` binary in the `bin/` subdirectory.
 
