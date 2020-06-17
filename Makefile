@@ -33,8 +33,6 @@
 
 # make world #############################################################
 
-
-
 world:
 	cd src; $(MAKE) install
 
@@ -46,6 +44,19 @@ world.byt:
 clean:
 	cd src; $(MAKE) clean
 	rm -f *~
+	rm ott.install
+
+# ott.install file ######################################################
+
+ott.install : built_doc/*
+	cp ott.install.nodoc ott.install
+	echo "doc : [" >> ott.install
+	echo "\"README.md\" { \"README.md\" }" >> ott.install
+	echo "\"LICENSE\" { \"LICENSE\" }" >> ott.install
+	echo "\"built_doc/top2.pdf\" { \"doc/ott_manual.pdf\" }" >> ott.install
+	echo "\"built_doc/top2.html\" { \"doc/ott_manual.html\" }" >> ott.install
+	echo $(patsubst %, "\"%\"", $(wildcard built_doc/*.png)) >> ott.install
+	echo "]" >> ott.install
 
 # tests ##################################################################
 

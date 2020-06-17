@@ -8,7 +8,10 @@ bug-reports: "https://github.com/ott-lang/ott/issues"
 depends: [
   "ocaml" {>= "4.02.0"}
 ]
-build: [make "world"]
+build: [
+  [make "world"]
+  [make "ott.install"]
+]
 dev-repo: "git+https://github.com/ott-lang/ott.git"
 synopsis: "A tool for writing definitions of programming languages and calculi"
 description: """
