@@ -254,9 +254,7 @@ directory                | description
 
 ## Examples
 
- <h2>Examples</h2>
- 
-<table>
+<table style="font-size:8pt;">
 <tr>
       <th rowspan="2">System</th>
       <th rowspan="2">Rules</th>
