@@ -30,14 +30,14 @@ typeset terms.
 - [Ott: Effective Tool Support for the Working
   Semanticist](http://www.cl.cam.ac.uk/users/pes20/ott-jfp.pdf).
   Peter Sewell, Francesco Zappa Nardelli, Scott Owens, Gilles Peskine,
-  Thomas Ridge, Susmit Sarkar, Rok Strni&#353;a. [Journal of
+  Thomas Ridge, Susmit Sarkar, Rok Strnisa. [Journal of
   Functional Programming 20(1):71-122,
   2010](http://journals.cambridge.org/repo_A71Keeig)
 
 - [Ott: Effective Tool Support for the Working
   Semanticist](http://www.cl.cam.ac.uk/users/pes20/paper.pdf).  Peter
   Sewell, Francesco Zappa Nardelli, Scott Owens, Gilles Peskine,
-  Thomas Ridge, Susmit Sarkar, Rok Strni&#353;a.  In [ICFP
+  Thomas Ridge, Susmit Sarkar, Rok Strnisa.  In [ICFP
   2007](http://www.informatik.uni-bonn.de/%7Eralf/icfp07.html)
 
 - [Ott or
@@ -66,12 +66,12 @@ Joey Eremondi,
 Hannes Mehnert,
 Karl Palmskog,
 Matthew Parkinson,
-Thibaut Pérami,
+Thibaut Perami,
 Gilles Peskine,
 Alastair Reid,
 Tom Ridge,
 Susmit Sarkar,
-Rok Strniša,
+Rok Strnisa,
 Viktor Vafeiadis.
 
 
