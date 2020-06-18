@@ -53,6 +53,8 @@ More substantially, Ott has been used for work on
 <a href="http://www.cl.cam.ac.uk/~so294/ocaml">OCaml light</a>, by
   <a href="http://www.cl.cam.ac.uk/~so294">Scott Owens</a>.
 
+As of 2020, Ott remains in continuous use.
+
 ## Documentation
 
 * the manual is in the [Ott github](https://github.com/ott-lang/ott)
