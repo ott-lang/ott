@@ -229,11 +229,6 @@ There is a [plugin for VSCode](https://marketplace.visualstudio.com/items?itemNa
 
 
 
-## Web page with examples
-
-* [here](http://www.cl.cam.ac.uk/users/pes20/ott)
-
-
 ## Directory contents
 
 directory                | description
