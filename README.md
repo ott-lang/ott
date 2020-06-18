@@ -254,7 +254,10 @@ directory                | description
 
 ## Examples
 
-<table style="font-size:8pt;">
+The following LaTeX, Coq, HOL, and Isabelle files, except the proof scripts, are all automatically generated from the Ott sources.
+
+
+<table>
 <tr>
       <th rowspan="2">System</th>
       <th rowspan="2">Rules</th>
@@ -419,7 +422,6 @@ directory                | description
 </table>
 
 <p>
-(all files except the proof scripts are generated from the Ott sources)
 <br></br>
 (*) These systems would need explicit alpha conversion in the rules to capture the intended semantics using the fully concrete representation.
 </p>
