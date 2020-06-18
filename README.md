@@ -71,7 +71,7 @@ Gilles Peskine,
 Alastair Reid,
 Tom Ridge,
 Susmit Sarkar,
-Rok Strni&#353,
+Rok Strniša,
 Viktor Vafeiadis.
 
 
