@@ -49,7 +49,7 @@ LJ, a lightweight Java fragment.
 More substantially, Ott has been used for work on 
 <a href="http://www.cl.cam.ac.uk/research/pls/javasem/">iJAM and LJAM, Java Module
   Systems</a>, by <a href="http://www.cl.cam.ac.uk/~rs456">Rok
-  Strni&#353;a</a>, and semantics for 
+  Strnisa</a>, and semantics for 
 <a href="http://www.cl.cam.ac.uk/~so294/ocaml">OCaml light</a>, by
   <a href="http://www.cl.cam.ac.uk/~so294">Scott Owens</a>.
 
@@ -221,6 +221,13 @@ There is a [plugin for VSCode](https://marketplace.visualstudio.com/items?itemNa
 
 * [cl-ott-announce announcement mailing list](https://lists.cam.ac.uk/mailman/listinfo/cl-ott-announce)
 * [cl-ott-discuss discussion mailing list](https://lists.cam.ac.uk/mailman/listinfo/cl-ott-discuss)
+
+
+## Bug Tracker
+- Please now use the github issue tracker (though our resources for fixing issues are very limited)
+-  The previous issue tracker is <a href="https://gforge.inria.fr/tracker/?group_id=2980">here</a>
+
+
 
 ## Web page with examples
 
