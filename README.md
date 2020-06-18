@@ -4,55 +4,31 @@ A tool for writing definitions of programming languages and calculi
 
 by Peter Sewell, Francesco Zappa Nardelli, and Scott Owens.
 
-## Repository and Package
+## To install and build
 
-Ott is now [available from github](https://github.com/ott-lang/ott), and as
-an [opam](https://opam.ocaml.org) package.
-
-We no longer provide non-github tarballs or a Windows distribution.
-
-
-## Directory contents
-
-directory                | description
------------------------  | -------------------------------------------------
-`aux/`                   | auxiliary code (y2l) used to build the user guide
-`bin/`                   | the Ott binary
-`built_doc/`             | the user guide, in html, pdf, and ps
-`coq/`                   | auxiliary files for Coq
-`doc/`                   | the user guide sources
-`emacs/`                 | an Ott Emacs mode
-`examples/`              | some larger example Ott files
-`tex/`                   | auxiliary files for LaTeX
-`hol/`                   | auxiliary files for HOL
-`menhir/`                | auxiliary files for menhir
-`ocamlgraph-1.7.tar.gz`  | a copy of the ocamlgraph library
-`regression/`            | regression-test machinery
-`tests/`                 | various small example Ott files
-`src/`                   | the (OCaml) Ott sources
-`Makefile`               | a Makefile for the examples
-`LICENCE`                | the BSD-style licence terms
-`README.md`              | this file (Section 2 of the user guide)
-`revisionhistory.txt`    | the revision history
-
-
-
-## To build
+Ott is available as 
+an [opam](https://opam.ocaml.org) package and a 
+[github repo](https://github.com/ott-lang/ott).
 
 ### With OPAM  (released version)
 
-First, ensure you have opam (the OCaml package manager) installed. You can use your system's package
-manager e.g. `sudo apt-get install opam` (on Ubuntu 20.04) or follow the [instructions
-from the opam website](https://opam.ocaml.org/doc/Install.html).
-The opam version must be >= 2.0; opam 1 versions of ott are no longer supported. On older Ubuntu versions you will not be able to use opam from the package manager, and will need to install it following the instructions on the opam website.
+First, ensure you have opam (the OCaml package manager) installed,
+version 2.0 or greater (opam 1 versions of ott are no longer
+supported).  You can use your system's package manager e.g. `sudo
+apt-get install opam` (e.g. on Ubuntu 20.04) or follow the
+[instructions from the opam website](https://opam.ocaml.org/doc/Install.html).
+On older Ubuntu versions you will not be able to use their package
+manager's opam 1 version, and will need to install it following the
+instructions on the opam website.
 
-Then 
-`opam install ott` will install the latest Ott version.  The Emacs mode
-will be in `` $(opam config var prefix)/share/emacs/site-lisp ``, and
-documentation in `` $(opam config var prefix)/doc/ott ``.
+Then `opam install ott` will install the latest Ott version.  The
+Emacs mode will be in `` $(opam config var
+prefix)/share/emacs/site-lisp ``, and documentation in `` $(opam
+config var prefix)/doc/ott ``.
 
-To install the Ott auxiliary files for Coq, first activate the
-`coq-released` OPAM repository:
+If you want to use Ott with the Coq proof assistant, to install the
+Ott auxiliary files for Coq, first activate the `coq-released` OPAM
+repository:
 
 `opam repo add coq-released https://coq.inria.fr/opam/released`
 
@@ -64,9 +40,6 @@ and then run `opam install coq-ott`.
 In the checkout directory, run `opam pin add ott .`.
 
 To rebuild and reinstall after local changes, run `opam upgrade --working-dir ott`  (or `opam upgrade -w ott`).
-
-
-
 
 ### Without OPAM
 
@@ -82,6 +55,13 @@ of Ott), do `make world.byt`.
 To build the Ott auxiliary files for Coq, go to the `coq/` subdirectory
 and run `make`. To install the resulting files in Coq's `user-contrib`,
 run `make install`.
+
+
+## Manual
+
+* in the [Ott github](https://github.com/ott-lang/ott) built_doc directory, or
+* [here (html)](http://www.cl.cam.ac.uk/~pes20/ott/top2.html)
+
 
 ## To run
 
@@ -107,11 +87,6 @@ filename          | description
 `out.thy`         | Isabelle source
 
 from files `test10.ott`, `test8.ott`, etc., in `tests/`.
-
-## Manual
-
-* in the [Ott github](https://github.com/ott-lang/ott) built_doc directory, or
-* [here (html)](http://www.cl.cam.ac.uk/~pes20/ott/top2.html)
 
 ## Editor Plugins
 
@@ -147,6 +122,34 @@ There is a [plugin for VSCode](https://marketplace.visualstudio.com/items?itemNa
 ## Web page with examples
 
 * [here](http://www.cl.cam.ac.uk/users/pes20/ott)
+
+
+## Directory contents
+
+directory                | description
+-----------------------  | -------------------------------------------------
+`aux/`                   | auxiliary code (y2l) used to build the user guide
+`bin/`                   | the Ott binary
+`built_doc/`             | the user guide, in html, pdf, and ps
+`coq/`                   | auxiliary files for Coq
+`doc/`                   | the user guide sources
+`emacs/`                 | an Ott Emacs mode
+`examples/`              | some larger example Ott files
+`tex/`                   | auxiliary files for LaTeX
+`hol/`                   | auxiliary files for HOL
+`menhir/`                | auxiliary files for menhir
+`ocamlgraph-1.7.tar.gz`  | a copy of the ocamlgraph library
+`regression/`            | regression-test machinery
+`tests/`                 | various small example Ott files
+`src/`                   | the (OCaml) Ott sources
+`Makefile`               | a Makefile for the examples
+`LICENCE`                | the BSD-style licence terms
+`README.md`              | this file (Section 2 of the user guide)
+`revisionhistory.txt`    | the revision history
+
+
+
+
 
 ## Copyright information
 
