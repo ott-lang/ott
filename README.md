@@ -1,8 +1,80 @@
 # Ott
 
-A tool for writing definitions of programming languages and calculi
+Ott is a tool for writing definitions of programming languages and
+calculi.  It takes as input a definition of a language syntax and
+semantics, in a concise and readable ASCII notation that is close to
+what one would write in informal mathematics.  With appropriate
+annotation, it can then generate output:
 
-by Peter Sewell, Francesco Zappa Nardelli, and Scott Owens.
+- a LaTeX source file that defines commands to build a typeset version of  the definition;
+- a Coq version of the definition; 
+- a HOL version of the definition;
+- an Isabelle/HOL version of the definition; 
+- a Lem version of the definition; 
+- an OCaml version of the syntax of the definition; and
+- (experimental) a menhir parser and crude pretty printer for the syntax.
+
+Additionally, it can be run as a filter, taking a
+LaTeX/Coq/Isabelle/HOL/Lem/OCaml source file with embedded (symbolic)
+terms of the defined language, parsing them and replacing them by
+typeset terms.
+
+
+## Manual
+
+* in the [Ott github](https://github.com/ott-lang/ott) built_doc directory, or
+* [here (html)](http://www.cl.cam.ac.uk/~pes20/ott/top2.html)
+
+## Papers
+
+- [Ott: Effective Tool Support for the Working
+  Semanticist](http://www.cl.cam.ac.uk/users/pes20/ott-jfp.pdf).
+  Peter Sewell, Francesco Zappa Nardelli, Scott Owens, Gilles Peskine,
+  Thomas Ridge, Susmit Sarkar, Rok Strni&#353;a. [Journal of
+  Functional Programming 20(1):71-122,
+  2010](http://journals.cambridge.org/repo_A71Keeig)
+
+- [Ott: Effective Tool Support for the Working
+  Semanticist](http://www.cl.cam.ac.uk/users/pes20/paper.pdf).  Peter
+  Sewell, Francesco Zappa Nardelli, Scott Owens, Gilles Peskine,
+  Thomas Ridge, Susmit Sarkar, Rok Strni&#353;a.  In [ICFP
+  2007](http://www.informatik.uni-bonn.de/%7Eralf/icfp07.html)
+
+- [Ott or
+  Nott](http://www.cl.cam.ac.uk/users/pes20/wmm2010.pdf). Stephanie
+  Weirich, Scott Owens, Peter Sewell, Francesco Zappa Nardelli. In
+  [WMM 2010](http://www.cis.upenn.edu/~bcpierce/wmm/): 5th ACM SIGPLAN
+  Workshop on Mechanizing Metatheory.
+
+- [Binding and Substitution
+  (draft)](http://www.cl.cam.ac.uk/users/pes20/bind-doc.pdf). Susmit
+  Sarkar, Peter Sewell, Francesco Zappa Nardelli.  Note, 2007.
+
+- [The experimental Coq locally-nameless backend
+  (html)](http://moscova.inria.fr/~zappa/projects/ln_ott). Francesco
+  Zappa Nardelli. Note, 2009.
+
+
+## People
+
+Ott has been principally devloped by 
+<a href="http://www.cl.cam.ac.uk/~pes20">Peter Sewell</a>, 
+<a href="http://moscova.inria.fr/~zappa">Francesco Zappa Nardelli</a>, and
+<a href="http://www.cl.cam.ac.uk/~so294">Scott Owens</a>,
+with contributions from many others including
+Joey Eremondi,
+Hannes Mehnert,
+Karl Palmskog,
+Matthew Parkinson,
+Thibaut Pérami,
+Gilles Peskine,
+Alastair Reid,
+Tom Ridge,
+Susmit Sarkar,
+Rok Strni&#353,
+Viktor Vafeiadis.
+
+
 
 ## To install and build
 
@@ -57,20 +129,16 @@ and run `make`. To install the resulting files in Coq's `user-contrib`,
 run `make install`.
 
 
-## Manual
-
-* in the [Ott github](https://github.com/ott-lang/ott) built_doc directory, or
-* [here (html)](http://www.cl.cam.ac.uk/~pes20/ott/top2.html)
 
 
 ## To run
 
-Ott runs as a command-line tool. Executing `bin/ott` shows the
+Ott runs as a command-line tool. Executing `ott` shows the
 usage and options.  To run Ott on the test file
 `tests/test10.ott`, generating LaTeX in `test10.tex` and
 Coq in `test10.v`, type:
 
-  `bin/ott -i tests/test10.ott -o test10.tex -o test10.v`
+  `ott -i tests/test10.ott -o test10.tex -o test10.v`
 
 Isabelle, HOL, and Lem can be generated with options `-o test10.thy`,
 `-o test10Script.sml`, and `-o test10.lem`, respectively.
