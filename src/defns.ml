@@ -478,9 +478,6 @@ let pp_defn fd (m:pp_mode) (xd:syntaxdefn) lookup (defnclass_wrapper:string) (un
       output_string fd "\n\n"
   | Isa io ->
       Printf.fprintf fd "(* defn %s *)\n\n" d.d_name;
-      ( match (Grammar_pp.isa_fancy_syntax_clause_for_defn m xd io "foo" defnclass_wrapper d) with
-        | None -> ()
-	| Some _ -> output_string fd "| " );
       iter_sep (pp_processed_semiraw_rule fd m xd) "\n| " d.d_rules
   | Hol _ ->
       Printf.fprintf fd "(* defn %s *)\n\n" d.d_name;
@@ -592,7 +589,8 @@ let pp_defnclass fd (m:pp_mode) (xd:syntaxdefn) lookup (dc:defnclass) =
       output_string fd "\nwhere\n";
       ( match fancy_syntax_clauses with
         | [] -> ()
-        | fscs -> iter_asep fd "\n| "  (*List.iter*) (fun x -> output_string fd (snd x)) fscs);
+        | fscs -> iter_asep fd "\n| "  (*List.iter*) (fun x -> output_string fd (snd x)) fscs;
+                  output_string fd "\n\n| ");
       iter_asep fd "\n| " (fun d -> pp_defn fd m xd lookup dc.dc_wrapper universe d) dc.dc_defns
 
   | Hol ho -> 
