@@ -59,7 +59,7 @@ Qed.
 Lemma In_Forall_list :
   forall P l, (forall x, In x l -> P x) -> Forall_list P l.
 Proof.
-  induction l; firstorder.
+  induction l; constructor; firstorder.
 Qed.
 
 Lemma exists_In_Exists_list :
