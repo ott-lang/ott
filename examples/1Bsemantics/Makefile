@@ -1,5 +1,5 @@
 
-OTT=~/github/ott/bin/ott
+OTT=../../bin/ott
 
 l1: l1.ott
 	$(OTT) -pp_grammar -isa_syntax true l1.ott -o l1.tex -o l1.thy -o l1.lem
