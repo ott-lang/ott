@@ -438,6 +438,9 @@ let menhir_semantic_value_id_of_list es =
 let pp_pp_raw_name ntmvr =
   "pp_raw_" ^ ntmvr
 
+let pp_pp_json_name ntmvr =
+  "pp_json_" ^ ntmvr
+
 let pp_pp_name ntmvr =
   "pp_" ^ ntmvr
 
@@ -470,9 +473,12 @@ type element_data = {
     semantic_action : string option;  (* None for terminals *)
     pp_raw_rhs : string option;       (* None for terminals *)
     pp_pretty_rhs : string option;
+    pp_json_rhs : string option;  (* None for terminals *)
   }
-    
-let rec element_data_of_element xd ts (allow_lists:bool) (indent_nonterms:bool) e : element_data = 
+
+let pp_json_key s = "\\\"" ^ s ^ "\\\""
+                  
+let rec element_data_of_element xd ts (allow_lists:bool) (indent_nonterms:bool) (no_json_key : bool) e : element_data = 
 (*string option(*semantic_value_id*) * string(*grammar body*) * string option (*semantic action*) =*)
   match e with
   | Lang_terminal t -> 
@@ -480,6 +486,7 @@ let rec element_data_of_element xd ts (allow_lists:bool) (indent_nonterms:bool) 
         grammar_body      = token_of_terminal ts t;
         semantic_action   = None;
         pp_raw_rhs        = None;
+        pp_json_rhs       = None;
         pp_pretty_rhs     = Some ("string \"" ^ String.escaped t ^ "\""); }
 
   | Lang_nonterm (ntr,nt) ->
@@ -488,6 +495,12 @@ let rec element_data_of_element xd ts (allow_lists:bool) (indent_nonterms:bool) 
         grammar_body      = menhir_nonterminal_id_of_ntr ntr;
         semantic_action   = Some svi;
         pp_raw_rhs        = Some (pp_pp_raw_name ntr ^ pp_params (Auxl.rule_of_ntr_nonprimary xd ntr) ^ " " ^ svi);
+        pp_json_rhs       = Some (
+                                (if no_json_key then
+                                  ""
+                                else
+                                  "string \"" ^ pp_json_key (Grammar_pp.pp_plain_nonterm nt)  ^ ":\" ^^ ")
+                                ^ pp_pp_json_name ntr ^ pp_params (Auxl.rule_of_ntr_nonprimary xd ntr) ^ " " ^ svi);
         pp_pretty_rhs     
           = match Auxl.hom_spec_for_hom_name "pp-suppress" (Auxl.rule_of_ntr_nonprimary xd ntr).rule_homs with 
           | Some hs ->
@@ -504,6 +517,7 @@ let rec element_data_of_element xd ts (allow_lists:bool) (indent_nonterms:bool) 
         grammar_body      = token_of_metavarroot ts mvr;
         semantic_action   = Some svi;
         pp_raw_rhs        = Some (pp_pp_raw_name mvr ^ " " ^ svi);
+        pp_json_rhs       = Some ( "string \"" ^ pp_json_key (Grammar_pp.pp_plain_metavar mv) ^ " : \" ^^ " ^ pp_pp_json_name mvr ^ " " ^ svi);
         pp_pretty_rhs     
           = match Auxl.hom_spec_for_hom_name "pp-suppress" (Auxl.mvd_of_mvr_nonprimary xd mvr).mvd_rep with 
           | Some hs ->
@@ -516,7 +530,7 @@ let rec element_data_of_element xd ts (allow_lists:bool) (indent_nonterms:bool) 
       
   | Lang_list elb -> 
       if not allow_lists then raise (Failure "unexpected list form");
-      let element_data = List.map (element_data_of_element xd ts false indent_nonterms) elb.elb_es in 
+      let element_data = List.map (element_data_of_element xd ts false true indent_nonterms ) elb.elb_es in 
       
       let svi = menhir_semantic_value_id_of_list elb.elb_es in      
 
@@ -568,6 +582,14 @@ let rec element_data_of_element xd ts (allow_lists:bool) (indent_nonterms:bool) 
         let pper = "string \"[\" ^^ separate  (string \";\") (List.map " ^ f ^ " " ^ svi ^")" ^" ^^ string \"]\"" in
         pper in
 
+      let pp_json_rhs = 
+        let rhs_data = Auxl.option_map (function x-> x.pp_json_rhs) element_data in
+        let rhs =  "string \"\" ^^ " ^ String.concat  " ^^ string \",\" ^^ " rhs_data ^ " ^^ string \"\"" in
+        let f = "(function "^pat^" -> "^rhs^")" in
+        let pper = "string \"\\\"list\\\" : [\" ^^ separate  (string \",\") (List.map " ^ f ^ " " ^ svi ^")" ^" ^^ string \"]\"" in
+        pper in
+
+      
       let pp_pretty_rhs = 
         let rhs_data = Auxl.option_map (function x-> x.pp_pretty_rhs) element_data in
         let rhs =  String.concat  " ^^ string \" \" ^^ " rhs_data in
@@ -580,6 +602,7 @@ let rec element_data_of_element xd ts (allow_lists:bool) (indent_nonterms:bool) 
         grammar_body      = body;
         semantic_action   = Some action;
         pp_raw_rhs        = Some pp_raw_rhs;
+        pp_json_rhs       = Some pp_json_rhs;
         pp_pretty_rhs     = Some pp_pretty_rhs ; }
         
   | _ -> raise (Failure "unexpected Lang_ form")
@@ -588,7 +611,7 @@ let rec element_data_of_element xd ts (allow_lists:bool) (indent_nonterms:bool) 
 let element_data_of_prod xd ts p =
   (* try indenting nonterms iff this production has a top-level terminal *)
   let indent_nonterms = List.exists (function | Lang_terminal _ -> true | _ -> false) p.prod_es in 
-  List.map (element_data_of_element xd ts true indent_nonterms) p.prod_es
+  List.map (element_data_of_element xd ts true indent_nonterms false) p.prod_es
 
 
 let pp_menhir_prod_grammar element_data = 
@@ -633,6 +656,7 @@ let aux_constructor_element : element_data =
     grammar_body = "DUMMY";
     semantic_action = Some "Range($symbolstartpos,$endpos)";
     pp_raw_rhs = None;
+    pp_json_rhs = None;
     pp_pretty_rhs = None (* effectively pp-suppress for this element *); }
 
 let generate_aux_info_for_prod generate_aux_info r p = 
@@ -714,7 +738,7 @@ let pp_menhir_prod yo generate_aux_info_here xd ts r p =
           match hse with
           | Hom_string s ->  s
           (* TODO, arbitrary failure? *)
-          | Hom_index i -> let e = List.nth es'' (*or es? *) i  in let d=element_data_of_element xd ts true false e in (match d.semantic_action with Some s -> s | None -> raise (Failure ("pp_menhir_hse Hom_index " ^ string_of_int i ^ " at " ^ Location.pp_loc p.prod_loc)))
+          | Hom_index i -> let e = List.nth es'' (*or es? *) i  in let d=element_data_of_element xd ts true false false e in (match d.semantic_action with Some s -> s | None -> raise (Failure ("pp_menhir_hse Hom_index " ^ string_of_int i ^ " at " ^ Location.pp_loc p.prod_loc)))
           | Hom_terminal s -> s
           | Hom_ln_free_index (mvs,s) -> raise (Failure "Hom_ln_free_index not implemented")  in
         String.concat "" (List.map pp_menhir_hse hs)
@@ -869,6 +893,8 @@ let pp_pp_raw_metavar_defn yo generate_aux_info xd ts md =
            Some (pp_pp_raw_name md.mvd_name ^ " "^svi^" = " ^ " string_of_int " ^ svi ^ "\n\n")
         | Some [Hom_string s] when s="big_int" -> 
            Some (pp_pp_raw_name md.mvd_name ^ " "^svi^" = " ^ " Big_int.string_of_big_int " ^ svi ^ "\n\n")
+        | Some [Hom_string s]  -> 
+           Some (pp_pp_raw_name md.mvd_name ^ " "^svi^" = " ^ " string_of_" ^ s ^ " " ^ svi ^ "\n\n")
         | Some hs -> Some ("no default for "^md.mvd_name^" ocaml homspec="^Grammar_pp.pp_plain_hom_spec hs ^ "\n\n")
         | None -> Some ("no pp-raw or ocaml hom for "^md.mvd_name^ "\n\n")
        )
@@ -892,6 +918,8 @@ let pp_pp_metavar_defn yo generate_aux_info xd ts md =
            Some (pp_pp_name md.mvd_name ^ " "^svi^" = " ^ "string_of_int " ^ svi ^ "\n\n")
         | Some [Hom_string s] when s="big_int" -> 
            Some (pp_pp_name md.mvd_name ^ " "^svi^" = " ^ " Big_int.string_of_big_int " ^ svi ^ "\n\n")
+        | Some [Hom_string s]  -> 
+           Some (pp_pp_name md.mvd_name ^ " "^svi^" = " ^ " string_of_" ^ s ^ " " ^ svi ^ "\n\n")
         | Some hs -> Some ("no pp default for "^md.mvd_name^" ocaml homspec="^Grammar_pp.pp_plain_hom_spec hs ^ "\n\n")
         | None -> Some ("no pp or ocaml hom for "^md.mvd_name^ "\n\n")
        )
@@ -1026,6 +1054,89 @@ let pp_pp_metavar_defns_and_rules yo generate_aux_info xd ts mds rs =
       ((Auxl.option_map (pp_pp_metavar_defn yo generate_aux_info xd ts) mds)
       @ (Auxl.option_map (pp_pp_rule yo generate_aux_info prettier xd ts) rs))
 
+(** ******************************************************************** *)
+(** json pp                                                               *)
+(** ******************************************************************** *)
+
+      
+let pp_pp_json_metavar_defn yo generate_aux_info xd ts md = 
+  if suppress_metavar yo md then 
+    None
+  else 
+    (match Auxl.hom_spec_for_hom_name "pp-json" md.mvd_rep with 
+    | Some hs -> 
+        Some (pp_pp_json_name md.mvd_name ^ " " ^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs ^"\n\n")
+    | None ->
+       (*       let svi = menhir_semantic_value_id_of_ntmv (md.mvd_name,[])  in *)
+       let svi = "x" in
+       (match Auxl.hom_spec_for_hom_name "ocaml" md.mvd_rep with 
+        | Some [Hom_string s] when s="string" -> 
+           Some (pp_pp_json_name md.mvd_name ^ " "^svi^" = " ^ " string \"\\\"\" ^^ string " ^ svi ^ " ^^ string \"\\\"\"\n\n")
+        | Some [Hom_string s] when s="int" -> 
+           Some (pp_pp_json_name md.mvd_name ^ " "^svi^" = " ^ " string_of_int " ^ svi ^ "\n\n")
+        | Some [Hom_string s] when s="big_int" -> 
+           Some (pp_pp_json_name md.mvd_name ^ " "^svi^" = " ^ " Big_int.string_of_big_int " ^ svi ^ "\n\n")
+        | Some [Hom_string s]  -> 
+           Some (pp_pp_json_name md.mvd_name ^ " "^svi^" = " ^ " string_of_" ^ s ^ " " ^ svi ^ "\n\n")
+        | Some hs -> Some ("no default for "^md.mvd_name^" ocaml homspec="^Grammar_pp.pp_plain_hom_spec hs ^ "\n\n")
+        | None -> Some ("no pp-json or ocaml hom for "^md.mvd_name^ "\n\n")
+       )
+    )
+
+  
+let pp_pp_json_prod yo generate_aux_info_here xd ts r p = 
+  if suppress_prod yo p || p.prod_sugar then 
+    ""
+  else
+    match Auxl.hom_spec_for_hom_name "pp-json" p.prod_homs with 
+    | Some hs -> 
+       "| " ^ String.capitalize p.prod_name ^ " " ^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs ^"\n"
+    | None ->
+       (*let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in*)
+       let element_data = element_data_of_prod xd ts p in 
+       
+       let ppd_rhs = 
+         (match aux_constructor generate_aux_info_here r p with
+          | Some _ -> " string \"[\" ^^ string (pp_json_l "^ott_menhir_loc^") ^^ string \"]\" ^^ "
+          | None -> "") 
+         ^
+           "string \"{ \\\"tag\\\" : \\\"" ^ String.capitalize p.prod_name ^ "\\\"\"" 
+         ^ 
+           let args = Auxl.option_map (function x->x.pp_json_rhs) element_data in
+           match args with
+           | [] -> " ^^ string \"}\""
+           | _ -> " ^^ string \", \" ^^ "^ String.concat " ^^ string \",\" ^^ " args ^ " ^^ string \"}\"" 
+       in                                                                   
+       "| " ^ pp_pattern_prod r p generate_aux_info_here element_data ^ " -> " 
+       ^ ppd_rhs
+       ^ "\n"
+       
+
+let pp_pp_json_rule yo generate_aux_info xd ts r = 
+  if suppress_rule yo r then 
+    None
+  else 
+    (match Auxl.hom_spec_for_hom_name "pp-json" r.rule_homs with 
+    | Some hs -> 
+        Some (pp_pp_json_name r.rule_ntr_name ^ " " ^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs ^"\n\n")
+    | None ->
+       if r.rule_phantom then
+       (*(Auxl.error (Some r.rule_loc) ("no pp-json hom for phantom production "^r.rule_ntr_name));*)
+         Some (pp_pp_json_name r.rule_ntr_name ^ "_default " (*^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs*) ^"\n\n")
+       else 
+         let generate_aux_info_here = generate_aux_info_for_rule generate_aux_info r in 
+    
+         Some (pp_pp_json_name r.rule_ntr_name ^ pp_params r ^ " x = match x with\n" 
+               ^  String.concat "" (List.map (pp_pp_json_prod yo generate_aux_info_here xd ts r) r.rule_ps)
+               ^ "\n")
+    )
+
+let pp_pp_json_metavar_defns_and_rules yo generate_aux_info xd ts mds rs = 
+  "let rec "
+  ^ String.concat "and "
+      ((Auxl.option_map (pp_pp_json_metavar_defn yo generate_aux_info xd ts) mds)
+       @ (Auxl.option_map (pp_pp_json_rule yo generate_aux_info xd ts) rs))
+
 
 
 (* old code to pull out precedence/assoc info*)
@@ -1125,6 +1236,8 @@ let pp_pp_syntaxdefn m sources xd_quotiented xd_unquotiented xd_quotiented_unaux
                     ^ pp_pp_raw_metavar_defns_and_rules yo generate_aux_info xd ts xd.xd_mds xd.xd_rs
                     ^ "\n"
                     ^ pp_pp_metavar_defns_and_rules yo generate_aux_info xd ts xd.xd_mds xd.xd_rs
+                    ^ "\n"
+                    ^ pp_pp_json_metavar_defns_and_rules yo generate_aux_info xd ts xd.xd_mds xd.xd_rs
                    );
   close_out fd;
 
