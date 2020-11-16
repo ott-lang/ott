@@ -12,7 +12,7 @@ in ott repository
 7) cd doc && make && make install-top2-built (this generates a top2.pdf and
    copies it to built_doc)
 
-- someone with access to the ott homepage should run "make install-web-files"
+- someone with access to the ott homepage should cd doc and run "make install-web-files" then cd src and "make install-www-index"
 
 on GitHub
 8) on https://github.com/ott-lang/ott/releases click "Draft a new release"

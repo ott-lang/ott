@@ -34,6 +34,7 @@
 open Location
 open Types
 
+   
 (* command-line options *)
 let colour = ref true
 let file_arguments = ref ([]:(file_argument*string) list)
@@ -252,7 +253,12 @@ let options = Arg.align [
     "<"^string_of_bool !caml_include_terminals^">  Include terminals in OCaml output (experimental!)" );
   ( "-ocaml_pp",
     Arg.String (fun s -> caml_pp_filename := Some s),
-    "   generate OCaml AST pretty printer files (experimental!) (also included in .mly target)" );
+    "   <target.ml filename> generate OCaml AST pretty printer files (experimental!) (also included in .mly target)" );
+
+  ( "-ocaml_pp_ast_module",
+    Arg.String (fun s -> Global_option.caml_pp_ast_module := Some s),
+    "   override default OCaml module name for AST module (experimental!)" );
+
   
 (* options for debugging *)
   ( "-pp_grammar", 
@@ -614,7 +620,7 @@ let process source_filenames =
   in
 
   let ((xd,structure,rdcs),xd_unquotiented,xd_quotiented_unaux) = 
-    if List.mem "menhir" targets then 
+    if List.mem "menhir" targets (*|| !caml_pp_filename <> None*) then 
       (f true !generate_aux_rules, (match f false false with (xd,_,_)-> xd), (match f !generate_aux_rules false with (xd,_,_)-> xd))
     else
       match f !quotient_rules !generate_aux_rules with 
@@ -793,7 +799,7 @@ let output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux) =
        let xd_unquotiented = sd_unquotiented.syntax in
        let xd_quotiented_unaux = sd_quotiented_unaux.syntax in
        (*      (Lex_menhir_pp.pp_menhir_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented lookup !generate_aux_rules fi;*)
-       Lex_menhir_pp.pp_pp_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented xd_quotiented_unaux !generate_aux_rules false [] filename
+       Lex_menhir_pp.pp_pp_syntaxdefn m_menhir sd.sources xd_quotiented xd_unquotiented xd_quotiented_unaux (!generate_aux_rules && not !Global_option.aux_style_rules) false [] filename
   end;
   
   

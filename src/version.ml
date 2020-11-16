@@ -1,2 +1,2 @@
-let n="0.30"
-let d="Sun 24 Nov 2019 21:57:16 CET"
+let n="0.31"
+let d="Mon 15 Jun 12:00:29 BST 2020"

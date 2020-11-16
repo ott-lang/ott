@@ -591,12 +591,12 @@ let pp_defnclass fd (m:pp_mode) (xd:syntaxdefn) lookup (dc:defnclass) =
          dc.dc_defns; 
       ( match fancy_syntax_clauses with
         | [] -> ()
-        | fscs -> output_string fd "\nand ";
-                  List.iter (fun x -> output_string fd (fst x)) fscs);
+        | fscs -> 
+                  List.iter (fun x -> output_string fd "\nand "; output_string fd (fst x)) fscs);
       output_string fd "\nwhere\n";
       ( match fancy_syntax_clauses with
         | [] -> ()
-        | fscs -> List.iter (fun x -> output_string fd (snd x)) fscs);
+        | fscs -> iter_asep fd "\n| "  (*List.iter*) (fun x -> output_string fd (snd x)) fscs);
       iter_asep fd "\n| " (fun d -> pp_defn fd m xd lookup dc.dc_wrapper universe d) dc.dc_defns
 
   | Hol ho -> 

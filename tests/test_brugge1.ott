@@ -1,0 +1,21 @@
+defns
+
+Jwf :: '' ::=
+
+
+
+defn
+
+G |-k k : Sort       :: :: KV :: KV_ {{ isasyn [[G]] \<turnstile>\<^sub>k [[k]] : [[Sort]] }}
+
+by
+
+% ...
+
+defn
+
+G |-ty t : k        :: :: K :: K_  {{ isasyn [[G]] \<turnstile>\<^sub>t\<^sub>y [[t]] : [[k]] }}
+
+by
+
+% ...

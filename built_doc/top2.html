@@ -2,7 +2,7 @@
 <html >
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<meta name="generator" content="hevea 2.32">
+<meta name="generator" content="hevea 2.30">
 <style type="text/css">
 .li-itemize{margin:1ex 0ex;}
 .li-enumerate{margin:1ex 0ex;}
@@ -52,7 +52,7 @@ td p{margin:0px;}
 <title>Ott: Tool Support for
 Semantics  
 User Guide 
- version 0.30
+ version 0.31
 
 </title>
 </head>
@@ -61,7 +61,7 @@ User Guide
 <!--CUT STYLE article--><!--CUT DEF section 1 --><table class="title"><tr><td style="padding:1ex"><h1 class="titlemain">Ott: Tool Support for
 Semantics <br>
 User Guide<br>
- version 0.30
+ version 0.31
 </h1><h3 class="titlerest">Peter Sewell<sup>*</sup> &#XA0;&#XA0;&#XA0;&#XA0;Francesco Zappa Nardelli<sup>**</sup> &#XA0;&#XA0;&#XA0;&#XA0;Scott Owens <sup>*</sup> <br>
 with Gilles Peskine<sup>*</sup>, Tom
 Ridge<sup>*</sup>,<br>
@@ -190,9 +190,9 @@ them by typeset terms.</p><p>This document is a user guide for the tool. The pap
 </p><ul class="itemize"><li class="li-itemize">
 <a href="http://www.cl.cam.ac.uk/users/pes20/ott/ott-jfp.pdf">Ott: Effective Tool Support for the Working Semanticist</a>. Peter Sewell, Francesco Zappa Nardelli, Scott Owens, Gilles
 Peskine, Thomas Ridge, Susmit Sarkar, Rok Strni&#X161;a. 
-Journal of Functional Programming 20(1):71-122, 2010 [<a href="#ott-jfp">SZNO+10</a>].</li><li class="li-itemize"><a href="http://www.cl.cam.ac.uk/users/pes20/ott/paper.pdf">Ott: Effective Tool Support for the Working Semanticist</a>. Peter Sewell, Francesco Zappa Nardelli, Scott Owens, Gilles
+Journal of Functional Programming 20(1):71-122, 2010 [<a href="#ott-jfp"></a>].</li><li class="li-itemize"><a href="http://www.cl.cam.ac.uk/users/pes20/ott/paper.pdf">Ott: Effective Tool Support for the Working Semanticist</a>. Peter Sewell, Francesco Zappa Nardelli, Scott Owens, Gilles
 Peskine, Thomas Ridge, Susmit Sarkar, Rok Strni&#X161;a. 
-ICFP&#X2019;07 [<a href="#ott-sub">SZNO+07</a>].</li></ul><p>
+ICFP&#X2019;07 [<a href="#ott-sub"></a>].</li></ul><p>
 give an overview of the project, including discussion of motivation,
 design decisions, and related work, and one should look at that together
 with this manual. The project web page
@@ -202,11 +202,11 @@ with this manual. The project web page
 links to the github source repository, with a
 BSD-style licence. It also has a range of examples, including
 untyped and simply typed CBV lambda calculus, ML polymorphism, various
-first-order systems from Pierce&#X2019;s TAPL&#XA0;[<a href="#Pierce%3ATypeSystems">Pie02</a>], the
-POPLmark F<sub>&lt;:</sub> language&#XA0;[<a href="#poplmark">ABF+05</a>], a module system by
-Leroy&#XA0;[<a href="#Leroy-generativity">Ler96</a>, &#XA7;4] (extended with a term language and an
+first-order systems from Pierce&#X2019;s TAPL&#XA0;[<a href="#Pierce%3ATypeSystems"></a>], the
+POPLmark F<sub>&lt;:</sub> language&#XA0;[<a href="#poplmark"></a>], a module system by
+Leroy&#XA0;[<a href="#Leroy-generativity"></a>, &#XA7;4] (extended with a term language and an
 operational semantics), the LJ Java fragment and LJAM Java module
-system&#XA0;[<a href="#ljam-sub">SSP07</a>], and a substantial fragment of OCaml.</p><p>Our main goal is to support work on large programming language
+system&#XA0;[<a href="#ljam-sub"></a>], and a substantial fragment of OCaml.</p><p>Our main goal is to support work on large programming language
 definitions, where the scale makes it hard to keep a definition
 internally consistent, and hard to keep a tight correspondence between a
 definition and implementations.
@@ -242,14 +242,14 @@ then it will aid only a small part of the work (and one might choose
 instead to work just within a single proof assistant), but for larger
 languages the definition is a more substantial problem &#X2014; so much so
 that only a handful of full-scale languages have been given complete definitions. We
-aim to make this more commonplace, less of a heroic task.</p><p><a id="ott"></p>
+aim to make this more commonplace, less of a heroic task.</p>
 <!--TOC section id="sec3" Getting started with Ott (the README)-->
-<h2 id="sec3" class="section">2&#XA0;&#XA0;Getting started with Ott (the README)</h2><!--SEC END --><p></a></p><p>A tool for writing definitions of programming languages and calculi</p><p>by Peter Sewell, Francesco Zappa Nardelli, and Scott Owens.</p><p><a id="repository-and-package"></p>
+<h2 id="sec3" class="section">2&#XA0;&#XA0;Getting started with Ott (the README)</h2><!--SEC END --><p><a id="ott"></a></p><p>A tool for writing definitions of programming languages and calculi</p><p>by Peter Sewell, Francesco Zappa Nardelli, and Scott Owens.</p>
 <!--TOC subsection id="sec4" Repository and Package-->
-<h3 id="sec4" class="subsection">2.1&#XA0;&#XA0;Repository and Package</h3><!--SEC END --><p></a></p><p>Ott is now <a href="https://github.com/ott-lang/ott">available from
-github</a>, and as an <a href="https://opam.ocaml.org">opam</a> package.</p><p>We no longer provide non-github tarballs or a Windows distribution.</p><p><a id="directory-contents"></p>
+<h3 id="sec4" class="subsection">2.1&#XA0;&#XA0;Repository and Package</h3><!--SEC END --><p><a id="repository-and-package"></a></p><p>Ott is now <a href="https://github.com/ott-lang/ott">available from
+github</a>, and as an <a href="https://opam.ocaml.org">opam</a> package.</p><p>We no longer provide non-github tarballs or a Windows distribution.</p>
 <!--TOC subsection id="sec5" Directory contents-->
-<h3 id="sec5" class="subsection">2.2&#XA0;&#XA0;Directory contents</h3><!--SEC END --><p></a></p><p>
+<h3 id="sec5" class="subsection">2.2&#XA0;&#XA0;Directory contents</h3><!--SEC END --><p><a id="directory-contents"></a></p><p>
 
 
 </p><blockquote class="table"><div class="center"><hr style="width:80%;height:2"></div><div class="center"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="text-align:left;white-space:nowrap" >
@@ -280,26 +280,26 @@ guide)</td></tr>
 <tr><td style="text-align:left;white-space:nowrap" >&nbsp;</td></tr>
 </table>
 
-</div><div class="center"><hr style="width:80%;height:2"></div></blockquote><p><a id="to-build"></p>
+</div><div class="center"><hr style="width:80%;height:2"></div></blockquote>
 <!--TOC subsection id="sec6" To build-->
-<h3 id="sec6" class="subsection">2.3&#XA0;&#XA0;To build</h3><!--SEC END --><p></a></p><p><a id="with-opam"></p>
+<h3 id="sec6" class="subsection">2.3&#XA0;&#XA0;To build</h3><!--SEC END --><p><a id="to-build"></a></p>
 <!--TOC subsubsection id="sec7" With OPAM-->
-<h4 id="sec7" class="subsubsection">2.3.1&#XA0;&#XA0;With OPAM</h4><!--SEC END --><p></a></p><p>If you have <a href="https://opam.ocaml.org">OPAM</a> installed on your
+<h4 id="sec7" class="subsubsection">2.3.1&#XA0;&#XA0;With OPAM</h4><!--SEC END --><p><a id="with-opam"></a></p><p>If you have <a href="https://opam.ocaml.org">OPAM</a> installed on your
 system, <span style="font-family:monospace">opam install ott</span> will install the latest Ott version.
 The Emacs mode will be in
 <span style="font-family:monospace">$(opam config var prefix)/share/emacs/site-lisp</span>, and
 documentation in <span style="font-family:monospace">$(opam config var prefix)/doc/ott</span>.</p><p>To install the Ott auxiliary files for Coq, first activate the
-<span style="font-family:monospace">coq-released</span> OPAM repository:</p><p><span style="font-family:monospace">opam repo add coq-released https://coq.inria.fr/opam/released</span></p><p>and then run <span style="font-family:monospace">opam install coq-ott</span>.</p><p><a id="without-opam"></p>
+<span style="font-family:monospace">coq-released</span> OPAM repository:</p><p><span style="font-family:monospace">opam repo add coq-released https://coq.inria.fr/opam/released</span></p><p>and then run <span style="font-family:monospace">opam install coq-ott</span>.</p>
 <!--TOC subsubsection id="sec8" Without OPAM-->
-<h4 id="sec8" class="subsubsection">2.3.2&#XA0;&#XA0;Without OPAM</h4><!--SEC END --><p></a></p><p>Ott depends on OCaml version 4.00.0 or later. It builds with (at least)
+<h4 id="sec8" class="subsubsection">2.3.2&#XA0;&#XA0;Without OPAM</h4><!--SEC END --><p><a id="without-opam"></a></p><p>Ott depends on OCaml version 4.00.0 or later. It builds with (at least)
 OCaml 4.02.3.</p><p>The command <span style="font-family:monospace">make</span> (<span style="font-family:monospace">make world</span>) builds the <span style="font-family:monospace">ott</span>
 binary in the <span style="font-family:monospace">bin/</span> subdirectory.</p><p>This will compile Ott using <span style="font-family:monospace">ocamlopt</span>. To force it to compile
 with <span style="font-family:monospace">ocamlc</span> (which may give significantly slower execution of
 Ott), do <span style="font-family:monospace">make world.byt</span>.</p><p>To build the Ott auxiliary files for Coq, go to the <span style="font-family:monospace">coq/</span>
 subdirectory and run <span style="font-family:monospace">make</span>. To install the resulting files in
-Coq&#X2019;s <span style="font-family:monospace">user-contrib</span>, run <span style="font-family:monospace">make install</span>.</p><p><a id="to-run"></p>
+Coq&#X2019;s <span style="font-family:monospace">user-contrib</span>, run <span style="font-family:monospace">make install</span>.</p>
 <!--TOC subsection id="sec9" To run-->
-<h3 id="sec9" class="subsection">2.4&#XA0;&#XA0;To run</h3><!--SEC END --><p></a></p><p>Ott runs as a command-line tool. Executing <span style="font-family:monospace">bin/ott</span> shows the
+<h3 id="sec9" class="subsection">2.4&#XA0;&#XA0;To run</h3><!--SEC END --><p><a id="to-run"></a></p><p>Ott runs as a command-line tool. Executing <span style="font-family:monospace">bin/ott</span> shows the
 usage and options. To run Ott on the test file
 <span style="font-family:monospace">tests/test10.ott</span>, generating LaTeX in <span style="font-family:monospace">test10.tex</span> and
 Coq in <span style="font-family:monospace">test10.v</span>, type:</p><p><span style="font-family:monospace">bin/ott -i tests/test10.ott -o test10.tex -o test10.v</span></p><p>Isabelle, HOL, and Lem can be generated with options
@@ -321,17 +321,17 @@ filename</td><td style="text-align:left;white-space:nowrap" >description</td></t
 </table>
 
 </div><div class="center"><hr style="width:80%;height:2"></div></blockquote><p>from files <span style="font-family:monospace">test10.ott</span>, <span style="font-family:monospace">test8.ott</span>, etc., in
-<span style="font-family:monospace">tests/</span>.</p><p><a id="manual"></p>
+<span style="font-family:monospace">tests/</span>.</p>
 <!--TOC subsection id="sec10" Manual-->
-<h3 id="sec10" class="subsection">2.5&#XA0;&#XA0;Manual</h3><!--SEC END --><p></a></p><ul class="itemize"><li class="li-itemize">
+<h3 id="sec10" class="subsection">2.5&#XA0;&#XA0;Manual</h3><!--SEC END --><p><a id="manual"></a></p><ul class="itemize"><li class="li-itemize">
 in the <a href="https://github.com/ott-lang/ott">Ott github</a> built_doc
 directory, or
 </li><li class="li-itemize"><a href="http://www.cl.cam.ac.uk/&#XA0;pes20/ott/top2.html">here (html)</a>
-</li></ul><p><a id="editor-plugins"></p>
+</li></ul>
 <!--TOC subsection id="sec11" Editor Plugins-->
-<h3 id="sec11" class="subsection">2.6&#XA0;&#XA0;Editor Plugins</h3><!--SEC END --><p></a></p><p><a id="emacs-mode"></p>
+<h3 id="sec11" class="subsection">2.6&#XA0;&#XA0;Editor Plugins</h3><!--SEC END --><p><a id="editor-plugins"></a></p>
 <!--TOC subsubsection id="sec12" Emacs mode-->
-<h4 id="sec12" class="subsubsection">2.6.1&#XA0;&#XA0;Emacs mode</h4><!--SEC END --><p></a></p><p>The file <span style="font-family:monospace">emacs/ott-mode.el</span> defines a very simple Emacs mode for
+<h4 id="sec12" class="subsubsection">2.6.1&#XA0;&#XA0;Emacs mode</h4><!--SEC END --><p><a id="emacs-mode"></a></p><p>The file <span style="font-family:monospace">emacs/ott-mode.el</span> defines a very simple Emacs mode for
 syntax highlighting of Ott source files. It can be used by, for example,
 adding the following to your <span style="font-family:monospace">.emacs</span> file, replacing
 <span style="font-family:monospace">PATH</span> by a path to your Ott Emacs directory.</p><pre class="verbatim">(setq load-path (cons (expand-file-name "PATH") load-path))
@@ -341,25 +341,25 @@ the following code, which will call <span style="font-family:monospace">opam con
 at load-time.</p><pre class="verbatim">(setq opam-share (substring (shell-command-to-string "opam config var share") 0 -1))
 (add-to-list 'load-path (concat opam-share "/emacs/site-lisp"))
 (require 'ott-mode)
-</pre><p><a id="visual-studio-code"></p>
+</pre>
 <!--TOC subsubsection id="sec13" Visual Studio Code-->
-<h4 id="sec13" class="subsubsection">2.6.2&#XA0;&#XA0;Visual Studio Code</h4><!--SEC END --><p></a></p><p>There is a
+<h4 id="sec13" class="subsubsection">2.6.2&#XA0;&#XA0;Visual Studio Code</h4><!--SEC END --><p><a id="visual-studio-code"></a></p><p>There is a
 <a href="https://marketplace.visualstudio.com/items?itemName=JoeyEremondi.ott">plugin
 for VSCode</a>, which features syntax highlighting and inline error
-reporting.</p><p><a id="mailing-lists"></p>
+reporting.</p>
 <!--TOC subsection id="sec14" Mailing lists-->
-<h3 id="sec14" class="subsection">2.7&#XA0;&#XA0;Mailing lists</h3><!--SEC END --><p></a></p><ul class="itemize"><li class="li-itemize">
+<h3 id="sec14" class="subsection">2.7&#XA0;&#XA0;Mailing lists</h3><!--SEC END --><p><a id="mailing-lists"></a></p><ul class="itemize"><li class="li-itemize">
 <a href="https://lists.cam.ac.uk/mailman/listinfo/cl-ott-announce">cl-ott-announce
 announcement mailing list</a>
 </li><li class="li-itemize"><a href="https://lists.cam.ac.uk/mailman/listinfo/cl-ott-discuss">cl-ott-discuss
 discussion mailing list</a>
-</li></ul><p><a id="web-page-with-examples"></p>
+</li></ul>
 <!--TOC subsection id="sec15" Web page with examples-->
-<h3 id="sec15" class="subsection">2.8&#XA0;&#XA0;Web page with examples</h3><!--SEC END --><p></a></p><ul class="itemize"><li class="li-itemize">
+<h3 id="sec15" class="subsection">2.8&#XA0;&#XA0;Web page with examples</h3><!--SEC END --><p><a id="web-page-with-examples"></a></p><ul class="itemize"><li class="li-itemize">
 <a href="http://www.cl.cam.ac.uk/users/pes20/ott">here</a>
-</li></ul><p><a id="copyright-information"></p>
+</li></ul>
 <!--TOC subsection id="sec16" Copyright information-->
-<h3 id="sec16" class="subsection">2.9&#XA0;&#XA0;Copyright information</h3><!--SEC END --><p></a></p><p>The ocamlgraph library is distributed under the LGPL (from
+<h3 id="sec16" class="subsection">2.9&#XA0;&#XA0;Copyright information</h3><!--SEC END --><p><a id="copyright-information"></a></p><p>The ocamlgraph library is distributed under the LGPL (from
 http://www.lri.fr/~filliatr/ftp/ocamlgraph/); we include
 a snapshot for convenience. For its authorship and copyright information
 see the files therein.</p><p>All other files are distributed under the BSD-style licence in LICENCE.
@@ -894,7 +894,7 @@ The body of a proof assistant hom should normally include outer
 parentheses, as in the <span style="font-family:monospace">Tsub</span> hom above, so that it is
 parsed correctly by the proof assistant in all contexts.</p><blockquote class="figure"><div class="center"><hr style="width:80%;height:2"></div>
 <div class="minipage"><span class="textboxed"><span style="font-size:small">
-</span></span><pre class="verbatim"><span class="textboxed"><span style="font-size:small">(* generated by Ott 0.30 from: ../tests/test10.ott ../tests/non_super_tabular.ott *)
+</span></span><pre class="verbatim"><span class="textboxed"><span style="font-size:small">(* generated by Ott 0.31 from: ../tests/test10.ott ../tests/non_super_tabular.ott *)
 
 Require Import Arith.
 Require Import Bool.
@@ -961,7 +961,7 @@ Inductive reduce : term -&gt; term -&gt; Prop :=    (* defn reduce *)
 </table></div>
 <div class="center"><hr style="width:80%;height:2"></div></blockquote><blockquote class="figure"><div class="center"><hr style="width:80%;height:2"></div>
 <div class="minipage"><span class="textboxed"><span style="font-size:small">
-</span></span><pre class="verbatim"><span class="textboxed"><span style="font-size:small">(* generated by Ott 0.30 from: ../tests/test10.ott ../tests/non_super_tabular.ott *)
+</span></span><pre class="verbatim"><span class="textboxed"><span style="font-size:small">(* generated by Ott 0.31 from: ../tests/test10.ott ../tests/non_super_tabular.ott *)
 theory test10
 imports Main
 begin
@@ -1016,7 +1016,7 @@ end
 </table></div>
 <div class="center"><hr style="width:80%;height:2"></div></blockquote><blockquote class="figure"><div class="center"><hr style="width:80%;height:2"></div>
 <div class="minipage"><span class="textboxed"><span style="font-size:small">
-</span></span><pre class="verbatim"><span class="textboxed"><span style="font-size:small">(* generated by Ott 0.30 from: ../tests/test10.ott ../tests/non_super_tabular.ott *)
+</span></span><pre class="verbatim"><span class="textboxed"><span style="font-size:small">(* generated by Ott 0.31 from: ../tests/test10.ott ../tests/non_super_tabular.ott *)
 (* to compile: Holmake test10Theory.uo   *)
 (* for interactive use:
   app load ["pred_setTheory","finite_mapTheory","stringTheory","containerTheory","ottLib"];
@@ -1468,7 +1468,7 @@ Jop </span></span><span class="textboxed"><span style="font-size:small"><span st
 </table></div>
 <div class="center"><hr style="width:80%;height:2"></div></blockquote><blockquote class="figure"><div class="center"><hr style="width:80%;height:2"></div>
 <div class="minipage"><span class="textboxed"><span style="font-size:small">
-</span></span><pre class="verbatim"><span class="textboxed"><span style="font-size:small">(* generated by Ott 0.30 from: ../tests/test10.ott ../tests/non_super_tabular.ott *)
+</span></span><pre class="verbatim"><span class="textboxed"><span style="font-size:small">(* generated by Ott 0.31 from: ../tests/test10.ott ../tests/non_super_tabular.ott *)
 
 type var = int (* term variable *)
 
@@ -1719,7 +1719,7 @@ the record patterns below.
 </p><p><img src="top2020.png"></p><p>This suffices to express the binding structure of almost all the
 natural examples we have come across, including definitions of
 mutually recursive functions with multiple clauses for each, Join
-calculus definitions&#XA0;[<a href="#FGLMR96">FGL+96</a>], dependent record patterns, and many others.</p>
+calculus definitions&#XA0;[<a href="#FGLMR96"></a>], dependent record patterns, and many others.</p>
 <!--TOC section id="sec42" Generating substitution and free variable functions-->
 <h2 id="sec42" class="section">10&#XA0;&#XA0;Generating substitution and free variable functions</h2><!--SEC END --><p><a id="a67"></a>The tool can generate Isabelle/Coq/HOL/OCaml code for both single and multiple
 substitution functions. For example, the ML polymorphism Ott source
@@ -2555,7 +2555,7 @@ reusable Ott components to define standard formulae, LaTeX pretty
 printing of terminals, or LaTeX styles. 
 For example, Figure&#XA0;<a href="#a12">15</a> shows the Ott source file for a
 <span style="font-family:monospace">let</span> feature in isolation, taken from our Ott development of
-some languages from Pierce&#X2019;s TAPL&#XA0;[<a href="#Pierce%3ATypeSystems">Pie02</a>].
+some languages from Pierce&#X2019;s TAPL&#XA0;[<a href="#Pierce%3ATypeSystems"></a>].
 </p><blockquote class="figure"><div class="center"><hr style="width:80%;height:2"></div>
 <div class="minipage"><span class="textboxed">
 </span><pre><span class="textboxed"><span style="font-size:small">
@@ -2594,7 +2594,7 @@ G |- let x=t1 in t2 : T2
 </table></div>
 <div class="center"><hr style="width:80%;height:2"></div></blockquote><p>
 The original TAPL languages were produced using
-TinkerType&#XA0;[<a href="#LevinPierce99">LP03</a>] to compose features and check for
+TinkerType&#XA0;[<a href="#LevinPierce99"></a>] to compose features and check for
 conflicts. 
 In <span style="font-family:monospace">examples/tapl</span> we build a system, similar to the TinkerType
 <span style="font-family:monospace">sys-fullsimple</span>, from <span style="font-family:monospace">ott</span> source files that
@@ -2841,7 +2841,7 @@ also targets &#XA0;<code>%.coq.out</code>, &#XA0;<code>%.hol.out</code>, and
 &#XA0;<code>%.isa.out</code>, to generate just LaTeX and the code for one proof
 assistant, and &#XA0;<code>%.tex.out</code>, to generate just LaTeX.</p><p>The <span style="font-family:monospace">ott</span> command-line options (with default values where applicable) are
 shown below. 
-</p><pre class="verbatim">Ott version 0.30   distribution of Sun 24 Nov 2019 21:57:16 CET
+</p><pre class="verbatim">Ott version 0.31   distribution of Mon 15 Jun 12:00:29 BST 2020
 
 usage: ott &lt;options&gt; &lt;filename1&gt; .. &lt;filenamen&gt; 
   (use "OCAMLRUNPARAM=p  ott ..." to show the ocamlyacc trace)
@@ -2890,6 +2890,8 @@ usage: ott &lt;options&gt; &lt;filename1&gt; .. &lt;filenamen&gt;
   -coq_names_in_rules &lt;true&gt;         Copy user names in rule definitions
   -coq_use_filter_fn &lt;false&gt;         Use list_filter instead of list_minus2 in substitutions
   -ocaml_include_terminals &lt;false&gt;   Include terminals in OCaml output (experimental!)
+  -ocaml_pp                          &lt;target.ml filename&gt; generate OCaml AST pretty printer files (experimental!) (also included in .mly target)
+  -ocaml_pp_ast_module               override default OCaml module name for AST module (experimental!)
   -pp_grammar                        (debug) print term grammar
   -dot &lt;filename&gt;                    (debug) dot graph of syntax dependencies
   -alltt &lt;filename&gt;                  (debug) alltt output of single source file
@@ -3797,44 +3799,7 @@ University Research Fellowship (Sewell), an EPSRC Leadership
 Fellowship (Sewell), 
 EPSRC Programme Grant, EP/K008528/1 REMS <em>Rigorous Engineering of
 Mainstrem Systems</em>,
-and ANR grant ANR-06-SETI-010-02 (Zappa Nardelli). </p><!--TOC section id="sec74" References-->
-<h2 id="sec74" class="section">References</h2><!--SEC END --><dl class="thebibliography"><dt class="dt-thebibliography">
-<a id="poplmark">[ABF<sup>+</sup>05]</a></dt><dd class="dd-thebibliography">
-Brian&#XA0;E. Aydemir, Aaron Bohannon, Matthew Fairbairn, J.&#XA0;Nathan Foster,
-Benjamin&#XA0;C. Pierce, Peter Sewell, Dimitrios Vytiniotis, Geoffrey Washburn,
-Stephanie Weirich, and Steve Zdancewic.
-Mechanized metatheory for the masses: The POPLmark Challenge.
-In <em>Proc.&#XA0;TPHOLs, LNCS 3603</em>, 2005.</dd><dt class="dt-thebibliography"><a id="FGLMR96">[FGL<sup>+</sup>96]</a></dt><dd class="dd-thebibliography">
-C&#XE9;dric Fournet, Georges Gonthier, Jean-Jacques L&#XE9;vy, Luc Maranget, and
-Didier R&#XE9;my.
-A calculus of mobile agents.
-In <em>Proc.&#XA0;CONCUR &#X2019;96, LNCS 1119</em>, 1996.</dd><dt class="dt-thebibliography"><a id="Leroy-generativity">[Ler96]</a></dt><dd class="dd-thebibliography">
-Xavier Leroy.
-A syntactic theory of type generativity and sharing.
-<em>Journal of Functional Programming</em>, 6(5):667&#X2013;698, 1996.</dd><dt class="dt-thebibliography"><a id="LevinPierce99">[LP03]</a></dt><dd class="dd-thebibliography">
-Michael&#XA0;Y. Levin and Benjamin&#XA0;C. Pierce.
-Tinkertype: A language for playing with formal systems.
-<em>Journal of Functional Programming</em>, 13(2), March 2003.</dd><dt class="dt-thebibliography"><a id="Pierce:TypeSystems">[Pie02]</a></dt><dd class="dd-thebibliography">
-Benjamin&#XA0;C. Pierce.
-<em>Types and Programming Languages</em>.
-MIT Press, 2002.</dd><dt class="dt-thebibliography"><a id="ljam-sub">[SSP07]</a></dt><dd class="dd-thebibliography">
-Rok Strni&#X161;a, Peter Sewell, and Matthew Parkinson.
-The Java Module System: core design and semantic definition.
-In <em>Proceedings of </em><em>OOPSLA</em><em> 2007, the </em><em>22nd ACM SIGPLAN
-International Conference on Object-Oriented Programming, Systems, Languages
-and Applications (Montre</em><em>&#XE1;</em><em>l)</em>, October 2007.
-15pp.</dd><dt class="dt-thebibliography"><a id="ott-sub">[SZNO<sup>+</sup>07]</a></dt><dd class="dd-thebibliography">
-Peter Sewell, Francesco Zappa&#XA0;Nardelli, Scott Owens, Gilles Peskine, Thomas
-Ridge, Susmit Sarkar, and Rok&#XA0;Strni&#X161;a.
-Ott: Effective tool support for the working semanticist.
-In <em>Proceedings of ICFP 2007: </em><em>the 12th ACM SIGPLAN International
-Conference on Functional Programming (Freiburg)</em>, October 2007.
-12pp.</dd><dt class="dt-thebibliography"><a id="ott-jfp">[SZNO<sup>+</sup>10]</a></dt><dd class="dd-thebibliography">
-Peter Sewell, Francesco Zappa&#XA0;Nardelli, Scott Owens, Gilles Peskine, Thomas
-Ridge, Susmit Sarkar, and Rok&#XA0;Strni&#X161;a.
-Ott: Effective tool support for the working semanticist.
-<em>Journal of Functional Programming</em>, 20(1):70&#X2013;122, January 2010.
-Invited submission from ICFP 2007.</dd></dl><!--BEGIN NOTES document-->
+and ANR grant ANR-06-SETI-010-02 (Zappa Nardelli). </p><!--BEGIN NOTES document-->
 <hr class="footnoterule"><dl class="thefootnotes"><dt class="dt-thefootnotes">
 <a id="note1" href="#text1">1</a></dt><dd class="dd-thefootnotes"><div class="footnotetext">Strictly, clauses
 of primitive recursive function definitions from symbolic terms to strings, here of LaTeX code.</div></dd></dl>
