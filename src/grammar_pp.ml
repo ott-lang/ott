@@ -1363,7 +1363,7 @@ and apply_hom_spec m xd hses ss =
   match hses with
   | [] -> []
   | Hom_string s :: hses' -> 
-      String.trim s :: apply_hom_spec m xd hses' ss 
+      s :: apply_hom_spec m xd hses' ss 
   | Hom_index i :: hses' -> 
       (List.nth ss i) :: apply_hom_spec m xd hses' ss
   | Hom_terminal tm :: hses' -> 
