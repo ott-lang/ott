@@ -96,4 +96,4 @@ and pp_embed_spec_el fd m xd lookup ese =
           (* not taking account of possible dot forms shared over different terms *)
           let st = Term_parser.just_one_parse xd lookup "user_syntax" false l s in
           let ((de1,de2) as de,de3,pptbe) = Bounds.bound_extraction m xd l [st]  in
-          output_string fd (String.trim (Grammar_pp.pp_symterm m xd [] de st)))
+          output_string fd (Grammar_pp.pp_symterm m xd [] de st))
