@@ -245,9 +245,8 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
         (snd ppd_premises);
       output_string fd "}{\n";
       output_string fd ppd_conclusion;
-      Printf.fprintf fd "}{%%\n{%s{%s}}{%s}%%\n}}\n"
-        (Grammar_pp.pp_tex_DRULE_NAME_NAME m)
-        (Auxl.pp_tex_escape dr.drule_name)
+      Printf.fprintf fd "}{%%\n{%sName}{%s}%%\n}}\n"
+        (Grammar_pp.tex_drule_name m dr.drule_name)
         pp_com
   | Isa _ | Hol _ | Lem _ | Coq _ | Twf _ ->
       let non_free_ntrs = Subrules_pp.non_free_ntrs m xd xd.xd_srs in
