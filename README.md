@@ -62,7 +62,7 @@ As of 2020, Ott remains in continuous use.
   (html)](http://www.cl.cam.ac.uk/~pes20/ott/top2.html)
 
 - [Binding and
-  Substitution](http://www.cl.cam.ac.uk/users/pes20/bind-doc.pdf). Susmit
+  Substitution](http://www.cl.cam.ac.uk/users/pes20/ott/bind-doc.pdf). Susmit
   Sarkar, Peter Sewell, Francesco Zappa Nardelli.  Note, 2007.
 
 - [The experimental Coq locally-nameless backend
