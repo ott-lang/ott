@@ -259,6 +259,9 @@ let options = Arg.align [
     Arg.String (fun s -> Global_option.caml_pp_ast_module := Some s),
     "   override default OCaml module name for AST module (experimental!)" );
 
+  ( "-ocaml_pp_json",
+    Arg.Bool (fun b -> Global_option.caml_pp_json := b),
+    "<"^string_of_bool !Global_option.caml_pp_json^">  Include JSON output in pretty printer (experimental)");
   
 (* options for debugging *)
   ( "-pp_grammar", 
