@@ -1037,7 +1037,7 @@ let pp_pp_rule yo generate_aux_info prettier  xd ts r =
     | None ->
        if r.rule_phantom then
          (* hack: default pp hom if missing *)
-         (*(Auxl.error (Some r.rule_loc) ("no pp hom for phantom production "^r.rule_ntr_name));*)
+         let () = Auxl.warning (Some r.rule_loc) ("no pp hom for phantom production "^r.rule_ntr_name) in
          Some (pp_pp_name r.rule_ntr_name ^ "_default " (*^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs *)^"\n\n")
        else
          let generate_aux_info_here = generate_aux_info_for_rule generate_aux_info r in 
@@ -1121,8 +1121,7 @@ let pp_pp_json_rule yo generate_aux_info xd ts r =
         Some (pp_pp_json_name r.rule_ntr_name ^ " " ^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs ^"\n\n")
     | None ->
        if r.rule_phantom then
-       (*(Auxl.error (Some r.rule_loc) ("no pp-json hom for phantom production "^r.rule_ntr_name));*)
-         Some (pp_pp_json_name r.rule_ntr_name ^ "_default " (*^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs*) ^"\n\n")
+         Auxl.error (Some r.rule_loc) ("no pp-json hom for phantom production "^r.rule_ntr_name)
        else 
          let generate_aux_info_here = generate_aux_info_for_rule generate_aux_info r in 
     
@@ -1235,9 +1234,10 @@ let pp_pp_syntaxdefn m sources xd_quotiented xd_unquotiented xd_quotiented_unaux
   output_string fd ("open " ^ (match !Global_option.caml_pp_ast_module with None -> yo.ppm_caml_ast_module | Some s -> s)  ^ "\n\n" 
                     ^ pp_pp_raw_metavar_defns_and_rules yo generate_aux_info xd ts xd.xd_mds xd.xd_rs
                     ^ "\n"
-                    ^ pp_pp_metavar_defns_and_rules yo generate_aux_info xd ts xd.xd_mds xd.xd_rs
-                    ^ "\n"
-                    ^ pp_pp_json_metavar_defns_and_rules yo generate_aux_info xd ts xd.xd_mds xd.xd_rs
+                    ^ pp_pp_metavar_defns_and_rules yo generate_aux_info xd ts xd.xd_mds xd.xd_rs);
+  if !Global_option.caml_pp_json then
+    output_string fd ("\n"
+                      ^ pp_pp_json_metavar_defns_and_rules yo generate_aux_info xd ts xd.xd_mds xd.xd_rs
                    );
   close_out fd;
 
