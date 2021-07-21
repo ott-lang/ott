@@ -300,8 +300,8 @@ away when generating proof assistant output.  The two flags \mykw{M}
 and \mykw{S} are identical except that productions with the latter are 
 admitted when parsing example concrete terms; the \mykw{S} tag is thus
 appropriate for lightweight syntactic sugar, such as productions for
-parentheses.  One can also use an \mykw{X} flag here to suppress a
-production in the generated LaTeX.
+parentheses.  One can also use another flag, e.g.~\mykw{X}, along with the command-line option \verb+-tex_suppress_category+,  to suppress 
+productions in the generated LaTeX.
 
 Each production has a production name (e.g.~\verb+t_Lam+), composed of
 the rule name prefix (here~\verb+t_+) and the production name kernel
