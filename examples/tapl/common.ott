@@ -1,6 +1,6 @@
 embed
 {{ tex-preamble
-\renewcommand{\ottnt}[1]{\mathsf{#1} }
+\renewcommand{\ottnt}[1]{\ensuremath{\mathsf{#1} } }
 \renewcommand{\ottkw}[1]{\textsf{#1} }
 \renewcommand{\ottcom}[1]{\textit{#1} }
 \renewcommand{\ottcomplu}[5]{#1\mbox{}^{\,#2\in #3 #4 #5} }
