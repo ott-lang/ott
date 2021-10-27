@@ -2,7 +2,7 @@
 
 Require Import Arith.
 Require Import List.
-Require Import Omega.
+Require Import Lia.
 Require Import Ott.ott_list_support.
 Require Import Ott.ott_list_base.
 Require Import Ott.ott_list_nth.
@@ -43,7 +43,7 @@ Qed.
 
 Lemma repeat_S : forall n x, repeat (S n) x = repeat n x ++ x::nil.
 Proof.
-  intros. replace (S n) with (n+1). 2: omega.
+  intros. replace (S n) with (n+1). 2: lia.
   rewrite repeat_app. reflexivity.
 Qed.
 
@@ -71,7 +71,7 @@ Proof.
   intros. assert (value (nth_safe (repeat n x) m H) = value x).
   rewrite nth_safe_eq_nth_error. rewrite nth_error_repeat.
   rewrite repeat_length in H.
-  destruct (le_lt_dec n m). elimtype False; omega. reflexivity.
+  destruct (le_lt_dec n m). lia. reflexivity.
   injection H0. tauto.
 Qed.
 

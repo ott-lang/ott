@@ -1,7 +1,7 @@
 (* Additional definitions and lemmas on lists *)
 
 Require Import Arith.
-Require Import Omega.
+Require Import Lia.
 
 
 
@@ -15,7 +15,7 @@ Lemma le_lt_dec_S :
     (if le_lt_dec n m then x else y).
 Proof.
   intros. destruct (le_lt_dec n m); destruct (le_lt_dec (S n) (S m)).
-  reflexivity. elimtype False; omega. elimtype False; omega. reflexivity.
+  reflexivity. lia. lia. reflexivity.
 Qed.
 
 End List_lib_Arith.
