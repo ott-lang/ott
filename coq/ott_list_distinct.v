@@ -8,7 +8,7 @@ Require Import Ott.ott_list_core.
 Require Import Ott.ott_list_base.
 Require Import Ott.ott_list_nth.
 Require Import Ott.ott_list_mem.
-Require Import Omega.
+Require Import Lia.
 
 
 
@@ -164,15 +164,15 @@ Proof.
   generalize (j-i); clear Ineq j; intros k Distinct Nths Bound.
   destruct k. solve [auto with arith]. elimtype False.
   generalize dependent xs; induction i; intros; destruct xs; simpl in * .
-  omega.
+  lia.
   destruct (andb_prop2 _ _ Distinct) as [Notin _]; clear Distinct Bound.
   generalize dependent k; induction xs; intros; simpl in * .
   destruct k; discriminate.
   destruct (eq_dec a0 a). exact Notin.
   destruct k; simpl in *; [injection Nths | idtac]; solve [eauto].
-  omega.
+  lia.
   eapply IHi; eauto. destruct_andb; assumption.
-  omega.
+  lia.
 Qed.
 Lemma all_distinct_indices :
   forall xs i j,
@@ -183,7 +183,7 @@ Lemma all_distinct_indices :
 Proof.
   intros. destruct (le_ge_dec i j).
   eapply all_distinct_indices_aux; eauto.
-  symmetry. eapply all_distinct_indices_aux; eauto. omega.
+  symmetry. eapply all_distinct_indices_aux; eauto. lia.
 Qed.
 
 End All_distinct.

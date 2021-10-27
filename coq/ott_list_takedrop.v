@@ -4,7 +4,7 @@ Require Import Arith.
 Require Import Max.
 Require Import Min.
 Require Import List.
-Require Import Omega.
+Require Import Lia.
 Require Import Ott.ott_list_support.
 Require Import Ott.ott_list_base.
 Require Import Ott.ott_list_nth.
@@ -47,7 +47,7 @@ Lemma take_all :
 Proof.
   induction l; destruct n; intros; try reflexivity.
   solve [inversion H].
-  simpl in * . apply (f_equal2 (@cons A)). reflexivity. apply IHl. omega.
+  simpl in * . apply (f_equal2 (@cons A)). reflexivity. apply IHl. lia.
 Qed.
 
 Lemma take_length :
@@ -101,7 +101,7 @@ Lemma drop_all :
 Proof.
   induction l; destruct n; intros; try reflexivity.
   solve [inversion H].
-  simpl in * . apply IHl. omega.
+  simpl in * . apply IHl. lia.
 Qed.
 
 Lemma drop_length : forall l n, length (drop n l) = length l - n.
@@ -120,7 +120,7 @@ Proof.
   generalize (conj (refl_equal (length (drop n l))) (refl_equal (drop n l))).
   pattern (drop n l) at 1 3.
   case (drop n l); intros; rewrite drop_length in H; destruct H; simpl in * .
-  elimtype False; omega.
+  lia.
   rewrite <- H0. assumption.
 Qed.
 
@@ -193,7 +193,7 @@ Proof. intros. induction l; simpl; congruence. Qed.
 Lemma take_from_app :
   forall l l', take (length l) (l ++ l') = l.
 Proof.
-  intros. replace (length l) with (length l + 0). 2: omega.
+  intros. replace (length l) with (length l + 0). 2: lia.
   rewrite take_app_short. rewrite take_0.
   symmetry. apply app_nil_end.
 Qed.
@@ -201,7 +201,7 @@ Qed.
 Lemma drop_from_app :
   forall l l', drop (length l) (l ++ l') = l'.
 Proof.
-  intros. replace (length l) with (length l + 0). 2: omega.
+  intros. replace (length l) with (length l + 0). 2: lia.
   rewrite drop_app_short. apply drop_0.
 Qed.
 
@@ -267,7 +267,7 @@ Ltac cut_list original cut_point prefix suffix :=
       autorewrite with lists take_drop; intros;
       rename p into prefix; rename s into suffix
     | (**length original < n**)
-      try (equate_list_lengths; elimtype False; omega) ]
+      try (equate_list_lengths; lia) ]
   ).
 
 (* Look for equations between lists that can be simplified.
@@ -280,14 +280,14 @@ Ltac parallel_split :=
              | H : app ?p ?s = app ?p' ?s' |- _ =>
                (
                  assert (tmp : length p = length p');
-                   [equate_list_lengths; omega | idtac];
+                   [equate_list_lengths; lia | idtac];
                  assert (EqPrefix := app_inj_prefix_length_prefix _ _ _ _ tmp H);
                  rewrite <- EqPrefix in H;
                  assert (EqSuffix := app_inj_prefix _ _ _ H);
                  clear tmp H
                ) || (
                  assert (tmp : length s = length s');
-                   [equate_list_lengths; omega | idtac];
+                   [equate_list_lengths; lia | idtac];
                  assert (EqSuffix := app_inj_prefix_length_suffix _ _ _ _ tmp H);
                  rewrite <- EqSuffix in H;
                  assert (EqPrefix := app_inj_suffix _ _ _ H);
@@ -303,7 +303,7 @@ Ltac parallel_split_maps :=
   repeat match goal with
            | H : map ?f ?p ++ map ?f ?s = ?p' ++ ?s' |- _ =>
              assert (Eqlen' : length (map f p) = length p');
-               [equate_list_lengths; omega | idtac];
+               [equate_list_lengths; lia | idtac];
              assert (EqPrefix := app_inj_prefix_length_prefix _ _ _ _ Eqlen' H);
              rewrite <- EqPrefix in H;
              assert (EqSuffix := app_inj_prefix _ _ _ H);
