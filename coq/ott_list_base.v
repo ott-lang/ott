@@ -2,7 +2,7 @@
 
 Require Import Arith.
 Require Import List.
-Require Import Omega.
+Require Import Lia.
 Require Import Wf_nat.
 Require Import Ott.ott_list_support.
 
@@ -113,7 +113,7 @@ Lemma app_inj_suffix_length_prefix :
 Proof.
   intros. eapply app_inj_prefix_length_prefix. 2: eexact H0.
   assert (Eq := f_equal (@length A) H0).
-  repeat rewrite length_app in Eq. omega.
+  repeat rewrite length_app in Eq. lia.
 Qed.
 Lemma app_inj_suffix_length_suffix :
   forall l0 l1 l0' l1',

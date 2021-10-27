@@ -1,5 +1,5 @@
 Require Import Arith.
-Require Import Omega.
+Require Import Lia.
 Require Import List.
 Require Import Ott.ott_list_support.
 Require Import Ott.ott_list_base.
@@ -92,8 +92,8 @@ Lemma nth_error_out :
   forall l n, length l <= n -> nth_error l n = error.
 Proof.
   induction l; intros n H. solve [apply nth_error_nil].
-  simpl in H. destruct n. assert False; [omega | intuition].
-  simpl. apply IHl. omega.
+  simpl in H. destruct n. assert False; [lia | intuition].
+  simpl. apply IHl. lia.
 Qed.
 
 Lemma nth_error_app_prefix :
@@ -128,7 +128,7 @@ Proof.
     destruct (le_lt_dec (length l) n);
     destruct (le_lt_dec (S (length l)) (S n));
     reflexivity ||
-    (assert False; [omega | intuition]) ||
+    (assert False; [lia | intuition]) ||
     simpl.
   match match goal with |- ?g => g end with value ?lhs = value ?rhs =>
     assert (Eq : lhs=rhs)
@@ -162,11 +162,10 @@ Lemma nth_eq_nth_safe :
                       end.
 Proof.
   induction l; destruct n; reflexivity || intros. simpl nth; simpl length.
-  destruct (le_lt_dec (S (length l)) (S n));
-    case_eq (le_lt_dec (length l) n); intros;
-    [idtac | elimtype False; omega | elimtype False; omega | idtac];
-    pose (H' := IHl n default); rewrite H in H'; rewrite H'.
-  reflexivity. simpl; apply nth_safe_proof_irrelevance.
+  rewrite (IHl n default).
+  simpl; destruct (le_lt_dec (length l) n); simpl.
+  reflexivity.
+  apply nth_safe_proof_irrelevance.
 Qed.
 
 Lemma nth_eq_nth_error :
@@ -189,6 +188,6 @@ Arguments nth_safe_app [A] _ _ _ _.
 
 Hint Rewrite nth_map nth_ok_map nth_error_map : lists.
 Hint Rewrite nth_error_nil : lists.
-Hint Rewrite nth_error_in nth_error_out using omega : list_nth_error.
+Hint Rewrite nth_error_in nth_error_out using lia : list_nth_error.
 Hint Rewrite nth_error_dec : list_nth_dec.
 Hint Resolve nth_error_value nth_error_error : datatypes.
