@@ -12,7 +12,7 @@ MENHIR          := menhir
 
 MENHIRFLAGS     := --infer --explain --unused-tokens --trace --base $(ROOT)_parser
 
-OCAMLBUILD      := ocamlbuild -use-ocamlfind -use-menhir -menhir "$(MENHIR) $(MENHIRFLAGS) ../$(MENHIR_EXTRA_LIB) "
+OCAMLBUILD      := ocamlbuild -use-ocamlfind -use-menhir -menhir "$(MENHIR) $(MENHIRFLAGS) ../$(MENHIR_EXTRA_LIB) " -package pprint
 
 MAIN            := main
 
