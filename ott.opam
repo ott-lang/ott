@@ -7,10 +7,15 @@ homepage: "http://www.cl.cam.ac.uk/~pes20/ott/"
 bug-reports: "https://github.com/ott-lang/ott/issues"
 depends: [
   "ocaml" {>= "4.02.0"}
+  "pprint" {with-test & < "20220103"}
+  "menhir" {with-test}
 ]
 build: [
   [make "world"]
   [make "ott.install"]
+]
+run-test: [
+  [make "-C" "tests/menhir_tests/test_if"]
 ]
 dev-repo: "git+https://github.com/ott-lang/ott.git"
 synopsis: "A tool for writing definitions of programming languages and calculi"
