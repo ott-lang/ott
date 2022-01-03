@@ -1,15 +1,23 @@
-(**************************************************************************)
-(*                                                                        *)
-(*  PPrint                                                                *)
-(*                                                                        *)
-(*  François Pottier, Inria Paris                                         *)
-(*  Nicolas Pouillard                                                     *)
-(*                                                                        *)
-(*  Copyright 2007-2017 Inria. All rights reserved. This file is          *)
-(*  distributed under the terms of the GNU Library General Public         *)
-(*  License, with an exception, as described in the file LICENSE.         *)
-(*                                                                        *)
-(**************************************************************************)
+(******************************************************************************)
+(*                                                                            *)
+(*                                    PPrint                                  *)
+(*                                                                            *)
+(*                        François Pottier, Inria Paris                       *)
+(*                              Nicolas Pouillard                             *)
+(*                                                                            *)
+(*         Copyright 2007-2022 Inria. All rights reserved. This file is       *)
+(*        distributed under the terms of the GNU Library General Public       *)
+(*        License, with an exception, as described in the file LICENSE.       *)
+(*                                                                            *)
+(******************************************************************************)
+
+(** A point is a pair of a line number and a column number. *)
+type point =
+  int * int
+
+(** A range is a pair of points. *)
+type range =
+  point * point
 
 (* ------------------------------------------------------------------------- *)
 
@@ -51,6 +59,82 @@ class type output = object
 
 end
 
+(* ------------------------------------------------------------------------- *)
+
+(* Printing blank space. This is used both internally (to emit indentation
+   characters) and via the public combinator [blank]. *)
+
+let blank_length =
+  80
+
+let blank_buffer =
+  String.make blank_length ' '
+
+let rec blanks (output : output) n =
+  if n <= 0 then
+    ()
+  else if n <= blank_length then
+    output#substring blank_buffer 0 n
+  else begin
+    output#substring blank_buffer 0 blank_length;
+    blanks output (n - blank_length)
+  end
+
+(* ------------------------------------------------------------------------- *)
+
+(* The class [buffering] implements a wrapper that delays the printing of
+   blank characters. This includes indentation characters and characters
+   produced by the combinator [blank]. The printing of these characters is
+   delayed until it is known that they are followed by something on the same
+   line; if they are not followed with anything, then it is canceled.
+
+   The actual printing task is delegated to the object [delegate], whose type
+   is [output]; the new object has type [output] as well. *)
+
+class buffering (delegate : output) : output = object (self)
+
+  (* The number of blank characters that are withholding. *)
+  val mutable buffered = 0
+
+  (* [flush] sends out the blank characters that have been withheld. *)
+  method private flush =
+    blanks delegate buffered;
+    buffered <- 0
+
+  method char c : unit =
+    begin match c with
+    | '\n' ->
+        (* The current line ends here. Any blank characters that were withheld
+           are destroyed. This is where we avoid printing blank characters if
+           nothing follows them. *)
+        buffered <- 0
+    | _ ->
+        (* The current line is nonempty. Any blank characters that were
+           withheld can now be flushed. *)
+        self#flush
+    end;
+    (* Print this character as usual. *)
+    delegate#char c
+
+  method substring s pos len =
+    (* If this is a string of length zero, then there is nothing to do. *)
+    if len = 0 then
+      ()
+    (* If this is a blank string (which we recognize by its address), then
+       its content is withheld. *)
+    else if s == blank_buffer then
+      buffered <- buffered + len
+    (* If this is not a blank string, then the blank characters that were
+       withheld up to this point can now be flushed. *)
+    else begin
+      self#flush;
+      delegate#substring s pos len
+    end
+
+end
+
+(* ------------------------------------------------------------------------- *)
+
 (* Three kinds of output channels are wrapped so as to satisfy the above
    interface: OCaml output channels, OCaml memory buffers, and OCaml
    formatters. *)
@@ -72,8 +156,17 @@ class buffer_output buffer = object
 end
 
 class formatter_output fmt = object
-  method char = Format.pp_print_char fmt
-  method substring = fst (Format.pp_get_formatter_output_functions fmt ())
+  method char = function
+    | '\n' -> Format.pp_force_newline fmt ()
+    | ' '  -> Format.pp_print_space fmt ()
+    | c    -> Format.pp_print_char fmt c
+
+  method substring str ofs len =
+    Format.pp_print_text fmt (
+      if ofs = 0 && len = String.length str
+      then str
+      else String.sub str ofs len
+    )
 end
 
 (* ------------------------------------------------------------------------- *)
@@ -94,9 +187,13 @@ type state = {
 
     mutable last_indent: int;
     (** The number of blanks that were printed at the beginning of the current
-        line. This field is updated (only) by the function [emit_hardline]. It
-        is used (only) to determine whether the ribbon width constraint is
+        line. This field is updated (only) when a hardline is emitted. It is
+        used (only) to determine whether the ribbon width constraint is
         respected. *)
+
+    mutable line: int;
+    (** The current line. This field is updated (only) when a hardline is
+        emitted. It is not used by the pretty-printing engine itself. *)
 
     mutable column: int;
     (** The current column. This field must be updated whenever something is
@@ -113,6 +210,7 @@ let initial rfrac width = {
   width = width;
   ribbon = max 0 (min width (truncate (float_of_int width *. rfrac)));
   last_indent = 0;
+  line = 0;
   column = 0
 }
 
@@ -245,6 +343,12 @@ type document =
 
   | Align of requirement * document
 
+  (* [Range (req, hook, doc)] is printed like [doc]. After it is printed, the
+     function [hook] is applied to the range that is occupied by [doc] in the
+     output. *)
+
+  | Range of requirement * (range -> unit) * document
+
   (* [Custom (req, f)] is a document whose appearance is user-defined. *)
 
   | Custom of custom
@@ -276,7 +380,8 @@ let rec requirement = function
   | Cat (req, _, _)
   | Nest (req, _, _)
   | Group (req, _)
-  | Align (req, _) ->
+  | Align (req, _)
+  | Range (req, _, _) ->
       (* These nodes store their requirement -- which is computed when the
          node is constructed -- so as to allow us to answer in constant time
          here. *)
@@ -298,7 +403,7 @@ let char c =
   Char c
 
 let space =
-  char ' '
+  Blank 1
 
 let string s =
   String s
@@ -332,6 +437,9 @@ let utf8_length s =
 let utf8string s =
   fancystring s (utf8_length s)
 
+let utf8format f =
+  Printf.ksprintf utf8string f
+
 let hardline =
   HardLine
 
@@ -339,8 +447,6 @@ let blank n =
   match n with
   | 0 ->
       empty
-  | 1 ->
-      space
   | _ ->
       Blank n
 
@@ -394,30 +500,13 @@ let group x =
 let align x =
   Align (requirement x, x)
 
+let range hook x =
+  Range (requirement x, hook, x)
+
 let custom c =
   (* Sanity check. *)
   assert (c#requirement >= 0);
   Custom c
-
-(* ------------------------------------------------------------------------- *)
-
-(* Printing blank space (indentation characters). *)
-
-let blank_length =
-  80
-
-let blank_buffer =
-  String.make blank_length ' '
-
-let rec blanks output n =
-  if n <= 0 then
-    ()
-  else if n <= blank_length then
-    output#substring blank_buffer 0 n
-  else begin
-    output#substring blank_buffer 0 blank_length;
-    blanks output (n - blank_length)
-  end
 
 (* ------------------------------------------------------------------------- *)
 
@@ -445,12 +534,14 @@ let ok state flatten : bool =
    manner in which the document is rendered. *)
 
 (* The code is written in tail-recursive style, so as to avoid running out of
-   stack space if the document is very deep. Its explicit continuation can be
-   viewed as a sequence of pending calls to [pretty]. *)
+   stack space if the document is very deep. Each [KCons] cell in a
+   continuation represents a pending call to [pretty]. Each [KRange] cell
+   represents a pending call to a user-provided range hook. *)
 
 type cont =
   | KNil
   | KCons of int * bool * document * cont
+  | KRange of (range -> unit) * point * cont
 
 let rec pretty
   (output : output)
@@ -498,6 +589,7 @@ let rec pretty
       (* Emit a hardline. *)
       output#char '\n';
       blanks output indent;
+      state.line <- state.line + 1;
       state.column <- indent;
       state.last_indent <- indent;
       (* Continue. *)
@@ -537,6 +629,10 @@ let rec pretty
       (* assert (state.column > state.last_indent); *)
       pretty output state state.column flatten doc cont
 
+  | Range (_, hook, doc) ->
+      let start : point = (state.line, state.column) in
+      pretty output state indent flatten doc (KRange (hook, start, cont))
+
   | Custom c ->
       (* Invoke the document's custom rendering function. *)
       c#pretty output state indent flatten;
@@ -550,6 +646,10 @@ and continue output state = function
       ()
   | KCons (indent, flatten, doc, cont) ->
       pretty output state indent flatten doc cont
+  | KRange (hook, start, cont) ->
+      let finish : point = (state.line, state.column) in
+      hook (start, finish);
+      continue output state cont
 
 (* Publish a version of [pretty] that does not take an explicit continuation.
    This function may be used by authors of custom documents. We do not expose
@@ -575,7 +675,7 @@ let rec compact output doc cont =
       let len = String.length s in
       output#substring s 0 len;
       continue output cont
-  | FancyString (s, ofs, len, apparent_length) ->
+  | FancyString (s, ofs, len, _apparent_length) ->
       output#substring s ofs len;
       continue output cont
   | Blank n ->
@@ -589,7 +689,8 @@ let rec compact output doc cont =
   | IfFlat (doc, _)
   | Nest (_, _, doc)
   | Group (_, doc)
-  | Align (_, doc) ->
+  | Align (_, doc)
+  | Range (_, _, doc) ->
       compact output doc cont
   | Custom c ->
       (* Invoke the document's custom rendering function. *)
@@ -612,13 +713,21 @@ let compact output doc =
 
 (* This is just boilerplate. *)
 
+module type RENDERER = sig
+  type channel
+  type document
+  val pretty: float -> int -> channel -> document -> unit
+  val compact: channel -> document -> unit
+end
+
 module MakeRenderer (X : sig
   type channel
   val output: channel -> output
-end) = struct
+end)
+: RENDERER with type channel = X.channel and type document = document
+= struct
   type channel = X.channel
-  type dummy = document
-  type document = dummy
+  type nonrec document = document
   let pretty rfrac width channel doc = pretty (X.output channel) (initial rfrac width) 0 false doc
   let compact channel doc = compact (X.output channel) doc
 end
@@ -626,17 +735,17 @@ end
 module ToChannel =
   MakeRenderer(struct
     type channel = out_channel
-    let output = new channel_output
+    let output channel = new buffering (new channel_output channel)
   end)
 
 module ToBuffer =
   MakeRenderer(struct
     type channel = Buffer.t
-    let output = new buffer_output
+    let output buffer = new buffering (new buffer_output buffer)
   end)
 
 module ToFormatter =
   MakeRenderer(struct
     type channel = Format.formatter
-    let output = new formatter_output
+    let output fmt = new buffering (new formatter_output fmt)
   end)
