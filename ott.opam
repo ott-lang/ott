@@ -7,7 +7,7 @@ homepage: "http://www.cl.cam.ac.uk/~pes20/ott/"
 bug-reports: "https://github.com/ott-lang/ott/issues"
 depends: [
   "ocaml" {>= "4.02.0"}
-  "pprint" {with-test & < "20220103"}
+  "pprint" {with-test}
   "menhir" {with-test}
 ]
 build: [
