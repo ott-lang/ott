@@ -8,7 +8,7 @@ MENHIR          := menhir
 
 MENHIRFLAGS     := --infer
 
-OCAMLBUILD      := ocamlbuild -use-ocamlfind -use-menhir -menhir "$(MENHIR) $(MENHIRFLAGS)"
+OCAMLBUILD      := ocamlbuild -use-ocamlfind -use-menhir -menhir "$(MENHIR) $(MENHIRFLAGS)" -package pprint
 
 MAIN            := main
 
