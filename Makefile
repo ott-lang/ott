@@ -44,7 +44,7 @@ world.byt:
 clean:
 	cd src; $(MAKE) clean
 	rm -f *~
-	rm ott.install
+	rm -f ott.install
 
 # ott.install file ######################################################
 
