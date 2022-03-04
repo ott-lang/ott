@@ -1,3 +1,24 @@
+This is infrastructure for regression testing the Ott implementation (by FZN, but this README is much later by PS; it might be wrong).
+
+`./regression`, from `regression.ml`, runs Ott on a set of tests and runs Coq, Isabelle, HOL4, OCaml, and Latex on the generated code. 
+
+
+
+This is infrastructure for regression testing the Ott implementation (by FZN, but this README is much later by PS).
+
+`./regression`, from `regression.ml`, runs Ott on a set of tests and runs Coq, Isabelle, HOL4, OCaml, and Latex on the generated code.   For some tests, not all of those are intended to work, so this is set up to either compute and save a baseline or to compare against such a baseline.  Baselines are in some internal `.bl` format, but can be pretty-printed with the `-dump_baseline` option. Here in each backend column the first `+`/`-` records whether Ott successfully generated that output and the second `+`/`-` whether the relevant tool successfully built it.
+
+```
+Coq CoqNL Isa  HOL OCaml LaTeX
+[...]
+ + +  + -  + -  + +  + +  + + ../tests/test10.ott
+ + +  + -  + -  + +  -    + + ../tests/test10st.ott
+[...] 
+```
+
+
+`./regression -help` shows the command-line options. 
+
 
 $ ./regression -baseline -todo_list
 
