@@ -17,7 +17,7 @@ this library.
 build: [make "-j%{jobs}%" "-C" "coq"]
 install: [make "-C" "coq" "install"]
 depends: [
-  "coq" {(>= "8.5" & < "8.13~") | (= "dev")}
+  "coq" {>= "8.5"}
 ]
 tags: [
   "category:Computer Science/Semantics and Compilation/Semantics"
