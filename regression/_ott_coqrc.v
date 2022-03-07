@@ -1,6 +1,6 @@
 (*This file is used by the regression tests.*)
 (* Add LoadPath "../coq/metatheory".*)
-Add LoadPath "../coq".
+Add LoadPath "../coq" as Ott.
 (* Add LoadPath "". *)
 (* Add LoadPath "../coq/ln_sets". *)
 (* Add LoadPath "../examples/tapl". *)

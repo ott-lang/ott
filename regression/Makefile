@@ -66,6 +66,9 @@ clean:
 	rm -rf *~
 	rm -rf regression
 	rm -rf testRegr*
+	rm -rf .testRegr*
+	rm -rf ._ott_coqrc.aux
+	rm -rf _ott_coqrc.glob
 
 clean-regr:
 	rm -rf testRegr*
