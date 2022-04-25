@@ -94,7 +94,7 @@ As of 2020, Ott remains in continuous use.
 
 ## People
 
-Ott has been principally devloped by 
+Ott has been principally developed by
 <a href="http://www.cl.cam.ac.uk/~pes20">Peter Sewell</a>, 
 <a href="http://moscova.inria.fr/~zappa">Francesco Zappa Nardelli</a>, and
 <a href="http://www.cl.cam.ac.uk/~so294">Scott Owens</a>,
