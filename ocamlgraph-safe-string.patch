@@ -1,10 +1,9 @@
-diff --git a/lib/bitv.ml b/lib/bitv.ml
-index 28d0ac5..23f5325 100644
---- a/lib/bitv.ml
-+++ b/lib/bitv.ml
-@@ -449,11 +449,11 @@ let all_ones v =
+diff -ur ocamlgraph-1.7.orig/lib/bitv.ml ocamlgraph-1.7/lib/bitv.ml
+--- ocamlgraph-1.7.orig/lib/bitv.ml	2022-11-18 17:43:54.907784451 +0000
++++ ocamlgraph-1.7/lib/bitv.ml	2022-11-18 17:44:01.751765389 +0000
+@@ -459,11 +459,11 @@
  
- let to_string v =
+ let to_string v = 
    let n = v.length in
 -  let s = String.make n '0' in
 +  let s = Buffer.create n in
@@ -17,3 +16,4 @@ index 28d0ac5..23f5325 100644
  
  let print fmt v = Format.pp_print_string fmt (to_string v)
  
+Only in ocamlgraph-1.7/lib: bitv.ml.orig
