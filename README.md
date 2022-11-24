@@ -152,8 +152,8 @@ To rebuild and reinstall after local changes, run `opam upgrade --working-dir ot
 
 ### Without OPAM
 
-Ott depends on OCaml version 4.00.0 or later. It builds with (at
-least) OCaml 4.02.3 and 4.10.0. 
+Ott depends on OCaml version 4.07.0 or later and the ocamlgraph package. It
+builds with (at least) OCaml 4.07.0 and 4.14.0, and ocamlgraph 1.8.8. 
 
 The command `make` (`make world`) builds the `ott` binary in the `bin/` subdirectory.
 
