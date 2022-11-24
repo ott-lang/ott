@@ -1520,7 +1520,7 @@ let capitalize_prodnames sd =
   let rule_list = sd.syntax.xd_rs in
   let prod_list = List.flatten (List.map (fun r -> r.rule_ps) rule_list) in
   (* let prod_name_list = List.map (fun p -> p.prod_name) prod_list in *)
-  let map_prod_names = List.map (fun p -> (p.prod_loc, p.prod_name, String.capitalize p.prod_name)) prod_list in
+  let map_prod_names = List.map (fun p -> (p.prod_loc, p.prod_name, String.capitalize_ascii p.prod_name)) prod_list in
   let (conflict,err_msg,loc) = detect_conflicts map_prod_names in
   if conflict
   then error (Some loc) ("Renaming of production name \""^err_msg^"\" generates a conflict\n")
@@ -1529,7 +1529,7 @@ let capitalize_prodnames sd =
 let uncapitalize_prodnames sd =
   let rule_list = sd.syntax.xd_rs in
   let prod_list = List.flatten (List.map (fun r -> r.rule_ps) rule_list) in
-  let map_prod_names = List.map (fun p -> (p.prod_loc, p.prod_name, String.uncapitalize p.prod_name)) prod_list in
+  let map_prod_names = List.map (fun p -> (p.prod_loc, p.prod_name, String.uncapitalize_ascii p.prod_name)) prod_list in
   let (conflict,err_msg,loc) = detect_conflicts map_prod_names in
   if conflict
   then error (Some loc) ("Renaming of production name \""^err_msg^"\" generates a conflict\n")
@@ -1538,7 +1538,7 @@ let uncapitalize_prodnames sd =
 let uncapitalize_primary_nontermroots sd = 
   let rule_list = sd.syntax.xd_rs in
   let nontermroots_list = List.map (fun r -> (r.rule_loc, r.rule_ntr_name)) rule_list in
-  let map_nontermroots = List.map (fun (loc,ntr) -> (loc,ntr,String.uncapitalize ntr)) nontermroots_list in
+  let map_nontermroots = List.map (fun (loc,ntr) -> (loc,ntr,String.uncapitalize_ascii ntr)) nontermroots_list in
   let (conflict,err_msg,loc) = detect_conflicts map_nontermroots in
   if conflict
   then error (Some loc) ("Renaming of primary nontermroot \""^err_msg^"\" generates a conflict\n")
@@ -1547,7 +1547,7 @@ let uncapitalize_primary_nontermroots sd =
 let uncapitalize_primary_metavarroots sd =
   let metavardefn_list = sd.syntax.xd_mds in
   let metavarroots_list = List.map (fun mvd -> (mvd.mvd_loc, mvd.mvd_name)) metavardefn_list in
-  let map_metavarroots = List.map (fun (loc,mvr) -> (loc,mvr,String.uncapitalize mvr)) metavarroots_list in
+  let map_metavarroots = List.map (fun (loc,mvr) -> (loc,mvr,String.uncapitalize_ascii mvr)) metavarroots_list in
   let (conflict,err_msg,loc) = detect_conflicts map_metavarroots in
   if conflict
   then error (Some loc) ("Renaming of primary metavar \""^err_msg^"\" generates a conflict\n")
@@ -1571,7 +1571,7 @@ let rec capitalize_prodnames_in_symterm st =
   | _ -> st
 and capitalize_prodnames_in_symterm_node_body stnb =
   { st_rule_ntr_name = stnb.st_rule_ntr_name;
-    st_prod_name = String.capitalize stnb.st_prod_name;
+    st_prod_name = String.capitalize_ascii stnb.st_prod_name;
     st_es = List.map capitalize_prodnames_in_symterm_element stnb.st_es;
     st_loc = stnb.st_loc }
 and capitalize_prodnames_in_symterm_element ste =

@@ -452,7 +452,7 @@ struct
     type t = symbol_node list
     module V = struct
       type t = symbol_node
-      let compare x y = Pervasives.compare x.sn_index y.sn_index
+      let compare x y = Stdlib.compare x.sn_index y.sn_index
       let hash x = x.sn_index
       let equal x y = x.sn_index = y.sn_index
     end

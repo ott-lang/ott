@@ -457,7 +457,7 @@ let target_ocaml_ast_module =
         | _,_,_ -> None) 
         all_file_arguments in
     match target_ocaml_filenames with
-    | [n] -> String.capitalize (Filename.chop_extension n)
+    | [n] -> String.capitalize_ascii (Filename.chop_extension n)
     | _ -> Auxl.error None "\n if there is a menhir output file, there must be exactly one ocaml output file"
   else
     ""
@@ -476,7 +476,7 @@ let target_ocaml_parser_module =
         | _,_,_ -> None) 
         all_file_arguments in
     match target_menhir_filenames with
-    | [n] -> String.capitalize (Filename.chop_extension n)
+    | [n] -> String.capitalize_ascii (Filename.chop_extension n)
     | _ -> Auxl.error None "\n if there is an ocamllex output file, there must be exactly one menhir output file"
   else
     ""

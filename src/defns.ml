@@ -78,7 +78,7 @@ let pp_subntr (m: pp_mode) (xd: syntaxdefn): (nontermroot * nontermroot * nonter
       let s = 
 	Auxl.pp_is ntrl ntru ^ " " 
 	^ Auxl.hide_isa_trailing_underscore m
-	    (( match m with Twf _ -> String.uppercase ntr' 
+	    (( match m with Twf _ -> String.uppercase_ascii ntr' 
 	    | Coq _ | Isa _ | Hol _ | Lem _ -> ntr'
 	    | Caml _ | Tex _ | Ascii _ | Lex _ | Menhir _ -> raise Auxl.ThisCannotHappen )
 	     ^ Grammar_pp.pp_suffix_with_sie m xd Bounds.sie_project suff)
@@ -1018,11 +1018,11 @@ let process_semiraw_rule (m: pp_mode) (xd: syntaxdefn) (lookup: made_parser)
 
         let rule_name_parse s =
           let is_letter c =
-            let cc = Char.code (Char.lowercase c) in
+            let cc = Char.code (Char.lowercase_ascii c) in
             cc >= 97 && cc <= 122 in
           
           let is_num_or_letter c =
-            let cc = Char.code (Char.lowercase c) in
+            let cc = Char.code (Char.lowercase_ascii c) in
             (cc >= 97 && cc <= 122) || (cc >= 48 && cc <= 57) in
           
           let is_space c =

@@ -971,7 +971,7 @@ and pp_plain_hom_spec hs =
                          
 and capitalize_if_twelf_non_type as_type m s =
   match m,as_type with
-  | Twf _,false -> String.capitalize s
+  | Twf _,false -> String.capitalize_ascii s
   | _,_ -> s
 
 and pp_pseudo_hom_spec_el hse =
@@ -1354,7 +1354,7 @@ and pp_metavarrep m xd mvd_rep type_name loc =
 	
 and pp_prodname m xd pn =  (* FZ this is never called *)
   match m with
-  | Caml _ | Lem _ -> String.capitalize (pp_maybe_quote_ident m xd pn)
+  | Caml _ | Lem _ -> String.capitalize_ascii (pp_maybe_quote_ident m xd pn)
   | _ -> pp_maybe_quote_ident m xd pn
 
 and pp_category m xd cat = pp_maybe_quote_ident m xd cat
@@ -2390,7 +2390,7 @@ and pp_nominal_prod m xd rnn rpw p =
 	    ( fun (bl,el) ->
 	      match el with
 	      | Lang_metavar (emvr,emv) -> 
-		  if (Pervasives.compare mv emv = 0)
+		  if (Stdlib.compare mv emv = 0)
 		  then None
 		  else Some (bl,el)
 	      | _ -> Some (bl,el) )
@@ -2400,7 +2400,7 @@ and pp_nominal_prod m xd rnn rpw p =
 	    ( fun (bl,el) ->
 	      match el with
 	      | Lang_nonterm (entr,ent) ->
-		  if (Pervasives.compare nt ent = 0)
+		  if (Stdlib.compare nt ent = 0)
 		  then 
 		    let mvr = Auxl.primary_mvr_of_mvr xd (fst mv) in
 		    Some ((Lang_metavar (mvr,(mvr,[])))::bl, el)
@@ -2514,15 +2514,15 @@ and pp_prod m xd rnn rpw p = (* returns a string option *)
         None
       else
         ( match pp_elements m xd [] (apply_hom_order m xd p) (*p.prod_es*) false true true false with
-        | None ->  Some (String.capitalize p.prod_name ^ pp_com)
-        | Some s ->  Some ((String.capitalize p.prod_name) ^ " of " ^ s ^ pp_com) )
+        | None ->  Some (String.capitalize_ascii p.prod_name ^ pp_com)
+        | Some s ->  Some ((String.capitalize_ascii p.prod_name) ^ " of " ^ s ^ pp_com) )
   | Lem _ ->
       if p.prod_meta then
         None
       else
         ( match pp_elements m xd [] (apply_hom_order m xd p) (*p.prod_es*) false true true false with
-        | None ->  Some (String.capitalize p.prod_name ^ pp_com)
-        | Some s ->  Some ((String.capitalize p.prod_name) ^ " of " ^ s ^ pp_com) )
+        | None ->  Some (String.capitalize_ascii p.prod_name ^ pp_com)
+        | Some s ->  Some ((String.capitalize_ascii p.prod_name) ^ " of " ^ s ^ pp_com) )
 
   | Tex xo -> 
       let suppressed_category = 
@@ -2723,7 +2723,7 @@ and pp_rule_list m xd rs =
             (* and we generate a type abbreviation *)
             | [Ntr ntr] 
               when (None<>Auxl.hom_spec_for_pp_mode m(Auxl.rule_of_ntr xd ntr).rule_homs 
-                      & match m with Isa _ | Coq _ | Hol _ | Lem _ | Caml _ -> true | _ -> false) 
+                      && match m with Isa _ | Coq _ | Hol _ | Lem _ | Caml _ -> true | _ -> false) 
               ->
 (* PS hack to turn off printing of phantom nonterms which would otherwise turn into type abbreviations.  Please check - maybe this should be before dependency analysis??? *)
                 if (Auxl.rule_of_ntr xd ntr).rule_phantom then "" else 
@@ -3489,22 +3489,22 @@ and pp_symterm_node_body m xd sie de stnb : string =
                       ^ ")"  )
               | Caml _ -> 
 	          ( match stnb.st_es with
-	          | [] -> (String.capitalize promoted_pn)
+	          | [] -> (String.capitalize_ascii promoted_pn)
 	          | _  ->
                       let pp_es = pp_es() in
 		      "("
-                      ^ (String.capitalize promoted_pn)^" "
+                      ^ (String.capitalize_ascii promoted_pn)^" "
                       ^ ( if List.length pp_es = 1 
                           then List.hd pp_es
                           else "("^String.concat  "," pp_es^")" )
                       ^ ")"  )
               | Lem _ -> 
 	          ( match stnb.st_es with
-	          | [] -> (String.capitalize promoted_pn)
+	          | [] -> (String.capitalize_ascii promoted_pn)
 	          | _  ->
                       let pp_es = pp_es() in
 		      "("
-                      ^ (String.capitalize promoted_pn)^" "
+                      ^ (String.capitalize_ascii promoted_pn)^" "
                       ^ ( if List.length pp_es = 1 
                           then List.hd pp_es
                           else String.concat  " " pp_es^"" )
