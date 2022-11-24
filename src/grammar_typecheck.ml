@@ -125,7 +125,7 @@ let auxed_rule_name rr = rr.raw_rule_ntr_name ^ "_aux"
 
 let aux_rule (rr:raw_rule) ((before :string list),(after : string list), (l :loc)) : raw_rule =
   let aux_prod = 
-    { raw_prod_name = (if rr.raw_rule_pn_wrapper<>"" then rr.raw_rule_pn_wrapper else String.capitalize rr.raw_rule_ntr_name ^"_") ^ "aux";
+    { raw_prod_name = (if rr.raw_rule_pn_wrapper<>"" then rr.raw_rule_pn_wrapper else String.capitalize_ascii rr.raw_rule_ntr_name ^"_") ^ "aux";
       raw_prod_flavour = Bar;
       raw_prod_categories = [];
       raw_prod_es = 

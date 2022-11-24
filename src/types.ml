@@ -480,40 +480,40 @@ exception My_parse_error of loc option * string
 (** ************************ *)
 
 
-module NtrSet = Set.Make(struct type t = nontermroot let compare = Pervasives.compare end);;
+module NtrSet = Set.Make(struct type t = nontermroot let compare = Stdlib.compare end);;
 let ntrlistunion : NtrSet.t list -> NtrSet.t 
     = fun ntrss -> List.fold_left (fun ntrs ntrs' -> NtrSet.union ntrs ntrs') NtrSet.empty ntrss 
 let ntrsetoflist : nontermroot list -> NtrSet.t 
     = fun ntrs -> List.fold_left (fun ntrs' ntr -> NtrSet.add ntr ntrs') NtrSet.empty ntrs
 
-module NtrPairSet = Set.Make(struct type t = nontermroot*nontermroot let compare = Pervasives.compare end);;
+module NtrPairSet = Set.Make(struct type t = nontermroot*nontermroot let compare = Stdlib.compare end);;
 let ntrpairlistunion : NtrPairSet.t list -> NtrPairSet.t 
     = fun ntrpairss -> List.fold_left (fun ntrpairs ntrpairs' -> NtrPairSet.union ntrpairs ntrpairs') NtrPairSet.empty ntrpairss 
 let ntrpairsetoflist : (nontermroot*nontermroot) list -> NtrPairSet.t 
     = fun ntrpairs -> List.fold_left (fun ntrpairs' ntrpair -> NtrPairSet.add ntrpair ntrpairs') NtrPairSet.empty ntrpairs
 
 
-module NtSet = Set.Make(struct type t = nontermroot * nonterm * prod_env let compare = Pervasives.compare end);;
+module NtSet = Set.Make(struct type t = nontermroot * nonterm * prod_env let compare = Stdlib.compare end);;
 let ntlistunion : NtSet.t list -> NtSet.t 
     = fun ntss -> List.fold_left (fun nts nts' -> NtSet.union nts nts') NtSet.empty ntss 
 let ntsetoflist : (nontermroot * nonterm * prod_env) list -> NtSet.t 
     = fun nts -> List.fold_left (fun nts' nt -> NtSet.add nt nts') NtSet.empty nts 
 
 
-module NtsubSet = Set.Make(struct type t = nontermroot * nontermroot * nonterm let compare = Pervasives.compare end);;
+module NtsubSet = Set.Make(struct type t = nontermroot * nontermroot * nonterm let compare = Stdlib.compare end);;
 let ntsublistunion : NtsubSet.t list -> NtsubSet.t 
     = fun ntss -> List.fold_left (fun nts nts' -> NtsubSet.union nts nts') NtsubSet.empty ntss 
 let ntsubsetoflist
     = fun ntsubs -> List.fold_left (fun ntsubs' ntsub -> NtsubSet.add ntsub ntsubs') NtsubSet.empty ntsubs 
 
-module MvrSet = Set.Make(struct type t = metavarroot  let compare = Pervasives.compare end);;
+module MvrSet = Set.Make(struct type t = metavarroot  let compare = Stdlib.compare end);;
 let mvrlistunion : MvrSet.t list -> MvrSet.t 
     = fun mvrss -> List.fold_left (fun mvrs mvrs' -> MvrSet.union mvrs mvrs') MvrSet.empty mvrss 
 let mvrsetoflist : metavarroot  list -> MvrSet.t 
     = fun mvrs -> List.fold_left (fun mvrs' mvr -> MvrSet.add mvr mvrs') MvrSet.empty mvrs 
 
 
-module MvSet = Set.Make(struct type t =  metavarroot * metavar * prod_env let compare = Pervasives.compare end);;
+module MvSet = Set.Make(struct type t =  metavarroot * metavar * prod_env let compare = Stdlib.compare end);;
 let mvlistunion : MvSet.t list -> MvSet.t 
     = fun mvss -> List.fold_left (fun mvs mvs' -> MvSet.union mvs mvs') MvSet.empty mvss 
 let mvsetoflist : (metavarroot * metavar * prod_env) list -> MvSet.t 

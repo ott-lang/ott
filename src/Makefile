@@ -35,13 +35,16 @@ topdir = ..
 
 OTTVER=0.32
 
+OCAMLFIND=ocamlfind
+OCAMLARGS=-package str -package ocamlgraph -linkpkg
+
 # for us
-OCAMLC	 	= ocamlc -g -dtypes  # -w p disables partial match warnings
-OCAMLOPT	= ocamlopt -w y -g -dtypes -unsafe -inline 9
+OCAMLC	 	= $(OCAMLFIND) ocamlc $(OCAMLARGS) -g -dtypes  # -w p disables partial match warnings
+OCAMLOPT	= $(OCAMLFIND) ocamlopt $(OCAMLARGS) -w y -g -dtypes -unsafe -inline 9
 
 # for releases
-#OCAMLC	 	= ocamlc -g -w p -w y
-#OCAMLOPT	= ocamlopt -w p -w y -unsafe -inline 9
+#OCAMLC	 	= $(OCAMLFIND) ocamlc $(OCAMLARGS) -g -w p -w y
+#OCAMLOPT	= $(OCAMLFIND) ocamlopt $(OCAMLARGS) -w p -w y -unsafe -inline 9
 
 OCAMLDEP 	= ocamldep
 OCAMLLEX        = ocamllex
@@ -54,10 +57,6 @@ DVIPDFM		= dvipdfm
 COQC            = coqc
 COQ_INCLUDE     = -I $(topdir)/coq
 COQ_FLAGS       =
-OCAMLGRAPHDIRBODY = ocamlgraph-1.7
-OCAMLGRAPHDIR = $(topdir)/$(OCAMLGRAPHDIRBODY)
-OCAMLGRAPHTARGZ	= ocamlgraph-1.7.tar.gz
-LIBRARIES	= str $(OCAMLGRAPHDIR)/graph
 
 # DO NOT EDIT BELOW THIS LINE ###########################################
 
@@ -119,7 +118,7 @@ byt: ott.byt
 ott.byt: Makefile $(CMO) $(CMI_FROM_MLI) version.tex
 	echo $^
 	$(OCAMLC) -v
-	$(OCAMLC) -o ott.byt $(addsuffix .cma, $(LIBRARIES)) $(CMO)
+	$(OCAMLC) -o ott.byt $(CMO)
 	ln -s -f $@ ott
 
 .FORCE: opt
@@ -128,7 +127,7 @@ opt: ott.opt
 ott.opt: Makefile $(CMX) $(CMI_FROM_MLI) version.tex
 	echo $^
 	$(OCAMLOPT) -v
-	$(OCAMLOPT) -o ott.opt $(addsuffix .cmxa, $(LIBRARIES)) $(CMX)
+	$(OCAMLOPT) -o ott.opt $(CMX)
 	ln -s -f $@ ott
 
 interfaces: $(ML:.ml=.interface)
@@ -144,34 +143,34 @@ grammar_parser.ml grammar_parser.mli: grammar_parser.mly
 	$(OCAMLYACC) -v grammar_parser.mly
 
 grammar_typecheck.cmo: grammar_typecheck.ml
-	$(OCAMLC) -c -I $(OCAMLGRAPHDIR) grammar_typecheck.ml
+	$(OCAMLC) -c grammar_typecheck.ml
 
 grammar_typecheck.cmx: grammar_typecheck.ml
-	$(OCAMLOPT) -c -I $(OCAMLGRAPHDIR) grammar_typecheck.ml
+	$(OCAMLOPT) -c grammar_typecheck.ml
 
 glr.cmo: glr.ml
-	$(OCAMLC) -c -I $(OCAMLGRAPHDIR) glr.ml
+	$(OCAMLC) -c glr.ml
 
 glr.cmx: glr.ml
-	$(OCAMLOPT) -c -I $(OCAMLGRAPHDIR) glr.ml
+	$(OCAMLOPT) -c glr.ml
 
 parse_table.cmo: parse_table.ml
-	$(OCAMLC) -c -I $(OCAMLGRAPHDIR) parse_table.ml
+	$(OCAMLC) -c parse_table.ml
 
 parse_table.cmx: parse_table.ml
-	$(OCAMLOPT) -c -I $(OCAMLGRAPHDIR) parse_table.ml
+	$(OCAMLOPT) -c parse_table.ml
 
 new_term_parser.cmo: new_term_parser.ml
-	$(OCAMLC) -c -I $(OCAMLGRAPHDIR) new_term_parser.ml
+	$(OCAMLC) -c new_term_parser.ml
 
 new_term_parser.cmx: new_term_parser.ml
-	$(OCAMLOPT) -c -I $(OCAMLGRAPHDIR) new_term_parser.ml
+	$(OCAMLOPT) -c new_term_parser.ml
 
 dependency.cmo: dependency.ml
-	$(OCAMLC) -c -I $(OCAMLGRAPHDIR) dependency.ml
+	$(OCAMLC) -c dependency.ml
 
 dependency.cmx: dependency.ml
-	$(OCAMLOPT) -c -I $(OCAMLGRAPHDIR) dependency.ml
+	$(OCAMLOPT) -c dependency.ml
 
 #version.ml: Makefile tmp_date.txt
 #	echo let n=\"$(OTTVER)\" > tmp_version1.ml
@@ -194,19 +193,19 @@ version.tex: tmp_date.txt version_src.tex Makefile
 # common rules
 
 %.cmi: %.mli
-	$(OCAMLC) -I $(OCAMLGRAPHDIR) -c $<
+	$(OCAMLC) -c $<
 
 %.interface: %.ml
-	$(OCAMLC) -I $(OCAMLGRAPHDIR) -i $< >$@
+	$(OCAMLC) -i $< >$@
 
 #%.mli: %.ml
-#	$(OCAMLC) -I $(OCAMLGRAPHDIR) -i $< >$@
+#	$(OCAMLC) -i $< >$@
 
 %.cmo: %.ml
 	$(OCAMLC) -c $<
 
 %.cmx: %.ml
-	$(OCAMLOPT) -I $(OCAMLGRAPHDIR) -c $<
+	$(OCAMLOPT) -c $<
 
 %.ps : %.dot
 	dot -Tps $< > $@
@@ -219,28 +218,14 @@ version.tex: tmp_date.txt version_src.tex Makefile
 
 # INSTALL  ##############################################################
 
-## Rules to unpack and build our copy of ocamlgraph.
-$(OCAMLGRAPHDIR)/Makefile:
-	cd $(topdir) && tar -zxvf $(OCAMLGRAPHTARGZ)
-	cd $(OCAMLGRAPHDIR) && patch -p1 < $(topdir)/ocamlgraph-safe-string.patch
-	cd $(OCAMLGRAPHDIR) && ./configure
-$(OCAMLGRAPHDIR)/graph.cma: $(OCAMLGRAPHDIR)/Makefile
-	cd $(OCAMLGRAPHDIR) && $(MAKE) graph.cma
-$(OCAMLGRAPHDIR)/graph.cmxa: $(OCAMLGRAPHDIR)/Makefile
-	cd $(OCAMLGRAPHDIR) && \
-	$(MAKE) OCAMLOPT='$(OCAMLOPT) -I src -I lib' graph.cmxa
-# The extra `-I' options when building graph.cmxa work around OCaml
-# PR#4124 (present in OCaml 3.09.*).
-ocamlgraph: $(OCAMLGRAPHDIR)/graph.cma $(OCAMLGRAPHDIR)/graph.cmxa
-
 $(topdir)/bin:
 	mkdir $(topdir)/bin
 
-install.byt: $(topdir)/bin $(OCAMLGRAPHDIR)/graph.cma
+install.byt: $(topdir)/bin
 	$(MAKE) byt
 	cp ./ott $(topdir)/bin/ott
 
-install: $(topdir)/bin $(OCAMLGRAPHDIR)/graph.cmxa
+install: $(topdir)/bin
 	$(MAKE) opt
 	cp ./ott $(topdir)/bin/ott
 
@@ -358,7 +343,6 @@ clean:
 	rm -f tmp_*.ott
 	rm -f testRegr*
 	rm -f *Theory.* *.ui *.uo
-	rm -rf $(OCAMLGRAPHDIR)
 
 realclean:
 	rm -f .depend
