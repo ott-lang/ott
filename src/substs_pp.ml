@@ -1237,7 +1237,7 @@ let pp_subst_prod
           [ "",
 	    ( match m with 
             | Caml _ -> 
-                String.capitalize lhs_stnb.st_prod_name  
+                String.capitalize_ascii lhs_stnb.st_prod_name  
                 ^ " "
                 ^ ( if List.length pp_body = 0
                     then ""
@@ -1245,7 +1245,7 @@ let pp_subst_prod
                     then List.hd pp_body 
                     else "(" ^ String.concat "," pp_body ^ ")" )
             | Lem _ -> 
-                String.capitalize lhs_stnb.st_prod_name  
+                String.capitalize_ascii lhs_stnb.st_prod_name  
                 ^ " "
                 ^ ( if List.length pp_body = 0
                     then ""

@@ -650,7 +650,7 @@ let pp_menhir_prod_grammar element_data =
        element_data)
 
 let pp_menhir_prod_action p element_data = 
-  String.capitalize p.prod_name 
+  String.capitalize_ascii p.prod_name 
   ^ 
     (let args = Auxl.option_map (function x-> x.semantic_action) element_data in
     match args with
@@ -669,7 +669,7 @@ let generate_aux_info_for_rule generate_aux_info r =
 
 let aux_constructor generate_aux_info_here r p : string option = 
   if generate_aux_info_here && not(has_hom "ocaml" p.prod_homs) && !Global_option.aux_style_rules then
-    let aux_prod_name = (if r.rule_pn_wrapper<>"" then r.rule_pn_wrapper else String.capitalize r.rule_ntr_name ^"_") ^ "aux" in
+    let aux_prod_name = (if r.rule_pn_wrapper<>"" then r.rule_pn_wrapper else String.capitalize_ascii r.rule_ntr_name ^"_") ^ "aux" in
     Some aux_prod_name
   else
     None
@@ -695,7 +695,7 @@ let generate_aux_info_for_prod generate_aux_info r p =
 let pp_pattern_prod r p generate_aux_info_here element_data = 
   let element_data' = element_data @ if generate_aux_info_for_prod generate_aux_info_here r p then [aux_constructor_element] else [] in
   let inner_pattern = 
-    String.capitalize p.prod_name 
+    String.capitalize_ascii p.prod_name 
     ^ 
       (let args = Auxl.option_map (function x-> x.semantic_value_id) element_data' in
       match args with
@@ -975,7 +975,7 @@ let pp_pp_raw_prod yo generate_aux_info_here xd ts r p =
   else
     match Auxl.hom_spec_for_hom_name "pp-raw" p.prod_homs with 
     | Some hs -> 
-       "| " ^ String.capitalize p.prod_name ^ " " ^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs ^"\n"
+       "| " ^ String.capitalize_ascii p.prod_name ^ " " ^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs ^"\n"
     | None ->
        (*let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in*)
        let element_data = element_data_of_prod xd ts p in 
@@ -985,7 +985,7 @@ let pp_pp_raw_prod yo generate_aux_info_here xd ts r p =
           | Some _ -> " string \"[\" ^^ string (pp_raw_l "^ott_menhir_loc^") ^^ string \"]\" ^^ "
           | None -> "") 
          ^
-           "string \"" ^ String.capitalize p.prod_name ^ "\"" 
+           "string \"" ^ String.capitalize_ascii p.prod_name ^ "\"" 
          ^ 
            let args = Auxl.option_map (function x->x.pp_raw_rhs) element_data in
            match args with
@@ -1033,7 +1033,7 @@ let pp_pp_prod yo generate_aux_info_here prettier xd ts r p =
   else
     match Auxl.hom_spec_for_hom_name "pp" p.prod_homs with 
     | Some hs -> 
-       "| " ^ String.capitalize p.prod_name ^ " " ^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs ^"\n"
+       "| " ^ String.capitalize_ascii p.prod_name ^ " " ^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs ^"\n"
     | None ->
        (*let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in*)
        let element_data = element_data_of_prod xd ts p in 
@@ -1116,7 +1116,7 @@ let pp_pp_json_prod yo generate_aux_info_here xd ts r p =
   else
     match Auxl.hom_spec_for_hom_name "pp-json" p.prod_homs with 
     | Some hs -> 
-       "| " ^ String.capitalize p.prod_name ^ " " ^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs ^"\n"
+       "| " ^ String.capitalize_ascii p.prod_name ^ " " ^ Grammar_pp.pp_hom_spec (Menhir yo) xd hs ^"\n"
     | None ->
        (*let es' = Grammar_pp.apply_hom_order (Menhir yo) xd p in*)
        let element_data = element_data_of_prod xd ts p in 
@@ -1126,7 +1126,7 @@ let pp_pp_json_prod yo generate_aux_info_here xd ts r p =
           | Some _ -> " string \"[\" ^^ string (pp_json_l "^ott_menhir_loc^") ^^ string \"]\" ^^ "
           | None -> "") 
          ^
-           "string \"{ \\\"tag\\\" : \\\"" ^ String.capitalize p.prod_name ^ "\\\"\"" 
+           "string \"{ \\\"tag\\\" : \\\"" ^ String.capitalize_ascii p.prod_name ^ "\\\"\"" 
          ^ 
            let args = Auxl.option_map (function x->x.pp_json_rhs) element_data in
            match args with
