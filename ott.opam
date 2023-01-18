@@ -14,7 +14,8 @@ depends: [
   "menhir" {>= "20151112" & with-test}
 ]
 build: [
-  [make "world"]
+  [make "world"] { ocaml:native }
+  [make "world.byt"] { !ocaml:native }
   [make "ott.install"]
 ]
 run-test: [
