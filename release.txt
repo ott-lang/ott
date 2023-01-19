@@ -36,8 +36,10 @@ in opam-repository git repository
 12) git checkout -b ott.$VERSION
 13) cd opam-repository/packages/ott ; mkdir ott.$VERSION
 14) cp /path/to/ott/opam ott.$VERSION/opam
+14b) edit the opam file to remove the version field (otherwise opam CI
+will complain)
 15) for sanity, do a diff between ott.$LATEST/opam and ott.$VERSION/opam
-16) curl -o /tmp/ott.tar.gz https://github.com/ott-lang/ott/archive/$VERSION.tar.gz
+16) curl -Lo /tmp/ott.tar.gz https://github.com/ott-lang/ott/archive/$VERSION.tar.gz
 17) take checksum from `sha512` (or `sha512sum` or `openssl sha512q) /tmp/ott.tar.gz
 18) add in ott.$VERSION/opam the archive location and checksum:
   url {
@@ -50,3 +52,6 @@ in opam-repository git repository
 21) done.  now a CI system and maintainers will care about the new release,
     and may suggest enhancements to the opam file (best to be done in the ott
     repository as well)
+
+There's also a coq-ott package that goes into the Coq opam repository.
+It's probably the same procedure, but Karl Palmskog has been doing it.
