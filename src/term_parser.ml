@@ -1219,7 +1219,7 @@ let make_parser xd : made_parser =
             None -> []
           | Some tree -> 
               let res = P.process_parse_tree tree in
-                List.map (fun (Ntp.Gtp.Res_st s) -> s) res
+                List.rev (List.rev_map (fun (Ntp.Gtp.Res_st s) -> s) res)
   in
   new_parser;;
 
