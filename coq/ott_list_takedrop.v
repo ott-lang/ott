@@ -167,7 +167,7 @@ Lemma take_app_long :
 Proof.
   intros.
   set (tmp := l) in |- * at 2. rewrite <- (take_app_drop l n). subst tmp.
-  rewrite app_ass. rewrite take_app_exact. reflexivity.
+  rewrite <- app_assoc. rewrite take_app_exact. reflexivity.
   apply take_some_length. assumption.
 Qed.
 
@@ -176,7 +176,7 @@ Lemma drop_app_long :
 Proof.
   intros.
   set (tmp := l) in |- * at 2. rewrite <- (take_app_drop l n). subst tmp.
-  rewrite app_ass. rewrite drop_app_exact. reflexivity.
+  rewrite <- app_assoc. rewrite drop_app_exact. reflexivity.
   apply take_some_length. assumption.
 Qed.
 
@@ -193,7 +193,7 @@ Lemma take_from_app :
 Proof.
   intros. replace (length l) with (length l + 0). 2: lia.
   rewrite take_app_short. rewrite take_0.
-  symmetry. apply app_nil_end.
+  apply app_nil_r.
 Qed.
 
 Lemma drop_from_app :
