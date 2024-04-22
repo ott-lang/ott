@@ -1,8 +1,6 @@
 (* Additional definitions and lemmas on lists *)
 
 Require Import Arith.
-Require Import Max.
-Require Import Min.
 Require Import List.
 Require Import Lia.
 Require Import Ott.ott_list_support.
@@ -51,7 +49,7 @@ Proof.
 Qed.
 
 Lemma take_length :
-  forall l n, length (take n l) = min n (length l).
+  forall l n, length (take n l) = Nat.min n (length l).
 Proof.
   induction l; destruct n; intros; simpl; try rewrite IHl; reflexivity.
 Qed.
@@ -76,10 +74,10 @@ Proof.
 Qed.
 
 Lemma take_take :
-  forall l m n, take m (take n l) = take (min m n) l.
+  forall l m n, take m (take n l) = take (Nat.min m n) l.
 Proof.
   induction l; intros; simpl.
-  destruct (min m n); destruct n; repeat rewrite take_nil; reflexivity.
+  destruct (Nat.min m n); destruct n; repeat rewrite take_nil; reflexivity.
   destruct n; destruct m; try reflexivity.
   simpl. rewrite IHl. reflexivity.
 Qed.
@@ -209,7 +207,7 @@ Lemma take_take_app :
   forall l l' n, n <= length l -> take n (take n l ++ l') = take n l.
 Proof.
   intros. rewrite take_app_long. rewrite take_take.
-  destruct (min_dec n n) as [Eq | Eq]; rewrite Eq; reflexivity.
+  destruct (Nat.min_dec n n) as [Eq | Eq]; rewrite Eq; reflexivity.
   rewrite take_some_length; trivial.
 Qed.
 

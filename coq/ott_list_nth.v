@@ -35,13 +35,13 @@ Fixpoint nth_safe l n {struct l} : n < length l -> A :=
   match l as l1, n as n1 return n1 < length l1 -> A with
     | h::t, 0 => fun H => h
     | h::t, S m => fun H => nth_safe t m (le_S_n _ _ H)
-    | nil, _ => fun H => match le_Sn_O _ H with end
+    | nil, _ => fun H => match Nat.nle_succ_0 _ H with end
   end.
 
 Lemma nth_safe_eq_nth_error :
   forall l n H, value (nth_safe l n H) = nth_error l n.
 Proof.
-  induction l; intro n; pose (F := le_Sn_O n); destruct n; try (contradiction || tauto).
+  induction l; intro n; pose (F := Nat.nle_succ_0 n); destruct n; try (contradiction || tauto).
   simpl length; intro H. 
   simpl nth_error; rewrite <- (IHl n (le_S_n _ _ H)).
   reflexivity.
@@ -65,7 +65,7 @@ Lemma nth_safe_app :
   forall l l' n (H:n<length l),
     exists H', nth_safe l n H = nth_safe (l++l') n H'.
 Proof.
-  induction l; intros. solve [contradiction (le_Sn_O n H)].
+  induction l; intros. solve [contradiction (Nat.nle_succ_0 n H)].
   destruct n.
   simpl length. assert (H' : 0 < S (length (l ++ l')));
                   [solve [auto with arith] | exists H'; reflexivity].

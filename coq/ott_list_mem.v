@@ -148,7 +148,7 @@ Proof.
     repeat match goal with |- context C [In_dec ?eq_dec_ ?x_ ?l_] =>
              destruct (In_dec eq_dec_ x_ l_)
            end;
-    intros; try ring; elimtype False;
+    intros; try ring; exfalso;
     (let a := type of i in (generalize dependent i; fold (~a)));
     auto with datatypes.
 Qed.

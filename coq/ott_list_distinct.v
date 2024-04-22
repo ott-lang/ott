@@ -162,7 +162,7 @@ Proof.
   intros xs i j Ineq.
   replace j with (i + (j-i)). 2: solve [auto with arith].
   generalize (j-i); clear Ineq j; intros k Distinct Nths Bound.
-  destruct k. solve [auto with arith]. elimtype False.
+  destruct k. solve [auto with arith]. exfalso.
   generalize dependent xs; induction i; intros; destruct xs; simpl in * .
   lia.
   destruct (andb_prop2 _ _ Distinct) as [Notin _]; clear Distinct Bound.

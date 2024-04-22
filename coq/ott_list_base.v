@@ -60,7 +60,7 @@ Qed.
 Lemma length_rev : forall l, length (rev l) = length l.
 Proof.
   induction l; auto.
-  simpl. rewrite length_app. rewrite IHl. simpl. rewrite plus_comm. auto.
+  simpl. rewrite length_app. rewrite IHl. simpl. rewrite Nat.add_comm. auto.
 Qed.
 
 Definition rev_rev := rev_involutive.
