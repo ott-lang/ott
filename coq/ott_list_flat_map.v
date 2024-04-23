@@ -87,10 +87,10 @@ Qed.
 
 End Flat_map.
 
-Hint Rewrite std_eq_flat_map
+#[export] Hint Rewrite std_eq_flat_map
              length_flat_map flat_map_app flat_map_map map_flat_map
              flat_map_identity flat_map_extensionality
              flat_map_rev
              unfold_flatten
              : lists.
-Hint Resolve In_flat_map_intro In_flat_map_elim : lists.
+#[export] Hint Resolve In_flat_map_intro In_flat_map_elim : lists.

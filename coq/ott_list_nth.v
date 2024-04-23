@@ -186,8 +186,8 @@ Arguments nth_safe_proof_irrelevance [A] _ _ _ _.
 Arguments nth_safe_cons [A] _ _ _ _.
 Arguments nth_safe_app [A] _ _ _ _.
 
-Hint Rewrite nth_map nth_ok_map nth_error_map : lists.
-Hint Rewrite nth_error_nil : lists.
-Hint Rewrite nth_error_in nth_error_out using lia : list_nth_error.
-Hint Rewrite nth_error_dec : list_nth_dec.
-Hint Resolve nth_error_value nth_error_error : datatypes.
+#[export] Hint Rewrite nth_map nth_ok_map nth_error_map : lists.
+#[export] Hint Rewrite nth_error_nil : lists.
+#[export] Hint Rewrite nth_error_in nth_error_out using lia : list_nth_error.
+#[export] Hint Rewrite nth_error_dec : list_nth_dec.
+#[export] Hint Resolve nth_error_value nth_error_error : datatypes.

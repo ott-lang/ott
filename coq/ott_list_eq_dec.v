@@ -35,10 +35,10 @@ Lemma pair_eq_dec :
          (eqB:forall b b0:B, {b=b0}+{b<>b0})
          (x y:A*B), {x=y}+{x<>y}.
 Proof. intros until 2; decide equality; auto. Qed.
-Hint Resolve pair_eq_dec : ott_coq_equality.
+#[export] Hint Resolve pair_eq_dec : ott_coq_equality.
 
 (* With the following hint, the default {{coq-equality}} proof handles
    grammar types containing lists provided that no recursive call appears
    in a list. *)
-Hint Resolve list_eq_dec : ott_coq_equality.
+#[export] Hint Resolve list_eq_dec : ott_coq_equality.
 

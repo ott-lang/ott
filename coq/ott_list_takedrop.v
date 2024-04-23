@@ -224,17 +224,17 @@ Qed.
 
 End Lists.
 
-Hint Rewrite take_0 take_nil take_length take_nth take_take : take_drop.
-Hint Rewrite take_all : take_drop_short.
-Hint Rewrite take_some_length : take_drop_long.
-Hint Rewrite drop_0 drop_nil drop_length drop_nth drop_drop : take_drop.
-Hint Rewrite drop_all : take_drop_short.
-Hint Rewrite take_app_drop : take_drop.
-Hint Rewrite take_app_exact drop_app_exact : take_drop_exact.
-Hint Rewrite take_app_long drop_app_long : take_drop_long.
-Hint Rewrite take_app_short drop_app_short : take_drop.
-Hint Rewrite take_from_app drop_from_app : take_drop.
-Hint Rewrite take_take_app drop_take_app : take_drop_long.
+#[export] Hint Rewrite take_0 take_nil take_length take_nth take_take : take_drop.
+#[export] Hint Rewrite take_all : take_drop_short.
+#[export] Hint Rewrite take_some_length : take_drop_long.
+#[export] Hint Rewrite drop_0 drop_nil drop_length drop_nth drop_drop : take_drop.
+#[export] Hint Rewrite drop_all : take_drop_short.
+#[export] Hint Rewrite take_app_drop : take_drop.
+#[export] Hint Rewrite take_app_exact drop_app_exact : take_drop_exact.
+#[export] Hint Rewrite take_app_long drop_app_long : take_drop_long.
+#[export] Hint Rewrite take_app_short drop_app_short : take_drop.
+#[export] Hint Rewrite take_from_app drop_from_app : take_drop.
+#[export] Hint Rewrite take_take_app drop_take_app : take_drop_long.
 
 (* Break the list [original] into two pieces [prefix] and [suffix]
    at the location indicated by [cut_point]. [cut_point] indicates

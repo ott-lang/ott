@@ -79,5 +79,5 @@ End Lists.
 
 
 
-Hint Rewrite repeat_length repeat_app repeat_S : lists.
-Hint Rewrite nth_error_repeat nth_repeat nth_safe_repeat : lists.
+#[export] Hint Rewrite repeat_length repeat_app repeat_S : lists.
+#[export] Hint Rewrite nth_error_repeat nth_repeat nth_safe_repeat : lists.

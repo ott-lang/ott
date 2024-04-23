@@ -49,9 +49,9 @@ Qed.
 
 End In.
 
-Hint Resolve In_left_app In_right_app : datatypes.
-Hint Resolve not_in_app_or not_in_or_app : datatypes.
-Hint Resolve nth_error_In nth_safe_In : datatypes.
+#[export] Hint Resolve In_left_app In_right_app : datatypes.
+#[export] Hint Resolve not_in_app_or not_in_or_app : datatypes.
+#[export] Hint Resolve nth_error_In nth_safe_In : datatypes.
 
 
 
@@ -162,7 +162,7 @@ Proof. intros; apply In_implies_list_mem. apply nth_safe_In; auto. Qed.
 
 End list_mem.
 
-Hint Rewrite list_mem_app : lists.
+#[export] Hint Rewrite list_mem_app : lists.
 
 
 
@@ -201,5 +201,5 @@ Qed.
 
 End list_minus.
 
-Hint Resolve In_list_plus : In_list_plus.
-Hint Resolve In_list_minus_other : datatypes.
+#[export] Hint Resolve In_list_plus : In_list_plus.
+#[export] Hint Resolve In_list_minus_other : datatypes.

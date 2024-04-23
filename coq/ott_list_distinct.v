@@ -190,8 +190,8 @@ End All_distinct.
 
 Notation one_distinct := (fun eq_dec x xs => negb (list_mem eq_dec x xs)).
 
-Hint Rewrite one_distinct_app all_distinct_app : lists.
-Hint Rewrite disjoint_nil_left disjoint_nil_right : lists.
-Hint Rewrite disjoint_app_distr_left disjoint_app_distr_right : lists.
-Hint Rewrite rev_one_distinct rev_disjoint_right rev_disjoint_left
+#[export] Hint Rewrite one_distinct_app all_distinct_app : lists.
+#[export] Hint Rewrite disjoint_nil_left disjoint_nil_right : lists.
+#[export] Hint Rewrite disjoint_app_distr_left disjoint_app_distr_right : lists.
+#[export] Hint Rewrite rev_one_distinct rev_disjoint_right rev_disjoint_left
              rev_all_distinct : lists.

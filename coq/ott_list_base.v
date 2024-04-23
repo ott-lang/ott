@@ -181,14 +181,14 @@ Qed.
 End Lists.
 Arguments lt_length [A] _ _.
 
-Hint Resolve length_app length_map length_rev : datatypes.
-Hint Rewrite length_app length_map length_rev : lists.
-Hint Rewrite rev_app rev_unit rev_rev : lists.
-Hint Rewrite <- app_assoc : lists.
-Hint Rewrite app_nil_r : lists.
-Hint Rewrite <- app_comm_cons.
-Hint Rewrite map_app map_map map_rev map_identity : lists.
-Hint Rewrite app_inj_prefix_length_prefix app_inj_prefix_length_suffix
+#[export] Hint Resolve length_app length_map length_rev : datatypes.
+#[export] Hint Rewrite length_app length_map length_rev : lists.
+#[export] Hint Rewrite rev_app rev_unit rev_rev : lists.
+#[export] Hint Rewrite <- app_assoc : lists.
+#[export] Hint Rewrite app_nil_r : lists.
+#[export] Hint Rewrite <- app_comm_cons.
+#[export] Hint Rewrite map_app map_map map_rev map_identity : lists.
+#[export] Hint Rewrite app_inj_prefix_length_prefix app_inj_prefix_length_suffix
              app_inj_suffix_length_prefix app_inj_suffix_length_suffix
              app_inj_prefix app_inj_suffix : app_inj.
 
