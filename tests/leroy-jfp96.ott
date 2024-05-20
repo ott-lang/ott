@@ -249,7 +249,7 @@ val Sstrengthen_def = Define `
 val sstrengthen_def = Define `
 ([[(struct d end)/p]] = [[struct d/p end]]) /\
 ([[(functor (xi : S) s)/p]] = Ftorexp xi S s) /\
-([[:dNil:/p]] = dNil) /\
+([[:dNil_d:/p]] = dNil) /\
 ([[(c; d)/p]] = [[c/p; (d/p)]]) /\
 ([[(:Typebind: type ti = T)/p]] = Typebind ti Ty) /\
 ([[(datatype t i)/p]] = Typebind (Id t i) (Typath p t)) /\
