@@ -797,25 +797,36 @@ let pp_tex_COMP_NAME m = "\\"^pp_tex_NAME_PREFIX m^"comp"
 let pp_tex_COMP_U_NAME m = "\\"^pp_tex_NAME_PREFIX m^"compu"
 let pp_tex_COMP_LU_NAME m = "\\"^pp_tex_NAME_PREFIX m^"complu"
 
+(* Note: as a hack, we represent unicode characters as base16 shifted forward by 16, i.e. 0, 1, 2,
+3, 4, 5, 6, 7, 8, 9, 10, a, b, c, d, e, f become  g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v*)
+let utf8_tex_escape c = 
+  if c <= 255 then
+    match char_of_int c with
+    | '_' ->"XX" 
+    | '#' -> "YY" 
+    | '\'' -> "PP" 
+    | '0' -> "Zero"
+    | '1' -> "One"
+    | '2' -> "Two"
+    | '3' -> "Three"
+    | '4' -> "Four"
+    | '5' -> "Five"
+    | '6' -> "Six"
+    | '7' -> "Seven"
+    | '8' -> "Eight"
+    | '9' -> "Nine"
+    | c -> String.make 1 c
+  else
+    let rec shex s c = 
+      let d = c mod 16 in
+      let c = c / 16 in
+      let s = (String.make 1 (char_of_int ((int_of_char 'g') + d))) ^ s in
+      if c = 0 then s else shex s c
+    in
+      shex "" c
+
 let rec tex_command_escape s = 
-  String.concat "" 
-    (List.map 
-       (fun c -> match c with
-       | '_' ->"XX" 
-       | '#' -> "YY" 
-       | '\'' -> "PP" 
-       | '0' -> "Zero"
-       | '1' -> "One"
-       | '2' -> "Two"
-       | '3' -> "Three"
-       | '4' -> "Four"
-       | '5' -> "Five"
-       | '6' -> "Six"
-       | '7' -> "Seven"
-       | '8' -> "Eight"
-       | '9' -> "Nine"
-       | _ -> String.make 1 c) 
-       (Auxl.char_list_of_string s))
+  String.concat "" (List.map utf8_tex_escape (Auxl.utf8_cp_list_of_string s))
 
 and tex_rule_name m ntr = "\\"^pp_tex_NAME_PREFIX m^tex_command_escape ntr 
 and tex_drule_name m s = "\\"^pp_tex_NAME_PREFIX m^"drule"^tex_command_escape s
