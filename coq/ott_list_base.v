@@ -1,4 +1,4 @@
-(* Additional definitions and lemmas on lists *)
+(** * Additional definitions and lemmas on lists *)
 
 Require Import Arith.
 Require Import List.
@@ -6,9 +6,7 @@ Require Import Lia.
 Require Import Wf_nat.
 Require Import Ott.ott_list_support.
 
-
-
-(*** Tactic definitions ***)
+(** ** Tactics *)
 
 (* Tactic definitions do not survive their section, so tactics that are
    exported must come outside of any section. *)
@@ -21,9 +19,7 @@ Ltac reverse_list l l' :=
        clearbody tmp; subst l; rename tmp into l']
   ).
 
-
-
-(*** Start of the Lists section ***)
+(** ** Definitions and lemmas *)
 
 Section Lists.
 
@@ -39,10 +35,7 @@ Implicit Types g : B -> C.
 Implicit Types m n : nat.
 Set Implicit Arguments.
 
-
-
-
-(*** Length ***)
+(** *** Length *)
 
 Definition lt_length (A:Type) := ltof _ (@length A).
 Definition well_founded_lt_length (A:Type) := (well_founded_ltof _ (@length A)).
@@ -52,10 +45,7 @@ Proof.
   induction l; simpl; auto.
 Qed.
 
-
-
-
-(*** Reverse ***)
+(** *** Reverse **)
 
 Lemma length_rev : forall l, length (rev l) = length l.
 Proof.
@@ -71,9 +61,7 @@ Proof.
   apply (f_equal (@rev A)). assumption.
 Qed.
 
-
-
-(*** Concatenation ***)
+(** *** Concatenation *)
 
 Lemma rev_app : forall l l', rev (l++l') = rev l' ++ rev l.
 Proof (@distr_rev A).
@@ -123,9 +111,7 @@ Proof.
   eapply app_inj_prefix; eauto.
 Qed.
 
-
-
-(*** Map ***)
+(** *** Map *)
 
 Lemma length_map : forall f l, length (map f l) = length l.
 Proof.
@@ -174,12 +160,10 @@ Proof.
   simpl. rewrite map_app. rewrite IHl. reflexivity.
 Qed.
 
-
-
-(*** End of the Lists section ***)
-
 End Lists.
 Arguments lt_length [A] _ _.
+
+(** ** Hints and more tactics *)
 
 #[export] Hint Resolve length_app length_map length_rev : datatypes.
 #[export] Hint Rewrite length_app length_map length_rev : lists.
@@ -192,9 +176,7 @@ Arguments lt_length [A] _ _.
              app_inj_suffix_length_prefix app_inj_suffix_length_suffix
              app_inj_prefix app_inj_suffix : app_inj.
 
-
-
-(* Look for equations in the context that prove that some lists are empty,
+(** Look for equations in the context that prove that some lists are empty,
    and substitute them away. *)
 Ltac eliminate_nil :=
   repeat
@@ -206,13 +188,13 @@ Ltac eliminate_nil :=
       | H : ?l = nil |- _ => subst l
     end.
 
-(* Simplify all hypotheses involving the list [l]. *)
+(** Simplify all hypotheses involving the list [l]. *)
 Ltac simplify_list l :=
   generalize dependent l; intro;
   autorewrite with lists; unfold compose; simpl;
   intros.
 
-(* Simplify all hypotheses involving lists. *)
+(** Simplify all hypotheses involving lists. *)
 Ltac simplify_lists :=
   repeat match goal with l:list _ |- _ =>
            generalize dependent l; intro;
@@ -221,7 +203,7 @@ Ltac simplify_lists :=
          end;
   intros.
 
-(* For every hypothesis that is an equality between lists, add a hypothesis
+(** For every hypothesis that is an equality between lists, add a hypothesis
    stating that their lengths are equal. *)
 Ltac equate_list_lengths :=
   let eq' := fresh "eq" in (
@@ -234,4 +216,3 @@ Ltac equate_list_lengths :=
     unfold eq' in *; clear eq';
     autorewrite with lists; simpl; intros
   ).
-

@@ -1,11 +1,9 @@
-(* Helper lemmas for {{coq-equality}} homs. *)
+(** * Helper lemmas for coq-equality homs *)
 
 Require Import List.
 Set Implicit Arguments.
 
-
-
-(* Help construct equality decision procedures (for {{coq-equality}}
+(** Help construct equality decision procedures (for [{{coq-equality}}]
    homs). We provide a transparent version of [List.list_eq_dec] from
    the Coq standard library. This transparent version is needed for
    types that contain a recursive call inside a list. Note that at the
@@ -26,7 +24,7 @@ Proof.
   apply e; injection H; trivial.
 Defined.
 
-(* While the Coq built-in "decide equality" tactic can decide equality on
+(** While the Coq built-in "decide equality" tactic can decide equality on
    pairs on its own, adding the following lemmas in the hint database helps
    when lists of pairs are involved. *)
 Lemma pair_eq_dec :
@@ -37,8 +35,7 @@ Lemma pair_eq_dec :
 Proof. intros until 2; decide equality; auto. Qed.
 #[export] Hint Resolve pair_eq_dec : ott_coq_equality.
 
-(* With the following hint, the default {{coq-equality}} proof handles
+(** With the following hint, the default [{{coq-equality}}] proof handles
    grammar types containing lists provided that no recursive call appears
    in a list. *)
 #[export] Hint Resolve list_eq_dec : ott_coq_equality.
-

@@ -1,11 +1,7 @@
-(* Additional definitions and lemmas on lists *)
+(** * Support definitions and lemmas on lists *)
 
 Require Import Arith.
 Require Import Lia.
-
-
-
-(*** Support definitions and lemmas ***)
 
 Module List_lib_Arith.
 
@@ -20,8 +16,6 @@ Qed.
 
 End List_lib_Arith.
 
-
-
 Section functions.
   Set Implicit Arguments.
   Variables A B C D : Type.
@@ -29,8 +23,6 @@ Section functions.
   Definition compose2 (h:B->C->D) (f:A->B) (g:A->C) x y := h (f x) (g y).
 End functions.
 #[export] Hint Unfold compose compose2 : core.
-
-
 
 Section option.
   Set Implicit Arguments.

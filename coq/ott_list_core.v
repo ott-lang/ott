@@ -1,28 +1,28 @@
-(* Definitions that are used by ott-generated output (when using non-expanded lists) *)
+(** * Definitions used by ott-generated output (when using non-expanded lists) *)
 
 Require Import Bool.
 Require Import List.
+
 Set Implicit Arguments.
-
-
 
 Section list_predicates.
 Variable (A : Type).
 
-(* Test whether a predicate [p] holds for every element of a list [l]. *)
+(** Test whether a predicate [p] holds for every element of a list [l]. *)
 Definition forall_list (p:A->bool) (l:list A) :=
   fold_left (fun b (z:A) => b && p z) l true.
 
-(* Test whether a predicate [p] holds for some element of a list [l]. *)
+(** Test whether a predicate [p] holds for some element of a list [l]. *)
 Definition exists_list (p:A->bool) (l:list A) :=
   fold_left (fun b (z:A) => b || p z) l false.
 
-(* Assert that a property holds for every element of a list *)
+(** Assert that a property holds for every element of a list. *)
 Inductive Forall_list (P:A->Prop) : list A -> Prop :=
   | Forall_nil : Forall_list P nil
   | Forall_cons :
     forall x l, P x -> Forall_list P l -> Forall_list P (x::l).
-(* Assert that a property holds for some element of a list *)
+
+(** Assert that a property holds for some element of a list. *)
 Inductive Exists_list (P:A->Prop) : list A -> Prop :=
   | Exists_head : forall x l, P x -> Exists_list P (x::l)
   | Exists_tail : forall x l, Exists_list P l -> Exists_list P (x::l).
@@ -30,22 +30,20 @@ Inductive Exists_list (P:A->Prop) : list A -> Prop :=
 End list_predicates.
 #[export] Hint Constructors Forall_list Exists_list : core.
 
-
-
 Section list_mem.
-(* Functions about membership in a list, with equality between a list
+(** Functions about membership in a list, with equality between a list
    element and a potential member being decided by [eq_dec]. *)
 Variable (A : Type).
 Variable (eq_dec : forall (a b:A), {a=b} + {a<>b}).
 
-(* Test whether [x] appears in [l]. *)
+(** Test whether [x] appears in [l]. *)
 Fixpoint list_mem (x:A) (l:list A) {struct l} : bool :=
   match l with
   | nil => false
   | cons h t => if eq_dec h x then true else list_mem x t
 end.
 
-(* Remove any element of [l1] that is present in [l2]. *)
+(** Remove any element of [l1] that is present in [l2]. *)
 Fixpoint list_minus (l1 l2:list A) {struct l1} : list A :=
   match l1 with
   | nil => nil
@@ -54,18 +52,17 @@ Fixpoint list_minus (l1 l2:list A) {struct l1} : list A :=
 end.
 End list_mem.
 
-
-
 Section Flat_map_definition.
 Variables (A B : Type).
 Variable (f : A -> list B).
-(* This definition is almost the same as the one in the standard library of
+
+(** This definition is almost the same as the one in the standard library of
    Coq V8.0 or V8.1. The difference is that this version has the shape
-    fun A B f => (fix flat_map l := _)
+    [fun A B f => (fix flat_map l := _)]
    while the standard library has
-    fun A B => (fix flat_map f l := _)
+    [fun A B => (fix flat_map f l := _)]
    Our version has the advantage of making recursive definitions such as
-    fix foo x := match x with ... | List xs => flat_map foo xs end
+    [fix foo x := match x with ... | List xs => flat_map foo xs end]
    well-founded.
  *)
 Fixpoint flat_map (l:list A) {struct l} : list B :=
@@ -75,7 +72,5 @@ Fixpoint flat_map (l:list A) {struct l} : list B :=
   end.
 End Flat_map_definition.
 
-
-
-(* Provide helper lemmas for {{coq-equality}} homs. *)
+(** Provide helper lemmas for [{{coq-equality}}] homs. *)
 Require Export Ott.ott_list_eq_dec.

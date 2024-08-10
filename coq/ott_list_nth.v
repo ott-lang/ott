@@ -1,10 +1,10 @@
+(** * Nth element of a list **)
+
 Require Import Arith.
 Require Import Lia.
 Require Import List.
 Require Import Ott.ott_list_support.
 Require Import Ott.ott_list_base.
-
-
 
 Section Lists.
 
@@ -24,10 +24,6 @@ Ltac case_eq foo :=
   generalize (refl_equal foo);
   pattern foo at -1;
   case foo.
-
-
-
-(*** Nth element ***)
 
 Unset Implicit Arguments.
 

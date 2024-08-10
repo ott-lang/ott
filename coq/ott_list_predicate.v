@@ -1,4 +1,4 @@
-(*** Predicates on a list ***)
+(** * Predicates on a list *)
 
 Require Import Arith.
 Require Import Bool.
@@ -7,10 +7,9 @@ Require Import Ott.ott_list_base.
 Require Import Ott.ott_list_core.
 Require Import Ott.ott_list_takedrop.
 
-
-
 Section List_predicate_inductive.
-(* Properties of [Forall_list] and [Exists_list] *)
+
+(** Properties of [Forall_list] and [Exists_list] *)
 
 Variables A : Type.
 Implicit Types x : A.
@@ -182,7 +181,8 @@ End List_predicate_inductive.
 
 
 Section List_predicate_fold.
-(* Properties of [forall_list] and [exists_list] *)
+
+(** Properties of [forall_list] and [exists_list] *)
 
 Variables A : Type.
 Implicit Types x : A.
@@ -261,8 +261,6 @@ Qed.
 
 End List_predicate_fold.
 
-
-
 Section List_predicate_relationship.
 
 Variables A : Type.
@@ -289,10 +287,6 @@ Proof.
 Qed.
 
 End List_predicate_relationship.
-
-
-
-(*** More about maps ***)
 
 Section List_predicate_map.
 
@@ -387,7 +381,7 @@ End List_predicate_map.
 #[export] Hint Resolve Forall_list_map_intro Exists_list_map_intro : lists.
 #[export] Hint Resolve Forall_list_map_elim Exists_list_map_elim : lists.
 
-(* Simplify hypotheses and goals involving [Forall_list]. Simplifications
+(** Simplify hypotheses and goals involving [Forall_list]. Simplifications
    involve rewriting [Forall_list ?P ?l] into equivalent statements
    where [?l] is simpler. Recognised ``complex'' constructors for [?l]
    are [nil], [cons], [app], [map], [rev]. In the goal, only
@@ -423,4 +417,3 @@ Ltac simplify_Forall_list :=
              apply rev_Forall_list
             ); simpl)
   ).
-

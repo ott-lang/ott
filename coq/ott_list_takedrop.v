@@ -1,4 +1,4 @@
-(* Additional definitions and lemmas on lists *)
+(** * Prefix and suffix extraction on lists **)
 
 Require Import Arith.
 Require Import List.
@@ -7,8 +7,6 @@ Require Import Ott.ott_list_support.
 Require Import Ott.ott_list_base.
 Require Import Ott.ott_list_nth.
 Import List_lib_Arith.
-
-
 
 Section Lists.
 
@@ -23,10 +21,6 @@ Implicit Types f : A -> B.
 Implicit Types g : B -> C.
 Implicit Types m n : nat.
 Set Implicit Arguments.
-
-
-
-(*** Prefix and suffix extraction ***)
 
 Fixpoint take n l {struct l} : list A :=
   match n, l with
@@ -218,10 +212,6 @@ Proof.
   apply take_some_length. assumption.
 Qed.
 
-
-
-(*** End of the Lists section ***)
-
 End Lists.
 
 #[export] Hint Rewrite take_0 take_nil take_length take_nth take_take : take_drop.
@@ -236,7 +226,7 @@ End Lists.
 #[export] Hint Rewrite take_from_app drop_from_app : take_drop.
 #[export] Hint Rewrite take_take_app drop_take_app : take_drop_long.
 
-(* Break the list [original] into two pieces [prefix] and [suffix]
+(** Break the list [original] into two pieces [prefix] and [suffix]
    at the location indicated by [cut_point]. [cut_point] indicates
    the number of elements to retain in [prefix]; it may also be
    a list whose length is used. This tactic leaves either one or two
@@ -244,7 +234,7 @@ End Lists.
    [prefix] is [cut_point]. The second goal has [original] left
    unchanged and an additional hypothesis stating that
    [length original < cut_point]; the tactic tries refuting this by
-   calling omega. *)
+   calling lia. *)
 Ltac cut_list original cut_point prefix suffix :=
   let l := fresh "whole" with Ineq := fresh "Ineq" with
       Eq := fresh "Decomposition" with Eql := fresh "Eqlen" with
@@ -255,16 +245,16 @@ Ltac cut_list original cut_point prefix suffix :=
              | _ => fail "cut_list: unrecognised cut_point type"
            end in (
     destruct (le_lt_dec n (length original)) as [Ineq | Ineq]; [
-      (**length original >= n, so length prefix = n**)
+      (** [length original >= n], so [length prefix = n] *)
       assert (Eql := take_some_length original Ineq); clear Ineq;
       generalize dependent original; intro l;
       assert (Eq := take_app_drop l n);
       set (p := (take n l)) in *; set (s := (drop n l)) in *;
       clearbody p s; subst l;
-      (*We've done the cutting, now we try to do some simplifications*)
+      (** We've done the cutting, now we try to do some simplifications *)
       autorewrite with lists take_drop; intros;
       rename p into prefix; rename s into suffix
-    | (**length original < n**)
+    | (** [length original < n] *)
       try (equate_list_lengths; lia) ]
   ).
 
@@ -308,8 +298,3 @@ Ltac parallel_split_maps :=
              clear Eqlen' H
            | H : _ ++ _ = map _ _ ++ map _ _ |- _ => symmetry in H
          end.
-
-
-
-
-(*** The End. ***)

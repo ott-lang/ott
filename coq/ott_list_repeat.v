@@ -1,4 +1,4 @@
-(*** Constant list ***)
+(** * Constant lists *)
 
 Require Import Arith.
 Require Import List.
@@ -7,8 +7,6 @@ Require Import Ott.ott_list_support.
 Require Import Ott.ott_list_base.
 Require Import Ott.ott_list_nth.
 Import List_lib_Arith.
-
-
 
 Section Lists.
 
@@ -76,8 +74,6 @@ Proof.
 Qed.
 
 End Lists.
-
-
 
 #[export] Hint Rewrite repeat_length repeat_app repeat_S : lists.
 #[export] Hint Rewrite nth_error_repeat nth_repeat nth_safe_repeat : lists.
