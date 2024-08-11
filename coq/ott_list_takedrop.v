@@ -1,16 +1,12 @@
-(* Additional definitions and lemmas on lists *)
+(** * Prefix and suffix extraction on lists **)
 
 Require Import Arith.
-Require Import Max.
-Require Import Min.
 Require Import List.
 Require Import Lia.
 Require Import Ott.ott_list_support.
 Require Import Ott.ott_list_base.
 Require Import Ott.ott_list_nth.
 Import List_lib_Arith.
-
-
 
 Section Lists.
 
@@ -25,10 +21,6 @@ Implicit Types f : A -> B.
 Implicit Types g : B -> C.
 Implicit Types m n : nat.
 Set Implicit Arguments.
-
-
-
-(*** Prefix and suffix extraction ***)
 
 Fixpoint take n l {struct l} : list A :=
   match n, l with
@@ -51,7 +43,7 @@ Proof.
 Qed.
 
 Lemma take_length :
-  forall l n, length (take n l) = min n (length l).
+  forall l n, length (take n l) = Nat.min n (length l).
 Proof.
   induction l; destruct n; intros; simpl; try rewrite IHl; reflexivity.
 Qed.
@@ -76,10 +68,10 @@ Proof.
 Qed.
 
 Lemma take_take :
-  forall l m n, take m (take n l) = take (min m n) l.
+  forall l m n, take m (take n l) = take (Nat.min m n) l.
 Proof.
   induction l; intros; simpl.
-  destruct (min m n); destruct n; repeat rewrite take_nil; reflexivity.
+  destruct (Nat.min m n); destruct n; repeat rewrite take_nil; reflexivity.
   destruct n; destruct m; try reflexivity.
   simpl. rewrite IHl. reflexivity.
 Qed.
@@ -169,7 +161,7 @@ Lemma take_app_long :
 Proof.
   intros.
   set (tmp := l) in |- * at 2. rewrite <- (take_app_drop l n). subst tmp.
-  rewrite app_ass. rewrite take_app_exact. reflexivity.
+  rewrite <- app_assoc. rewrite take_app_exact. reflexivity.
   apply take_some_length. assumption.
 Qed.
 
@@ -178,7 +170,7 @@ Lemma drop_app_long :
 Proof.
   intros.
   set (tmp := l) in |- * at 2. rewrite <- (take_app_drop l n). subst tmp.
-  rewrite app_ass. rewrite drop_app_exact. reflexivity.
+  rewrite <- app_assoc. rewrite drop_app_exact. reflexivity.
   apply take_some_length. assumption.
 Qed.
 
@@ -195,7 +187,7 @@ Lemma take_from_app :
 Proof.
   intros. replace (length l) with (length l + 0). 2: lia.
   rewrite take_app_short. rewrite take_0.
-  symmetry. apply app_nil_end.
+  apply app_nil_r.
 Qed.
 
 Lemma drop_from_app :
@@ -209,7 +201,7 @@ Lemma take_take_app :
   forall l l' n, n <= length l -> take n (take n l ++ l') = take n l.
 Proof.
   intros. rewrite take_app_long. rewrite take_take.
-  destruct (min_dec n n) as [Eq | Eq]; rewrite Eq; reflexivity.
+  destruct (Nat.min_dec n n) as [Eq | Eq]; rewrite Eq; reflexivity.
   rewrite take_some_length; trivial.
 Qed.
 
@@ -220,25 +212,21 @@ Proof.
   apply take_some_length. assumption.
 Qed.
 
-
-
-(*** End of the Lists section ***)
-
 End Lists.
 
-Hint Rewrite take_0 take_nil take_length take_nth take_take : take_drop.
-Hint Rewrite take_all : take_drop_short.
-Hint Rewrite take_some_length : take_drop_long.
-Hint Rewrite drop_0 drop_nil drop_length drop_nth drop_drop : take_drop.
-Hint Rewrite drop_all : take_drop_short.
-Hint Rewrite take_app_drop : take_drop.
-Hint Rewrite take_app_exact drop_app_exact : take_drop_exact.
-Hint Rewrite take_app_long drop_app_long : take_drop_long.
-Hint Rewrite take_app_short drop_app_short : take_drop.
-Hint Rewrite take_from_app drop_from_app : take_drop.
-Hint Rewrite take_take_app drop_take_app : take_drop_long.
+#[export] Hint Rewrite take_0 take_nil take_length take_nth take_take : take_drop.
+#[export] Hint Rewrite take_all : take_drop_short.
+#[export] Hint Rewrite take_some_length : take_drop_long.
+#[export] Hint Rewrite drop_0 drop_nil drop_length drop_nth drop_drop : take_drop.
+#[export] Hint Rewrite drop_all : take_drop_short.
+#[export] Hint Rewrite take_app_drop : take_drop.
+#[export] Hint Rewrite take_app_exact drop_app_exact : take_drop_exact.
+#[export] Hint Rewrite take_app_long drop_app_long : take_drop_long.
+#[export] Hint Rewrite take_app_short drop_app_short : take_drop.
+#[export] Hint Rewrite take_from_app drop_from_app : take_drop.
+#[export] Hint Rewrite take_take_app drop_take_app : take_drop_long.
 
-(* Break the list [original] into two pieces [prefix] and [suffix]
+(** Break the list [original] into two pieces [prefix] and [suffix]
    at the location indicated by [cut_point]. [cut_point] indicates
    the number of elements to retain in [prefix]; it may also be
    a list whose length is used. This tactic leaves either one or two
@@ -246,7 +234,7 @@ Hint Rewrite take_take_app drop_take_app : take_drop_long.
    [prefix] is [cut_point]. The second goal has [original] left
    unchanged and an additional hypothesis stating that
    [length original < cut_point]; the tactic tries refuting this by
-   calling omega. *)
+   calling lia. *)
 Ltac cut_list original cut_point prefix suffix :=
   let l := fresh "whole" with Ineq := fresh "Ineq" with
       Eq := fresh "Decomposition" with Eql := fresh "Eqlen" with
@@ -257,16 +245,16 @@ Ltac cut_list original cut_point prefix suffix :=
              | _ => fail "cut_list: unrecognised cut_point type"
            end in (
     destruct (le_lt_dec n (length original)) as [Ineq | Ineq]; [
-      (**length original >= n, so length prefix = n**)
+      (** [length original >= n], so [length prefix = n] *)
       assert (Eql := take_some_length original Ineq); clear Ineq;
       generalize dependent original; intro l;
       assert (Eq := take_app_drop l n);
       set (p := (take n l)) in *; set (s := (drop n l)) in *;
       clearbody p s; subst l;
-      (*We've done the cutting, now we try to do some simplifications*)
+      (** We've done the cutting, now we try to do some simplifications *)
       autorewrite with lists take_drop; intros;
       rename p into prefix; rename s into suffix
-    | (**length original < n**)
+    | (** [length original < n] *)
       try (equate_list_lengths; lia) ]
   ).
 
@@ -310,8 +298,3 @@ Ltac parallel_split_maps :=
              clear Eqlen' H
            | H : _ ++ _ = map _ _ ++ map _ _ |- _ => symmetry in H
          end.
-
-
-
-
-(*** The End. ***)

@@ -46,7 +46,7 @@ poly_lib = /Users/so294/polyml.5.1/lib
 #### Programs and their arguments ####
 COQC = coqc
 #COQ_INCLUDE = -I $(ott_coq_lib_dir)
-COQ_INCLUDE = -R $(ott_coq_lib_dir) Ott
+COQ_INCLUDE = -Q $(ott_coq_lib_dir) Ott
 COQ_FLAGS =
 DVIPS = dvips
 DVIPSFLAGS = -Ppdf -j0 -G0
@@ -200,7 +200,7 @@ hol/ocamlpp/filter:
 clean:
 	rm -f *.grammar *.rawtex
 	rm -f *.aux *.dvi *.lof *.log *.lot *.ps *.pdf *.toc
-	rm -f *.vo *.ui *.uo *.isa
+	rm -f *.vo *.vos *.vok *.glob *.ui *.uo *.isa
 	rm -f $(caml_combinations:=_syntax.ott) $(caml_combinations:=_typing.ott) $(caml_combinations:=_reduction.ott)
 	rm -f $(caml_combinations:=.tex) $(caml_combinations:=Script.sml) $(caml_combinations:=.thy) $(caml_combinations:=.v)
 	rm -f *Theory.sig *Theory.sml
