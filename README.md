@@ -1,5 +1,10 @@
 # Ott
 
+[![Docker CI][docker-action-shield]][docker-action-link]
+
+[docker-action-shield]: https://github.com/ott-lang/ott/actions/workflows/docker-action.yml/badge.svg?branch=master
+[docker-action-link]: https://github.com/ott-lang/ott/actions/workflows/docker-action.yml
+
 Ott is a tool for writing definitions of programming languages and
 calculi.  It takes as input a definition of a language syntax and
 semantics, in a concise and readable ASCII notation that is close to
@@ -53,7 +58,7 @@ More substantially, Ott has been used for work on
 <a href="http://www.cl.cam.ac.uk/~so294/ocaml">OCaml light</a>, by
   <a href="http://www.cl.cam.ac.uk/~so294">Scott Owens</a>.
 
-As of 2020, Ott remains in continuous use.
+As of 2024, Ott remains in continuous use.
 
 ## Documentation
 
