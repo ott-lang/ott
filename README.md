@@ -124,7 +124,7 @@ Ott is available as
 an [opam](https://opam.ocaml.org) package and a 
 [github repo](https://github.com/ott-lang/ott).
 
-### With OPAM  (released version)
+### With opam (released version)
 
 First, ensure you have opam (the OCaml package manager) installed,
 version 2.0 or greater (opam 1 versions of ott are no longer
@@ -149,13 +149,13 @@ repository:
 and then run `opam install coq-ott`.
 
 
-### With OPAM (github checkout)
+### With opam (github checkout)
 
 In the checkout directory, run `opam pin add ott .`.
 
 To rebuild and reinstall after local changes, run `opam upgrade --working-dir ott`  (or `opam upgrade -w ott`).
 
-### Without OPAM
+### Without opam
 
 Ott depends on OCaml version 4.07.0 or later and the ocamlgraph package. It
 builds with (at least) OCaml 4.07.0 and 4.14.0, and ocamlgraph 1.8.8. 
@@ -212,7 +212,7 @@ Ott Emacs directory.
 (require 'ott-mode)
 ```
 
-For installations using OPAM on \*nix systems, it is sufficient to use the following code, which will call `opam config var prefix` at load-time.
+For installations using opam on \*nix systems, it is sufficient to use the following code, which will call `opam config var prefix` at load-time.
 
 ```ELisp
 (setq opam-share (substring (shell-command-to-string "opam config var share") 0 -1))
@@ -250,7 +250,6 @@ directory                | description
 `tex/`                   | auxiliary files for LaTeX
 `hol/`                   | auxiliary files for HOL
 `menhir/`                | auxiliary files for menhir
-`ocamlgraph-1.7.tar.gz`  | a copy of the ocamlgraph library
 `regression/`            | regression-test machinery
 `tests/`                 | various small example Ott files
 `src/`                   | the (OCaml) Ott sources
@@ -439,9 +438,4 @@ The following LaTeX, Coq, HOL, and Isabelle files, except the proof scripts, are
 
 ## Copyright information
 
-The ocamlgraph library is distributed under the LGPL (from
-http://www.lri.fr/~filliatr/ftp/ocamlgraph/); we include a snapshot
-for convenience. For its authorship and copyright information see the
-files therein.
-
-All other files are distributed under the BSD-style licence in LICENCE.
+Files are distributed under the BSD-style licence in LICENCE.
