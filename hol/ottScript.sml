@@ -124,4 +124,4 @@ Definition clause_name:
  clause_name (x:string) = T
 End
 
-val _ = export_theory();
+val _ = export_theory ();
