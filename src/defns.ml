@@ -593,7 +593,7 @@ let pp_defnclass fd (m:pp_mode) (xd:syntaxdefn) lookup (dc:defnclass) =
       iter_asep fd "\n| " (fun d -> pp_defn fd m xd lookup dc.dc_wrapper universe d) dc.dc_defns
 
   | Hol ho -> 
-      Printf.fprintf fd "(* defns %s *)\nInductive %s:\n" dc.dc_name dc.dc_name;
+      Printf.fprintf fd "\n(* defns %s *)\nInductive %s:\n" dc.dc_name dc.dc_name;
       iter_asep fd "\n" (fun d -> pp_defn fd m xd lookup dc.dc_wrapper universe d) dc.dc_defns;
       output_string fd "End\n"
 

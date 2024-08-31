@@ -2736,7 +2736,7 @@ and pp_rule_list m xd rs =
                     ^ pp_hom_spec m xd hs
                     ^ "\"\n"
                 | Hol _ -> 
-                    "Type "
+                    "\nType "
                     ^ pp_nontermroot_ty m xd ntr ^ " = ``:"
                     ^ pp_hom_spec m xd hs
                     ^ "``\n"
@@ -2800,7 +2800,7 @@ and pp_rule_list m xd rs =
           if Auxl.rules_require_nominal m xd rs then "nominal_datatype " else "datatype ")
         "and " ""
   | Hol ho ->
-      int_rule_list_dep m xd rs (fun rs -> "Datatype:\n") ";\n" "End"
+      int_rule_list_dep m xd rs (fun rs -> "\nDatatype:\n") ";\n" "End"
   | Coq co ->
       let def = int_rule_list_dep m xd rs (fun rs -> "\nInductive ") "\nwith " "." in
       let coq_equality_code = !pp_internal_coq_buffer in
