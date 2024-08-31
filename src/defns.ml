@@ -347,7 +347,7 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
           output_string fd "\"\n"
 
       | Hol _ ->
-          Printf.fprintf fd "[~%s:] (" dr.drule_name;
+          Printf.fprintf fd "[%s:] (" dr.drule_name;
           (match quantified_proof_assistant_vars with
            | [] -> ()
            | _ ->
