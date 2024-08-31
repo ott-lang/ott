@@ -888,7 +888,7 @@ e.g.~a usage of \verb+v'+ where \verb+v<::t+, an additional premise
 invoking the generated  subrule predicate for the non-free rule is added, e.g.~\verb+is_v v'+.
 For Coq and HOL, explicit quantifiers are introduced for all variables
 mentioned in the rule.
-For HOL, rules are tagged with their rule name (using \verb+clause_name+).
+For HOL, rules are labelled with their rule name.
 
 
 \subsection{Representation of binding}
