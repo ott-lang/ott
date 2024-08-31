@@ -1,7 +1,6 @@
-open HolKernel boolLib Parse bossLib;
-open pairTheory optionTheory stringTheory;
+open HolKernel boolLib Parse bossLib ottLib;
 
-open ottLib;
-
-val _ = ottDefine "test_def" 
- `(test T = T) /\ (test F = T)`;
+val _ = ottDefine "test_def" `
+   (test T = T)
+/\ (test F = T)
+`;

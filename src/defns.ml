@@ -387,7 +387,6 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
 (*
 );
 *)
-          (*Printf.fprintf fd "(clause_name \"%s\")" dr.drule_name;*)
           if (snd ppd_premises)<>[] || ppd_subntrs<>[] then
 	    begin
               (* output_string fd " &&\n(";*)
