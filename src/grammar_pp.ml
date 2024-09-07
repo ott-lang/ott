@@ -2368,7 +2368,7 @@ and pp_elements m xd sie es paren toplevel in_list in_type =
       | [] -> None
       | _ -> 
            (if toplevel then 
-             Some (String.concat " " (List.map (fun s -> ""^s^"") ss) )
+             Some (String.concat " => " (List.map (fun s -> ""^s^"") ss) )
            else 
              (match paren,List.length ss with
              | false,_ | true,1 ->  Some (String.concat "#" ss)
@@ -2491,7 +2491,7 @@ and pp_prod m xd rnn rpw p = (* returns a string option *)
       else (
         match pp_elements m xd [] (apply_hom_order m xd p) (*p.prod_es*) false true false false with
         | None -> Some (p.prod_name ^ pp_com)
-        | Some s -> Some (p.prod_name ^ " " ^ s ^ pp_com) )
+        | Some s -> Some (p.prod_name ^ " of " ^ s ^ pp_com) )
   | Coq co ->
       if p.prod_meta then
         None
@@ -2800,7 +2800,7 @@ and pp_rule_list m xd rs =
           if Auxl.rules_require_nominal m xd rs then "nominal_datatype " else "datatype ")
         "and " ""
   | Hol ho ->
-      int_rule_list_dep m xd rs (fun rs -> "\nDatatype:\n") ";\n" "End"
+      int_rule_list_dep m xd rs (fun rs -> "val _ = Hol_datatype ` \n") ";\n" "`;"
   | Coq co ->
       let def = int_rule_list_dep m xd rs (fun rs -> "\nInductive ") "\nwith " "." in
       let coq_equality_code = !pp_internal_coq_buffer in

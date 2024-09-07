@@ -40,7 +40,8 @@ install_doc: caml_typedef.pdf
 topdir = ../..
 #/home/so294/scratch/ott_distro_0.10.13
 ott_coq_lib_dir = $(topdir)/coq
-ott_hol_lib_dir = $(topdir)/hol
+ott_hol_lib_dir = '$$(OTTDIR)/hol'
+#ott_hol_ocaml_light_dir = '$$(OTTDIR)/examples/ocaml_light'
 poly_lib = /Users/so294/polyml.5.1/lib
 
 #### Programs and their arguments ####
@@ -51,7 +52,7 @@ COQ_FLAGS =
 DVIPS = dvips
 DVIPSFLAGS = -Ppdf -j0 -G0
 HOLMAKE = Holmake
-HOLMAKE_INCLUDE = -I $(ott_hol_lib_dir)
+HOLMAKE_INCLUDE = -I $(topdir)/hol
 HOLMAKE_FLAGS = --qof
 ISABELLE = isabelle
 ISABELLE_FLAGS = -q
@@ -170,18 +171,14 @@ hol_caml.o: caml_typedefTheory.uo hol_caml.ML
 hol_caml: hol_caml.o
 	cc -L$(poly_lib) -o hol_caml -lpolymain -lpolyml hol_caml.o
 
-hol_libs = $(topdir)/hol/ottLib $(topdir)/hol/ottTheory
-hol-libs: $(hol_libs:=.ui) $(hol_libs:=.uo)
-$(hol_libs:=.ui) $(hol_libs:=.uo): %:
-	cd $(@D) && $(MAKE) $(@F)
-%Theory.uo: %Script.sml hol-libs
+%Theory.uo: %Script.sml
 	$(HOLMAKE) $(HOLMAKE_INCLUDE) $(HOLMAKE_FLAGS) $@
 hol/Holmakefile: Makefile
 	rm -f hol/Holmakefile
-	echo INCLUDES = .. ../$(ott_hol_lib_dir) > hol/Holmakefile
+	echo INCLUDES = $(ott_hol_lib_dir) > hol/Holmakefile
 hol/testing/Holmakefile: Makefile
 	rm -f hol/testing/Holmakefile
-	echo INCLUDES = .. ../.. $(ott_hol_lib_dir) > hol/testing/Holmakefile
+	echo INCLUDES = $(ott_hol_ocaml_light_dir)\ $(ott_hol_lib_dir) > hol/testing/Holmakefile
 hol/definitionsTheory.uo: caml_typedefTheory.uo hol/Holmakefile hol/testing/Holmakefile dummy hol-def
 	cd $(@D) && $(HOLMAKE) $(HOLMAKE_FLAGS) --poly ../hol_caml $(@F)
 hol/defs_red_funTheory.uo: caml_typedefTheory.uo hol/Holmakefile hol/testing/Holmakefile dummy hol-def
