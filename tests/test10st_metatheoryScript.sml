@@ -4,6 +4,8 @@
 
 open HolKernel boolLib bossLib test10stTheory IndDefLib IndDefRules listTheory optionTheory relationTheory;
 
+open ottTheory test10stTheory;
+
 val _ = new_theory "test10st_metatheory";
 
 val list_minus_thm = Q.prove (
@@ -28,9 +30,9 @@ THENL [
   Cases_on `G1` THEN FULL_SIMP_TAC list_ss [] THEN Cases_on `h` THEN FULL_SIMP_TAC list_ss [] THEN METIS_TAC []
 ]);
 
-val GtT_rules = SIMP_RULE bool_ss [GSYM lookup_thm] GtT_rules;
-val GtT_ind = SIMP_RULE bool_ss [GSYM lookup_thm] GtT_ind;
-val GtT_cases = SIMP_RULE bool_ss [GSYM lookup_thm] GtT_cases;
+val GtT_rules = SIMP_RULE bool_ss [GSYM lookup_thm] Jtype_rules;
+val GtT_ind = SIMP_RULE bool_ss [GSYM lookup_thm] Jtype_ind;
+val GtT_cases = SIMP_RULE bool_ss [GSYM lookup_thm] Jtype_cases;
 
 fun structural_cases arg cases thm =
   let fun helper (terms, thm) =
@@ -45,11 +47,11 @@ fun get_terms f =
 
 val terms = get_terms is_v_of_t_def;
 
-val reduce_fun = structural_cases 0 [terms] reduce_cases;
+val reduce_fun = structural_cases 0 [terms] Jop_cases;
 val GtT_fun = structural_cases 1 [terms] GtT_cases;
 
 val GtT_sind = IndDefLib.derive_strong_induction (GtT_rules, GtT_ind);
-val reduce_sind = IndDefLib.derive_strong_induction (reduce_rules, reduce_ind);
+val reduce_sind = IndDefLib.derive_strong_induction (Jop_rules, Jop_ind);
 
 fun RI thm = RULE_INDUCT_THEN thm STRIP_ASSUME_TAC STRIP_ASSUME_TAC;
 
