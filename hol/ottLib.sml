@@ -112,6 +112,7 @@ fun mapshape [] _ _ =  []
 fun mk_branch_name (consts, TAC) =
 ((fn (assums, g) => 
     let val (cn, goal_name) = (dest_comb o hd o strip_conj o fst o dest_imp o snd o strip_forall) g in
+       same_const ``clause_name`` cn andalso
        List.exists (fn tm => term_eq goal_name tm) consts
     end),
  TAC);

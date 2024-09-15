@@ -354,16 +354,17 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
               output_string fd "!";
               List.iter (fun (var,ty,_) -> Printf.fprintf fd " (%s:%s)" var ty)
 	        quantified_proof_assistant_vars;
-              output_string fd " . ");
+              output_string fd " .");
+          Printf.fprintf fd "\n(clause_name \"%s\")" dr.drule_name;
           if (snd ppd_premises)<>[] || ppd_subntrs<>[] then begin
-            output_string fd "\n(";
-	    iter_asep fd " /\\\n"
-              (fun s -> output_string fd "("; output_string fd s; output_string fd ")") 
-              (ppd_subntrs @ snd ppd_premises);
-            output_string fd ")\n ==>"
+              output_string fd " /\\\n(";
+              iter_asep fd " /\\\n"
+                (fun s -> output_string fd "("; output_string fd s; output_string fd ")")
+                (ppd_subntrs @ snd ppd_premises);
+              output_string fd ")"
           end;
-          output_string fd "\n(";
-          output_string fd ppd_conclusion; 
+          output_string fd "\n ==> \n(";
+          output_string fd ppd_conclusion;
           output_string fd "))\n"
 
       | Lem _ ->

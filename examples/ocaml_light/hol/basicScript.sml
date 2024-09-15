@@ -22,13 +22,13 @@ val domEB_def = Define
 
 val domEB_thm = Q.prove (
 `!EB name. JdomEB EB name = (domEB EB = name)`,
-Cases THEN SRW_TAC [] [JdomEB_cases, domEB_def] THEN METIS_TAC [typexprs_nchotomy]);
+Cases THEN SRW_TAC [] [JdomEB_cases, domEB_def, clause_name_def] THEN METIS_TAC [typexprs_nchotomy]);
 
 val domE_thm = Q.prove (
 `!E names. JdomE E names = (MAP domEB E = names)`,
 Induct THENL
-[SRW_TAC [] [Once JdomE_cases] THEN METIS_TAC [],
- SRW_TAC [] [Once JdomE_cases, domEB_thm] THEN METIS_TAC []]);
+[SRW_TAC [] [Once JdomE_cases, clause_name_def] THEN METIS_TAC [],
+ SRW_TAC [] [Once JdomE_cases, domEB_thm, clause_name_def] THEN METIS_TAC []]);
 
 val lookup_def = Define
 `(lookup [] name = NONE) /\
@@ -55,9 +55,9 @@ Induct THEN SRW_TAC [] [lookup_def] THEN METIS_TAC [NOT_SOME_NONE]);
 val lookup_thm = Q.prove (
 `!E name EB. Jlookup_EB E name EB = (lookup E name = SOME EB)`,
 Induct THENL [
-SRW_TAC [] [Once Jlookup_cases, lookup_def],
+SRW_TAC [] [Once Jlookup_cases, lookup_def, clause_name_def],
 SIMP_TAC list_ss [Once Jlookup_cases] THEN Cases THEN
-       SRW_TAC [] [lookup_def, domE_thm, domEB_thm] THEN EQ_TAC THEN
+       SRW_TAC [] [lookup_def, domE_thm, domEB_thm, clause_name_def] THEN EQ_TAC THEN
        SRW_TAC [] [domEB_def] THEN 
        FULL_SIMP_TAC list_ss [domEB_def, name_distinct, name_11, shiftEB_add_thm]]);
 
@@ -71,13 +71,13 @@ val idx_bound_thm = Q.prove (
 `!E idx num. Jidx_bound E idx = idx_bound E idx`,
 Induct THENL [
 SRW_TAC [] [Once Jidx_cases, idx_bound_def],
-SRW_TAC [] [Once Jidx_cases, idx_bound_def] THEN
+SRW_TAC [] [Once Jidx_cases, idx_bound_def, clause_name_def] THEN
 Cases_on `h` THEN SRW_TAC [] [idx_bound_def, domEB_thm, domEB_def] THEN
 Cases_on `idx` THEN SRW_TAC [] [idx_bound_def] THEN FULL_SIMP_TAC list_ss [arithmeticTheory.ADD1]]);
 
 val Slookup_thm = Q.prove (
 `!st l v. JSlookup st l v = (list_assoc l st = SOME v)`,
-Induct THEN ONCE_REWRITE_TAC [JSlookup_cases] THEN SRW_TAC [] [list_assoc_def] THEN
+Induct THEN ONCE_REWRITE_TAC [JSlookup_cases] THEN SRW_TAC [] [list_assoc_def, clause_name_def] THEN
 Cases_on `h` THEN SRW_TAC [] [list_assoc_def]);
 
 val recfun_def = Define
@@ -93,7 +93,7 @@ val recfun_def = Define
 val recfun_thm = Q.prove (
 `!letrec_bindings pattern_matching expr. Jrecfun letrec_bindings pattern_matching expr =
                                          (recfun letrec_bindings pattern_matching = expr)`,
- Cases THEN SRW_TAC [] [Jrecfun_cases, recfun_def] THEN EQ_TAC THEN SRW_TAC [] [] THENL
+ Cases THEN SRW_TAC [] [Jrecfun_cases, recfun_def, clause_name_def] THEN EQ_TAC THEN SRW_TAC [] [] THENL
  [SRW_TAC [] [MAP_MAP, 
               Q.prove (`!x. (case (\(a, b). LRB_simple a b) x of LRB_simple a b => P a b) =
                                (case x of (a, b) => P a b)`, 
@@ -117,7 +117,7 @@ val funval_def = Define
 
 val funval_thm = Q.prove (
 `!v. Jfunval v = funval v`,
-Cases THEN SRW_TAC [] [funval_def, Jfunval_cases] THEN
+Cases THEN SRW_TAC [] [funval_def, Jfunval_cases, clause_name_def] THEN
 Cases_on `e` THEN SRW_TAC [] [funval_def, Jfunval_cases]);
 
 val tp_to_tv_def = Define
@@ -313,7 +313,7 @@ FULL_SIMP_TAC list_ss [domEB_def, name_11, name_distinct] THEN METIS_TAC []);
 
 
 local
-val SIMP = SIMP_RULE bool_ss [EVERY_MAP, EVERY_CONJ, ETA_THM, LAMBDA_PROD2, lookup_thm, 
+val SIMP = SIMP_RULE bool_ss [clause_name_def, EVERY_MAP, EVERY_CONJ, ETA_THM, LAMBDA_PROD2, lookup_thm, 
                               domE_thm, idx_bound_thm];
 val JTEok_rules2 = SIMP JTEok_rules;
 val JTEok_cases2 = SIMP JTEok_cases;
@@ -353,7 +353,7 @@ THENL
  Cases_on `lookup E (name_tcn typeconstr_name)` THEN SRW_TAC [] [] 
     THEN IMP_RES_TAC lookup_name_thm THEN SRW_TAC [] [] THEN 
     FULL_SIMP_TAC list_ss [name_11, name_distinct] THEN
-    Cases_on `tpo` THEN SRW_TAC [ARITH_ss] [JTtps_kind_cases],
+    Cases_on `tpo` THEN SRW_TAC [ARITH_ss] [clause_name_def, JTtps_kind_cases],
  EQ_TAC THEN SRW_TAC [] [],
  EQ_TAC THEN SRW_TAC [] [] THEN FULL_SIMP_TAC list_ss [MAP_MAP, tp_to_tv_def] THEN1 METIS_TAC [] THEN
      Q.EXISTS_TAC `MAP tp_to_tv tps` THEN SRW_TAC [] [tp_to_tv_def, MAP_MAP, tp_to_tv_thm, MAP_I],

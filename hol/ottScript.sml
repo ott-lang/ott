@@ -120,4 +120,8 @@ Proof
  DECIDE_TAC
 QED
 
+Definition clause_name_def:
+ clause_name (x:string) = T
+End
+
 val _ = export_theory ();
