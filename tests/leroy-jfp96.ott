@@ -93,7 +93,7 @@ c :: '' ::=									{{ com Definitions }}
 % expression.  Requiring an explicit signature annotation would fix things.
   | val vi = M			::   :: Valbind	(+ cbinders = vi +)		{{ com value binding }}
   | c / p			:: M :: cstrengthen				{{ ich (cstrengthen [[c]] [[p]]) }}
-  | ( c )			:: M :: paren_c					{{ ich [[cV]] }}
+  | ( c )			:: M :: paren_c					{{ ich ([[c]]) }}
 
 
 S :: '' ::=									{{ com Signature expressions }}
@@ -207,17 +207,17 @@ val D_BV_def = Define `
 (D_BV [[C; D]] = C_BV [[C]] :: D_BV [[D]])`;
 
 val d_BV_def = Define `
-(d_BV dNil = []) /\
+(d_BV dNil_d = []) /\
 (d_BV [[c; d]] = c_BV [[c]] :: d_BV [[d]])`;
 
 val build_msubst_D_def = Define `
 build_msubst_D p D = 
-MAP (\id. case id of Id n i -> (id, (Mpath p n)))
+MAP (\id. case id of Id n i => (id, (Mpath p n)))
     (D_BV D)`;
 
 val build_msubst_d_def = Define `
 build_msubst_d p d = 
-MAP (\id. case id of Id n i -> (id, (Mpath p n)))
+MAP (\id. case id of Id n i => (id, (Mpath p n)))
     (d_BV d)`;
 
 }}
@@ -249,7 +249,7 @@ val Sstrengthen_def = Define `
 val sstrengthen_def = Define `
 ([[(struct d end)/p]] = [[struct d/p end]]) /\
 ([[(functor (xi : S) s)/p]] = Ftorexp xi S s) /\
-([[:dNil_d:/p]] = dNil) /\
+([[:dNil_d:/p]] = dNil_d) /\
 ([[(c; d)/p]] = [[c/p; (d/p)]]) /\
 ([[(:Typebind: type ti = T)/p]] = Typebind ti Ty) /\
 ([[(datatype t i)/p]] = Typebind (Id t i) (Typath p t)) /\
