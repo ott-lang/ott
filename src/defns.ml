@@ -347,25 +347,25 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
           output_string fd "\"\n"
 
       | Hol _ ->
-          Printf.fprintf fd "( (* %s *) " dr.drule_name; 
+          Printf.fprintf fd "[%s:] (" dr.drule_name;
           (match quantified_proof_assistant_vars with
            | [] -> ()
            | _ ->
               output_string fd "!";
               List.iter (fun (var,ty,_) -> Printf.fprintf fd " (%s:%s)" var ty)
 	        quantified_proof_assistant_vars;
-              output_string fd " . ");
-          Printf.fprintf fd "(clause_name \"%s\")" dr.drule_name;
+              output_string fd " .");
+          Printf.fprintf fd "\n(clause_name \"%s\")" dr.drule_name;
           if (snd ppd_premises)<>[] || ppd_subntrs<>[] then begin
-            output_string fd " /\\\n(";
-	    iter_asep fd " /\\\n"
-              (fun s -> output_string fd "("; output_string fd s; output_string fd ")") 
-              (ppd_subntrs @ snd ppd_premises);
-	    output_string fd ")\n"
-          end; 
-          output_string fd " ==> \n(";
-          output_string fd ppd_conclusion; 
-          output_string fd "))\n\n"
+              output_string fd " /\\\n(";
+              iter_asep fd " /\\\n"
+                (fun s -> output_string fd "("; output_string fd s; output_string fd ")")
+                (ppd_subntrs @ snd ppd_premises);
+              output_string fd ")"
+          end;
+          output_string fd "\n ==> \n(";
+          output_string fd ppd_conclusion;
+          output_string fd "))\n"
 
       | Lem _ ->
           Printf.fprintf fd "%s%s%s: " 
@@ -388,7 +388,6 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
 (*
 );
 *)
-          (*Printf.fprintf fd "(clause_name \"%s\")" dr.drule_name;*)
           if (snd ppd_premises)<>[] || ppd_subntrs<>[] then
 	    begin
               (* output_string fd " &&\n(";*)
@@ -481,7 +480,7 @@ let pp_defn fd (m:pp_mode) (xd:syntaxdefn) lookup (defnclass_wrapper:string) (un
       iter_sep (pp_processed_semiraw_rule fd m xd) "\n| " d.d_rules
   | Hol _ ->
       Printf.fprintf fd "(* defn %s *)\n\n" d.d_name;
-      iter_sep (pp_processed_semiraw_rule fd m xd) "/\\ " d.d_rules
+      iter_sep (pp_processed_semiraw_rule fd m xd) "\n" d.d_rules
   | Lem _ ->
       Printf.fprintf fd "(* defn %s *)\n\n" d.d_name;
       iter_sep (pp_processed_semiraw_rule fd m xd) "and\n" d.d_rules
@@ -594,10 +593,9 @@ let pp_defnclass fd (m:pp_mode) (xd:syntaxdefn) lookup (dc:defnclass) =
       iter_asep fd "\n| " (fun d -> pp_defn fd m xd lookup dc.dc_wrapper universe d) dc.dc_defns
 
   | Hol ho -> 
-      Printf.fprintf fd "(* defns %s *)\n\nval (%s_rules, %s_ind, %s_cases) = Hol_reln`\n"
-        dc.dc_name dc.dc_name dc.dc_name dc.dc_name;
-      iter_asep fd "/\\" (fun d -> pp_defn fd m xd lookup dc.dc_wrapper universe d) dc.dc_defns;
-      output_string fd "`;\n"
+      Printf.fprintf fd "\n(* defns %s *)\nInductive %s:\n" dc.dc_name dc.dc_name;
+      iter_asep fd "\n" (fun d -> pp_defn fd m xd lookup dc.dc_wrapper universe d) dc.dc_defns;
+      output_string fd "End\n"
 
   | Lem lo -> 
       Printf.fprintf fd "%s(* defns %s *)\nindreln\n" 

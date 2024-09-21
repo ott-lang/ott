@@ -1295,10 +1295,10 @@ and pp_metavardefn m xd mvd =
 	      ^ (pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc)^ "\"" ^ pp_com ^ "\n"
 	| Hol ho -> 
 	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in 
-	    "val _ = type_abbrev(\""
+	    "Type "
 	    ^ type_name
-	    ^ "\", ``:"
-	    ^ (pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc) ^ "``);" 
+	    ^ " = ``:"
+	    ^ (pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc) ^ "``"
 	    ^ pp_com ^ "\n"
 	| Lem lo -> 
 	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in 
@@ -2736,10 +2736,10 @@ and pp_rule_list m xd rs =
                     ^ pp_hom_spec m xd hs
                     ^ "\"\n"
                 | Hol _ -> 
-                    "val _ = type_abbrev(\""
-                    ^ pp_nontermroot_ty m xd ntr ^ "\", ``:"
+                    "\nType "
+                    ^ pp_nontermroot_ty m xd ntr ^ " = ``:"
                     ^ pp_hom_spec m xd hs
-                    ^ "``);\n"
+                    ^ "``\n"
                 | Coq _ -> 
                     let universe = 
                       try pp_hom_spec m xd (List.assoc "coq-universe" (Auxl.rule_of_ntr xd ntr).rule_homs) 

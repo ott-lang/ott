@@ -28,7 +28,7 @@ val domE_thm = Q.prove (
 `!E names. JdomE E names = (MAP domEB E = names)`,
 Induct THENL
 [SRW_TAC [] [Once JdomE_cases, clause_name_def] THEN METIS_TAC [],
- SRW_TAC [] [Once JdomE_cases, domEB_thm, clause_name_def] THEN METIS_TAC []]);             
+ SRW_TAC [] [Once JdomE_cases, domEB_thm, clause_name_def] THEN METIS_TAC []]);
 
 val lookup_def = Define
 `(lookup [] name = NONE) /\
@@ -40,8 +40,8 @@ val lookup_def = Define
 val lookup_append_thm = Q.store_thm ("lookup_append_thm",
 `!E1 E2 name. lookup (E1++E2) name =
                 case lookup E1 name of
-                   NONE -> OPTION_MAP (\EB. shiftEB 0 (num_tv E1) EB) (lookup E2 name)
-                || SOME EB -> SOME EB`,
+                  NONE => OPTION_MAP (\EB. shiftEB 0 (num_tv E1) EB) (lookup E2 name)
+                | SOME EB => SOME EB`,
 Induct THEN SRW_TAC [] [lookup_def, num_tv_def, OPTION_MAP_I, shiftEB_add_thm] THEN
 Cases_on `lookup E1 name` THEN FULL_SIMP_TAC list_ss [] THEN Cases_on `lookup E2 name` THEN
 SRW_TAC [] [] THEN Cases_on `h` THEN SRW_TAC [] [num_tv_def, shiftEB_add_thm] THEN
@@ -55,8 +55,8 @@ Induct THEN SRW_TAC [] [lookup_def] THEN METIS_TAC [NOT_SOME_NONE]);
 val lookup_thm = Q.prove (
 `!E name EB. Jlookup_EB E name EB = (lookup E name = SOME EB)`,
 Induct THENL [
-SRW_TAC [] [Once Jlookup_EB_cases, lookup_def, clause_name_def],
-SIMP_TAC list_ss [Once Jlookup_EB_cases] THEN Cases THEN
+SRW_TAC [] [Once Jlookup_cases, lookup_def, clause_name_def],
+SIMP_TAC list_ss [Once Jlookup_cases] THEN Cases THEN
        SRW_TAC [] [lookup_def, domE_thm, domEB_thm, clause_name_def] THEN EQ_TAC THEN
        SRW_TAC [] [domEB_def] THEN 
        FULL_SIMP_TAC list_ss [domEB_def, name_distinct, name_11, shiftEB_add_thm]]);
@@ -70,8 +70,8 @@ val idx_bound_def = Define
 val idx_bound_thm = Q.prove (
 `!E idx num. Jidx_bound E idx = idx_bound E idx`,
 Induct THENL [
-SRW_TAC [] [Once Jidx_bound_cases, idx_bound_def],
-SRW_TAC [] [Once Jidx_bound_cases, idx_bound_def, clause_name_def] THEN
+SRW_TAC [] [Once Jidx_cases, idx_bound_def],
+SRW_TAC [] [Once Jidx_cases, idx_bound_def, clause_name_def] THEN
 Cases_on `h` THEN SRW_TAC [] [idx_bound_def, domEB_thm, domEB_def] THEN
 Cases_on `idx` THEN SRW_TAC [] [idx_bound_def] THEN FULL_SIMP_TAC list_ss [arithmeticTheory.ADD1]]);
 
@@ -84,7 +84,7 @@ val recfun_def = Define
 `recfun (LRBs_inj letrec_bindings) pattern_matching =
   (substs_value_name_expr
     (MAP (\letrec_binding. case letrec_binding of
-                             LRB_simple x pattern_matching ->
+                             LRB_simple x pattern_matching =>
                                (x , Expr_letrec (LRBs_inj letrec_bindings)
                                                 (Expr_ident x)))
          letrec_bindings)
@@ -93,19 +93,20 @@ val recfun_def = Define
 val recfun_thm = Q.prove (
 `!letrec_bindings pattern_matching expr. Jrecfun letrec_bindings pattern_matching expr =
                                          (recfun letrec_bindings pattern_matching = expr)`,
-Cases THEN SRW_TAC [] [Jrecfun_cases, recfun_def, clause_name_def] THEN EQ_TAC THEN SRW_TAC [] [] THENL
-[SRW_TAC [] [MAP_MAP, 
-                 Q.prove (`!x. (case (\(a, b). LRB_simple a b) x of LRB_simple a b -> P a b) =
-                               (case x of (a, b) -> P a b)`, 
+ Cases THEN SRW_TAC [] [Jrecfun_cases, recfun_def, clause_name_def] THEN EQ_TAC THEN SRW_TAC [] [] THENL
+ [SRW_TAC [] [MAP_MAP, 
+              Q.prove (`!x. (case (\(a, b). LRB_simple a b) x of LRB_simple a b => P a b) =
+                               (case x of (a, b) => P a b)`, 
                           Cases THEN SRW_TAC [] []),
-                 LAMBDA_PROD],
- Q.EXISTS_TAC `MAP (\x. case x of LRB_simple a b -> (a, b)) l'` THEN
-   SRW_TAC [] [MAP_MAP, 
-                   Q.prove (`!x f. ((\(x_ ,pattern_matching_). f x_)
-                                    case x of LRB_simple a b -> (a,b)) = 
-                                   case x of LRB_simple a b -> f a`,
-                            Cases THEN SRW_TAC [] [])] THEN
-   Induct_on `l'` THEN SRW_TAC [] [] THENL [Cases_on `h` THEN SRW_TAC [] [], METIS_TAC []]]);
+              LAMBDA_PROD],
+  Q.EXISTS_TAC `MAP (\x. case x of LRB_simple a b => (a, b)) l` THEN
+  SRW_TAC [] [MAP_MAP, 
+              Q.prove (`!x f. ((\(x_ ,pattern_matching_). f x_)
+                               case x of LRB_simple a b => (a,b)) = 
+                       case x of LRB_simple a b => f a`,
+              Cases THEN SRW_TAC [] [])] THEN
+  Induct_on `l` THEN SRW_TAC [] [] THEN Cases_on `h` THEN SRW_TAC [] []
+]);
 
 val funval_def = Define
 `(funval (Expr_uprim unary_prim) = T) /\
@@ -117,7 +118,7 @@ val funval_def = Define
 val funval_thm = Q.prove (
 `!v. Jfunval v = funval v`,
 Cases THEN SRW_TAC [] [funval_def, Jfunval_cases, clause_name_def] THEN
-Cases_on `e'` THEN SRW_TAC [] [funval_def, Jfunval_cases]);
+Cases_on `e` THEN SRW_TAC [] [funval_def, Jfunval_cases]);
 
 val tp_to_tv_def = Define
 `tp_to_tv (TP_var tv) = tv`;
@@ -198,55 +199,55 @@ local
 in
 
 val Eok_def = tDefine "Eok"
-`(Eok [] = T) /\
- (Eok (EB_tv::E) = Eok E) /\
- (Eok (EB_vn value_name ts::E) = tsok E ts) /\
- (Eok (EB_cc constr_name TC_exn::E) =
+`(Eok [] <=> T) /\
+ (Eok (EB_tv::E) <=> Eok E) /\
+ (Eok (EB_vn value_name ts::E) <=> tsok E ts) /\
+ (Eok (EB_cc constr_name TC_exn::E) <=>
     Eok E /\ ~MEM (name_cn constr_name) (MAP domEB E)) /\
- (Eok (EB_cc constr_name (TC_name typeconstr_name)::E) =
+ (Eok (EB_cc constr_name (TC_name typeconstr_name)::E) <=>
     Eok E /\ (?kind. lookup E (name_tcn typeconstr_name) = SOME (EB_td typeconstr_name kind)) /\
     ~MEM (name_cn constr_name) (MAP domEB E)) /\
- (Eok (EB_cc constr_name tc::E) = F) /\
- (Eok (EB_pc constr_name (TPS_nary []) (typexprs_inj t_list) TC_exn::E) =
+ (Eok (EB_cc constr_name tc::E) <=> F) /\
+ (Eok (EB_pc constr_name (TPS_nary []) (typexprs_inj t_list) TC_exn::E) <=>
     EVERY (tkind E) t_list /\
     ~MEM (name_cn constr_name) (MAP domEB E) /\
     LENGTH t_list >= 1) /\
- (Eok (EB_pc constr_name (TPS_nary vars) (typexprs_inj t_list) (TC_name typeconstr_name)::E) =
+ (Eok (EB_pc constr_name (TPS_nary vars) (typexprs_inj t_list) (TC_name typeconstr_name)::E) <=>
     EVERY (\t. ntsok E vars t) t_list /\
     (lookup E (name_tcn typeconstr_name) = SOME (EB_td typeconstr_name (LENGTH vars))) /\
     ~MEM (name_cn constr_name) (MAP domEB E) /\
     LENGTH t_list >= 1) /\
- (Eok (EB_pc constr_name params (typexprs_inj t_list) tc::E) = F) /\
- (Eok (EB_fn field_name (TPS_nary vars) typeconstr_name t::E) =
+ (Eok (EB_pc constr_name params (typexprs_inj t_list) tc::E) <=> F) /\
+ (Eok (EB_fn field_name (TPS_nary vars) typeconstr_name t::E) <=>
     ntsok E vars t /\
     ~MEM (name_fn field_name) (MAP domEB E) /\
     ?field_name_list. (lookup E (name_tcn typeconstr_name) =
                        SOME (EB_tr typeconstr_name (LENGTH vars) field_name_list)) /\
                       MEM field_name field_name_list) /\
- (Eok (EB_td typeconstr_name kind::E) = 
+ (Eok (EB_td typeconstr_name kind::E) <=>
     Eok E /\ 
     ~MEM (name_tcn typeconstr_name) (MAP domEB E)) /\
- (Eok (EB_ta (TPS_nary vars) typeconstr_name t::E) =
+ (Eok (EB_ta (TPS_nary vars) typeconstr_name t::E) <=>
     ~MEM (name_tcn typeconstr_name) (MAP domEB E) /\ ntsok E vars t) /\
- (Eok (EB_tr typeconstr_name kind field_name_list::E) =
+ (Eok (EB_tr typeconstr_name kind field_name_list::E) <=>
     Eok E /\
     ~MEM (name_tcn typeconstr_name) (MAP domEB E) /\
     ALL_DISTINCT (MAP name_fn field_name_list)) /\ 
- (Eok (EB_l location t::E) = 
+ (Eok (EB_l location t::E) <=>
     tkind E t /\
     ~MEM (name_l location) (MAP domEB E)) /\
 
  (typeconstr_kind E (TC_name typeconstr_name) = 
    if Eok E then
      case lookup E (name_tcn typeconstr_name) of
-        NONE -> NONE
-     || SOME (EB_td tcn kind) -> SOME kind
-     || SOME (EB_ta (TPS_nary type_params_opt) tcn t) -> 
+        NONE => NONE
+     | SOME (EB_td tcn kind) => SOME kind
+     | SOME (EB_ta (TPS_nary type_params_opt) tcn t) => 
           if ALL_DISTINCT type_params_opt then
             SOME (LENGTH type_params_opt)
           else
             NONE
-     || SOME (EB_tr tcn kind field_name_list) ->
+     | SOME (EB_tr tcn kind field_name_list) =>
           SOME kind
    else
      NONE) /\
@@ -263,19 +264,19 @@ val Eok_def = tDefine "Eok"
 
  (tsok E (TS_forall t) = tkind (EB_tv::E) t) /\
 
- (ntsok E vars t =
+ (ntsok E vars t <=>
    ALL_DISTINCT vars /\
    tkind E (substs_typevar_typexpr (MAP (\tp. (tp_to_tv tp, TE_constr [] TC_unit)) vars) t)) /\
 
- (tkind E (TE_var typevar) = F) /\
- (tkind E (TE_idxvar idx n) = 
+ (tkind E (TE_var typevar) <=> F) /\
+ (tkind E (TE_idxvar idx n) <=>
     Eok E /\ idx_bound E idx) /\
- (tkind E TE_any = F) /\
- (tkind E (TE_arrow t1 t2) = 
+ (tkind E TE_any <=> F) /\
+ (tkind E (TE_arrow t1 t2) <=>
    tkind E t1 /\ tkind E t2) /\
- (tkind E (TE_tuple t_list) = 
+ (tkind E (TE_tuple t_list) <=>
    EVERY (tkind E) t_list /\ LENGTH t_list >= 2) /\
- (tkind E (TE_constr t_list typeconstr) =
+ (tkind E (TE_constr t_list typeconstr) <=>
    (typeconstr_kind E typeconstr = SOME (LENGTH t_list)) /\ EVERY (tkind E) t_list)`
 (WF_REL_TAC `inv_image ($< LEX $<) 
                        (\a. (sum_size (E_size) 
@@ -319,46 +320,73 @@ val JTEok_cases2 = SIMP JTEok_cases;
 
 in
 val Eok_thm = Q.prove (
-`(!E. JTEok E = Eok E) /\
- (!E tc k. JTtypeconstr E tc k = (typeconstr_kind E tc = SOME k)) /\
- (!E ts k. JTts E ts k = tsok E ts /\ (k = 0)) /\
- (!E tps t k. JTtsnamed E (TPS_nary tps) t k = ntsok E tps t /\ (k = 0)) /\
- (!E t k. JTt E t k = tkind E t /\ (k = 0))`,
+`(!E. JTEok E <=> Eok E) /\
+ (!E tc k. JTtypeconstr E tc k <=> (typeconstr_kind E tc = SOME k)) /\
+ (!E ts k. JTts E ts k <=> tsok E ts /\ (k = 0)) /\
+ (!E tps t k. JTtsnamed E (TPS_nary tps) t k <=> ntsok E tps t /\ (k = 0)) /\
+ (!E t k. JTt E t k <=> tkind E t /\ (k = 0))`,
 HO_MATCH_MP_TAC Eok_ind THEN
- SRW_TAC [ARITH_ss] [Eok_def, domE_thm, lookup_thm, JTEok_rules2] THEN
-   ONCE_REWRITE_TAC [JTEok_cases2] THEN SRW_TAC [ARITH_ss] [EVERY_MEM]
-THENL
-[
+SRW_TAC [ARITH_ss] [Eok_def, domE_thm, lookup_thm, JTEok_rules2] THEN
+ONCE_REWRITE_TAC [JTEok_cases2] THEN SRW_TAC [ARITH_ss] [EVERY_MEM] THENL [
  EQ_TAC THEN SRW_TAC [] [] THEN1 METIS_TAC [] THEN
-    Cases_on `ts` THEN SRW_TAC [] [] THEN Cases_on `t` THEN SRW_TAC [] [], 
+ Cases_on `ts` THEN SRW_TAC [] [] THEN Cases_on `t` THEN SRW_TAC [] [],
+
  METIS_TAC [],
+
  EQ_TAC THEN SRW_TAC [] [] THEN 
-   FULL_SIMP_TAC list_ss [MAP_MAP, MAP_REVERSE] THENL
-   [Cases_on `tv_list` THEN 
-          FULL_SIMP_TAC list_ss [MAP_MAP, MAP_REVERSE] THEN METIS_TAC [],
-    METIS_TAC [],
-    METIS_TAC [],
-    Cases_on `tv_list` THEN FULL_SIMP_TAC list_ss [],
-    Q.EXISTS_TAC `MAP tp_to_tv (v30::v31)` THEN 
-            SRW_TAC [] [MAP_MAP, MAP_REVERSE, tp_to_tv_thm, MAP_I] THEN METIS_TAC []],
+ FULL_SIMP_TAC list_ss [MAP_MAP, MAP_REVERSE] THEN
+ SRW_TAC [] [] THEN1 METIS_TAC [] THEN1 METIS_TAC [] THEN
+ Q.EXISTS_TAC `MAP tp_to_tv tps` THEN
+ SRW_TAC [] [MAP_MAP, MAP_I, tp_to_tv_thm] THEN METIS_TAC [],
+
  EQ_TAC THEN SRW_TAC [] [] THEN 
-    FULL_SIMP_TAC list_ss [MAP_MAP, MAP_REVERSE] THEN
-    SRW_TAC [] [] THEN1 METIS_TAC [] THEN1 METIS_TAC [] THEN
-    Q.EXISTS_TAC `MAP tp_to_tv tps` THEN
-    SRW_TAC [] [MAP_MAP, MAP_I, tp_to_tv_thm],
- EQ_TAC THEN SRW_TAC [] [] THEN1 METIS_TAC [] THEN1 METIS_TAC [] THEN1 METIS_TAC [] THEN
-    Q.EXISTS_TAC `MAP tp_to_tv tps` THEN
-    SRW_TAC [] [MAP_MAP, MAP_I, tp_to_tv_thm],
+ FULL_SIMP_TAC list_ss [MAP_MAP, MAP_REVERSE] THEN
+ SRW_TAC [] [] THEN1 METIS_TAC [] THEN1 METIS_TAC [] THEN
+ Q.EXISTS_TAC `MAP tp_to_tv tps` THEN
+ SRW_TAC [] [MAP_MAP, MAP_I, tp_to_tv_thm] THEN METIS_TAC [],
+
+ EQ_TAC THEN SRW_TAC [] [] THEN 
+ FULL_SIMP_TAC list_ss [MAP_MAP, MAP_REVERSE] THEN
+ SRW_TAC [] [] THEN1 METIS_TAC [] THEN1 METIS_TAC [] THEN
+ Q.EXISTS_TAC `MAP tp_to_tv tps` THEN
+ SRW_TAC [] [MAP_MAP, MAP_I, tp_to_tv_thm] THEN METIS_TAC [],
+
  Cases_on `lookup E (name_tcn typeconstr_name)` THEN SRW_TAC [] [] 
-    THEN IMP_RES_TAC lookup_name_thm THEN SRW_TAC [] [] THEN 
-    FULL_SIMP_TAC list_ss [name_11, name_distinct] THEN
-    Cases_on `tpo` THEN SRW_TAC [ARITH_ss] [clause_name_def, JTtps_kind_cases],
- EQ_TAC THEN SRW_TAC [] [],
+ THEN IMP_RES_TAC lookup_name_thm THEN SRW_TAC [] [] THEN 
+ FULL_SIMP_TAC list_ss [name_11, name_distinct] THEN
+ Cases_on `tpo` THEN SRW_TAC [ARITH_ss] [clause_name_def, JTtps_kind_cases] THEN METIS_TAC [],
+
+ METIS_TAC [],
+
+ METIS_TAC [],
+
+ METIS_TAC [],
+
+ METIS_TAC [],
+
+ METIS_TAC [],
+
+ METIS_TAC [],
+
+ METIS_TAC [],
+
+ METIS_TAC [],
+
+ METIS_TAC [],
+ 
+ METIS_TAC [],
+
+ METIS_TAC [],
+
  EQ_TAC THEN SRW_TAC [] [] THEN FULL_SIMP_TAC list_ss [MAP_MAP, tp_to_tv_def] THEN1 METIS_TAC [] THEN
-     Q.EXISTS_TAC `MAP tp_to_tv tps` THEN SRW_TAC [] [tp_to_tv_def, MAP_MAP, tp_to_tv_thm, MAP_I],
- EQ_TAC THEN SRW_TAC [] [] THEN SRW_TAC [] [] THEN Cases_on `idx_bound E idx` THEN FULL_SIMP_TAC list_ss [],
+ Q.EXISTS_TAC `MAP tp_to_tv tps` THEN SRW_TAC [] [tp_to_tv_def, MAP_MAP, tp_to_tv_thm, MAP_I],
+
  METIS_TAC [],
+
  METIS_TAC [],
+
+ METIS_TAC [],
+
  METIS_TAC []]);
 end;
 
@@ -419,28 +447,28 @@ val SIMP2 = SIMP_RULE bool_ss [EVERY_MAP, EVERY_CONJ, ETA_THM, LAMBDA_PROD2, loo
                                idx_bound_thm, domE_thm, recfun_thm, funval_thm, Eok_thm, clause_name_def,
                                idxsub_thm];
 
-val JM_matchP_cases = save_thm ("JM_matchP_cases", SIMP2 JM_matchP_cases);
-val _ = save_thm ("JM_matchP_sind", SIMP1 (derive_strong_induction (JM_matchP_rules, JM_matchP_ind)));
-val _ = save_thm ("JM_matchP_ind", SIMP1 JM_matchP_ind);
-val _ = save_thm ("JM_matchP_rules", SIMP2 JM_matchP_rules);
+val JM_matchP_cases = save_thm ("JM_matchP_cases", SIMP2 JmatchP_cases);
+val _ = save_thm ("JM_matchP_sind", SIMP1 (derive_strong_induction (JmatchP_rules, JmatchP_ind)));
+val _ = save_thm ("JM_matchP_ind", SIMP1 JmatchP_ind);
+val _ = save_thm ("JM_matchP_rules", SIMP2 JmatchP_rules);
 
-val JM_match_cases = save_thm ("JM_match_cases", SIMP2 JM_match_cases);
-val _ = save_thm ("JM_match_sind", SIMP1 (derive_strong_induction (JM_match_rules, JM_match_ind)));
-val _ = save_thm ("JM_match_ind", SIMP1 JM_match_ind);
-val _ = save_thm ("JM_match_rules", SIMP2 JM_match_rules);
+val JM_match_cases = save_thm ("JM_match_cases", SIMP2 Jmatch_cases);
+val _ = save_thm ("JM_match_sind", SIMP1 (derive_strong_induction (Jmatch_rules, Jmatch_ind)));
+val _ = save_thm ("JM_match_ind", SIMP1 Jmatch_ind);
+val _ = save_thm ("JM_match_rules", SIMP2 Jmatch_rules);
 
-val JRB_dbehaviour_cases = save_thm ("JRB_dbehaviour_cases", SIMP2 JRB_dbehaviour_cases);
-val _ = save_thm ("JRB_dbehaviour_ind", SIMP1 JRB_dbehaviour_ind);
-val _ = save_thm ("JRB_dbehaviour_rules", SIMP2 JRB_dbehaviour_rules);
+val JRB_dbehaviour_cases = save_thm ("JRB_dbehaviour_cases", SIMP2 Jdbehaviour_cases);
+val _ = save_thm ("JRB_dbehaviour_ind", SIMP1 Jdbehaviour_ind);
+val _ = save_thm ("JRB_dbehaviour_rules", SIMP2 Jdbehaviour_rules);
 
-val JRB_ebehaviour_cases = save_thm ("JRB_ebehaviour_cases", SIMP2 JRB_ebehaviour_cases);
-val _ = save_thm ("JRB_ebehaviour_ind", SIMP1 JRB_ebehaviour_ind);
-val _ = save_thm ("JRB_ebehaviour_rules", SIMP2 JRB_ebehaviour_rules);
+val JRB_ebehaviour_cases = save_thm ("JRB_ebehaviour_cases", SIMP2 Jebehaviour_cases);
+val _ = save_thm ("JRB_ebehaviour_ind", SIMP1 Jebehaviour_ind);
+val _ = save_thm ("JRB_ebehaviour_rules", SIMP2 Jebehaviour_rules);
 
-val JR_expr_cases = save_thm ("JR_expr_cases", SIMP2 JR_expr_cases);
-val _ = save_thm ("JR_expr_sind", SIMP1 (derive_strong_induction (JR_expr_rules, JR_expr_ind)));
-val _ = save_thm ("JR_expr_ind", SIMP1 JR_expr_ind);
-val _ = save_thm ("JR_expr_rules", SIMP2 JR_expr_rules);
+val JR_expr_cases = save_thm ("JR_expr_cases", SIMP2 Jred_cases);
+val _ = save_thm ("JR_expr_sind", SIMP1 (derive_strong_induction (Jred_rules, Jred_ind)));
+val _ = save_thm ("JR_expr_ind", SIMP1 Jred_ind);
+val _ = save_thm ("JR_expr_rules", SIMP2 Jred_rules);
 
 val JRbprim_cases = save_thm ("JRbprim_cases", SIMP2 JRbprim_cases);
 val _ = save_thm ("JRbprim_ind", SIMP1 JRbprim_ind);
@@ -560,9 +588,9 @@ val JTuprim_cases = save_thm ("JTuprim_cases", SIMP2 JTuprim_cases);
 val _ = save_thm ("JTuprim_ind", SIMP1 JTuprim_ind);
 val _ = save_thm ("JTuprim_rules", SIMP2 JTuprim_rules);
 
-val JTvalue_name_cases = save_thm ("JTvalue_name_cases", SIMP2 JTvalue_name_cases);
-val _ = save_thm ("JTvalue_name_ind", SIMP1 JTvalue_name_ind);
-val _ = save_thm ("JTvalue_name_rules", SIMP2 JTvalue_name_rules);
+val JTvalue_name_cases = save_thm ("JTvalue_name_cases", SIMP2 JTval_cases);
+val _ = save_thm ("JTvalue_name_ind", SIMP1 JTval_ind);
+val _ = save_thm ("JTvalue_name_rules", SIMP2 JTval_rules);
 
 val JTtop_cases = save_thm ("JTtop_cases", SIMP2 JTtop_cases);
 val _ = save_thm ("JTtop_ind", SIMP1 JTtop_ind);
@@ -694,16 +722,16 @@ val Eok2_def = Define
 val is_abbrev_tc_def = Define `
 (is_abbrev_tc E (TE_constr _ (TC_name tcn)) =
   case lookup E (name_tcn tcn) of
-     SOME (EB_ta x y z) -> T
-  || _ -> F) /\
+    SOME (EB_ta x y z) => T
+  | _ => F) /\
 (is_abbrev_tc E _ = F)`;
 
 val is_abbrev_tc_cases = Q.store_thm ("is_abbrev_tc_cases",
-`!E t. is_abbrev_tc E t = ?ts tcn tps t'. (t = TE_constr ts (TC_name tcn)) /\
+`!E t. is_abbrev_tc E t <=> ?ts tcn tps t'. (t = TE_constr ts (TC_name tcn)) /\
                                           (lookup E (name_tcn tcn) = SOME (EB_ta (TPS_nary tps) tcn t'))`,
 Cases_on `t` THEN SRW_TAC [] [is_abbrev_tc_def] THEN
 Cases_on `t'` THEN SRW_TAC [] [is_abbrev_tc_def] THEN
-Cases_on `lookup E (name_tcn t'')` THEN SRW_TAC [] [is_abbrev_tc_def] THEN
+Cases_on `lookup E (name_tcn t)` THEN SRW_TAC [] [is_abbrev_tc_def] THEN
 Cases_on `x` THEN SRW_TAC [] [is_abbrev_tc_def] THEN
 IMP_RES_TAC lookup_name_thm THEN
 FULL_SIMP_TAC list_ss [environment_binding_11, environment_binding_distinct, type_params_opt_nchotomy]);
@@ -711,16 +739,16 @@ FULL_SIMP_TAC list_ss [environment_binding_11, environment_binding_distinct, typ
 val is_record_tc_def = Define `
 (is_record_tc E (TE_constr _ (TC_name tcn)) =
   case lookup E (name_tcn tcn) of
-     SOME (EB_tr x y z) -> T
-  || _ -> F) /\
+    SOME (EB_tr x y z) => T
+  | _ => F) /\
 (is_record_tc E _ = F)`;
 
 val is_record_tc_cases = Q.store_thm ("is_record_tc_cases",
-`!E t. is_record_tc E t = (?ts tcn k fns. (t = TE_constr ts (TC_name tcn)) /\
+`!E t. is_record_tc E t <=> (?ts tcn k fns. (t = TE_constr ts (TC_name tcn)) /\
                                           (lookup E (name_tcn tcn) = SOME (EB_tr tcn k fns)))`,
 Cases_on `t` THEN SRW_TAC [] [is_record_tc_def] THEN
 Cases_on `t'` THEN SRW_TAC [] [is_record_tc_def] THEN
-Cases_on `lookup E (name_tcn t'')` THEN SRW_TAC [] [is_record_tc_def] THEN
+Cases_on `lookup E (name_tcn t)` THEN SRW_TAC [] [is_record_tc_def] THEN
 Cases_on `x` THEN SRW_TAC [] [is_abbrev_tc_def] THEN
 IMP_RES_TAC lookup_name_thm THEN
 FULL_SIMP_TAC list_ss [environment_binding_11, environment_binding_distinct]);
@@ -728,21 +756,21 @@ FULL_SIMP_TAC list_ss [environment_binding_11, environment_binding_distinct]);
 val is_constr_tc_def = Define `
 (is_constr_tc E (TE_constr _ (TC_name tcn)) =
   case lookup E (name_tcn tcn) of
-     SOME (EB_td x y) -> T
-  || _ -> F) /\
+    SOME (EB_td x y) => T
+  | _ => F) /\
 (is_constr_tc E (TE_constr [] TC_exn) = T) /\
 (is_constr_tc E (TE_constr [t] TC_option) = T) /\
 (is_constr_tc E _ = F)`;
 
 val is_constr_tc_cases = Q.store_thm ("is_constr_tc_cases",
-`!E t. is_constr_tc E t = (?ts tcn k. (t = TE_constr ts (TC_name tcn)) /\
+`!E t. is_constr_tc E t <=> (?ts tcn k. (t = TE_constr ts (TC_name tcn)) /\
                                       (lookup E (name_tcn tcn) = SOME (EB_td tcn k))) \/
                           (?t'. t = TE_constr [t'] TC_option) \/
                           (t = TE_constr [] TC_exn)`,
 Cases_on `t` THEN SRW_TAC [] [is_constr_tc_def] THEN
 Cases_on `t'` THEN SRW_TAC [] [is_constr_tc_def] THEN
-Cases_on `l` THEN SRW_TAC [] [is_constr_tc_def] THEN
-TRY (Cases_on `lookup E (name_tcn t'')` THEN SRW_TAC [] [is_constr_tc_def]) THEN
+TRY (Cases_on `l` THEN SRW_TAC [] [is_constr_tc_def]) THEN
+TRY (Cases_on `lookup E (name_tcn t)` THEN SRW_TAC [] [is_constr_tc_def]) THEN
 TRY (Cases_on `t` THEN SRW_TAC [] [is_constr_tc_def]) THEN
 TRY (Cases_on `t'` THEN SRW_TAC [] [is_constr_tc_def]) THEN
 Cases_on `x` THEN SRW_TAC [] [is_abbrev_tc_def] THEN
@@ -751,7 +779,7 @@ FULL_SIMP_TAC list_ss [environment_binding_11, environment_binding_distinct]);
 
 val JM_match_lem = Q.prove (
 `!e p s. JM_match e p s ==> JM_matchP e p`,
-RULE_INDUCT_TAC JM_match_ind [JM_matchP_fun, ELIM_UNCURRY, EVERY_MAP, EVERY_MEM]
+RULE_INDUCT_TAC Jmatch_ind [JM_matchP_fun, ELIM_UNCURRY, EVERY_MAP, EVERY_MEM]
 [([``"JM_match_construct"``, ``"JM_match_tuple"``],
   SRW_TAC [] [] THEN Q.EXISTS_TAC `MAP (\x. (FST x, FST (SND x))) v_pat_substs_x_list` THEN
         SRW_TAC [] [MAP_MAP, ETA_THM] THEN FULL_SIMP_TAC list_ss [MEM_MAP]),
@@ -802,52 +830,60 @@ val JM_matchP_lem = Q.prove (
  (!(fp:field#pattern) (fe:field#expr). JM_matchP (SND fe) (SND fp) ==>
           ?s. JM_match (SND fe) (SND fp) (substs_x_xs s) /\ EVERY is_value_of_expr (MAP SND s))`,
 Induct THEN SRW_TAC [] [JM_match_fun, JM_matchP_fun, EVERY_MAP] THEN
-FULL_SIMP_TAC list_ss [EVERY_MAP, ELIM_UNCURRY] THENL
-[RES_TAC THEN Q.EXISTS_TAC `s++[(v,e)]` THEN SRW_TAC [] [],
+FULL_SIMP_TAC list_ss [EVERY_MAP, ELIM_UNCURRY] THENL [
+ RES_TAC THEN Q.EXISTS_TAC `s++[(v,e)]` THEN SRW_TAC [] [],
+
  METIS_TAC [],
  METIS_TAC [],
  METIS_TAC [],
- Q.PAT_ASSUM `!elist. P elist ==> Q elist` (MP_TAC o Q.SPEC `MAP FST (v_pat_list:(expr#pattern) list)`) THEN
-       SRW_TAC [] [ZIP_MAP_ID] THEN Q.EXISTS_TAC `FLAT slist` THEN SRW_TAC [] [] THEN
-       Q.EXISTS_TAC `MAP (\((v, p), s). (v, p, s)) (ZIP (v_pat_list, MAP substs_x_xs slist))` THEN
-       SRW_TAC [] [MAP_MAP, LAMBDA_PROD2, EVERY_MAP] THEN
-       SRW_TAC [] [GSYM MAP_MAP, MAP_FST_ZIP, MAP_SND_ZIP, GSYM EVERY_MAP] THEN
-       SRW_TAC [] [MAP_MAP, MAP_I, EVERY_MAP, lem1],
-  Q.PAT_ASSUM `!elist. P elist ==> Q elist` (MP_TAC o Q.SPEC `MAP FST (v_pat_list:(expr#pattern) list)`) THEN
-       SRW_TAC [] [ZIP_MAP_ID] THEN Q.EXISTS_TAC `FLAT slist` THEN SRW_TAC [] [] THEN
-       Q.EXISTS_TAC `MAP (\((v, p), s). (v, p, s)) (ZIP (v_pat_list, MAP substs_x_xs slist))` THEN
-       SRW_TAC [] [MAP_MAP, LAMBDA_PROD2, EVERY_MAP] THEN
-       SRW_TAC [] [GSYM MAP_MAP, MAP_FST_ZIP, MAP_SND_ZIP, GSYM EVERY_MAP] THEN
-       SRW_TAC [] [MAP_MAP, MAP_I, EVERY_MAP, lem1],
- Q.PAT_ASSUM `!felist. P felist ==> Q felist`
+
+ Q.PAT_X_ASSUM `!elist. P elist ==> Q elist` (MP_TAC o Q.SPEC `MAP FST (v_pat_list:(expr#pattern) list)`) THEN
+ SRW_TAC [] [ZIP_MAP_ID] THEN Q.EXISTS_TAC `FLAT slist` THEN SRW_TAC [] [] THEN
+ Q.EXISTS_TAC `MAP (\((v, p), s). (v, p, s)) (ZIP (v_pat_list, MAP substs_x_xs slist))` THEN
+ SRW_TAC [] [MAP_MAP, LAMBDA_PROD2, EVERY_MAP] THEN
+ SRW_TAC [] [GSYM MAP_MAP, MAP_FST_ZIP, MAP_SND_ZIP, GSYM EVERY_MAP] THEN
+ SRW_TAC [] [MAP_MAP, MAP_I, EVERY_MAP, lem1] THEN 
+ SRW_TAC [] [ZIP_MAP,MAP_MAP] THEN METIS_TAC [MAP_ZIP],
+
+ Q.PAT_X_ASSUM `!elist. P elist ==> Q elist` (MP_TAC o Q.SPEC `MAP FST (v_pat_list:(expr#pattern) list)`) THEN
+ SRW_TAC [] [ZIP_MAP_ID] THEN Q.EXISTS_TAC `FLAT slist` THEN SRW_TAC [] [] THEN
+ Q.EXISTS_TAC `MAP (\((v, p), s). (v, p, s)) (ZIP (v_pat_list, MAP substs_x_xs slist))` THEN
+ SRW_TAC [] [MAP_MAP, LAMBDA_PROD2, EVERY_MAP] THEN
+ SRW_TAC [] [GSYM MAP_MAP, MAP_FST_ZIP, MAP_SND_ZIP, GSYM EVERY_MAP] THEN
+ SRW_TAC [] [MAP_MAP, MAP_I, EVERY_MAP, lem1] THEN
+ SRW_TAC [] [ZIP_MAP,MAP_MAP] THEN METIS_TAC [MAP_ZIP],
+
+ Q.PAT_X_ASSUM `!felist. P felist ==> Q felist`
              (MP_TAC o Q.SPEC `MAP (\(fn, p:pattern, v:expr). (F_name fn, v)) field_name'_pat_v'_list`) THEN
-       SRW_TAC [] [MAP_MAP, MAP_ZIP_SAME, ZIP_MAP, EVERY_MAP, LAMBDA_PROD2] THEN
-       Q.EXISTS_TAC `FLAT slist` THEN SRW_TAC [] [] THEN
-       MAP_EVERY Q.EXISTS_TAC [`fn_v''_list`,
-                               `MAP (\((f, p, v), s). (f, p, substs_x_xs s, v))
-                                    (ZIP (field_name'_pat_v'_list, slist))`,
-                               `field_name_v_list`] THEN
-       SRW_TAC [] [ETA_THM, MAP_MAP, LAMBDA_PROD2, EVERY_MAP, MAP_SND_ZIP, lem2] THEN
-       SRW_TAC [] [GSYM EVERY_MAP, GSYM MAP_MAP, MAP_FST_ZIP] THEN
-       SRW_TAC [] [EVERY_MAP, lem3],
+ SRW_TAC [] [MAP_MAP, MAP_ZIP_SAME, ZIP_MAP, EVERY_MAP, LAMBDA_PROD2] THEN
+ Q.EXISTS_TAC `FLAT slist` THEN SRW_TAC [] [] THEN
+ MAP_EVERY Q.EXISTS_TAC [`fn_v''_list`,
+                          `MAP (\((f, p, v), s). (f, p, substs_x_xs s, v))
+                          (ZIP (field_name'_pat_v'_list, slist))`,
+                          `field_name_v_list`] THEN
+ SRW_TAC [] [ETA_THM, MAP_MAP, LAMBDA_PROD2, EVERY_MAP, MAP_SND_ZIP, lem2] THEN
+ SRW_TAC [] [GSYM EVERY_MAP, GSYM MAP_MAP, MAP_FST_ZIP] THEN
+ SRW_TAC [] [EVERY_MAP, lem3],
+
  RES_TAC THEN Q.EXISTS_TAC `s'++s` THEN SRW_TAC [] [] THEN
-       MAP_EVERY Q.EXISTS_TAC [`substs_x_xs s'`, `substs_x_xs s`] THEN SRW_TAC [] [],
- Cases_on `elist` THEN FULL_SIMP_TAC list_ss [] THEN Q.EXISTS_TAC `[]` THEN SRW_TAC [] [],
- Cases_on `elist` THEN FULL_SIMP_TAC list_ss [] THEN
-       Q.PAT_ASSUM `!elist. P elist ==> ?slist. (LENGTH elist = LENGTH slist) /\ Q elist slist`
-               (MP_TAC o Q.SPEC `t`) THEN
-       SRW_TAC [] [] THEN RES_TAC THEN Q.EXISTS_TAC `s::slist` THEN SRW_TAC [] [],
- Cases_on `felist` THEN FULL_SIMP_TAC list_ss [] THEN Q.EXISTS_TAC `[]` THEN SRW_TAC [] [],
+ MAP_EVERY Q.EXISTS_TAC [`substs_x_xs s'`, `substs_x_xs s`] THEN SRW_TAC [] [],
+
  Cases_on `felist` THEN FULL_SIMP_TAC list_ss [] THEN
-       Q.PAT_ASSUM `!felist'. P felist' ==> ?slist. (LENGTH fplist = LENGTH slist) /\ Q felist' slist`
+ Q.PAT_ASSUM `!felist'. P felist' ==> ?slist. (LENGTH fplist = LENGTH slist) /\ Q felist' slist`
                (MP_TAC o Q.SPEC `t`) THEN
-       SRW_TAC [] [] THEN RES_TAC THEN Q.EXISTS_TAC `s::slist` THEN SRW_TAC [] []]);
+ SRW_TAC [] [] THEN RES_TAC THEN Q.EXISTS_TAC `s::slist` THEN SRW_TAC [] [] THEN METIS_TAC [], 
+
+ Cases_on `elist` THEN FULL_SIMP_TAC list_ss [] THEN
+ Q.PAT_X_ASSUM `!elist. P elist ==> ?slist. (LENGTH elist = LENGTH slist) /\ Q elist slist`
+               (MP_TAC o Q.SPEC `t`) THEN
+ SRW_TAC [] [] THEN RES_TAC THEN Q.EXISTS_TAC `s::slist` THEN SRW_TAC [] []
+]);
 
 end;
 
 val JM_match_is_val_thm = Q.store_thm ("JM_match_is_val_thm",
 `!e p s. JM_match e p s ==> !s'. (s = substs_x_xs s') ==> EVERY is_value_of_expr (MAP SND s')`,
-RULE_INDUCT_TAC JM_match_ind [EVERY_MAP, ELIM_UNCURRY, MAP_MAP]
+RULE_INDUCT_TAC Jmatch_ind [EVERY_MAP, ELIM_UNCURRY, MAP_MAP]
 [([``"JM_match_tuple"``, ``"JM_match_construct"``],
   SRW_TAC [] [EVERY_MEM, MEM_FLAT, EXISTS_MAP, EXISTS_MEM] THEN
        Cases_on `x'` THEN FULL_SIMP_TAC list_ss [] THEN

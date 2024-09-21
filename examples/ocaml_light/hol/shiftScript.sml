@@ -84,8 +84,8 @@ val shiftTsig_com_lem = Q.store_thm ("shiftTsig_com_lem",
 Induct THEN SRW_TAC [] [shiftTsig_def, LAMBDA_PROD2, MAP_MAP, shiftt_com_lem]);
 
 val shiftt_11 = Q.store_thm ("shiftt_11",
-`(!r r' n. (shiftt n 1 r = shiftt n 1 r') = (r = r')) /\
- (!rl rl' n. (MAP (\r. shiftt n 1 r) rl = MAP (\r. shiftt n 1 r) rl') = (rl = rl'))`,
+`(!r r' n. (shiftt n 1 r = shiftt n 1 r') <=> (r = r')) /\
+ (!rl rl' n. (MAP (\r. shiftt n 1 r) rl = MAP (\r. shiftt n 1 r) rl') <=> (rl = rl'))`,
 Induct THEN SRW_TAC [] [shiftt_def] THENL
 [Cases_on `r'`,
  Cases_on `r'`,
@@ -94,7 +94,6 @@ Induct THEN SRW_TAC [] [shiftt_def] THENL
  Cases_on `r''`,
  Cases_on `r'`,
  Cases_on `r'`,
- Cases_on `rl'`,
  Cases_on `rl'`]
  THEN FULL_SIMP_TAC list_ss [shiftt_def] THEN SRW_TAC [] [] THEN DECIDE_TAC);
 
