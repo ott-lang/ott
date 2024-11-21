@@ -527,9 +527,20 @@ struct
 
   let process_parse_tree pt = 
 
+    (* Tail-recursive version of list functions *)
+    let map_tr f l =
+      List.rev (List.rev_map f l)
+    in
+    let flatten_tr ll =
+      List.rev (List.fold_left (fun acc l -> List.rev_append l acc) [] ll)
+    in
+    let fold_right_tr f l acc =
+      List.fold_left (fun acc x -> f x acc) acc (List.rev l)
+    in
+
     let rec process_rule_node (rn : rule_node) : (result * int list * NTset.t) list =
       let idx = rn.rule_nt.reduce_index in
-        List.fold_right
+        fold_right_tr
           (fun (rl,injection_children,loop) res -> 
              if NTset.mem rn.rule_nt.reduce_left loop then
                res
@@ -573,10 +584,10 @@ struct
                   (process_sym_node sn)
               in
               let rest_results = process (i + 1) rest in
-                List.flatten
-                  (List.map 
+                flatten_tr
+                  (map_tr
                      (fun (f_res,f_idx,f_nts) -> 
-                        List.map 
+                        map_tr
                           (fun (r_res,r_idx,r_nts) -> 
                              (f_res::r_res,
                               combine_f i f_idx r_idx,
@@ -601,7 +612,7 @@ struct
         let ans = 
           try
             sn.started <- true;
-            List.flatten (List.map process_rule_node sn.possibilities)
+            flatten_tr (map_tr process_rule_node sn.possibilities)
           with Reject_all_parses ->
             []
         in
@@ -615,7 +626,7 @@ struct
         | [] -> assert false
         | sns ->
             let answers = 
-              List.map 
+              map_tr
                 (fun sn ->
                    let res = process_sym_node sn in
                      List.iter (fun sn -> 
@@ -640,6 +651,6 @@ struct
       for i = 0 to Array.length scc - 1 do
         process_component scc.(i)
       done;
-      List.map (fun (x,_,_) -> x) pt.answers
+      map_tr (fun (x,_,_) -> x) pt.answers
 
 end
