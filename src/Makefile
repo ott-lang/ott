@@ -241,7 +241,7 @@ coq-lib:
 
 # magic to tex-ify our yacc parser
 
-Y2L=../aux/y2l/y2l  
+Y2L=../tools/y2l/y2l
 
 %.mly-y2l : %.mly
 	cat $< | tr -d \' | grep -v '%start' | grep -v '%type' | sed -e 's/%prec [^ ]*//' > $@
