@@ -240,7 +240,6 @@ There is a [plugin for VSCode](https://marketplace.visualstudio.com/items?itemNa
 
 directory                | description
 -----------------------  | -------------------------------------------------
-`aux/`                   | auxiliary code (y2l) used to build the user guide
 `bin/`                   | the Ott binary
 `built_doc/`             | the user guide, in html, pdf, and ps
 `coq/`                   | auxiliary files for Coq
@@ -252,6 +251,7 @@ directory                | description
 `menhir/`                | auxiliary files for menhir
 `regression/`            | regression-test machinery
 `tests/`                 | various small example Ott files
+`tools/`                 | auxiliary code (y2l) used to build the user guide
 `src/`                   | the (OCaml) Ott sources
 `Makefile`               | a Makefile for the examples
 `LICENCE`                | the BSD-style licence terms

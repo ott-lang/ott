@@ -448,8 +448,8 @@ install-top2-built: top2.html top2.ps top2.pdf
 # markdown processing and in the latex user guide
 README.tex: ../README.md
 	rm -rf README.tex
-	cat ../README.md | sed -e 's/|//g' > README.tmp.md
-	pandoc  README.tmp.md -o README.tmp.tex
+	cat ../README.md | sed -e 's/|//g' -e '/docker/d' > README.tmp.md
+	pandoc --no-highlight README.tmp.md -o README.tmp.tex
 	cat README.tmp.tex | sed -e 's/section{Ott}/section{Getting started with Ott (the README)}/g' | sed -e 's/href/ahref/g' | sed -e 's/\\noalign{\\medskip}//g' > README.tex
 	chmod ugo-w README.tex
 
