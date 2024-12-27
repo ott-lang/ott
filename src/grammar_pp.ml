@@ -1250,7 +1250,7 @@ and coq_maybe_decide_equality m xd homs ntmvr loc =
         | [ Hom_string s ] -> s 
         | _ -> Auxl.error (Some loc) "malformed coq-equality homomorphism\n" )
       ^ "\nDefined.\n"
-      ^ "Hint Resolve eq_" ^ type_name  ^ " : ott_coq_equality.\n"
+      ^ "#[export] Hint Resolve eq_" ^ type_name  ^ " : ott_coq_equality.\n"
 
 and pp_metavardefn m xd mvd =
   let pp_com = pp_com_strings m xd mvd.mvd_rep [pp_metavar_with_sie m xd [] (mvd.mvd_name,[])] in

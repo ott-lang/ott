@@ -1758,7 +1758,7 @@ Tactic Notation \"apply_fresh\" \"*\" constr(T) \"as\" ident(x) :=
     let h = hints_rel @ hints_lc in
     if List.length h = 0 
     then ""
-    else "Hint Constructors "^(String.concat " " h)^" : core.\n" in
+    else "#[export] Hint Constructors "^(String.concat " " h)^" : core.\n" in
 
   (* ** all together *)
   "\n(** infrastructure *)\n" 
