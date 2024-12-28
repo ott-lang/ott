@@ -2750,14 +2750,18 @@ and pp_rule_list m xd rs =
                     ^ pp_nontermroot_ty m xd ntr ^ " = ``:"
                     ^ pp_hom_spec m xd hs
                     ^ "``\n"
-                | Coq _ -> 
-                    let universe = 
-                      try pp_hom_spec m xd (List.assoc "coq-universe" (Auxl.rule_of_ntr xd ntr).rule_homs) 
-                      with Not_found -> "Set" in
-                    "\nDefinition "
-                    ^ pp_nontermroot_ty m xd ntr ^ " : " ^ universe ^ " := "
-                    ^ pp_hom_spec m xd hs
-                    ^ ".\n"
+                | Coq _ ->
+                    let homs = (Auxl.rule_of_ntr xd ntr).rule_homs in
+                    let type_name = pp_nontermroot_ty m xd ntr in
+                    let universe =
+                      try pp_hom_spec m xd (List.assoc "coq-universe" homs)
+                      with Not_found -> "Set"
+                    in
+                    let body = pp_hom_spec m xd hs in
+                    if List.mem_assoc "coq-notation" homs then
+                      "\nNotation " ^ type_name ^ " := (" ^ body ^ " : " ^ universe ^ ").\n"
+                    else
+                      "\nDefinition " ^ type_name ^ " : " ^ universe ^ " := " ^ body ^ ".\n"
                 | Twf _ -> 
                     "\n%abbrev "
                     ^ pp_nontermroot_ty m xd ntr ^ " : type = "

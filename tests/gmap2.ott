@@ -1,0 +1,17 @@
+embed 
+{{ coq
+From stdpp Require Import gmap.
+}}
+grammar
+context :: context_ ::=
+ {{ coq gmap nat nat }}
+ {{ coq-universe Type }}
+ {{ coq-notation }}
+| [] :: M :: empty
+  {{ coq GMap GEmpty }}
+embed
+{{ coq
+Fact insert_lookup_ne_context: forall (C:context) i j x y,
+    i <> j -> C !! i = Some x -> <[j:=y]> C !! i = Some x.
+Proof. by intros; simplify_map_eq. Qed.
+}}
