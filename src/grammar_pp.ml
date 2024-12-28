@@ -1273,10 +1273,20 @@ and pp_metavardefn m xd mvd =
       | true -> ""
       | false -> ( match m with
 	| Coq co ->
-	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in
-	    let universe = try pp_hom_spec m xd (List.assoc "coq-universe" mvd.mvd_rep) with Not_found -> "Set" in
-	    "Definition " ^  type_name ^ " : " ^ universe ^ " := "
-	    ^ (pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc) ^ "." ^ pp_com ^ "\n" 
+            let type_name = pp_metavarroot_ty m xd mvd.mvd_name in
+            let universe =
+              try pp_hom_spec m xd (List.assoc "coq-universe" mvd.mvd_rep)
+              with Not_found -> "Set"
+            in
+            let body = pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc in
+            let sentence =
+              if List.mem_assoc "coq-notation" mvd.mvd_rep then
+	        "Notation " ^ type_name ^ " := (" ^ body ^ " : " ^ universe ^ ")."
+              else
+	        "Definition " ^  type_name ^ " : " ^ universe ^ " := " ^ body ^ "."
+            in
+            sentence
+            ^ pp_com ^ "\n"
 	    ^ coq_maybe_decide_equality m xd mvd.mvd_rep (Mvr mvd.mvd_name) mvd.mvd_loc
 	| Caml oo ->
 	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in 
