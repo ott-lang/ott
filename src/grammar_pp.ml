@@ -1401,8 +1401,7 @@ and pp_com_es m xd homs es =
       ^ String.concat "" (apply_hom_spec m xd hs ((*List.map (function s -> "$"^s^"$")*) ss))
       ^ "}" 
     | Isa _ -> " \\<comment> \\<open>" ^ String.concat "" (apply_hom_spec m xd hs ss) ^ "\\<close>"
-    | Coq _ -> " (*r " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " *)" 
-    | Hol _ | Lem _ | Caml _ | Lex _ ->  " (* " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " *)" 
+    | Coq _ | Hol _ | Lem _ | Caml _ | Lex _ ->  " (* " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " *)"
     | Menhir _ -> "/* " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " */" 
     | Ascii _ | Twf _ -> ""
 
@@ -1416,8 +1415,7 @@ and pp_com_strings m xd homs ss =
       ^ String.concat "" (apply_hom_spec m xd hs (List.map (function s -> "$"^s^"$") ss))
       ^ "}"
     | Isa _ -> " \\<comment> \\<open>" ^ String.concat "" (apply_hom_spec m xd hs ss) ^ "\\<close>"
-    | Coq _ -> " (*r " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " *)"
-    | Hol _ | Lem _ | Caml _ | Lex _ ->  " (* " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " *)"
+    | Coq _ | Hol _ | Lem _ | Caml _ | Lex _ ->  " (* " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " *)"
     | Menhir _ -> "/* " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " */" 
     | Ascii _ | Twf _ -> ""
 
