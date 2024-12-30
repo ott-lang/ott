@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<meta name="generator" content="hevea 2.35">
+<meta name="generator" content="hevea 2.36">
 <style type="text/css">
 .equationcontainer{position:relative;}
 .equationnumber{float:right;left:auto;position:absolute;right:0}
@@ -71,7 +71,7 @@ text-indent: 0;
 <title>Ott: Tool Support for
 Semantics  
 User Guide 
- version 0.33
+ version 0.34
 
 </title>
 </head>
@@ -80,7 +80,7 @@ User Guide
 <!--CUT STYLE article--><!--CUT DEF section 1 --><table class="title"><tr><td style="padding:1ex"><h1 class="titlemain">Ott: Tool Support for
 Semantics <br>
 User Guide<br>
- version 0.33
+ version 0.34
 </h1><h3 class="titlerest">Peter Sewell<sup>*</sup> &#X2003;&#X2003;Francesco Zappa Nardelli<sup>**</sup> &#X2003;&#X2003;Scott Owens <sup>*</sup> <br>
 with Gilles Peskine<sup>*</sup>, Tom
 Ridge<sup>*</sup>,<br>
@@ -96,11 +96,11 @@ Susmit Sarkar<sup>*</sup>, and Rok Strni&#X161;a<sup>*</sup><br>
 </span></li><li class="li-toc"><a href="#sec6"><span style="font-size:small">2.3&#X2003;People</span></a><span style="font-size:small">
 </span></li><li class="li-toc"><a href="#sec7"><span style="font-size:small">2.4&#X2003;To install and build</span></a><span style="font-size:small">
 </span><ul class="toc"><li class="li-toc"><span style="font-size:small">
-</span><a href="#sec8"><span style="font-size:small">2.4.1&#X2003;With OPAM (released
+</span><a href="#sec8"><span style="font-size:small">2.4.1&#X2003;With opam (released
 version)</span></a><span style="font-size:small">
-</span></li><li class="li-toc"><a href="#sec9"><span style="font-size:small">2.4.2&#X2003;With OPAM (github
+</span></li><li class="li-toc"><a href="#sec9"><span style="font-size:small">2.4.2&#X2003;With opam (github
 checkout)</span></a><span style="font-size:small">
-</span></li><li class="li-toc"><a href="#sec10"><span style="font-size:small">2.4.3&#X2003;Without OPAM</span></a><span style="font-size:small">
+</span></li><li class="li-toc"><a href="#sec10"><span style="font-size:small">2.4.3&#X2003;Without opam</span></a><span style="font-size:small">
 </span></li></ul><span style="font-size:small">
 </span></li><li class="li-toc"><a href="#sec11"><span style="font-size:small">2.5&#X2003;To run</span></a><span style="font-size:small">
 </span></li><li class="li-toc"><a href="#sec12"><span style="font-size:small">2.6&#X2003;Editor Plugins</span></a><span style="font-size:small">
@@ -198,8 +198,7 @@ calculi.
 It takes as input a definition of a language syntax and semantics, in
 a concise and readable ASCII notation that is close to what one would
 write in informal mathematics. It generates output:
-</p><ol class="enumerate" type=1><li class="li-enumerate">
-a LaTeX source file that defines commands to build a typeset version of
+</p><ol class="enumerate" type=1><li class="li-enumerate">a LaTeX source file that defines commands to build a typeset version of
 the definition;
 </li><li class="li-enumerate">a Coq version of the definition; 
 </li><li class="li-enumerate">a HOL version of the definition;
@@ -211,8 +210,7 @@ Additionally, it can be run as a filter, taking a
 LaTeX/Coq/Isabelle/HOL/Lem/OCaml source file
 with embedded (symbolic) terms of the defined language, parsing them and replacing
 them by typeset terms.</p><p>This document is a user guide for the tool. The papers
-</p><ul class="itemize"><li class="li-itemize">
-<a href="http://www.cl.cam.ac.uk/users/pes20/ott/ott-jfp.pdf">Ott: Effective Tool Support for the Working Semanticist</a>. Peter Sewell, Francesco Zappa Nardelli, Scott Owens, Gilles
+</p><ul class="itemize"><li class="li-itemize"><a href="http://www.cl.cam.ac.uk/users/pes20/ott/ott-jfp.pdf">Ott: Effective Tool Support for the Working Semanticist</a>. Peter Sewell, Francesco Zappa Nardelli, Scott Owens, Gilles
 Peskine, Thomas Ridge, Susmit Sarkar, Rok Strni&#X161;a. 
 Journal of Functional Programming 20(1):71-122, 2010 [<a href="#ott-jfp"></a>].</li><li class="li-itemize"><a href="http://www.cl.cam.ac.uk/users/pes20/ott/paper.pdf">Ott: Effective Tool Support for the Working Semanticist</a>. Peter Sewell, Francesco Zappa Nardelli, Scott Owens, Gilles
 Peskine, Thomas Ridge, Susmit Sarkar, Rok Strni&#X161;a. 
@@ -226,11 +224,11 @@ with this manual. The project web page
 links to the github source repository, with a
 BSD-style licence. It also has a range of examples, including
 untyped and simply typed CBV lambda calculus, ML polymorphism, various
-first-order systems from Pierce&#X2019;s TAPL&#X2004;&#X200D;[<a href="#Pierce%3ATypeSystems"></a>], the
-POPLmark F<sub>&lt;:</sub> language&#X2004;&#X200D;[<a href="#poplmark"></a>], a module system by
-Leroy&#X2004;&#X200D;[<a href="#Leroy-generativity"></a>, &#XA7;4] (extended with a term language and an
+first-order systems from Pierce&#X2019;s TAPL&#XA0;[<a href="#Pierce%3ATypeSystems"></a>], the
+POPLmark F<sub>&lt;:</sub> language&#XA0;[<a href="#poplmark"></a>], a module system by
+Leroy&#XA0;[<a href="#Leroy-generativity"></a>, &#XA7;4] (extended with a term language and an
 operational semantics), the LJ Java fragment and LJAM Java module
-system&#X2004;&#X200D;[<a href="#ljam-sub"></a>], and a substantial fragment of OCaml.</p><p>Our main goal is to support work on large programming language
+system&#XA0;[<a href="#ljam-sub"></a>], and a substantial fragment of OCaml.</p><p>Our main goal is to support work on large programming language
 definitions, where the scale makes it hard to keep a definition
 internally consistent, and hard to keep a tight correspondence between a
 definition and implementations.
@@ -242,14 +240,14 @@ Here it permits the definition, and terms within proofs and
 exposition, to be written in a clear, editable, ASCII notation, without LaTeX
 noise. It generates good-quality typeset output. 
 By parsing (and so sort-checking) this input, it quickly catches a
-range of simple errors, e.g.&#X2004;&#X200D;inconsistent use of judgement forms or
+range of simple errors, e.g.&#XA0;inconsistent use of judgement forms or
 metavariable naming conventions. 
 That same input, extended with some additional data, can be used to generate formal definitions for
 Coq, HOL, Isabelle, and Lem. It should thereby enable a smooth transition
 between use of informal and formal mathematics. Further, the
 tool can automatically generate definitions of functions for free
 variables, single and multiple substitutions, subgrammar checks
-(e.g.&#X2004;&#X200D;for value subgrammars), and binding auxiliary functions.
+(e.g.&#XA0;for value subgrammars), and binding auxiliary functions.
 Ott supports a &#X2018;fully concrete&#X2019; representation, sufficient
 for many examples but not dealing with general alpha equivalence. 
 An experimental Coq backend generates definitions in locally-nameless style for a subset of the Ott metalanguage.
@@ -272,8 +270,7 @@ aim to make this more commonplace, less of a heroic task.</p><p><a id="ott"></p>
 calculi. It takes as input a definition of a language syntax and
 semantics, in a concise and readable ASCII notation that is close to
 what one would write in informal mathematics. With appropriate
-annotations, it can then generate output:</p><ul class="itemize"><li class="li-itemize">
-a LaTeX source file that defines commands to build a typeset version
+annotations, it can then generate output:</p><ul class="itemize"><li class="li-itemize">a LaTeX source file that defines commands to build a typeset version
 of the definition;
 </li><li class="li-itemize">a Coq version of the definition;
 </li><li class="li-itemize">a HOL version of the definition;
@@ -290,12 +287,12 @@ permits the definition, and terms within proofs and exposition, to be
 written in a clear, editable, ASCII notation, without LaTeX noise. It
 generates good-quality typeset output. By parsing (and so sort-checking)
 this input, it quickly catches a range of simple errors,
-e.g.&#X2004;&#X200D;inconsistent use of judgement forms or metavariable naming
+e.g.&#XA0;inconsistent use of judgement forms or metavariable naming
 conventions.</p><p>That same input can be used to generate formal definitions, for Coq,
 HOL, Isabelle, and Lem. It should thereby enable a smooth transition
 between use of informal and formal mathematics. Additionally, the tool
 can automatically generate definitions of functions for free variables,
-single and multiple substitutions, subgrammar checks (e.g.&#X2004;&#X200D;for value
+single and multiple substitutions, subgrammar checks (e.g.&#XA0;for value
 subgrammars), and binding auxiliary functions. At present only a fully
 concrete representation of binding, without quotienting by alpha
 equivalence, is fully supported. An experimental backend generates a
@@ -307,36 +304,34 @@ ML polymorphism, the POPLmark Fsub with and without records, an ML
 module system taken from (Leroy, JFP 1996) and equipped with an
 operational semantics, and LJ, a lightweight Java fragment. More
 substantially, Ott has been used for work on iJAM and LJAM, Java Module
-Systems, by Rok Strnisa, and semantics for OCaml light, by Scott Owens.</p><p>As of 2020, Ott remains in continuous use.</p><p><a id="documentation"></p>
+Systems, by Rok Strnisa, and semantics for OCaml light, by Scott Owens.</p><p>As of 2024, Ott remains in continuous use.</p><p><a id="documentation"></p>
 <!--TOC subsection id="sec4" Documentation-->
-<h3 id="sec4" class="subsection">2.1&#X2003;Documentation</h3><!--SEC END --><p></a></p><ul class="itemize"><li class="li-itemize">
-the manual is in the <a href="https://github.com/ott-lang/ott">Ott
+<h3 id="sec4" class="subsection">2.1&#X2003;Documentation</h3><!--SEC END --><p></a></p><ul class="itemize"><li class="li-itemize">the manual is in the <a href="https://github.com/ott-lang/ott">Ott
 github</a> built_doc directory, or
-<a href="http://www.cl.cam.ac.uk/&#X2004;&#X200D;pes20/ott/top2.html">here (html)</a>
+<a href="http://www.cl.cam.ac.uk/&#XA0;pes20/ott/top2.html">here (html)</a>
 </li><li class="li-itemize"><a href="http://www.cl.cam.ac.uk/users/pes20/ott/bind-doc.pdf">Binding
 and Substitution</a>. Susmit Sarkar, Peter Sewell, Francesco Zappa
 Nardelli. Note, 2007.
-</li><li class="li-itemize"><a href="http://moscova.inria.fr/&#X2004;&#X200D;zappa/projects/ln_ott">The experimental
+</li><li class="li-itemize"><a href="http://moscova.inria.fr/&#XA0;zappa/projects/ln_ott">The experimental
 Coq locally-nameless backend (html)</a>. Francesco Zappa Nardelli. Note,
 2009.
 </li></ul><p><a id="papers"></p>
 <!--TOC subsection id="sec5" Papers-->
-<h3 id="sec5" class="subsection">2.2&#X2003;Papers</h3><!--SEC END --><p></a></p><ul class="itemize"><li class="li-itemize">
-<a href="http://www.cl.cam.ac.uk/users/pes20/ott-jfp.pdf">Ott: Effective
-Tool Support for the Working Semanticist</a>. Peter Sewell, Francesco
-Zappa Nardelli, Scott Owens, Gilles Peskine, Thomas Ridge, Susmit
-Sarkar, Rok Strnisa.
+<h3 id="sec5" class="subsection">2.2&#X2003;Papers</h3><!--SEC END --><p></a></p><ul class="itemize"><li class="li-itemize"><a href="http://www.cl.cam.ac.uk/users/pes20/ott/ott-jfp.pdf">Ott:
+Effective Tool Support for the Working Semanticist</a>. Peter Sewell,
+Francesco Zappa Nardelli, Scott Owens, Gilles Peskine, Thomas Ridge,
+Susmit Sarkar, Rok Strnisa.
 <a href="http://journals.cambridge.org/repo_A71Keeig">Journal of
 Functional Programming 20(1):71-122, 2010</a>
-</li><li class="li-itemize"><a href="http://www.cl.cam.ac.uk/users/pes20/paper.pdf">Ott: Effective
-Tool Support for the Working Semanticist</a>. Peter Sewell, Francesco
-Zappa Nardelli, Scott Owens, Gilles Peskine, Thomas Ridge, Susmit
-Sarkar, Rok Strnisa. In
+</li><li class="li-itemize"><a href="http://www.cl.cam.ac.uk/users/pes20/ott/paper.pdf">Ott:
+Effective Tool Support for the Working Semanticist</a>. Peter Sewell,
+Francesco Zappa Nardelli, Scott Owens, Gilles Peskine, Thomas Ridge,
+Susmit Sarkar, Rok Strnisa. In
 <a href="http://www.informatik.uni-bonn.de/%7Eralf/icfp07.html">ICFP
 2007</a>
-</li><li class="li-itemize"><a href="http://www.cl.cam.ac.uk/users/pes20/wmm2010.pdf">Ott or Nott</a>.
-Stephanie Weirich, Scott Owens, Peter Sewell, Francesco Zappa
-Nardelli. In <a href="http://www.cis.upenn.edu/&#X2004;&#X200D;bcpierce/wmm/">WMM 2010</a>:
+</li><li class="li-itemize"><a href="http://www.cl.cam.ac.uk/users/pes20/ott/wmm2010.pdf">Ott or
+Nott</a>. Stephanie Weirich, Scott Owens, Peter Sewell, Francesco Zappa
+Nardelli. In <a href="http://www.cis.upenn.edu/&#XA0;bcpierce/wmm/">WMM 2010</a>:
 5th ACM SIGPLAN Workshop on Mechanizing Metatheory.
 </li></ul><p><a id="people"></p>
 <!--TOC subsection id="sec6" People-->
@@ -348,13 +343,13 @@ Strnisa, Viktor Vafeiadis.</p><p><a id="to-install-and-build"></p>
 <!--TOC subsection id="sec7" To install and build-->
 <h3 id="sec7" class="subsection">2.4&#X2003;To install and build</h3><!--SEC END --><p></a></p><p>Ott is available as an <a href="https://opam.ocaml.org">opam</a> package and a
 <a href="https://github.com/ott-lang/ott">github repo</a>.</p><p><a id="with-opam-released-version"></p>
-<!--TOC subsubsection id="sec8" With OPAM (released
+<!--TOC subsubsection id="sec8" With opam (released
 version)-->
-<h4 id="sec8" class="subsubsection">2.4.1&#X2003;With OPAM (released
+<h4 id="sec8" class="subsubsection">2.4.1&#X2003;With opam (released
 version)</h4><!--SEC END --><p></a></p><p>First, ensure you have opam (the OCaml package manager) installed,
 version 2.0 or greater (opam 1 versions of ott are no longer supported).
 You can use your system&#X2019;s package manager
-e.g.&#X2004;&#X200D;<span style="font-family:monospace">sudo apt-get install opam</span> (e.g.&#X2004;&#X200D;on Ubuntu 20.04) or
+e.g.&#XA0;<span style="font-family:monospace">sudo apt-get install opam</span> (e.g.&#XA0;on Ubuntu 20.04) or
 follow the <a href="https://opam.ocaml.org/doc/Install.html">instructions
 from the opam website</a>. On older Ubuntu versions you will not be able to
 use their package manager&#X2019;s opam 1 version, and will need to install
@@ -364,14 +359,14 @@ The Emacs mode will be in
 documentation in <span style="font-family:monospace">$(opam config var prefix)/doc/ott</span>.</p><p>If you want to use Ott with the Coq proof assistant, to install the Ott
 auxiliary files for Coq, first activate the <span style="font-family:monospace">coq-released</span> OPAM
 repository:</p><p><span style="font-family:monospace">opam repo add coq-released https://coq.inria.fr/opam/released</span></p><p>and then run <span style="font-family:monospace">opam install coq-ott</span>.</p><p><a id="with-opam-github-checkout"></p>
-<!--TOC subsubsection id="sec9" With OPAM (github
+<!--TOC subsubsection id="sec9" With opam (github
 checkout)-->
-<h4 id="sec9" class="subsubsection">2.4.2&#X2003;With OPAM (github
+<h4 id="sec9" class="subsubsection">2.4.2&#X2003;With opam (github
 checkout)</h4><!--SEC END --><p></a></p><p>In the checkout directory, run <span style="font-family:monospace">opam pin add ott .</span>.</p><p>To rebuild and reinstall after local changes, run
 <span style="font-family:monospace">opam upgrade --working-dir ott</span> (or
 <span style="font-family:monospace">opam upgrade -w ott</span>).</p><p><a id="without-opam"></p>
-<!--TOC subsubsection id="sec10" Without OPAM-->
-<h4 id="sec10" class="subsubsection">2.4.3&#X2003;Without OPAM</h4><!--SEC END --><p></a></p><p>Ott depends on OCaml version 4.07.0 or later and the ocamlgraph package.
+<!--TOC subsubsection id="sec10" Without opam-->
+<h4 id="sec10" class="subsubsection">2.4.3&#X2003;Without opam</h4><!--SEC END --><p></a></p><p>Ott depends on OCaml version 4.07.0 or later and the ocamlgraph package.
 It builds with (at least) OCaml 4.07.0 and 4.14.0, and ocamlgraph 1.8.8.</p><p>The command <span style="font-family:monospace">make</span> (<span style="font-family:monospace">make world</span>) builds the <span style="font-family:monospace">ott</span>
 binary in the <span style="font-family:monospace">bin/</span> subdirectory.</p><p>This will compile Ott using <span style="font-family:monospace">ocamlopt</span>. To force it to compile
 with <span style="font-family:monospace">ocamlc</span> (which may give significantly slower execution of
@@ -390,13 +385,18 @@ they generate:</p><p>
 
 
 </p><blockquote class="table"><div class="center"><hr class="floatrule"></div><div class="center"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="text-align:left;white-space:nowrap" >
-filename</td><td style="text-align:left;white-space:nowrap" >description</td></tr>
+
+filename</td><td style="text-align:left;white-space:nowrap" >description </td></tr>
 <tr><td style="text-align:left;white-space:nowrap" >&nbsp;</td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="font-family:monospace">out.tex</span></td><td style="text-align:left;white-space:nowrap" >LaTeX source for a definition</td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="font-family:monospace">out.ps</span></td><td style="text-align:left;white-space:nowrap" >the postscript built from that</td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="font-family:monospace">out.v</span></td><td style="text-align:left;white-space:nowrap" >Coq source</td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="font-family:monospace">outScript.sml</span></td><td style="text-align:left;white-space:nowrap" >HOL source</td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="font-family:monospace">out.thy</span></td><td style="text-align:left;white-space:nowrap" >Isabelle source</td></tr>
+<tr><td style="text-align:left;white-space:nowrap" ><span style="font-family:monospace">out.tex</span></td><td style="text-align:left;white-space:nowrap" >LaTeX source for a definition </td></tr>
+<tr><td style="text-align:left;white-space:nowrap" >
+<span style="font-family:monospace">out.ps</span></td><td style="text-align:left;white-space:nowrap" >the postscript built from that </td></tr>
+<tr><td style="text-align:left;white-space:nowrap" >
+<span style="font-family:monospace">out.v</span></td><td style="text-align:left;white-space:nowrap" >Coq source </td></tr>
+<tr><td style="text-align:left;white-space:nowrap" >
+<span style="font-family:monospace">outScript.sml</span></td><td style="text-align:left;white-space:nowrap" >HOL source </td></tr>
+<tr><td style="text-align:left;white-space:nowrap" >
+<span style="font-family:monospace">out.thy</span></td><td style="text-align:left;white-space:nowrap" >Isabelle source </td></tr>
 <tr><td style="text-align:left;white-space:nowrap" >&nbsp;</td></tr>
 </table>
 
@@ -410,7 +410,7 @@ syntax highlighting of Ott source files. It can be used by, for example,
 adding the following to your <span style="font-family:monospace">.emacs</span> file, replacing
 <span style="font-family:monospace">PATH</span> by a path to your Ott Emacs directory.</p><pre class="verbatim">(setq load-path (cons (expand-file-name "PATH") load-path))
 (require 'ott-mode)
-</pre><p>For installations using OPAM on *nix systems, it is sufficient to use
+</pre><p>For installations using opam on *nix systems, it is sufficient to use
 the following code, which will call <span style="font-family:monospace">opam config var prefix</span>
 at load-time.</p><pre class="verbatim">(setq opam-share (substring (shell-command-to-string "opam config var share") 0 -1))
 (add-to-list 'load-path (concat opam-share "/emacs/site-lisp"))
@@ -422,15 +422,13 @@ at load-time.</p><pre class="verbatim">(setq opam-share (substring (shell-comman
 for VSCode</a>, which features syntax highlighting and inline error
 reporting.</p><p><a id="mailing-lists"></p>
 <!--TOC subsection id="sec15" Mailing lists-->
-<h3 id="sec15" class="subsection">2.7&#X2003;Mailing lists</h3><!--SEC END --><p></a></p><ul class="itemize"><li class="li-itemize">
-<a href="https://lists.cam.ac.uk/mailman/listinfo/cl-ott-announce">cl-ott-announce
+<h3 id="sec15" class="subsection">2.7&#X2003;Mailing lists</h3><!--SEC END --><p></a></p><ul class="itemize"><li class="li-itemize"><a href="https://lists.cam.ac.uk/mailman/listinfo/cl-ott-announce">cl-ott-announce
 announcement mailing list</a>
 </li><li class="li-itemize"><a href="https://lists.cam.ac.uk/mailman/listinfo/cl-ott-discuss">cl-ott-discuss
 discussion mailing list</a>
 </li></ul><p><a id="bug-tracker"></p>
 <!--TOC subsection id="sec16" Bug Tracker-->
-<h3 id="sec16" class="subsection">2.8&#X2003;Bug Tracker</h3><!--SEC END --><p></a></p><ul class="itemize"><li class="li-itemize">
-Please now use the github issue tracker (though our resources for
+<h3 id="sec16" class="subsection">2.8&#X2003;Bug Tracker</h3><!--SEC END --><p></a></p><ul class="itemize"><li class="li-itemize">Please now use the github issue tracker (though our resources for
 fixing issues are very limited)
 </li><li class="li-itemize">The previous issue tracker is here
 </li></ul><p><a id="directory-contents"></p>
@@ -439,46 +437,55 @@ fixing issues are very limited)
 
 
 </p><blockquote class="table"><div class="center"><hr class="floatrule"></div><div class="center"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="text-align:left;white-space:nowrap" >
-directory</td><td style="text-align:left;white-space:nowrap" >description</td></tr>
+
+directory</td><td style="text-align:left;white-space:nowrap" >description </td></tr>
 <tr><td style="text-align:left;white-space:nowrap" >&nbsp;</td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="font-family:monospace">aux/</span></td><td style="text-align:left;white-space:nowrap" >auxiliary code (y2l) used to build the user
-guide</td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="font-family:monospace">bin/</span></td><td style="text-align:left;white-space:nowrap" >the Ott binary</td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="font-family:monospace">built_doc/</span></td><td style="text-align:left;white-space:nowrap" >the user guide, in html, pdf, and
-ps</td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="font-family:monospace">coq/</span></td><td style="text-align:left;white-space:nowrap" >auxiliary files for Coq</td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="font-family:monospace">doc/</span></td><td style="text-align:left;white-space:nowrap" >the user guide sources</td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="font-family:monospace">emacs/</span></td><td style="text-align:left;white-space:nowrap" >an Ott Emacs mode</td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="font-family:monospace">examples/</span></td><td style="text-align:left;white-space:nowrap" >some larger example Ott files</td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="font-family:monospace">tex/</span></td><td style="text-align:left;white-space:nowrap" >auxiliary files for LaTeX</td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="font-family:monospace">hol/</span></td><td style="text-align:left;white-space:nowrap" >auxiliary files for HOL</td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="font-family:monospace">menhir/</span></td><td style="text-align:left;white-space:nowrap" >auxiliary files for menhir</td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="font-family:monospace">ocamlgraph-1.7.tar.gz</span></td><td style="text-align:left;white-space:nowrap" >a copy of the ocamlgraph
-library</td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="font-family:monospace">regression/</span></td><td style="text-align:left;white-space:nowrap" >regression-test machinery</td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="font-family:monospace">tests/</span></td><td style="text-align:left;white-space:nowrap" >various small example Ott files</td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="font-family:monospace">src/</span></td><td style="text-align:left;white-space:nowrap" >the (OCaml) Ott sources</td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="font-family:monospace">Makefile</span></td><td style="text-align:left;white-space:nowrap" >a Makefile for the examples</td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="font-family:monospace">LICENCE</span></td><td style="text-align:left;white-space:nowrap" >the BSD-style licence terms</td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="font-family:monospace">README.md</span></td><td style="text-align:left;white-space:nowrap" >this file (Section 2 of the user
-guide)</td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="font-family:monospace">revisionhistory.txt</span></td><td style="text-align:left;white-space:nowrap" >the revision history</td></tr>
+<tr><td style="text-align:left;white-space:nowrap" ><span style="font-family:monospace">bin/</span></td><td style="text-align:left;white-space:nowrap" >the Ott binary </td></tr>
+<tr><td style="text-align:left;white-space:nowrap" >
+<span style="font-family:monospace">built_doc/</span></td><td style="text-align:left;white-space:nowrap" >the user guide, in html, pdf, and ps </td></tr>
+<tr><td style="text-align:left;white-space:nowrap" >
+<span style="font-family:monospace">coq/</span></td><td style="text-align:left;white-space:nowrap" >auxiliary files for Coq </td></tr>
+<tr><td style="text-align:left;white-space:nowrap" >
+<span style="font-family:monospace">doc/</span></td><td style="text-align:left;white-space:nowrap" >the user guide sources </td></tr>
+<tr><td style="text-align:left;white-space:nowrap" >
+<span style="font-family:monospace">emacs/</span></td><td style="text-align:left;white-space:nowrap" >an Ott Emacs mode </td></tr>
+<tr><td style="text-align:left;white-space:nowrap" >
+<span style="font-family:monospace">examples/</span></td><td style="text-align:left;white-space:nowrap" >some larger example Ott files </td></tr>
+<tr><td style="text-align:left;white-space:nowrap" >
+<span style="font-family:monospace">tex/</span></td><td style="text-align:left;white-space:nowrap" >auxiliary files for LaTeX </td></tr>
+<tr><td style="text-align:left;white-space:nowrap" >
+<span style="font-family:monospace">hol/</span></td><td style="text-align:left;white-space:nowrap" >auxiliary files for HOL </td></tr>
+<tr><td style="text-align:left;white-space:nowrap" >
+<span style="font-family:monospace">menhir/</span></td><td style="text-align:left;white-space:nowrap" >auxiliary files for menhir </td></tr>
+<tr><td style="text-align:left;white-space:nowrap" >
+<span style="font-family:monospace">regression/</span></td><td style="text-align:left;white-space:nowrap" >regression-test machinery </td></tr>
+<tr><td style="text-align:left;white-space:nowrap" >
+<span style="font-family:monospace">tests/</span></td><td style="text-align:left;white-space:nowrap" >various small example Ott files </td></tr>
+<tr><td style="text-align:left;white-space:nowrap" >
+<span style="font-family:monospace">tools/</span></td><td style="text-align:left;white-space:nowrap" >auxiliary code (y2l) used to build the user guide </td></tr>
+<tr><td style="text-align:left;white-space:nowrap" >
+<span style="font-family:monospace">src/</span></td><td style="text-align:left;white-space:nowrap" >the (OCaml) Ott sources </td></tr>
+<tr><td style="text-align:left;white-space:nowrap" >
+<span style="font-family:monospace">Makefile</span></td><td style="text-align:left;white-space:nowrap" >a Makefile for the examples </td></tr>
+<tr><td style="text-align:left;white-space:nowrap" >
+<span style="font-family:monospace">LICENCE</span></td><td style="text-align:left;white-space:nowrap" >the BSD-style licence terms </td></tr>
+<tr><td style="text-align:left;white-space:nowrap" >
+<span style="font-family:monospace">README.md</span></td><td style="text-align:left;white-space:nowrap" >this file (Section 2 of the user guide) </td></tr>
+<tr><td style="text-align:left;white-space:nowrap" >
+<span style="font-family:monospace">revisionhistory.txt</span></td><td style="text-align:left;white-space:nowrap" >the revision history </td></tr>
 <tr><td style="text-align:left;white-space:nowrap" >&nbsp;</td></tr>
 </table>
 
 </div><div class="center"><hr class="floatrule"></div></blockquote><p><a id="examples"></p>
 <!--TOC subsection id="sec18" Examples-->
 <h3 id="sec18" class="subsection">2.10&#X2003;Examples</h3><!--SEC END --><p></a></p><p>The following LaTeX, Coq, HOL, and Isabelle files, except the proof
-scripts, are all automatically generated from the Ott sources.</p><p>System</p><p>Rules</p><p>Ott sources</p><p>Latex</p><p>Typeset</p><p>Dot</p><p>Coq</p><p>HOL</p><p>Isabelle</p><p>Defn</p><p>Proof</p><p>Defn</p><p>Proof</p><p>Defn</p><p>Proof</p><p>Untyped CBV lambda</p><p>3</p><p>test10.ott</p><p>test10.tex</p><p>(ps)</p><p>test10.v</p><p>test10Script.sml</p><p>test10.thy</p><p>Simply typed CBV lambda</p><p>6</p><p>test10st.ott</p><p>test10st.tex</p><p>(ps)</p><p>test10st.v</p><p>test10st_metatheory.v</p><p>test10stScript.sml</p><p>test10st_metatheoryScript.sml</p><p>test10st.thy</p><p>test10st_metatheory.thy</p><p>ML polymorphism</p><p>22</p><p>test8.ott</p><p>test8.tex</p><p>(ps)</p><p>test8.v</p><p>test8Script.sml</p><p>test8.thy</p><p>TAPL roughly-full-simple</p><p>63</p><p>(sources)</p><p>(ps)</p><p>(Coq (including records))</p><p>(HOL)</p><p>(script)</p><p>(Isabelle)</p><p>(script)</p><p>POPLmark Fsub (*)</p><p>48</p><p>(sources)</p><p>(latex)</p><p>(pdf) &#X2004;&#X200D; (ps)</p><p>Leroy JFP96 module system (*)</p><p>67</p><p>leroy-jfp96.ott</p><p>(latex)</p><p>(ps)</p><p>(HOL)</p><p>LJ: Lightweight Java</p><p>85</p><p>(sources)</p><p>(pdf)</p><p>(Isabelle)</p><p>(zip)</p><p>LJAM: Java Module System</p><p>163</p><p>(sources)</p><p>(pdf)</p><p>(Isabelle)</p><p>(zip)</p><p>OCaml light</p><p>310</p><p>(sources)</p><p>(ps)</p><p>(ps)</p><p>(Coq)</p><p>(HOL)</p><p>(scripts)</p><p>(Isabelle)</p><p>(*) These systems would need explicit alpha conversion in the rules to
+scripts, are all automatically generated from the Ott sources.</p><p>System</p><p>Rules</p><p>Ott sources</p><p>Latex</p><p>Typeset</p><p>Dot</p><p>Coq</p><p>HOL</p><p>Isabelle</p><p>Defn</p><p>Proof</p><p>Defn</p><p>Proof</p><p>Defn</p><p>Proof</p><p>Untyped CBV lambda</p><p>3</p><p>test10.ott</p><p>test10.tex</p><p>(ps)</p><p>test10.v</p><p>test10Script.sml</p><p>test10.thy</p><p>Simply typed CBV lambda</p><p>6</p><p>test10st.ott</p><p>test10st.tex</p><p>(ps)</p><p>test10st.v</p><p>test10st_metatheory.v</p><p>test10stScript.sml</p><p>test10st_metatheoryScript.sml</p><p>test10st.thy</p><p>test10st_metatheory.thy</p><p>ML polymorphism</p><p>22</p><p>test8.ott</p><p>test8.tex</p><p>(ps)</p><p>test8.v</p><p>test8Script.sml</p><p>test8.thy</p><p>TAPL roughly-full-simple</p><p>63</p><p>(sources)</p><p>(ps)</p><p>(Coq (including records))</p><p>(HOL)</p><p>(script)</p><p>(Isabelle)</p><p>(script)</p><p>POPLmark Fsub (*)</p><p>48</p><p>(sources)</p><p>(latex)</p><p>(pdf) &#XA0; (ps)</p><p>Leroy JFP96 module system (*)</p><p>67</p><p>leroy-jfp96.ott</p><p>(latex)</p><p>(ps)</p><p>(HOL)</p><p>LJ: Lightweight Java</p><p>85</p><p>(sources)</p><p>(pdf)</p><p>(Isabelle)</p><p>(zip)</p><p>LJAM: Java Module System</p><p>163</p><p>(sources)</p><p>(pdf)</p><p>(Isabelle)</p><p>(zip)</p><p>OCaml light</p><p>310</p><p>(sources)</p><p>(ps)</p><p>(ps)</p><p>(Coq)</p><p>(HOL)</p><p>(scripts)</p><p>(Isabelle)</p><p>(*) These systems would need explicit alpha conversion in the rules to
 capture the intended semantics using the fully concrete representation.</p><p><a id="copyright-information"></p>
 <!--TOC subsection id="sec19" Copyright information-->
-<h3 id="sec19" class="subsection">2.11&#X2003;Copyright information</h3><!--SEC END --><p></a></p><p>The ocamlgraph library is distributed under the LGPL (from
-http://www.lri.fr/~filliatr/ftp/ocamlgraph/); we include
-a snapshot for convenience. For its authorship and copyright information
-see the files therein.</p><p>All other files are distributed under the BSD-style licence in LICENCE.
+<h3 id="sec19" class="subsection">2.11&#X2003;Copyright information</h3><!--SEC END --><p></a></p><p>Files are distributed under the BSD-style licence in LICENCE.
 </p>
 <!--TOC section id="sec20" A minimal Ott source file: the untyped CBV lambda calculus-->
-<h2 id="sec20" class="section">3&#X2003;A minimal Ott source file: the untyped CBV lambda calculus</h2><!--SEC END --><p><a id="a51"></a>Fig.&#X2004;&#X200D;<a href="#a45">1</a> shows an Ott source file for an untyped call-by-value
+<h2 id="sec20" class="section">3&#X2003;A minimal Ott source file: the untyped CBV lambda calculus</h2><!--SEC END --><p><a id="a51"></a>Fig.&#XA0;<a href="#a45">1</a> shows an Ott source file for an untyped call-by-value
 (CBV) lambda calculus. This section explains the basic features that
 appear there, while in the following sections we show what must be
 added to generate typeset output, proof assistant definitions, and
@@ -537,7 +544,7 @@ The following <span style="color:#A51815"><span style="font-family:monospace">gr
 <span style="font-family:monospace">t</span>, and one for values <span style="font-family:monospace">v</span>.
 This specifies the concrete syntax of object-language terms,
 the abstract syntax representations for proof-assistant mathematics,
-and the syntax of symbolic terms to be used in semantic rules.</p><p>Each rule has a rule name prefix (e.g.&#X2004;&#X200D;<span style="font-family:monospace">&#X2019;t_&#X2019;</span>) and then a list
+and the syntax of symbolic terms to be used in semantic rules.</p><p>Each rule has a rule name prefix (e.g.&#XA0;<span style="font-family:monospace">&#X2019;t_&#X2019;</span>) and then a list
 of productions. Each production, e.g.
 </p><pre>
   <span style="color:#007FFF"><span style="font-family:monospace">|</span></span> <span style="font-family:monospace">\</span> x . t      <span style="color:#007FFF"><span style="font-family:monospace">::</span></span>  <span style="color:#007FFF"><span style="font-family:monospace">::</span></span> Lam
@@ -556,7 +563,7 @@ do not have to be quoted at usage points.
 (If one accidentally omits inter-token whitespace in the grammar, the
 output of Ott can be surprising. This is best diagnosed by looking at
 the colourised ASCII or LaTeX output from Ott.)</p><p>Metavariables and nonterminals can be formed from the specified
-metavariable and nonterminal roots by appending a suffix, e.g.&#X2004;&#X200D;the
+metavariable and nonterminal roots by appending a suffix, e.g.&#XA0;the
 nonterminal <code class="verb">t'</code> in the <code class="verb">App</code> and <code class="verb">Tsub</code> productions. </p><p>Between the <span style="color:#007FFF"><span style="font-family:monospace">::</span></span>&#X2019;s is an optional meta flag <span style="color:#A51815"><span style="font-family:monospace">M</span></span> or <span style="color:#A51815"><span style="font-family:monospace">S</span></span>. Non-meta
 productions give rise to clauses of datatype definitions in the
 Isabelle/Coq/HOL output, whereas meta productions do not. Later, we
@@ -565,12 +572,12 @@ away when generating proof assistant output. The two flags <span style="color:#A
 and <span style="color:#A51815"><span style="font-family:monospace">S</span></span> are identical except that productions with the latter are 
 admitted when parsing example concrete terms; the <span style="color:#A51815"><span style="font-family:monospace">S</span></span> tag is thus
 appropriate for lightweight syntactic sugar, such as productions for
-parentheses. One can also use another flag, e.g.&#X2004;&#X200D;<span style="color:#A51815"><span style="font-family:monospace">X</span></span>, along with the command-line option <code class="verb">-tex_suppress_category</code>, to suppress 
-productions in the generated LaTeX.</p><p>Each production has a production name (e.g.&#X2004;&#X200D;<code class="verb">t_Lam</code>), composed of
-the rule name prefix (here&#X2004;&#X200D;<code class="verb">t_</code>) and the production name kernel
-that follows the <span style="color:#007FFF"><span style="font-family:monospace">::</span></span>&#X2019;s (here&#X2004;&#X200D;<code class="verb">Lam</code>). The production name is
+parentheses. One can also use another flag, e.g.&#XA0;<span style="color:#A51815"><span style="font-family:monospace">X</span></span>, along with the command-line option <code class="verb">-tex_suppress_category</code>, to suppress 
+productions in the generated LaTeX.</p><p>Each production has a production name (e.g.&#XA0;<code class="verb">t_Lam</code>), composed of
+the rule name prefix (here&#XA0;<code class="verb">t_</code>) and the production name kernel
+that follows the <span style="color:#007FFF"><span style="font-family:monospace">::</span></span>&#X2019;s (here&#XA0;<code class="verb">Lam</code>). The production name is
 used as a constructor name in the generated Isabelle/Coq/HOL. </p><p>The tool supports arbitrary context-free grammars, extended with
-special constructs for list forms (c.f.&#X2004;&#X200D;&#XA7;<a href="#a61">12</a>). </p><p>Following the <span style="color:#A51815"><span style="font-family:monospace">grammar</span></span> in this example is a <span style="color:#A51815"><span style="font-family:monospace">subrule</span></span>
+special constructs for list forms (c.f.&#XA0;&#XA7;<a href="#a61">12</a>). </p><p>Following the <span style="color:#A51815"><span style="font-family:monospace">grammar</span></span> in this example is a <span style="color:#A51815"><span style="font-family:monospace">subrule</span></span>
 declaration
 </p><pre>
   <span style="color:#A51815"><span style="font-family:monospace">subrules</span></span>
@@ -578,7 +585,7 @@ declaration
 </pre><p>
 declaring that the <code class="verb">v</code> grammar rule (of values) is a
 subgrammar of the <code class="verb">t</code> rule (of terms). The tool checks that
-there is in fact a subgrammar relationship, i.e.&#X2004;&#X200D;that for each
+there is in fact a subgrammar relationship, i.e.&#XA0;that for each
 production of the lower rule there exists a production of the higher
 rule with corresponding elements (up to the subrule relation). 
 The subrule declaration means that, in the semantic rules below, we
@@ -621,7 +628,7 @@ form of any of the defined judgements. More generally (see
 Each rule
 has a name, composed of a definition family prefix
 (here empty), a definition prefix (here also empty) and a kernel
-(the&#X2004;&#X200D;<code class="verb">ctx_app_arg</code>). 
+(the&#XA0;<code class="verb">ctx_app_arg</code>). 
 </p><p>The symbolic terms in semantic rules are parsed with a scannerless parser, built
 using parser combinators over character-list inputs. The parser
 searches for all parses of the input. If none are found, the ASCII
@@ -642,9 +649,9 @@ achieve reasonable performance on the small symbolic terms that are
 typical in semantic rules. Their performance on large (whole-program
 size) examples is untested.
 To resolve ambiguity one can add metaproductions for parentheses (as
-in Fig.&#X2004;&#X200D;<a href="#a45">1</a>), or 
+in Fig.&#XA0;<a href="#a45">1</a>), or 
 production-name annotations in particular symbolic terms,
-e.g.&#X2004;&#X200D;the <code class="verb">:t_tsub:</code> in the <code class="verb">AppAbs</code> rule of the POPLmark
+e.g.&#XA0;the <code class="verb">:t_tsub:</code> in the <code class="verb">AppAbs</code> rule of the POPLmark
 example, 
 <span style="font-family:monospace">test7.ott</span>. There is currently no support for precedence
 or associativity.</p><p>This file is included in the distribution as
@@ -672,7 +679,7 @@ metavariables, e.g. by:
   <span style="color:#A51815"><span style="font-family:monospace">indexvar</span></span> index<span style="color:#007FFF"><span style="font-family:monospace">,</span></span> i<span style="color:#007FFF"><span style="font-family:monospace">,</span></span> j<span style="color:#007FFF"><span style="font-family:monospace">,</span></span> n<span style="color:#007FFF"><span style="font-family:monospace">,</span></span> m <span style="color:#007FFF"><span style="font-family:monospace">::=</span></span> <span style="color:#007FFF"><span style="font-family:monospace">{</span></span><span style="color:#007FFF"><span style="font-family:monospace">{</span></span> <span style="color:#A51815"><span style="font-family:monospace">isa</span></span> num <span style="color:#007FFF"><span style="font-family:monospace">}</span></span><span style="color:#007FFF"><span style="font-family:monospace">}</span></span> <span style="color:#007FFF"><span style="font-family:monospace">{</span></span><span style="color:#007FFF"><span style="font-family:monospace">{</span></span> <span style="color:#A51815"><span style="font-family:monospace">coq</span></span> nat <span style="color:#007FFF"><span style="font-family:monospace">}</span></span><span style="color:#007FFF"><span style="font-family:monospace">}</span></span> <span style="color:#007FFF"><span style="font-family:monospace">{</span></span><span style="color:#007FFF"><span style="font-family:monospace">{</span></span> <span style="color:#A51815"><span style="font-family:monospace">hol</span></span> num <span style="color:#007FFF"><span style="font-family:monospace">}</span></span><span style="color:#007FFF"><span style="font-family:monospace">}</span></span> 
 </pre><p>
 Given such a declaration, <code class="verb">index</code>, <code class="verb">i</code>, <code class="verb">j</code>, <code class="verb">n</code>
-and <code class="verb">m</code> can be used in suffixes, e.g.&#X2004;&#X200D;in the production
+and <code class="verb">m</code> can be used in suffixes, e.g.&#XA0;in the production
 </p><pre>
    <span style="color:#007FFF"><span style="font-family:monospace">|</span></span>  ( t1 , <span style="color:#007FFF"><span style="font-family:monospace">....</span></span> , tn )           <span style="color:#007FFF"><span style="font-family:monospace">::</span></span> <span style="color:#007FFF"><span style="font-family:monospace">::</span></span> Tuple
 </pre><p>
@@ -686,7 +693,7 @@ LaTeX, for example by executing
 </pre><p>
 to produce a LaTeX file <span style="font-family:monospace">out.tex</span>. One often needs to
 fine-tune the default typesetting, as illustrated in 
-Figure&#X2004;&#X200D;<a href="#a46">2</a> (the Ott source) and Figure&#X2004;&#X200D;<a href="#a49">3</a>
+Figure&#XA0;<a href="#a46">2</a> (the Ott source) and Figure&#XA0;<a href="#a49">3</a>
 (the resulting LaTeX). 
 (The latter was built using the additional option <code class="verb">-tex_show_meta false</code>, to 
 suppress display of the metaproductions.)
@@ -776,20 +783,20 @@ the
 attached to a production, and the
 <span style="font-family:monospace"><span style="color:#007FFF">{</span></span><span style="font-family:monospace"><span style="color:#007FFF">{</span></span><span style="font-family:monospace"> </span><span style="font-family:monospace"><span style="color:#A51815">com</span></span><span style="font-family:monospace"> </span><span style="font-family:monospace"><span style="color:#007FFF">[[</span></span><span style="font-family:monospace">t1</span><span style="font-family:monospace"><span style="color:#007FFF">]]</span></span><span style="font-family:monospace"> reduces to </span><span style="font-family:monospace"><span style="color:#007FFF">[[</span></span><span style="font-family:monospace">t2</span><span style="font-family:monospace"><span style="color:#007FFF">]]</span></span><span style="font-family:monospace"><span style="color:#007FFF">}</span></span><span style="font-family:monospace"><span style="color:#007FFF">}</span></span>
 attached to a semantic relation. These appear in the LaTeX output
-as shown in Figure&#X2004;&#X200D;<a href="#a49">3</a>.</p>
+as shown in Figure&#XA0;<a href="#a49">3</a>.</p>
 <!--TOC subsection id="sec23" Specifying LaTeX for productions-->
 <h3 id="sec23" class="subsection">4.1&#X2003;Specifying LaTeX for productions</h3><!--SEC END --><p>
 One can also specify <span style="color:#A51815"><span style="font-family:monospace">tex</span></span> translations for productions, overriding the default
-LaTeX typesetting, e.g.&#X2004;&#X200D;as in this example of
+LaTeX typesetting, e.g.&#XA0;as in this example of
 a type abstraction production.
 </p><pre>
     <span style="color:#007FFF"><span style="font-family:monospace">|</span></span>  X &lt;: T . t   <span style="color:#007FFF"><span style="font-family:monospace">::</span></span> <span style="color:#007FFF"><span style="font-family:monospace">::</span></span> TLam   <span style="color:#007FFF"><span style="font-family:monospace">{</span></span><span style="color:#007FFF"><span style="font-family:monospace">{</span></span> <span style="color:#A51815"><span style="font-family:monospace">tex</span></span> <span style="font-family:monospace">\</span>Lambda <span style="color:#007FFF"><span style="font-family:monospace">[[</span></span>X<span style="color:#007FFF"><span style="font-family:monospace">]]</span></span> <span style="color:#007FFF"><span style="font-family:monospace">[[</span></span>&lt;:<span style="color:#007FFF"><span style="font-family:monospace">]]</span></span> <span style="color:#007FFF"><span style="font-family:monospace">[[</span></span>T<span style="color:#007FFF"><span style="font-family:monospace">]]</span></span>. <span style="font-family:monospace">\</span>, <span style="color:#007FFF"><span style="font-family:monospace">[[</span></span>t<span style="color:#007FFF"><span style="font-family:monospace">]]</span></span> <span style="color:#007FFF"><span style="font-family:monospace">}</span></span><span style="color:#007FFF"><span style="font-family:monospace">}</span></span>
 </pre><p>
 These <em>homomorphisms</em>, or <em>homs</em><sup><a id="text1" href="#note1">1</a></sup>, can refer to the metavariables and
-nonterminals that occur in the production, e.g.&#X2004;&#X200D;the <span style="font-family:monospace"><span style="color:#007FFF">[[</span></span><span style="font-family:monospace">X</span><span style="font-family:monospace"><span style="color:#007FFF">]]</span></span>,
+nonterminals that occur in the production, e.g.&#XA0;the <span style="font-family:monospace"><span style="color:#007FFF">[[</span></span><span style="font-family:monospace">X</span><span style="font-family:monospace"><span style="color:#007FFF">]]</span></span>,
 <span style="font-family:monospace"><span style="color:#007FFF">[[</span></span><span style="font-family:monospace">T</span><span style="font-family:monospace"><span style="color:#007FFF">]]</span></span>, and <span style="font-family:monospace"><span style="color:#007FFF">[[</span></span><span style="font-family:monospace">t</span><span style="font-family:monospace"><span style="color:#007FFF">]]</span></span> in the <span style="color:#A51815"><span style="font-family:monospace">tex</span></span> hom above,
 interleaved with arbitrary strings and with typeset elements of the
-<span style="color:#A51815"><span style="font-family:monospace">terminals</span></span> grammar, e.g.&#X2004;&#X200D;the <span style="font-family:monospace"><span style="color:#007FFF">[[</span></span><span style="font-family:monospace">&lt;:</span><span style="font-family:monospace"><span style="color:#007FFF">]]</span></span>.</p><p>Homomorphisms are applied recursively down the structure of symbolic
+<span style="color:#A51815"><span style="font-family:monospace">terminals</span></span> grammar, e.g.&#XA0;the <span style="font-family:monospace"><span style="color:#007FFF">[[</span></span><span style="font-family:monospace">&lt;:</span><span style="font-family:monospace"><span style="color:#007FFF">]]</span></span>.</p><p>Homomorphisms are applied recursively down the structure of symbolic
 terms. For example, an F<sub>&lt;:</sub> term
 </p><pre class="verbatim">  (\X&lt;:T11.t12) [T2]
 </pre><p>
@@ -835,7 +842,7 @@ homs specifying how they should be typeset:
         <span style="color:#007FFF"><span style="font-family:monospace">|</span></span> empty                 <span style="color:#007FFF"><span style="font-family:monospace">::</span></span>   <span style="color:#007FFF"><span style="font-family:monospace">::</span></span> empty       
         <span style="color:#007FFF"><span style="font-family:monospace">|</span></span> G , x : T             <span style="color:#007FFF"><span style="font-family:monospace">::</span></span>   <span style="color:#007FFF"><span style="font-family:monospace">::</span></span> term        
 </pre><p>
-permitting the user to write <code class="verb">G'</code>, <code class="verb">D12</code> etc.&#X2004;&#X200D;in symbolic
+permitting the user to write <code class="verb">G'</code>, <code class="verb">D12</code> etc.&#XA0;in symbolic
 terms, to be typeset as 
 
 <img src="top2004.png">etc.</p>
@@ -861,8 +868,8 @@ This makes it possible to quote individual parts of the definition,
 possibly out-of-order, in a paper or technical report. </p><p>If one needs to include more than one system in a single LaTeX
 document, the <code class="verb">ott</code> prefix can be replaced using the
 <code class="verb">-tex_name_prefix</code> command-line argument. </p><p>The generated LaTeX is factored through some common style macros, 
-e.g.&#X2004;&#X200D;to typeset a comment, a production, and a grammar. If necessary
-these can be redefined in an <span style="color:#A51815"><span style="font-family:monospace">embed</span></span> block (see Section&#X2004;&#X200D;<a href="#a60">8.1</a>). 
+e.g.&#XA0;to typeset a comment, a production, and a grammar. If necessary
+these can be redefined in an <span style="color:#A51815"><span style="font-family:monospace">embed</span></span> block (see Section&#XA0;<a href="#a60">8.1</a>). 
 For example, the file <code class="verb">tests/squishtex.ott</code>
 </p><pre>
 <span style="color:#A51815"><span style="font-family:monospace">embed</span></span> 
@@ -886,14 +893,14 @@ inference rules and grammars should be typeset, is contained in the
 manual therein.</p>
 <!--TOC section id="sec26" Generating proof assistant definitions-->
 <h2 id="sec26" class="section">5&#X2003;Generating proof assistant definitions</h2><!--SEC END --><p><a id="a52"></a>To generate proof assistant definitions, for Coq, Isabelle, and HOL,
-the minimal Ott source file of Section&#X2004;&#X200D;<a href="#a51">3</a>/Figure&#X2004;&#X200D;<a href="#a45">1</a> must
-be extended with a modest amount of additional data, as shown in Figure&#X2004;&#X200D;<a href="#a47">4</a>.
+the minimal Ott source file of Section&#XA0;<a href="#a51">3</a>/Figure&#XA0;<a href="#a45">1</a> must
+be extended with a modest amount of additional data, as shown in Figure&#XA0;<a href="#a47">4</a>.
 Executing 
 </p><pre>
    bin/ott  -i tests/test10.4.ott  -o out.v  -o out.thy  -o outScript.sml 
 </pre><p>
 generates Coq <span style="font-family:monospace">out.v</span>, Isabelle <span style="font-family:monospace">out.thy</span>, and HOL
-<span style="font-family:monospace">outScript.sml</span>, shown in Figures&#X2004;&#X200D;<a href="#a6">5</a>, <a href="#a5">6</a>, and <a href="#a40">7</a>.
+<span style="font-family:monospace">outScript.sml</span>, shown in Figures&#XA0;<a href="#a6">5</a>, <a href="#a5">6</a>, and <a href="#a40">7</a>.
 The additional data can be combined with the annotations for
 LaTeX of the previous section, but those are omitted here. 
 </p><blockquote class="figure"><div class="center"><hr class="floatrule"></div>
@@ -972,7 +979,7 @@ annotation on the <span style="font-family:monospace">Lam</span> production:
 </p><pre>
   <span style="color:#007FFF"><span style="font-family:monospace">|</span></span> <span style="font-family:monospace">\</span> x . t      <span style="color:#007FFF"><span style="font-family:monospace">::</span></span>  <span style="color:#007FFF"><span style="font-family:monospace">::</span></span> Lam     <span style="color:#007FFF"><span style="font-family:monospace">(+</span></span> <span style="color:#A51815"><span style="font-family:monospace">bind</span></span> x <span style="color:#A51815"><span style="font-family:monospace">in</span></span> t <span style="color:#007FFF"><span style="font-family:monospace">+)</span></span>
 </pre><p>
-Section&#X2004;&#X200D;<a href="#a62">9</a> describes the full language of binding specifications.</p><p>Third, we add a block
+Section&#XA0;<a href="#a62">9</a> describes the full language of binding specifications.</p><p>Third, we add a block
 </p><pre>
   <span style="color:#A51815"><span style="font-family:monospace">substitutions</span></span>
     <span style="color:#A51815"><span style="font-family:monospace">single</span></span> t x <span style="color:#007FFF"><span style="font-family:monospace">::</span></span> tsubst 
@@ -1007,7 +1014,7 @@ The body of a proof assistant hom should normally include outer
 parentheses, as in the <span style="font-family:monospace">Tsub</span> hom above, so that it is
 parsed correctly by the proof assistant in all contexts.</p><blockquote class="figure"><div class="center"><hr class="floatrule"></div>
 <span class="lrbox framebox"><div class="minipage"><span style="font-size:small">
-</span><pre class="verbatim"><span style="font-size:small">(* generated by Ott 0.33 from: ../tests/test10.ott ../tests/non_super_tabular.ott *)
+</span><pre class="verbatim"><span style="font-size:small">(* generated by Ott 0.34 from: ../tests/test10.ott ../tests/non_super_tabular.ott *)
 
 Require Import Arith.
 Require Import Bool.
@@ -1015,17 +1022,17 @@ Require Import List.
 Require Import Ott.ott_list_core.
 
 
-Definition var : Set := nat. (*r term variable *)
+Definition var : Set := nat. (* term variable *)
 Lemma eq_var: forall (x y : var), {x = y} + {x &lt;&gt; y}.
 Proof.
   decide equality; auto with ott_coq_equality arith.
 Defined.
-Hint Resolve eq_var : ott_coq_equality.
+#[export] Hint Resolve eq_var : ott_coq_equality.
 
-Inductive term : Set :=  (*r term *)
- | t_var (x:var) (*r variable *)
- | t_lam (x:var) (t:term) (*r lambda *)
- | t_app (t:term) (t':term) (*r app *).
+Inductive term : Set :=  (* term *)
+ | t_var (x:var) (* variable *)
+ | t_lam (x:var) (t:term) (* lambda *)
+ | t_app (t:term) (t':term) (* app *).
 
 (** subrules *)
 Definition is_val_of_term (t5:term) : bool :=
@@ -1052,7 +1059,7 @@ Fixpoint tsubst_term (t5:term) (x5:var) (t_6:term) {struct t_6} : term :=
   | (t_app t t') =&gt; t_app (tsubst_term t5 x5 t) (tsubst_term t5 x5 t')
 end.
 
-(** definitions *)
+(* definitions *)
 
 (* defns Jop *)
 Inductive reduce : term -&gt; term -&gt; Prop :=    (* defn reduce *)
@@ -1074,7 +1081,7 @@ Inductive reduce : term -&gt; term -&gt; Prop :=    (* defn reduce *)
 </table></div>
 <div class="center"><hr class="floatrule"></div></blockquote><blockquote class="figure"><div class="center"><hr class="floatrule"></div>
 <span class="lrbox framebox"><div class="minipage"><span style="font-size:small">
-</span><pre class="verbatim"><span style="font-size:small">(* generated by Ott 0.33 from: ../tests/test10.ott ../tests/non_super_tabular.ott *)
+</span><pre class="verbatim"><span style="font-size:small">(* generated by Ott 0.34 from: ../tests/test10.ott ../tests/non_super_tabular.ott *)
 theory test10
 imports Main
 begin
@@ -1129,7 +1136,7 @@ end
 </table></div>
 <div class="center"><hr class="floatrule"></div></blockquote><blockquote class="figure"><div class="center"><hr class="floatrule"></div>
 <span class="lrbox framebox"><div class="minipage"><span style="font-size:small">
-</span><pre class="verbatim"><span style="font-size:small">(* generated by Ott 0.33 from: ../tests/test10.ott ../tests/non_super_tabular.ott *)
+</span><pre class="verbatim"><span style="font-size:small">(* generated by Ott 0.34 from: ../tests/test10.ott ../tests/non_super_tabular.ott *)
 (* to compile: Holmake test10Theory.uo   *)
 (* for interactive use:
   app load ["pred_setTheory","finite_mapTheory","stringTheory","containerTheory","ottLib"];
@@ -1142,8 +1149,7 @@ local open arithmeticTheory stringTheory containerTheory pred_setTheory listTheo
 
 val _ = new_theory "test10";
 
-
-val _ = type_abbrev("var", ``:string``); (* term variable *)
+Type var = ``:string`` (* term variable *)
 val _ = Hol_datatype ` 
 term =  (* term *)
    t_var of var (* variable *)
@@ -1165,28 +1171,30 @@ val _ = ottDefine "tsubst_term" `
 /\  ( tsubst_term t5 x5 (t_app t t') = t_app (tsubst_term t5 x5 t) (tsubst_term t5 x5 t'))
 `;
 (** definitions *)
-(* defns Jop *)
 
-val (Jop_rules, Jop_ind, Jop_cases) = Hol_reln`
+(* defns Jop *)
+Inductive Jop:
 (* defn reduce *)
 
-( (* ax_app *) ! (x:var) (t1:term) (v2:term) . (clause_name "ax_app") /\
+[ax_app:] (! (x:var) (t1:term) (v2:term) .
+(clause_name "ax_app") /\
 ((is_val_of_term v2))
  ==&gt; 
 ( ( reduce (t_app  (t_lam x t1)  v2)  (tsubst_term  v2   x   t1 )  )))
 
-/\ ( (* ctx_app_fun *) ! (t1:term) (t:term) (t1':term) . (clause_name "ctx_app_fun") /\
+[ctx_app_fun:] (! (t1:term) (t:term) (t1':term) .
+(clause_name "ctx_app_fun") /\
 (( ( reduce t1 t1' )))
  ==&gt; 
 ( ( reduce (t_app t1 t) (t_app t1' t) )))
 
-/\ ( (* ctx_app_arg *) ! (v:term) (t1:term) (t1':term) . (clause_name "ctx_app_arg") /\
+[ctx_app_arg:] (! (v:term) (t1:term) (t1':term) .
+(clause_name "ctx_app_arg") /\
 ((is_val_of_term v) /\
 ( ( reduce t1 t1' )))
  ==&gt; 
 ( ( reduce (t_app v t1) (t_app v t1') )))
-
-`;
+End
 
 val _ = export_theory ();
 
@@ -1240,7 +1248,7 @@ Here the <span style="font-family:monospace"><span style="color:#007FFF">{</span
 Isabelle output this type be represented as an Isabelle
 <code class="verb">(termvar*t) list</code> instead of the default free inductive type;
 all the productions are metaproductions (tagged <span style="color:#A51815"><span style="font-family:monospace">M</span></span>); and <span style="color:#A51815"><span style="font-family:monospace">isa</span></span> homs for each production specify how they should be translated into that Isabelle type.
-This feature must be used with care, as any Ott-generated functions, e.g.&#X2004;&#X200D;substitution functions, cannot recurse through such user-defined types. </p><p>Grammar rules (whether free or non-free) can also include a <span style="color:#A51815"><span style="font-family:monospace">coq equality</span></span> hom, instructing
+This feature must be used with care, as any Ott-generated functions, e.g.&#XA0;substitution functions, cannot recurse through such user-defined types. </p><p>Grammar rules (whether free or non-free) can also include a <span style="color:#A51815"><span style="font-family:monospace">coq equality</span></span> hom, instructing
 the Coq code generator to derive a decidable equality for the Coq
 representation type. For example, the ML polymorphism Ott source of
 <span style="font-family:monospace">test8.ott</span> includes the following.
@@ -1252,7 +1260,7 @@ metavariable declaration, is normally
 taken to be just its primary nonterminal root. 
 Occasionally it is useful to work around a clash between a
 metavar or nonterminal primary root and a proof assistant symbol,
-e.g.&#X2004;&#X200D;<span style="font-family:monospace">T</span> in HOL or <span style="font-family:monospace">value</span> in Isabelle. 
+e.g.&#XA0;<span style="font-family:monospace">T</span> in HOL or <span style="font-family:monospace">value</span> in Isabelle. 
 For this, one can add a <span style="color:#A51815"><span style="font-family:monospace">coq</span></span>, <span style="color:#A51815"><span style="font-family:monospace">hol</span></span>, <span style="color:#A51815"><span style="font-family:monospace">isa</span></span>, or
 <span style="color:#A51815"><span style="font-family:monospace">ocaml</span></span> hom to the primary nonterminal root. In the example
 below, the user can write <span style="font-family:monospace">T</span>, <span style="font-family:monospace">T&#X2019;</span> etc. in their Ott
@@ -1273,7 +1281,7 @@ Each <span style="color:#A51815"><span style="font-family:monospace">defns</span
 recursive definition of each <span style="color:#A51815"><span style="font-family:monospace">defn</span></span> inside it
 (it seems clearer not to do a topological sort here).
 Definition rules are expressed internally with symbolic terms. 
-We give a simplified grammar thereof in Fig.&#X2004;&#X200D;<a href="#a19">17</a>, omitting the
+We give a simplified grammar thereof in Fig.&#XA0;<a href="#a19">17</a>, omitting the
 symbolic terms for list forms. 
 A symbolic term <span style="font-style:italic">st</span> for a nonterminal root is either an explicit nonterminal or a
 node, the latter labelled with a production name and containing a list of
@@ -1285,24 +1293,23 @@ that the premises (Ott symbolic terms of the <span style="color:#A51815"><span s
 imply the conclusion (an Ott symbolic term of whichever judgement is
 being defined). 
 Symbolic terms are compiled in several different ways:
-</p><ul class="itemize"><li class="li-itemize">
-Nodes of non-meta productions are output as applications of the appropriate proof-assistant constructor (and, for a subrule, promoted to the corresponding constructor of a maximal rule).
+</p><ul class="itemize"><li class="li-itemize">Nodes of non-meta productions are output as applications of the appropriate proof-assistant constructor (and, for a subrule, promoted to the corresponding constructor of a maximal rule).
 </li><li class="li-itemize">Nodes of meta productions are transformed with the user-specified homomorphism.
 </li><li class="li-itemize">Nodes of judgement forms are represented as applications of the defined relation in Coq and HOL, and as set-membership assertions in Isabelle.
 </li><li class="li-itemize">Lists of formulae (the <code class="verb">formula_dots</code> production, c.f.&#XA7;<a href="#a61">12</a>) are
 special-cased to proof-assistant conjunctions.
 </li></ul><p>
 Further, for each nonterminal of a non-free grammar rule,
-e.g.&#X2004;&#X200D;a usage of <code class="verb">v'</code> where <code class="verb">v&lt;::t</code>, an additional premise
-invoking the generated subrule predicate for the non-free rule is added, e.g.&#X2004;&#X200D;<code class="verb">is_v v'</code>.
+e.g.&#XA0;a usage of <code class="verb">v'</code> where <code class="verb">v&lt;::t</code>, an additional premise
+invoking the generated subrule predicate for the non-free rule is added, e.g.&#XA0;<code class="verb">is_v v'</code>.
 For Coq and HOL, explicit quantifiers are introduced for all variables
 mentioned in the rule.
-For HOL, rules are tagged with their rule name (using <code class="verb">clause_name</code>).</p>
+For HOL, rules are labelled with their rule name and tagged using <code class="verb">clause_name</code>.</p>
 <!--TOC subsection id="sec29" Representation of binding-->
 <h3 id="sec29" class="subsection">5.3&#X2003;Representation of binding</h3><!--SEC END --><p>
 At present the generated Isabelle/Coq/HOL uses fully concrete
 representations of variables in terms, without any notion of alpha
-equivalence, as one can see in Fig.&#X2004;&#X200D;<a href="#a5">6</a>:
+equivalence, as one can see in Fig.&#XA0;<a href="#a5">6</a>:
 see the <code class="verb">t</code> datatype of terms and the <code class="verb">tsubst_t</code>
 substitution function there. 
 An experimental Coq backend generates definitions in locally-nameless style for a subset of the Ott metalanguage. This is work-in-progress, and it is extensively documented in <a href="http://moscova.inria.fr/~zappa/projects/ln_ott/"><span style="font-family:monospace">http://moscova.inria.fr/~zappa/projects/ln_ott/</span></a>.
@@ -1327,7 +1334,7 @@ Zappa Nardelli. August 2007.
 available from the Ott web page.</p>
 <!--TOC subsection id="sec30" Helper functions for free variable and substitution functions-->
 <h3 id="sec30" class="subsection">5.4&#X2003;Helper functions for free variable and substitution functions</h3><!--SEC END --><p>The generated free variable and substitution functions in the Coq output 
-(e.g., in Figure&#X2004;&#X200D;<a href="#a6">5</a>) often rely on a few standard library functions: 
+(e.g., in Figure&#XA0;<a href="#a6">5</a>) often rely on a few standard library functions: 
 <code class="verb">list_mem</code>, <code class="verb">list_assoc</code>, <code class="verb">list_minus</code>, <code class="verb">list_minus2</code>.
 In order to avoid dependencies on external libraries for defining those
 functions, by default Ott generates the definitions for any such functions it
@@ -1350,7 +1357,7 @@ is not guaranteed, however, for several reasons: (1) There may be name
 clashes between Ott-generated identifiers and proof assistant built-in
 identifiers (or, in pathological cases, even among different
 Ott-generated identifiers). (2) In some cases we depend on automatic
-proof procedures, e.g.&#X2004;&#X200D;for HOL definitions. These work in our test
+proof procedures, e.g.&#XA0;for HOL definitions. These work in our test
 cases, but it is hard to ensure that they will in all cases. More
 importantly, (3) the generation process is complex, so it is quite
 possible that there is either a bug in Ott or a mismatch between the
@@ -1495,7 +1502,7 @@ embedded code (&#XA7;<a href="#a54">8</a>).</p>
 only metavariables that range over them. 
 In examples, however, one may need either a mix of concrete variables
 and metavariables, or, for strictly concrete terms, to restrict to
-just the former (and also to prohibit symbolic nonterminals).</p><p>Figure&#X2004;&#X200D;<a href="#a46">2</a> combines the LaTeX and proof assistant
+just the former (and also to prohibit symbolic nonterminals).</p><p>Figure&#XA0;<a href="#a46">2</a> combines the LaTeX and proof assistant
 annotations of Sections <a href="#a51">3</a> and <a href="#a58">4</a>, adding a
 <span style="font-family:monospace"><span style="color:#007FFF">{</span></span><span style="font-family:monospace"><span style="color:#007FFF">{</span></span><span style="font-family:monospace"> </span><span style="font-family:monospace"><span style="color:#A51815">lex</span></span><span style="font-family:monospace"> alphanum</span><span style="font-family:monospace"><span style="color:#007FFF">}</span></span><span style="font-family:monospace"><span style="color:#007FFF">}</span></span>
 hom
@@ -1507,27 +1514,27 @@ At present a <span style="color:#A51815"><span style="font-family:monospace">lex
 <span style="color:#A51815"><span style="font-family:monospace">alphanum0</span></span> (for <code class="verb">[a-z]([A-Z]|[a-z]|[0-9]|'|_)*</code>), or
 <span style="color:#A51815"><span style="font-family:monospace">numeral</span></span> (for <code class="verb">[0-9][0-9]*</code>); more general regular expressions are not supported.
 An identifier that can be ambiguously lexed as either a concrete or
-symbolic metavariable, e.g.&#X2004;&#X200D;<span style="font-family:monospace">x</span> in the scope of the above
+symbolic metavariable, e.g.&#XA0;<span style="font-family:monospace">x</span> in the scope of the above
 declaration, will be taken to be symbolic. 
 To restrict the parser to strictly concrete terms only, one can add a
-<span style="color:#A51815"><span style="font-family:monospace">:concrete:</span></span> prefix, as shown in Figure&#X2004;&#X200D;<a href="#a56">10</a>.</p><p>One can also specify how concrete variables should be LaTeX&#X2019;d or
-translated into a proof assistant, e.g.&#X2004;&#X200D;with
+<span style="color:#A51815"><span style="font-family:monospace">:concrete:</span></span> prefix, as shown in Figure&#XA0;<a href="#a56">10</a>.</p><p>One can also specify how concrete variables should be LaTeX&#X2019;d or
+translated into a proof assistant, e.g.&#XA0;with
 homomorphisms 
 <span style="font-family:monospace"><span style="color:#007FFF">{</span></span><span style="font-family:monospace"><span style="color:#007FFF">{</span></span><span style="font-family:monospace"> </span><span style="font-family:monospace"><span style="color:#A51815">texvar</span></span><span style="font-family:monospace"> </span><span style="font-family:monospace">\</span><span style="font-family:monospace">mathrm</span><span style="font-family:monospace">{</span><span style="font-family:monospace"><span style="color:#007FFF">[[</span></span><span style="font-family:monospace">termvar</span><span style="font-family:monospace"><span style="color:#007FFF">]]</span></span><span style="font-family:monospace"><span style="color:#007FFF">}</span></span><span style="font-family:monospace"><span style="color:#007FFF">}</span></span>
 and
 <span style="font-family:monospace"><span style="color:#007FFF">{</span></span><span style="font-family:monospace"><span style="color:#007FFF">{</span></span><span style="font-family:monospace"> </span><span style="font-family:monospace"><span style="color:#A51815">isavar</span></span><span style="font-family:monospace"> &#X2019;&#X2019;</span><span style="font-family:monospace"><span style="color:#007FFF">[[</span></span><span style="font-family:monospace">termvar</span><span style="font-family:monospace"><span style="color:#007FFF">]]</span></span><span style="font-family:monospace">&#X2019;&#X2019;</span><span style="font-family:monospace"><span style="color:#007FFF">}</span></span><span style="font-family:monospace"><span style="color:#007FFF">}</span></span>
-(and similarly <span style="color:#A51815"><span style="font-family:monospace">coqvar</span></span>, <span style="color:#A51815"><span style="font-family:monospace">holvar</span></span>, and <span style="color:#A51815"><span style="font-family:monospace">ocamlvar</span></span>).</p><p>Figure&#X2004;&#X200D;<a href="#a46">2</a> also specifies an OCaml representation type for
+(and similarly <span style="color:#A51815"><span style="font-family:monospace">coqvar</span></span>, <span style="color:#A51815"><span style="font-family:monospace">holvar</span></span>, and <span style="color:#A51815"><span style="font-family:monospace">ocamlvar</span></span>).</p><p>Figure&#XA0;<a href="#a46">2</a> also specifies an OCaml representation type for
 variables, with the <span style="color:#A51815"><span style="font-family:monospace">metavar</span></span> hom
 <span style="font-family:monospace"><span style="color:#007FFF">{</span></span><span style="font-family:monospace"><span style="color:#007FFF">{</span></span><span style="font-family:monospace"> </span><span style="font-family:monospace"><span style="color:#A51815">ocaml</span></span><span style="font-family:monospace"> int</span><span style="font-family:monospace"><span style="color:#007FFF">}</span></span><span style="font-family:monospace"><span style="color:#007FFF">}</span></span>.
 Executing 
 </p><pre>
    bin/ott -i tests/test10.ott -o test10.ml  
 </pre><p>
-produces the OCaml code shown in Figure&#X2004;&#X200D;<a href="#a59">9</a>, including OCaml
+produces the OCaml code shown in Figure&#XA0;<a href="#a59">9</a>, including OCaml
 types to represent the abstract syntax, and auxiliary functions for
 subrules and substitutions. This does not implement the semantic
 rules. In some cases the various proof assistant code extraction
-facilities can be used &#X2014; see Section&#X2004;&#X200D;<a href="#a22">21</a>.</p><blockquote class="figure"><div class="center"><hr class="floatrule"></div>
+facilities can be used &#X2014; see Section&#XA0;<a href="#a22">21</a>.</p><blockquote class="figure"><div class="center"><hr class="floatrule"></div>
 <span class="lrbox framebox"><div class="minipage"><span style="font-size:small">
 </span><pre><span style="font-size:small">
 % all
@@ -1581,7 +1588,7 @@ Jop </span><span style="font-size:small"><span style="color:#007FFF"><span style
 </table></div>
 <div class="center"><hr class="floatrule"></div></blockquote><blockquote class="figure"><div class="center"><hr class="floatrule"></div>
 <span class="lrbox framebox"><div class="minipage"><span style="font-size:small">
-</span><pre class="verbatim"><span style="font-size:small">(* generated by Ott 0.33 from: ../tests/test10.ott ../tests/non_super_tabular.ott *)
+</span><pre class="verbatim"><span style="font-size:small">(* generated by Ott 0.34 from: ../tests/test10.ott ../tests/non_super_tabular.ott *)
 
 type var = int (* term variable *)
 
@@ -1709,12 +1716,12 @@ included in a single LaTeX document).
 The <code class="verb">-tex_filter</code> argument takes two
 filenames, a source and a destination. It filters the source file,
 (roughly) replacing any string found within <code class="verb">[[</code> <code class="verb">]]</code> by
-the tex pretty-print of its parse. This parsing is done w.r.t.&#X2004;&#X200D;the generated nonterminal 
+the tex pretty-print of its parse. This parsing is done w.r.t.&#XA0;the generated nonterminal 
 <code class="verb">user_syntax</code> which is a union of all the user&#X2019;s grammar. </p><p>At present munged strings are not automatically
 put within <code class="verb">$</code> <code class="verb">$</code>, and there is no analogue of the
 <code class="verb">&lt;[</code> <code class="verb">]&gt;</code> of our previous munger. </p><p>The lexing 
 turns any sequence of <code class="verb">[</code> (resp. of <code class="verb">]</code>) of
-length <span style="font-style:italic">n</span>+1 for <span style="font-style:italic">n</span>&gt;2 into a literal sequence of length <span style="font-style:italic">n</span>.</p><p>Figures&#X2004;&#X200D;<a href="#a56">10</a> and <a href="#a55">11</a> show a source file (<span style="font-family:monospace">test7tt.mng</span>) that uses terms of the F<sub>&lt;:</sub>
+length <span style="font-style:italic">n</span>+1 for <span style="font-style:italic">n</span>&gt;2 into a literal sequence of length <span style="font-style:italic">n</span>.</p><p>Figures&#XA0;<a href="#a56">10</a> and <a href="#a55">11</a> show a source file (<span style="font-family:monospace">test7tt.mng</span>) that uses terms of the F<sub>&lt;:</sub>
 definition of <span style="font-family:monospace">test7.ott</span>, and the result of filtering it.</p><p>Similar filtering can be performed on Coq, Isabelle, HOL, and OCaml files.</p><p>To filter files with respect to a relatively stable
 system definition, without having to re-process the Ott source files of
 that system definition each time, there are command-line options
@@ -1766,13 +1773,13 @@ One can also include a &#X2018;defns&#X2019; collection of judgements, or the co
 <!--TOC section id="sec44" Binding specifications-->
 <h2 id="sec44" class="section">9&#X2003;Binding specifications</h2><!--SEC END --><p><a id="a62"></a></p><p>Our first example involved a production with a single binder:
 
-</p><p><img src="top2008.png"></p><p>specified by the source shown in Figure&#X2004;&#X200D;<a href="#a47">4</a>:
+</p><p><img src="top2008.png"></p><p>specified by the source shown in Figure&#XA0;<a href="#a47">4</a>:
 </p><pre>
   <span style="color:#007FFF"><span style="font-family:monospace">|</span></span> <span style="font-family:monospace">\</span> x . t      <span style="color:#007FFF"><span style="font-family:monospace">::</span></span>  <span style="color:#007FFF"><span style="font-family:monospace">::</span></span> Lam     <span style="color:#007FFF"><span style="font-family:monospace">(+</span></span> <span style="color:#A51815"><span style="font-family:monospace">bind</span></span> x <span style="color:#A51815"><span style="font-family:monospace">in</span></span> t <span style="color:#007FFF"><span style="font-family:monospace">+)</span></span>
 </pre><p>
 in which a single variable binds in a single subterm.
 Realistic programming languages often have much more complex binding
-structures, e.g.&#X2004;&#X200D;structured patterns, multiple mutually recursive <span style="font-family:monospace">let</span> definitions,
+structures, e.g.&#XA0;structured patterns, multiple mutually recursive <span style="font-family:monospace">let</span> definitions,
 comprehensions, or-patterns, and dependent record patterns.</p><p>Ott has a flexible metalanguage for specifying binding structures,
 expressive enough to cover these.
 It comprises two forms of annotation on productions.
@@ -1783,7 +1790,7 @@ production, as in the <span style="font-family:monospace">Lam</span> production 
 Here 
 
 <img src="top2010.png">is a <em>metavariable set expression</em>,
-e.g.&#X2004;&#X200D;in that lambda production just the singleton
+e.g.&#XA0;in that lambda production just the singleton
 metavariable 
 
 <img src="top2011.png">of the production.
@@ -1815,24 +1822,24 @@ binders above. This is an auxiliary function defined over the
 used in the <span style="font-family:sans-serif">bind</span> annotation on the 
 <img src="top2018.png">production. There can be any number of such auxiliary functions;
 binders is not a distinguished keyword.</p><p>The syntax of a precise fragment of the binding metalanguage is given in
-Fig.&#X2004;&#X200D;<a href="#a13">12</a>,
+Fig.&#XA0;<a href="#a13">12</a>,
 
 </p><blockquote class="figure"><div class="center"><hr class="floatrule"></div>
 <img src="top2019.png"><div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 12: Mini-Ott in Ott: the binding specification metalanguage<a id="a13"></a></td></tr>
 </table></div>
 <div class="center"><hr class="floatrule"></div></blockquote><p>where we have used Ott to define part of the Ott
 metalanguage. A simple type system (not shown) enforces sanity properties,
-e.g.&#X2004;&#X200D;that each auxiliary function is only applied to nonterminals that
+e.g.&#XA0;that each auxiliary function is only applied to nonterminals that
 it is defined over, and that metavariable set expressions are
 well-sorted.</p><p>Further to that fragment, the tool supports binding for the list forms
 of &#XA7;<a href="#a61">12</a>. 
 Metavariable set expressions can include lists of metavariables
-and auxiliary functions applied to lists of nonterminals, e.g.&#X2004;&#X200D;as in
+and auxiliary functions applied to lists of nonterminals, e.g.&#XA0;as in
 the record patterns below.
 </p><p><img src="top2020.png"></p><p>This suffices to express the binding structure of almost all the
 natural examples we have come across, including definitions of
 mutually recursive functions with multiple clauses for each, Join
-calculus definitions&#X2004;&#X200D;[<a href="#FGLMR96"></a>], dependent record patterns, and many others.</p>
+calculus definitions&#XA0;[<a href="#FGLMR96"></a>], dependent record patterns, and many others.</p>
 <!--TOC section id="sec45" Generating substitution and free variable functions-->
 <h2 id="sec45" class="section">10&#X2003;Generating substitution and free variable functions</h2><!--SEC END --><p><a id="a67"></a>The tool can generate Isabelle/Coq/HOL/OCaml code for both single and multiple
 substitution functions. For example, the ML polymorphism Ott source
@@ -1906,8 +1913,7 @@ Inductive term : Set :=
 | term_lam : term -&gt; term 
 | term_app : term -&gt; term -&gt; term.
 </pre><p>Remarks:
-</p><ol class="enumerate" type=1><li class="li-enumerate">
-Productions containing metavariables susceptible to be bound
+</p><ol class="enumerate" type=1><li class="li-enumerate">Productions containing metavariables susceptible to be bound
 (e.g., <span style="font-family:monospace">term_var</span>) give rise to two distinct constructors, one
 (<span style="font-family:monospace">term_var_b</span>) for de Bruijn indices to be used when the metavariable
 is bound, one (<span style="font-family:monospace">term_var_f</span>) for "free" variables. The type <span style="font-family:monospace">var</span>,
@@ -1935,8 +1941,7 @@ Inductive typing : env -&gt; term -&gt; type -&gt; Prop := (* defn typing *)
    (forall x, x <span style="font-family:monospace">\</span>notin L -&gt; typing (E &amp; x ~ S) (open_term_wrt_term t (term_var_f x)) T) -&gt; 
    typing E (term_lam t) (type_arrow S T).
 </pre><p>For that, Ott follows the algorithm below. For each rule,
-</p><ol class="enumerate" type=1><li class="li-enumerate">
-for each nonterminal that appears in the rule, compute the
+</p><ol class="enumerate" type=1><li class="li-enumerate">for each nonterminal that appears in the rule, compute the
 maximal set of binders under which it appears: for example, in the
 rule lambda above, the maximal set of binders for the nonterminal <span style="font-family:monospace">t</span>
 is the singleton <span style="font-family:monospace">x</span>, and it is empty for all the other nonterminals;
@@ -1983,17 +1988,17 @@ the translation of the <span style="font-family:monospace">ax_app</span> rule is
 shown above.</p><p><span style="font-style:italic">Current limitations: support for single binders only, no auxfn, Coq only.</span></p><p><span style="font-style:italic">Disclaimer: to compile rule definitions, Ott applies blindly the algorithm described above. Although in most of the cases, this generates a correct and idiomatic representation of the language, some language constructs might not be faithfully translated. Please, let us know if you find one of these cases.
 </span></p><p>If Ott is invoked with the <span style="font-family:monospace">-coq_lngen</span> option, then the
 generated locally-nameless Coq code is compatible with Aydemir&#X2019;s
-<span style="font-style:italic">lngen</span> tool (<a href="http://www.cis.upenn.edu/&#X2004;&#X200D;sweirich/papers/lngen/"><span style="font-family:monospace">http://www.cis.upenn.edu/&#X2004;&#X200D;sweirich/papers/lngen/</span></a>).</p>
+<span style="font-style:italic">lngen</span> tool (<a href="http://www.cis.upenn.edu/&#XA0;sweirich/papers/lngen/"><span style="font-family:monospace">http://www.cis.upenn.edu/&#XA0;sweirich/papers/lngen/</span></a>).</p>
 <!--TOC section id="sec47" List forms-->
 <h2 id="sec47" class="section">12&#X2003;List forms</h2><!--SEC END --><p><a id="a61"></a>Ott has direct support for lists, both as <em>dot forms</em> such as 
 
 <img src="top2021.png">and as <em>list comprehensions</em> such as 
 
 <img src="top2022.png">.
-Figure&#X2004;&#X200D;<a href="#a63">13</a> shows an example semantic rule taken from our OCaml
+Figure&#XA0;<a href="#a63">13</a> shows an example semantic rule taken from our OCaml
 fragment semantics, as both the generated LaTeX and its Ott
 source, that involves several dot forms.
-Other types commonly used in semantics, e.g.&#X2004;&#X200D;finite maps or sets, can
+Other types commonly used in semantics, e.g.&#XA0;finite maps or sets, can
 often be described with this list syntax in conjunction with type and
 metaproduction homs to specify the proof assistant representation.
 When using list forms, one usually also wants to add a list-of-formula
@@ -2041,7 +2046,7 @@ p <span style="color:#007FFF"><span style="font-family:monospace">::</span></spa
 the <span style="font-style:italic">l</span><sub><span style="font-style:italic">j</span></sub> below:</p><p>
 <img src="top2026.png"></p><p>Symbolic terms can also include concatenations of two dot forms with a
 singleton in between:</p><p>
-<img src="top2027.png"></p><p>Multiple dot forms within the same semantic rule can share bounds (e.g.&#X2004;&#X200D;1..<span style="font-style:italic">m</span>):</p><p>
+<img src="top2027.png"></p><p>Multiple dot forms within the same semantic rule can share bounds (e.g.&#XA0;1..<span style="font-style:italic">m</span>):</p><p>
 <img src="top2028.png"></p><p>In more detail, productions can have dot tokens interspersed between the elements. 
 Dot tokens consist of two, three or four consecutive dots (<span style="color:#007FFF"><span style="font-family:monospace">..</span></span>,
 <span style="color:#007FFF"><span style="font-family:monospace">...</span></span>, or <span style="color:#007FFF"><span style="font-family:monospace">....</span></span>), indicating lists with minimum lengths 0,
@@ -2065,7 +2070,7 @@ supported. </p><p>Homomorphisms and binding specifications are generalised to ma
 involve a dot form of metavariables; 
 a dot form of nonterminals; or an auxiliary function applied to a dot
 form
-of nonterminals (e.g.&#X2004;&#X200D;the
+of nonterminals (e.g.&#XA0;the
 b(<span style="font-style:italic">p</span><sub>1</sub>..<span style="font-style:italic">p</span><sub><span style="font-style:italic">n</span></sub>) above).
 Dot forms on the right of a <span style="color:#A51815"><span style="font-family:monospace">bind</span></span> are not currently supported.</p><p>LaTeX homomorphisms should not refer to dot forms, as either an error
 or bad output will be generated. (For LaTeX, there should really be
@@ -2147,17 +2152,17 @@ list forms in the same inference rule, they must all be in the same style and
 with the same bounds. Moreover, in a production, a list form in a bindspec or
 homomorphism must be in the same style and with the same bounds as the
 corresponding list form in the elements of the production. </p><p>The comprehension form without an upper bound, 
-e.g.&#X2004;&#X200D;<span style="font-family:monospace"><span style="color:#007FFF">&lt;/</span></span><span style="font-family:monospace"> G |- ti:Ti </span><span style="font-family:monospace"><span style="color:#007FFF">//</span></span><span style="font-family:monospace"> i </span><span style="font-family:monospace"><span style="color:#007FFF">/&gt;</span></span>, 
+e.g.&#XA0;<span style="font-family:monospace"><span style="color:#007FFF">&lt;/</span></span><span style="font-family:monospace"> G |- ti:Ti </span><span style="font-family:monospace"><span style="color:#007FFF">//</span></span><span style="font-family:monospace"> i </span><span style="font-family:monospace"><span style="color:#007FFF">/&gt;</span></span>, 
 typeset as 
 <img src="top2031.png">is not standard
 notation, but is often very useful. Many semantic rules involve lists
-of matched length, e.g.&#X2004;&#X200D;of the 
+of matched length, e.g.&#XA0;of the 
 <img src="top2032.png">and
 <img src="top2033.png">here, but do not need to introduce an
 identifier for that length; omitting it keeps them concise.</p><p>The default visual style for typesetting list comprehensions can be
 overridden by redefining the LaTeX commands <code class="verb">\ottcomp</code>,
 <code class="verb">\ottcompu</code>, and <code class="verb">\ottcomplu</code> in an <span style="color:#A51815"><span style="font-family:monospace">embed</span></span> section, as
-in Section&#X2004;&#X200D;<a href="#a64">4.3</a>.</p><p>In some cases one could make the typeset notation even less noisy, by
+in Section&#XA0;<a href="#a64">4.3</a>.</p><p>In some cases one could make the typeset notation even less noisy, by
 either omitting the superscript <span style="font-style:italic">i</span> or omitting both the superscript <span style="font-style:italic">i</span> and
 the subscript <span style="font-style:italic">i</span>&#X2019;s on <span style="font-style:italic">t</span> and <span style="font-style:italic">T</span>. The first is unambiguous if there
 is at most one index on each element in the comprehension; the second
@@ -2208,7 +2213,7 @@ list_label_t : Set :=
 with t : Set := 
    E_record : list_label_t -&gt; t .
 </span></pre><p><span style="font-size:small">
-</span>These are included in the grammar topological sort, and utility functions, e.g.&#X2004;&#X200D;to 
+</span>These are included in the grammar topological sort, and utility functions, e.g.&#XA0;to 
 make and unmake lists, are synthesised. 
 </p>
 <!--TOC subsubsection id="sec52" Terms (in inductive definition rules)-->
@@ -2350,15 +2355,15 @@ Note that in the second the list of pairs is projected out from the
   <span style="color:#A51815"><span style="font-family:monospace">subrules</span></span>
     nt1 <span style="color:#007FFF"><span style="font-family:monospace">&lt;::</span></span> nt2
 </pre><p>
-where <span style="font-family:monospace">nt1</span> and <span style="font-family:monospace">nt2</span> are nonterminal roots. </p><p>Subrules can be chained, i.e.&#X2004;&#X200D;there can be a pair of
+where <span style="font-family:monospace">nt1</span> and <span style="font-family:monospace">nt2</span> are nonterminal roots. </p><p>Subrules can be chained, i.e.&#XA0;there can be a pair of
 subrule declarations <span style="font-family:monospace">nt1 </span><span style="font-family:monospace"><span style="color:#007FFF">&lt;::</span></span><span style="font-family:monospace"> nt2</span> and <span style="font-family:monospace">nt2 </span><span style="font-family:monospace"><span style="color:#007FFF">&lt;::</span></span><span style="font-family:monospace"> nt3</span>,
-and they can form a directed acyclic graph, e.g.&#X2004;&#X200D;with 
+and they can form a directed acyclic graph, e.g.&#XA0;with 
 <span style="font-family:monospace">nt0 </span><span style="font-family:monospace"><span style="color:#007FFF">&lt;::</span></span><span style="font-family:monospace"> nt1</span>, <span style="font-family:monospace">nt0 </span><span style="font-family:monospace"><span style="color:#007FFF">&lt;::</span></span><span style="font-family:monospace"> nt2</span>,
 <span style="font-family:monospace">nt1 </span><span style="font-family:monospace"><span style="color:#007FFF">&lt;::</span></span><span style="font-family:monospace"> nt3</span>, and <span style="font-family:monospace">nt2 </span><span style="font-family:monospace"><span style="color:#007FFF">&lt;::</span></span><span style="font-family:monospace"> nt3</span>. However, there cannot be
 cycles, or nonterminal roots for which there are multiple upper bounds. 
 Subrule declarations should not involve nonterminal roots for which
 proof-assistant type homs are specified. </p><p>We support the case in which the upper rule is also
-non-free, i.e.&#X2004;&#X200D;it contains productions that mention nonterminals that
+non-free, i.e.&#XA0;it contains productions that mention nonterminals that
 occur on the left of a subrule declaration. In the example below
 (<span style="font-family:monospace">test11.ott</span>) the
 <span style="font-family:monospace">t</span> rule contains a production <span style="font-family:monospace">Foo v</span>.
@@ -2396,7 +2401,7 @@ clause for <span style="font-family:monospace">ax</span> uses both predicates. T
 </p><pre class="verbatim">  axI: "[|is_t t ; is_v v|] ==&gt;  ( t , v ) : Baz"
 </pre>
 <!--TOC section id="sec55" Context rules-->
-<h2 id="sec55" class="section">14&#X2003;Context rules</h2><!--SEC END --><p><a id="a69"></a>The system supports the definition of single-hole contexts, e.g.&#X2004;&#X200D;for
+<h2 id="sec55" class="section">14&#X2003;Context rules</h2><!--SEC END --><p><a id="a69"></a>The system supports the definition of single-hole contexts, e.g.&#XA0;for
 evaluation contexts. For example, suppose one has a term grammar as below:
 </p><pre>
 t <span style="color:#007FFF"><span style="font-family:monospace">::</span></span> &#X2019;t_&#X2019; <span style="color:#007FFF"><span style="font-family:monospace">::=</span></span>                               <span style="color:#007FFF"><span style="font-family:monospace">{</span></span><span style="color:#007FFF"><span style="font-family:monospace">{</span></span> <span style="color:#A51815"><span style="font-family:monospace">com</span></span> term    <span style="color:#007FFF"><span style="font-family:monospace">}</span></span><span style="color:#007FFF"><span style="font-family:monospace">}</span></span>
@@ -2431,7 +2436,7 @@ A <span style="color:#A51815"><span style="font-family:monospace">contextrules</
 </pre><p>
 causes Ott to (a) check that each production of the <span style="font-family:monospace">E</span> grammar
 is indeed a context for the <span style="font-family:monospace">t</span> grammar, and (b) generates
-proof assistant functions, e.g.&#X2004;&#X200D;<code class="verb">appctx_E_t</code>, to apply a context
+proof assistant functions, e.g.&#XA0;<code class="verb">appctx_E_t</code>, to apply a context
 to a term:
 </p><pre class="verbatim">(** context application *)
 Definition appctx_E_t (E5:E) (t_6:t) : t :=
@@ -2470,7 +2475,7 @@ That can then be used in relations:
 <span style="color:#007FFF"><span style="font-family:monospace">    --------------</span></span> :: ctx
     E.t --&gt; E.t&#X2019;
 </pre><p>One would typically also define a <span style="font-family:monospace">terminals</span> production for
-the hole terminal <code class="verb">__</code>, e.g.&#X2004;&#X200D;here we typeset the hole as [&#XB7;].
+the hole terminal <code class="verb">__</code>, e.g.&#XA0;here we typeset the hole as [&#XB7;].
 </p><pre>
 <span style="color:#A51815"><span style="font-family:monospace">terminals</span></span> <span style="color:#007FFF"><span style="font-family:monospace">::</span></span> &#X2019;terminals_&#X2019; <span style="color:#007FFF"><span style="font-family:monospace">::=</span></span>
   <span style="color:#007FFF"><span style="font-family:monospace">|</span></span> __           <span style="color:#007FFF"><span style="font-family:monospace">::</span></span>  <span style="color:#007FFF"><span style="font-family:monospace">::</span></span> hole    <span style="color:#007FFF"><span style="font-family:monospace">{</span></span><span style="color:#007FFF"><span style="font-family:monospace">{</span></span> <span style="color:#A51815"><span style="font-family:monospace">tex</span></span> [<span style="font-family:monospace">\</span>cdot] <span style="color:#007FFF"><span style="font-family:monospace">}</span></span><span style="color:#007FFF"><span style="font-family:monospace">}</span></span>
@@ -2529,8 +2534,7 @@ As a simple example, consider the Ott file below:</p><pre>
 n1 + n2 <span style="color:#007FFF"><span style="font-family:monospace">::</span></span> n <span style="color:#007FFF"><span style="font-family:monospace">::</span></span> add
 <span style="color:#A51815"><span style="font-family:monospace">by</span></span>
 declaration specifies:
-</p><ul class="itemize"><li class="li-itemize">
-the name of the function: <code class="verb">add</code>
+</p><ul class="itemize"><li class="li-itemize">the name of the function: <code class="verb">add</code>
 </li><li class="li-itemize">the symbolic term that defines the lhs: <code class="verb">n1 + n2</code>
 </li><li class="li-itemize">the non-terminal that defines the rhs: <code class="verb">n</code>
 </li></ul><p>The type of the arguments of the function is defined by the
@@ -2557,8 +2561,7 @@ support common idioms that are ambiguous. For example, the production
 might be used to allow a list of typing contexts to be appended together, but
 it is highly ambiguous. The following restrictions forbid many unwanted parses
 that could otherwise occur.
-</p><ul class="itemize"><li class="li-itemize">
-All parses in which a nonterminal derives itself without consuming any input
+</p><ul class="itemize"><li class="li-itemize">All parses in which a nonterminal derives itself without consuming any input
 are ignored. For example, in the production above, the list could otherwise be
 of length one so that &#X393; directly derives &#X393; giving rise to a
 vacuous cycle, and an infinite forest of parse trees. This restriction
@@ -2570,14 +2573,13 @@ of two element sequences (&#X393;<sub>1</sub>,&#X393;<sub>2</sub>),(&#X393;<sub>
 production above.
 </li><li class="li-itemize">User supplied priority annotations in a <span style="color:#A51815"><span style="font-family:monospace">parsing</span></span> section rule out certain
 trees as follows:
-<ul class="itemize"><li class="li-itemize">
-<span style="font-style:italic">prodname</span><sub>1</sub> <span style="color:#007FFF"><span style="font-family:monospace">&lt;=</span></span> <span style="font-style:italic">prodname</span><sub>2</sub>: Parse trees where a
+<ul class="itemize"><li class="li-itemize"><span style="font-style:italic">prodname</span><sub>1</sub> <span style="color:#007FFF"><span style="font-family:monospace">&lt;=</span></span> <span style="font-style:italic">prodname</span><sub>2</sub>: Parse trees where a
 <span style="font-style:italic">prodname</span><sub>1</sub> node is a child of a <span style="font-style:italic">prodname</span><sub>2</sub> node are
 ignored.
-</li><li class="li-itemize"><span style="font-style:italic">prodname</span><sub>1</sub>&#X2004;&#X200D;<span style="color:#A51815"><span style="font-family:monospace">right</span></span>&#X2004;&#X200D;<span style="font-style:italic">prodname</span><sub>2</sub>: Parse trees where a
+</li><li class="li-itemize"><span style="font-style:italic">prodname</span><sub>1</sub>&#XA0;<span style="color:#A51815"><span style="font-family:monospace">right</span></span>&#XA0;<span style="font-style:italic">prodname</span><sub>2</sub>: Parse trees where a
 <span style="font-style:italic">prodname</span><sub>1</sub> node is the leftmost child of a <span style="font-style:italic">prodname</span><sub>1</sub>
 node are ignored.
-</li><li class="li-itemize"><span style="font-style:italic">prodname</span><sub>1</sub>&#X2004;&#X200D;<span style="color:#A51815"><span style="font-family:monospace">left</span></span>&#X2004;&#X200D;<span style="font-style:italic">prodname</span><sub>2</sub>: Parse trees where a
+</li><li class="li-itemize"><span style="font-style:italic">prodname</span><sub>1</sub>&#XA0;<span style="color:#A51815"><span style="font-family:monospace">left</span></span>&#XA0;<span style="font-style:italic">prodname</span><sub>2</sub>: Parse trees where a
 <span style="font-style:italic">prodname</span><sub>2</sub> node is the rightmost child of a <span style="font-style:italic">prodname</span><sub>1</sub>
 node are ignored.
 </li></ul>
@@ -2585,10 +2587,9 @@ In addition to immediate children, these priority annotations also prohibit
 parse trees where the forbidden child node occurs underneath a chain of
 derivations from the specified parent when the chain does not consume any
 input.
-Figure&#X2004;&#X200D;<a href="#parsing_figure">17</a> demonstrates a typical use of a <span style="color:#A51815"><span style="font-family:monospace">parsing</span></span>
+Figure&#XA0;<a href="#parsing_figure">17</a> demonstrates a typical use of a <span style="color:#A51815"><span style="font-family:monospace">parsing</span></span>
 section; the declarations have effect as follows:
-<ul class="itemize"><li class="li-itemize">
-Line #1: <code class="verb">n + n + n</code> parses as <code class="verb">(n + n) + n</code>, but not <code class="verb">n + (n + n)</code>;
+<ul class="itemize"><li class="li-itemize">Line #1: <code class="verb">n + n + n</code> parses as <code class="verb">(n + n) + n</code>, but not <code class="verb">n + (n + n)</code>;
 </li><li class="li-itemize">Line #3: <code class="verb">n + n - n</code> parses as <code class="verb">(n + n) - n</code>, but not <code class="verb">n + (n - n)</code>;
 </li><li class="li-itemize">Line #9: <code class="verb">-n + n</code> parses as <code class="verb">(-n) + n</code>, but not <code class="verb">-(n + n)</code>;
 </li><li class="li-itemize">Line #15: <code class="verb">n + n n</code> parses as <code class="verb">n + (n n)</code>, but not <code class="verb">(n + n) n</code>;
@@ -2666,9 +2667,9 @@ This rudimentary form of modularity can be very useful, either to
 split a language definition into separate features, or to define
 reusable Ott components to define standard formulae, LaTeX pretty
 printing of terminals, or LaTeX styles. 
-For example, Figure&#X2004;&#X200D;<a href="#a12">15</a> shows the Ott source file for a
+For example, Figure&#XA0;<a href="#a12">15</a> shows the Ott source file for a
 <span style="font-family:monospace">let</span> feature in isolation, taken from our Ott development of
-some languages from Pierce&#X2019;s TAPL&#X2004;&#X200D;[<a href="#Pierce%3ATypeSystems"></a>].
+some languages from Pierce&#X2019;s TAPL&#XA0;[<a href="#Pierce%3ATypeSystems"></a>].
 </p><blockquote class="figure"><div class="center"><hr class="floatrule"></div>
 <span class="lrbox framebox">&#X2004;<div class="minipage">
 <pre><span style="font-size:small">
@@ -2707,7 +2708,7 @@ G |- let x=t1 in t2 : T2
 </table></div>
 <div class="center"><hr class="floatrule"></div></blockquote><p>
 The original TAPL languages were produced using
-TinkerType&#X2004;&#X200D;[<a href="#LevinPierce99"></a>] to compose features and check for
+TinkerType&#XA0;[<a href="#LevinPierce99"></a>] to compose features and check for
 conflicts. 
 In <span style="font-family:monospace">examples/tapl</span> we build a system, similar to the TinkerType
 <span style="font-family:monospace">sys-fullsimple</span>, from <span style="font-family:monospace">ott</span> source files that
@@ -2736,9 +2737,9 @@ For example, one can write
 </pre><p>
 Each of these begins with a prefix and then has a sequence of
 production name or definition name kernels, each followed by a
-sequence of bindspecs and then a sequence of homomorphisms.</p><p>The <code class="verb">test10_homs.ott</code> example, in Fig.&#X2004;&#X200D;<a href="#a38">16</a>, shows this. It
+sequence of bindspecs and then a sequence of homomorphisms.</p><p>The <code class="verb">test10_homs.ott</code> example, in Fig.&#XA0;<a href="#a38">16</a>, shows this. It
 is semantically equivalent to the <code class="verb">test10.ott</code> example of
-Fig.&#X2004;&#X200D;<a href="#a68">8</a>, but the homs have been moved into <span style="font-family:monospace">hom</span>
+Fig.&#XA0;<a href="#a68">8</a>, but the homs have been moved into <span style="font-family:monospace">hom</span>
 blocks.
 </p><blockquote class="figure"><div class="center"><hr class="floatrule"></div>
 <span class="lrbox framebox"><div class="minipage">
@@ -2826,7 +2827,7 @@ The two homs are used to output the Isabelle syntax annotation in the
 </span></pre><p><span style="font-size:small">
 </span>
 Definitions can be annotated with
-<span style="color:#A51815"><span style="font-family:monospace">isasyn</span></span> and/or <span style="color:#A51815"><span style="font-family:monospace">isaprec</span></span> homomorphisms similarly, e.g.&#X2004;&#X200D;as below.
+<span style="color:#A51815"><span style="font-family:monospace">isasyn</span></span> and/or <span style="color:#A51815"><span style="font-family:monospace">isaprec</span></span> homomorphisms similarly, e.g.&#XA0;as below.
 </p><pre>
     <span style="color:#A51815"><span style="font-family:monospace">defn</span></span>
     t1 --&gt; t2 <span style="color:#007FFF"><span style="font-family:monospace">::</span></span>  <span style="color:#007FFF"><span style="font-family:monospace">::</span></span> reduce <span style="color:#007FFF"><span style="font-family:monospace">::</span></span> &#X201D; <span style="color:#007FFF"><span style="font-family:monospace">{</span></span><span style="color:#007FFF"><span style="font-family:monospace">{</span></span> <span style="color:#A51815"><span style="font-family:monospace">isasyn</span></span> <span style="color:#007FFF"><span style="font-family:monospace">[[</span></span>t1<span style="color:#007FFF"><span style="font-family:monospace">]]</span></span> ---&gt; <span style="color:#007FFF"><span style="font-family:monospace">[[</span></span>t2<span style="color:#007FFF"><span style="font-family:monospace">]]</span></span> <span style="color:#007FFF"><span style="font-family:monospace">}</span></span><span style="color:#007FFF"><span style="font-family:monospace">}</span></span>  <span style="color:#A51815"><span style="font-family:monospace">by</span></span> 
@@ -2858,7 +2859,7 @@ in the datatype definition above.</p><p>This functionality is limited in various
 (1) the full range of Isabelle precedence and associativity
 specifications are not supported;
 (2) the automatically generated syntax annotations are somewhat crude,
-especially w.r.t.&#X2004;&#X200D;spacing and parenthesisation;
+especially w.r.t.&#XA0;spacing and parenthesisation;
 (3) syntax annotation on meta productions is not propertly supported;
 and
 (4) it would be desirable to have more fine-grain control of whether
@@ -2924,8 +2925,7 @@ end
            &amp;&amp; ($(LATEX) out; $(DVIPS) out -o)
 </pre><p>
 When <code class="verb">make test10</code> is executed, <span style="font-family:monospace">ott</span>:
-</p><ul class="itemize"><li class="li-itemize">
-reads the source file <code class="verb">tests/test10.ott</code>
+</p><ul class="itemize"><li class="li-itemize">reads the source file <code class="verb">tests/test10.ott</code>
 </li><li class="li-itemize">(if one also specifies <span style="font-family:monospace">-show_sort true</span> and <span style="font-family:monospace">-show_defns
 true</span>) prints on standard output various diagnostic information,
 including ASCII versions of the grammar and
@@ -2947,14 +2947,14 @@ That LaTeX document is then compiled and converted to postscript. </p><p>For con
 </pre><p>
 is equivalent to
 </p><pre class="verbatim">  ott -i &lt;file1&gt; ... -i &lt;filen&gt; [options]
-</pre><p>The&#X2004;&#X200D;<code class="verb">%.out</code> <code class="verb">Makefile</code> target runs <code class="verb">ott</code> with common
-defaults on the file&#X2004;&#X200D;<code class="verb">%.ott</code>, so for example executing <code class="verb">make tests/test10.out</code>
+</pre><p>The&#XA0;<code class="verb">%.out</code> <code class="verb">Makefile</code> target runs <code class="verb">ott</code> with common
+defaults on the file&#XA0;<code class="verb">%.ott</code>, so for example executing <code class="verb">make tests/test10.out</code>
 runs <code class="verb">ott</code> on <code class="verb">tests/test10.ott</code>, generating all outputs. There are
-also targets &#X2004;&#X200D;<code class="verb">%.coq.out</code>, &#X2004;&#X200D;<code class="verb">%.hol.out</code>, and
-&#X2004;&#X200D;<code class="verb">%.isa.out</code>, to generate just LaTeX and the code for one proof
-assistant, and &#X2004;&#X200D;<code class="verb">%.tex.out</code>, to generate just LaTeX.</p><p>The <span style="font-family:monospace">ott</span> command-line options (with default values where applicable) are
+also targets &#XA0;<code class="verb">%.coq.out</code>, &#XA0;<code class="verb">%.hol.out</code>, and
+&#XA0;<code class="verb">%.isa.out</code>, to generate just LaTeX and the code for one proof
+assistant, and &#XA0;<code class="verb">%.tex.out</code>, to generate just LaTeX.</p><p>The <span style="font-family:monospace">ott</span> command-line options (with default values where applicable) are
 shown below. 
-</p><pre class="verbatim">Ott version 0.33   distribution of Mon 16 Jan 15:32:01 GMT 2023
+</p><pre class="verbatim">Ott version 0.34   distribution of Mon Dec 30 10:12:45 GMT 2024
 
 usage: ott &lt;options&gt; &lt;filename1&gt; .. &lt;filenamen&gt; 
   (use "OCAMLRUNPARAM=p  ott ..." to show the ocamlyacc trace)
@@ -3028,10 +3028,10 @@ The latter includes the former but also
 allows symbolic metavariables and nonterminals.
 Symbolic terms may also include the production-name
 annotations mentioned in &#XA7;<a href="#a51">3</a>.
-For a syntax definition with list forms (c.f.&#X2004;&#X200D;&#XA7;<a href="#a61">12</a>) symbolic
+For a syntax definition with list forms (c.f.&#XA0;&#XA7;<a href="#a61">12</a>) symbolic
 terms also include various list constructs.
 A simplified abstract syntax of symbolic terms is shown in
-Figure&#X2004;&#X200D;<a href="#a19">17</a>, omitting list forms. In this section we give an
+Figure&#XA0;<a href="#a19">17</a>, omitting list forms. In this section we give an
 informal definition of the full concrete syntax of symbolic terms.
 </p><blockquote class="figure"><div class="center"><hr class="floatrule"></div>
 <img src="top2037.png"><div class="caption"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="vertical-align:top;text-align:left;" >Figure 17: Mini-Ott in Ott: symbolic terms<a id="a19"></a></td></tr>
@@ -3063,8 +3063,7 @@ we have
 </td></tr>
 </table></td></tr>
 </table><p>For an element there are various cases. 
-</p><ol class="enumerate" type=1><li class="li-enumerate">
-For a terminal <span style="font-style:italic">terminal</span>
+</p><ol class="enumerate" type=1><li class="li-enumerate">For a terminal <span style="font-style:italic">terminal</span>
 <table class="display dcenter"><tr style="vertical-align:middle"><td class="dcell"><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="text-align:left;white-space:nowrap" >&#X2004;[[<span style="font-style:italic">terminal</span>]]</td><td style="text-align:center;white-space:nowrap" >::=</td><td style="text-align:left;white-space:nowrap" ><span style="font-style:italic">terminal</span></td></tr>
 </table></td></tr>
 </table>
@@ -3174,7 +3173,7 @@ as in the example
 </p><pre class="verbatim"><span style="font-size:small">\[ [[ :concrete: \Z1&lt;:Top. \x:Z1.x ]]\]
 </span></pre><p><span style="font-size:small">
 </span>
-shown in Figure&#X2004;&#X200D;<a href="#a56">10</a>. Below such an annotation, only concrete terms
+shown in Figure&#XA0;<a href="#a56">10</a>. Below such an annotation, only concrete terms
 are permitted, with no further annotation, no symbolic nonterminals or
 metavariables, no list dot forms or comprehensions, etc.</p><p>Parsing of terms is done with a scannerless GLR parser over character-list
 inputs. The parser
@@ -3192,11 +3191,10 @@ typical in semantic rules. Its performance on large (whole-program
 size) examples is untested.</p>
 <!--TOC section id="sec65" Reference: Generation of proof assistant definitions-->
 <h2 id="sec65" class="section">24&#X2003;Reference: Generation of proof assistant definitions</h2><!--SEC END --><p><a id="a42"></a>This section briefly summarises the steps involved in the generation
-of proof assistant definitions from an Ott source file. For a description of the locally-nameless backend, refer to <a href="http://moscova.inria.fr/&#X2004;&#X200D;zappa/projects/ln_ott/"><span style="font-family:monospace">http://moscova.inria.fr/&#X2004;&#X200D;zappa/projects/ln_ott/</span></a>.
+of proof assistant definitions from an Ott source file. For a description of the locally-nameless backend, refer to <a href="http://moscova.inria.fr/&#XA0;zappa/projects/ln_ott/"><span style="font-family:monospace">http://moscova.inria.fr/&#XA0;zappa/projects/ln_ott/</span></a>.
 </p>
 <!--TOC subsection id="sec66" Generation of types-->
-<h3 id="sec66" class="subsection">24.1&#X2003;Generation of types</h3><!--SEC END --><ul class="itemize"><li class="li-itemize"> 
-The primary metavariable roots and primary nonterminal roots are used
+<h3 id="sec66" class="subsection">24.1&#X2003;Generation of types</h3><!--SEC END --><ul class="itemize"><li class="li-itemize">The primary metavariable roots and primary nonterminal roots are used
 directly as the names of proof assistant types, except where they
 have a hom specifying a root-overriding string.
 </li><li class="li-itemize">Type abbreviation declarations are produced for metavars, in the
@@ -3273,7 +3271,7 @@ iterated pairs, so we do the same for productions with tuples of size
 3 or more. 
 Isabelle also requires a function definition for each recursive type.
 In the case where there are multiple uses of the same type
-(e.g.&#X2004;&#X200D;several uses of <code class="verb">t list</code> in different productions) all the
+(e.g.&#XA0;several uses of <code class="verb">t list</code> in different productions) all the
 functions we wish to generate need identical auxiliaries. As yet, the
 tool does not generate the identical copies required.</p><p>If the option <code class="verb">-isabelle_primrec</code> is set to <code class="verb">false</code>, then
 Ott uses the <code class="verb">fun</code> package instead of the <code class="verb">primrec</code> package.
@@ -3294,7 +3292,7 @@ The non-free rules are the least subset of the rules that either
 (1) occur on the left of a subrule (<code class="verb">&lt;::</code>) declaration, or
 (2) have a (non-meta) production that mentions a non-free rule. 
 Note that these can include rules that are maximal elements of the
-subrule order, e.g.&#X2004;&#X200D;if an expression grammar included a production
+subrule order, e.g.&#XA0;if an expression grammar included a production
 involving packaged values. 
 The subrule predicate for a type is defined by pattern matching over
 constructors of the maximal type above it &#X2014; for each non-meta
@@ -3311,9 +3309,9 @@ For these, and for substitutions, we simplify the generated functions by using t
 <!--TOC subsubsection id="sec71" Substitutions-->
 <h4 id="sec71" class="subsubsection">24.2.4&#X2003;Substitutions</h4><!--SEC END --><p>
 The generated substitution functions also walk over the structure of the free proof assistant types. 
-For each production, for each occurrence of a nonterminal <code class="verb">nt</code> within it, we first calculate the things (of whatever type is in question) binding in that <code class="verb">nt</code>, i.e.&#X2004;&#X200D;those that should be removed from the domain of any substitution pushed down into it. There are two cases:
+For each production, for each occurrence of a nonterminal <code class="verb">nt</code> within it, we first calculate the things (of whatever type is in question) binding in that <code class="verb">nt</code>, i.e.&#XA0;those that should be removed from the domain of any substitution pushed down into it. There are two cases:
 (1) the <code class="verb">mse'</code> from any <code class="verb">bind mse' in nt</code>;
-(2) <code class="verb">nt</code> itself if it occurs in the <code class="verb">mse''</code> of any <code class="verb">bind mse'' in nt''</code>, i.e.&#X2004;&#X200D;
+(2) <code class="verb">nt</code> itself if it occurs in the <code class="verb">mse''</code> of any <code class="verb">bind mse'' in nt''</code>, i.e.&#XA0;
 <code class="verb">nt</code> itself if it is directly used to bind elsewhere.
 List forms within bindspecs are dealt with analogously. 
 </p><p>The substitution function clause for a production is then of one of two forms:
@@ -3334,16 +3332,14 @@ recursive definition of each <code class="verb">defn</code> inside it.
 Each definition rule gives rise to an implicational clause, essentially
 that the premises (Ott <code class="verb">formula</code>s) imply the conclusion (an Ott symbolic term of whichever judgement is being defined). 
 In addition:
-</p><ul class="itemize"><li class="li-itemize">
-Symbolic terms are transformed in various different ways:
-<ul class="itemize"><li class="li-itemize">
-Nodes of non-meta productions are output as applications of the appropriate proof-assistant constructor (and, for a subrule, promoted to the corresponding constructor of a maximal rule).
+</p><ul class="itemize"><li class="li-itemize">Symbolic terms are transformed in various different ways:
+<ul class="itemize"><li class="li-itemize">Nodes of non-meta productions are output as applications of the appropriate proof-assistant constructor (and, for a subrule, promoted to the corresponding constructor of a maximal rule).
 </li><li class="li-itemize">Nodes of meta productions are transformed with the user-specified homomorphism.
 </li><li class="li-itemize">Nodes of judgement forms are represented as applications of the defined relation in Coq and HOL, and as set-membership assertions in Isabelle.
 </li><li class="li-itemize">Lists of formulae (the <code class="verb">formula_dots</code> production) are special-cased.
 </li></ul>
 </li><li class="li-itemize">For each nonterminal of a non-free syntax rule (as in &#XA7;<a href="#a43">24.2.1</a>) that occurs,
-e.g.&#X2004;&#X200D;a usage of <code class="verb">v'</code> where <code class="verb">v&lt;::t</code>, an additional premise invoking the subrule predicate for the non-free rule is added, e.g.&#X2004;&#X200D;<code class="verb">is_v v'</code>.
+e.g.&#XA0;a usage of <code class="verb">v'</code> where <code class="verb">v&lt;::t</code>, an additional premise invoking the subrule predicate for the non-free rule is added, e.g.&#XA0;<code class="verb">is_v v'</code>.
 </li><li class="li-itemize">The set of symbolic terms of the definition rule are analysed together to identify list forms with the same bounds. A single proof assistant variable is introduced for each such, with appropriate projections and list maps/foralls at the usage points.
 </li><li class="li-itemize">For Coq, auxiliary defined relations are introduced for list forms.
 </li><li class="li-itemize">For Coq, as the projections from list forms involve (Ott-generated) <code class="verb">nth</code> functions that return option types, for any such projection a pattern-match against <code class="verb">Some</code> is introduced as an additional premise.
@@ -3351,7 +3347,7 @@ e.g.&#X2004;&#X200D;a usage of <code class="verb">v'</code> where <code class="v
 </li></ul>
 <!--TOC section id="sec73" Reference: Summary of homomorphisms-->
 <h2 id="sec73" class="section">25&#X2003;Reference: Summary of homomorphisms</h2><!--SEC END --><p><a id="a41"></a>Homomorphisms can appear in various positions in an Ott source
-file. The table below summarises their meanings. A * indicates that arguments are meaningful for that usage (e.g.&#X2004;&#X200D;<span style="font-family:monospace"><span style="color:#007FFF">[[</span></span><span style="font-family:monospace">e1</span><span style="font-family:monospace"><span style="color:#007FFF">]]</span></span> in a production mentioning a nonterminal or metavariable
+file. The table below summarises their meanings. A * indicates that arguments are meaningful for that usage (e.g.&#XA0;<span style="font-family:monospace"><span style="color:#007FFF">[[</span></span><span style="font-family:monospace">e1</span><span style="font-family:monospace"><span style="color:#007FFF">]]</span></span> in a production mentioning a nonterminal or metavariable
 <code class="verb">e1</code>).</p><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="text-align:left;white-space:nowrap"  colspan=3>a metavar or indexvar declaration, after one of the defined metavar/indexvar roots, or</td></tr>
 <tr><td style="text-align:left;white-space:nowrap"  colspan=3>a rule, after one of the defined nonterminal
 roots</td></tr>
@@ -3369,7 +3365,8 @@ roots</td></tr>
 <tr><td style="text-align:left;white-space:nowrap" ><span style="color:#A51815"><span style="font-family:monospace">tex</span></span></td><td style="text-align:center;white-space:nowrap" >*</td><td style="text-align:left;white-space:nowrap" >LaTeX typesetting for symbolic variables </td></tr>
 <tr><td style="text-align:left;white-space:nowrap" ><span style="color:#A51815"><span style="font-family:monospace">com</span></span></td><td style="text-align:center;white-space:nowrap" >&nbsp;</td><td style="text-align:left;white-space:nowrap" >comment to appear in LaTeX syntax definition </td></tr>
 <tr><td style="text-align:left;white-space:nowrap" ><span style="color:#A51815"><span style="font-family:monospace">coq-equality</span></span></td><td style="text-align:center;white-space:nowrap" >&nbsp;</td><td style="text-align:left;white-space:nowrap" >Coq proof script to decide equality over the representation type </td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="color:#A51815"><span style="font-family:monospace">coq-universe</span></span></td><td style="text-align:center;white-space:nowrap" >&nbsp;</td><td style="text-align:left;white-space:nowrap" >Coq universe (e.g.&#X2004;&#X200D;<span style="font-family:monospace">Type</span>) for the representation type </td></tr>
+<tr><td style="text-align:left;white-space:nowrap" ><span style="color:#A51815"><span style="font-family:monospace">coq-notation</span></span></td><td style="text-align:center;white-space:nowrap" >&nbsp;</td><td style="text-align:left;white-space:nowrap" >Coq sentence using <span style="font-family:monospace">Notation</span> for the representation type </td></tr>
+<tr><td style="text-align:left;white-space:nowrap" ><span style="color:#A51815"><span style="font-family:monospace">coq-universe</span></span></td><td style="text-align:center;white-space:nowrap" >&nbsp;</td><td style="text-align:left;white-space:nowrap" >Coq universe (e.g.&#XA0;<span style="font-family:monospace">Type</span>) for the representation type </td></tr>
 <tr><td style="text-align:left;white-space:nowrap" ><span style="color:#A51815"><span style="font-family:monospace">repr-locally-nameless</span></span></td><td style="text-align:center;white-space:nowrap" >&nbsp;</td><td style="text-align:left;white-space:nowrap" >(Coq only) use a locally-nameless representation </td></tr>
 <tr><td style="text-align:left;white-space:nowrap" ><span style="color:#A51815"><span style="font-family:monospace">phantom</span></span></td><td style="text-align:center;white-space:nowrap" >&nbsp;</td><td style="text-align:left;white-space:nowrap" >suppress the representation type definition in theorem prover output </td></tr>
 <tr><td style="text-align:left;white-space:nowrap" ><span style="color:#A51815"><span style="font-family:monospace">lex</span></span></td><td style="text-align:center;white-space:nowrap" >&nbsp;</td><td style="text-align:left;white-space:nowrap" >regular expression for lexing concrete variables </td></tr>
@@ -3387,7 +3384,8 @@ roots</td></tr>
 <tr><td style="text-align:left;white-space:nowrap" ><span style="color:#A51815"><span style="font-family:monospace">tex</span></span></td><td style="text-align:center;white-space:nowrap" >*</td><td style="text-align:left;white-space:nowrap" >LaTeX typesetting for symbolic variables </td></tr>
 <tr><td style="text-align:left;white-space:nowrap" ><span style="color:#A51815"><span style="font-family:monospace">com</span></span></td><td style="text-align:center;white-space:nowrap" >*</td><td style="text-align:left;white-space:nowrap" >comment to appear in LaTeX syntax definition </td></tr>
 <tr><td style="text-align:left;white-space:nowrap" ><span style="color:#A51815"><span style="font-family:monospace">coq-equality</span></span></td><td style="text-align:center;white-space:nowrap" >&nbsp;</td><td style="text-align:left;white-space:nowrap" >Coq proof script to decide equality over the representation type </td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="color:#A51815"><span style="font-family:monospace">coq-universe</span></span></td><td style="text-align:center;white-space:nowrap" >&nbsp;</td><td style="text-align:left;white-space:nowrap" >Coq universe (e.g.&#X2004;&#X200D;<span style="font-family:monospace">Type</span>) for the representation type </td></tr>
+<tr><td style="text-align:left;white-space:nowrap" ><span style="color:#A51815"><span style="font-family:monospace">coq-notation</span></span></td><td style="text-align:center;white-space:nowrap" >&nbsp;</td><td style="text-align:left;white-space:nowrap" >Coq sentence using <span style="font-family:monospace">Notation</span> for the representation type </td></tr>
+<tr><td style="text-align:left;white-space:nowrap" ><span style="color:#A51815"><span style="font-family:monospace">coq-universe</span></span></td><td style="text-align:center;white-space:nowrap" >&nbsp;</td><td style="text-align:left;white-space:nowrap" >Coq universe (e.g.&#XA0;<span style="font-family:monospace">Type</span>) for the representation type </td></tr>
 <tr><td style="text-align:left;white-space:nowrap" ><span style="color:#A51815"><span style="font-family:monospace">phantom</span></span></td><td style="text-align:center;white-space:nowrap" >&nbsp;</td><td style="text-align:left;white-space:nowrap" >suppress the representation type definition in theorem prover output </td></tr>
 <tr><td style="text-align:left;white-space:nowrap" ><span style="color:#A51815"><span style="font-family:monospace">aux</span></span></td><td style="text-align:center;white-space:nowrap" >(*)</td><td style="text-align:left;white-space:nowrap" >construct an auxiliary grammar rule with a single production </td></tr>
 <tr><td style="text-align:left;white-space:nowrap" ><span style="color:#A51815"><span style="font-family:monospace">icho</span></span></td><td style="text-align:center;white-space:nowrap" >*</td><td style="text-align:left;white-space:nowrap" >shorthand for identical <span style="color:#A51815"><span style="font-family:monospace">coq</span></span>, <span style="color:#A51815"><span style="font-family:monospace">isa</span></span>, <span style="color:#A51815"><span style="font-family:monospace">hol</span></span>, and <span style="color:#A51815"><span style="font-family:monospace">ocaml</span></span> homs</td></tr>
@@ -3435,7 +3433,7 @@ roots</td></tr>
 <tr><td style="text-align:left;white-space:nowrap" >&nbsp;</td></tr>
 </table><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="text-align:left;white-space:nowrap"  colspan=3>a group of defns, after the <span style="color:#007FFF"><span style="font-family:monospace">::=</span></span></td></tr>
 <tr><td class="hrule" colspan=3></td></tr>
-<tr><td style="text-align:left;white-space:nowrap" ><span style="color:#A51815"><span style="font-family:monospace">coq-universe</span></span></td><td style="text-align:center;white-space:nowrap" >&nbsp;</td><td style="text-align:left;white-space:nowrap" >Coq universe (e.g.&#X2004;&#X200D;<span style="font-family:monospace">Type</span>) for the representation type </td></tr>
+<tr><td style="text-align:left;white-space:nowrap" ><span style="color:#A51815"><span style="font-family:monospace">coq-universe</span></span></td><td style="text-align:center;white-space:nowrap" >&nbsp;</td><td style="text-align:left;white-space:nowrap" >Coq universe (e.g.&#XA0;<span style="font-family:monospace">Type</span>) for the representation type </td></tr>
 <tr><td style="text-align:left;white-space:nowrap" >&nbsp;</td></tr>
 </table><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="text-align:left;white-space:nowrap"  colspan=3>an <span style="color:#A51815"><span style="font-family:monospace">embed</span></span> section</td></tr>
 <tr><td class="hrule" colspan=3></td></tr>
@@ -3453,7 +3451,7 @@ roots</td></tr>
 <tr><td style="text-align:left;white-space:nowrap" ><span style="color:#A51815"><span style="font-family:monospace">isa-proof</span></span></td><td style="text-align:center;white-space:nowrap" >&nbsp;</td><td style="text-align:left;white-space:nowrap" >Isabelle proof script </td></tr>
 </table><p>(1) This is occasionally useful to work around a clash between a
 metavar or nonterminal primary root and a proof assistant symbol,
-e.g.&#X2004;&#X200D;<span style="font-family:monospace">value</span> in Isabelle or <span style="font-family:monospace">T</span> in HOL.</p>
+e.g.&#XA0;<span style="font-family:monospace">value</span> in Isabelle or <span style="font-family:monospace">T</span> in HOL.</p>
 <!--TOC section id="sec74" Reference: The Ott source grammar-->
 <h2 id="sec74" class="section">26&#X2003;Reference: The Ott source grammar</h2><!--SEC END --><p>
 This is automatically generated (by <code class="verb">mly-y2l</code>) from the
@@ -3869,7 +3867,7 @@ BLANKS
 gives a variety of examples. Some of these, and additional
 small examples, are included in the distribution in the <code class="verb">tests</code>
 directory. Typically they can be built using the <code class="verb">Makefile</code> in
-the <code class="verb">ott</code> directory, e.g.&#X2004;&#X200D;typing <code class="verb">make test10</code> or (more generally) <code class="verb">make tests/test10.out</code>) there.</p><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="text-align:left;white-space:nowrap" > <code class="verb">test10.ott</code></td><td style="text-align:left;white-space:nowrap" >untyped CBV lambda</td></tr>
+the <code class="verb">ott</code> directory, e.g.&#XA0;typing <code class="verb">make test10</code> or (more generally) <code class="verb">make tests/test10.out</code>) there.</p><table style="border-spacing:6px;border-collapse:separate;" class="cellpading0"><tr><td style="text-align:left;white-space:nowrap" > <code class="verb">test10.ott</code></td><td style="text-align:left;white-space:nowrap" >untyped CBV lambda</td></tr>
 <tr><td style="text-align:left;white-space:nowrap" > <code class="verb">test10st.ott</code></td><td style="text-align:left;white-space:nowrap" >simply typed CBV lambda</td></tr>
 <tr><td style="text-align:left;white-space:nowrap" > <code class="verb">test8.ott</code></td><td style="text-align:left;white-space:nowrap" >ML polymorphism example</td></tr>
 <tr><td style="text-align:left;white-space:nowrap" > <code class="verb">test7a.ott</code></td><td style="text-align:left;white-space:nowrap" >POPLmark Fsub example (without records)</td></tr>
@@ -3914,8 +3912,7 @@ Fellowship (Sewell),
 EPSRC Programme Grant, EP/K008528/1 REMS <em>Rigorous Engineering of
 Mainstrem Systems</em>,
 and ANR grant ANR-06-SETI-010-02 (Zappa Nardelli). </p><!--BEGIN NOTES document-->
-<hr class="footnoterule"><dl class="thefootnotes"><dt class="dt-thefootnotes">
-<a id="note1" href="#text1">1</a></dt><dd class="dd-thefootnotes"><div class="footnotetext">Strictly, clauses
+<hr class="footnoterule"><dl class="thefootnotes"><dt class="dt-thefootnotes"><a id="note1" href="#text1">1</a></dt><dd class="dd-thefootnotes"><div class="footnotetext">Strictly, clauses
 of primitive recursive function definitions from symbolic terms to strings, here of LaTeX code.</div></dd></dl>
 <!--END NOTES-->
 <!--CUT END -->
