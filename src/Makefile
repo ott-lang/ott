@@ -33,7 +33,7 @@
 
 topdir = ..
 
-OTTVER=0.33
+OTTVER=0.34
 
 OCAMLFIND=ocamlfind
 OCAMLARGS=-package str -package ocamlgraph -linkpkg
