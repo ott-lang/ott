@@ -3612,6 +3612,7 @@ file. The table below summarises their meanings.  A \tick{} indicates that argum
 \mykw{tex} & \tick & \myLaTeX{} typesetting for symbolic variables \\
 \mykw{com} &       & comment to appear in \myLaTeX{} syntax definition \\
 \mykw{coq-equality} & & Coq proof script to decide equality over the representation type \\
+\mykw{coq-notation} & & Coq sentence using \texttt{Notation} for the representation type \\
 \mykw{coq-universe} & & Coq universe (e.g.~\texttt{Type}) for the representation type  \\
 \mykw{repr-locally-nameless} & & (Coq only) use a locally-nameless representation \\
 \mykw{phantom} & & suppress the representation type definition in theorem prover output \\
@@ -3637,6 +3638,7 @@ file. The table below summarises their meanings.  A \tick{} indicates that argum
 \mykw{tex} & \tick & \myLaTeX{} typesetting for symbolic variables \\
 \mykw{com} & \tick & comment to appear in \myLaTeX{} syntax definition \\
 \mykw{coq-equality} & & Coq proof script to decide equality over the representation type \\
+\mykw{coq-notation} & & Coq sentence using \texttt{Notation} for the representation type \\
 \mykw{coq-universe} & & Coq universe (e.g.~\texttt{Type}) for the representation type  \\
 \mykw{phantom} & & suppress the representation type definition in theorem prover output \\
 \mykw{aux} & (\tick)& construct an auxiliary grammar rule with a single production \\

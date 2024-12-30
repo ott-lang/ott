@@ -1273,10 +1273,20 @@ and pp_metavardefn m xd mvd =
       | true -> ""
       | false -> ( match m with
 	| Coq co ->
-	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in
-	    let universe = try pp_hom_spec m xd (List.assoc "coq-universe" mvd.mvd_rep) with Not_found -> "Set" in
-	    "Definition " ^  type_name ^ " : " ^ universe ^ " := "
-	    ^ (pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc) ^ "." ^ pp_com ^ "\n" 
+            let type_name = pp_metavarroot_ty m xd mvd.mvd_name in
+            let universe =
+              try pp_hom_spec m xd (List.assoc "coq-universe" mvd.mvd_rep)
+              with Not_found -> "Set"
+            in
+            let body = pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc in
+            let sentence =
+              if List.mem_assoc "coq-notation" mvd.mvd_rep then
+	        "Notation " ^ type_name ^ " := (" ^ body ^ " : " ^ universe ^ ")."
+              else
+	        "Definition " ^  type_name ^ " : " ^ universe ^ " := " ^ body ^ "."
+            in
+            sentence
+            ^ pp_com ^ "\n"
 	    ^ coq_maybe_decide_equality m xd mvd.mvd_rep (Mvr mvd.mvd_name) mvd.mvd_loc
 	| Caml oo ->
 	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in 
@@ -2740,14 +2750,18 @@ and pp_rule_list m xd rs =
                     ^ pp_nontermroot_ty m xd ntr ^ " = ``:"
                     ^ pp_hom_spec m xd hs
                     ^ "``\n"
-                | Coq _ -> 
-                    let universe = 
-                      try pp_hom_spec m xd (List.assoc "coq-universe" (Auxl.rule_of_ntr xd ntr).rule_homs) 
-                      with Not_found -> "Set" in
-                    "\nDefinition "
-                    ^ pp_nontermroot_ty m xd ntr ^ " : " ^ universe ^ " := "
-                    ^ pp_hom_spec m xd hs
-                    ^ ".\n"
+                | Coq _ ->
+                    let homs = (Auxl.rule_of_ntr xd ntr).rule_homs in
+                    let type_name = pp_nontermroot_ty m xd ntr in
+                    let universe =
+                      try pp_hom_spec m xd (List.assoc "coq-universe" homs)
+                      with Not_found -> "Set"
+                    in
+                    let body = pp_hom_spec m xd hs in
+                    if List.mem_assoc "coq-notation" homs then
+                      "\nNotation " ^ type_name ^ " := (" ^ body ^ " : " ^ universe ^ ").\n"
+                    else
+                      "\nDefinition " ^ type_name ^ " : " ^ universe ^ " := " ^ body ^ ".\n"
                 | Twf _ -> 
                     "\n%abbrev "
                     ^ pp_nontermroot_ty m xd ntr ^ " : type = "
