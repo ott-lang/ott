@@ -953,7 +953,7 @@ let pp_fun_or_reln_defnclass_list
           List.iter (fun frdc -> pp_fun_or_reln_defnclass fd m xd lookup frdc) frdcs
       | Coq co ->
           pp_auxiliary_list_rules fd m xd frdcs;
-	  output_string fd "(** definitions *)\n";
+	  output_string fd "(* definitions *)\n";
           List.iter (fun frdc -> pp_fun_or_reln_defnclass fd m xd lookup frdc) frdcs;
       | Tex _ -> 
           output_string fd "% defnss\n";
