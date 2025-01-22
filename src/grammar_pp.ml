@@ -820,6 +820,7 @@ let rec tex_command_escape s =
        (Auxl.char_list_of_string s))
 
 and tex_rule_name m ntr = "\\"^pp_tex_NAME_PREFIX m^tex_command_escape ntr 
+and tex_drule_name_name m s = "\\"^pp_tex_NAME_PREFIX m^"drulename"^tex_command_escape s
 and tex_drule_name m s = "\\"^pp_tex_NAME_PREFIX m^"drule"^tex_command_escape s
 and tex_defn_name m wrapper s = "\\"^pp_tex_NAME_PREFIX m^"defn"^tex_command_escape (wrapper^s)
 and tex_defnclass_name m s = "\\"^pp_tex_NAME_PREFIX m^"defns"^tex_command_escape s
