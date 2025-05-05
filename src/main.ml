@@ -697,7 +697,7 @@ let read_systemdefn read_systemdefn_filename =
   let fd = open_in_bin read_systemdefn_filename in
   let sd,lookup ,sd_unquotiented, sd_quotiented_unaux = 
     try (Marshal.from_channel fd :
-          (Types.systemdefn * (string -> bool -> string -> Types.symterm list) * Types.systemdefn * Types.systemdefn))
+          (Types.systemdefn * Types.made_parser * Types.systemdefn * Types.systemdefn))
     with Failure s -> Auxl.error None ("Cannot read dumped systemdefn\n   " ^ s ^"\n")
   in
   close_in fd;
@@ -712,7 +712,7 @@ let output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux) =
       let fd = open_out_bin s in
       Marshal.to_channel fd (
           (sd,lookup,sd_unquotiented,sd_quotiented_unaux) :
-            (Types.systemdefn * (string -> bool -> string -> Types.symterm list) * Types.systemdefn * Types.systemdefn))
+            (Types.systemdefn * Types.made_parser * Types.systemdefn * Types.systemdefn))
         [Marshal.Closures];
       close_out fd;
       print_string ("system definition in file: " ^ s ^ "\n") );
