@@ -39,6 +39,10 @@ exception LemTODO;;
 
 exception DE1 of string;;
 
+exception Reject_parse;;
+
+exception Reject_all_parses;;
+
 open Location;;
 
 (** ************************ *)
