@@ -18,7 +18,7 @@ this library.
 build: [make "-j%{jobs}%" "-C" "coq"]
 install: [make "-C" "coq" "install"]
 depends: [
-  "coq" {>= "8.14"}
+  ("coq" {>= "8.14" & < "9.0"}) | ("rocq-prover" {>= "9.0"} & "coq" {>= "9.0"})
 ]
 tags: [
   "category:Computer Science/Semantics and Compilation/Semantics"

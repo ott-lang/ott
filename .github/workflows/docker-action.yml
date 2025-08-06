@@ -15,6 +15,7 @@ jobs:
       matrix:
         image:
           - 'coqorg/coq:8.20'
+          - 'rocq/rocq-prover:9.0'
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
