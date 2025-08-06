@@ -624,7 +624,10 @@ let select_dep_graph_nontran m xddep =
 
 let hom_spec_for_hom_name hn homs = 
   try Some (List.assoc hn homs)
-  with Not_found -> None
+  with Not_found ->
+    (* Try the alternate: rocq -> coq *)
+    let alt = Str.global_replace (Str.regexp "rocq") "coq" hn in
+    if alt <> hn then try Some (List.assoc alt homs) with Not_found -> None else None
 
 let hom_spec_for_pp_mode m homs = 
   hom_spec_for_hom_name (hom_name_for_pp_mode m) homs

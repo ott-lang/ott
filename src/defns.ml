@@ -545,7 +545,9 @@ let pp_defn fd (m:pp_mode) (xd:syntaxdefn) lookup (defnclass_wrapper:string) (un
 
             
 let pp_defnclass fd (m:pp_mode) (xd:syntaxdefn) lookup (dc:defnclass) =
-  let universe = try Grammar_pp.pp_hom_spec m xd (List.assoc "coq-universe" dc.dc_homs) with Not_found -> "Prop" in
+  let universe = match Auxl.hom_spec_for_hom_name "rocq-universe" dc.dc_homs with
+    | Some hs -> Grammar_pp.pp_hom_spec m xd hs
+    | None -> "Prop" in
   let isa_type_of_defn (m: pp_mode) (xd: syntaxdefn) (d: defn) : string = 
       (* seems simplest to find the type associated with the production that
          we added to the language for this defn, rather than build a type
@@ -723,7 +725,7 @@ let fundefn_to_int_func (m:pp_mode) (xd:syntaxdefn) (deps:string list) (fd:funde
         let prod_es = Grammar_pp.apply_hom_order m xd (Auxl.prod_of_prodname xd prod_name) in
 
 	let struct_on = 
-	  match Auxl.hom_spec_for_hom_name "coq-struct" fd.fd_homs with
+	  match Auxl.hom_spec_for_hom_name "rocq-struct" fd.fd_homs with
 	  | Some ([Hom_index i]) -> "{struct x" ^ string_of_int (i+1) ^ "} "
 	  | Some _ -> 
      Auxl.warning (* TODO *) None "malformed coq-struct homomorphism"; 

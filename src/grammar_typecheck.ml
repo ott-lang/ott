@@ -404,21 +404,21 @@ let subrule (xd:syntaxdefn) (include_meta_prods:bool)
 
 let allowable_hom_data = 
   [ 
-    ( Hu_root    , (["isa";"coq";"hol";"lem";(*"twf";*)"tex";"ocaml"], 
+    ( Hu_root    , (["isa";"coq";"rocq";"hol";"lem";(*"twf";*)"tex";"ocaml"], 
                     "nonterminal, metavar or indexvar root"));
-    ( Hu_metavar , (["isa";"coq";"hol";"lem";(*"twf";*)"tex";"ocaml";"com";"coq-equality";"coq-notation";"coq-universe";"lex";"texvar";"isavar";"holvar";"lemvar";"ocamlvar";"repr-locally-nameless";(*"repr-nominal";*)"phantom";"ocamllex";"ocamllex-remove";"ocamllex-of-string";"pp";"pp-raw";"pp-suppress"],
+    ( Hu_metavar , (["isa";"coq";"rocq";"hol";"lem";(*"twf";*)"tex";"ocaml";"com";"coq-equality";"rocq-equality";"coq-notation";"coq-universe";"rocq-universe";"lex";"texvar";"isavar";"holvar";"lemvar";"ocamlvar";"repr-locally-nameless";(*"repr-nominal";*)"phantom";"ocamllex";"ocamllex-remove";"ocamllex-of-string";"pp";"pp-raw";"pp-suppress"],
                     "metavar declaration"));
-    ( Hu_rule    , (["isa";"coq";"hol";"lem";(*"twf";*)"tex";"ocaml";"com";"coq-equality";"coq-notation";"coq-universe";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ic";"ch";"ih";"phantom";"aux";"auxparam";"menhir-start";"menhir-start-type";"quotient-with";"pp";"pp-raw";"pp-suppress";"pp-params";"lex-comment"],
+    ( Hu_rule    , (["isa";"coq";"rocq";"hol";"lem";(*"twf";*)"tex";"ocaml";"com";"coq-equality";"rocq-equality";"coq-notation";"coq-universe";"rocq-universe";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ic";"ch";"ih";"phantom";"aux";"auxparam";"menhir-start";"menhir-start-type";"quotient-with";"pp";"pp-raw";"pp-suppress";"pp-params";"lex-comment"],
                     "rule"));
     ( Hu_rule_meta, (["com"], "special rule"));
-    ( Hu_prod    , (["isa";"coq";"hol";"lem";(*"twf";*)"tex";"texlong";"ocaml";"com";"order";"isasyn";"isaprec";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ic";"ch";"ih";
+    ( Hu_prod    , (["isa";"coq";"rocq";"hol";"lem";(*"twf";*)"tex";"texlong";"ocaml";"com";"order";"isasyn";"isaprec";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ic";"ch";"ih";
                      "disambiguate";"prec";"leftassoc";"rightassoc";"menhir";"quotient-remove";"menhir-prec";"pp";"pp-raw"],
                     "production"));
     ( Hu_prod_tm , (["isa";                      "tex";"lex";  "com"; "prec";"leftassoc";"rightassoc"],"production of the terminals grammar"));
     ( Hu_drule   , ([                                          "com"],"definition rule"));
     ( Hu_defn    , ([                            "tex";        "com";"isasyn";"isaprec";"disambiguate";"lemwcf"],"definition"));
-    ( Hu_defnclass, (["coq-universe"],"defns block"));
-    ( Hu_fundefn , (["isa";"coq";"hol";"lem";(*"twf";*)"tex";        "com";"order";"isasyn";"isaprec";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ic";"ch";"ih";"coq-struct"],"function definition"));
+    ( Hu_defnclass, (["coq-universe";"rocq-universe"],"defns block"));
+    ( Hu_fundefn , (["isa";"coq";"rocq";"hol";"lem";(*"twf";*)"tex";        "com";"order";"isasyn";"isaprec";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ic";"ch";"ih";"coq-struct";"rocq-struct"],"function definition"));
     ( Hu_fundefnclass, ([(* "isa-proof";*)"hol-proof"],"funs block"));
     ( Hu_subrule,  (["isa-proof"],"subrule definition"));
     ( Hu_subst,    (["isa-proof"],"substitution definition"));
@@ -428,6 +428,7 @@ let allowable_hom_data =
   ] 
 
 let embed_allowable_homs = ["coq";"coq-lib";"coq-preamble";
+                            "rocq";"rocq-lib";"rocq-preamble";
                             "isa";"isa-import";"isa-auxfn-proof";"isa-subrule-proof";"isa-lib";"isa-preamble";
                             "hol";"hol-preamble";
                             "lem";"lem-preamble";
@@ -436,7 +437,7 @@ let embed_allowable_homs = ["coq";"coq-lib";"coq-preamble";
                             "ocaml";"ocaml-preamble";
                             "menhir"]
 
-let list_form_allowable_homs =["isa";"coq";"hol";"lem";"ic";"ch";"ih";"ich";"ichl";"icho";"ichlo";(*"icht";*)"coq-struct";"ocaml"] 
+let list_form_allowable_homs =["isa";"coq";"rocq";"hol";"lem";"ic";"ch";"ih";"ich";"ichl";"icho";"ichlo";(*"icht";*)"coq-struct";"rocq-struct";"ocaml"] 
 
 let cd_disambiguate_hom name rhs hs =
   try 
@@ -878,7 +879,12 @@ and cd_prod c (rn:string) (pnw:string) (targets:string list) (rule_homs_for_targ
     then ty_error2 p.raw_prod_loc ("illegal hom \"order\" in meta or sugar production") "";
     List.iter 
       (function target -> 
-        if not (List.mem target def_homs) 
+        let target_ok = 
+          if target = "coq" then
+            (List.mem "coq" def_homs) || (List.mem "rocq" def_homs)
+          else
+            List.mem target def_homs in
+        if not target_ok
         then ty_error2 p.raw_prod_loc 
             ("meta or sugar production must have a hom for each target - here \""
              ^target^"\" is missing") "") 
@@ -1481,7 +1487,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
       raw_prod_flavour = Bar;
       raw_prod_categories = []; (* fd.raw_fd_categories; *)
       raw_prod_es = fd.raw_fd_es @ [ Raw_ident (dummy_loc,(dummy_loc,"===")); Raw_ident (dummy_loc,fd.raw_fd_result) ];
-      raw_prod_homs = List.filter (function (hn,_,_) -> not (List.mem hn ["coq-struct"])) fd.raw_fd_homs;
+      raw_prod_homs = List.filter (function (hn,_,_) -> not (List.mem hn ["coq-struct";"rocq-struct"])) fd.raw_fd_homs;
       raw_prod_bs = [];
       raw_prod_loc = fd.raw_fd_loc } in
 
@@ -1544,7 +1550,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
       raw_prod_flavour = Bar;
       raw_prod_categories = [(dummy_loc,"M"); (dummy_loc,"F")]; (* fd.raw_fd_categories; *) (* FUNTODO:  M ? *)
       raw_prod_es = fd.raw_fd_es;
-      raw_prod_homs = List.filter (function (hn,_,_) -> not (List.mem hn ["coq-struct"])) fd.raw_fd_homs;  
+      raw_prod_homs = List.filter (function (hn,_,_) -> not (List.mem hn ["coq-struct";"rocq-struct"])) fd.raw_fd_homs;  
       raw_prod_bs = [];
       raw_prod_loc = fd.raw_fd_loc } in
 
@@ -1966,6 +1972,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
          | "tex-wrap-pre"
          | "tex-wrap-post"  -> Some (l,hn,he)
          | "coq-preamble"   -> Some (l,"coq",he)
+         | "rocq-preamble"  -> Some (l,"coq",he)
          | "isa-preamble"   -> Some (l,"isa",he)
          | "hol-preamble"   -> Some (l,"hol",he)
          | "lem-preamble"   -> Some (l,"lem",he)

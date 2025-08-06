@@ -62,7 +62,7 @@ type lexer = Lexing.lexbuf -> Grammar_parser.token
 
 type token_type = Tok_kw of string | Tok_sym of string*string | Tok_sym_direct of string*string | Tok_user of string 
 
-let hom_strings = ["TEX_NAME_PREFIX";"formula";"terminals";"M";"S";"tex";"com";"coq";"hol";"lem";"isa";"ocaml";"icho";"ichlo";"ich";"ichl";"coq-equality";"isasyn";"isaprec";"lex";"texvar";"isavar";"holvar";"lemvar";"ocamlvar";"repr-locally-nameless";"phantom";"coq-struct";"isa-proof";"isa-auxfn-proof";"isa-subrule-proof";"coq-lib"]
+let hom_strings = ["TEX_NAME_PREFIX";"formula";"terminals";"M";"S";"tex";"com";"coq";"rocq";"hol";"lem";"isa";"ocaml";"icho";"ichlo";"ich";"ichl";"coq-equality";"rocq-equality";"isasyn";"isaprec";"lex";"texvar";"isavar";"holvar";"lemvar";"ocamlvar";"repr-locally-nameless";"phantom";"coq-struct";"rocq-struct";"isa-proof";"isa-auxfn-proof";"isa-subrule-proof";"coq-lib";"rocq-lib";"coq-universe";"rocq-universe"]
 
 
 let de_lex t = match t with

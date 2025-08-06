@@ -80,7 +80,7 @@ let rules_needing_induction m xd rs : nontermroot list list =
     (fun g -> List.for_all 
 	(fun ntr -> 
 	  let r = Auxl.rule_of_ntr xd ntr in
-	  match (Auxl.hom_spec_for_hom_name "coq" r.rule_homs) with
+	  match (Auxl.hom_spec_for_hom_name "rocq" r.rule_homs) with
 	    Some _ -> false | None -> true)
 	g)
     groups

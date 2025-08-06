@@ -140,8 +140,9 @@ let expand_element (m:pp_mode) (xd:syntaxdefn) (bs:bindspec list) (e:element) :
           List.map (fun mvntr -> 
             match mvntr with
             | Ntr ntr -> 
-                ( try Grammar_pp.pp_hom_spec m xd (List.assoc "coq-universe" (Auxl.rule_of_ntr xd ntr).rule_homs) 
-                with Not_found -> "Set" )
+                ( match Auxl.hom_spec_for_hom_name "rocq-universe" (Auxl.rule_of_ntr xd ntr).rule_homs with
+                  | Some hs -> Grammar_pp.pp_hom_spec m xd hs
+                  | None -> "Set" )
             | Mvr _ -> "Set") ss in
         if List.for_all (fun s -> String.compare s "Set" = 0) universes
         then "Set"
