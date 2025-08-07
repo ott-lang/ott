@@ -47,7 +47,7 @@ let mode_name m = match m with
   | Isa _ -> "Isabelle"
   | Hol _ -> "HOL"
   | Lem _ -> "Lem"
-  | Coq _ -> "Coq"
+  | Coq _ -> "Rocq"
   | Twf _ -> "Twelf"
   | Caml _ -> "OCaml"
   | Lex _ -> "Lex"
@@ -252,7 +252,7 @@ let add_to_lib r name def =
 (* Similar function already in Grammar_pp
 let pp_type_name m xd (s: string) = 
   let homname = match m with
-    | Coq _ -> "coq"
+    | Coq _ -> "rocq"
     | Hol _ -> "hol"
     | Isa _ -> "isa"
     | Twf _ -> "twf"
@@ -602,7 +602,7 @@ let hom_name_for_pp_mode m
     | Isa _ -> "isa"
     | Hol _ -> "hol"
     | Lem _ -> "lem"
-    | Coq _ -> "coq"
+    | Coq _ -> "rocq"
     | Twf _ -> "twf"
     | Caml _ -> "ocaml"
     | Lex _ -> "lex"
@@ -1792,7 +1792,7 @@ let filename_check m s =
 
 let is_lngen m =
   let co = match m with Coq co -> co 
-  | _ -> errorm m "ln_transform_syntaxdefn of non-coq target" in
+  | _ -> errorm m "ln_transform_syntaxdefn of non-rocq target" in
   co.coq_lngen
 
 let require_locally_nameless xd =

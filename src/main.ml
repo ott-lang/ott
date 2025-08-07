@@ -56,9 +56,9 @@ let hol_filter_filename_dsts = ref ([] :  string list)
 let lem_filter_filenames = ref ([] : (string * string) list)
 let lem_filter_filename_srcs = ref ([] : string list)
 let lem_filter_filename_dsts = ref ([] :  string list)
-let coq_filter_filenames = ref ([] : (string * string) list)
-let coq_filter_filename_srcs = ref ([] : string list)
-let coq_filter_filename_dsts = ref ([] :  string list)
+let rocq_filter_filenames = ref ([] : (string * string) list)
+let rocq_filter_filename_srcs = ref ([] : string list)
+let rocq_filter_filename_dsts = ref ([] :  string list)
 let twf_filter_filenames = ref ([] : (string * string) list)
 let twf_filter_filename_srcs = ref ([] : string list)
 let twf_filter_filename_dsts = ref ([] :  string list)
@@ -88,11 +88,11 @@ let isa_syntax = ref false
 let isa_primrec = ref true 
 let isa_inductive = ref true
 let isa_generate_lemmas = ref true
-let coq_avoid = ref 1
-let coq_expand_lists = ref false
-let coq_lngen = ref false
-let coq_names_in_rules = ref true
-let coq_use_filter_fn = ref false
+let rocq_avoid = ref 1
+let rocq_expand_lists = ref false
+let rocq_lngen = ref false
+let rocq_names_in_rules = ref true
+let rocq_use_filter_fn = ref false
 let merge_fragments = ref false
 let picky_multiple_parses = ref false
 let caml_include_terminals = ref false
@@ -124,10 +124,10 @@ let options = Arg.align [
     Arg.Tuple[Arg.String (fun s -> tex_filter_filename_srcs := s :: !tex_filter_filename_srcs);
               Arg.String (fun s -> tex_filter_filename_dsts := s :: !tex_filter_filename_dsts)],
     "<src><dst>  Files to TeX filter" ); 
-  ( "-coq_filter", 
-    Arg.Tuple[Arg.String (fun s -> coq_filter_filename_srcs := s :: !coq_filter_filename_srcs);
-              Arg.String (fun s -> coq_filter_filename_dsts := s :: !coq_filter_filename_dsts)],
-    "<src><dst>  Files to Coq filter" ); 
+  ( "-rocq_filter", 
+    Arg.Tuple[Arg.String (fun s -> rocq_filter_filename_srcs := s :: !rocq_filter_filename_srcs);
+              Arg.String (fun s -> rocq_filter_filename_dsts := s :: !rocq_filter_filename_dsts)],
+    "<src><dst>  Files to Rocq filter" ); 
   ( "-hol_filter", 
     Arg.Tuple[Arg.String (fun s -> hol_filter_filename_srcs := s :: !hol_filter_filename_srcs);
               Arg.String (fun s -> hol_filter_filename_dsts := s :: !hol_filter_filename_dsts)],
@@ -231,22 +231,22 @@ let options = Arg.align [
     Arg.Bool (fun b -> isa_generate_lemmas := b),
     "<"^string_of_bool !isa_syntax ^">       Lemmas for collapsed functions in Isabelle" ); 
 
-(* options for coq output *)
-  ( "-coq_avoid", 
-    Arg.Int (fun i -> coq_avoid := i),
-    "<"^string_of_int !coq_avoid^">          coq type-name avoidance\n                                       (0=nothing, 1=avoid, 2=secondaryify)" ); 
-  ( "-coq_expand_list_types", 
-    Arg.Bool (fun b -> coq_expand_lists := b),
-    "<"^string_of_bool !coq_expand_lists^">  Expand list types in Coq output" ); 
-  ( "-coq_lngen", 
-    Arg.Bool (fun b -> coq_lngen := b),
-    "<"^string_of_bool !coq_lngen^">  lngen compatibility" ); 
-  ( "-coq_names_in_rules", 
-    Arg.Bool (fun b -> coq_names_in_rules := b),
-    "<"^string_of_bool !coq_names_in_rules^">  Copy user names in rule definitions" ); 
-  ( "-coq_use_filter_fn", 
-    Arg.Bool (fun b -> coq_use_filter_fn := b),
-    "<"^string_of_bool !coq_use_filter_fn^">  Use list_filter instead of list_minus2 in substitutions" ); 
+(* options for rocq output *)
+  ( "-rocq_avoid", 
+    Arg.Int (fun i -> rocq_avoid := i),
+    "<"^string_of_int !rocq_avoid^">          rocq type-name avoidance\n                                       (0=nothing, 1=avoid, 2=secondaryify)" ); 
+  ( "-rocq_expand_list_types", 
+    Arg.Bool (fun b -> rocq_expand_lists := b),
+    "<"^string_of_bool !rocq_expand_lists^">  Expand list types in Rocq output" ); 
+  ( "-rocq_lngen", 
+    Arg.Bool (fun b -> rocq_lngen := b),
+    "<"^string_of_bool !rocq_lngen^">  lngen compatibility" ); 
+  ( "-rocq_names_in_rules", 
+    Arg.Bool (fun b -> rocq_names_in_rules := b),
+    "<"^string_of_bool !rocq_names_in_rules^">  Copy user names in rule definitions" ); 
+  ( "-rocq_use_filter_fn", 
+    Arg.Bool (fun b -> rocq_use_filter_fn := b),
+    "<"^string_of_bool !rocq_use_filter_fn^">  Use list_filter instead of list_minus2 in substitutions" ); 
 (* options for OCaml output *)
   ( "-ocaml_include_terminals",
     Arg.Bool (fun b -> caml_include_terminals := b),
@@ -303,27 +303,40 @@ let usage_msg =
 
 let _ = print_string ("Ott version "^Version.n^"   distribution of "^Version.d^"\n")
 
-let _ = 
+(* Normalize flag names: replace "coq" with "rocq" for backward compatibility *)
+let normalize_flag flag =
+  if String.length flag >= 4 && String.sub flag 0 4 = "-coq" then
+    "-rocq" ^ String.sub flag 4 (String.length flag - 4)
+  else
+    flag
+
+let _ =
   let extra_arguments = ref [] in
-  Arg.parse options 
-    (fun s -> 
-      if !i_arguments 
-      then Auxl.exit_with None "must either use -i <filename> or specify all input filenames at the end of the command line"
-      else extra_arguments := (In,s) ::(!extra_arguments))
-    usage_msg;
+  let normalized_argv = Array.map normalize_flag Sys.argv in
+  (try
+    Arg.parse_argv normalized_argv options
+      (fun s ->
+        if !i_arguments
+        then Auxl.exit_with None "must either use -i <filename> or specify all input filenames at the end of the command line"
+        else extra_arguments := (In,s) ::(!extra_arguments))
+      usage_msg
+  with
+  | Arg.Help msg -> print_string msg; exit 0
+  | Arg.Bad msg -> print_string msg; exit 2);
   file_arguments :=  !file_arguments @ !extra_arguments 
 
 let _ = tex_filter_filenames := List.combine (!tex_filter_filename_srcs) (!tex_filter_filename_dsts)
 let _ = hol_filter_filenames := List.combine (!hol_filter_filename_srcs) (!hol_filter_filename_dsts)
 let _ = lem_filter_filenames := List.combine (!lem_filter_filename_srcs) (!lem_filter_filename_dsts)
 let _ = isa_filter_filenames := List.combine (!isa_filter_filename_srcs) (!isa_filter_filename_dsts)
-let _ = coq_filter_filenames := List.combine (!coq_filter_filename_srcs) (!coq_filter_filename_dsts)
+let _ = rocq_filter_filenames := List.combine (!rocq_filter_filename_srcs) (!rocq_filter_filename_dsts)
 let _ = twf_filter_filenames := List.combine (!twf_filter_filename_srcs) (!twf_filter_filename_dsts)
 let _ = caml_filter_filenames := List.combine (!caml_filter_filename_srcs) (!caml_filter_filename_dsts)
 
 let types_of_extensions =
     [ "ott","ott";
       "tex","tex"; 
+      "v",  "rocq"; 
       "v",  "coq"; 
       "thy","isa"; 
       "sml","hol"; 
@@ -345,7 +358,7 @@ let file_type name =
   with
     _ -> None 
 
-let non_tex_output_types = ["coq"; "isa"; "hol"; "lem"; "twf"; "ocaml"]
+let non_tex_output_types = ["rocq"; "coq"; "isa"; "hol"; "lem"; "twf"; "ocaml"]
 let output_types =  "tex" :: "lex" :: "menhir" :: non_tex_output_types
 let input_types = "ott" :: output_types
 
@@ -373,7 +386,7 @@ let classify_file_argument arg =
 (*                                                                           *)                  
 (*   values, containing first all the ott source files from the end of       *)
 (*   the command line, if any, then all the explicit -in and -out arguments, *)
-(*   and finally any -tex/-coq/-hol/-isabelle/-lem/-ocaml arguments               *)
+(*   and finally any -tex/-rocq/-hol/-isabelle/-lem/-ocaml arguments               *)
 
 let all_file_arguments = 
   List.map classify_file_argument (List.rev (!file_arguments))
@@ -392,7 +405,7 @@ let targets_in ts =
 
 let targets_non_tex = targets_in non_tex_output_types
 let targets = targets_in output_types
-let targets_for_non_picky = targets_in [(*"lex";"ocaml";*)"hol";"lem";"isa";"twf";"coq";"tex"]
+let targets_for_non_picky = targets_in [(*"lex";"ocaml";*)"hol";"lem";"isa";"twf";"rocq";"coq";"tex"]
 
 (* collect the source filenames *)
 let source_filenames = 
@@ -426,7 +439,7 @@ let m_hol = Hol { hol_library = ref ("",[]); }
 let m_lem = Lem { lem_library = ref ("",[]); }
 let m_twf = Twf { twf_current_defn = ref "";
 		  twf_library = ref ("",[]) }
-let m_coq = Coq { coq_expand_lists = !coq_expand_lists;
+let m_coq = Coq { coq_expand_lists = !rocq_expand_lists;
 		  coq_quantified_vars_from_de = ref [];
 		  coq_non_local_hyp_defn = ref "";
 		  coq_non_local_hyp_defn_vars = ref [];
@@ -435,9 +448,9 @@ let m_coq = Coq { coq_expand_lists = !coq_expand_lists;
                   coq_list_aux_defns = { defined = ref []; newly_defined = ref [] };
                   coq_library = ref ("",[]);
 		  coq_locally_nameless = ref false;
-                  coq_lngen = !coq_lngen;
-                  coq_use_filter_fn = !coq_use_filter_fn;
-                  coq_names_in_rules = !coq_names_in_rules }
+                  coq_lngen = !rocq_lngen;
+                  coq_use_filter_fn = !rocq_use_filter_fn;
+                  coq_names_in_rules = !rocq_names_in_rules }
 
 let oo =  { ppo_include_terminals = !caml_include_terminals; caml_library = ref ("",[]) } 
 let m_caml = Caml oo 
@@ -527,6 +540,7 @@ let _ =
              "lem",m_lem;
              "isa",m_isa;
              "twf",m_twf;
+             "rocq",m_coq ;
              "coq",m_coq ;
              "tex",m_tex ]) 
         targets_for_non_picky)
@@ -765,13 +779,13 @@ let output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux) =
       match t with
       | "tex" -> 
           System_pp.pp_systemdefn_core_tex m_tex sd lookup fi
-      | "coq" -> 
+      | "rocq" | "coq" -> 
           let sd = 
-            ( match !coq_avoid with
+            ( match !rocq_avoid with
             | 0 -> sd
             | 1 -> Auxl.avoid_primaries_systemdefn false sd
             | 2 -> Auxl.avoid_primaries_systemdefn true sd
-            | _ -> Auxl.error None "coq type-name avoidance must be in {0,1,2}" ) in
+            | _ -> Auxl.error None "rocq type-name avoidance must be in {0,1,2}" ) in
           System_pp.pp_systemdefn_core_io m_coq sd lookup fi !merge_fragments
       | "isa" ->
           System_pp.pp_systemdefn_core_io m_isa sd lookup fi !merge_fragments
@@ -860,7 +874,7 @@ let output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux) =
   in
 
   (List.iter (filter m_tex) (!tex_filter_filenames));
-  (List.iter (filter m_coq) (!coq_filter_filenames));
+  (List.iter (filter m_coq) (!rocq_filter_filenames));
   (List.iter (filter m_isa) (!isa_filter_filenames));
   (List.iter (filter m_hol) (!hol_filter_filenames));
   (List.iter (filter m_lem) (!lem_filter_filenames));

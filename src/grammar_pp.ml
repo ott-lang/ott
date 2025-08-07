@@ -1246,7 +1246,7 @@ and coq_maybe_decide_equality m xd homs ntmvr loc =
       ^ ( match eh with
         | [ ] -> "  decide equality; auto with ott_coq_equality arith."
         | [ Hom_string s ] -> s 
-        | _ -> Auxl.error (Some loc) "malformed coq-equality homomorphism\n" )
+        | _ -> Auxl.error (Some loc) "malformed rocq-equality homomorphism\n" )
       ^ "\nDefined.\n"
       ^ "#[export] Hint Resolve eq_" ^ type_name  ^ " : ott_coq_equality.\n"
 
@@ -1279,7 +1279,7 @@ and pp_metavardefn m xd mvd =
             in
             let body = pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc in
             let sentence =
-              if List.mem_assoc "coq-notation" mvd.mvd_rep then
+              if Auxl.hom_spec_for_hom_name "rocq-notation" mvd.mvd_rep <> None then
 	        "Notation " ^ type_name ^ " := (" ^ body ^ " : " ^ universe ^ ")."
               else
 	        "Definition " ^  type_name ^ " : " ^ universe ^ " := " ^ body ^ "."
@@ -2757,7 +2757,7 @@ and pp_rule_list m xd rs =
                       | None -> "Set"
                     in
                     let body = pp_hom_spec m xd hs in
-                    if List.mem_assoc "coq-notation" homs then
+                    if Auxl.hom_spec_for_hom_name "rocq-notation" homs <> None then
                       "\nNotation " ^ type_name ^ " := (" ^ body ^ " : " ^ universe ^ ").\n"
                     else
                       "\nDefinition " ^ type_name ^ " : " ^ universe ^ " := " ^ body ^ ".\n"

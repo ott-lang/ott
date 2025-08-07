@@ -406,9 +406,9 @@ let allowable_hom_data =
   [ 
     ( Hu_root    , (["isa";"coq";"rocq";"hol";"lem";(*"twf";*)"tex";"ocaml"], 
                     "nonterminal, metavar or indexvar root"));
-    ( Hu_metavar , (["isa";"coq";"rocq";"hol";"lem";(*"twf";*)"tex";"ocaml";"com";"coq-equality";"rocq-equality";"coq-notation";"coq-universe";"rocq-universe";"lex";"texvar";"isavar";"holvar";"lemvar";"ocamlvar";"repr-locally-nameless";(*"repr-nominal";*)"phantom";"ocamllex";"ocamllex-remove";"ocamllex-of-string";"pp";"pp-raw";"pp-suppress"],
+    ( Hu_metavar , (["isa";"coq";"rocq";"hol";"lem";(*"twf";*)"tex";"ocaml";"com";"coq-equality";"rocq-equality";"coq-notation";"rocq-notation";"coq-universe";"rocq-universe";"lex";"texvar";"isavar";"holvar";"lemvar";"ocamlvar";"repr-locally-nameless";(*"repr-nominal";*)"phantom";"ocamllex";"ocamllex-remove";"ocamllex-of-string";"pp";"pp-raw";"pp-suppress"],
                     "metavar declaration"));
-    ( Hu_rule    , (["isa";"coq";"rocq";"hol";"lem";(*"twf";*)"tex";"ocaml";"com";"coq-equality";"rocq-equality";"coq-notation";"coq-universe";"rocq-universe";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ic";"ch";"ih";"phantom";"aux";"auxparam";"menhir-start";"menhir-start-type";"quotient-with";"pp";"pp-raw";"pp-suppress";"pp-params";"lex-comment"],
+    ( Hu_rule    , (["isa";"coq";"rocq";"hol";"lem";(*"twf";*)"tex";"ocaml";"com";"coq-equality";"rocq-equality";"coq-notation";"rocq-notation";"coq-universe";"rocq-universe";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ic";"ch";"ih";"phantom";"aux";"auxparam";"menhir-start";"menhir-start-type";"quotient-with";"pp";"pp-raw";"pp-suppress";"pp-params";"lex-comment"],
                     "rule"));
     ( Hu_rule_meta, (["com"], "special rule"));
     ( Hu_prod    , (["isa";"coq";"rocq";"hol";"lem";(*"twf";*)"tex";"texlong";"ocaml";"com";"order";"isasyn";"isaprec";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ic";"ch";"ih";
@@ -665,21 +665,21 @@ and cd_homs_icho (c: cd_env) (hs: homomorphism list) : homomorphism list =
       | [] -> []
       | (hn,hs)::hs' -> 
           if hn = "ic" then 
-            ("isa",hs)::("coq",hs)::(cd_homs_icho c hs') 
+            ("isa",hs)::("rocq",hs)::(cd_homs_icho c hs') 
           else if hn = "ih" then 
             ("isa",hs)::("hol",hs)::(cd_homs_icho c hs') 
           else if hn = "ch" then 
-            ("hol",hs)::("coq",hs)::(cd_homs_icho c hs') 
+            ("hol",hs)::("rocq",hs)::(cd_homs_icho c hs') 
           else if hn = "ich" then 
-            ("isa",hs)::("hol",hs)::("coq",hs)::(cd_homs_icho c hs') 
+            ("isa",hs)::("hol",hs)::("rocq",hs)::(cd_homs_icho c hs') 
 (*           else if hn = "icht" then  *)
-(*             ("isa",hs)::("hol",hs)::("coq",hs)::("twf",hs)::(cd_homs_icho c hs')  *)
+(*             ("isa",hs)::("hol",hs)::("rocq",hs)::("twf",hs)::(cd_homs_icho c hs')  *)
           else if hn = "icho" then 
-            ("isa",hs)::("hol",hs)::("coq",hs)::("ocaml",hs)::(cd_homs_icho c hs') 
+            ("isa",hs)::("hol",hs)::("rocq",hs)::("ocaml",hs)::(cd_homs_icho c hs') 
           else if hn = "ichl" then 
-            ("isa",hs)::("hol",hs)::("coq",hs)::("lem",hs)::(cd_homs_icho c hs') 
+            ("isa",hs)::("hol",hs)::("rocq",hs)::("lem",hs)::(cd_homs_icho c hs') 
           else if hn = "ichlo" then 
-            ("isa",hs)::("hol",hs)::("coq",hs)::("lem",hs)::("ocaml",hs)::(cd_homs_icho c hs') 
+            ("isa",hs)::("hol",hs)::("rocq",hs)::("lem",hs)::("ocaml",hs)::(cd_homs_icho c hs') 
           else 
             (hn,hs)::(cd_homs_icho c hs') 
 
@@ -818,7 +818,7 @@ and cd_prod c (rn:string) (pnw:string) (targets:string list) (rule_homs_for_targ
 	List.filter 
 	  (fun h -> match h with Hom_index _ -> true | _ -> false) 
 	  (List.assoc "order" homs) in
-      let oh_coq = ( "coq", (Hom_string ("("^prod_name))::oh@[Hom_string ")"] ) in
+      let oh_coq = ( "rocq", (Hom_string ("("^prod_name))::oh@[Hom_string ")"] ) in
       let oh_isa = ( "isa", (Hom_string ("("^prod_name))::oh@[Hom_string ")"] ) in
       let oh_hol = 
 	let of_s = if List.length oh = 0 then "" else " of " in
@@ -842,7 +842,7 @@ and cd_prod c (rn:string) (pnw:string) (targets:string list) (rule_homs_for_targ
               (List.filter (function Lang_nonterm _ | Lang_metavar _ -> true | _ -> false)
                  elems)) []
     in
-    let oh_coq = ( "coq", (Hom_string ("("^prod_name))::oh@[Hom_string ")"] ) in
+    let oh_coq = ( "rocq", (Hom_string ("("^prod_name))::oh@[Hom_string ")"] ) in
     let oh_isa = ( "isa", (Hom_string ("("^prod_name))::oh@[Hom_string ")"] ) in
     let oh_hol = ( "hol", (Hom_string ("("^prod_name))::oh@[Hom_string ")"] ) in
     let oh_lem = ( "lem", (Hom_string ("("^prod_name))::oh@[Hom_string ")"] ) in
@@ -880,7 +880,7 @@ and cd_prod c (rn:string) (pnw:string) (targets:string list) (rule_homs_for_targ
     List.iter 
       (function target -> 
         let target_ok = 
-          if target = "coq" then
+          if target = "rocq" then
             (List.mem "coq" def_homs) || (List.mem "rocq" def_homs)
           else
             List.mem target def_homs in
@@ -1937,7 +1937,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
            r.raw_rule_homs) in
     let rule_homs = 
       if r.raw_rule_ntr_name = "formula" then
-        [("coq", [Hom_string "Prop"]); ("hol", [Hom_string "bool"]); 
+        [("rocq", [Hom_string "Prop"]); ("hol", [Hom_string "bool"]); 
          ("lem", [Hom_string "bool"]);
          ("isa", [Hom_string "bool"]); ("ocaml", [Hom_string "bool"])] 
       else rule_homs in
@@ -1971,8 +1971,8 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
          | "tex-preamble"   -> Some (l,"tex",he)
          | "tex-wrap-pre"
          | "tex-wrap-post"  -> Some (l,hn,he)
-         | "coq-preamble"   -> Some (l,"coq",he)
-         | "rocq-preamble"  -> Some (l,"coq",he)
+         | "coq-preamble"   -> Some (l,"rocq",he)
+         | "rocq-preamble"  -> Some (l,"rocq",he)
          | "isa-preamble"   -> Some (l,"isa",he)
          | "hol-preamble"   -> Some (l,"hol",he)
          | "lem-preamble"   -> Some (l,"lem",he)
@@ -2007,7 +2007,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
 	    mvd_names = List.map
               (function s,rhoms->(s,List.map (cd_hom Hu_root c []) rhoms))
               mvd.raw_mvd_names; 
-	    mvd_rep = if ln then ("coq",[(Hom_string "var")])::mvd_rep else mvd_rep;
+	    mvd_rep = if ln then ("rocq",[(Hom_string "var")])::mvd_rep else mvd_rep;
             mvd_indexvar = mvd.raw_mvd_indexvar;
 	    mvd_locally_nameless = ln;
 	    mvd_phantom = 

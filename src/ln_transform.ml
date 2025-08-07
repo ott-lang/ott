@@ -279,7 +279,7 @@ let ln_transform_rule (m:pp_mode) (xd:syntaxdefn) (r:rule) : rule =
 		      if bound_by_auxfn xd mvr
 		      then [ Lang_metavar ("nat",("nat",[Si_num "1"])); Lang_metavar ("nat",("nat",[Si_num "2"])) ]
 		      else [ Lang_metavar ("nat",("nat",[])) ];
-		    prod_homs = ("coq-ln_splitted",[Hom_string mvr])::p.prod_homs;  
+		    prod_homs = ("rocq-ln_splitted",[Hom_string mvr])::p.prod_homs;  
                     prod_disambiguate = None;
 		    prod_bs = [];                                                   
 		    prod_loc = p.prod_loc };
@@ -313,7 +313,7 @@ let ln_transform_rule (m:pp_mode) (xd:syntaxdefn) (r:rule) : rule =
 	prod_es = [ Lang_terminal (open_name xd false r.rule_ntr_name wrt);
 		    Lang_nonterm (wrt,(wrt,[]));
 		    Lang_nonterm (r.rule_ntr_name,(r.rule_ntr_name,[])) ];
-	prod_homs = [ ( "coq",
+	prod_homs = [ ( "rocq",
 			[ Hom_string "(";
 			  Hom_string (open_name xd false r.rule_ntr_name wrt); 
 			  Hom_index 0;
@@ -422,7 +422,7 @@ let ln_add_cofinite_formula m xd mvrs =
 		  Lang_nonterm ("var_sets",("var_sets",[]));
 		  Lang_metavar (mvr, (mvr,[]));        
 		  Lang_nonterm ("formula",("formula",[])) ];
-      prod_homs = [ ("coq", [ Hom_string "(";
+      prod_homs = [ ("rocq", [ Hom_string "(";
 			      Hom_string "forall";
 			      Hom_index 1;
 			      Hom_string ",";
@@ -452,7 +452,7 @@ let ln_add_universal_formula m xd mvrs =
       prod_es = [ Lang_terminal "univ";
 		  Lang_metavar (mvr, (mvr,[]));        
 		  Lang_nonterm ("formula",("formula",[])) ];
-      prod_homs = [ ("coq", [ Hom_string "(";
+      prod_homs = [ ("rocq", [ Hom_string "(";
 			      Hom_string "forall";
 			      Hom_index 0;
 			      Hom_string ",";
@@ -479,7 +479,7 @@ let ln_transform_syntaxdefn (m:pp_mode) (xd:syntaxdefn) : syntaxdefn =
       then 
 	[ { mvd_name = "var"; 
 	    mvd_names = [ ("var",[]) ];
-	    mvd_rep = [("coq",[Hom_string "var"]) ];
+	    mvd_rep = [("rocq",[Hom_string "var"]) ];
 	    mvd_indexvar = false;
 	    mvd_locally_nameless = false;
 	    mvd_phantom = true;
@@ -488,7 +488,7 @@ let ln_transform_syntaxdefn (m:pp_mode) (xd:syntaxdefn) : syntaxdefn =
     @
     ( { mvd_name = "nat"; 
 	mvd_names = [ ("nat",[]) ];
-	mvd_rep = [("coq",[Hom_string "nat"]) ];
+	mvd_rep = [("rocq",[Hom_string "nat"]) ];
 	mvd_indexvar = false;
 	mvd_locally_nameless = false;
 	mvd_phantom = true;
@@ -496,7 +496,7 @@ let ln_transform_syntaxdefn (m:pp_mode) (xd:syntaxdefn) : syntaxdefn =
       :: 
 	{ mvd_name = "vars"; 
 	  mvd_names = [ ("vars",[]); ("L",[]) ];
-	  mvd_rep = [("coq",[Hom_string "vars"]) ];
+	  mvd_rep = [("rocq",[Hom_string "vars"]) ];
 	  mvd_indexvar = false;
 	  mvd_locally_nameless = false;
 	  mvd_phantom = true;
@@ -513,7 +513,7 @@ let ln_transform_syntaxdefn (m:pp_mode) (xd:syntaxdefn) : syntaxdefn =
 	  prod_sugar = false;
 	  prod_categories = StringSet.empty;
 	  prod_es = [ Lang_metavar ("vars",("vars",[])) ];
-	  prod_homs = [ ("coq", [ Hom_index 0 ]) ];
+	  prod_homs = [ ("rocq", [ Hom_index 0 ]) ];
           prod_disambiguate = None;
 	  prod_bs = [];
 	  prod_loc = dummy_loc };
@@ -525,7 +525,7 @@ let ln_transform_syntaxdefn (m:pp_mode) (xd:syntaxdefn) : syntaxdefn =
 	  prod_es = [ Lang_nonterm ("var_sets",("var_sets",[])); 
 		      Lang_terminal "union"; 
 		      Lang_metavar ("var",("var",[])) ];
-	  prod_homs = [ ("coq", [ Hom_index 0; Hom_string "\\u {{"; Hom_index 1; Hom_string "}}" ]) ];
+	  prod_homs = [ ("rocq", [ Hom_index 0; Hom_string "\\u {{"; Hom_index 1; Hom_string "}}" ]) ];
           prod_disambiguate = None;
 	  prod_bs = [];
 	  prod_loc = dummy_loc }
@@ -638,7 +638,7 @@ and pp_open_symterm_list_body m xd mvr wrt s unshifted_nonterms ov sie de stlb =
 	  ^ de1i.de1_pattern^" => " ^pp_body^" end) "  
           ^ de1i.de1_compound_id
           ^ ")", List.concat list_funcs )
-  | _ -> ("<<internal: only Coq + native lists supported>>",[])
+  | _ -> ("<<internal: only Rocq + native lists supported>>",[])
 
 
 
@@ -656,7 +656,7 @@ let pp_open_prod m xd mvr wrt (ov:string) (rule_ntr_name:nontermroot) (p:prod) :
   (* we distinguish the case of the prod that splits mvr *)
   let splits = 
     try 
-      match List.assoc "coq-ln_splitted" p.prod_homs with
+      match List.assoc "rocq-ln_splitted" p.prod_homs with
       | [(Hom_string mvr1)] -> String.compare mvr mvr1 = 0
       | _ -> false 
     with Not_found -> false in
@@ -979,7 +979,7 @@ let pp_lcs fd m xd : unit =
 
   let lcs_drule_from_prod r p =
     try 
-      let _ = List.assoc "coq-ln_splitted" p.prod_homs 
+      let _ = List.assoc "rocq-ln_splitted" p.prod_homs 
       in None
     with Not_found -> 
       let premises = make_premises r p in
@@ -1491,7 +1491,7 @@ let ln_transform_symterms (m:pp_mode) (xd:syntaxdefn) (stlp:(string option * sym
 	    p.prod_bs in
 	let nbss = (* nts that should not be opened wrt variables - look at homs *)
 	  try
-	    let h = List.assoc "coq" p.prod_homs in
+	    let h = List.assoc "rocq" p.prod_homs in
 	    Auxl.option_map
 	      ( fun hse -> match hse with
 	      | Hom_ln_free_index (fvis, nti) -> Some ((nti+1), (List.map (List.nth stnb.st_es) fvis))
