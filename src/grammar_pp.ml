@@ -1004,7 +1004,8 @@ and pp_nonterm_with_sie_internal as_type m xd sie (ntr,suff) =
     let auxparam_opt = try Some (List.assoc "auxparam" r.rule_homs) with Not_found -> None in
     let auxparam_prefix_opt = 
       match as_type,m,auxparam_opt with
-      | true,Caml _,Some hs | true,Lem _,Some hs -> Some (String.concat "" (List.map (function | Hom_string s -> s | Hom_index _ | Hom_terminal _ | Hom_ln_free_index (_,_) -> Auxl.int_error("illegal auxparam hom "^String.concat ""(List.map pp_plain_hom_spec_el hs))) hs))
+      | true,Caml _,Some hs | true,Lem _,Some hs | true,Hol _,Some hs ->
+          Some (String.concat "" (List.map (function | Hom_string s -> s | Hom_index _ | Hom_terminal _ | Hom_ln_free_index (_,_) -> Auxl.int_error("illegal auxparam hom "^String.concat ""(List.map pp_plain_hom_spec_el hs))) hs))
       | _,_,_ -> None in
     
     match m with
@@ -1037,6 +1038,8 @@ and pp_nonterm_with_sie_internal as_type m xd sie (ntr,suff) =
         let s = match m with
         | Caml _ -> (match auxparam_prefix_opt with Some p -> p^" "^s1 | None -> s1)
         | Lem _ -> (match auxparam_prefix_opt with Some p -> "("^s1^" "^p^")" | None -> s1)
+        | Hol _ -> if as_type then (match auxparam_prefix_opt with Some p -> p^" "^s1 | None -> s1)
+                   else s0
         | _ -> s1 in
         s
   end
@@ -2702,7 +2705,10 @@ and pp_rule m xd r = (* returns a string option *)
 
 and         (* the strip_surrounding_parens is a horrible hack to remove the parens introduced around an auxparam-introduced type name and its arguments when used on the left of a definition, for Lem *)
     strip_surrounding_parens s =
-  if s.[0]='(' && s.[String.length s -1]=')' then String.sub s 1 (String.length s -2) else s 
+  if s.[0]='(' && s.[String.length s -1]=')' then String.sub s 1 (String.length s -2) else s
+and (* strip_type_vars is a hack to remove type variables from an auxparam-introduced type name when used on the left of definition, for Hol *)
+    strip_type_vars s =
+  List.hd (List.rev (String.split_on_char ' ' s))
 
 
 and pp_rule_list m xd rs = 
@@ -2745,7 +2751,7 @@ and pp_rule_list m xd rs =
                     ^ "\"\n"
                 | Hol _ -> 
                     "\nType "
-                    ^ pp_nontermroot_ty m xd ntr ^ " = ``:"
+                    ^ strip_type_vars (pp_nontermroot_ty m xd ntr) ^ " = ``:"
                     ^ pp_hom_spec m xd hs
                     ^ "``\n"
                 | Coq _ ->
