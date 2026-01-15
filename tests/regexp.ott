@@ -6,30 +6,37 @@ Variable char : Type.
 }}
 metavar c ::=
           {{ lex alphanum }}
+          {{ phantom }}
           {{ com character }}
           {{ coq char }}
-          {{ hol char }}
+          {{ hol 'a }}
+          {{ ocaml 'a }}
           {{ coq-universe Type }}
 grammar
 s :: s_ ::=
   {{ com string }}
   {{ coq list char }}
-  {{ hol char list }}
+  {{ hol 'a list }}
+  {{ ocaml 'a list }}
   {{ coq-universe Type }}
   | e :: M :: empty
     {{ coq [] }}
     {{ hol [] }}
+    {{ ocaml [] }}
     {{ tex \epsilon }}
   | c :: M :: char
     {{ coq ([[c]] :: []) }}
     {{ hol ([[c]] :: []) }}
+    {{ ocaml ([[c]] :: []) }}
   | s s' :: M :: concat
     {{ coq ([[s]] ++ [[s']]) }}
     {{ hol ([[s]] ++ [[s']]) }}
+    {{ ocaml ([[s]] ++ [[s']]) }}
 
 r :: r_ ::=
   {{ com regexp }}
   {{ coq-universe Type }}
+  {{ auxparam 'a }}
   | 0 :: :: zero
   | 1 :: :: unit
   | c :: :: char

@@ -2637,7 +2637,10 @@ and pp_rule m xd r = (* returns a string option *)
       then None
       else 
         Some 
-          (strip_surrounding_parens (pp_nontermroot_ty m xd r.rule_ntr_name) ^ " = "^pp_com^"\n" 
+          ((match m with
+           | Hol _ -> strip_type_vars (pp_nontermroot_ty m xd r.rule_ntr_name)
+           | _ -> strip_surrounding_parens (pp_nontermroot_ty m xd r.rule_ntr_name))
+           ^ " = "^pp_com^"\n" 
 	   ^ (match m with Lem _ -> " | " | _ -> "   ")
            ^ String.concat " | " 
                (List.map 
