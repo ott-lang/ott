@@ -30,7 +30,7 @@ e :: 'E_'  ::=	           {{ com expressions }}
   | skip                    ::   :: skip
   | e1 ; e2                 ::   :: sequence
   | while e1 do e2          ::   :: while
-  | ( e )                   :: M :: paren  {{ ichlo ([[e]]) }}
+  | ( e )                   :: M :: paren  {{ ichlo ([[e]]) }} {{ lean ([[e]]) }}
 
 v :: 'V_' ::=              {{ com values }}
   | n                       ::   :: num

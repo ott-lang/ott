@@ -101,7 +101,7 @@ let pp_prod_context m xd lookup (hole:nonterm) (target:nontermroot) (r:rule) (p:
   let lhs_pat = Grammar_pp.pp_symterm m xd sie de lhs_st in
   let lhs = 
     ( match m with
-    | Coq _ | Caml _ -> lhs_pat 
+    | Coq _ | Lean _ | Caml _ -> lhs_pat 
     | Isa _ | Hol _ | Lem _ | Twf _ -> lhs_pat ^ " " ^ Grammar_pp.pp_nonterm m xd hole
     | Lex _ | Menhir _ | Tex _ | Ascii _ -> assert false) in
   (* compute the rhs *)
@@ -128,6 +128,12 @@ let pp_rule_context m xd lookup cr : int_func =
 	( id 
 	  ^ " ("^ctx_var^":"^ Grammar_pp.pp_nontermroot_ty m xd cr.cr_ntr 
 	  ^ ") ("^fake_hole_var^":"^ Grammar_pp.pp_nontermroot_ty m xd cr.cr_hole ^")",
+	  "",
+	  " : " ^ (Grammar_pp.pp_nontermroot_ty m xd cr.cr_target) ^ " :=\n  match "^ctx_var^" with\n")
+    | Lean _ ->
+	((leanTODO "6" ( id 
+	  ^ " ("^ctx_var^":"^ Grammar_pp.pp_nontermroot_ty m xd cr.cr_ntr 
+	  ^ ") ("^fake_hole_var^":"^ Grammar_pp.pp_nontermroot_ty m xd cr.cr_hole ^")")),
 	  "",
 	  " : " ^ (Grammar_pp.pp_nontermroot_ty m xd cr.cr_target) ^ " :=\n  match "^ctx_var^" with\n")
     | Isa _ ->

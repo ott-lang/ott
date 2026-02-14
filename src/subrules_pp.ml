@@ -308,6 +308,10 @@ let pp_subrules m xd srs : int_funcs_collapsed =
             [ lemTODO "15" (" (List.all (fun "^de1i.de1_pattern^" -> "^conjuncted_conjuncts^") "
 	      ^ de1i.de1_compound_id
 	      ^ ")")], deps, []
+        | Lean _ ->
+            [ leanTODO "7" (" (List.all (fun "^de1i.de1_pattern^" => "^conjuncted_conjuncts^") "
+	      ^ de1i.de1_compound_id
+	      ^ ")")], deps, []
 	| Coq co when not co.coq_expand_lists ->
 	    let e = 
 	      if List.length (Str.split (Str.regexp "(\\|,\\|)") de1i.de1_pattern) = 1
@@ -424,7 +428,7 @@ let pp_subrules m xd srs : int_funcs_collapsed =
 		   dep := deps @ !dep;
 		   funcs := !funcs @ new_funcs;
                    match m with 
-                   | Coq _ | Hol _ | Lem _| Isa _ | Caml _ -> 
+                   | Coq _ | Lean _ | Hol _ | Lem _| Isa _ | Caml _ -> 
 		       if conjuncts = [] 
                        then Auxl.pp_true m false
 		       else String.concat (Auxl.pp_and m false) conjuncts
@@ -434,7 +438,7 @@ let pp_subrules m xd srs : int_funcs_collapsed =
                  pls in
 
              match m with 
-             | Coq _ | Hol _ | Lem _ | Isa _ | Caml _ -> 
+             | Coq _ | Lean _ | Hol _ | Lem _ | Isa _ | Caml _ -> 
                  let rhs = 
                    if rhss = [] 
                    then Auxl.pp_false m false
@@ -483,6 +487,18 @@ let pp_subrules m xd srs : int_funcs_collapsed =
               "",
               " : " 
 	      ^ (if co.coq_expand_lists then "Prop :=\n" else "bool :=\n")
+	      ^ "  match " ^ Grammar_pp.pp_nonterm m xd fresh_var ^ " with\n" ) 
+	| Lean _ -> 
+            let nts_used = Context_pp.nts_used_in_lhss m xd ru in
+(*	    let nts_used = Auxl.nts_used_in_rule ru in *)
+            let fresh_var_ntr = Auxl.secondary_ntr xd sru in
+	    let fresh_var = Auxl.fresh_nt nts_used (fresh_var_ntr,[]) in (* FZ Substs_pp *)
+	    ( Auxl.pp_is srl sru 
+              ^ " (" ^ Grammar_pp.pp_nonterm m xd fresh_var 
+              ^ ":" ^ Grammar_pp.pp_nontermroot_ty m xd sru ^ ")",
+              "",
+              " : " 
+	      ^ ("bool :=\n")
 	      ^ "  match " ^ Grammar_pp.pp_nonterm m xd fresh_var ^ " with\n" ) 
         | Twf _ -> 
 	    ( Auxl.pp_is srl sru ^ " : " 
