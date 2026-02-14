@@ -1,15 +1,25 @@
+embed {{ coq
+
+From Stdlib Require Import ZArith.
+(* From Stdlib Require Ascii.*)
+From Stdlib Require Bool.
+From Stdlib Require List.
+From Stdlib Require Import Strings.String.
+Open Scope string.
+
+}}
 
 metavar n ::=
   {{ com Numeric literals }}
   {{ phantom }}
   {{ lex numeric }}
   {{ lem integer }}
-  {{ coq someZarithtype }}
+  {{ coq Z }}
   
 metavar location, l ::= 
   {{ com Store locations }}
   {{ lem string }}
-  {{ coq somestringtype }}
+  {{ coq string }}
 
 grammar 
 b :: 'B_' ::=              {{ com booleans }}  {{ phantom }} {{ lem bool }} {{ coq bool }}
@@ -37,7 +47,7 @@ v :: 'V_' ::=              {{ com values }}
   | b                       ::   :: bool
   | skip                    ::   :: skip    
 
-store , s :: 'Store_' ::=  {{ com stores }} {{ phantom }} {{ lem list (location * integer) }} {{ coq list (location * integer) }}
+store , s :: 'Store_' ::=  {{ com stores }} {{ phantom }} {{ lem list (location * integer) }} {{ coq list (location * Z) }}
    | empty                  ::   :: empty {{ lem [] }} {{ coq [] }}
    | s , l |-> n            ::   :: extend  {{ lem (([[l]],[[n]])::[[s]]) }} {{ coq (([[l]],[[n]])::[[s]]) }}
 
