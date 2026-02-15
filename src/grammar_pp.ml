@@ -1339,6 +1339,13 @@ and pp_metavardefn m xd mvd =
 	    ^ " := "
 	    ^ pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc
 	    ^ pp_com ^ "\n"
+            ^   (match
+                  try Some (List.assoc "lean-equality" mvd.mvd_rep) with Not_found -> None
+                with
+                  | None -> ""
+                  | Some eh -> "deriving instance BEq for " ^ type_name ^ "\n"
+                )
+
 	| Twf _ -> 
 	    "%abbrev "
 	    ^ pp_metavarroot_ty m xd mvd.mvd_name 
@@ -2681,9 +2688,9 @@ and pp_rule m xd r = (* returns a string option *)
       then None
       else 
         Some 
-          (strip_surrounding_parens (pp_nontermroot_ty m xd r.rule_ntr_name) ^ " = "^pp_com^"\n" 
+          (strip_surrounding_parens (pp_nontermroot_ty m xd r.rule_ntr_name) ^ (match m with Lean _ -> " where" | _ -> " := ")^pp_com^"\n" 
 	   ^ (match m with Lem _ -> " | " | _ -> "   ")
-           ^ String.concat " | " 
+           ^ String.concat (match m with Lean _ -> "   " | _ -> " | ")
                (List.map 
                   (function s -> s^"\n") 
                   (Auxl.option_map 
@@ -2872,9 +2879,13 @@ and pp_rule_list m xd rs =
       def ^ coq_equality_code
   | Lean _ ->
       let def = int_rule_list_dep m xd rs (fun rs -> "\ninductive ") "\nwhere " "" in
+      let lean_equality_code = 
+      "open " ^ String.concat " " (Auxl.option_map (fun r -> if r.rule_meta || r.rule_phantom || (try (List.assoc "lean" r.rule_homs);true with Not_found -> false)  then None else Some (pp_nontermroot_ty m xd r.rule_ntr_name)) rs) ^ "\n" in
+
       (*let coq_equality_code = !pp_internal_coq_buffer in
       pp_internal_coq_buffer := "";*)
-      def (*^ coq_equality_code*)
+      def ^ (*^ coq_equality_code*)
+      lean_equality_code
   | Twf wo ->
       int_rule_list_dep m xd rs (fun rs -> "") "\n" ""
   | Caml oo ->

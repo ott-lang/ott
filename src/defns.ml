@@ -412,7 +412,7 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
           Printf.fprintf fd "%s%s%s: " 
             (leanTODO "18" "") 
             "" (*("(*"^Location.pp_loc dr.drule_loc^"*)")*)
-            dr.drule_name; 
+            ("| " ^ dr.drule_name); 
 (* Lem currrently requires a forall even if there are no quantified variables,
    and a "true ==>" if there are no premises *)
 (*
@@ -421,25 +421,26 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
            | _ ->
 *)
               output_string fd "forall";
-              List.iter (fun (var,ty,_) -> Printf.fprintf fd " %s" (leanTODO "19" var))
+(* the second version, with explicit type annotations, is pretty noisy, and probably not idiomatic. For l1.ott, we need it only for b:bool, where Lean type inference seems to get confused? *)
+(*              List.iter (fun (var,ty,_) -> Printf.fprintf fd " %s" (leanTODO "19" var))
 	        quantified_proof_assistant_vars;
-(*              List.iter (fun (var,ty,_) -> Printf.fprintf fd " (%s:%s)" var ty)
-	        quantified_proof_assistant_vars;*)
-              output_string fd " .\n";
+*)              List.iter (fun (var,ty,_) -> Printf.fprintf fd " (%s:%s)" var ty)
+	        quantified_proof_assistant_vars;
+              output_string fd ",\n";
 (*
 );
 *)
           if (snd ppd_premises)<>[] || ppd_subntrs<>[] then
 	    begin
               (* output_string fd " &&\n(";*)
-	      iter_asep fd " /\\n"
+	      iter_asep fd " ->\n"
 		(fun s -> output_string fd "("; output_string fd s; output_string fd ")") 
 		(ppd_subntrs @ snd ppd_premises);
 	      output_string fd "\n"
             end
 	  else
 	    output_string fd "true\n"; 
-          output_string fd " ==> \n";
+          output_string fd " -> \n";
           output_string fd ppd_conclusion; 
           output_string fd "\n\n"
 
@@ -527,8 +528,20 @@ let pp_defn fd (m:pp_mode) (xd:syntaxdefn) lookup (defnclass_wrapper:string) (un
       Printf.fprintf fd "(* defn %s *)\n\n" d.d_name;
       iter_sep (pp_processed_semiraw_rule fd m xd) "and\n" d.d_rules
   | Lean _ ->
-      Printf.fprintf fd "/- defn %s -/\n\n" d.d_name;
-      iter_sep (pp_processed_semiraw_rule fd m xd) (leanTODO "20" "and\n") d.d_rules
+      (*Printf.fprintf fd "/- defn %s -/\n\n" d.d_name;*)
+
+      let prod_name = defnclass_wrapper ^ d.d_name in
+
+      let type_defn = 
+        let es = (Auxl.prod_of_prodname xd prod_name).prod_es in
+        let ss = (Auxl.option_map (Grammar_pp.pp_element m xd [] true) es) in
+        match ss with
+        | [] -> universe^" :="
+        | [s] -> s ^ " -> "^universe^" :="      
+        | _ -> String.concat " -> " ss ^ " -> " ^ universe^" where" in        
+      Printf.fprintf fd "%s%s : %s    /- defn %s -/\n" defnclass_wrapper d.d_name type_defn d.d_name;
+      iter_nosep (fun psr -> pp_processed_semiraw_rule fd m xd "" psr) d.d_rules
+
   | Coq co -> (* FZ factor this code ? *)
 
       let prod_name = defnclass_wrapper ^ d.d_name in
@@ -673,7 +686,7 @@ let pp_defnclass fd (m:pp_mode) (xd:syntaxdefn) lookup (dc:defnclass) =
 
   | Lean co -> 
       Printf.fprintf fd "\n/- defns %s -/\ninductive " dc.dc_name;
-      iter_asep fd "\nwhere "
+      iter_asep fd "\ninductive "
         (fun d -> pp_defn fd m xd lookup dc.dc_wrapper universe d)
 	dc.dc_defns
 

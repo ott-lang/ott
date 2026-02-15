@@ -1,26 +1,41 @@
 
+embed {{ lean
+set_option linter.unusedVariables false
+
+open Option
+}}
+
 metavar n ::=
   {{ com Numeric literals }}
   {{ phantom }}
   {{ lex numeric }}
   {{ lem integer }}
   {{ coq someZarithtype }}
+  {{ lean Int }}
   
-metavar location, l ::= 
+metavar Location {{ lean Location }}, l ::= 
   {{ com Store locations }}
   {{ lem string }}
   {{ coq somestringtype }}
+  {{ lean String }}
+  {{ lean-equality }}
+
+% think idiomatic Lean to capitalise that, but with `metavar location {{ lean Location }}` it hits a bug in which the lean hom isn't respected in the inductive rule printing, so I've just capitalised the metavar for now - which will probably be bad for other targets
 
 grammar 
-b :: 'B_' ::=              {{ com booleans }}  {{ phantom }} {{ lem bool }} {{ coq bool }}
-  | true                    ::   :: true      {{ lem true }} {{ coq true }}
-  | false                   ::   :: false     {{ lem false }} {{ coq false }}
+b :: 'B_' ::=              {{ com booleans }}  {{ phantom }} {{ lem bool }} {{ coq bool }} {{ lean Bool }} 
+  | true                    ::   :: true      {{ lem true }} {{ coq true }} {{ lean true }}
+  | false                   ::   :: false     {{ lem false }} {{ coq false }} {{ lean false }}
 
-operations, op :: 'Op_' ::=            {{ com operations }}
+% is it nice to deeply embed the L1 bools like this or not?
+
+operations {{ lean Operations }}, op :: 'op_' ::=            {{ com operations }}
   | +                       ::   :: plus
   | >=                      ::   :: gteq
 
-e :: 'E_'  ::=	           {{ com expressions }}
+% all the other languages have constructors capitalised, but in Lean it seems conventional to have them lower-case. Ott doesn't support per-target constructor name prefixes, so in this file I've lower-cased them all for now.
+
+expr {{ lean Expr }}, e :: 'e_'  ::=	           {{ com expressions }}
   | n                       ::   :: num
   | b                       ::   :: bool
   | e1 op e2                ::   :: op
@@ -37,11 +52,14 @@ v :: 'V_' ::=              {{ com values }}
   | b                       ::   :: bool
   | skip                    ::   :: skip    
 
-store , s :: 'Store_' ::=  {{ com stores }} {{ phantom }} {{ lem list (location * integer) }} {{ coq list (location * integer) }}
-   | empty                  ::   :: empty {{ lem [] }} {{ coq [] }}
-   | s , l |-> n            ::   :: extend  {{ lem (([[l]],[[n]])::[[s]]) }} {{ coq (([[l]],[[n]])::[[s]]) }}
+store {{ lean Store }}, s :: 'store_' ::=  {{ com stores }} {{ phantom }} {{ lem list (Location * integer) }} {{ coq list (Location * integer) }} {{ lean List (Location × Int) }}
+   | empty                  ::   :: empty {{ lem [] }} {{ coq [] }}  {{ lean [] }}
+   | s , l |-> n            ::   :: extend  {{ lem (([[l]],[[n]])::[[s]]) }} {{ coq (([[l]],[[n]])::[[s]]) }} {{ lean (([[l]],[[n]])::[[s]]) }}
 
-typ, T :: 'T_' ::=         {{ com types }}
+config {{ lean Config }}, c :: 'Config_' ::= {{ com configurations }} {{ phantom }} {{lem (expr*store) }} {{ coq (expr * store) }} {{ lean ([[Expr]] × [[Store]]) }}
+   | < e , s >              ::   :: config {{ lem ([[e]], [[s]]) }}  {{ coq ([[e]], [[s]]) }} {{ lean ([[e]], [[s]]) }}
+
+typ {{ lean Typ }}, T :: 't_' ::=         {{ com types }}
   | int                     ::   :: int
   | bool                    ::   :: bool
   | unit                    ::   :: unit
@@ -50,12 +68,12 @@ Tloc {{ isa tloc }} {{ coq tloc }} {{ hol tloc }} {{ lem tloc }} {{ ocaml tloc }
   | intref                  ::   :: intref	
 
 
-type_assumption, ta :: 'TA_' ::= {{ com type assumption }}
-  | l : Tloc                ::   :: loc
+type_assumption {{ lean Type_assumption }}, ta :: 'TA_' ::= {{ com type assumption }} {{ lean ([[Location]]×[[Tloc]]) }}
+  | l : Tloc                ::   :: loc {{ lean ([[l]], [[Tloc]]) }}
 
-G {{ tex \Gamma }} :: G_ ::=     {{ com type environments }} {{ phantom }} {{ lem list type_assumption }} {{ coq list type_assumption }}
-  | empty                   ::   :: empty {{ lem [] }}  {{ coq [] }}
-  | G , ta                  ::   :: extend {{ lem ([[ta]]::[[G]]) }}  {{ coq ([[ta]]::[[G]]) }}
+G {{ tex \Gamma }} :: G_ ::=     {{ com type environments }} {{ phantom }} {{ lem list type_assumption }} {{ coq list type_assumption }} {{ lean (List Type_assumption) }}
+  | empty                   ::   :: empty {{ lem [] }}  {{ coq [] }}  {{ lean [] }}
+  | G , ta                  ::   :: extend {{ lem ([[ta]]::[[G]]) }}  {{ coq ([[ta]]::[[G]]) }}  {{ lean ([[ta]]::[[G]]) }}
 
 
 terminals :: terminals_ ::=
@@ -74,13 +92,13 @@ subrules
 grammar 
 formula :: formula_ ::=
   | judgement              :: :: judgement
-  | n1 + n2 = n3           :: :: sum         {{ lem ([[n1]]+[[n2]]=[[n3]]) }}                               {{ coq ([[n1]]+[[n2]]=[[n3]]) }}                                 
-  | n1 >= n2 = b           :: :: leq         {{ lem ([[n1]]>=[[n2]]=[[b]]) }}                               {{ coq ([[n1]]>=[[n2]]=[[b]]) }}                                 
-  | s ( l ) = n            :: :: lookup      {{ lem (List.lookup [[l]] [[s]] =Just ([[n]])) }}              {{ coq (List.lookup [[l]] [[s]] =Just ([[n]])) }}                
-  | G ( l ) = Tloc         :: :: type_lookup {{ lem (lookup_location_type [[l]] [[G]] = Just ([[Tloc]])) }} {{ coq (lookup_location_type [[l]] [[G]] = Just ([[Tloc]])) }}     
+  | n1 + n2 = n3           :: :: sum         {{ lem ([[n1]]+[[n2]]=[[n3]]) }}                               {{ coq ([[n1]]+[[n2]]=[[n3]]) }}                                {{ lean ([[n1]]+[[n2]]=[[n3]]) }}                                    
+  | n1 >= n2 = b           :: :: leq         {{ lem ([[n1]]>=[[n2]]=[[b]]) }}                               {{ coq ([[n1]]>=[[n2]]=[[b]]) }}                                {{ lean (([[n1]]>=[[n2]])=[[b]]) }}                                    
+  | s ( l ) = n            :: :: lookup      {{ lem (List.lookup [[l]] [[s]] =Just ([[n]])) }}              {{ coq (List.lookup [[l]] [[s]] =Some ([[n]])) }}               {{ lean (List.lookup [[l]] [[s]] = some ([[n]])) }}                   
+  | G ( l ) = Tloc         :: :: type_lookup {{ lem (lookup_location_type [[l]] [[G]] = Just ([[Tloc]])) }} {{ coq (lookup_location_type [[l]] [[G]] = Some ([[Tloc]])) }}  {{ lean (List.lookup [[l]] [[G]] = some ([[Tloc]])) }}        
 
 
-% this is a bit ugly - to capture the different use of Gamma in L1 and L2 we have a list of a Lem variant type and two special-purpose lookup functions, with a wildcard pattern match in each.
+% this is a bit ugly - to capture the different use of Gamma in L1 and L2 we have a list of a Lem variant type and two special-purpose lookup functions, with a wildcard pattern match in each. Not currently implemented for Lean.
 
 embed {{ lem
 let rec lookup_location_type l g =
@@ -98,7 +116,7 @@ Jop :: '' ::=
 % Reductions. Want to allow lem hom to specify witness and animation info
 
 defn
-< e , s > -> < e' , s' > :: :: reduce :: ''  {{ com $\langle[[e]],\,[[s]]\rangle$ reduces to $\langle[[e']],\,[[s']]\rangle$ }} by
+c -> c' :: :: reduce :: ''  {{ com $\langle[[e]],\,[[s]]\rangle$ reduces to $\langle[[e']],\,[[s']]\rangle$ }} by
 
   n1 + n2 = n
 ----------------------   :: op_plus

@@ -498,7 +498,7 @@ let pp_subrules m xd srs : int_funcs_collapsed =
               ^ ":" ^ Grammar_pp.pp_nontermroot_ty m xd sru ^ ")",
               "",
               " : " 
-	      ^ ("bool :=\n")
+	      ^ ("Bool :=\n")
 	      ^ "  match " ^ Grammar_pp.pp_nonterm m xd fresh_var ^ " with\n" ) 
         | Twf _ -> 
 	    ( Auxl.pp_is srl sru ^ " : " 
