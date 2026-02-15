@@ -1,3 +1,13 @@
+embed {{ coq
+
+From Stdlib Require Import ZArith.
+(* From Stdlib Require Ascii.*)
+From Stdlib Require Bool.
+From Stdlib Require List.
+From Stdlib Require Import Strings.String.
+Open Scope string.
+
+}}
 
 embed {{ lean
 set_option linter.unusedVariables false
@@ -10,17 +20,18 @@ metavar n ::=
   {{ phantom }}
   {{ lex numeric }}
   {{ lem integer }}
-  {{ coq someZarithtype }}
   {{ lean Int }}
+  {{ coq Z }}
   
 metavar Location {{ lean Location }}, l ::= 
   {{ com Store locations }}
   {{ lem string }}
-  {{ coq somestringtype }}
+  {{ coq stringb }}
   {{ lean String }}
   {{ lean-equality }}
 
 % think idiomatic Lean to capitalise that, but with `metavar location {{ lean Location }}` it hits a bug in which the lean hom isn't respected in the inductive rule printing, so I've just capitalised the metavar for now - which will probably be bad for other targets
+  {{ coq string }}
 
 grammar 
 b :: 'B_' ::=              {{ com booleans }}  {{ phantom }} {{ lem bool }} {{ coq bool }} {{ lean Bool }} 
@@ -52,7 +63,7 @@ v :: 'V_' ::=              {{ com values }}
   | b                       ::   :: bool
   | skip                    ::   :: skip    
 
-store {{ lean Store }}, s :: 'store_' ::=  {{ com stores }} {{ lem list (Location * integer) }} {{ coq list (Location * integer) }} {{ lean List (Location × Int) }}
+store {{ lean Store }}, s :: 'store_' ::=  {{ com stores }} {{ lem list (Location * integer) }} {{ coq list (Location * Z) }} {{ lean List (Location × Int) }}
    | empty                  ::   :: empty {{ lem [] }} {{ coq [] }}  {{ lean [] }}
    | s , l |-> n            ::   :: extend  {{ lem (([[l]],[[n]])::[[s]]) }} {{ coq (([[l]],[[n]])::[[s]]) }} {{ lean (([[l]],[[n]])::[[s]]) }}
 
