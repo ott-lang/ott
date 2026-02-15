@@ -2368,6 +2368,10 @@ and pp_element m xd sie in_type e =
           Some ("("^v^":"^t^")")
       | Coq co, Some (None,t) when co.coq_names_in_rules && (not in_type) -> 
           Some ("(_:"^t^")")
+      | Lean co, Some (Some v,t) when (not in_type) -> 
+          Some ("("^v^":"^t^")")
+      | Lean co, Some (None,t) when (not in_type) -> 
+          Some ("(_:"^t^")")
       | Coq co, Some (v,t) when (not co.coq_names_in_rules) || in_type -> 
           Some t
       | _, Some (v,t) -> 

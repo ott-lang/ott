@@ -86,6 +86,8 @@ terminals :: terminals_ ::=
   | <    :: :: la        {{ tex \langle }}
   | >    :: :: ra        {{ tex \rangle }}
 
+% for proof, would one really want subrules to generate functions, as Ott does, or more inductive relations?
+
 subrules
   v <:: e
 
@@ -116,7 +118,7 @@ Jop :: '' ::=
 % Reductions. Want to allow lem hom to specify witness and animation info
 
 defn
-c -> c' :: :: reduce :: ''  {{ com $\langle[[e]],\,[[s]]\rangle$ reduces to $\langle[[e']],\,[[s']]\rangle$ }} by
+c -> c' :: :: Reduce :: ''  {{ com $\langle[[e]],\,[[s]]\rangle$ reduces to $\langle[[e']],\,[[s']]\rangle$ }} by
 
   n1 + n2 = n
 ----------------------   :: op_plus
@@ -168,7 +170,7 @@ c -> c' :: :: reduce :: ''  {{ com $\langle[[e]],\,[[s]]\rangle$ reduces to $\la
 
 
 defn
-G |- e : T :: :: typing :: Ty_ by
+G |- e : T :: :: Typing :: ty_ by
 
 ------------------  :: int
   G |- n : int
