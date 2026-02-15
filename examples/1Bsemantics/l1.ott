@@ -40,7 +40,7 @@ expr {{ lean Expr }}, e :: 'e_'  ::=	           {{ com expressions }}
   | b                       ::   :: bool
   | e1 op e2                ::   :: op
   | if e1 then e2 else e3   ::   :: if
-  | l := e                  ::   :: assign
+  | l := e1                 ::   :: assign
   | ! l                     ::   :: ref
   | skip                    ::   :: skip
   | e1 ; e2                 ::   :: sequence
@@ -52,11 +52,11 @@ v :: 'V_' ::=              {{ com values }}
   | b                       ::   :: bool
   | skip                    ::   :: skip    
 
-store {{ lean Store }}, s :: 'store_' ::=  {{ com stores }} {{ phantom }} {{ lem list (Location * integer) }} {{ coq list (Location * integer) }} {{ lean List (Location × Int) }}
+store {{ lean Store }}, s :: 'store_' ::=  {{ com stores }} {{ lem list (Location * integer) }} {{ coq list (Location * integer) }} {{ lean List (Location × Int) }}
    | empty                  ::   :: empty {{ lem [] }} {{ coq [] }}  {{ lean [] }}
    | s , l |-> n            ::   :: extend  {{ lem (([[l]],[[n]])::[[s]]) }} {{ coq (([[l]],[[n]])::[[s]]) }} {{ lean (([[l]],[[n]])::[[s]]) }}
 
-config {{ lean Config }}, c :: 'Config_' ::= {{ com configurations }} {{ phantom }} {{lem (expr*store) }} {{ coq (expr * store) }} {{ lean ([[Expr]] × [[Store]]) }}
+config {{ lean Config }}, c :: 'Config_' ::= {{ com configurations }} {{lem (expr*store) }} {{ coq (expr * store) }} {{ lean ([[Expr]] × [[Store]]) }}
    | < e , s >              ::   :: config {{ lem ([[e]], [[s]]) }}  {{ coq ([[e]], [[s]]) }} {{ lean ([[e]], [[s]]) }}
 
 typ {{ lean Typ }}, T :: 't_' ::=         {{ com types }}
