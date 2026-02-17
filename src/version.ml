@@ -1,2 +1,2 @@
-let n="0.33"
-let d="Mon 16 Jan 15:32:01 GMT 2023"
+let n="0.34"
+let d="Mon Dec 30 10:12:45 GMT 2024"

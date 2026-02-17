@@ -1250,7 +1250,7 @@ and coq_maybe_decide_equality m xd homs ntmvr loc =
         | [ Hom_string s ] -> s 
         | _ -> Auxl.error (Some loc) "malformed coq-equality homomorphism\n" )
       ^ "\nDefined.\n"
-      ^ "Hint Resolve eq_" ^ type_name  ^ " : ott_coq_equality.\n"
+      ^ "#[export] Hint Resolve eq_" ^ type_name  ^ " : ott_coq_equality.\n"
 
 and pp_metavardefn m xd mvd =
   let pp_com = pp_com_strings m xd mvd.mvd_rep [pp_metavar_with_sie m xd [] (mvd.mvd_name,[])] in
@@ -1273,10 +1273,20 @@ and pp_metavardefn m xd mvd =
       | true -> ""
       | false -> ( match m with
 	| Coq co ->
-	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in
-	    let universe = try pp_hom_spec m xd (List.assoc "coq-universe" mvd.mvd_rep) with Not_found -> "Set" in
-	    "Definition " ^  type_name ^ " : " ^ universe ^ " := "
-	    ^ (pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc) ^ "." ^ pp_com ^ "\n" 
+            let type_name = pp_metavarroot_ty m xd mvd.mvd_name in
+            let universe =
+              try pp_hom_spec m xd (List.assoc "coq-universe" mvd.mvd_rep)
+              with Not_found -> "Set"
+            in
+            let body = pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc in
+            let sentence =
+              if List.mem_assoc "coq-notation" mvd.mvd_rep then
+	        "Notation " ^ type_name ^ " := (" ^ body ^ " : " ^ universe ^ ")."
+              else
+	        "Definition " ^  type_name ^ " : " ^ universe ^ " := " ^ body ^ "."
+            in
+            sentence
+            ^ pp_com ^ "\n"
 	    ^ coq_maybe_decide_equality m xd mvd.mvd_rep (Mvr mvd.mvd_name) mvd.mvd_loc
 	| Caml oo ->
 	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in 
@@ -1295,10 +1305,10 @@ and pp_metavardefn m xd mvd =
 	      ^ (pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc)^ "\"" ^ pp_com ^ "\n"
 	| Hol ho -> 
 	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in 
-	    "val _ = type_abbrev(\""
+	    "Type "
 	    ^ type_name
-	    ^ "\", ``:"
-	    ^ (pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc) ^ "``);" 
+	    ^ " = ``:"
+	    ^ (pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc) ^ "``"
 	    ^ pp_com ^ "\n"
 	| Lem lo -> 
 	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in 
@@ -1391,8 +1401,7 @@ and pp_com_es m xd homs es =
       ^ String.concat "" (apply_hom_spec m xd hs ((*List.map (function s -> "$"^s^"$")*) ss))
       ^ "}" 
     | Isa _ -> " \\<comment> \\<open>" ^ String.concat "" (apply_hom_spec m xd hs ss) ^ "\\<close>"
-    | Coq _ -> " (*r " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " *)" 
-    | Hol _ | Lem _ | Caml _ | Lex _ ->  " (* " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " *)" 
+    | Coq _ | Hol _ | Lem _ | Caml _ | Lex _ ->  " (* " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " *)"
     | Menhir _ -> "/* " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " */" 
     | Ascii _ | Twf _ -> ""
 
@@ -1406,8 +1415,7 @@ and pp_com_strings m xd homs ss =
       ^ String.concat "" (apply_hom_spec m xd hs (List.map (function s -> "$"^s^"$") ss))
       ^ "}"
     | Isa _ -> " \\<comment> \\<open>" ^ String.concat "" (apply_hom_spec m xd hs ss) ^ "\\<close>"
-    | Coq _ -> " (*r " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " *)"
-    | Hol _ | Lem _ | Caml _ | Lex _ ->  " (* " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " *)"
+    | Coq _ | Hol _ | Lem _ | Caml _ | Lex _ ->  " (* " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " *)"
     | Menhir _ -> "/* " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " */" 
     | Ascii _ | Twf _ -> ""
 
@@ -2736,18 +2744,22 @@ and pp_rule_list m xd rs =
                     ^ pp_hom_spec m xd hs
                     ^ "\"\n"
                 | Hol _ -> 
-                    "val _ = type_abbrev(\""
-                    ^ pp_nontermroot_ty m xd ntr ^ "\", ``:"
+                    "\nType "
+                    ^ pp_nontermroot_ty m xd ntr ^ " = ``:"
                     ^ pp_hom_spec m xd hs
-                    ^ "``);\n"
-                | Coq _ -> 
-                    let universe = 
-                      try pp_hom_spec m xd (List.assoc "coq-universe" (Auxl.rule_of_ntr xd ntr).rule_homs) 
-                      with Not_found -> "Set" in
-                    "\nDefinition "
-                    ^ pp_nontermroot_ty m xd ntr ^ " : " ^ universe ^ " := "
-                    ^ pp_hom_spec m xd hs
-                    ^ ".\n"
+                    ^ "``\n"
+                | Coq _ ->
+                    let homs = (Auxl.rule_of_ntr xd ntr).rule_homs in
+                    let type_name = pp_nontermroot_ty m xd ntr in
+                    let universe =
+                      try pp_hom_spec m xd (List.assoc "coq-universe" homs)
+                      with Not_found -> "Set"
+                    in
+                    let body = pp_hom_spec m xd hs in
+                    if List.mem_assoc "coq-notation" homs then
+                      "\nNotation " ^ type_name ^ " := (" ^ body ^ " : " ^ universe ^ ").\n"
+                    else
+                      "\nDefinition " ^ type_name ^ " : " ^ universe ^ " := " ^ body ^ ".\n"
                 | Twf _ -> 
                     "\n%abbrev "
                     ^ pp_nontermroot_ty m xd ntr ^ " : type = "

@@ -1,0 +1,50 @@
+name: Docker CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image:
+          - 'coqorg/coq:dev'
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: coq-community/docker-coq-action@v1
+        with:
+          custom_image: ${{ matrix.image }}
+          custom_script: |
+            {{before_install}}
+            startGroup "Build ott dependencies"
+              opam pin add -n -y -k path ott .
+              opam update -y
+              opam install -y -j $(nproc) ott --deps-only
+            endGroup
+            startGroup "Build ott"
+              opam install -y -v -j $(nproc) ott
+              opam list
+            endGroup
+            startGroup "Build coq-ott dependencies"
+              opam pin add -n -y -k path coq-ott .
+              opam update -y
+              opam install -y -j $(nproc) coq-ott --deps-only
+            endGroup
+            startGroup "Build coq-ott"
+              opam install -y -v -j $(nproc) coq-ott
+              opam list
+            endGroup
+            startGroup "Uninstallation test"
+              opam remove -y coq-ott
+              opam remove -y ott
+            endGroup
+          export: 'OPAMWITHTEST'
+        env:
+          OPAMWITHTEST: 'true'

@@ -1,18 +1,30 @@
+embed {{ coq
+
+From Stdlib Require Import ZArith.
+(* From Stdlib Require Ascii.*)
+From Stdlib Require Bool.
+From Stdlib Require List.
+From Stdlib Require Import Strings.String.
+Open Scope string.
+
+}}
 
 metavar n ::=
   {{ com Numeric literals }}
   {{ phantom }}
   {{ lex numeric }}
   {{ lem integer }}
-
+  {{ coq Z }}
+  
 metavar location, l ::= 
   {{ com Store locations }}
   {{ lem string }}
+  {{ coq string }}
 
 grammar 
-b :: 'B_' ::=              {{ com booleans }}  {{ phantom }} {{ lem bool }}
-  | true                    ::   :: true      {{ lem true }}
-  | false                   ::   :: false     {{ lem false }}
+b :: 'B_' ::=              {{ com booleans }}  {{ phantom }} {{ lem bool }} {{ coq bool }}
+  | true                    ::   :: true      {{ lem true }} {{ coq true }}
+  | false                   ::   :: false     {{ lem false }} {{ coq false }}
 
 operations, op :: 'Op_' ::=            {{ com operations }}
   | +                       ::   :: plus
@@ -35,25 +47,25 @@ v :: 'V_' ::=              {{ com values }}
   | b                       ::   :: bool
   | skip                    ::   :: skip    
 
-store , s :: 'Store_' ::=  {{ com stores }} {{ phantom }} {{ lem list (location * integer) }}
-   | empty                  ::   :: empty {{ lem [] }}
-   | s , l |-> n            ::   :: extend  {{ lem (([[l]],[[n]])::[[s]]) }}
+store , s :: 'Store_' ::=  {{ com stores }} {{ phantom }} {{ lem list (location * integer) }} {{ coq list (location * Z) }}
+   | empty                  ::   :: empty {{ lem [] }} {{ coq [] }}
+   | s , l |-> n            ::   :: extend  {{ lem (([[l]],[[n]])::[[s]]) }} {{ coq (([[l]],[[n]])::[[s]]) }}
 
 typ, T :: 'T_' ::=         {{ com types }}
   | int                     ::   :: int
   | bool                    ::   :: bool
   | unit                    ::   :: unit
 
-Tloc {{ isa tloc }} {{ coq tloc }} {{ hol tloc }} {{ lem tloc }} {{ ocaml tloc }} :: 'TLoc_' ::=        {{ com types of locations }}
+Tloc {{ isa tloc }} {{ coq tloc }} {{ hol tloc }} {{ lem tloc }} {{ ocaml tloc }} {{ coq tloc }} :: 'TLoc_' ::=        {{ com types of locations }}
   | intref                  ::   :: intref	
 
 
 type_assumption, ta :: 'TA_' ::= {{ com type assumption }}
   | l : Tloc                ::   :: loc
 
-G {{ tex \Gamma }} :: G_ ::=     {{ com type environments }} {{ phantom }} {{ lem list type_assumption }}
-  | empty                   ::   :: empty {{ lem [] }}
-  | G , ta                  ::   :: extend {{ lem ([[ta]]::[[G]]) }}
+G {{ tex \Gamma }} :: G_ ::=     {{ com type environments }} {{ phantom }} {{ lem list type_assumption }} {{ coq list type_assumption }}
+  | empty                   ::   :: empty {{ lem [] }}  {{ coq [] }}
+  | G , ta                  ::   :: extend {{ lem ([[ta]]::[[G]]) }}  {{ coq ([[ta]]::[[G]]) }}
 
 
 terminals :: terminals_ ::=
@@ -72,10 +84,10 @@ subrules
 grammar 
 formula :: formula_ ::=
   | judgement              :: :: judgement
-  | n1 + n2 = n3           :: :: sum         {{ lem ([[n1]]+[[n2]]=[[n3]]) }}
-  | n1 >= n2 = b           :: :: leq         {{ lem ([[n1]]>=[[n2]]=[[b]]) }}
-  | s ( l ) = n            :: :: lookup      {{ lem (List.lookup [[l]] [[s]] =Just ([[n]])) }}   
-  | G ( l ) = Tloc         :: :: type_lookup {{ lem (lookup_location_type [[l]] [[G]] = Just ([[Tloc]])) }}   
+  | n1 + n2 = n3           :: :: sum         {{ lem ([[n1]]+[[n2]]=[[n3]]) }}                               {{ coq ([[n1]]+[[n2]]=[[n3]]) }}                                 
+  | n1 >= n2 = b           :: :: leq         {{ lem ([[n1]]>=[[n2]]=[[b]]) }}                               {{ coq ([[n1]]>=[[n2]]=[[b]]) }}                                 
+  | s ( l ) = n            :: :: lookup      {{ lem (List.lookup [[l]] [[s]] =Just ([[n]])) }}              {{ coq (List.lookup [[l]] [[s]] =Just ([[n]])) }}                
+  | G ( l ) = Tloc         :: :: type_lookup {{ lem (lookup_location_type [[l]] [[G]] = Just ([[Tloc]])) }} {{ coq (lookup_location_type [[l]] [[G]] = Just ([[Tloc]])) }}     
 
 
 % this is a bit ugly - to capture the different use of Gamma in L1 and L2 we have a list of a Lem variant type and two special-purpose lookup functions, with a wildcard pattern match in each.

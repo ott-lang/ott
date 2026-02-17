@@ -1246,7 +1246,7 @@ val _ = ottDefine "shiftt"
  (shiftt m n (TE_constr typexprs tc) = TE_constr (MAP (shiftt m n) typexprs) tc)`;
 
 val _ = Define
-`(shifttes m n (Typexprs_inj tes) = Typexprs_inj (MAP (shiftt m n) tes))`;
+`(shifttes m n (typexprs_inj tes) = typexprs_inj (MAP (shiftt m n) tes))`;
 
 val _ = Define
 `([[shift m n forall typexpr]] = [[forall shift (m + 1) n typexpr]])`;

@@ -1,0 +1,4 @@
+INCLUDES = $(OTTDIR)/hol $(OTTDIR)/examples/ocaml_light
+
+all: $(DEFAULT_TARGETS)
+.PHONY: all

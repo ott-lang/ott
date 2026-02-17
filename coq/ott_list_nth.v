@@ -1,10 +1,10 @@
+(** * Nth element of a list **)
+
 Require Import Arith.
 Require Import Lia.
 Require Import List.
 Require Import Ott.ott_list_support.
 Require Import Ott.ott_list_base.
-
-
 
 Section Lists.
 
@@ -25,23 +25,19 @@ Ltac case_eq foo :=
   pattern foo at -1;
   case foo.
 
-
-
-(*** Nth element ***)
-
 Unset Implicit Arguments.
 
 Fixpoint nth_safe l n {struct l} : n < length l -> A :=
   match l as l1, n as n1 return n1 < length l1 -> A with
     | h::t, 0 => fun H => h
     | h::t, S m => fun H => nth_safe t m (le_S_n _ _ H)
-    | nil, _ => fun H => match le_Sn_O _ H with end
+    | nil, _ => fun H => match Nat.nle_succ_0 _ H with end
   end.
 
 Lemma nth_safe_eq_nth_error :
   forall l n H, value (nth_safe l n H) = nth_error l n.
 Proof.
-  induction l; intro n; pose (F := le_Sn_O n); destruct n; try (contradiction || tauto).
+  induction l; intro n; pose (F := Nat.nle_succ_0 n); destruct n; try (contradiction || tauto).
   simpl length; intro H. 
   simpl nth_error; rewrite <- (IHl n (le_S_n _ _ H)).
   reflexivity.
@@ -65,7 +61,7 @@ Lemma nth_safe_app :
   forall l l' n (H:n<length l),
     exists H', nth_safe l n H = nth_safe (l++l') n H'.
 Proof.
-  induction l; intros. solve [contradiction (le_Sn_O n H)].
+  induction l; intros. solve [contradiction (Nat.nle_succ_0 n H)].
   destruct n.
   simpl length. assert (H' : 0 < S (length (l ++ l')));
                   [solve [auto with arith] | exists H'; reflexivity].
@@ -186,8 +182,8 @@ Arguments nth_safe_proof_irrelevance [A] _ _ _ _.
 Arguments nth_safe_cons [A] _ _ _ _.
 Arguments nth_safe_app [A] _ _ _ _.
 
-Hint Rewrite nth_map nth_ok_map nth_error_map : lists.
-Hint Rewrite nth_error_nil : lists.
-Hint Rewrite nth_error_in nth_error_out using lia : list_nth_error.
-Hint Rewrite nth_error_dec : list_nth_dec.
-Hint Resolve nth_error_value nth_error_error : datatypes.
+#[export] Hint Rewrite nth_map nth_ok_map nth_error_map : lists.
+#[export] Hint Rewrite nth_error_nil : lists.
+#[export] Hint Rewrite nth_error_in nth_error_out using lia : list_nth_error.
+#[export] Hint Rewrite nth_error_dec : list_nth_dec.
+#[export] Hint Resolve nth_error_value nth_error_error : datatypes.

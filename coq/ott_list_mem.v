@@ -1,4 +1,4 @@
-(*** Membership predicates ***)
+(** * Membership predicates on lists *)
 
 Require Import Arith.
 Require Import Bool.
@@ -7,19 +7,18 @@ Require Import Ring.
 Require Import Ott.ott_list_base.
 Require Import Ott.ott_list_core.
 Require Import Ott.ott_list_nth.
+
 Set Implicit Arguments.
 
-
-
-(*** Membership predicate ***)
+(** ** Membership predicate *)
 
 Section In.
 Variable A : Type.
 Implicit Types x : A.
 Implicit Types xs l : list A.
 
-(* Speed up proofs by providing trivial consequences of [List.in_or_app] that
-   do not require eauto. *)
+(** Speed up proofs by providing trivial consequences of [in_or_app] that
+   do not require [eauto]. *)
 Lemma In_left_app :
   forall l l' a, In a l -> In a (l ++ l').
 Proof. auto with datatypes. Qed.
@@ -49,13 +48,11 @@ Qed.
 
 End In.
 
-Hint Resolve In_left_app In_right_app : datatypes.
-Hint Resolve not_in_app_or not_in_or_app : datatypes.
-Hint Resolve nth_error_In nth_safe_In : datatypes.
+#[export] Hint Resolve In_left_app In_right_app : datatypes.
+#[export] Hint Resolve not_in_app_or not_in_or_app : datatypes.
+#[export] Hint Resolve nth_error_In nth_safe_In : datatypes.
 
-
-
-(*** Membership predicate and map ***)
+(** ** Membership predicate and map *)
 
 Lemma image_In_map :
   forall (A B:Type) x l (f:A->B),
@@ -88,9 +85,7 @@ Ltac elim_all_In_map :=
              )
          end.
 
-
-
-(*** Membership function ***)
+(** ** Membership function *)
 
 Section list_mem.
 Variable A : Type.
@@ -148,7 +143,7 @@ Proof.
     repeat match goal with |- context C [In_dec ?eq_dec_ ?x_ ?l_] =>
              destruct (In_dec eq_dec_ x_ l_)
            end;
-    intros; try ring; elimtype False;
+    intros; try ring; exfalso;
     (let a := type of i in (generalize dependent i; fold (~a)));
     auto with datatypes.
 Qed.
@@ -162,11 +157,9 @@ Proof. intros; apply In_implies_list_mem. apply nth_safe_In; auto. Qed.
 
 End list_mem.
 
-Hint Rewrite list_mem_app : lists.
+#[export] Hint Rewrite list_mem_app : lists.
 
-
-
-(*** Removing an element ***)
+(** ** Removing an element *)
 
 Section list_minus.
 Variable A : Type.
@@ -201,5 +194,5 @@ Qed.
 
 End list_minus.
 
-Hint Resolve In_list_plus : In_list_plus.
-Hint Resolve In_list_minus_other : datatypes.
+#[export] Hint Resolve In_list_plus : In_list_plus.
+#[export] Hint Resolve In_list_minus_other : datatypes.

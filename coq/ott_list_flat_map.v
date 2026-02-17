@@ -1,12 +1,10 @@
-(*** Flattening and mapping ***)
+(** * Flattening and mapping on lists *)
 
 Require Import Arith.
 Require Import List.
 Require Import Ott.ott_list_core.
 Require Import Ott.ott_list_support.
 Require Import Ott.ott_list_base.
-
-
 
 Section Flat_map.
 Variables A B C : Type.
@@ -65,6 +63,7 @@ Proof.
 Qed.
 
 Definition flatten := flat_map (fun xs => xs).
+
 Lemma unfold_flatten : flatten = flat_map (fun xs => xs).
 Proof refl_equal _.
 
@@ -87,10 +86,10 @@ Qed.
 
 End Flat_map.
 
-Hint Rewrite std_eq_flat_map
+#[export] Hint Rewrite std_eq_flat_map
              length_flat_map flat_map_app flat_map_map map_flat_map
              flat_map_identity flat_map_extensionality
              flat_map_rev
              unfold_flatten
              : lists.
-Hint Resolve In_flat_map_intro In_flat_map_elim : lists.
+#[export] Hint Resolve In_flat_map_intro In_flat_map_elim : lists.
