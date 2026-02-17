@@ -67,7 +67,7 @@ let latex_progressions = ref 0
 let latex_regressions = ref 0
 let twelf_progressions = ref 0
 let twelf_regressions = ref 0
-let report_fd = ref Pervasives.stdout
+let report_fd = ref Stdlib.stdout
 
 (* let _ = *)
 (*   if !night then begin *)

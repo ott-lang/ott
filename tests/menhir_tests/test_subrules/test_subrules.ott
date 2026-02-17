@@ -1,0 +1,37 @@
+metavar nat, k ::=
+  {{ com natural numbers }}
+  {{ lex numeral }}
+  {{ coq nat }}
+  {{ ocaml int }}
+  {{ ocamllex ['0'-'9']+ }}
+
+grammar
+
+num :: 'num_' ::= {{ com num }} {{ pp-suppress }} {{ menhir-start }}
+  | k           ::   :: int   {{ com integer }}
+
+value, v  :: 'value_' ::= {{ com value }} {{ pp-suppress }} {{ menhir-start }}
+  | k           ::   :: int   {{ com integer }}
+  | ( v1 , v2 ) ::   :: tuple {{ com tuple }}
+
+expr, e  :: 'expr_' ::= {{ com expression }} {{ menhir-start }}
+  | term        ::   :: term  {{ com term }} {{ quotient-remove }} {{ ocaml [[term]] }}
+  | e1 + e2     ::   :: add   {{ com addition }}
+
+term :: 'expr_' ::= {{ com term }} {{ quotient-with expr }}
+  | k           ::   :: int   {{ com integer }}
+  | term . k    ::   :: proj  {{ com projection }}
+  | ( e1 , e2 ) ::   :: tuple {{ com tuple }}
+  | ( e )       :: S :: paren {{ icho [[e]] }}
+
+parsing
+
+expr_add left expr_add
+
+embed {{ menhir %left PLUS }}
+
+% this is what we're testing, to ensure we have minimal support for subrules. we
+% should only take the maximal elements from the subrule order: `e` in this case
+subrules
+  v <:: e
+  num <:: v

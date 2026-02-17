@@ -488,6 +488,7 @@ let yo = {
                  ppm_caml_opts = oo;
                  ppm_caml_ast_module = target_ocaml_ast_module;
                  ppm_caml_parser_module = target_ocaml_parser_module;
+                 syntaxdefn = None;
  }
 
 let m_menhir = Menhir yo 
@@ -612,9 +613,9 @@ let process source_filenames =
 
   (* the quotiented un-auxed syntax, used to generate the pp functions, should be without the generated aux rules *)
 
-  let f quotient generate_aux = 
+  let f quotient generate_aux skip_validation = 
     try 
-      Grammar_typecheck.check_and_disambiguate m_tex quotient generate_aux targets_non_tex (List.map snd source_filenames) (!merge_fragments) document 
+      Grammar_typecheck.check_and_disambiguate m_tex quotient generate_aux targets_non_tex (List.map snd source_filenames) (!merge_fragments) skip_validation document 
     with
     | Typecheck_error (loc,s1,s2) ->
         Auxl.error (Some loc) ("(in checking and disambiguating "^(if quotient then "quotiented " else "") ^ "syntax)\n"^s1
@@ -622,11 +623,15 @@ let process source_filenames =
                     ^ "\n")
   in
 
+  let menhir_target = List.mem "menhir" targets in
+
   let ((xd,structure,rdcs),xd_unquotiented,xd_quotiented_unaux) = 
-    if List.mem "menhir" targets (*|| !caml_pp_filename <> None*) then 
-      (f true !generate_aux_rules, (match f false false with (xd,_,_)-> xd), (match f !generate_aux_rules false with (xd,_,_)-> xd))
+    if menhir_target (*|| !caml_pp_filename <> None*) then 
+      (f true !generate_aux_rules false, 
+       (match f false false menhir_target with (xd,_,_)-> xd), 
+       (match f !generate_aux_rules false false with (xd,_,_)-> xd))
     else
-      match f !quotient_rules !generate_aux_rules with 
+      match f !quotient_rules !generate_aux_rules false with 
       | (xd,structure,rdcs) -> ((xd,structure,rdcs), xd, xd (* two dummies, unused *))
   in
 
