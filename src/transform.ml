@@ -34,7 +34,7 @@
 open Types
 
 (* FZ: is this comment outdated ? *)
-(* FZ: only for Coq, only the bare grammar (no homs...),  *)
+(* FZ: only for Rocq, only the bare grammar (no homs...),  *)
 (*     only for very simple suffixes *)
   
 type int_code =
@@ -140,8 +140,9 @@ let expand_element (m:pp_mode) (xd:syntaxdefn) (bs:bindspec list) (e:element) :
           List.map (fun mvntr -> 
             match mvntr with
             | Ntr ntr -> 
-                ( try Grammar_pp.pp_hom_spec m xd (List.assoc "coq-universe" (Auxl.rule_of_ntr xd ntr).rule_homs) 
-                with Not_found -> "Set" )
+                ( match Auxl.hom_spec_for_hom_name "rocq-universe" (Auxl.rule_of_ntr xd ntr).rule_homs with
+                  | Some hs -> Grammar_pp.pp_hom_spec m xd hs
+                  | None -> "Set" )
             | Mvr _ -> "Set") ss in
         if List.for_all (fun s -> String.compare s "Set" = 0) universes
         then "Set"
@@ -238,7 +239,7 @@ let expand_element (m:pp_mode) (xd:syntaxdefn) (bs:bindspec list) (e:element) :
 	  rule_ntr_names = [ (id,[]) ];
 	  rule_pn_wrapper = "";
 	  rule_ps = [ nil_prod; cons_prod ];
-	  rule_homs = [("coq-universe", [Hom_string id_universe])];
+	  rule_homs = [("rocq-universe", [Hom_string id_universe])];
 	  rule_meta = false;
 	  rule_semi_meta = false;
           rule_phantom = false;
@@ -274,7 +275,7 @@ let expand_prod (m:pp_mode) (xd:syntaxdefn) (p:prod) : prod * rule list * (auxfn
 let expand_rule (m:pp_mode) (xd:syntaxdefn) (r:rule) : rule list * string list * (auxfn * auxfn_type) list =
   if 
     (String.compare r.rule_ntr_name "formula" = 0) || 
-    (List.exists (fun (h,_) -> String.compare h "coq" = 0) r.rule_homs)
+    (List.exists (fun (h,_) -> String.compare h "coq" = 0 || String.compare h "rocq" = 0) r.rule_homs)
   then ([r],[],[])
   else
     let expanded_prods, new_rules, extended_auxfns = 
@@ -335,7 +336,7 @@ let expand_lists_in_syntaxdefn (m:pp_mode) (xd:syntaxdefn) (structure: structure
         if exp_list_aux_funcs = ""
         then [(Struct_rs (!newstruct@br), Some exp)]
         else [(Struct_rs (!newstruct@br), Some exp); 
-              (Struct_embed (dummy_loc, "coq", [Embed_string (dummy_loc, exp_list_aux_funcs)]), None)] in 
+              (Struct_embed (dummy_loc, "rocq", [Embed_string (dummy_loc, exp_list_aux_funcs)]), None)] in 
       
       let (expanded_structure,exp) = 
         List.split (List.concat (List.map
@@ -405,10 +406,10 @@ let expand_lists_in_syntaxdefn (m:pp_mode) (xd:syntaxdefn) (structure: structure
  
       let expanded_deps = 
 	Dependency.compute_dependencies 
-	  { xd with xd_rs = expanded_rules; xd_dep = [] } "coq" in
+	  { xd with xd_rs = expanded_rules; xd_dep = [] } "rocq" in
       { xd with
 	xd_rs = expanded_rules;
-	xd_dep = [ ("coq", expanded_deps); ("ascii", expanded_deps) ];
+	xd_dep = [ ("rocq", expanded_deps); ("ascii", expanded_deps) ];
         xd_axs = expanded_auxfns },
       expanded_structure
 

@@ -1,0 +1,17 @@
+% Test file for rocq keywords (beginrocqsection, endrocqsection, rocqvariable)
+
+grammar
+t :: 't_' ::=                          {{ com term    }}
+  | x            ::  :: var             {{ com variable }}
+  | t t'         ::  :: app             {{ com application }}
+
+beginrocqsection TestSection
+
+rocqvariable x
+
+embed
+{{ rocq
+Definition test_fun (x : nat) : nat := x + 1.
+}}
+
+endrocqsection TestSection

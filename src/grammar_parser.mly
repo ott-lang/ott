@@ -109,6 +109,7 @@ let parse_error s =
 %token UNION  EMPTY
 
 %token COQSECTIONBEGIN COQSECTIONEND COQVARIABLE
+%token ROCQSECTIONBEGIN ROCQSECTIONEND ROCQVARIABLE
 
 %token COMP_LEFT COMP_MIDDLE COMP_RIGHT COMP_IN
 
@@ -154,6 +155,9 @@ item:
  | COQSECTIONBEGIN coq_section_begin { $2 }
  | COQSECTIONEND coq_section_end     { $2 }
  | COQVARIABLE coq_variable          { $2 }
+ | ROCQSECTIONBEGIN coq_section_begin { $2 }
+ | ROCQSECTIONEND coq_section_end     { $2 }
+ | ROCQVARIABLE coq_variable          { $2 }
 
 metavardefn:
    metavardefn_int   

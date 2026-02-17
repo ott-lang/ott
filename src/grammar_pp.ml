@@ -1228,9 +1228,7 @@ and pp_nt_or_mv_root_ty m xd ntmvr =
   | Mvr mvr -> pp_metavarroot_ty m xd mvr
 
 and coq_maybe_decide_equality m xd homs ntmvr loc = 
-  match
-    try Some (List.assoc "coq-equality" homs) with Not_found -> None
-  with
+  match Auxl.hom_spec_for_hom_name "rocq-equality" homs with
   | None -> ""
   | Some eh ->
       let type_name = pp_nt_or_mv_root_ty m xd ntmvr in
@@ -1248,7 +1246,7 @@ and coq_maybe_decide_equality m xd homs ntmvr loc =
       ^ ( match eh with
         | [ ] -> "  decide equality; auto with ott_coq_equality arith."
         | [ Hom_string s ] -> s 
-        | _ -> Auxl.error (Some loc) "malformed coq-equality homomorphism\n" )
+        | _ -> Auxl.error (Some loc) "malformed rocq-equality homomorphism\n" )
       ^ "\nDefined.\n"
       ^ "#[export] Hint Resolve eq_" ^ type_name  ^ " : ott_coq_equality.\n"
 
@@ -1275,12 +1273,13 @@ and pp_metavardefn m xd mvd =
 	| Coq co ->
             let type_name = pp_metavarroot_ty m xd mvd.mvd_name in
             let universe =
-              try pp_hom_spec m xd (List.assoc "coq-universe" mvd.mvd_rep)
-              with Not_found -> "Set"
+              match Auxl.hom_spec_for_hom_name "rocq-universe" mvd.mvd_rep with
+              | Some hs -> pp_hom_spec m xd hs
+              | None -> "Set"
             in
             let body = pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc in
             let sentence =
-              if List.mem_assoc "coq-notation" mvd.mvd_rep then
+              if Auxl.hom_spec_for_hom_name "rocq-notation" mvd.mvd_rep <> None then
 	        "Notation " ^ type_name ^ " := (" ^ body ^ " : " ^ universe ^ ")."
               else
 	        "Definition " ^  type_name ^ " : " ^ universe ^ " := " ^ body ^ "."
@@ -1347,10 +1346,9 @@ and pp_metavarrep m xd mvd_rep type_name loc =
 	pp_hom_spec m xd hs
       with Not_found -> Auxl.warning (Some loc) ("undefined lem metavarrep for "^type_name^"\n"); "UNDEFINED" )
   | Coq co ->
-      ( try
-	let hs = List.assoc "coq" mvd_rep in
-	pp_hom_spec m xd hs
-      with Not_found -> Auxl.warning (Some loc) ("undefined coq metavarrep for "^type_name^"\n"); "UNDEFINED" )
+      ( match Auxl.hom_spec_for_hom_name "rocq" mvd_rep with
+        | Some hs -> pp_hom_spec m xd hs
+        | None -> Auxl.warning (Some loc) ("undefined rocq metavarrep for "^type_name^"\n"); "UNDEFINED" )
   | Twf wo ->
       ( try
 	let hs = List.assoc "twf" mvd_rep in
@@ -2649,7 +2647,9 @@ and pp_rule m xd r = (* returns a string option *)
       if r.rule_meta || r.rule_phantom
       then None
       else
-        let universe = try pp_hom_spec m xd (List.assoc "coq-universe" r.rule_homs) with Not_found -> "Set" in
+        let universe = match Auxl.hom_spec_for_hom_name "rocq-universe" r.rule_homs with
+          | Some hs -> pp_hom_spec m xd hs
+          | None -> "Set" in
         Some
           (pp_nontermroot_ty m xd r.rule_ntr_name ^ " : "^universe^ " := "^pp_com^"\n"
            ^ String.concat "\n"
@@ -2752,11 +2752,12 @@ and pp_rule_list m xd rs =
                     let homs = (Auxl.rule_of_ntr xd ntr).rule_homs in
                     let type_name = pp_nontermroot_ty m xd ntr in
                     let universe =
-                      try pp_hom_spec m xd (List.assoc "coq-universe" homs)
-                      with Not_found -> "Set"
+                      match Auxl.hom_spec_for_hom_name "rocq-universe" homs with
+                      | Some hs -> pp_hom_spec m xd hs
+                      | None -> "Set"
                     in
                     let body = pp_hom_spec m xd hs in
-                    if List.mem_assoc "coq-notation" homs then
+                    if Auxl.hom_spec_for_hom_name "rocq-notation" homs <> None then
                       "\nNotation " ^ type_name ^ " := (" ^ body ^ " : " ^ universe ^ ").\n"
                     else
                       "\nDefinition " ^ type_name ^ " : " ^ universe ^ " := " ^ body ^ ".\n"
@@ -3909,7 +3910,7 @@ and pp_symterm_list_body m xd sie (de :dotenv) tmopt include_terminals prod_es s
                 | [] -> []
                 | (Lang_nonterm(ntr,_))::t -> 
                     let r = Auxl.rule_of_ntr xd ntr in
-                    let b = (List.exists (fun (h,_) -> String.compare h "coq" = 0) r.rule_homs) in
+                    let b = (List.exists (fun (h,_) -> let normalized = Str.global_replace (Str.regexp "rocq") "coq" h in String.compare normalized "coq" = 0) r.rule_homs) in
                     (Auxl.promote_ntr xd ntr,b) :: (intern t)
                 | (Lang_metavar(mvr,_))::t -> (mvr,false) :: (intern t)
                 | (Lang_terminal _)::t -> intern t

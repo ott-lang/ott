@@ -36,11 +36,11 @@
 all: regression
 
 regression: regression.ml
-	ocamlc unix.cma str.cma -o regression -dtypes regression.ml
+	ocamlc -I +unix -I +str unix.cma str.cma -o regression -dtypes regression.ml
 
 regression_p: regression_p_client.ml regression_p_master.ml
-	ocamlc unix.cma str.cma -o regression_p_client regression_p_client.ml
-	ocamlc unix.cma str.cma -o regression_p_master regression_p_master.ml
+	ocamlc -I +unix -I +str unix.cma str.cma -o regression_p_client regression_p_client.ml
+	ocamlc -I +unix -I +str unix.cma str.cma -o regression_p_master regression_p_master.ml
 
 regression_para: regression_para.ml
 	ocamlp3lopt -par unix.cmxa str.cmxa -o regression_para regression_para.ml
@@ -77,7 +77,7 @@ clean-regr:
 
 # Jenkins
 
-# regression-jenkins: 
+# regression-jenkins:
 # 	ocamlc unix.cma str.cma -o regression-jenkins -dtypes regression-jenkins.ml
 
 run-jenkins: regression

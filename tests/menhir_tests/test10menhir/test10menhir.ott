@@ -7,17 +7,21 @@
 
 % - tex for the quotiented grammar
 
-metavar var, x ::=   {{ com  term variable }} 
+% ensure we generate correct parses for int / float / bool
+metavar boolean ::= {{ ocaml bool }} {{ coq nat }}
+metavar integer ::= {{ ocaml int }} {{ coq nat }}
+metavar floating ::= {{ ocaml float }} {{ coq nat }}
+
+metavar var, x ::=   {{ com  term variable }}
 {{ isa string}} {{ coq nat}} {{ hol string}} {{ lem string }} {{ coq-equality }}
 {{ ocaml string}} {{ lex alphanum}} {{ tex \mathit{[[var]]} }} {{ ocamllex ['a'-'z''A'-'Z']+ }}
 
 grammar
 %                lhs_of_app  rhs_of_app  lambda_body
-%  | ( t )           y          y            y 
+%  | ( t )           y          y            y
 %  | x               y          y            y
 %  | \ x . t         n          y            y
 %  | t t'            y          n            y
-
 
 term, t, v :: 'T_' ::=               {{ menhir-start }}
   | at             :: :: at          {{ quotient-remove }}   {{ ocaml [[at]] }}
@@ -26,21 +30,20 @@ term, t, v :: 'T_' ::=               {{ menhir-start }}
 
   | { t / x } t' :: M :: sub         {{ ichlo (tsubst_term [[t]] [[x]] [[t']])}}
 
-                   
-atomic_term, at :: 'T_' ::=       {{ quotient-with t }}      
+atomic_term, at :: 'T_' ::=       {{ quotient-with t }}
   | x              :: :: var
   | ( t )          :: :: paren
-                   
-lhs :: 'T_' ::=                   {{ quotient-with t }}      
+
+lhs :: 'T_' ::=                   {{ quotient-with t }}
   | at             :: :: at_lhs       {{ quotient-remove }}   {{ ocaml [[at]] }}
   | lhs at'        :: :: app_lhs      {{ quotient-remove }}   {{ ocaml T_app([[lhs]], [[at']]) }}
-                   
-rhs :: 'T_' ::=                   {{ quotient-with t }}      
+
+rhs :: 'T_' ::=                   {{ quotient-with t }}
   | at             :: :: at_rhs       {{ quotient-remove }}   {{ ocaml [[at]] }}
   | lambda         :: :: fn_rhs       {{ quotient-remove }}   {{ ocaml [[lambda]] }}
-                   
+
 lambda :: 'T_' ::=                {{ quotient-with t }}
-  | \ x . t        :: :: lambda   
+  | \ x . t        :: :: lambda
 
 % in principle, these ocaml homs, which are used in the parser actions
 % of the removed productions, could be constructed automatically, by
@@ -49,10 +52,9 @@ lambda :: 'T_' ::=                {{ quotient-with t }}
 % nonterminal roots.  Neither seems worth the complexity right now,
 % though.
 
-
 % the parser generation code doesn't currently support subrules
 
-% %val,v :: 'v_' ::=                            {{ com value   }} 
+% %val,v :: 'v_' ::=                            {{ com value   }}
 % %  | \ x . t      ::   :: lam                   {{ com lambda  }}
 
 terminals :: 'terminals_' ::=
@@ -63,24 +65,22 @@ terminals :: 'terminals_' ::=
 %  val <:: term
 
 % substitutions
-%   single term var :: tsubst 
-% 
+%   single term var :: tsubst
+%
 %  defns
 %  Jop :: '' ::=
-%  
+%
 %   defn
 %   t1 --> t2 :: ::reduce::'' {{ com [[t1]] reduces to [[t2]] }} {{ lemwcf  witness type reduce_witness; check reduce_check; eval : input -> output }} by
-%  
-%  
+%
+%
 %      --------------------------  :: ax_app
 %      (\x.t1) v2 -->  {v2/x}t1
-%  
+%
 %      t1 --> t1'
 %      -------------- :: ctx_app_fun
 %      t1 t --> t1' t
-%  
+%
 %      t1 --> t1'
 %      -------------- :: ctx_app_arg
 %      v t1 --> v t1'
-
-

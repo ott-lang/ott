@@ -258,7 +258,18 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
                   let ntr_upper = List.assoc ntr non_free_ntrs in
                   Some (ntr,ntr_upper,(ntr,suffix))
                 with
-                  Not_found -> None)
+                  Not_found -> 
+                    (* Try with the primary nonterminal to handle aliases *)
+                    let primary_ntr = 
+                      try Auxl.primary_ntr_of_ntr xd ntr 
+                      with Not_found -> ntr in
+                    if primary_ntr = ntr then None
+                    else
+                      try
+                        let ntr_upper = List.assoc primary_ntr non_free_ntrs in
+                        Some (primary_ntr,ntr_upper,(ntr,suffix))
+                      with
+                        Not_found -> None)
             | (Ntr ntr,suffix),Some(ntrl,ntru) -> Some (ntrl,ntru,(ntr,suffix))
             | (Mvr mvr,suffix),_ -> None) 
             ntmvsns in
@@ -534,7 +545,9 @@ let pp_defn fd (m:pp_mode) (xd:syntaxdefn) lookup (defnclass_wrapper:string) (un
 
             
 let pp_defnclass fd (m:pp_mode) (xd:syntaxdefn) lookup (dc:defnclass) =
-  let universe = try Grammar_pp.pp_hom_spec m xd (List.assoc "coq-universe" dc.dc_homs) with Not_found -> "Prop" in
+  let universe = match Auxl.hom_spec_for_hom_name "rocq-universe" dc.dc_homs with
+    | Some hs -> Grammar_pp.pp_hom_spec m xd hs
+    | None -> "Prop" in
   let isa_type_of_defn (m: pp_mode) (xd: syntaxdefn) (d: defn) : string = 
       (* seems simplest to find the type associated with the production that
          we added to the language for this defn, rather than build a type
@@ -712,7 +725,7 @@ let fundefn_to_int_func (m:pp_mode) (xd:syntaxdefn) (deps:string list) (fd:funde
         let prod_es = Grammar_pp.apply_hom_order m xd (Auxl.prod_of_prodname xd prod_name) in
 
 	let struct_on = 
-	  match Auxl.hom_spec_for_hom_name "coq-struct" fd.fd_homs with
+	  match Auxl.hom_spec_for_hom_name "rocq-struct" fd.fd_homs with
 	  | Some ([Hom_index i]) -> "{struct x" ^ string_of_int (i+1) ^ "} "
 	  | Some _ -> 
      Auxl.warning (* TODO *) None "malformed coq-struct homomorphism"; 

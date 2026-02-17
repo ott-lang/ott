@@ -55,7 +55,7 @@ and pp_embedmorphism fd m xd lookup (l,hn,es) =
       output_string fd " ";
       output_string fd Grammar_pp.pp_DOUBLERIGHTBRACE;
       output_string fd "\n";
-  | (Coq _, "coq") 
+  | (Coq _, "coq") | (Coq _, "rocq") 
   | (Isa _, "isa")                       
   | (Hol _, "hol") 
   | (Lem _, "lem") 
@@ -66,7 +66,7 @@ and pp_embedmorphism fd m xd lookup (l,hn,es) =
   | (Lex _,  "lex") -> 
       pp_embed_spec fd m xd lookup es;
       output_string fd "\n"
-  | (Coq co, "coq-lib") -> 
+  | (Coq co, "coq-lib") | (Coq co, "rocq-lib") -> 
       let x = co.coq_library in
       x := (fst !x, embed_strings (snd !x) es)
   | (Isa io, "isa-lib") -> 

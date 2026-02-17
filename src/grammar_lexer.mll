@@ -62,7 +62,7 @@ type lexer = Lexing.lexbuf -> Grammar_parser.token
 
 type token_type = Tok_kw of string | Tok_sym of string*string | Tok_sym_direct of string*string | Tok_user of string 
 
-let hom_strings = ["TEX_NAME_PREFIX";"formula";"terminals";"M";"S";"tex";"com";"coq";"hol";"lem";"isa";"ocaml";"icho";"ichlo";"ich";"ichl";"coq-equality";"isasyn";"isaprec";"lex";"texvar";"isavar";"holvar";"lemvar";"ocamlvar";"repr-locally-nameless";"phantom";"coq-struct";"isa-proof";"isa-auxfn-proof";"isa-subrule-proof";"coq-lib"]
+let hom_strings = ["TEX_NAME_PREFIX";"formula";"terminals";"M";"S";"tex";"com";"coq";"rocq";"hol";"lem";"isa";"ocaml";"icho";"ichlo";"ich";"ichl";"ir";"rh";"irh";"irho";"irhl";"irhlo";"coq-equality";"rocq-equality";"isasyn";"isaprec";"lex";"texvar";"isavar";"holvar";"lemvar";"ocamlvar";"repr-locally-nameless";"phantom";"coq-struct";"rocq-struct";"isa-proof";"isa-auxfn-proof";"isa-subrule-proof";"coq-lib";"rocq-lib";"coq-universe";"rocq-universe";"coq-notation";"rocq-notation"]
 
 
 let de_lex t = match t with
@@ -103,6 +103,9 @@ let de_lex t = match t with
 | COQSECTIONBEGIN      -> Tok_kw "begincoqsection"
 | COQSECTIONEND        -> Tok_kw "endcoqsection"
 | COQVARIABLE          -> Tok_kw "coqvariable"
+| ROCQSECTIONBEGIN     -> Tok_kw "beginrocqsection"
+| ROCQSECTIONEND       -> Tok_kw "endrocqsection"
+| ROCQVARIABLE         -> Tok_kw "rocqvariable"
 | LTEQ                 -> Tok_sym ("<="   ,"<=")
 | BIND_LEFT_DELIM      -> Tok_sym ("(+"   , "(+")
 | DOTDOT               -> Tok_sym (".."   , "..")          
@@ -259,6 +262,9 @@ rule metalang = parse
   | "begincoqsection"              { COQSECTIONBEGIN      }
   | "endcoqsection"                { COQSECTIONEND        }
   | "coqvariable"                  { COQVARIABLE          }
+  | "beginrocqsection"             { ROCQSECTIONBEGIN     }
+  | "endrocqsection"               { ROCQSECTIONEND       }
+  | "rocqvariable"                 { ROCQVARIABLE         }
   | "<="                           { LTEQ                 }
   | "left"                         { LEFT                 }
   | "right"                        { RIGHT                }
@@ -434,6 +440,9 @@ and defnlang = parse
 	| "begincoqsection"-> go_back back metalang lexbuf;COQSECTIONBEGIN
 	| "endcoqsection"  -> go_back back metalang lexbuf;COQSECTIONEND
 	| "coqvariable"	   -> go_back back metalang lexbuf;COQVARIABLE
+	| "beginrocqsection"-> go_back back metalang lexbuf;ROCQSECTIONBEGIN
+	| "endrocqsection" -> go_back back metalang lexbuf;ROCQSECTIONEND
+	| "rocqvariable"   -> go_back back metalang lexbuf;ROCQVARIABLE
 	| "defn"	   -> go_back back elements lexbuf;DEFN
 	| "funs"	   -> go_back back metalang lexbuf;FUNDEFNCLASS
 	| "fun"		   -> go_back back elements lexbuf;FUNDEFN

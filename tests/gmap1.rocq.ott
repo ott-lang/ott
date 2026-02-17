@@ -1,0 +1,14 @@
+embed
+{{ rocq
+From stdpp Require Import gmap.
+}}
+metavar context ::=
+ {{ rocq gmap nat nat }}
+ {{ rocq-universe Type }}
+ {{ rocq-notation }}
+embed
+{{ rocq
+Fact insert_lookup_ne_context: forall (C:context) i j x y,
+    i <> j -> C !! i = Some x -> <[j:=y]> C !! i = Some x.
+Proof. by intros; simplify_map_eq. Qed.
+}}

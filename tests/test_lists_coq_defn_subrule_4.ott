@@ -1,0 +1,79 @@
+% Mixing list bounds with subrules
+% Should pass on all targets, but previous versions failed
+% in Coq with "The variable tau_ is bound several times in pattern"
+% due to an error in how bound were calculated for sub-non-terminals
+
+metavar var, X ::= {{ coq nat }}
+
+indexvar n ::=  {{ coq nat }}
+
+grammar
+
+Kind, K :: kind_ ::=
+  | KindStar ::  :: KindStar
+
+typexpr, T :: T_ ::=
+  | X                                    ::   :: var
+  | ForAll << X1 , .. , Xn >> .  T       ::   :: polyarrow
+  | [ X1 |-> tau1 .. Xn |-> taun ] T     :: M :: tsub  {{ icho  [[T]] }}
+
+tau, t :: tau_ ::=
+  | X  ::   :: var
+
+formula :: 'formula_' ::=
+  | judgement            ::   :: judgement
+  | formula1 .. formulan ::   :: dots
+
+subrules
+  tau <:: T
+
+defns
+  Jtype :: '' ::=
+
+defn
+  |- t : K :: :: kind :: Kind
+by
+
+  ------------------------------------ :: Var
+  |- t : KindStar
+
+defn
+  is t ::  :: Simpl :: ''
+by
+
+  ------------------------------------ :: Basic
+  is X
+
+defn
+  |- T <: T' :: :: sub :: Sub
+by
+
+  </ |-  taun : KindStar // n />
+  ------------------------------------------ :: InstL
+  |-  ForAll << </ Xn // n /> >> .  T  <: [ </ Xn |-> taun // n /> ] T
+
+  is t
+  ------------------------------------------ :: Sub
+  |- t <: X
+
+embed {{ coq
+
+Require Import List.
+Import ListNotations.
+
+Lemma test_is_tau_premise_needed :
+  (sub (T_polyarrow nil (T_var 0)) (T_var 1)) -> Is_true (is_tau_of_typexpr (T_polyarrow [] (T_var 0))).
+Proof.
+  intros.
+  inversion H.
+  assumption.
+Qed.
+
+Theorem is_tau_required_for_kind :
+  forall t, kind t kind_KindStar -> Is_true (is_tau_of_typexpr t).
+Proof.
+  intros.
+  inversion H.
+  assumption.
+Qed.
+}}

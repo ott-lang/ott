@@ -117,30 +117,37 @@ let pp_subrules m xd srs : int_funcs_collapsed =
   let rec pp_subelement = 
     fun sie de isa_list_name_flag pu srl sru el eu -> match el,eu with
       Lang_nonterm (ntrpl,ntl), Lang_nonterm (ntrpu,ntu) -> 
-        (* TODO: THIS IS PROBABLY WRONG WRONG WRONG *)
-(*         if  (ntrpl=ntrpu) then  *)
-(*           try  *)
-(*             let ntr_upper = List.assoc ntrpl non_free_ntrs in *)
-(*             [ "(" ^ (Auxl.pp_is ntrpl (Auxl.promote_ntr xd ntrpu)) ^ " "  *)
-(*               ^ Grammar_pp.pp_nonterm_with_sie m xd sie ntu  *)
-(* 	      ^ ")"], [Auxl.pp_is ntrpl (Auxl.promote_ntr xd ntrpu)], [] *)
-(*           with Not_found -> [],[],[] *)
-(*         else if  *)
-(*           List.exists  *)
-(*             (function sr -> sr.sr_lower=ntrpl && sr.sr_upper=ntrpu)  *)
-(*             xd.xd_srs  *)
-(*         then  *)
-(*           [ "(" ^ (Auxl.pp_is ntrpl (Auxl.promote_ntr xd ntrpu)) ^ " "  *)
-(*             ^ Grammar_pp.pp_nonterm_with_sie m xd sie ntu ^")"],  *)
-(*           [Auxl.pp_is ntrpl (Auxl.promote_ntr xd ntrpu)], [] *)
-(*         else [],[],[] *)
-
-        (try
-          let ntr_upper = List.assoc ntrpl non_free_ntrs in
-          [ "(" ^ (Auxl.pp_is ntrpl ntr_upper) ^ " " 
+        (* Check if there's a direct subrule relationship, checking both the nonterminal
+           and its primary form to handle alias cases *)
+        let direct_subrule = 
+          let primary_ntrpl = 
+            try Auxl.primary_ntr_of_ntr xd ntrpl 
+            with Not_found -> ntrpl in
+          List.exists 
+            (function sr -> 
+              (sr.sr_lower=ntrpl || sr.sr_lower=primary_ntrpl) && 
+              sr.sr_upper=ntrpu)
+            xd.xd_srs
+        in
+        
+        if direct_subrule then
+          [ "(" ^ (Auxl.pp_is ntrpl (Auxl.promote_ntr xd ntrpu)) ^ " " 
             ^ Grammar_pp.pp_nonterm_with_sie m xd sie ntu 
-	    ^ ")"], [Auxl.pp_is ntrpl ntr_upper], []
-        with Not_found -> [],[],[])
+            ^ ")"], [Auxl.pp_is ntrpl (Auxl.promote_ntr xd ntrpu)], []
+        else
+          (* Try to find the top-level nonterminal for this subrule *)
+          (try
+            let primary_ntrpl = 
+              try Auxl.primary_ntr_of_ntr xd ntrpl 
+              with Not_found -> ntrpl in
+            let ntr_upper = 
+              try List.assoc ntrpl non_free_ntrs 
+              with Not_found -> List.assoc primary_ntrpl non_free_ntrs in
+            let promoted_upper = Auxl.promote_ntr xd ntr_upper in
+            [ "(" ^ (Auxl.pp_is ntrpl promoted_upper) ^ " " 
+              ^ Grammar_pp.pp_nonterm_with_sie m xd sie ntu 
+              ^ ")"], [Auxl.pp_is ntrpl promoted_upper], []
+          with Not_found -> [],[],[])
 
     | Lang_metavar _, Lang_metavar _ -> [],[],[]
     | Lang_terminal _, Lang_terminal _ -> [],[],[]

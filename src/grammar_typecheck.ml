@@ -404,21 +404,21 @@ let subrule (xd:syntaxdefn) (include_meta_prods:bool)
 
 let allowable_hom_data = 
   [ 
-    ( Hu_root    , (["isa";"coq";"hol";"lem";(*"twf";*)"tex";"ocaml"], 
+    ( Hu_root    , (["isa";"coq";"rocq";"hol";"lem";(*"twf";*)"tex";"ocaml"], 
                     "nonterminal, metavar or indexvar root"));
-    ( Hu_metavar , (["isa";"coq";"hol";"lem";(*"twf";*)"tex";"ocaml";"com";"coq-equality";"coq-notation";"coq-universe";"lex";"texvar";"isavar";"holvar";"lemvar";"ocamlvar";"repr-locally-nameless";(*"repr-nominal";*)"phantom";"ocamllex";"ocamllex-remove";"ocamllex-of-string";"pp";"pp-raw";"pp-suppress"],
+    ( Hu_metavar , (["isa";"coq";"rocq";"hol";"lem";(*"twf";*)"tex";"ocaml";"com";"coq-equality";"rocq-equality";"coq-notation";"rocq-notation";"coq-universe";"rocq-universe";"lex";"texvar";"isavar";"holvar";"lemvar";"ocamlvar";"repr-locally-nameless";(*"repr-nominal";*)"phantom";"ocamllex";"ocamllex-remove";"ocamllex-of-string";"pp";"pp-raw";"pp-suppress"],
                     "metavar declaration"));
-    ( Hu_rule    , (["isa";"coq";"hol";"lem";(*"twf";*)"tex";"ocaml";"com";"coq-equality";"coq-notation";"coq-universe";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ic";"ch";"ih";"phantom";"aux";"auxparam";"menhir-start";"menhir-start-type";"quotient-with";"pp";"pp-raw";"pp-suppress";"pp-params";"lex-comment"],
+    ( Hu_rule    , (["isa";"coq";"rocq";"hol";"lem";(*"twf";*)"tex";"ocaml";"com";"coq-equality";"rocq-equality";"coq-notation";"rocq-notation";"coq-universe";"rocq-universe";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ic";"ch";"ih";"ir";"rh";"irh";"irho";"irhl";"irhlo";"phantom";"aux";"auxparam";"menhir-start";"menhir-start-type";"quotient-with";"pp";"pp-raw";"pp-suppress";"pp-params";"lex-comment"],
                     "rule"));
     ( Hu_rule_meta, (["com"], "special rule"));
-    ( Hu_prod    , (["isa";"coq";"hol";"lem";(*"twf";*)"tex";"texlong";"ocaml";"com";"order";"isasyn";"isaprec";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ic";"ch";"ih";
+    ( Hu_prod    , (["isa";"coq";"rocq";"hol";"lem";(*"twf";*)"tex";"texlong";"ocaml";"com";"order";"isasyn";"isaprec";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ic";"ch";"ih";"ir";"rh";"irh";"irho";"irhl";"irhlo";
                      "disambiguate";"prec";"leftassoc";"rightassoc";"menhir";"quotient-remove";"menhir-prec";"pp";"pp-raw"],
                     "production"));
     ( Hu_prod_tm , (["isa";                      "tex";"lex";  "com"; "prec";"leftassoc";"rightassoc"],"production of the terminals grammar"));
     ( Hu_drule   , ([                                          "com"],"definition rule"));
     ( Hu_defn    , ([                            "tex";        "com";"isasyn";"isaprec";"disambiguate";"lemwcf"],"definition"));
-    ( Hu_defnclass, (["coq-universe"],"defns block"));
-    ( Hu_fundefn , (["isa";"coq";"hol";"lem";(*"twf";*)"tex";        "com";"order";"isasyn";"isaprec";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ic";"ch";"ih";"coq-struct"],"function definition"));
+    ( Hu_defnclass, (["coq-universe";"rocq-universe"],"defns block"));
+    ( Hu_fundefn , (["isa";"coq";"rocq";"hol";"lem";(*"twf";*)"tex";        "com";"order";"isasyn";"isaprec";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ic";"ch";"ih";"ir";"rh";"irh";"irho";"irhl";"irhlo";"coq-struct";"rocq-struct"],"function definition"));
     ( Hu_fundefnclass, ([(* "isa-proof";*)"hol-proof"],"funs block"));
     ( Hu_subrule,  (["isa-proof"],"subrule definition"));
     ( Hu_subst,    (["isa-proof"],"substitution definition"));
@@ -428,6 +428,7 @@ let allowable_hom_data =
   ] 
 
 let embed_allowable_homs = ["coq";"coq-lib";"coq-preamble";
+                            "rocq";"rocq-lib";"rocq-preamble";
                             "isa";"isa-import";"isa-auxfn-proof";"isa-subrule-proof";"isa-lib";"isa-preamble";
                             "hol";"hol-preamble";
                             "lem";"lem-preamble";
@@ -436,7 +437,7 @@ let embed_allowable_homs = ["coq";"coq-lib";"coq-preamble";
                             "ocaml";"ocaml-preamble";
                             "menhir"]
 
-let list_form_allowable_homs =["isa";"coq";"hol";"lem";"ic";"ch";"ih";"ich";"ichl";"icho";"ichlo";(*"icht";*)"coq-struct";"ocaml"] 
+let list_form_allowable_homs =["isa";"coq";"rocq";"hol";"lem";"ic";"ch";"ih";"ich";"ichl";"icho";"ichlo";"ir";"rh";"irh";"irhl";"irho";"irhlo";(*"icht";*)"coq-struct";"rocq-struct";"ocaml"] 
 
 let cd_disambiguate_hom name rhs hs =
   try 
@@ -664,21 +665,33 @@ and cd_homs_icho (c: cd_env) (hs: homomorphism list) : homomorphism list =
       | [] -> []
       | (hn,hs)::hs' -> 
           if hn = "ic" then 
-            ("isa",hs)::("coq",hs)::(cd_homs_icho c hs') 
+            ("isa",hs)::("rocq",hs)::(cd_homs_icho c hs') 
           else if hn = "ih" then 
             ("isa",hs)::("hol",hs)::(cd_homs_icho c hs') 
           else if hn = "ch" then 
-            ("hol",hs)::("coq",hs)::(cd_homs_icho c hs') 
+            ("hol",hs)::("rocq",hs)::(cd_homs_icho c hs') 
           else if hn = "ich" then 
-            ("isa",hs)::("hol",hs)::("coq",hs)::(cd_homs_icho c hs') 
+            ("isa",hs)::("hol",hs)::("rocq",hs)::(cd_homs_icho c hs') 
 (*           else if hn = "icht" then  *)
-(*             ("isa",hs)::("hol",hs)::("coq",hs)::("twf",hs)::(cd_homs_icho c hs')  *)
+(*             ("isa",hs)::("hol",hs)::("rocq",hs)::("twf",hs)::(cd_homs_icho c hs')  *)
           else if hn = "icho" then 
-            ("isa",hs)::("hol",hs)::("coq",hs)::("ocaml",hs)::(cd_homs_icho c hs') 
+            ("isa",hs)::("hol",hs)::("rocq",hs)::("ocaml",hs)::(cd_homs_icho c hs') 
           else if hn = "ichl" then 
-            ("isa",hs)::("hol",hs)::("coq",hs)::("lem",hs)::(cd_homs_icho c hs') 
+            ("isa",hs)::("hol",hs)::("rocq",hs)::("lem",hs)::(cd_homs_icho c hs') 
           else if hn = "ichlo" then 
-            ("isa",hs)::("hol",hs)::("coq",hs)::("lem",hs)::("ocaml",hs)::(cd_homs_icho c hs') 
+            ("isa",hs)::("hol",hs)::("rocq",hs)::("lem",hs)::("ocaml",hs)::(cd_homs_icho c hs') 
+          else if hn = "ir" then 
+            ("isa",hs)::("rocq",hs)::(cd_homs_icho c hs') 
+          else if hn = "rh" then 
+            ("rocq",hs)::("hol",hs)::(cd_homs_icho c hs') 
+          else if hn = "irh" then 
+            ("isa",hs)::("rocq",hs)::("hol",hs)::(cd_homs_icho c hs') 
+          else if hn = "irho" then 
+            ("isa",hs)::("rocq",hs)::("hol",hs)::("ocaml",hs)::(cd_homs_icho c hs') 
+          else if hn = "irhl" then 
+            ("isa",hs)::("rocq",hs)::("hol",hs)::("lem",hs)::(cd_homs_icho c hs') 
+          else if hn = "irhlo" then 
+            ("isa",hs)::("rocq",hs)::("hol",hs)::("lem",hs)::("ocaml",hs)::(cd_homs_icho c hs') 
           else 
             (hn,hs)::(cd_homs_icho c hs') 
 
@@ -817,7 +830,7 @@ and cd_prod c (rn:string) (pnw:string) (targets:string list) (rule_homs_for_targ
 	List.filter 
 	  (fun h -> match h with Hom_index _ -> true | _ -> false) 
 	  (List.assoc "order" homs) in
-      let oh_coq = ( "coq", (Hom_string ("("^prod_name))::oh@[Hom_string ")"] ) in
+      let oh_coq = ( "rocq", (Hom_string ("("^prod_name))::oh@[Hom_string ")"] ) in
       let oh_isa = ( "isa", (Hom_string ("("^prod_name))::oh@[Hom_string ")"] ) in
       let oh_hol = 
 	let of_s = if List.length oh = 0 then "" else " of " in
@@ -841,7 +854,7 @@ and cd_prod c (rn:string) (pnw:string) (targets:string list) (rule_homs_for_targ
               (List.filter (function Lang_nonterm _ | Lang_metavar _ -> true | _ -> false)
                  elems)) []
     in
-    let oh_coq = ( "coq", (Hom_string ("("^prod_name))::oh@[Hom_string ")"] ) in
+    let oh_coq = ( "rocq", (Hom_string ("("^prod_name))::oh@[Hom_string ")"] ) in
     let oh_isa = ( "isa", (Hom_string ("("^prod_name))::oh@[Hom_string ")"] ) in
     let oh_hol = ( "hol", (Hom_string ("("^prod_name))::oh@[Hom_string ")"] ) in
     let oh_lem = ( "lem", (Hom_string ("("^prod_name))::oh@[Hom_string ")"] ) in
@@ -878,7 +891,12 @@ and cd_prod c (rn:string) (pnw:string) (targets:string list) (rule_homs_for_targ
     then ty_error2 p.raw_prod_loc ("illegal hom \"order\" in meta or sugar production") "";
     List.iter 
       (function target -> 
-        if not (List.mem target def_homs) 
+        let target_ok = 
+          if target = "rocq" then
+            (List.mem "coq" def_homs) || (List.mem "rocq" def_homs)
+          else
+            List.mem target def_homs in
+        if not target_ok
         then ty_error2 p.raw_prod_loc 
             ("meta or sugar production must have a hom for each target - here \""
              ^target^"\" is missing") "") 
@@ -1397,7 +1415,7 @@ let check_structure (xd:syntaxdefn) (str:structure) : unit =
 
 (** This constructs an internal representation of a grammar from a raw
     representation, typechecking the grammar on the way *)
-let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:bool) (targets:string list) (source_filenames:string list) (merge_fragments:bool)  (ris_per_file:raw_item list list)
+let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:bool) (targets:string list) (source_filenames:string list) (merge_fragments:bool) (skip_subrule_validation:bool) (ris_per_file:raw_item list list)
     : syntaxdefn * structure * raw_fun_or_reln_defnclass list =
 
   (* now we have in our hand the new ris_per_file that preserves the
@@ -1481,7 +1499,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
       raw_prod_flavour = Bar;
       raw_prod_categories = []; (* fd.raw_fd_categories; *)
       raw_prod_es = fd.raw_fd_es @ [ Raw_ident (dummy_loc,(dummy_loc,"===")); Raw_ident (dummy_loc,fd.raw_fd_result) ];
-      raw_prod_homs = List.filter (function (hn,_,_) -> not (List.mem hn ["coq-struct"])) fd.raw_fd_homs;
+      raw_prod_homs = List.filter (function (hn,_,_) -> not (List.mem hn ["coq-struct";"rocq-struct"])) fd.raw_fd_homs;
       raw_prod_bs = [];
       raw_prod_loc = fd.raw_fd_loc } in
 
@@ -1544,7 +1562,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
       raw_prod_flavour = Bar;
       raw_prod_categories = [(dummy_loc,"M"); (dummy_loc,"F")]; (* fd.raw_fd_categories; *) (* FUNTODO:  M ? *)
       raw_prod_es = fd.raw_fd_es;
-      raw_prod_homs = List.filter (function (hn,_,_) -> not (List.mem hn ["coq-struct"])) fd.raw_fd_homs;  
+      raw_prod_homs = List.filter (function (hn,_,_) -> not (List.mem hn ["coq-struct";"rocq-struct"])) fd.raw_fd_homs;  
       raw_prod_bs = [];
       raw_prod_loc = fd.raw_fd_loc } in
 
@@ -1931,7 +1949,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
            r.raw_rule_homs) in
     let rule_homs = 
       if r.raw_rule_ntr_name = "formula" then
-        [("coq", [Hom_string "Prop"]); ("hol", [Hom_string "bool"]); 
+        [("rocq", [Hom_string "Prop"]); ("hol", [Hom_string "bool"]); 
          ("lem", [Hom_string "bool"]);
          ("isa", [Hom_string "bool"]); ("ocaml", [Hom_string "bool"])] 
       else rule_homs in
@@ -1965,7 +1983,8 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
          | "tex-preamble"   -> Some (l,"tex",he)
          | "tex-wrap-pre"
          | "tex-wrap-post"  -> Some (l,hn,he)
-         | "coq-preamble"   -> Some (l,"coq",he)
+         | "coq-preamble"   -> Some (l,"rocq",he)
+         | "rocq-preamble"  -> Some (l,"rocq",he)
          | "isa-preamble"   -> Some (l,"isa",he)
          | "hol-preamble"   -> Some (l,"hol",he)
          | "lem-preamble"   -> Some (l,"lem",he)
@@ -2000,7 +2019,7 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
 	    mvd_names = List.map
               (function s,rhoms->(s,List.map (cd_hom Hu_root c []) rhoms))
               mvd.raw_mvd_names; 
-	    mvd_rep = if ln then ("coq",[(Hom_string "var")])::mvd_rep else mvd_rep;
+	    mvd_rep = if ln then ("rocq",[(Hom_string "var")])::mvd_rep else mvd_rep;
             mvd_indexvar = mvd.raw_mvd_indexvar;
 	    mvd_locally_nameless = ln;
 	    mvd_phantom = 
@@ -2468,14 +2487,22 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
 (*         else nodups xs ) in *)
 (*   nodups srs_lowers; *)
 
-  List.iter 
-    (fun sr -> ignore(subrule xd true sr.sr_lower sr.sr_upper)) xd.xd_srs;
+  (* Skip subrule validation if needed (for Menhir backend) *)
+  if not skip_subrule_validation then
+    List.iter 
+      (fun sr -> ignore(subrule xd true sr.sr_lower sr.sr_upper)) xd.xd_srs;
 
   (* as an internal consistency check, also check against the tops - should always succeed*)
   (* Further, record the production promotion maps *)
   let srd_subrule_pn_promotion = 
     List.map 
-      (fun sr -> (sr.sr_lower,(sr.sr_top,subrule xd true sr.sr_lower sr.sr_top))) xd.xd_srs in
+      (fun sr -> (sr.sr_lower,(sr.sr_top,
+        (* Skip subrule validation if needed (for Menhir backend) *)
+        if skip_subrule_validation then
+          (* Create dummy list for the case when validation is skipped *)
+          [(sr.sr_lower, sr.sr_top)]
+        else
+          subrule xd true sr.sr_lower sr.sr_top))) xd.xd_srs in
 
 
   let xd = {xd with xd_srd={xd.xd_srd with srd_subrule_pn_promotion=srd_subrule_pn_promotion}} in

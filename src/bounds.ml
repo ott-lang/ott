@@ -170,6 +170,84 @@ let split_bounded :
        f [] [] xbos
 
 
+(* Coalesce nonterminals with the same name and compatible bounds *)
+let coalesce_bounds xd loc x : ((nt_or_mv * subntr_data) * bound option) list =
+  (* Group by nonterminal name and suffix *)
+  let by_name_and_suffix = 
+    Auxl.remove_duplicates 
+      (List.map (fun (((ntmv, sf), _), _) -> (ntmv, sf)) x) 
+  in
+  
+  (* Get all entries for a given nonterminal and suffix *)
+  let entries_for ntmv sf = 
+    List.filter (fun (((nm, sf'), _), _) -> nm = ntmv && sf = sf') x 
+  in
+  
+  (* Check if two subntr_data are compatible *)
+  let compatible_subntr_data d1 d2 = match (d1, d2) with
+    | (None, _) | (_, None) -> true
+    | (Some (ntrl1, ntrt1), Some (ntrl2, ntrt2)) -> 
+        ntrl1 = ntrl2 && ntrt1 = ntrt2
+  in
+  
+  (* Check if two bounds are compatible *)
+  let compatible_bounds b1 b2 = match (b1, b2) with
+    | (None, _) | (_, None) -> true
+    | (Some b1, Some b2) -> b1 = b2
+  in
+  
+  (* Merge entries for a nonterminal *)
+  let merge_entries entries =
+    let rec find_best_entry remaining best =
+      match remaining with
+      | [] -> best
+      | entry :: rest ->
+          let (((_, _), sd), bo) = entry in
+          let (((_, _), best_sd), best_bo) = best in
+          
+          (* Prefer entries with subrule data over those without *)
+          let better = 
+            match sd, best_sd with
+            | Some _, None -> true
+            | None, Some _ -> false
+            | _, _ -> 
+                (* If both have or don't have subrule data, prefer those with bounds *)
+                match bo, best_bo with
+                | Some _, None -> true
+                | None, Some _ -> false
+                | _, _ -> false
+          in
+          
+          find_best_entry rest (if better then entry else best)
+    in
+    
+    match entries with
+    | [] -> failwith "Empty entries list in coalesce_bounds"
+    | first :: rest -> find_best_entry rest first
+  in
+  
+  (* Process each nonterminal and suffix pair *)
+  List.map (fun (ntmv, sf) -> 
+    let entries = entries_for ntmv sf in
+    
+    (* Check for incompatible entries *)
+    List.iter (fun e1 ->
+      List.iter (fun e2 ->
+        let ((_, sd1), bo1) = e1 in
+        let ((_, sd2), bo2) = e2 in
+        
+        if not (compatible_subntr_data sd1 sd2) then
+          raise (Bounds (loc, "incompatible subntr_data for nonterminal " ^ 
+                        (Grammar_pp.pp_nt_or_mv Types.pp_ascii_opts_default xd (ntmv, sf))))
+        else if not (compatible_bounds bo1 bo2) then
+          raise (Bounds (loc, "incompatible bounds for nonterminal " ^ 
+                        (Grammar_pp.pp_nt_or_mv Types.pp_ascii_opts_default xd (ntmv, sf))))
+      ) entries
+    ) entries;
+    
+    merge_entries entries
+  ) by_name_and_suffix
+
 (*invert, calculating, for each bound, the nt_or_mv that have that bound*)
 let nt_or_mv_per_bound :
  ((nt_or_mv*subntr_data) * bound ) list ->  (bound * (nt_or_mv*subntr_data) list) list 
@@ -325,7 +403,8 @@ let dotenv23 ntmvsn_without_bounds ntmvsn_with_bounds  =
 
 let bound_extraction m xd loc sts : dotenv * dotenv3 * string = 
   try  
-    let x = nt_or_mv_of_symterms sts in
+    let x_raw = nt_or_mv_of_symterms sts in
+    let x = coalesce_bounds xd loc x_raw in
     let bounds = check_length_consistency loc x in
     let pp_bounds = String.concat "  " 
         (List.map Grammar_pp.pp_plain_bound bounds) in

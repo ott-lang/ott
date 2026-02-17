@@ -1,0 +1,36 @@
+% Test file for all metahoms containing 'c' or 'r'
+% This tests both backward compatibility (c-prefixed) and new Rocq naming (r-prefixed)
+
+grammar
+
+% Test all c-prefixed and r-prefixed metahoms in one nonterminal
+nonterminal :: T ::=
+  % Old c-prefixed metahoms (backward compatibility)
+  | x            ::   :: var_ic
+    {{ ic isa rocq old style }}
+  | T '+' T      ::   :: plus_ch
+    {{ ch hol rocq old style }}
+  | '(' T ')'    ::   :: paren_ich
+    {{ ich isa hol rocq old style }}
+  | T '*' T      ::   :: mult_icho
+    {{ icho isa hol rocq ocaml old style }}
+  | T '-' T      ::   :: minus_ichl
+    {{ ichl isa hol rocq lem old style }}
+  | T '/' T      ::   :: div_ichlo
+    {{ ichlo isa hol rocq lem ocaml old style }}
+  % New r-prefixed metahoms (Rocq naming)  
+  | y            ::   :: var_ir
+    {{ ir isa rocq new style }}
+  | T '&' T      ::   :: and_rh
+    {{ rh rocq hol new style }}
+  | '[' T ']'    ::   :: bracket_irh
+    {{ irh isa rocq hol new style }}
+  | T '^' T      ::   :: exp_irho
+    {{ irho isa rocq hol ocaml new style }}
+  | T '%' T      ::   :: mod_irhl
+    {{ irhl isa rocq hol lem new style }}
+  | T '~' T      ::   :: tilde_irhlo
+    {{ irhlo isa rocq hol lem ocaml new style }}
+  % Test ih metahom (contains h but not c, should still work)
+  | z            ::   :: var_ih
+    {{ ih isa hol no change needed }}
