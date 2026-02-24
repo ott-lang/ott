@@ -854,6 +854,7 @@ type pp_menhir_opts =
       ppm_caml_opts : pp_caml_opts; 
       ppm_caml_ast_module : string;
       ppm_caml_parser_module : string;
+      mutable syntaxdefn : syntaxdefn option;
     } (* yo *)
 type pp_yacc_opts = unit (* yo *)
 

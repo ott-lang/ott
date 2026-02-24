@@ -92,7 +92,7 @@ let latex_regressions = ref 0
 (* let twelf_progressions = ref 0 *)
 (* let twelf_regressions = ref 0 *)
 let summary = ref []
-let report_fd = ref Pervasives.stdout
+let report_fd = ref Stdlib.stdout
 let config_state = ref []
 
 let _ =
@@ -354,7 +354,7 @@ let run_test i n (tn,tl) =
     if (command cmd) = 0
     then begin
       pp_success tgt name;
-      let cmd = "coqc -init-file _ott_coqrc.v "^name^".v > " ^ name ^ ".coq.out" (* was "/dev/null"*)  in
+      let cmd = "coqc -Q ../coq Ott "^name^".v > " ^ name ^ ".coq.out" (* was "/dev/null"*)  in
       let tgt = "Coq" in
       pp_tgt i_of_n tgt cmd;
       if (command cmd) = 0 then begin
@@ -382,7 +382,7 @@ let run_test i n (tn,tl) =
     if (command cmd) = 0
     then begin
       pp_success tgt name;
-      let cmd = "coqc -init-file _ott_coqrc.v "^name^".v" in
+      let cmd = "coqc -Q ../coq Ott "^name^".v" in
       let tgt = "Coq" in
       pp_tgt i_of_n tgt cmd;
       if (command cmd) = 0 then begin
@@ -575,7 +575,7 @@ let report tp a b =
     progressions := !progressions + 1;
     ott_progressions := !ott_progressions + 1
   end else 
-    if not a.ott && b.ott 
+    if not a.ott && b.ott && not (a.tp = Skipped || b.tp = Skipped)
     then begin
       regressions := !regressions + 1;
       ott_regressions := !ott_regressions + 1
@@ -839,4 +839,6 @@ let _ =
     end;
     output_string fd "</testsuite>\n";
     close_out fd
-  end
+  end;
+
+  if !regressions != 0 then exit 1

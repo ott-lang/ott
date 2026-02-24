@@ -258,7 +258,18 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
                   let ntr_upper = List.assoc ntr non_free_ntrs in
                   Some (ntr,ntr_upper,(ntr,suffix))
                 with
-                  Not_found -> None)
+                  Not_found -> 
+                    (* Try with the primary nonterminal to handle aliases *)
+                    let primary_ntr = 
+                      try Auxl.primary_ntr_of_ntr xd ntr 
+                      with Not_found -> ntr in
+                    if primary_ntr = ntr then None
+                    else
+                      try
+                        let ntr_upper = List.assoc primary_ntr non_free_ntrs in
+                        Some (primary_ntr,ntr_upper,(ntr,suffix))
+                      with
+                        Not_found -> None)
             | (Ntr ntr,suffix),Some(ntrl,ntru) -> Some (ntrl,ntru,(ntr,suffix))
             | (Mvr mvr,suffix),_ -> None) 
             ntmvsns in

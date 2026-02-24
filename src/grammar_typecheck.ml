@@ -1397,7 +1397,7 @@ let check_structure (xd:syntaxdefn) (str:structure) : unit =
 
 (** This constructs an internal representation of a grammar from a raw
     representation, typechecking the grammar on the way *)
-let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:bool) (targets:string list) (source_filenames:string list) (merge_fragments:bool)  (ris_per_file:raw_item list list)
+let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:bool) (targets:string list) (source_filenames:string list) (merge_fragments:bool) (skip_subrule_validation:bool) (ris_per_file:raw_item list list)
     : syntaxdefn * structure * raw_fun_or_reln_defnclass list =
 
   (* now we have in our hand the new ris_per_file that preserves the
@@ -2468,14 +2468,22 @@ let rec check_and_disambiguate m_tex (quotient_rules:bool) (generate_aux_rules:b
 (*         else nodups xs ) in *)
 (*   nodups srs_lowers; *)
 
-  List.iter 
-    (fun sr -> ignore(subrule xd true sr.sr_lower sr.sr_upper)) xd.xd_srs;
+  (* Skip subrule validation if needed (for Menhir backend) *)
+  if not skip_subrule_validation then
+    List.iter 
+      (fun sr -> ignore(subrule xd true sr.sr_lower sr.sr_upper)) xd.xd_srs;
 
   (* as an internal consistency check, also check against the tops - should always succeed*)
   (* Further, record the production promotion maps *)
   let srd_subrule_pn_promotion = 
     List.map 
-      (fun sr -> (sr.sr_lower,(sr.sr_top,subrule xd true sr.sr_lower sr.sr_top))) xd.xd_srs in
+      (fun sr -> (sr.sr_lower,(sr.sr_top,
+        (* Skip subrule validation if needed (for Menhir backend) *)
+        if skip_subrule_validation then
+          (* Create dummy list for the case when validation is skipped *)
+          [(sr.sr_lower, sr.sr_top)]
+        else
+          subrule xd true sr.sr_lower sr.sr_top))) xd.xd_srs in
 
 
   let xd = {xd with xd_srd={xd.xd_srd with srd_subrule_pn_promotion=srd_subrule_pn_promotion}} in
