@@ -557,6 +557,7 @@ let pp_systemdefn_core_tex m sd lookup oi =
         (Grammar_pp.pp_tex_DRULE_NAME m) (Grammar_pp.pp_tex_DRULE_NAME_NAME m);
       Printf.fprintf fd ("\\newcommand{%s}[1]{\\[#1\\]}\n") (Grammar_pp.pp_tex_USE_DRULE_NAME m);
       Printf.fprintf fd ("\\newcommand{%s}[1]{ #1 \\\\}\n") (Grammar_pp.pp_tex_PREMISE_NAME m );
+      Printf.fprintf fd ("\\newcommand{%s}[1]{ #1 \\\\}\n") (Grammar_pp.pp_tex_LAST_PREMISE_NAME m );
       Printf.fprintf fd ("\\newenvironment{%s}[3][]{ \\framebox{\\mbox{#2}} \\quad #3 \\\\[0pt]}{}\n") (Grammar_pp.pp_tex_DEFN_BLOCK_NAME m );
       Printf.fprintf fd ("\\newenvironment{%s}[3][]{ \\framebox{\\mbox{#2}} \\quad #3 \\\\[0pt]\\begin{displaymath}\\begin{array}{l}}{\\end{array}\\end{displaymath}}\n")
         (Grammar_pp.pp_tex_FUNDEFN_BLOCK_NAME m );
@@ -586,6 +587,7 @@ let pp_systemdefn_core_tex m sd lookup oi =
       Printf.fprintf fd ("\\newcommand{%s}[6]{%s{#1}{#2}{#3}{#4}{#5}{#6}}\n")
         (Grammar_pp.pp_tex_BINDSPEC_PROD_NAME m ) (Grammar_pp.pp_tex_PROD_NAME m);
       Printf.fprintf fd ("\\newcommand{%s}{\\\\}\n") (Grammar_pp.pp_tex_PROD_NEWLINE_NAME m );
+      Printf.fprintf fd ("\\newcommand{%s}{\\\\}\n") (Grammar_pp.pp_tex_FIRST_PROD_NEWLINE_NAME m );
       Printf.fprintf fd ("\\newcommand{%s}{\\\\[5.0mm]}\n") (Grammar_pp.pp_tex_INTERRULE_NAME m );
       Printf.fprintf fd ("\\newcommand{%s}{\\\\}\n") (Grammar_pp.pp_tex_AFTERLASTRULE_NAME m );
       Embed_pp.pp_embeds fd m sd.syntax lookup sd.syntax.xd_embed_preamble;

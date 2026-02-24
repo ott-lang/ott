@@ -771,6 +771,7 @@ let pp_tex_BINDSPEC_PROD_NAME m        = "\\"^pp_tex_NAME_PREFIX m^"bindspecprod
 let pp_tex_FIRST_LONG_PROD_NAME m        = "\\"^pp_tex_NAME_PREFIX m^"firstlongprodline"
 let pp_tex_FIRST_PROD_NAME m        = "\\"^pp_tex_NAME_PREFIX m^"firstprodline"
 let pp_tex_PROD_NEWLINE_NAME m        = "\\"^pp_tex_NAME_PREFIX m^"prodnewline"
+let pp_tex_FIRST_PROD_NEWLINE_NAME m        = "\\"^pp_tex_NAME_PREFIX m^"firstprodnewline"
 let pp_tex_INTERRULE_NAME m        = "\\"^pp_tex_NAME_PREFIX m^"interrule"
 let pp_tex_AFTERLASTRULE_NAME m        = "\\"^pp_tex_NAME_PREFIX m^"afterlastrule"
 
@@ -785,6 +786,7 @@ let pp_tex_DRULE_NAME m = "\\"^pp_tex_NAME_PREFIX m^"drule"
 let pp_tex_DRULE_NAME_NAME m = "\\"^pp_tex_NAME_PREFIX m^"drulename"
 let pp_tex_USE_DRULE_NAME m = "\\"^pp_tex_NAME_PREFIX m^"usedrule"
 let pp_tex_PREMISE_NAME m = "\\"^pp_tex_NAME_PREFIX m^"premise"
+let pp_tex_LAST_PREMISE_NAME m = "\\"^pp_tex_NAME_PREFIX m^"lastpremise"
 let pp_tex_DEFN_BLOCK_NAME m = pp_tex_NAME_PREFIX m^"defnblock"
 let pp_tex_FUNCLAUSE_NAME m = "\\"^pp_tex_NAME_PREFIX m^"funclause"
 let pp_tex_FUNDEFN_BLOCK_NAME m = pp_tex_NAME_PREFIX m^"fundefnblock"
@@ -818,6 +820,7 @@ let rec tex_command_escape s =
        (Auxl.char_list_of_string s))
 
 and tex_rule_name m ntr = "\\"^pp_tex_NAME_PREFIX m^tex_command_escape ntr 
+and tex_drule_name_name m s = "\\"^pp_tex_NAME_PREFIX m^"drulename"^tex_command_escape s
 and tex_drule_name m s = "\\"^pp_tex_NAME_PREFIX m^"drule"^tex_command_escape s
 and tex_defn_name m wrapper s = "\\"^pp_tex_NAME_PREFIX m^"defn"^tex_command_escape (wrapper^s)
 and tex_defnclass_name m s = "\\"^pp_tex_NAME_PREFIX m^"defns"^tex_command_escape s
@@ -2678,24 +2681,27 @@ and pp_rule m xd r = (* returns a string option *)
       else
         Some
 (* TODO: update the following to respect pp_tex_LONG_PROD_NAME (if necessary...) *)
-          (Str.replace_first 
-             (Str.regexp_string (pp_tex_PROD_NAME m))  
-             (pp_tex_FIRST_PROD_NAME m) 
-             ( "\\newcommand{"
-               ^ tex_rule_name m r.rule_ntr_name
-               ^ "}{\n"
-	       ^ (String.concat (pp_tex_PROD_NEWLINE_NAME m^"\n") 
-                    ( ( pp_tex_RULEHEAD_NAME m^"{"
-	                ^ String.concat  "  ,\\ "
-	                    (Auxl.remove_duplicates (List.map (function ntr,homs->pp_nontermroot m xd ntr) r.rule_ntr_names))
-	                ^ "}{::=}{" ^ pp_com ^ "}")
-                      ::
-	                (Auxl.option_map 
-                           (pp_prod m xd r.rule_ntr_name r.rule_pn_wrapper)
-                           r.rule_ps)))
-(*            ^"[5.0mm]" *)
-	       ^ "}\n"  ))
-  in 
+          (Str.replace_first
+             (Str.regexp_string (pp_tex_PROD_NEWLINE_NAME m))
+             (pp_tex_FIRST_PROD_NEWLINE_NAME m)
+             (Str.replace_first
+                (Str.regexp_string (pp_tex_PROD_NAME m))
+                (pp_tex_FIRST_PROD_NAME m)
+                ( "\\newcommand{"
+                  ^ tex_rule_name m r.rule_ntr_name
+                  ^ "}{\n"
+                  ^ (String.concat (pp_tex_PROD_NEWLINE_NAME m^"\n")
+                       ( ( pp_tex_RULEHEAD_NAME m^"{"
+                           ^ String.concat  "  ,\\ "
+                               (Auxl.remove_duplicates (List.map (function ntr,homs->pp_nontermroot m xd ntr) r.rule_ntr_names))
+                           ^ "}{::=}{" ^ pp_com ^ "}")
+                         ::
+                         (Auxl.option_map
+                            (pp_prod m xd r.rule_ntr_name r.rule_pn_wrapper)
+                            r.rule_ps)))
+                  (*            ^"[5.0mm]" *)
+                  ^ "}\n"  )))
+  in
   match result with
   | Some s -> Some (if !Global_option.output_source_locations >= 2 then "\n"^pp_source_location m r.rule_loc  ^ s else s)
   | None -> None
