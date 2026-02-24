@@ -1191,8 +1191,6 @@ let make_parser xd : made_parser =
   let module Pt2 = 
     struct 
       include Pt
-      exception Reject_parse = New_term_parser.Reject_parse;;
-      exception Reject_all_parses = New_term_parser.Reject_all_parses;;
       let debug = false
     end 
   in

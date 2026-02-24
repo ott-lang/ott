@@ -65,8 +65,6 @@ module type IN =
 sig
   include Parse_table.S
   val debug : bool
-  exception Reject_parse
-  exception Reject_all_parses
 end;;
 
 module Make (Pt : IN) : S with
@@ -538,7 +536,7 @@ struct
                  (rn.rule_nt.reduce_action rl, 
                   idx::injection_children,
                   NTset.add rn.rule_nt.reduce_left loop)::res
-               with Reject_parse ->
+               with Types.Reject_parse ->
                  res)
           (process_t_or_s_nodes idx rn.outgoing rn.rule_nt.reduce_transparent)
           []
@@ -602,7 +600,7 @@ struct
           try
             sn.started <- true;
             List.flatten (List.map process_rule_node sn.possibilities)
-          with Reject_all_parses ->
+          with Types.Reject_all_parses ->
             []
         in
           sn.finished <- true;
