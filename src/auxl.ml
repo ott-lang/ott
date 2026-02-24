@@ -215,6 +215,49 @@ let string_of_char_list ts =
   List.iter (Buffer.add_char s) ts;
   Buffer.contents s
 
+exception Not_UTF8
+
+let utf8_cp_list_of_string s =
+  let n = String.length s in
+  let rec f i = if i=n then [] else 
+    let c = int_of_char (String.get s i) in
+    if c land 0x80 = 0x80 then
+      if c land 0x40 = 0x40 then
+        if c land 0x20 = 0x20 then
+          if c land 0x10 = 0x10 then
+            (* First byte starts with 1111; codepoint is 4 bytes long *)
+            if i+3 >= n then
+              raise Not_UTF8
+            else
+              let c = (c land 0x0F) lsl 18 
+                + (int_of_char (String.get s (i+1)) land 0x3F) lsl 12 
+                + (int_of_char (String.get s (i+2)) land 0x3F) lsl 6 
+                + (int_of_char (String.get s (i+3)) land 0x3F) in
+              c :: f (i+4)
+          else
+            (* First byte starts with 1110; codepoint is 3 bytes long *)
+            if i+2 >= n then
+              raise Not_UTF8
+            else
+              let c = (c land 0x0F) lsl 12 
+                + (int_of_char (String.get s (i+1)) land 0x3F) lsl 6 
+                + (int_of_char (String.get s (i+2)) land 0x3F) in
+              c :: f (i+3)
+        else
+          (* First byte starts with 110; codepoint is 2 bytes long *)
+          if i+1 >= n then
+            raise Not_UTF8
+          else
+            let c = (c land 0x1F) lsl 6 + (int_of_char (String.get s (i+1)) land 0x3F) in
+            c :: f (i+2)
+      else
+        (* First byte starts with 10: invalid UTF 8 since leading byte cannot start with 10 *)
+        raise Not_UTF8
+    else
+      c :: f (i+1) 
+    in
+  f 0
+
 (* tests to identify strings *)
 
 exception Not_alpha

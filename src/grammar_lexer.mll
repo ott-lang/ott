@@ -199,22 +199,24 @@ let get_first_word_and_rest =
 let go_back n f lexbuf =
   lexbuf.Lexing.lex_curr_pos <- lexbuf.Lexing.lex_curr_pos - n;
   my_lexer_state := f
-
 } 
 
+(* remember: these codepoints are in decimal, not octal *)
 let whitespace = (' ' | '\t' | '\010' | '\012' | '\013')
 let newline = ('\010' | '\013' | "\013\010")
 let non_newline = [^ '\010' '\013']
 let non_newline_whitespace = (' ' | '\t' |'\012')
-(* let pre_ident = (['A'-'Z'] | ['a'-'z'] | ['0'-'9'] | "_" | "'")(['A'-'Z'] | ['a'-'z'] | ['0'-'9'] | "_" | "-" | "'")* *)
-let pre_ident = (['A'-'Z'] | ['a'-'z'] | ['0'-'9'] | "_" | "'")(['A'-'Z'] | ['a'-'z'] | ['0'-'9'] | "_" | "'")*
-let maybe_quoted_ident = pre_ident | ("'" pre_ident "'" ) | "''"
+(* Note: the bit at the end allows all Unicode which is not special ASCII characters *)
+let pre_ident = (['A'-'Z'] | ['a'-'z'] | ['0'-'9'] | "_" | "'" | ['\128'-'\255'])+
+let maybe_quoted_ident = pre_ident
 (*
 let pre_ident_allow_minus = (['A'-'Z'] | ['a'-'z'] | ['0'-'9'] | "_" | "'")(['A'-'Z'] | ['a'-'z'] | ['0'-'9'] | "_" | "-" | "'")*
 let maybe_quoted_ident_allow_minus = pre_ident_allow_minus | ("'" pre_ident_allow_minus "'" ) | "''"
 *)
 let string = [^ ' '  '\t'  '\010'  '\012'  '\013']+
-
+(* UNICODE NOTES: The above regexes will parse unicode whitespace as identifiers. This is the same
+as what the "string" regex would do in some positions previously, and the "whitespace" regex is not
+Unicode-aware, so we view this as not breaking anything new. Nonetheless, caveat emptor. *)
 
 (* We use context-dependent lexing, lexing (eg) the elements of a *)
 (* production w.r.t. a small language so that the user rarely has to *)
