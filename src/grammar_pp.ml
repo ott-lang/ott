@@ -2692,7 +2692,7 @@ and pp_rule m xd r = (* returns a string option *)
       then None
       else 
         Some 
-          (strip_surrounding_parens (pp_nontermroot_ty m xd r.rule_ntr_name) ^ (match m with Lean _ -> " where" | _ -> " := ")^pp_com^"\n" 
+          (strip_surrounding_parens (pp_nontermroot_ty m xd r.rule_ntr_name) ^ (match m with Lean _ -> " where" | _ -> " = ")^pp_com^"\n" 
 	   ^ (match m with Lem _ -> " | " | _ -> "   ")
            ^ String.concat (match m with Lean _ -> "   " | _ -> " | ")
                (List.map 
