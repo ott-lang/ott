@@ -579,7 +579,7 @@ Grammar rules can include a \mykw{tex} hom specifying how all the
   type\mysym{,} t\mysym{,} s \mysym{::} Typ_ \mysym{::=}  \mysym{\mylb\mylb{}} \mykw{tex} \mybackslash{}mathsf\mylb{}\mysym{[[}type\mysym{]]}\myrb{} \mysym{\myrb\myrb{}} 
         \mysym{|} unit                  \mysym{::}   \mysym{::} unit   
         \mysym{|} type * type'          \mysym{::}   \mysym{::} pair   
-        \mysym{|} type -> type'         \mysym{::}   \mysym{::} fun    
+        \mysym{|} type -> type'         \mysym{::}   \mysym{::} func   
 \end{alltt}
 %Here that \verb+tex+ hom overrides the default typesetting with
 %\verb+\mathsf+.
