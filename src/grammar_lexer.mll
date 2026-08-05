@@ -239,7 +239,7 @@ rule metalang = parse
   | ","                            { COMMA }
   | "::="                          { CCE                  }
   | "|"                            { my_lexer_state := elements; BAR }
-  | "{{"                           { my_lexer_state := hom metalang; DOUBLELEFTBRACE      }
+  | "{{"                           { my_lexer_state := hom metalang false; DOUBLELEFTBRACE      }
   | "}}"                           { DOUBLERIGHTBRACE     }
   | "::"                           { COLONCOLON           }
   | "<::"                          { LTCOLONCOLON         }
@@ -269,7 +269,7 @@ rule metalang = parse
   | "fun"                          { my_lexer_state := elements; FUNDEFN         }
   | "by"                           { my_lexer_state := defnlang; BY              }
   | "(+"                           { my_lexer_state := bindspec; BIND_LEFT_DELIM }
-  | "{{*"                          { my_lexer_state := hom_star metalang; DOUBLELEFTBRACE      }
+  | "{{*"                          { my_lexer_state := hom_star metalang false; DOUBLELEFTBRACE      }
   | "*}}"                          { DOUBLERIGHTBRACE     }
   | maybe_quoted_ident as lxm      { STRING(dequote(lxm),lxm) } 
   | eof                            { EOF                  }
@@ -317,7 +317,14 @@ and elements = parse
 (*    be insensitive to intermediate whitespace between the [, so for simplicity *)
 (*    it's now removed *)
 (* - comments are not allowed *)
-and hom returnstate = parse
+(* - the incomp flag records whether we are between the "</" and the "//" of a *)
+(*    list form.  There, and only there, a "//" is the COMP_MIDDLE that ends the *)
+(*    repeated body and moves us to the comp_bound state; elsewhere in a hom a *)
+(*    "//" is just part of the string passed through to the target.  The body *)
+(*    itself stays in this state, so that it can contain [[inner]] parts *)
+(* - list forms in homs do not nest (nor do they in productions), so a single *)
+(*    flag suffices *)
+and hom returnstate incomp = parse
     non_newline_whitespace+ as lxm { BLANKS(lxm) }     
   | newline as lxm                 { incr_linenum lexbuf; BLANKS(lxm) } 
 (*| "[[" "["+ as lxm               { STRING( trim lxm )   } *)
@@ -335,13 +342,16 @@ and hom returnstate = parse
   | ".."                           { DOTDOT               }
   | "..."                          { DOTDOTDOT            }
   | "...."                         { DOTDOTDOTDOT         }
-  | " "*"</"                       { my_lexer_state := comp_bound (hom returnstate); COMP_LEFT            }
+  | " "*"</"                       { my_lexer_state := hom returnstate true; COMP_LEFT            }
+  | "//"                           { if incomp then
+                                       (my_lexer_state := comp_bound (hom returnstate false); COMP_MIDDLE)
+                                     else STRING("//","//")  }
   | "." as lxm                     { STRING( ".",String.make 1 lxm)         }
   | [^ ' ' '\t' '\010' '\013' '\012' '[' ']' '{' '}' '.']+ as lxm  { STRING(lxm,lxm) } 
   | eof                            { EOF                  }
 
 (* same as hom, but ends with "*}}" *)
-and hom_star returnstate = parse
+and hom_star returnstate incomp = parse
     non_newline_whitespace+ as lxm { BLANKS(lxm) }     
   | newline as lxm                 { incr_linenum lexbuf; BLANKS(lxm) } 
   | "[["                           { DOUBLELEFTBRACKET    }
@@ -350,7 +360,10 @@ and hom_star returnstate = parse
   | ".."                           { DOTDOT               }
   | "..."                          { DOTDOTDOT            }
   | "...."                         { DOTDOTDOTDOT         }
-  | " "*"</"                       { my_lexer_state := comp_bound (hom_star returnstate); COMP_LEFT            }
+  | " "*"</"                       { my_lexer_state := hom_star returnstate true; COMP_LEFT            }
+  | "//"                           { if incomp then
+                                       (my_lexer_state := comp_bound (hom_star returnstate false); COMP_MIDDLE)
+                                     else STRING("//","//")  }
   | "[" as lxm                     { STRING("[",String.make 1 lxm)        }    
   | "]" as lxm                     { STRING("]",String.make 1 lxm)        }
   | "." as lxm                     { STRING(".",String.make 1 lxm)        }
@@ -437,12 +450,12 @@ and defnlang = parse
 	| "defn"	   -> go_back back elements lexbuf;DEFN
 	| "funs"	   -> go_back back metalang lexbuf;FUNDEFNCLASS
 	| "fun"		   -> go_back back elements lexbuf;FUNDEFN
-	| "{{com"	   -> go_back back (hom defnlang) lexbuf;DEFNCOM
+	| "{{com"	   -> go_back back (hom defnlang false) lexbuf;DEFNCOM
 	| "{{"             -> 
 	    begin 
 	      let (s, back) = get_first_word_and_rest (String.sub lxm (String.length lxm - back) back) in
 	      match s with 
-	      | "com"	   -> go_back back (hom defnlang) lexbuf;DEFNCOM
+	      | "com"	   -> go_back back (hom defnlang false) lexbuf;DEFNCOM
 	      | _          -> incr_linenum lexbuf; LINE(lxm1,lxm2) 
             end
         | _ -> incr_linenum lexbuf; LINE(lxm1,lxm2) } (* other newline- or eof-terminated string *)
