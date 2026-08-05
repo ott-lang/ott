@@ -705,13 +705,37 @@ let rec cd_hom hu c (es : element list) ((hn,hs,l0):raw_homomorphism): homomorph
         let has_all_template_es (i,elb) =
           let elb_es' = filter_es elb.elb_es in
           List.for_all (function e -> List.mem e elb_es') template_es in
+
+        (* a production can have two list forms over the same nonterminals,   *)
+        (* differing only in their bounds, and then the elements alone do not *)
+        (* say which the template is for.  An upper bound in the template, as *)
+        (* in </ .. // i IN n />, does.  It is only consulted to break such a *)
+        (* tie: requiring it in general would defeat the point, as the style  *)
+        (* and bounds of the term being printed need not be those of the      *)
+        (* production *)
+        let upper_of_bound b = match b with
+        | Bound_dotform bd -> Some bd.bd_upper
+        | Bound_comp _ -> None
+        | Bound_comp_u bcu -> Some bcu.bcu_upper
+        | Bound_comp_lu bclu -> Some bclu.bclu_upper in
+        let has_template_upper (i,elb) =
+          match upper_of_bound b, elb.elb_boundo with
+          | None, _ | _, None -> true
+          | Some u, Some b' -> upper_of_bound b' = Some u in
+
         let hl_index,elb =
           match List.filter has_all_template_es (list_forms es 0) with
           | [(i,elb)] -> i,elb
           | [] -> ty_error2 l0 ("no list form of the production has all of the "
                                 ^"nonterminals and metavariables of "^reconstructed_string) ""
-          | _ -> ty_error2 l0 ("it is ambiguous which list form of the production "
-                               ^reconstructed_string^" is for") "" in
+          | tied ->
+              ( match List.filter has_template_upper tied with
+              | [(i,elb)] -> i,elb
+              | _ -> ty_error2 l0 ("it is ambiguous which list form of the production "
+                                   ^reconstructed_string^" is for; an upper bound in the "
+                                   ^"hom, as in "^Grammar_pp.pp_COMP_LEFT^" .. "
+                                   ^Grammar_pp.pp_COMP_MIDDLE^" "^ivr^" IN n "
+                                   ^Grammar_pp.pp_COMP_RIGHT^", would say which") "" ) in
 
         (* now resolve the template itself, against the repeated unit *)
         let elb_es' = filter_es elb.elb_es in

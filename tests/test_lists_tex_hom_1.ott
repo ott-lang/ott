@@ -27,6 +27,12 @@ grammar
     | ( Phi1 \/ .. \/ Phin ) Phi'        ::   :: disj
         {{ tex \bigvee </ [[Phii]] // i /> \, \mathrm{else} \, [[Phi']] }}
 
+    % two list forms over the same nonterminal, so the elements alone do not
+    % say which each template is for: the upper bounds do
+    | ( Phi1 /\ .. /\ Phin ) ( Phi1 \/ .. \/ Phim ) :: :: both
+        {{ tex \bigwedge </ [[Phii]] // i IN n /> \quad
+               \bigvee   </ [[Phij]] // j IN m /> }}
+
 formula :: formula_ ::=
   | judgement            :: :: judgement
   | formula1 .. formulan :: :: dots
