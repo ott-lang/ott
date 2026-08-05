@@ -728,9 +728,17 @@ let rec pp_tex_insert_spacing (es:(string*tex_token_category) list) : string
   | [] -> ""
   | (s,ttc)::[] -> s
   | (s,ttc)::(((s',ttc')::_) as es') -> s ^ " "^ pairwise_spacing ttc ttc' ^ " "^pp_tex_insert_spacing es'
-                                                                          
 
 
+(* the output of one element of a production, from walking it against a      *)
+(* symterm.  Seg_uncounted is a terminal, which Hom_index does not count;    *)
+(* the other two are the elements it does count.  A list form is left        *)
+(* unprinted, as a Hom_list template has to be instantiated over its items   *)
+(* rather than applied to an already-printed string *)
+type symterm_element_group =  (* seg *)
+  | Seg_uncounted of (string * tex_token_category) list
+  | Seg_counted of (string * tex_token_category) list
+  | Seg_list of element_list_body * symterm_list_item list
 
 
 let pp_tex_BAR                = "|"   
@@ -972,6 +980,7 @@ and pp_plain_hom_spec_el hse =
   | Hom_index i -> "Hom_index "^(string_of_int i)
   | Hom_terminal t -> "Hom_terminal "^(pp_plain_terminal t)
   | Hom_ln_free_index _ -> "Hom_ln_free_index"
+  | Hom_list hlb -> "Hom_list "^(string_of_int hlb.hl_index)^" ["^pp_plain_hom_spec hlb.hl_body^"]"
 
 and pp_plain_hom_spec hs =
   String.concat ";" (List.map pp_plain_hom_spec_el hs)
@@ -1011,7 +1020,7 @@ and pp_nonterm_with_sie_internal as_type m xd sie (ntr,suff) =
     let auxparam_opt = try Some (List.assoc "auxparam" r.rule_homs) with Not_found -> None in
     let auxparam_prefix_opt = 
       match as_type,m,auxparam_opt with
-      | true,Caml _,Some hs | true,Lem _,Some hs -> Some (String.concat "" (List.map (function | Hom_string s -> s | Hom_index _ | Hom_terminal _ | Hom_ln_free_index (_,_) -> Auxl.int_error("illegal auxparam hom "^String.concat ""(List.map pp_plain_hom_spec_el hs))) hs))
+      | true,Caml _,Some hs | true,Lem _,Some hs -> Some (String.concat "" (List.map (function | Hom_string s -> s | Hom_index _ | Hom_terminal _ | Hom_ln_free_index (_,_) | Hom_list _ -> Auxl.int_error("illegal auxparam hom "^String.concat ""(List.map pp_plain_hom_spec_el hs))) hs))
       | _,_,_ -> None in
     
     match m with
@@ -1388,8 +1397,84 @@ and apply_hom_spec m xd hses ss =
   | Hom_ln_free_index (fvs,i) :: hses' ->
       (* fvs are only taken into account when opening terms in ln_transforms, and should be ignored here *)
       (List.nth ss i) :: apply_hom_spec m xd hses' ss
-    
-and pp_com_es m xd homs es = 
+  | Hom_list _ :: _ ->
+      (* only cd_hom_el of a tex hom builds these, and they are applied by *)
+      (* apply_hom_spec_symterm, which has the list form's symterm to hand *)
+      Auxl.int_error "apply_hom_spec Hom_list"
+
+(* as apply_hom_spec, but taking the production and the symterm rather than *)
+(* already-printed argument strings, so that a Hom_list template can be     *)
+(* instantiated over the items of the list form it is for *)
+and apply_hom_spec_symterm m xd sie de hses prod_es st_es =
+  let segs = pp_symterm_elements_hom m xd sie de prod_es st_es in
+  let rec f hses = match hses with
+  | [] -> []
+  | Hom_string s :: hses' ->
+      s :: f hses'
+  | Hom_index i :: hses' ->
+      pp_symterm_element_group m xd sie de (List.nth segs i) :: f hses'
+  | Hom_terminal tm :: hses' ->
+      pp_terminal m xd tm :: f hses'
+  | Hom_ln_free_index (fvs,i) :: hses' ->
+      (* fvs are only taken into account when opening terms in ln_transforms, and should be ignored here *)
+      pp_symterm_element_group m xd sie de (List.nth segs i) :: f hses'
+  | Hom_list hlb :: hses' ->
+      ( match List.nth segs hlb.hl_index with
+      | Seg_list (elb,stlis) -> pp_hom_list m xd sie de hlb elb stlis
+      | Seg_uncounted _ | Seg_counted _ ->
+          (* cd_hom_el only builds a Hom_list for a Lang_list element *)
+          Auxl.int_error "apply_hom_spec_symterm Hom_list of a non-list element" )
+      :: f hses' in
+  f hses
+
+(* instantiate a Hom_list template over the items of the list form it is    *)
+(* for.  This mirrors pp_symterm_list_items and pp_symterm_list_body, but   *)
+(* with the template in place of the elements of the repeated unit.  The    *)
+(* style - dot form or comprehension - and the bounds are those of the term *)
+(* being printed, not those written in the hom, which only names the index *)
+and pp_hom_list m xd sie de hlb elb stlis =
+  match m with
+  | Ascii _ | Isa _ | Hol _ | Lem _ | Coq _ | Twf _ | Caml _ | Lex _ | Menhir _ ->
+      Auxl.errorm m "pp_hom_list"
+  | Tex xo ->
+  (* no separator unless the hom gives one: the point of the template is to  *)
+  (* replace the notation of the production, separator included, so inheriting *)
+  (* the elb_tmo would defeat it *)
+  let sep =
+    match hlb.hl_sep with
+    | Some tm -> " " ^ pp_terminal m xd tm ^ " "
+    | None -> " " in
+  (* the template, with the elements of the repeated unit printed at sie' *)
+  let inst sie' stes =
+    String.concat ""
+      (apply_hom_spec_symterm m xd sie' de hlb.hl_body elb.elb_es stes) in
+  let pp_stli stli = match stli with
+  | Stli_single (l,stes) -> inst sie stes
+  | Stli_listform stlb ->
+      let stes = stlb.stl_elements in
+      ( match stlb.stl_bound with
+      | Bound_dotform bd ->
+          inst (bd.bd_lower::sie) stes
+          ^ sep ^ pp_dots m xd bd.bd_length ^ sep
+          ^ inst (bd.bd_upper::sie) stes
+      | Bound_comp bc ->
+          pp_tex_COMP_NAME m ^"{" ^ inst (Si_var (bc.bc_variable,0)::sie) stes
+          ^ "}{" ^ pp_metavarroot m xd bc.bc_variable ^ "}"
+      | Bound_comp_u bcu ->
+          pp_tex_COMP_U_NAME m ^"{" ^ inst (Si_var (bcu.bcu_variable,0)::sie) stes
+          ^ "}{" ^ pp_metavarroot m xd bcu.bcu_variable
+          ^ "}{" ^ pp_suffix_item_with_sie m xd [] true bcu.bcu_upper ^ "}"
+      | Bound_comp_lu bclu ->
+          pp_tex_COMP_LU_NAME m ^"{" ^ inst (Si_var (bclu.bclu_variable,0)::sie) stes
+          ^ "}{" ^ pp_metavarroot m xd bclu.bclu_variable
+          ^ "}{" ^ pp_suffix_item_with_sie m xd [] true bclu.bclu_lower
+          ^ "}{" ^ pp_dots m xd bclu.bclu_length
+          ^ "}{" ^ pp_suffix_item_with_sie m xd [] true bclu.bclu_upper ^ "}" ) in
+  match stlis with
+  | [] -> "\\," (* as pp_symterm_list_items for an empty list in Tex *)
+  | _ -> String.concat sep (List.map pp_stli stlis)
+
+and pp_com_es m xd homs es =
   match Auxl.hom_spec_for_hom_name "com" homs with
   | None -> ""
   | Some hs ->
@@ -1467,25 +1552,32 @@ and pp_hom_spec_el m xd hse =
 	  pp_DOUBLELEFTBRACKET
 	  ^ String.concat "" (List.map (fun mv -> "("^string_of_int mv^")") mvs)
 	  ^ string_of_int s 
-	  ^ pp_DOUBLERIGHTBRACKET)
+	  ^ pp_DOUBLERIGHTBRACKET
+      | Hom_list hlb ->
+	  pp_COMP_LEFT ^ pp_hom_spec m xd hlb.hl_body ^ pp_COMP_MIDDLE
+	  ^ (match hlb.hl_sep with None -> "" | Some tm -> tm ^ pp_COMP_MIDDLE)
+	  ^ string_of_int hlb.hl_index ^ pp_COMP_RIGHT)
   | Tex xo -> 
       ( match hse with
       | Hom_string s -> s
       | Hom_terminal s -> Auxl.errorm m "pp_hom_spec_el"
       | Hom_index i -> "UNIMPLEMENTED"
-      | Hom_ln_free_index _ -> Auxl.errorm m "pp_hom_spec el")
+      | Hom_ln_free_index _ -> Auxl.errorm m "pp_hom_spec el"
+      | Hom_list _ -> Auxl.errorm m "pp_hom_spec el")
   | Coq _ | Twf _ | Caml _ | Lex _ | Menhir _ -> 
       ( match hse with
       | Hom_string s -> s
       | Hom_terminal s -> Auxl.errorm m "pp_hom_spec_el"
       | Hom_index i -> "UNIMPLEMENTED"
-      | Hom_ln_free_index _ -> Auxl.errorm m "pp_hom_spec el")
+      | Hom_ln_free_index _ -> Auxl.errorm m "pp_hom_spec el"
+      | Hom_list _ -> Auxl.errorm m "pp_hom_spec el")
   | Isa _ | Hol _ | Lem _ ->       
       ( match hse with
       | Hom_string s -> s
       | Hom_terminal s -> s
       | Hom_index i -> "UNIMPLEMENTED[Hom_index"^string_of_int i^"]"
-      | Hom_ln_free_index _ -> Auxl.errorm m "pp_hom_spec el")
+      | Hom_ln_free_index _ -> Auxl.errorm m "pp_hom_spec el"
+      | Hom_list _ -> Auxl.errorm m "pp_hom_spec el")
 
 and pp_plain_suffix suff = String.concat "" (List.map pp_plain_suffix_item suff)
         
@@ -3169,8 +3261,7 @@ and pp_symterm_node_body m xd sie de stnb : string =
   match Auxl.hom_spec_for_pp_mode m p.prod_homs with
   (* if there's a hom, use that *)
   | Some hses ->
-      let pp_es = pp_symterm_elements_hom m xd sie de prod_es stnb.st_es in
-      let xs = apply_hom_spec m xd hses pp_es in
+      let xs = apply_hom_spec_symterm m xd sie de hses prod_es stnb.st_es in
 (*      " {{ "^String.concat " " xs ^" }} " *)
       " "^String.concat " " xs ^" "
 
@@ -3600,32 +3691,42 @@ and pp_symterm_elements m xd sie de include_terminals prod_es es : string list =
 
 and pp_symterm_elements' m xd sie de include_terminals prod_es es : (string * tex_token_category) list =
   List.flatten
-    (List.map snd (pp_symterm_elements_grouped m xd sie de include_terminals prod_es es))
+    (List.map
+       (function
+         | Seg_uncounted g | Seg_counted g -> g
+         | Seg_list (elb,stlis) -> pp_symterm_list_items m xd sie de elb.elb_tmo elb.elb_es stlis)
+       (pp_symterm_elements_grouped m xd sie de include_terminals prod_es es))
 
 (* the arguments to apply a production's hom to.  Hom_index counts one     *)
 (* element of the production per nonterminal, metavariable and list form   *)
-(* (cf index_of_ident in grammar_typecheck), so we must produce exactly    *)
-(* one string for each.  This is why we cannot just use                    *)
-(* pp_symterm_elements: for Ascii and Tex that splices a list form out     *)
-(* into one string per token, so any index after a list form would be off  *)
-(* by several. *)
-and pp_symterm_elements_hom m xd sie de prod_es es : string list =
+(* (cf index_of_ident in grammar_typecheck), so there must be exactly one  *)
+(* argument for each.  This is why we cannot just use pp_symterm_elements: *)
+(* for Ascii and Tex that splices a list form out into one string per      *)
+(* token, so any index after a list form would be off by several. *)
+and pp_symterm_elements_hom m xd sie de prod_es es : symterm_element_group list =
   Auxl.option_map
-    (function (counted,g) ->
-      if not counted then None else
-      Some (match m with
-      | Tex _ -> pp_tex_insert_spacing g
-      | Ascii _ | Isa _ | Hol _ | Lem _ | Coq _ | Twf _ | Caml _ | Lex _ | Menhir _ ->
-          String.concat " " (List.map fst g)))
+    (function
+      | Seg_uncounted _ -> None
+      | (Seg_counted _ | Seg_list (_,_)) as seg -> Some seg)
     (pp_symterm_elements_grouped m xd sie de false prod_es es)
 
+(* the default rendering of a hom argument, as it would be without a hom *)
+and pp_symterm_element_group m xd sie de seg : string =
+  let g = match seg with
+  | Seg_uncounted g | Seg_counted g -> g
+  | Seg_list (elb,stlis) -> pp_symterm_list_items m xd sie de elb.elb_tmo elb.elb_es stlis in
+  match m with
+  | Tex _ -> pp_tex_insert_spacing g
+  | Ascii _ | Isa _ | Hol _ | Lem _ | Coq _ | Twf _ | Caml _ | Lex _ | Menhir _ ->
+      String.concat " " (List.map fst g)
+
 and pp_symterm_elements_grouped m xd sie de include_terminals prod_es es
-    : (bool * (string * tex_token_category) list) list =
+    : symterm_element_group list =
   (* walk along a pair of an element list (from a grammar production)             *)
   (* and a symterm_element list (from a parsed term) in concert, pretty-printing  *)
   (* include terminals or not, as requested *)
-  (* the output of each element is kept separate, paired with whether Hom_index   *)
-  (* counts that element; pp_symterm_elements' flattens this back out *)
+  (* the output of each element is kept separate, so that a hom can be applied to *)
+  (* it; pp_symterm_elements' flattens this back out *)
   (* TODO: perhaps we should replace this by the more general hom mechanism, which,*)
   (*  when instantiated by the `identity hom' (not yet constructed) behaves like this *)
   debug ("pp_symterm_elements_grouped entry:\nes= [" ^String.concat " ; " (List.map pp_plain_symterm_element es)^"]\nprod_es= ["^String.concat " ; "(List.map pp_plain_element prod_es)^"]\n\n");
@@ -3636,24 +3737,24 @@ and pp_symterm_elements_grouped m xd sie de include_terminals prod_es es
     match prod_es, es with
     | [],[] -> []
     | Lang_terminal tm::prod_es', es ->
-        if include_terminals then (false,[pp_terminal_unquoted m xd tm,classify_TTC_terminal tm]) :: (f prod_es' es)
+        if include_terminals then Seg_uncounted [pp_terminal_unquoted m xd tm,classify_TTC_terminal tm] :: (f prod_es' es)
         else (f prod_es' es)
     | Lang_nonterm _ :: prod_es', Ste_st(_,St_nonterm (l,ntrp,nt))::es' ->
-        (true,[lem_paren_hack m (pp_nonterm_with_de_with_sie m xd sie de nt,TTC_nonterm_or_metavar)]) :: (f prod_es' es')
+        Seg_counted [lem_paren_hack m (pp_nonterm_with_de_with_sie m xd sie de nt,TTC_nonterm_or_metavar)] :: (f prod_es' es')
     | Lang_nonterm _ :: prod_es' , Ste_st(_,St_nontermsub (l,ntrpl,ntrpt,nt))::es' ->
-        (true,[lem_paren_hack m (pp_nonterm_with_de_with_sie m xd sie de nt,TTC_nonterm_or_metavar)]) :: (f prod_es' es')
+        Seg_counted [lem_paren_hack m (pp_nonterm_with_de_with_sie m xd sie de nt,TTC_nonterm_or_metavar)] :: (f prod_es' es')
     | Lang_nonterm _ :: prod_es', Ste_st(_,St_node (l,stnb))::es'  ->
-        (true,[lem_paren_hack m (pp_symterm_node_body m xd sie de stnb,TTC_nonterm_or_metavar)]) :: (f prod_es' es')
+        Seg_counted [lem_paren_hack m (pp_symterm_node_body m xd sie de stnb,TTC_nonterm_or_metavar)] :: (f prod_es' es')
     | prod_es, Ste_st(_,St_uninterpreted(l,s)) :: es' ->
         (* this consumes no element of the production, but count it anyway, to *)
         (* leave the indices as they were before grouping was introduced *)
-        (true,[pp_uninterpreted m xd s,classify_TTC_terminal s]) :: (f prod_es es')
+        Seg_counted [pp_uninterpreted m xd s,classify_TTC_terminal s] :: (f prod_es es')
     | Lang_metavar _ :: prod_es', Ste_metavar (l,mvrp,mv)::es'  ->
-        (true,[pp_metavar_with_de_with_sie m xd sie de mv,TTC_nonterm_or_metavar]) :: (f prod_es' es')
+        Seg_counted [pp_metavar_with_de_with_sie m xd sie de mv,TTC_nonterm_or_metavar] :: (f prod_es' es')
     | Lang_metavar _ :: prod_es', Ste_var (l,mvrp,var)::es'  ->
-        (true,[pp_variable m xd mvrp var,TTC_nonterm_or_metavar]) :: (f prod_es' es')
+        Seg_counted [pp_variable m xd mvrp var,TTC_nonterm_or_metavar] :: (f prod_es' es')
     | Lang_list elb :: prod_es',Ste_list(l,stlis)::es' ->
-        (true,pp_symterm_list_items m xd sie de elb.elb_tmo elb.elb_es stlis) :: (f prod_es' es')
+        Seg_list (elb,stlis) :: (f prod_es' es')
     | Lang_option _ :: _, _ ->
         raise (Invalid_argument "pp_symterm_elements_grouped Lang_option not implemented")
     | Lang_sugaroption _ :: _, _ ->
@@ -4067,6 +4168,7 @@ and arity_of_homspec hs =
   | hse::hs' -> (match hse with 
     | Hom_string _ -> arity_of_homspec hs'
     | Hom_index i -> max (1+i) (arity_of_homspec hs')
+    | Hom_list hlb -> max (1+hlb.hl_index) (arity_of_homspec hs')
     | Hom_terminal _ -> arity_of_homspec hs')
 
 

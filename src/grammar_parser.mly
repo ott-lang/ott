@@ -55,6 +55,14 @@ let parse_error s =
   raise (My_parse_error (Some (mkl ()), "Problem parsing: " ^ s 
 	    ))
 
+(* a hom_inner list form may be preceded by whitespace, as in [[ </ xi // i /> ]].
+   that whitespace has to be parsed as an ident_and_blanks_list, as giving it a
+   blanks_list of its own would not be LALR(1) - so check here that it really is
+   only whitespace *)
+let no_idents_before_comp ris =
+  if List.exists (function (_,s) -> String.trim s <> "") ris
+  then parse_error "syntax error"
+
 (* %token EQUAL             *)
 %}
 
@@ -212,8 +220,8 @@ hom_inner:
    ident_and_blanks_list          { Raw_hom_ident $1 }
  | ident_and_blanks_list dots ident_and_blanks_list   
                                   { Raw_hom_ident_dots (mkl(),$1,$2,$3) } 
- | COMP_LEFT  ident_and_blanks_list COMP_MIDDLE comp_bound COMP_RIGHT blanks_list 
-                                  { Raw_hom_ident_comp (mkl(),$2,$4) }
+ | ident_and_blanks_list COMP_LEFT ident_and_blanks_list COMP_MIDDLE comp_bound COMP_RIGHT blanks_list 
+                                  { no_idents_before_comp $1; Raw_hom_ident_comp (mkl(),$3,$5) }
 
 embedmorphism_list:
    /* empty */                    { [] }

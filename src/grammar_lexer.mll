@@ -342,7 +342,7 @@ and hom returnstate incomp = parse
   | ".."                           { DOTDOT               }
   | "..."                          { DOTDOTDOT            }
   | "...."                         { DOTDOTDOTDOT         }
-  | " "*"</"                       { my_lexer_state := hom returnstate true; COMP_LEFT            }
+  | "</"                           { my_lexer_state := hom returnstate true; COMP_LEFT            }
   | "//"                           { if incomp then
                                        (my_lexer_state := comp_bound (hom returnstate false); COMP_MIDDLE)
                                      else STRING("//","//")  }
@@ -360,7 +360,7 @@ and hom_star returnstate incomp = parse
   | ".."                           { DOTDOT               }
   | "..."                          { DOTDOTDOT            }
   | "...."                         { DOTDOTDOTDOT         }
-  | " "*"</"                       { my_lexer_state := hom_star returnstate true; COMP_LEFT            }
+  | "</"                           { my_lexer_state := hom_star returnstate true; COMP_LEFT            }
   | "//"                           { if incomp then
                                        (my_lexer_state := comp_bound (hom_star returnstate false); COMP_MIDDLE)
                                      else STRING("//","//")  }

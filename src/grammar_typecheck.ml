@@ -436,7 +436,12 @@ let embed_allowable_homs = ["coq";"coq-lib";"coq-preamble";
                             "ocaml";"ocaml-preamble";
                             "menhir"]
 
-let list_form_allowable_homs =["isa";"coq";"hol";"lem";"ic";"ch";"ih";"ich";"ichl";"icho";"ichlo";(*"icht";*)"coq-struct";"ocaml"] 
+let list_form_allowable_homs =["isa";"coq";"hol";"lem";"ic";"ch";"ih";"ich";"ichl";"icho";"ichlo";(*"icht";*)"coq-struct";"ocaml"]
+
+(* the homs that can contain a </ body // sep // i /> template for the      *)
+(* repeated unit of a list form.  Only tex, for now: the proof assistant    *)
+(* backends want the list itself, which they get from the forms above *)
+let list_form_template_allowable_homs = ["tex"]
 
 let cd_disambiguate_hom name rhs hs =
   try 
@@ -645,10 +650,89 @@ let rec cd_hom hu c (es : element list) ((hn,hs,l0):raw_homomorphism): homomorph
             ("dotform hom inner [["
              ^ reconstructed_string
              ^ "]] not found in production") "")
-    | Raw_hom_list (l0,_,_,_) ->
-        ty_error2 l0 ("hom \""^hn^"\" cannot contain a list form template "
-                      ^ Grammar_pp.pp_COMP_LEFT^"..."^Grammar_pp.pp_COMP_RIGHT
-                      ^ " (not yet implemented)") "") in
+    | Raw_hom_list (l0,rhs,sepo,rcb) ->
+        let b,ivr = cd_comp_bound c rcb in
+        let reconstructed_string =
+          Grammar_pp.pp_COMP_LEFT
+          ^ Grammar_pp.pp_raw_hom_spec rhs
+          ^ Grammar_pp.pp_COMP_MIDDLE
+          ^ Grammar_pp.pp_raw_comp_bound rcb
+          ^ Grammar_pp.pp_COMP_RIGHT in
+        if not(List.mem hn list_form_template_allowable_homs) then
+          ty_error2 l0 ("hom \""^hn^"\" cannot contain a list form template (the only homs here that can are "^String.concat ", " list_form_template_allowable_homs^")") "";
+
+        (* resolve one [[ident]] of the template to an element of the        *)
+        (* repeated unit of the production's list form, which has the index  *)
+        (* abstracted: the ti of </ .. [[ti]] .. // i /> is the t there *)
+        let element_of_ident ((l,_) as ri) =
+          match cd_elements c [Raw_ident (l,ri)] with
+          | [Lang_terminal _] -> None
+          | [e] ->
+              ( try Some (Merge.abstract_indexvar_element ivr 0 e)
+                with Merge.Abstract_indexvar_non_linear ->
+                  ty_error2 l0 ("index \""^ivr^"\" not used linearly in each nonterm and metavar of "
+                                ^reconstructed_string) "" )
+          | _ -> None in
+
+        (* the idents of the template, in order; each is either an element   *)
+        (* of the repeated unit or, as elsewhere in a hom, a terminal *)
+        let target_of_raw_hom_ident ris =
+          let ris' = List.filter (function (l,s) -> not (is_blankish s)) ris in
+          match List.rev ris' with
+          | ri :: [] -> ri
+          | _ -> ty_error2 l0 ("hom inner in "^reconstructed_string
+                               ^" must be a single identifier") "" in
+        let template_es =
+          Auxl.option_map
+            (function
+              | Raw_hom_ident ris -> element_of_ident (target_of_raw_hom_ident ris)
+              | Raw_hom_string _ | Raw_hom_blanks _ -> None
+              | Raw_hom_ident_dots (l,_,_,_) | Raw_hom_ident_comp (l,_,_)
+              | Raw_hom_list (l,_,_,_) ->
+                  ty_error2 l ("list forms cannot be nested, so "
+                               ^reconstructed_string^" cannot contain another one") "")
+            rhs in
+
+        (* the list form of the production that the template is for: the one *)
+        (* whose repeated unit has all of the template's elements *)
+        let rec list_forms es i = match es with
+        | [] -> []
+        | Lang_terminal _ :: es' -> list_forms es' i
+        | Lang_sugaroption _ :: es' -> list_forms es' i
+        | Lang_option _ :: _ -> failwith "homs for prods containing options not implemented"
+        | Lang_list elb :: es' -> (i,elb) :: list_forms es' (i+1)
+        | _ :: es' -> list_forms es' (i+1) in
+        let has_all_template_es (i,elb) =
+          let elb_es' = filter_es elb.elb_es in
+          List.for_all (function e -> List.mem e elb_es') template_es in
+        let hl_index,elb =
+          match List.filter has_all_template_es (list_forms es 0) with
+          | [(i,elb)] -> i,elb
+          | [] -> ty_error2 l0 ("no list form of the production has all of the "
+                                ^"nonterminals and metavariables of "^reconstructed_string) ""
+          | _ -> ty_error2 l0 ("it is ambiguous which list form of the production "
+                               ^reconstructed_string^" is for") "" in
+
+        (* now resolve the template itself, against the repeated unit *)
+        let elb_es' = filter_es elb.elb_es in
+        let rec index_of e es i = match es with
+        | [] -> raise Not_found
+        | e'::es' -> if e=e' then i else index_of e es' (i+1) in
+        let cd_template_el rhse = match rhse with
+        | Raw_hom_string s -> Hom_string s
+        | Raw_hom_blanks s -> Hom_string s
+        | Raw_hom_ident ris ->
+            let ((l,s) as ri) = target_of_raw_hom_ident ris in
+            ( match element_of_ident ri with
+            | Some e -> Hom_index (index_of e elb_es' 0)
+            | None -> Hom_terminal s )
+        | Raw_hom_ident_dots _ | Raw_hom_ident_comp _ | Raw_hom_list _ ->
+            (* already rejected when computing template_es *)
+            Auxl.int_error "cd_hom_el Raw_hom_list body" in
+
+        Hom_list { hl_index = hl_index;
+                   hl_body = agglomerate_strings (List.map cd_template_el rhs) None;
+                   hl_sep = (match sepo with None -> None | Some (l,s) -> Some s) }) in
 
   
   let rec strip_leading_trailing_blanks hs = 
