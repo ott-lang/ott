@@ -1,0 +1,58 @@
+% test_lists_tex_hom_1.ott  list forms in tex homs
+
+% a tex hom can contain a </ body // sep // i /> template for the repeated
+% unit of one of the production's list forms.  the template is instantiated
+% keeping the style and the bounds of the term being printed, not those
+% written in the hom, which only names the index
+
+indexvar index, n, i, m, j ::= {{ isa nat }} {{ coq nat }} {{ hol num }} {{ ocaml int }}
+
+metavar ident, x ::= {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ ocaml int }}
+
+grammar
+
+  Phi :: 'Phi_' ::=
+    | T                                  ::   :: true
+
+    % the separator of the production is not inherited: \bigwedge replaces it
+    | Phi1 /\ .. /\ Phin                 ::   :: conj
+        {{ tex \bigwedge </ [[Phii]] // i /> }}
+
+    % a repeated unit of more than one element, and an explicit separator
+    | { x1 |-> Phi1 , .. , xn |-> Phin } ::   :: rec
+        {{ tex \left\{ </ [[xi]] \colon [[Phii]] // , // i /> \right\} }}
+
+    % elements both before and after the list form, to check that the
+    % [[..]] indices still line up
+    | ( Phi1 \/ .. \/ Phin ) Phi'        ::   :: disj
+        {{ tex \bigvee </ [[Phii]] // i /> \, \mathrm{else} \, [[Phi']] }}
+
+formula :: formula_ ::=
+  | judgement            :: :: judgement
+  | formula1 .. formulan :: :: dots
+
+terminals :: terminals_ ::=
+  | /\                   ::   :: and    {{ tex \wedge }}
+  | \/                   ::   :: or     {{ tex \vee }}
+  | |->                  ::   :: mapsto {{ tex \mapsto }}
+  | |-                   ::   :: vdash  {{ tex \vdash }}
+
+defns
+  Jt :: '' ::=
+
+  defn
+  |- Phi :: :: judge :: 'J_' by
+
+    ------ :: true
+    |- T
+
+    % the term is a dot form, so the template is instantiated at each bound
+    |- Phi1 .. |- Phin
+    --------------------- :: dot
+    |- Phi1 /\ .. /\ Phin
+
+    % the same hom, but the term is a comprehension, so the template is
+    % instantiated once, inside \ottcompu
+    </ |- Phij // j IN m />
+    ----------------------- :: comp
+    |- </ Phij // j IN m />
