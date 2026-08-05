@@ -3162,7 +3162,7 @@ and pp_symterm_node_body m xd sie de stnb : string =
   match Auxl.hom_spec_for_pp_mode m p.prod_homs with
   (* if there's a hom, use that *)
   | Some hses ->
-      let pp_es = pp_symterm_elements m xd sie de false prod_es stnb.st_es in
+      let pp_es = pp_symterm_elements_hom m xd sie de prod_es stnb.st_es in
       let xs = apply_hom_spec m xd hses pp_es in
 (*      " {{ "^String.concat " " xs ^" }} " *)
       " "^String.concat " " xs ^" "
@@ -3591,42 +3591,68 @@ and pp_symterm_element_judge_twf_plain m xd sie de p'' stnb'' =
 and pp_symterm_elements m xd sie de include_terminals prod_es es : string list = 
   List.map fst (pp_symterm_elements' m xd sie de include_terminals prod_es es) 
 
-and pp_symterm_elements' m xd sie de include_terminals prod_es es : (string * tex_token_category) list = 
+and pp_symterm_elements' m xd sie de include_terminals prod_es es : (string * tex_token_category) list =
+  List.flatten
+    (List.map snd (pp_symterm_elements_grouped m xd sie de include_terminals prod_es es))
+
+(* the arguments to apply a production's hom to.  Hom_index counts one     *)
+(* element of the production per nonterminal, metavariable and list form   *)
+(* (cf index_of_ident in grammar_typecheck), so we must produce exactly    *)
+(* one string for each.  This is why we cannot just use                    *)
+(* pp_symterm_elements: for Ascii and Tex that splices a list form out     *)
+(* into one string per token, so any index after a list form would be off  *)
+(* by several. *)
+and pp_symterm_elements_hom m xd sie de prod_es es : string list =
+  Auxl.option_map
+    (function (counted,g) ->
+      if not counted then None else
+      Some (match m with
+      | Tex _ -> pp_tex_insert_spacing g
+      | Ascii _ | Isa _ | Hol _ | Lem _ | Coq _ | Twf _ | Caml _ | Lex _ | Menhir _ ->
+          String.concat " " (List.map fst g)))
+    (pp_symterm_elements_grouped m xd sie de false prod_es es)
+
+and pp_symterm_elements_grouped m xd sie de include_terminals prod_es es
+    : (bool * (string * tex_token_category) list) list =
   (* walk along a pair of an element list (from a grammar production)             *)
   (* and a symterm_element list (from a parsed term) in concert, pretty-printing  *)
   (* include terminals or not, as requested *)
+  (* the output of each element is kept separate, paired with whether Hom_index   *)
+  (* counts that element; pp_symterm_elements' flattens this back out *)
   (* TODO: perhaps we should replace this by the more general hom mechanism, which,*)
   (*  when instantiated by the `identity hom' (not yet constructed) behaves like this *)
-  debug ("pp_symterm_elements' entry:\nes= [" ^String.concat " ; " (List.map pp_plain_symterm_element es)^"]\nprod_es= ["^String.concat " ; "(List.map pp_plain_element prod_es)^"]\n\n");
+  debug ("pp_symterm_elements_grouped entry:\nes= [" ^String.concat " ; " (List.map pp_plain_symterm_element es)^"]\nprod_es= ["^String.concat " ; "(List.map pp_plain_element prod_es)^"]\n\n");
 
   let lem_paren_hack m (s,tc) = (s,tc) in (*match m with Lem _ -> ("("^s^")",tc) | _ -> (s,tc) in*)
-  let rec f prod_es es = 
+  let rec f prod_es es =
   debug ("f entry:\nes= [" ^String.concat " ; " (List.map pp_plain_symterm_element es)^"]\nprod_es= ["^String.concat " ; "(List.map pp_plain_element prod_es)^"]\n\n");
     match prod_es, es with
     | [],[] -> []
-    | Lang_terminal tm::prod_es', es -> 
-        if include_terminals then (pp_terminal_unquoted m xd tm,classify_TTC_terminal tm) :: (f prod_es' es)
+    | Lang_terminal tm::prod_es', es ->
+        if include_terminals then (false,[pp_terminal_unquoted m xd tm,classify_TTC_terminal tm]) :: (f prod_es' es)
         else (f prod_es' es)
-    | Lang_nonterm _ :: prod_es', Ste_st(_,St_nonterm (l,ntrp,nt))::es' -> 
-        lem_paren_hack m (pp_nonterm_with_de_with_sie m xd sie de nt,TTC_nonterm_or_metavar) :: (f prod_es' es')
-    | Lang_nonterm _ :: prod_es' , Ste_st(_,St_nontermsub (l,ntrpl,ntrpt,nt))::es' -> 
-        lem_paren_hack m (pp_nonterm_with_de_with_sie m xd sie de nt,TTC_nonterm_or_metavar) :: (f prod_es' es')
-    | Lang_nonterm _ :: prod_es', Ste_st(_,St_node (l,stnb))::es'  -> 
-        lem_paren_hack m (pp_symterm_node_body m xd sie de stnb,TTC_nonterm_or_metavar) :: (f prod_es' es')
+    | Lang_nonterm _ :: prod_es', Ste_st(_,St_nonterm (l,ntrp,nt))::es' ->
+        (true,[lem_paren_hack m (pp_nonterm_with_de_with_sie m xd sie de nt,TTC_nonterm_or_metavar)]) :: (f prod_es' es')
+    | Lang_nonterm _ :: prod_es' , Ste_st(_,St_nontermsub (l,ntrpl,ntrpt,nt))::es' ->
+        (true,[lem_paren_hack m (pp_nonterm_with_de_with_sie m xd sie de nt,TTC_nonterm_or_metavar)]) :: (f prod_es' es')
+    | Lang_nonterm _ :: prod_es', Ste_st(_,St_node (l,stnb))::es'  ->
+        (true,[lem_paren_hack m (pp_symterm_node_body m xd sie de stnb,TTC_nonterm_or_metavar)]) :: (f prod_es' es')
     | prod_es, Ste_st(_,St_uninterpreted(l,s)) :: es' ->
-        (pp_uninterpreted m xd s,classify_TTC_terminal s) :: (f prod_es es')
-    | Lang_metavar _ :: prod_es', Ste_metavar (l,mvrp,mv)::es'  -> 
-        (pp_metavar_with_de_with_sie m xd sie de mv,TTC_nonterm_or_metavar) :: (f prod_es' es')
-    | Lang_metavar _ :: prod_es', Ste_var (l,mvrp,var)::es'  -> 
-        (pp_variable m xd mvrp var,TTC_nonterm_or_metavar) :: (f prod_es' es')
-    | Lang_list elb :: prod_es',Ste_list(l,stlis)::es' -> 
-        (pp_symterm_list_items m xd sie de elb.elb_tmo elb.elb_es stlis) @ (f prod_es' es')
-    | Lang_option _ :: _, _ -> 
-        raise (Invalid_argument "pp_symterm_elements' Lang_option not implemented")
-    | Lang_sugaroption _ :: _, _ -> 
-        raise (Invalid_argument "pp_symterm_elements' Lang_sugaroption not implemented")
+        (* this consumes no element of the production, but count it anyway, to *)
+        (* leave the indices as they were before grouping was introduced *)
+        (true,[pp_uninterpreted m xd s,classify_TTC_terminal s]) :: (f prod_es es')
+    | Lang_metavar _ :: prod_es', Ste_metavar (l,mvrp,mv)::es'  ->
+        (true,[pp_metavar_with_de_with_sie m xd sie de mv,TTC_nonterm_or_metavar]) :: (f prod_es' es')
+    | Lang_metavar _ :: prod_es', Ste_var (l,mvrp,var)::es'  ->
+        (true,[pp_variable m xd mvrp var,TTC_nonterm_or_metavar]) :: (f prod_es' es')
+    | Lang_list elb :: prod_es',Ste_list(l,stlis)::es' ->
+        (true,pp_symterm_list_items m xd sie de elb.elb_tmo elb.elb_es stlis) :: (f prod_es' es')
+    | Lang_option _ :: _, _ ->
+        raise (Invalid_argument "pp_symterm_elements_grouped Lang_option not implemented")
+    | Lang_sugaroption _ :: _, _ ->
+        raise (Invalid_argument "pp_symterm_elements_grouped Lang_sugaroption not implemented")
     | _,_ ->
-        raise (Invalid_argument ("pp_symterm_elements' inconsistent structure\nes=      " ^String.concat "  " (List.map pp_plain_symterm_element es)^"\nprod_es= "^String.concat "  "(List.map pp_plain_element prod_es)))
+        raise (Invalid_argument ("pp_symterm_elements_grouped inconsistent structure\nes=      " ^String.concat "  " (List.map pp_plain_symterm_element es)^"\nprod_es= "^String.concat "  "(List.map pp_plain_element prod_es)))
   in
   f prod_es es
 
