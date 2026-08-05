@@ -580,6 +580,11 @@ and raw_hom_spec_el =
   | Raw_hom_ident of raw_ident list
   | Raw_hom_ident_dots of loc * raw_ident list * int * raw_ident list
   | Raw_hom_ident_comp of loc * raw_ident list * raw_comp_bound
+  (* </ body // sep // i /> : a template for the repeated unit of a list form *)
+  (* of the production.  Unlike the two above, which name a whole list form   *)
+  (* from within [[..]], this is at the top level of the hom spec, and its    *)
+  (* body is itself a hom spec, with its own [[..]] parts *)
+  | Raw_hom_list of loc * raw_hom_spec * raw_ident option * raw_comp_bound
 
 
 and raw_bindspec = 

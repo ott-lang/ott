@@ -641,10 +641,14 @@ let rec cd_hom hu c (es : element list) ((hn,hs,l0):raw_homomorphism): homomorph
             elb_es = es_inner } in
         debug (Grammar_pp.pp_plain_element (Lang_list elb_inner)^"\n");
         (try Hom_index (index_of_dotform elb_inner es 0 )
-        with Not_found -> ty_error2 l0 
+        with Not_found -> ty_error2 l0
             ("dotform hom inner [["
              ^ reconstructed_string
-             ^ "]] not found in production") "")) in
+             ^ "]] not found in production") "")
+    | Raw_hom_list (l0,_,_,_) ->
+        ty_error2 l0 ("hom \""^hn^"\" cannot contain a list form template "
+                      ^ Grammar_pp.pp_COMP_LEFT^"..."^Grammar_pp.pp_COMP_RIGHT
+                      ^ " (not yet implemented)") "") in
 
   
   let rec strip_leading_trailing_blanks hs = 

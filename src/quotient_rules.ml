@@ -119,6 +119,7 @@ and rename_raw_hom_spec_el renaming el = match el with
   | Raw_hom_ident is -> Raw_hom_ident (List.map (rename_raw_ident renaming) is)
   | Raw_hom_ident_dots (l, is, n, is') -> Raw_hom_ident_dots (l, List.map (rename_raw_ident renaming) is, n, List.map (rename_raw_ident renaming) is')
   | Raw_hom_ident_comp (l, is, cb) -> Raw_hom_ident_comp (l, List.map (rename_raw_ident renaming) is, cb)
+  | Raw_hom_list (l, hs, tmo, cb) -> Raw_hom_list (l, List.map (rename_raw_hom_spec_el renaming) hs, tmo, cb)
 
 and rename_raw_ident renaming (l, s) = (l, rename_raw_string renaming s)
 

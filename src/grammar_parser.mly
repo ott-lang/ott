@@ -203,6 +203,10 @@ hom_spec_el:
  | DOTDOT                         { Raw_hom_string ".." }
  | DOTDOTDOT                      { Raw_hom_string "..." }
  | DOTDOTDOTDOT                   { Raw_hom_string "...." }
+ | COMP_LEFT hom_spec_el_list COMP_MIDDLE comp_bound COMP_RIGHT
+                                  { Raw_hom_list (mkl(),$2,None,$4) }
+ | COMP_LEFT hom_spec_el_list COMP_MIDDLE ident COMP_MIDDLE comp_bound COMP_RIGHT
+                                  { Raw_hom_list (mkl(),$2,Some $4,$6) }
 
 hom_inner:
    ident_and_blanks_list          { Raw_hom_ident $1 }

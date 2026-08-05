@@ -217,6 +217,13 @@ and pp_raw_hom_spec_el hse = match hse with
     ^ pp_raw_comp_bound rcb
     ^ pp_COMP_RIGHT ^" "
     ^ pp_DOUBLERIGHTBRACKET
+| Raw_hom_list (l,hs,tmo,rcb) ->
+    pp_COMP_LEFT
+    ^ pp_raw_hom_spec hs
+    ^ pp_COMP_MIDDLE
+    ^ (match tmo with None -> "" | Some tm -> pp_raw_ident tm ^ pp_COMP_MIDDLE)
+    ^ pp_raw_comp_bound rcb
+    ^ pp_COMP_RIGHT
 
 and pp_raw_embedmorphism  (l,hn,es) =
   pp_DOUBLELEFTBRACE ^ " "
