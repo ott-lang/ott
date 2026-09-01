@@ -1,23 +1,25 @@
 %% Some examples of usage of lists
 %% (trying to gather the interesting cases from minicaml)
 
-indexvar i, j, k, l, m, n ::=
-metavar x ::=
+indexvar i, j, k, l, m, n ::= {{ lean natish }}
+metavar x ::= {{ lean natish }}
 
 grammar
 
 t, term :: t_ ::=
   | x                                   ::   :: x
   | letrec lb1 and ... and lbn in t     ::   :: letrec
+
 lb, letrec_binding :: lb_ ::=
   | x = t                               ::   :: simple
 
 b, binding :: b_ ::=
   | x                                   ::   :: x
+
 E, environment :: E_ ::=
   | b1 , .. , bn                        ::   :: concrete
-  | nil                                 :: M :: nil {{ ich wibble }}
-  | E1 , .... , En                      :: M :: concat {{ ich wibble }}
+  | nil                                 :: M :: nil {{ ich wibble }}    {{ lean wibble }}
+  | E1 , .... , En                      :: M :: concat {{ ich wibble }} {{ lean wobble }}
 
 
 defns Typing :: Typing_ ::=
