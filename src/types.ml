@@ -817,7 +817,8 @@ and pp_coq_opts =
       coq_use_filter_fn : bool;
       coq_names_in_rules : bool } (* co *)
 and pp_lean_opts = 
-    { lean_library : (string * string list) ref } (* lno *)
+  { lean_library : (string * string list) ref;
+    lean_names_in_rules : bool } (* lno *)
 and pp_isa_opts = 
     { ppi_isa_primrec : bool;
       ppi_isa_inductive : bool;

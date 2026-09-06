@@ -309,8 +309,9 @@ let pp_subrules m xd srs : int_funcs_collapsed =
 	      ^ de1i.de1_compound_id
 	      ^ ")")], deps, []
         | Lean _ ->
-            [ leanTODO "7" (" (List.all (fun "^de1i.de1_pattern^" => "^conjuncted_conjuncts^") "
-	      ^ de1i.de1_compound_id
+          [ leanTODO "7" (" (List.all "
+	                  ^ de1i.de1_compound_id ^ " "
+                          ^ "(fun "^de1i.de1_pattern^" => "^conjuncted_conjuncts^") "
 	      ^ ")")], deps, []
 	| Coq co when not co.coq_expand_lists ->
 	    let e = 

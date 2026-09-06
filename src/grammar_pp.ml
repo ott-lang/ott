@@ -2349,8 +2349,8 @@ and pp_element m xd sie in_type e =
 		  | Some s -> Some (None, "list "^s) )
             | Lean _ -> 
                 ( match pp_elements m xd sie elb.elb_es true false true true with
-	        | None -> Some (None, "list unit")
-	        | Some s -> Some (None, "list "^s) )
+	        | None -> Some (None, "List ()")
+	        | Some s -> Some (None, "List "^s) )
             | Isa _ | Hol _  -> 
 	        ( match pp_elements m xd sie elb.elb_es true false true true with  
                 | None -> Some (None, "unit list")    
@@ -2375,12 +2375,16 @@ and pp_element m xd sie in_type e =
           Some ("("^v^":"^t^")")
       | Coq co, Some (None,t) when co.coq_names_in_rules && (not in_type) -> 
           Some ("(_:"^t^")")
-      | Lean co, Some (Some v,t) when (not in_type) -> 
-          Some ("("^v^":"^t^")")
-      | Lean co, Some (None,t) when (not in_type) -> 
-          Some ("(_:"^t^")")
       | Coq co, Some (v,t) when (not co.coq_names_in_rules) || in_type -> 
           Some t
+
+      | Lean lno, Some (Some v,t) when lno.lean_names_in_rules && (not in_type) -> 
+          Some ("("^v^":"^t^")")
+      | Lean lno, Some (None,t) when lno.lean_names_in_rules && (not in_type) -> 
+          Some ("(_:"^t^")")
+      | Lean lno, Some (v,t) when (not lno.lean_names_in_rules) || in_type -> 
+          Some t
+
       | _, Some (v,t) -> 
           Some t)
  
@@ -2396,11 +2400,13 @@ and pp_elements m xd sie es paren toplevel in_list in_type =
           ( match m with
           | Caml _ | Lem _ -> " * "
 	  | Coq co when co.coq_expand_lists -> "_"
-	  | Coq co when not (co.coq_expand_lists) -> "*"
+          | Coq co when not (co.coq_expand_lists) -> "*"
+          | Lean _ -> " × "
           | _ -> "_" )
         else 
           ( match m with 
           | Coq co when co.coq_names_in_rules -> " "
+          | Lean lno when lno.lean_names_in_rules -> " -> "
           | _ -> " -> " ) in
       let s  = String.concat separator ss in  
       ( match List.length ss with 
@@ -3366,8 +3372,9 @@ and pp_symterm_node_body m xd sie de stnb : string =
 	          | _  -> 
                       leanTODO "3" (
                       "("
-                      ^ "List.all (fun b |-> b)" ^ " "
-                      ^ String.concat " " (pp_es())
+                      ^ "List.all "
+                      ^ "(" ^ String.concat " " (pp_es()) ^ ")"
+                      ^ "(fun b |-> b)"
                       ^ ")"
                      )
                    )
@@ -4013,7 +4020,7 @@ and pp_symterm_list_body m xd sie (de :dotenv) tmopt include_terminals prod_es s
              ^ de1i.de1_compound_id
 	     ^ ")")]
         | Lean _ -> 
-            [leanTODO "5" ("(List.map (fun "^de1i.de1_pattern^" -> "^pp_body^") "
+            [leanTODO "5" ("(List.map (fun "^de1i.de1_pattern^" => "^pp_body^") "
              ^ de1i.de1_compound_id
 	     ^ ")")]
 	| Coq co ->

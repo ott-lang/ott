@@ -3,48 +3,48 @@
 
 
 
-def typevar := string /- type variable -/
-def termvar := string /- term variable -/
-def label := string /- field label -/
-def index := integer /- indices -/
+abbrev typevar := String /- type variable -/
+abbrev termvar := String /- term variable -/
+abbrev label := String /- field label -/
+abbrev index := Nat /- indices -/
 
-inductive T where /- type -/
-    | Ty_Var : (X:typevar) -> T /- type variable -/
-    | Ty_Top : T /- maximum type -/
-    | Ty_Fun : (_:T) -> (T':T) -> T /- type of functions -/
-    | Ty_Forall : (X:typevar) -> (_:T) -> (T':T) -> T /- universal type -/
-    | Ty_Rec : (_:list (label_T)) -> T /- record -/
+inductive Typ where /- type -/
+    | Ty_Var : (X:typevar) -> Typ /- type variable -/
+    | Ty_Top : Typ /- maximum type -/
+    | Ty_Fun : (T:Typ) -> (T':Typ) -> Typ /- type of functions -/
+    | Ty_Forall : (X:typevar) -> (T:Typ) -> (T':Typ) -> Typ /- universal type -/
+    | Ty_Rec : (_:List (label × Typ)) -> Typ /- record -/
 
 
 inductive p where /- pattern -/
-    | P_Var : (x:termvar) -> (_:T) -> p /- variable pattern -/
-    | P_Rec : (_:list (label_p)) -> p /- record pattern -/
+    | P_Var : (x:termvar) -> (T:Typ) -> p /- variable pattern -/
+    | P_Rec : (_:List (label × p)) -> p /- record pattern -/
 
 
 inductive t where /- term -/
     | t_Var : (x:termvar) -> t /- variable -/
-    | t_Lam : (x:termvar) -> (_:T) -> (_:t) -> t /- abstraction -/
+    | t_Lam : (x:termvar) -> (T:Typ) -> (_:t) -> t /- abstraction -/
     | t_App : (_:t) -> (t':t) -> t /- application -/
-    | t_TLam : (X:typevar) -> (_:T) -> (_:t) -> t /- type abstraction -/
-    | t_TApp : (_:t) -> (_:T) -> t /- type application -/
-    | t_Rec : (_:list (label_t)) -> t /- record -/
+    | t_TLam : (X:typevar) -> (T:Typ) -> (_:t) -> t /- type abstraction -/
+    | t_TApp : (_:t) -> (T:Typ) -> t /- type application -/
+    | t_Rec : (_:List (label × t)) -> t /- record -/
     | t_Proj : (_:t) -> (l:label) -> t /- projection -/
     | t_Let : (_:p) -> (_:t) -> (t':t) -> t /- pattern binding -/
 
 
-def s := list (termvar*t)
+def s := List (termvar×t)
 
 
 inductive G where /- type environment -/
     | G_empty : G
-    | G_type : (_:G) -> (X:typevar) -> (_:T) -> G
-    | G_term : (_:G) -> (x:termvar) -> (_:T) -> G
+    | G_type : (_:G) -> (X:typevar) -> (T:Typ) -> G
+    | G_term : (_:G) -> (x:termvar) -> (T:Typ) -> G
 
-open T t p G
-def aux_b_p_of_p (p_5:p) : list termvar :=
-  match p_5 where
+open Typ t p G
+def aux_b_p_of_p (p_5:p) : List termvar :=
+  match p_5 with
   | (P_Var x T) => [x]
-  | (P_Rec (l_p_list)) => (List.flatten (List.map aux_b_p_of_p ((List.map (fun (l_,p_) -> p_) l_p_list))))
+  | (P_Rec (l_p_list)) => (List.flatten (List.map aux_b_p_of_p ((List.map (fun (l_,p_) => p_) l_p_list))))
 
 
 
@@ -56,151 +56,163 @@ def is_v_of_t (t_5:t) : Bool :=
   | (t_App t t') => false
   | (t_TLam X T t) => (true)
   | (t_TApp t T) => false
-  | (t_Rec (l_t_list)) => ( (List.all (fun (l_,t_) => (is_v_of_t t_)) l_t_list))
+  | (t_Rec (l_t_list)) => ( (List.all l_t_list (fun (l_,t_) => (is_v_of_t t_)) ))
   | (t_Proj t l) => false
   | (t_Let p t t') => false
 
 
+/- - library functions - -/
+def list_assoc [DecidableEq a] (l:List (a × b)) (x:a) : Option b :=
+match l with
+| [] => none
+| (x',y')::t => if x=x' then some y' else list_assoc t x
+
 
 /- - substitutions - -/
-def m_T_subst_T (sub:list (typevar*T)) {struct S_6} : T :=
+def m_T_subst_T (sub:List (typevar×Typ)) : Typ :=
   match S_6 with
-  | (Ty_Var X) => (match list_assoc_option X sub with | Nothing => (Ty_Var X)| Just S5 => S5 )
+  | (Ty_Var X) => (match list_assoc sub X with | none => (Ty_Var X)| some S5 => S5 )
   | Ty_Top => Ty_Top 
   | (Ty_Fun T T') => Ty_Fun (m_T_subst_T sub T) (m_T_subst_T sub T')
-  | (Ty_Forall X T T') => Ty_Forall X (m_T_subst_T sub T) (m_T_subst_T (List.filter (fun (X5,S5) |-> not( List.elem X5 ([X]))) sub) T')
-  | (Ty_Rec (l_T_list)) => Ty_Rec (List.map (fun (pat_:(dummy)) |-> match pat_ with (l_,T_) => (l_,(m_T_subst_T sub T_)) ) l_T_list)
+  | (Ty_Forall X T T') => Ty_Forall X (m_T_subst_T sub T) (m_T_subst_T (List.filter sub (fun (X5,S5) => not ( List.elem X5 ([X])))) T')
+  | (Ty_Rec (l_T_list)) => Ty_Rec (List.map (fun (pat_:(dummy)) => match pat_ with | (l_,T_) => (l_,(m_T_subst_T sub T_)) ) l_T_list)
 
 
-def Tsubst_T (S5:T) (X5:typevar) (S_6:T) {struct S_6} : T :=
+def Tsubst_T (S5:Typ) (X5:typevar) (S_6:Typ) : Typ :=
   match S_6 with
   | (Ty_Var X) => (if X=X5 then S5 else (Ty_Var X))
   | Ty_Top => Ty_Top 
   | (Ty_Fun T T') => Ty_Fun (Tsubst_T S5 X5 T) (Tsubst_T S5 X5 T')
   | (Ty_Forall X T T') => Ty_Forall X (Tsubst_T S5 X5 T) (if  List.elem X5 ([X]) then T' else (Tsubst_T S5 X5 T'))
-  | (Ty_Rec (l_T_list)) => Ty_Rec (List.map (fun (pat_:(dummy)) |-> match pat_ with (l_,T_) => (l_,(Tsubst_T S5 X5 T_)) ) l_T_list)
+  | (Ty_Rec (l_T_list)) => Ty_Rec (List.map (fun (pat_:(dummy)) => match pat_ with | (l_,T_) => (l_,(Tsubst_T S5 X5 T_)) ) l_T_list)
 
 
-def m_T_subst_p (sub:list (typevar*T)) {struct p_5} : p :=
+def m_T_subst_p (sub:List (typevar×Typ)) : p :=
   match p_5 with
   | (P_Var x T) => P_Var x (m_T_subst_T sub T)
-  | (P_Rec (l_p_list)) => P_Rec (List.map (fun (pat_:(dummy)) |-> match pat_ with (l_,p_) => (l_,(m_T_subst_p sub p_)) ) l_p_list)
+  | (P_Rec (l_p_list)) => P_Rec (List.map (fun (pat_:(dummy)) => match pat_ with | (l_,p_) => (l_,(m_T_subst_p sub p_)) ) l_p_list)
 
 
-def Tsubst_p (S5:T) (X5:typevar) (p_5:p) {struct p_5} : p :=
+def Tsubst_p (S5:Typ) (X5:typevar) (p_5:p) : p :=
   match p_5 with
   | (P_Var x T) => P_Var x (Tsubst_T S5 X5 T)
-  | (P_Rec (l_p_list)) => P_Rec (List.map (fun (pat_:(dummy)) |-> match pat_ with (l_,p_) => (l_,(Tsubst_p S5 X5 p_)) ) l_p_list)
+  | (P_Rec (l_p_list)) => P_Rec (List.map (fun (pat_:(dummy)) => match pat_ with | (l_,p_) => (l_,(Tsubst_p S5 X5 p_)) ) l_p_list)
 
 
-def tsubst_t (t_5:t) (x5:termvar) (t__6:t) {struct t__6} : t :=
+def tsubst_t (t_5:t) (x5:termvar) (t__6:t) : t :=
   match t__6 with
   | (t_Var x) => (if x=x5 then t_5 else (t_Var x))
   | (t_Lam x T t) => t_Lam x T (if  List.elem x5 ([x]) then t else (tsubst_t t_5 x5 t))
   | (t_App t t') => t_App (tsubst_t t_5 x5 t) (tsubst_t t_5 x5 t')
   | (t_TLam X T t) => t_TLam X T (tsubst_t t_5 x5 t)
   | (t_TApp t T) => t_TApp (tsubst_t t_5 x5 t) T
-  | (t_Rec (l_t_list)) => t_Rec (List.map (fun (pat_:(dummy)) |-> match pat_ with (l_,t_) => (l_,(tsubst_t t_5 x5 t_)) ) l_t_list)
+  | (t_Rec (l_t_list)) => t_Rec (List.map (fun (pat_:(dummy)) => match pat_ with | (l_,t_) => (l_,(tsubst_t t_5 x5 t_)) ) l_t_list)
   | (t_Proj t l) => t_Proj (tsubst_t t_5 x5 t) l
   | (t_Let p t t') => t_Let p (tsubst_t t_5 x5 t) (if  List.elem x5 ((aux_b_p_of_p p)) then t' else (tsubst_t t_5 x5 t'))
 
 
-def m_T_subst_G (sub:list (typevar*T)) {struct D5} : G :=
+def m_T_subst_G (sub:List (typevar×Typ)) : G :=
   match D5 with
   | G_empty => G_empty 
   | (G_type G X T) => G_type (m_T_subst_G sub G) X (m_T_subst_T sub T)
   | (G_term G x T) => G_term (m_T_subst_G sub G) x (m_T_subst_T sub T)
 
 
-def m_T_subst_t (sub:list (typevar*T)) {struct t_5} : t :=
+def m_T_subst_t (sub:List (typevar×Typ)) : t :=
   match t_5 with
   | (t_Var x) => t_Var x
   | (t_Lam x T t) => t_Lam x (m_T_subst_T sub T) (m_T_subst_t sub t)
   | (t_App t t') => t_App (m_T_subst_t sub t) (m_T_subst_t sub t')
-  | (t_TLam X T t) => t_TLam X (m_T_subst_T sub T) (m_T_subst_t (List.filter (fun (X5,S5) |-> not( List.elem X5 ([X]))) sub) t)
+  | (t_TLam X T t) => t_TLam X (m_T_subst_T sub T) (m_T_subst_t (List.filter sub (fun (X5,S5) => not ( List.elem X5 ([X])))) t)
   | (t_TApp t T) => t_TApp (m_T_subst_t sub t) (m_T_subst_T sub T)
-  | (t_Rec (l_t_list)) => t_Rec (List.map (fun (pat_:(dummy)) |-> match pat_ with (l_,t_) => (l_,(m_T_subst_t sub t_)) ) l_t_list)
+  | (t_Rec (l_t_list)) => t_Rec (List.map (fun (pat_:(dummy)) => match pat_ with | (l_,t_) => (l_,(m_T_subst_t sub t_)) ) l_t_list)
   | (t_Proj t l) => t_Proj (m_T_subst_t sub t) l
   | (t_Let p t t') => t_Let (m_T_subst_p sub p) (m_T_subst_t sub t) (m_T_subst_t sub t')
 
 
-def m_t_subst_t (sub:list (termvar*t)) {struct t__6} : t :=
+def m_t_subst_t (sub:List (termvar×t)) : t :=
   match t__6 with
-  | (t_Var x) => (match list_assoc_option x sub with | Nothing => (t_Var x)| Just t_5 => t_5 )
-  | (t_Lam x T t) => t_Lam x T (m_t_subst_t (List.filter (fun (x5,t_5) |-> not( List.elem x5 ([x]))) sub) t)
+  | (t_Var x) => (match list_assoc sub x with | none => (t_Var x)| some t_5 => t_5 )
+  | (t_Lam x T t) => t_Lam x T (m_t_subst_t (List.filter sub (fun (x5,t_5) => not ( List.elem x5 ([x])))) t)
   | (t_App t t') => t_App (m_t_subst_t sub t) (m_t_subst_t sub t')
   | (t_TLam X T t) => t_TLam X T (m_t_subst_t sub t)
   | (t_TApp t T) => t_TApp (m_t_subst_t sub t) T
-  | (t_Rec (l_t_list)) => t_Rec (List.map (fun (pat_:(dummy)) |-> match pat_ with (l_,t_) => (l_,(m_t_subst_t sub t_)) ) l_t_list)
+  | (t_Rec (l_t_list)) => t_Rec (List.map (fun (pat_:(dummy)) => match pat_ with | (l_,t_) => (l_,(m_t_subst_t sub t_)) ) l_t_list)
   | (t_Proj t l) => t_Proj (m_t_subst_t sub t) l
-  | (t_Let p t t') => t_Let p (m_t_subst_t sub t) (m_t_subst_t (List.filter (fun (x5,t_5) |-> not( List.elem x5 ((aux_b_p_of_p p)))) sub) t')
+  | (t_Let p t t') => t_Let p (m_t_subst_t sub t) (m_t_subst_t (List.filter sub (fun (x5,t_5) => not ( List.elem x5 ((aux_b_p_of_p p))))) t')
 
 
-def Tsubst_G (S5:T) (X5:typevar) (D5:G) {struct D5} : G :=
+def Tsubst_G (S5:Typ) (X5:typevar) (D5:G) : G :=
   match D5 with
   | G_empty => G_empty 
   | (G_type G X T) => G_type (Tsubst_G S5 X5 G) X (Tsubst_T S5 X5 T)
   | (G_term G x T) => G_term (Tsubst_G S5 X5 G) x (Tsubst_T S5 X5 T)
 
 
-def Tsubst_t (S5:T) (X5:typevar) (t_5:t) {struct t_5} : t :=
+def Tsubst_t (S5:Typ) (X5:typevar) (t_5:t) : t :=
   match t_5 with
   | (t_Var x) => t_Var x
   | (t_Lam x T t) => t_Lam x (Tsubst_T S5 X5 T) (Tsubst_t S5 X5 t)
   | (t_App t t') => t_App (Tsubst_t S5 X5 t) (Tsubst_t S5 X5 t')
   | (t_TLam X T t) => t_TLam X (Tsubst_T S5 X5 T) (if  List.elem X5 ([X]) then t else (Tsubst_t S5 X5 t))
   | (t_TApp t T) => t_TApp (Tsubst_t S5 X5 t) (Tsubst_T S5 X5 T)
-  | (t_Rec (l_t_list)) => t_Rec (List.map (fun (pat_:(dummy)) |-> match pat_ with (l_,t_) => (l_,(Tsubst_t S5 X5 t_)) ) l_t_list)
+  | (t_Rec (l_t_list)) => t_Rec (List.map (fun (pat_:(dummy)) => match pat_ with | (l_,t_) => (l_,(Tsubst_t S5 X5 t_)) ) l_t_list)
   | (t_Proj t l) => t_Proj (Tsubst_t S5 X5 t) l
   | (t_Let p t t') => t_Let (Tsubst_p S5 X5 p) (Tsubst_t S5 X5 t) (Tsubst_t S5 X5 t')
 
 
+/- - library functions - -/
+def list_minus [BEq a] (l1:List a) (l2:List a) : (List a) :=
+  match l1 with
+  | [] => []
+  | h::t => if List.elem h l2 then list_minus t l2 else h::(list_minus t l2)
+
 
 /- - free variables - -/
-def ftv_T (S5:T) :  list typevar =
-  match S5 where
+def ftv_T (S5:Typ) :  List typevar :=
+  match S5 with
   | (Ty_Var X) => [X]
   | Ty_Top => []
-  | (Ty_Fun T T') => (ftv_T T) @ (ftv_T T')
-  | (Ty_Forall X T T') => (ftv_T T) @ (list_minus (ftv_T T') [X])
-  | (Ty_Rec (l_T_list)) => (List.concat (List.map (fun (l_,T_) -> (ftv_T T_)) l_T_list))
+  | (Ty_Fun T T') => (ftv_T T) ++ (ftv_T T')
+  | (Ty_Forall X T T') => (ftv_T T) ++ (list_minus (ftv_T T') [X])
+  | (Ty_Rec (l_T_list)) => (List.concat (List.map (fun (l_,T_) => (ftv_T T_)) l_T_list))
 
 
-def ftv_p (p_5:p) :  list typevar =
-  match p_5 where
+def ftv_p (p_5:p) :  List typevar :=
+  match p_5 with
   | (P_Var x T) => (ftv_T T)
-  | (P_Rec (l_p_list)) => (List.concat (List.map (fun (l_,p_) -> (ftv_p p_)) l_p_list))
+  | (P_Rec (l_p_list)) => (List.concat (List.map (fun (l_,p_) => (ftv_p p_)) l_p_list))
 
 
-def fv_t (t_5:t) :  list termvar =
-  match t_5 where
+def fv_t (t_5:t) :  List termvar :=
+  match t_5 with
   | (t_Var x) => [x]
   | (t_Lam x T t) => (list_minus (fv_t t) [x])
-  | (t_App t t') => (fv_t t) @ (fv_t t')
+  | (t_App t t') => (fv_t t) ++ (fv_t t')
   | (t_TLam X T t) => (fv_t t)
   | (t_TApp t T) => (fv_t t)
-  | (t_Rec (l_t_list)) => (List.concat (List.map (fun (l_,t_) -> (fv_t t_)) l_t_list))
+  | (t_Rec (l_t_list)) => (List.concat (List.map (fun (l_,t_) => (fv_t t_)) l_t_list))
   | (t_Proj t l) => (fv_t t)
-  | (t_Let p t t') => (fv_t t) @ (list_minus (fv_t t') (aux_b_p_of_p p))
+  | (t_Let p t t') => (fv_t t) ++ (list_minus (fv_t t') (aux_b_p_of_p p))
 
 
-def ftv_G (D5:G) :  list typevar =
-  match D5 where
+def ftv_G (D5:G) :  List typevar :=
+  match D5 with
   | G_empty => []
-  | (G_type G X T) => (ftv_G G) @ (ftv_T T)
-  | (G_term G x T) => (ftv_G G) @ (ftv_T T)
+  | (G_type G X T) => (ftv_G G) ++ (ftv_T T)
+  | (G_term G x T) => (ftv_G G) ++ (ftv_T T)
 
 
-def ftv_t (t_5:t) :  list typevar =
-  match t_5 where
+def ftv_t (t_5:t) :  List typevar :=
+  match t_5 with
   | (t_Var x) => []
-  | (t_Lam x T t) => (ftv_T T) @ (ftv_t t)
-  | (t_App t t') => (ftv_t t) @ (ftv_t t')
-  | (t_TLam X T t) => (ftv_T T) @ (list_minus (ftv_t t) [X])
-  | (t_TApp t T) => (ftv_t t) @ (ftv_T T)
-  | (t_Rec (l_t_list)) => (List.concat (List.map (fun (l_,t_) -> (ftv_t t_)) l_t_list))
+  | (t_Lam x T t) => (ftv_T T) ++ (ftv_t t)
+  | (t_App t t') => (ftv_t t) ++ (ftv_t t')
+  | (t_TLam X T t) => (ftv_T T) ++ (list_minus (ftv_t t) [X])
+  | (t_TApp t T) => (ftv_t t) ++ (ftv_T T)
+  | (t_Rec (l_t_list)) => (List.concat (List.map (fun (l_,t_) => (ftv_t t_)) l_t_list))
   | (t_Proj t l) => (ftv_t t)
-  | (t_Let p t t') => (ftv_p p) @ (ftv_t t) @ (ftv_t t')
+  | (t_Let p t t') => (ftv_p p) ++ (ftv_t t) ++ (ftv_t t')
 
 
  (** embedded definitions of operations on type environments **)
@@ -208,7 +220,7 @@ def ftv_t (t_5:t) :  list typevar =
  let rec  append_G G G_empty = G
  and      append_G G (G_type G' X T) = (let G'' = append_G G G' in (G_type G'' X T))
  and      append_G G (G_term G' x T) = (let G'' = append_G G G' in (G_term G'' x T))
- val flatten_G : list G -> G
+ val flatten_G : List G -> G
  let rec flatten_G [] = G_empty
  and     flatten_G (G::Gs) = append_G G (flatten_G Gs)
  
@@ -217,68 +229,68 @@ def ftv_t (t_5:t) :  list typevar =
 
 /- defns Judgement_in -/
 inductive xinG : termvar -> G -> Prop where    /- defn xinG -/
-| xinG_1: forall (x:termvar) (G:G) (T:T),
+| xinG_1: forall (x:termvar) (G:G) (T:Typ),
 true
  -> 
 xinG x (G_term G x T)
 
-| xinG_2: forall (x:termvar) (G:G) (X':typevar) (U':T),
+| xinG_2: forall (x:termvar) (G:G) (X':typevar) (U':Typ),
 (xinG x G)
  -> 
 xinG x (G_type G X' U')
 
-| xinG_3: forall (x:termvar) (G:G) (x':termvar) (T':T),
+| xinG_3: forall (x:termvar) (G:G) (x':termvar) (T':Typ),
 (xinG x G)
  -> 
 xinG x (G_term G x' T')
 
 
 inductive XinG : typevar -> G -> Prop where    /- defn XinG -/
-| XinG_1: forall (X:typevar) (G:G) (U:T),
+| XinG_1: forall (X:typevar) (G:G) (U:Typ),
 true
  -> 
 XinG X (G_type G X U)
 
-| XinG_2: forall (X:typevar) (G:G) (X':typevar) (U':T),
+| XinG_2: forall (X:typevar) (G:G) (X':typevar) (U':Typ),
 (XinG X G)
  -> 
 XinG X (G_type G X' U')
 
-| XinG_3: forall (X:typevar) (G:G) (x':termvar) (T':T),
+| XinG_3: forall (X:typevar) (G:G) (x':termvar) (T':Typ),
 (XinG X G)
  -> 
 XinG X (G_term G x' T')
 
 
-inductive tin : termvar -> T -> G -> Prop where    /- defn tin -/
-| tin_1: forall (x:termvar) (T:T) (G:G),
+inductive tin : termvar -> Typ -> G -> Prop where    /- defn tin -/
+| tin_1: forall (x:termvar) (T:Typ) (G:G),
 true
  -> 
 tin x T (G_term G x T)
 
-| tin_2: forall (x:termvar) (T:T) (G:G) (X':typevar) (U':T),
+| tin_2: forall (x:termvar) (T:Typ) (G:G) (X':typevar) (U':Typ),
 (tin x T G)
  -> 
 tin x T (G_type G X' U')
 
-| tin_3: forall (x:termvar) (T:T) (G:G) (x':termvar) (T':T),
+| tin_3: forall (x:termvar) (T:Typ) (G:G) (x':termvar) (T':Typ),
 (tin x T G)
  -> 
 tin x T (G_term G x' T')
 
 
-inductive Tin : typevar -> T -> G -> Prop where    /- defn Tin -/
-| Tin_1: forall (X:typevar) (U:T) (G:G),
+inductive Tin : typevar -> Typ -> G -> Prop where    /- defn Tin -/
+| Tin_1: forall (X:typevar) (U:Typ) (G:G),
 true
  -> 
 Tin X U (G_type G X U)
 
-| Tin_2: forall (X:typevar) (U:T) (G:G) (X':typevar) (U':T),
+| Tin_2: forall (X:typevar) (U:Typ) (G:G) (X':typevar) (U':Typ),
 (Tin X U G)
  -> 
 Tin X U (G_type G X' U')
 
-| Tin_3: forall (X:typevar) (U:T) (G:G) (x':termvar) (T':T),
+| Tin_3: forall (X:typevar) (U:Typ) (G:G) (x':termvar) (T':Typ),
 (Tin X U G)
  -> 
 Tin X U (G_term G x' T')
@@ -293,21 +305,21 @@ true
  -> 
 Gok G_empty
 
-| Gok_2: forall (G:G) (x:termvar) (T:T),
+| Gok_2: forall (G:G) (x:termvar) (T:Typ),
 (GT G T) ->
 ( not(   (  xinG x G  )   ) )
  -> 
 Gok (G_term G x T)
 
-| Gok_3: forall (G:G) (X:typevar) (T:T),
+| Gok_3: forall (G:G) (X:typevar) (T:Typ),
 (GT G T) ->
 ( not(   (  XinG X G  )   ) )
  -> 
 Gok (G_type G X T)
 
 
-inductive GT : G -> T -> Prop where    /- defn GT -/
-| GT_Var: forall (G:G) (X:typevar) (U:T),
+inductive GT : G -> Typ -> Prop where    /- defn GT -/
+| GT_Var: forall (G:G) (X:typevar) (U:Typ),
 (Gok G) ->
 (Tin X U G)
  -> 
@@ -318,25 +330,25 @@ GT G (Ty_Var X)
  -> 
 GT G Ty_Top
 
-| GT_Fun: forall (G:G) (T:T) (T':T),
+| GT_Fun: forall (G:G) (T:Typ) (T':Typ),
 (GT G T) ->
 (GT G T')
  -> 
 GT G (Ty_Fun T T')
 
-| GT_Forall: forall (G:G) (X:typevar) (T:T) (T':T),
+| GT_Forall: forall (G:G) (X:typevar) (T:Typ) (T':Typ),
 (GT (G_type G X T) T')
  -> 
 GT G (Ty_Forall X T T')
 
 | GT_Rcd: forall (l_T_list:(dummy) list) (G:G),
-((List.all (fun b |-> b) ((List.map (fun (l_,T_) -> GT G T_) l_T_list))))
+((List.all (((List.map (fun (l_,T_) => GT G T_) l_T_list)))(fun b |-> b)))
  -> 
 GT G (Ty_Rec (l_T_list))
 
 
-inductive SA : G -> T -> T -> Prop where    /- defn SA -/
-| SA_Top: forall (G:G) (S:T),
+inductive SA : G -> Typ -> Typ -> Prop where    /- defn SA -/
+| SA_Top: forall (G:G) (S:Typ),
 (Gok G)
  -> 
 SA G S Ty_Top
@@ -346,19 +358,19 @@ SA G S Ty_Top
  -> 
 SA G (Ty_Var X) (Ty_Var X)
 
-| SA_Trans_TVar: forall (G:G) (X:typevar) (T:T) (U:T),
+| SA_Trans_TVar: forall (G:G) (X:typevar) (T:Typ) (U:Typ),
 (Tin X U G) ->
 (SA G U T)
  -> 
 SA G (Ty_Var X) T
 
-| SA_Arrow: forall (G:G) (S1:T) (S2:T) (T1:T) (T2:T),
+| SA_Arrow: forall (G:G) (S1:Typ) (S2:Typ) (T1:Typ) (T2:Typ),
 (SA G T1 S1) ->
 (SA G S2 T2)
  -> 
 SA G (Ty_Fun S1 S2) (Ty_Fun T1 T2)
 
-| SA_All: forall (G:G) (X:typevar) (S1:T) (S2:T) (T1:T) (T2:T),
+| SA_All: forall (G:G) (X:typevar) (S1:Typ) (S2:Typ) (T1:Typ) (T2:Typ),
 (SA G T1 S1) ->
 (SA (G_type G X T1) S2 T2)
  -> 
@@ -370,36 +382,36 @@ SA G (Ty_Forall X S1 S2) (Ty_Forall X T1 T2)
 SA G (Ty_Rec (k_S_list)) (Ty_Rec (l_T_list))
 
 
-inductive Ty : G -> t -> T -> Prop where    /- defn Ty -/
-| Ty_Var: forall (G:G) (x:termvar) (T:T),
+inductive Ty : G -> t -> Typ -> Prop where    /- defn Ty -/
+| Ty_Var: forall (G:G) (x:termvar) (T:Typ),
 (Gok G) ->
 (tin x T G)
  -> 
 Ty G (t_Var x) T
 
-| Ty_Abs: forall (G:G) (x:termvar) (T1:T) (t2:t) (T2:T),
+| Ty_Abs: forall (G:G) (x:termvar) (T1:Typ) (t2:t) (T2:Typ),
 (Ty (G_term G x T1) t2 T2)
  -> 
 Ty G (t_Lam x T1 t2) (Ty_Fun T1 T2)
 
-| Ty_App: forall (G:G) (t1:t) (t2:t) (T12:T) (T11:T),
+| Ty_App: forall (G:G) (t1:t) (t2:t) (T12:Typ) (T11:Typ),
 (Ty G t1 (Ty_Fun T11 T12)) ->
 (Ty G t2 T11)
  -> 
 Ty G (t_App t1 t2) T12
 
-| Ty_TAbs: forall (G:G) (X:typevar) (T1:T) (t2:t) (T2:T),
+| Ty_TAbs: forall (G:G) (X:typevar) (T1:Typ) (t2:t) (T2:Typ),
 (Ty (G_type G X T1) t2 T2)
  -> 
 Ty G (t_TLam X T1 t2) (Ty_Forall X T1 T2)
 
-| Ty_TApp: forall (G:G) (t1:t) (T2:T) (X:typevar) (T12:T) (T11:T),
+| Ty_TApp: forall (G:G) (t1:t) (T2:Typ) (X:typevar) (T12:Typ) (T11:Typ),
 (Ty G t1 (Ty_Forall X T11 T12)) ->
 (SA G T2 T11)
  -> 
 Ty G (t_TApp t1 T2)  (Tsubst_T  T2   X   T12 ) 
 
-| Ty_Let: forall (G:G) (p:p) (t1:t) (t2:t) (T2:T) (T1:T) (D:G),
+| Ty_Let: forall (G:G) (p:p) (t1:t) (t2:t) (T2:Typ) (T1:Typ) (D:G),
 (Ty G t1 T1) ->
 (Pat p T1 D) ->
 (Ty  (flatten_G  ([(G)] ++ [(D)]) )  t2 T2)
@@ -407,44 +419,44 @@ Ty G (t_TApp t1 T2)  (Tsubst_T  T2   X   T12 )
 Ty G (t_Let p t1 t2) T2
 
 | Ty_Rcd: forall (l_t_T_list:(dummy) list) (G:G),
-((List.all (fun b |-> b) ((List.map (fun (l_,t_,T_) -> Ty G t_ T_) l_t_T_list))))
+((List.all (((List.map (fun (l_,t_,T_) => Ty G t_ T_) l_t_T_list)))(fun b |-> b)))
  -> 
-Ty G (t_Rec ((List.map (fun (l_,t_,T_) -> (l_,t_)) l_t_T_list))) (Ty_Rec ((List.map (fun (l_,t_,T_) -> (l_,T_)) l_t_T_list)))
+Ty G (t_Rec ((List.map (fun (l_,t_,T_) => (l_,t_)) l_t_T_list))) (Ty_Rec ((List.map (fun (l_,t_,T_) => (l_,T_)) l_t_T_list)))
 
 | Ty_Proj: forall (l_T_list:(dummy) list) (j:index) (G:G) (t:t),
 (Ty G t (Ty_Rec (l_T_list)))
  -> 
 Ty G (t_Proj t ((fun (l_,T_) |-> l_) (List.nth l_T_list (j - 1)))) ((fun (l_,T_) |-> T_) (List.nth l_T_list (j - 1)))
 
-| Ty_Sub: forall (G:G) (t:t) (T:T) (S:T),
+| Ty_Sub: forall (G:G) (t:t) (T:Typ) (S:Typ),
 (Ty G t S) ->
 (SA G S T)
  -> 
 Ty G t T
 
 
-inductive Pat : p -> T -> G -> Prop where    /- defn Pat -/
-| Pat_Var: forall (x:termvar) (T:T),
+inductive Pat : p -> Typ -> G -> Prop where    /- defn Pat -/
+| Pat_Var: forall (x:termvar) (T:Typ),
 true
  -> 
 Pat (P_Var x T) T (G_term G_empty x T)
 
 | Pat_Rcd: forall (l_p_T_D_list:(dummy) list),
-((List.all (fun b |-> b) ((List.map (fun (l_,p_,T_,D_) -> Pat p_ T_ D_) l_p_T_D_list))))
+((List.all (((List.map (fun (l_,p_,T_,D_) => Pat p_ T_ D_) l_p_T_D_list)))(fun b |-> b)))
  -> 
-Pat (P_Rec ((List.map (fun (l_,p_,T_,D_) -> (l_,p_)) l_p_T_D_list))) (Ty_Rec ((List.map (fun (l_,p_,T_,D_) -> (l_,T_)) l_p_T_D_list)))  (flatten_G  ((List.map (fun (l_,p_,T_,D_) -> D_) l_p_T_D_list)) ) 
+Pat (P_Rec ((List.map (fun (l_,p_,T_,D_) => (l_,p_)) l_p_T_D_list))) (Ty_Rec ((List.map (fun (l_,p_,T_,D_) => (l_,T_)) l_p_T_D_list)))  (flatten_G  ((List.map (fun (l_,p_,T_,D_) => D_) l_p_T_D_list)) ) 
 
 /- definitions -/
 
 
 /- defns Jop -/
 inductive reduce : t -> t -> Prop where    /- defn reduce -/
-| reduce_AppAbs: forall (x:termvar) (T11:T) (t12:t) (v2:t),
+| reduce_AppAbs: forall (x:termvar) (T11:Typ) (t12:t) (v2:t),
 (is_v_of_t v2)
  -> 
 reduce (t_App  (t_Lam x T11 t12)  v2)  ( tsubst_t  v2   x   t12  ) 
 
-| reduce_TappTabs: forall (X:typevar) (T11:T) (t12:t) (T2:T),
+| reduce_TappTabs: forall (X:typevar) (T11:Typ) (t12:t) (T2:Typ),
 true
  -> 
 reduce (t_TApp  (t_TLam X T11 t12)  T2)  ( Tsubst_t  T2   X   t12  ) 
@@ -472,7 +484,7 @@ reduce (t_App t1 t) (t_App t1' t)
  -> 
 reduce (t_App v t1) (t_App v t1')
 
-| reduce_Ctx_type_fun: forall (t1:t) (T:T) (t1':t),
+| reduce_Ctx_type_fun: forall (t1:t) (T:Typ) (t1':t),
 (reduce t1 t1')
  -> 
 reduce (t_TApp t1 T) (t_TApp t1' T)
@@ -490,7 +502,7 @@ reduce (t_Let p t1 t2) (t_Let p t1' t2)
 
 
 inductive M : p -> t -> s -> Prop where    /- defn M -/
-| M_Var: forall (x:termvar) (T:T) (v:t),
+| M_Var: forall (x:termvar) (T:Typ) (v:t),
 (is_v_of_t v) ->
 (is_v_of_t v)
  -> 
@@ -500,7 +512,7 @@ M (P_Var x T) v  [ ( x , v ) ]
 (List.all (fun (k_,v_) -> is_v_of_t v_) k_v_list) ->
 ( (forall  i . (1<= i  &&  i  <= m) -->   (exists  j . (1<= j  &&  j  <= m) &&   (   (  ( ((fun (l_,p_,s_) |-> l_) (List.nth l_p_s_list (i - 1))) = ((fun (k_,v_) |-> k_) (List.nth k_v_list (j - 1))) )   &&  M ((fun (l_,p_,s_) |-> p_) (List.nth l_p_s_list (i - 1))) ((fun (k_,v_) |-> v_) (List.nth k_v_list (j - 1))) ((fun (l_,p_,s_) |-> s_) (List.nth l_p_s_list (i - 1))) )   )  )  ) )
  -> 
-M (P_Rec ((List.map (fun (l_,p_,s_) -> (l_,p_)) l_p_s_list))) (t_Rec (k_v_list))  (List.flatten  ((List.map (fun (l_,p_,s_) -> s_) l_p_s_list)) ) 
+M (P_Rec ((List.map (fun (l_,p_,s_) => (l_,p_)) l_p_s_list))) (t_Rec (k_v_list))  (List.flatten  ((List.map (fun (l_,p_,s_) => s_) l_p_s_list)) ) 
 
 
 

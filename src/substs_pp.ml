@@ -126,6 +126,14 @@ let pp_list_assoc_coq =
   ^ "end.\n"
   ^ "Arguments list_assoc [A B] _ _ _.\n\n")
 
+let pp_list_assoc_lean =
+  "def list_assoc [DecidableEq a] (l:List (a × b)) (x:a) : Option b :=\n"
+  ^ "match l with\n"
+  ^ "| [] => none\n"
+  ^ "| (x',y')::t => if x=x' then some y' else list_assoc t x\n\n"
+
+
+
 (* this is a temporary workaround, to be replaced when the Lem library
 List.assoc have been updated to return an option type *)
 let pp_list_assoc_lem =
@@ -181,9 +189,9 @@ let pp_list_minus2 m = match m with
 let pp_list_assoc m = match m with 
   | Isa io -> Auxl.add_to_lib io.isa_library "list_assoc" pp_list_assoc_isa
   | Hol ho -> ()
-  | Lean lno -> ()
   | Lem lo -> Auxl.add_to_lib lo.lem_library "list_assoc" pp_list_assoc_lem
   | Coq co -> Auxl.add_to_lib co.coq_library "list_assoc" pp_list_assoc_coq
+  | Lean lno -> Auxl.add_to_lib lno.lean_library "list_assoc" pp_list_assoc_lean
   | Caml _ | Twf _ | Tex _ | Ascii _ | Lex _ | Menhir _ 
     -> Auxl.errorm m "pp_list_assoc"
 
@@ -334,7 +342,7 @@ let pp_auxfn_clauses m xd f ntr ntmvr =
 	let pat_var  = Auxl.fresh_nt nts_used (fresh_var_ntr,[]) in
 	( (leanTODO "8" (Auxl.auxfn_name f ntrn ntrn (* FZ *)
 	  ^ " (" ^ Grammar_pp.pp_nonterm m xd pat_var 
-	  ^ ":" ^ Grammar_pp.pp_nontermroot_ty m xd ntr ^ ")")), 
+          ^ ":" ^ Grammar_pp.pp_nontermroot_ty m xd ntr ^ ")")), 
           "", 
           " : List " ^ Grammar_pp.pp_nt_or_mv_root_ty m xd ntmvr ^ " :=\n" 
 	  ^ "  match " ^ Grammar_pp.pp_nonterm m xd pat_var ^ " with\n" )
@@ -698,10 +706,11 @@ let rec pp_subst_symterm
 		| Empty -> sub_var 
 		| _ -> 
                     "(List.filter "
-                    ^ "(fun ("^ that_s ^","^ this_s ^") |-> " 
-                    ^ "not("^that_in_bound_things()^")"
+                    ^ sub_var ^ " "
+                    ^ "(fun ("^ that_s ^","^ this_s ^") => " 
+                    ^ "not ("^that_in_bound_things()^")"
                     ^ ")"
-                    ^ " "^sub_var^")")
+                    ^")")
 		^ " "
 		^ nt_s
 		^ ")" 
@@ -1095,12 +1104,12 @@ and pp_subst_symterm_list_body
     | Lean _ ->
         let l = Str.split (Str.regexp "(\\|,\\|)") de1i.de1_pattern in
         if List.length l = 1 then	
-          ( leanTODO "12" ("(List.map (fun ("^de1i.de1_pattern^":" ^ de1i.de1_coq_type_of_pattern ^ ") |-> "^pp_body^") "
+          ( leanTODO "12" ("(List.map (fun ("^de1i.de1_pattern^":" ^ de1i.de1_coq_type_of_pattern ^ ") => "^pp_body^") "
             ^ de1i.de1_compound_id
             ^ ")"), [] )
         else
-          ( leanTODO "13" ("(List.map (fun (pat_:" ^ de1i.de1_coq_type_of_pattern ^ ") |-> match pat_ with " (* FZ freshen pat_ *)
-            ^ de1i.de1_pattern^" => " ^pp_body^" ) "  
+          ( leanTODO "13" ("(List.map (fun (pat_:" ^ de1i.de1_coq_type_of_pattern ^ ") => match pat_ with " (* FZ freshen pat_ *)
+            ^ "| " ^ de1i.de1_pattern^" => " ^pp_body^" ) "  
             ^ de1i.de1_compound_id
             ^ ")"), [] )
 
@@ -1205,12 +1214,12 @@ let pp_subst_prod
 		  pp_list_assoc m;
 		  (* tentative hol code for multiple subst *)
                   leanTODO "14" (
-		  "(match list_assoc_option " 
-		  ^ thing_s ^ " " 
-		  ^ sub_var 
+		  "(match list_assoc " 
+		  ^ sub_var ^ " " 
+		  ^ thing_s 
 		  ^ " with "
-		  ^ "| Nothing => " ^ lhs_pat
-		  ^ "| Just " ^ Grammar_pp.pp_nonterm m xd this_var 
+		  ^ "| none => " ^ lhs_pat
+		  ^ "| some " ^ Grammar_pp.pp_nonterm m xd this_var 
 		  ^ " => " ^ Grammar_pp.pp_nonterm m xd this_var 
 		  ^ " )"
                  )
@@ -1458,9 +1467,9 @@ let pp_subst_rule : subst -> pp_mode -> syntaxdefn -> nontermroot list -> rule -
 	  ( (id
              ^ ( if subst.sb_multiple 
 	     then 
-	       (leanTODO "15" (" (" ^ sub_var ^ ":list (" 
+	       (leanTODO "15" (" (" ^ sub_var ^ ":List (" 
 	       ^ Grammar_pp.pp_nt_or_mv_root_ty m xd subst.sb_that 
-	       ^ "*" ^ Grammar_pp.pp_nontermroot_ty m xd subst.sb_this ^ "))" ))
+	       ^ "×" ^ Grammar_pp.pp_nontermroot_ty m xd subst.sb_this ^ "))" ))
 	     else 
 	      (leanTODO "16" ( " (" ^ Grammar_pp.pp_nonterm m xd this_var ^ ":"
                ^ Grammar_pp.pp_nontermroot_ty m xd subst.sb_this ^")"
@@ -1911,7 +1920,7 @@ and pp_fv_symterm_list_body
 	  | Lean _ ->
               let pp_body = String.concat (leanTODO "17" " ++ ") pp_body_elements in
               Some 
-		("(List.concat (List.map (fun "^de1i.de1_pattern^" -> "^pp_body^") "
+		("(List.concat (List.map (fun "^de1i.de1_pattern^" => "^pp_body^") "
 		 ^ de1i.de1_compound_id
 		 ^ "))"), funcs
 	  | Coq co when co.coq_expand_lists -> 

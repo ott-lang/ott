@@ -11,13 +11,13 @@ ideally also:
    can be replaced by a single one.
 <<
 metavar typevar, X ::=
- {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ lem string }} {{ lean string }} {{ lex Alphanum }} 
+ {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ lem string }} {{ lean String }} {{ lex Alphanum }} 
  {{ tex \mathit{[[typevar]]} }} {{ com  type variable  }}  
  {{ isavar ''[[typevar]]'' }} {{ holvar "[[typevar]]" }} {{ lemvar "[[typevar]]" }} {{ leanvar "[[typevar]]" }} {{ texvar \mathrm{[[typevar]]} }} 
  {{ ocamlvar "[[typevar]]" }}
 
 metavar termvar, x ::=
- {{ isa string }} {{ coq nat }} {{ hol string }}  {{ lem string }} {{ lean string }} {{ coq-equality }} {{ lex alphanum }}  
+ {{ isa string }} {{ coq nat }} {{ hol string }}  {{ lem string }} {{ lean String }} {{ coq-equality }} {{ lex alphanum }}  
  {{ tex \mathit{[[termvar]]} }} {{ com  term variable  }} 
  {{ isavar ''[[termvar]]'' }} {{ holvar "[[termvar]]" }} 
  {{ lemvar "[[typevar]]" }} 
@@ -26,15 +26,15 @@ metavar termvar, x ::=
  {{ ocamlvar "[[termvar]]" }}
 
 rmetavar label, l, k ::=
-r {{ isa string }} {{ coq nat }} {{ hol string }} {{ lem string }} {{ lean string }} {{ lex alphanum }}  {{ tex \mathit{[[label]]} }} 
+r {{ isa string }} {{ coq nat }} {{ hol string }} {{ lem string }} {{ lean String }} {{ lex alphanum }}  {{ tex \mathit{[[label]]} }} 
 r {{ com  field label  }}  {{ isavar ''[[label]]'' }} {{ holvar "[[label]]" }} {{ lemvar "[[typevar]]" }} {{ leanvar "[[typevar]]" }} 
 r {{ ocamlvar "[[label]]" }}
 
-indexvar index, i, j, n, m  ::= {{ isa nat }} {{ coq nat }} {{ hol num }} {{ lem num}} {{ lean integer}} {{ lex numeral }}
+indexvar index, i, j, n, m  ::= {{ isa nat }} {{ coq nat }} {{ hol num }} {{ lem num}} {{ lean Nat}} {{ lex numeral }}
   {{ com indices }}
 
 grammar
-T {{ hol Typ }}, S, U :: 'Ty_' ::=                    {{ com type  }}
+T {{ hol Typ }} {{ lean-type Typ }}, S, U :: 'Ty_' ::=                    {{ com type  }}
   | X                                :: :: Var          {{ com type variable }}  
   | Top                              :: :: Top          {{ com maximum type }}   
   | T -> T'                          :: :: Fun          {{ com type of functions }}
@@ -94,7 +94,7 @@ G {{ tex \Gamma }}, D {{ tex \Delta }} :: 'G_' ::= {{ com type environment }}
 %r  | G , G'                           :: M :: comma    {{ ichlL TODO }}
 r  | G1 , .. , Gn                     :: M :: dots {{ ichlL (flatten_G [[G1..Gn]]) }}  
 
-rs {{ tex \sigma }} :: 'S_' ::= {{ com multiple term substitution }} {{ isa (termvar*t) list }} {{ hol (termvar#t) list }} {{ coq list (termvar*t) }} {{ lem list (termvar*t) }} {{ lean list (termvar*t) }}
+rs {{ tex \sigma }} :: 'S_' ::= {{ com multiple term substitution }} {{ isa (termvar*t) list }} {{ hol (termvar#t) list }} {{ coq list (termvar*t) }} {{ lem list (termvar*t) }} {{ lean List (termvar×t) }}
 r  | [ x |-> t ]                    ::   :: singleton {{ ih [ ([[x]],[[t]]) ] }} {{ coq (cons ([[x]],[[t]]) nil) }} {{ lem [ ([[x]],[[t]]) ] }} {{ lean [ ([[x]],[[t]]) ] }}
 r  | s1 , ... , sn                   ::   :: list   {{ isa List.concat [[s1...sn]] }} {{ hol (FLAT [[s1...sn]]) }} {{ coq (List.flat_map (fun x => x) [[s1...sn]]) }} {{ lem (List.flatten [[s1...sn]]) }}  {{ lean (List.flatten [[s1...sn]]) }}
 
@@ -228,7 +228,7 @@ r val append_G : G -> G -> G
 r let rec  append_G [[G]] [[empty]] = [[G]]
 r and      append_G [[G]] [[G',X<:T]] = (let [[G'']] = append_G [[G]] [[G']] in [[G'',X<:T]])
 r and      append_G [[G]] [[G',x:T]] = (let [[G'']] = append_G [[G]] [[G']] in [[G'',x:T]])
-r val flatten_G : list G -> G
+r val flatten_G : List G -> G
 r let rec flatten_G [] = [[empty]]
 r and     flatten_G ([[G]]::Gs) = append_G [[G]] (flatten_G Gs)
 r }}

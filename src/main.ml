@@ -96,6 +96,7 @@ let coq_expand_lists = ref false
 let coq_lngen = ref false
 let coq_names_in_rules = ref true
 let coq_use_filter_fn = ref false
+let lean_names_in_rules = ref true
 let merge_fragments = ref false
 let picky_multiple_parses = ref false
 let caml_include_terminals = ref false
@@ -255,6 +256,9 @@ let options = Arg.align [
     Arg.Bool (fun b -> coq_use_filter_fn := b),
     "<"^string_of_bool !coq_use_filter_fn^">  Use list_filter instead of list_minus2 in substitutions" ); 
 (* options for OCaml output *)
+  ( "-lean_names_in_rules", 
+    Arg.Bool (fun b -> lean_names_in_rules := b),
+    "<"^string_of_bool !lean_names_in_rules^">  Copy user names in rule definitions" ); 
   ( "-ocaml_include_terminals",
     Arg.Bool (fun b -> caml_include_terminals := b),
     "<"^string_of_bool !caml_include_terminals^">  Include terminals in OCaml output (experimental!)" );
@@ -433,7 +437,8 @@ let m_isa = Isa { ppi_isa_primrec = !isa_primrec;
 		  ppi_generate_lemmas = !isa_generate_lemmas }  
 let m_hol = Hol { hol_library = ref ("",[]); }
 let m_lem = Lem { lem_library = ref ("",[]); }
-let m_lean = Lean { lean_library = ref ("",[]); }
+let m_lean = Lean { lean_library = ref ("",[]);
+                    lean_names_in_rules = !lean_names_in_rules}
 let m_twf = Twf { twf_current_defn = ref "";
 		  twf_library = ref ("",[]) }
 let m_coq = Coq { coq_expand_lists = !coq_expand_lists;
