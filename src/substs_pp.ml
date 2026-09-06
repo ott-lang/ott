@@ -1158,7 +1158,7 @@ let pp_subst_prod
 
     let substituted_singleton_rhs thing_s =
       ( match m with
-      | Coq _ | Isa _ | Hol _ | Lem _ | Caml _ ->
+      | Coq _ | Isa _ | Hol _ | Lem _ | Lean _ | Caml _ ->
 	  let ssr = 
 	    if subst.sb_multiple then 
               (match m with
@@ -1807,9 +1807,9 @@ and pp_fv_symterm_list_body
       let body_elements = 
         let tmp = 
           ( match m with
-          | Coq _ | Lean _ -> Auxl.insert_append m pp_body_elements
+          | Coq _ -> Auxl.insert_append m pp_body_elements
           | Isa _ when has_isa_set_hom fv -> String.concat " \\<union> " pp_body_elements
-          | _ -> String.concat (list_append m) pp_body_elements ) in
+          | (Lean _ | _) -> String.concat (list_append m) pp_body_elements ) in
         if List.length pp_body_elements = 1 
         then tmp
         else "(" ^ tmp ^ ")" in

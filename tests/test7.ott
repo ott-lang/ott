@@ -11,25 +11,26 @@ ideally also:
    can be replaced by a single one.
 <<
 metavar typevar, X ::=
- {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ lem string }} {{ lex Alphanum }}  
+ {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ lem string }} {{ lean string }} {{ lex Alphanum }} 
  {{ tex \mathit{[[typevar]]} }} {{ com  type variable  }}  
- {{ isavar ''[[typevar]]'' }} {{ holvar "[[typevar]]" }} {{ lemvar "[[typevar]]" }} {{ texvar \mathrm{[[typevar]]} }} 
+ {{ isavar ''[[typevar]]'' }} {{ holvar "[[typevar]]" }} {{ lemvar "[[typevar]]" }} {{ leanvar "[[typevar]]" }} {{ texvar \mathrm{[[typevar]]} }} 
  {{ ocamlvar "[[typevar]]" }}
 
 metavar termvar, x ::=
- {{ isa string }} {{ coq nat }} {{ hol string }}  {{ lem string }} {{ coq-equality }} {{ lex alphanum }}  
+ {{ isa string }} {{ coq nat }} {{ hol string }}  {{ lem string }} {{ lean string }} {{ coq-equality }} {{ lex alphanum }}  
  {{ tex \mathit{[[termvar]]} }} {{ com  term variable  }} 
  {{ isavar ''[[termvar]]'' }} {{ holvar "[[termvar]]" }} 
  {{ lemvar "[[typevar]]" }} 
+ {{ leanvar "[[typevar]]" }} 
  {{ texvar \mathrm{[[termvar]]} }} 
  {{ ocamlvar "[[termvar]]" }}
 
 rmetavar label, l, k ::=
-r {{ isa string }} {{ coq nat }} {{ hol string }} {{ lem string }} {{ lex alphanum }}  {{ tex \mathit{[[label]]} }} 
-r {{ com  field label  }}  {{ isavar ''[[label]]'' }} {{ holvar "[[label]]" }} {{ lemvar "[[typevar]]" }} 
+r {{ isa string }} {{ coq nat }} {{ hol string }} {{ lem string }} {{ lean string }} {{ lex alphanum }}  {{ tex \mathit{[[label]]} }} 
+r {{ com  field label  }}  {{ isavar ''[[label]]'' }} {{ holvar "[[label]]" }} {{ lemvar "[[typevar]]" }} {{ leanvar "[[typevar]]" }} 
 r {{ ocamlvar "[[label]]" }}
 
-indexvar index, i, j, n, m  ::= {{ isa nat }} {{ coq nat }} {{ hol num }} {{ lem num}} {{ lex numeral }}
+indexvar index, i, j, n, m  ::= {{ isa nat }} {{ coq nat }} {{ hol num }} {{ lem num}} {{ lean integer}} {{ lex numeral }}
   {{ com indices }}
 
 grammar
@@ -43,8 +44,8 @@ r  | { l1 : T1 , .. , ln : Tn }      :: :: Rec           {{ com record }}
 %R  | { }                              :: :: Rec_empty        {{ com empty record }}
 %R  | { Trb }                          :: :: Rec_ne           {{ com nonempty record }}
 % {{ com record type }}    
-  | ( T )                            :: S :: paren {{ ichl [[T]] }}
-  | [ X |-> T ] T'                   :: M :: sub   {{ ichl (Tsubst_T [[T]] [[X]] [[T']]) }} 
+  | ( T )                            :: S :: paren {{ ichlL [[T]] }}
+  | [ X |-> T ] T'                   :: M :: sub   {{ ichlL (Tsubst_T [[T]] [[X]] [[T']]) }} 
 
 %R Trb :: 'Trb_' ::=
 %R  | l : T                            :: :: rb1
@@ -61,11 +62,11 @@ t :: 't_' ::=                                                      {{ com  term 
 r  | { l1 = t1 ,  .. , ln = tn }      :: :: Rec                      {{ com record }}
 r  | t . l                            :: :: Proj                     {{ com projection }} 
 r  | let p = t in t'                  :: :: Let (+ bind b(p) in t' +){{ com pattern binding}}
-  | ( t )                            :: S :: paren {{ ichl [[t]] }} 
-  | [ x |-> t ] t'                   :: M :: tsub  {{ ichl ( tsubst_t [[t]] [[x]] [[t']] ) }}
-  | [ X |-> T ] t                    :: M :: Tsub  {{ ichl ( Tsubst_t [[T]] [[X]] [[t]] ) }} 
+  | ( t )                            :: S :: paren {{ ichlL [[t]] }} 
+  | [ x |-> t ] t'                   :: M :: tsub  {{ ichlL ( tsubst_t [[t]] [[x]] [[t']] ) }}
+  | [ X |-> T ] t                    :: M :: Tsub  {{ ichlL ( Tsubst_t [[T]] [[X]] [[t]] ) }} 
 %  | E [ t ]                          :: M :: ctx 
-r  | s t                              :: M :: tsubs {{ ichl ( m_t_subst_t [[s]] [[t]] ) }}
+r  | s t                              :: M :: tsubs {{ ichlL ( m_t_subst_t [[s]] [[t]] ) }}
 
 r p :: 'P_' ::=                                                {{ com  pattern }}
 r  | x : T                            :: :: Var (+ b = x  +)     {{ com variable pattern }}
@@ -90,12 +91,12 @@ G {{ tex \Gamma }}, D {{ tex \Delta }} :: 'G_' ::= {{ com type environment }}
   | empty                            ::   :: empty       
   | G , X <: T                       ::   :: type        
   | G , x : T                        ::    :: term
-%r  | G , G'                           :: M :: comma    {{ ichl TODO }}
-r  | G1 , .. , Gn                     :: M :: dots {{ ichl (flatten_G [[G1..Gn]]) }}  
+%r  | G , G'                           :: M :: comma    {{ ichlL TODO }}
+r  | G1 , .. , Gn                     :: M :: dots {{ ichlL (flatten_G [[G1..Gn]]) }}  
 
-rs {{ tex \sigma }} :: 'S_' ::= {{ com multiple term substitution }} {{ isa (termvar*t) list }} {{ hol (termvar#t) list }} {{ coq list (termvar*t) }} {{ lem list (termvar*t) }}
-r  | [ x |-> t ]                    ::   :: singleton {{ ih [ ([[x]],[[t]]) ] }} {{ coq (cons ([[x]],[[t]]) nil) }} {{ lem [ ([[x]],[[t]]) ] }}
-r  | s1 , ... , sn                   ::   :: list   {{ isa List.concat [[s1...sn]] }} {{ hol (FLAT [[s1...sn]]) }} {{ coq (List.flat_map (fun x => x) [[s1...sn]]) }} {{ lem (List.flatten [[s1...sn]]) }}
+rs {{ tex \sigma }} :: 'S_' ::= {{ com multiple term substitution }} {{ isa (termvar*t) list }} {{ hol (termvar#t) list }} {{ coq list (termvar*t) }} {{ lem list (termvar*t) }} {{ lean list (termvar*t) }}
+r  | [ x |-> t ]                    ::   :: singleton {{ ih [ ([[x]],[[t]]) ] }} {{ coq (cons ([[x]],[[t]]) nil) }} {{ lem [ ([[x]],[[t]]) ] }} {{ lean [ ([[x]],[[t]]) ] }}
+r  | s1 , ... , sn                   ::   :: list   {{ isa List.concat [[s1...sn]] }} {{ hol (FLAT [[s1...sn]]) }} {{ coq (List.flat_map (fun x => x) [[s1...sn]]) }} {{ lem (List.flatten [[s1...sn]]) }}  {{ lean (List.flatten [[s1...sn]]) }}
 
 terminals :: terminals_ ::=
   |  \                     ::   :: lambda    {{ tex  \lambda }}
@@ -113,13 +114,14 @@ r  | \/                     ::   :: vee       {{ tex \vee }}
 
 formula :: formula_ ::=          
   | judgement              :: :: judgement
-% | G = G'                 :: :: Geq     {{ ichl [[G]] = [[G']] }}
-  | x = x'                 :: :: xeq     {{ ichl [[x]] = [[x']]  }}
-  | X = X'                 :: :: Xeq     {{ ichl [[X]] = [[X']]  }}
-  | ( formula )            :: :: paren   {{ ichl ( [[formula]] ) }}
+% | G = G'                 :: :: Geq     {{ ichlL [[G]] = [[G']] }}
+  | x = x'                 :: :: xeq     {{ ichlL [[x]] = [[x']]  }}
+  | X = X'                 :: :: Xeq     {{ ichlL [[X]] = [[X']]  }}
+  | ( formula )            :: :: paren   {{ ichlL ( [[formula]] ) }}
   | not formula            :: :: not     {{ isa Not( [[formula]] ) }}
                                          {{ coq not( [[formula]] ) }}
                                          {{ lem not( [[formula]] ) }}
+                                         {{ lean not( [[formula]] ) }}
                                          {{ hol ~( [[formula]] ) }}
                                          {{ tex \neg [[ formula]] }}
 %  | x isin dom ( G )      :: :: xin    {{ isa ? T. ([[x]],T,[[G]]):tin }} 
@@ -132,6 +134,7 @@ r                               {{ isa ![[i]] . ((1::nat)<=[[i]] & [[i]]<=[[m]])
 r                               {{ hol ![[i]] . (1<=[[i]] /\ [[i]]<=[[m]]) ==> [[formula]] }} 
 r                               {{ coq (forall [[i]], (1<=[[i]] /\ [[i]] <= m) -> [[formula]]) }}
 r                               {{ lem (forall [[i]]. (1<=[[i]] && [[i]] <= m) --> [[formula]]) }}
+r                               {{ lean (forall [[i]]. (1<=[[i]] && [[i]] <= m) --> [[formula]]) }}
 
 r  | exists i isin 1 -- m . formula :: :: exists 
 r                               {{ tex \exists [[i]] \in 1 .. [[m]]. [[formula]] }}
@@ -139,13 +142,15 @@ r                               {{ isa ?[[i]]. ((1::nat)<=[[i]] & i<=[[m]]) ==> 
 r                               {{ hol ?[[i]] . (1<=[[i]] /\ [[i]]<=[[m]]) ==> [[formula]] }} 
 r                               {{ coq exists [[i]], (1<=[[i]] /\ [[i]] <= [[m]]) -> [[formula]] }}
 r                               {{ lem (exists [[i]]. (1<=[[i]] && [[i]] <= m) && [[formula]]) }}
+r                               {{ lean (exists [[i]]. (1<=[[i]] && [[i]] <= m) && [[formula]]) }}
 
 r  | formula /\ formula'   :: :: and  {{ isa ([[formula]] & [[formula']]) }}
 r                                     {{ hol ([[formula]] /\ [[formula']]) }}
 r                                     {{ coq ([[formula]] /\ [[formula']]) }}
 r                                     {{ lem ([[formula]] && [[formula']]) }}
+r                                     {{ lean ([[formula]] && [[formula']]) }}
 
-r  | l = l'                :: :: leq  {{ ichl ([[l]]=[[l']]) }}
+r  | l = l'                :: :: leq  {{ ichlL ([[l]]=[[l']]) }}
  
 % would be nice to write the above as  {{ isa ?[[T]]. [[X<:T isin G]] }}
 
@@ -207,6 +212,17 @@ r   | Nil_list_G => G_empty
 r   | Cons_list_G g gs => append_G g (flatten_G gs)
 r end.  }}
 r   {{ lem
+r (** embedded definitions of operations on type environments **)
+r val append_G : G -> G -> G
+r let rec  append_G [[G]] [[empty]] = [[G]]
+r and      append_G [[G]] [[G',X<:T]] = (let [[G'']] = append_G [[G]] [[G']] in [[G'',X<:T]])
+r and      append_G [[G]] [[G',x:T]] = (let [[G'']] = append_G [[G]] [[G']] in [[G'',x:T]])
+r val flatten_G : list G -> G
+r let rec flatten_G [] = [[empty]]
+r and     flatten_G ([[G]]::Gs) = append_G [[G]] (flatten_G Gs)
+r }}
+r 
+r   {{ lean
 r (** embedded definitions of operations on type environments **)
 r val append_G : G -> G -> G
 r let rec  append_G [[G]] [[empty]] = [[G]]
