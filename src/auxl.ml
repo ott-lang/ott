@@ -631,6 +631,9 @@ let hom_spec_for_hom_name hn homs =
 let hom_spec_for_pp_mode m homs = 
   hom_spec_for_hom_name (hom_name_for_pp_mode m) homs
 
+let hom_spec_for_pp_mode_dash_type m homs = 
+  hom_spec_for_hom_name (hom_name_for_pp_mode m ^ "-type") homs
+
 let loc_of_symterm st = match st with
   | St_node (l,_) -> l  
   | St_nonterm (l,_,_) -> l

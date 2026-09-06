@@ -62,6 +62,12 @@ let pp_list_minus_lem =
   ^ "  | h::t -> if (List.elem h l2) then list_minus t l2 else h::(list_minus t l2)\n"
   ^ "  end\n"
   ^ "\n")
+let pp_list_minus_lean = 
+  ("def list_minus [BEq a] (l1:List a) (l2:List a) : (List a) :=\n"
+  ^ "  match l1 with\n"
+  ^ "  | [] => []\n"
+  ^ "  | h::t => if List.elem h l2 then list_minus t l2 else h::(list_minus t l2)\n"
+  ^ "\n")
 let pp_list_minus_isa =
   ( "primrec\n"
   ^ "list_minus :: \"'a list => 'a list => 'a list\"\n"
@@ -159,7 +165,7 @@ let pp_list_minus m = match m with
   | Lem oo -> Auxl.add_to_lib oo.lem_library "list_minus" pp_list_minus_lem
   | Isa io  -> Auxl.add_to_lib io.isa_library "list_minus" pp_list_minus_isa
   | Hol ho  -> ()
-  | Lean lno  -> ()
+  | Lean lno  -> Auxl.add_to_lib lno.lean_library "list_minus" pp_list_minus_lean
   | Coq co  ->
       pp_list_mem m;
       Auxl.add_to_lib co.coq_library "list_minus" pp_list_minus_coq
@@ -330,8 +336,8 @@ let pp_auxfn_clauses m xd f ntr ntmvr =
 	  ^ " (" ^ Grammar_pp.pp_nonterm m xd pat_var 
 	  ^ ":" ^ Grammar_pp.pp_nontermroot_ty m xd ntr ^ ")")), 
           "", 
-          " : list " ^ Grammar_pp.pp_nt_or_mv_root_ty m xd ntmvr ^ " :=\n" 
-	  ^ "  match " ^ Grammar_pp.pp_nonterm m xd pat_var ^ " where\n" )
+          " : List " ^ Grammar_pp.pp_nt_or_mv_root_ty m xd ntmvr ^ " :=\n" 
+	  ^ "  match " ^ Grammar_pp.pp_nonterm m xd pat_var ^ " with\n" )
     | Lem _ 
     | Caml _ -> 
         let nts_used = Context_pp.nts_used_in_lhss m xd (Auxl.rule_of_ntr xd ntr) in
@@ -1462,7 +1468,7 @@ let pp_subst_rule : subst -> pp_mode -> syntaxdefn -> nontermroot list -> rule -
                ^ Grammar_pp.pp_nt_or_mv_root_ty m xd subst.sb_that ^ ")" )
 	     ^ " (" ^ Grammar_pp.pp_nonterm m xd in_var ^ ":"
              ^ Grammar_pp.pp_nontermroot_ty m xd r.rule_ntr_name ^")"))),
-             " {struct " ^ Grammar_pp.pp_nonterm m xd in_var ^"}", 
+     ""(*" {struct " ^ Grammar_pp.pp_nonterm m xd in_var ^"}"*), 
              " : " ^ Grammar_pp.pp_nontermroot_ty m xd r.rule_ntr_name ^ " :=\n" 
 	     ^ "  match " ^ Grammar_pp.pp_nonterm m xd in_var ^ " with\n" )
       | Lem _ 
@@ -1575,7 +1581,7 @@ let pp_freevar_rule_const (fv : freevar) (m: pp_mode) (xd: syntaxdefn)
 (** fv for a symterm *)
 (** **************** *)
 
-let list_append m = match m with | Lem _ | Hol _ -> " ++ " | _ -> " @ "
+let list_append m = match m with | Lem _ | Hol _ | Lean _ -> " ++ " | _ -> " @ "
 
 (* todo: is there a better idiom than this insane list of arguments? *)
 let rec pp_fv_symterm
@@ -2128,8 +2134,8 @@ let pp_freevar_rule : freevar -> pp_mode -> syntaxdefn -> nontermroot list -> ru
 	  ^ ") "),
           "",
 	  ": " 
-	  ^ " list " ^ Grammar_pp.pp_nt_or_mv_root_ty m xd fv.fv_that
-          ^ " =\n  match " ^ Grammar_pp.pp_nonterm m xd fresh_var ^ " where\n" 
+	  ^ " List " ^ Grammar_pp.pp_nt_or_mv_root_ty m xd fv.fv_that
+          ^ " :=\n  match " ^ Grammar_pp.pp_nonterm m xd fresh_var ^ " with\n" 
          
       | Twf _ ->
 	  ( Auxl.fv_name fv.fv_name r.rule_ntr_name ^ " : "

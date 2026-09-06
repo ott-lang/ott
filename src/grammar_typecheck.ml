@@ -404,7 +404,7 @@ let subrule (xd:syntaxdefn) (include_meta_prods:bool)
 
 let allowable_hom_data = 
   [ 
-    ( Hu_root    , (["isa";"coq";"lean";"hol";"lem";(*"twf";*)"tex";"ocaml"], 
+    ( Hu_root    , (["isa";"coq";"lean";"lean-type";"hol";"lem";(*"twf";*)"tex";"ocaml"], 
                     "nonterminal, metavar or indexvar root"));
     ( Hu_metavar , (["isa";"coq";"lean";"hol";"lem";(*"twf";*)"tex";"ocaml";"com";"coq-equality";"coq-notation";"coq-universe";"lean-equality";"lex";"texvar";"isavar";"holvar";"lemvar";"leanvar";"ocamlvar";"repr-locally-nameless";(*"repr-nominal";*)"phantom";"ocamllex";"ocamllex-remove";"ocamllex-of-string";"pp";"pp-raw";"pp-suppress"],
                     "metavar declaration"));

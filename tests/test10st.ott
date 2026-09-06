@@ -1,13 +1,13 @@
 metavar termvar, x ::=
-  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}  {{ lem string }} {{ ocaml int }} {{ lean TODOstring }}
+  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}  {{ lem string }} {{ ocaml int }} {{ lean String }}
   {{ tex \mathit{[[termvar]]} }} {{ com term variable }} 
 
 metavar typvar, X ::=
-  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}  {{ lem string }} {{ ocaml int }} {{ lean TODOstring }}
+  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}  {{ lem string }} {{ ocaml int }} {{ lean String }}
   {{ tex \mathit{[[typvar]]} }} {{ com type variable }} 
 
 grammar
-  t :: 't_' ::=                                         {{ com term }}
+  t {{ lean-type Term }}  :: 't_' ::=                                         {{ com term }}
     | x                   ::   :: Var                     {{ com variable }}         
     | \ x . t             ::   :: Lam  (+ bind x in t +)  {{ com abstraction }}      
     | t t'                ::   :: App                     {{ com application }}      
@@ -17,12 +17,12 @@ grammar
   v :: 'v_' ::=                                         {{ com  value }}
     | \ x . t             ::   :: Lam                     {{ com abstraction }}
 
-  T :: T_ ::=                                           {{ com type }}
+  T {{ lean-type Typ }} :: T_ ::=                                           {{ com type }}
     | X                   ::   :: var                     {{ com variable }}
     | T -> T'             ::   :: arrow                   {{ com function }}
     | ( T )               :: S :: paren {{ ichlL [[T]] }} {{ ocaml int }}
 
-  G {{ tex \Gamma }} :: G_ ::= {{ isa (termvar*T) list }} {{ coq list (termvar*T) }} {{ ocaml (termvar*T) list }} {{ lem list (termvar*T) }} {{ lean list (termvar*T) }}
+  G {{ tex \Gamma }} :: G_ ::= {{ isa (termvar*T) list }} {{ coq list (termvar*T) }} {{ ocaml (termvar*T) list }} {{ lem list (termvar*T) }} {{ lean List (termvar×Typ) }}
                                {{ hol (termvar#T) list }} {{ com type environment }}
     | empty               ::   :: em 
         {{ isa Nil }}
@@ -77,11 +77,10 @@ let rec bound x t0 g =
   end
 }}
 {{ lean
-let rec bound x t0 g =
+def bound (x:termvar) (t0:Typ) (g:G) :=
   match g with
-  | (x',t')::g' -> if x=x' then t0=t' else bound x t0 g'
-  | [] -> false
-  end
+  | (x',t')::g' => if x=x' then t0=t' else bound x t0 g'
+  | [] => false
 }}
 
 subrules

@@ -998,7 +998,11 @@ and pp_nonterm_with_sie_internal as_type m xd sie (ntr,suff) =
   else begin
     (* the per-ntr_name hom, if any *)
     let homs = List.assoc ntr r.rule_ntr_names in
-    let hso = Auxl.hom_spec_for_pp_mode m homs in
+    let hso =
+      if as_type then 
+        Auxl.hom_spec_for_pp_mode_dash_type m homs
+      else
+        Auxl.hom_spec_for_pp_mode m homs in
     
     let pp_ntr = match hso with
     | None -> capitalize_if_twelf_non_type as_type m ntr
@@ -1008,7 +1012,9 @@ and pp_nonterm_with_sie_internal as_type m xd sie (ntr,suff) =
     let auxparam_opt = try Some (List.assoc "auxparam" r.rule_homs) with Not_found -> None in
     let auxparam_prefix_opt = 
       match as_type,m,auxparam_opt with
-      | true,Caml _,Some hs | true,Lem _,Some hs -> Some (String.concat "" (List.map (function | Hom_string s -> s | Hom_index _ | Hom_terminal _ | Hom_ln_free_index (_,_) -> Auxl.int_error("illegal auxparam hom "^String.concat ""(List.map pp_plain_hom_spec_el hs))) hs))
+      | true,Caml _,Some hs | true,Lem _,Some hs ->
+        Some (String.concat ""
+                (List.map (function | Hom_string s -> s | Hom_index _ | Hom_terminal _ | Hom_ln_free_index (_,_) -> Auxl.int_error("illegal auxparam hom "^String.concat ""(List.map pp_plain_hom_spec_el hs))) hs))
       | _,_,_ -> None in
     
     match m with
@@ -1334,7 +1340,8 @@ and pp_metavardefn m xd mvd =
 	    ^ pp_com ^ "\n"
 	| Lean lno -> 
 	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in 
-	    "def "
+	    "abbrev "
+     (* or "def "?  but then we need type class instances... *)
 	    ^ type_name
 	    ^ " := "
 	    ^ pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc

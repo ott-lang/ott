@@ -3,50 +3,55 @@
 
 
 
-def termvar := TODOstring /- term variable -/
-def typvar := TODOstring /- type variable -/
+abbrev termvar := String /- term variable -/
+abbrev typvar := String /- type variable -/
 
-inductive T where /- type -/
-    | T_var : (X:typvar) -> T /- variable -/
-    | T_arrow : (_:T) -> (T':T) -> T /- function -/
-
-
-inductive t where /- term -/
-    | t_Var : (x:termvar) -> t /- variable -/
-    | t_Lam : (x:termvar) -> (_:t) -> t /- abstraction -/
-    | t_App : (_:t) -> (t':t) -> t /- application -/
+inductive Typ where /- type -/
+    | T_var : (X:typvar) -> Typ /- variable -/
+    | T_arrow : (T:Typ) -> (T':Typ) -> Typ /- function -/
 
 
-def G := list (termvar*T)
+inductive Term where /- term -/
+    | t_Var : (x:termvar) -> Term /- variable -/
+    | t_Lam : (x:termvar) -> (t:Term) -> Term /- abstraction -/
+    | t_App : (t:Term) -> (t':Term) -> Term /- application -/
 
-open t T
-let rec bound x t0 g =
+
+def G := List (termvar×Typ)
+
+open Term Typ
+def bound (x:termvar) (t0:Typ) (g:G) :=
   match g with
-  | (x',t')::g' -> if x=x' then t0=t' else bound x t0 g'
-  | [] -> false
-  end
+  | (x',t')::g' => if x=x' then t0=t' else bound x t0 g'
+  | [] => false
 
 
 /- - subrules - -/
-def is_v_of_t (t5:t) : Bool :=
+def is_v_of_t (t5:Term) : Bool :=
   match t5 with
   | (t_Var x) => false
   | (t_Lam x t) => (true)
   | (t_App t t') => false
 
 
+/- - library functions - -/
+def list_minus [BEq a] (l1:List a) (l2:List a) : (List a) :=
+  match l1 with
+  | [] => []
+  | h::t => if List.elem h l2 then list_minus t l2 else h::(list_minus t l2)
+
 
 /- - free variables - -/
-def fv_t (t5:t) :  list termvar =
-  match t5 where
+def fv_t (t5:Term) :  List termvar :=
+  match t5 with
   | (t_Var x) => [x]
   | (t_Lam x t) => (list_minus (fv_t t) [x])
-  | (t_App t t') => (fv_t t) @ (fv_t t')
+  | (t_App t t') => (fv_t t) ++ (fv_t t')
 
 
 
 /- - substitutions - -/
-def tsubst_t (t5:t) (x5:termvar) (t_6:t) {struct t_6} : t :=
+def tsubst_t (t5:Term) (x5:termvar) (t_6:Term) : Term :=
   match t_6 with
   | (t_Var x) => (if x=x5 then t5 else (t_Var x))
   | (t_Lam x t) => t_Lam x (if  List.elem x5 ([x]) then t else (tsubst_t t5 x5 t))
@@ -57,19 +62,19 @@ def tsubst_t (t5:t) (x5:termvar) (t_6:t) {struct t_6} : t :=
 
 
 /- defns Jtype -/
-inductive GtT : G -> t -> T -> Prop where    /- defn GtT -/
-| GtT_value_name: forall (G:G) (x:termvar) (T:T),
+inductive GtT : G -> Term -> Typ -> Prop where    /- defn GtT -/
+| GtT_value_name: forall (G:G) (x:termvar) (T:Typ),
 ( (bound  x   T   G ) )
  -> 
 GtT G (t_Var x) T
 
-| GtT_apply: forall (G:G) (t:t) (t':t) (T2:T) (T1:T),
+| GtT_apply: forall (G:G) (t:Term) (t':Term) (T2:Typ) (T1:Typ),
 (GtT G t (T_arrow T1 T2)) ->
 (GtT G t' T1)
  -> 
 GtT G (t_App t t') T2
 
-| GtT_lambda: forall (G:G) (x1:termvar) (t:t) (T1:T) (T:T),
+| GtT_lambda: forall (G:G) (x1:termvar) (t:Term) (T1:Typ) (T:Typ),
 (GtT  (( x1 , T1 ):: G )  t T)
  -> 
 GtT G (t_Lam x1 t) (T_arrow T1 T)
@@ -78,18 +83,18 @@ GtT G (t_Lam x1 t) (T_arrow T1 T)
 
 
 /- defns Jop -/
-inductive reduce : t -> t -> Prop where    /- defn reduce -/
-| ax_app: forall (x:termvar) (t12:t) (v2:t),
+inductive reduce : Term -> Term -> Prop where    /- defn reduce -/
+| ax_app: forall (x:termvar) (t12:Term) (v2:Term),
 (is_v_of_t v2)
  -> 
 reduce (t_App  (t_Lam x t12)  v2)  ( tsubst_t  v2   x   t12  ) 
 
-| ctx_app_fun: forall (t1:t) (t:t) (t1':t),
+| ctx_app_fun: forall (t1:Term) (t:Term) (t1':Term),
 (reduce t1 t1')
  -> 
 reduce (t_App t1 t) (t_App t1' t)
 
-| ctx_app_arg: forall (v:t) (t1:t) (t1':t),
+| ctx_app_arg: forall (v:Term) (t1:Term) (t1':Term),
 (is_v_of_t v) ->
 (reduce t1 t1')
  -> 
