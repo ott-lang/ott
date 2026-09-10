@@ -287,7 +287,8 @@ test10st.lean: tests/test10st.ott
 test7.lean: tests/tmp_test7.ott
 	bin/ott  \
 	-i tests/tmp_test7.ott \
-        -o tests/test7.lean 
+        -o tests/test7.lean \
+        -o tests/test7.thy
 	cp tests/test7.lean test-lean-project
 
 tests/tmp_test7.ott: tests/test7.ott

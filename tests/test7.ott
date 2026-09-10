@@ -10,6 +10,10 @@ ideally also:
 - implement context rules, so that the explicit reduction context rules 
    can be replaced by a single one.
 <<
+embed
+{{ lean
+set_option linter.unusedVariables false
+}}
 metavar typevar, X ::=
  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ lem string }} {{ lean String }} {{ lex Alphanum }} 
  {{ tex \mathit{[[typevar]]} }} {{ com  type variable  }}  

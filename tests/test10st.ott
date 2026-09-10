@@ -1,3 +1,7 @@
+embed
+{{ lean
+set_option linter.unusedVariables false
+}}
 metavar termvar, x ::=
   {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}  {{ lem string }} {{ ocaml int }} {{ lean String }}
   {{ tex \mathit{[[termvar]]} }} {{ com term variable }} 
