@@ -125,7 +125,7 @@ formula :: formula_ ::=
   | not formula            :: :: not     {{ isa Not( [[formula]] ) }}
                                          {{ coq not( [[formula]] ) }}
                                          {{ lem not( [[formula]] ) }}
-                                         {{ lean not( [[formula]] ) }}
+                                         {{ lean ¬ ( [[formula]] ) }}
                                          {{ hol ~( [[formula]] ) }}
                                          {{ tex \neg [[ formula]] }}
 %  | x isin dom ( G )      :: :: xin    {{ isa ? T. ([[x]],T,[[G]]):tin }} 
@@ -138,7 +138,7 @@ r                               {{ isa ![[i]] . ((1::nat)<=[[i]] & [[i]]<=[[m]])
 r                               {{ hol ![[i]] . (1<=[[i]] /\ [[i]]<=[[m]]) ==> [[formula]] }} 
 r                               {{ coq (forall [[i]], (1<=[[i]] /\ [[i]] <= m) -> [[formula]]) }}
 r                               {{ lem (forall [[i]]. (1<=[[i]] && [[i]] <= m) --> [[formula]]) }}
-r                               {{ lean (forall [[i]]. (1<=[[i]] && [[i]] <= m) --> [[formula]]) }}
+r                               {{ lean (∀ [[i]], (1 <= [[i]] ∧ [[i]] <= [[m]]) → [[formula]]) }}
 
 r  | exists i isin 1 -- m . formula :: :: exists 
 r                               {{ tex \exists [[i]] \in 1 .. [[m]]. [[formula]] }}
@@ -146,13 +146,13 @@ r                               {{ isa ?[[i]]. ((1::nat)<=[[i]] & i<=[[m]]) ==> 
 r                               {{ hol ?[[i]] . (1<=[[i]] /\ [[i]]<=[[m]]) ==> [[formula]] }} 
 r                               {{ coq exists [[i]], (1<=[[i]] /\ [[i]] <= [[m]]) -> [[formula]] }}
 r                               {{ lem (exists [[i]]. (1<=[[i]] && [[i]] <= m) && [[formula]]) }}
-r                               {{ lean (exists [[i]]. (1<=[[i]] && [[i]] <= m) && [[formula]]) }}
+r                               {{ lean (∃ [[i]], (1 <= [[i]] ∧ [[i]] <= [[m]]) ∧ [[formula]]) }}
 
 r  | formula /\ formula'   :: :: and  {{ isa ([[formula]] & [[formula']]) }}
 r                                     {{ hol ([[formula]] /\ [[formula']]) }}
 r                                     {{ coq ([[formula]] /\ [[formula']]) }}
 r                                     {{ lem ([[formula]] && [[formula']]) }}
-r                                     {{ lean ([[formula]] && [[formula']]) }}
+r                                     {{ lean ([[formula]] ∧ [[formula']]) }}
 
 r  | l = l'                :: :: leq  {{ ichlL ([[l]]=[[l']]) }}
  
@@ -233,10 +233,9 @@ r   match g2 with
 r   | G_empty => g1
 r   | G_type gh tv t => G_type (append_G g1 gh) tv t
 r   | G_term gh v t => G_term (append_G g1 gh) v t
-r /- def flatten_G (gl:list_G) : G :=                   -/
-r /-   match gl with                                    -/
-r /-   | Nil_list_G => G_empty                          -/
-r /-   | Cons_list_G g gs => append_G g (flatten_G gs)  -/
+r def flatten_G : List [[G]] -> [[G]]
+r   | [] => G_empty
+r   | g :: gs => append_G g (flatten_G gs)
 r  }}
 r 
 
@@ -396,9 +395,31 @@ G,X<:T1 |- S2<:T2
 --------------------------------------- :: All
 G |- Forall X<:S1.S2 <: Forall X<:T1.T2
 
-r forall i isin 1 -- m. exists j isin 1 -- n. (ki=lj /\ G |- Si<:Tj)
+r forall i isin 1 -- m . G |- ki Si <:f { l1 : T1 , .. , ln : Tn }
 r --------------------------------------------------------------------------- :: Rcd
 r G |- {k1:S1 , .. , km:Sm} <: {l1:T1,..,ln:Tn}
+
+
+% Claude: SA_Rcd was previously stated with an inner existential over supertype fields:
+%
+%   forall i isin 1 -- m. exists j isin 1 -- n. (ki=lj /\ G |- Si<:Tj)
+%   --------------------------------------------------------------------------- :: Rcd
+%   G |- {k1:S1 , .. , km:Sm} <: {l1:T1,..,ln:Tn}
+%
+% Lean 4 rejects a recursive occurrence of SA underneath exists/and, so the
+% inner "exists j" is instead threaded through the auxiliary judgement <:f
+% (SAf), which searches the supertype record and keeps SA under -> only.
+
+rdefn
+r G |- k S <:f { l1 : T1 , .. , ln : Tn } ::  :: SAf :: SAf_  {{ com field $[[k]]$:$[[S]]$ is matched, with subtyping, by a field of the record }} by
+r
+r G |- S <: T
+r ------------------------------------------------ :: found
+r G |- k S <:f { k : T , l1 : T1 , .. , ln : Tn }
+r
+r G |- k S <:f { l1 : T1 , .. , ln : Tn }
+r ------------------------------------------------ :: skip
+r G |- k S <:f { l : T , l1 : T1 , .. , ln : Tn }
 
 
 defn
@@ -514,8 +535,28 @@ r
 r ----------------------- :: Var
 r match(x:T,v) = [x|->v]
 r 
-r forall i isin 1 -- m. exists j isin 1 -- n. (li=kj /\ match(pi,vj)=si)
+r forall i isin 1 -- m . matchfield ( li , pi ) vs { k1 = v1 , .. , kn = vn } gives si
 r ---------------------------------------------------------------------- :: Rcd
 r match({l1=p1,..,lm=pm},{k1=v1,..,kn=vn}) = s1,..,sm
+
+% Claude: M_Rcd was previously stated with an inner existential over value fields:
+%
+%   forall i isin 1 -- m. exists j isin 1 -- n. (li=kj /\ match(pi,vj)=si)
+%   ---------------------------------------------------------------------- :: Rcd
+%   match({l1=p1,..,lm=pm},{k1=v1,..,kn=vn}) = s1,..,sm
+%
+% As for SA_Rcd, the inner "exists j" is threaded through an auxiliary
+% judgement (matchfield / Mf) so that the recursive M stays under -> only.
+
+rdefn
+r matchfield ( l , p ) vs { k1 = v1 , .. , kn = vn } gives s ::  :: Mf :: Mf_  by
+r
+r match ( p , v ) = s
+r ------------------------------------------------------- :: found
+r matchfield ( l , p ) vs { l = v , k1 = v1 , .. , kn = vn } gives s
+r
+r matchfield ( l , p ) vs { k1 = v1 , .. , kn = vn } gives s
+r ------------------------------------------------------- :: skip
+r matchfield ( l , p ) vs { k = v , k1 = v1 , .. , kn = vn } gives s
 
 

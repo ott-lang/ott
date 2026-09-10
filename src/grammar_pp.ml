@@ -1126,16 +1126,19 @@ and pp_nt_or_mv_with_de_with_sie_internal as_type m xd sie (de :dotenv) ((ntmvr,
                 | None -> ""
                 | Some suffi -> " - "^pp_plain_suffix_item suffi)
               ^ ")))"
-          | Lean _ -> 
+          | Lean _ ->
 leanTODO "1" (
-              "((fun "^de1i.de1_pattern^" |-> "^pp_nt_or_mv_with_sie m xd ((Si_var ("_",0))::sie) (ntmvr,suff)^")"
-              ^ " (List.nth " ^ de1i.de1_compound_id ^ " " 
-              ^ "(" ^ pp_plain_suffix_item suffi 
-              ^ 
-                (match non_zero_lower_of_bound bound with 
+              (* Claude: Lean lambda uses "=>", not Isabelle's "|->", and Lean 4
+                 has no List.nth: use the panic-on-out-of-bounds indexing l[i]!
+                 (the element inductives carry a derived Inhabited instance) *)
+              "((fun "^de1i.de1_pattern^" => "^pp_nt_or_mv_with_sie m xd ((Si_var ("_",0))::sie) (ntmvr,suff)^")"
+              ^ " (" ^ de1i.de1_compound_id ^ "["
+              ^ pp_plain_suffix_item suffi
+              ^
+                (match non_zero_lower_of_bound bound with
                 | None -> ""
                 | Some suffi -> " - "^pp_plain_suffix_item suffi)
-              ^ ")))"
+              ^ "]!))"
 )
           | Hol _ -> 
               " ((\\ "^de1i.de1_pattern^" . "^pp_nt_or_mv_with_sie m xd ((Si_var ("_",0))::sie) (ntmvr,suff)^")"
@@ -2893,8 +2896,10 @@ and pp_rule_list m xd rs =
                     ^ strip_surrounding_parens (pp_nontermroot_ty m xd ntr) ^ " = "
                     ^ pp_hom_spec m xd hs
                     ^ "\n\n"
-                | Lean _ -> 
-                    "\ndef "
+                | Lean _ ->
+                    (* Claude: abbrev (a reducible def), so instances such as
+                       Inhabited see through the synonym *)
+                    "\nabbrev "
                     ^ strip_surrounding_parens (pp_nontermroot_ty m xd ntr) ^ " := "
                     ^ pp_hom_spec m xd hs
                     ^ "\n\n"
@@ -2942,7 +2947,9 @@ and pp_rule_list m xd rs =
       pp_internal_coq_buffer := "";
       def ^ coq_equality_code
   | Lean _ ->
-      let def = int_rule_list_dep m xd rs (fun rs -> "\ninductive ") "\nwhere " "" in
+      (* Claude: derive Inhabited so panic-indexing (l[i]!) into these types
+         elaborates in specs *)
+      let def = int_rule_list_dep m xd rs (fun rs -> "\ninductive ") "\nwhere " "\n  deriving Inhabited" in
       let lean_equality_code = 
       "open " ^ String.concat " " (Auxl.option_map (fun r -> if r.rule_meta || r.rule_phantom || (try (List.assoc "lean" r.rule_homs);true with Not_found -> false)  then None else Some (pp_nontermroot_ty m xd r.rule_ntr_name)) rs) ^ "\n" in
 
@@ -3413,19 +3420,35 @@ and pp_symterm_node_body m xd sie de stnb : string =
                       ^ ")"
                      )
                    )
-              | Lean _ -> 
-	          ( match stnb.st_es with
-	          | [] -> stnb.st_prod_name
-	          | _  -> 
-                      leanTODO "3" (
-                      "("
-                      ^ "List.all "
-                      ^ "(" ^ String.concat " " (pp_es()) ^ ")"
-                      ^ "(fun b |-> b)"
-                      ^ ")"
-                     )
-                   )
-              | Coq co -> 
+              | Lean _ ->
+                  (* Claude: a dotted formula "phi1 .. phin" over a list becomes a
+                     bounded forall over the projected list, as the Coq backend
+                     emits "forall x, In x (map proj l) -> phi".  A Bool-valued
+                     List.all would break: the phi are Props, and a recursive
+                     occurrence of the relation being defined must stay under
+                     forall/-> only for the positivity check. *)
+                  ( match stnb.st_es with
+                  | [ Ste_list (_,[ Stli_listform stlb ]) ] ->
+                      ( match stlb.stl_elements with
+                      | [ Ste_st (_,St_node (_,stnb0)) ] ->
+                          let stnb0 =
+                            if String.compare stnb0.st_prod_name "formula_judgement" = 0
+                            then ( match stnb0.st_es with
+                                   | [ Ste_st (_,St_node (_,{ st_es = [ Ste_st (_,St_node (_,stnb1)) ] })) ] -> stnb1
+                                   | _ -> raise ThisCannotHappen )
+                            else stnb0 in
+                          let nt_stnb = pp_symterm_node_body m xd ((Si_var ("_",0))::sie) de stnb0 in
+                          let de1i = de1_lookup (fst de) stlb.stl_bound in
+                          let x = de1i.de1_compound_id ^ "_" in
+                          leanTODO "3" (
+                            "(\xe2\x88\x80 " ^ x ^ " \xe2\x88\x88 " ^ de1i.de1_compound_id
+                            ^ ", (fun " ^ de1i.de1_pattern ^ " => " ^ nt_stnb ^ ") " ^ x ^ ")" )
+                      | _ -> leanTODO "3" " <<< multiple slti in formula_dots not implemented >>> " )
+                  | _ ->
+                      ( match stnb.st_es with
+                      | [] -> stnb.st_prod_name
+                      | _  -> leanTODO "3" (" <<< invalid symterm in formula_dots >>> ") ) )
+              | Coq co ->
                   let dl = ("formula: "
                             ^(String.concat " -- "
                                 (List.map pp_plain_symterm_element stnb.st_es))) in
@@ -4405,14 +4428,21 @@ let extract_quantified_proof_assistant_vars m xd de1 de2 de3 =
 		  (Auxl.promote_ntmvr xd
 		     (Auxl.primary_nt_or_mv_of_nt_or_mv xd ntmv_root))))
            de1i.de1_ntmvsns) in
-      let tmp = 
+      let tmp =
 	if coq_expand_list
-	then String.concat "_" coq_type_pp1 
+	then String.concat "_" coq_type_pp1
 	else String.concat "*" coq_type_pp1 in
-      let coq_type_var = 
-	if coq_expand_list 
-	then "list_" ^tmp 
-	else "list " ^ (if (List.length coq_type_pp1) > 1 then "("^tmp^")" else tmp) in
+      let coq_type_var =
+	if coq_expand_list
+	then "list_" ^tmp
+	else
+          ( match m with
+          (* Claude: Lean uses "List (a \xc3\x97 b)" for the list-typed binder *)
+          | Lean _ ->
+              "List " ^ (if (List.length coq_type_pp1) > 1
+                         then "(" ^ String.concat " \xc3\x97 " coq_type_pp1 ^ ")"
+                         else tmp)
+          | _ -> "list " ^ (if (List.length coq_type_pp1) > 1 then "("^tmp^")" else tmp) ) in
       de1i.de1_compound_id,de1i.de1_hol_type_of_compound_id,(coq_type_var,Some tmp )) de1
      @ 
        List.map

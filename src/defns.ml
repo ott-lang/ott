@@ -117,10 +117,12 @@ let pp_listsubntr : pp_mode -> syntaxdefn -> ((nontermroot * nontermroot * nonte
                      ^ "(fun "^pp_pattern^" -> "^pp_subntr m xd subntr^") "
                      ^ pp_squished_vars
 
-                 | Lean _ -> 
+                 | Lean _ ->
+                     (* Claude: Lean's List.all takes the list first, then a
+                        Bool-valued predicate with "=>" *)
                      leanTODO "17" "List.all "
-                     ^ "(fun "^pp_pattern^" -> "^pp_subntr m xd subntr^") "
                      ^ pp_squished_vars
+                     ^ " (fun "^pp_pattern^" => "^pp_subntr m xd subntr^")"
 
                  | Coq co -> 
 	             let ty_list = Str.split (Str.regexp "(\\|*\\|)") coq_type_pattern in
@@ -420,28 +422,38 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
            | [] -> ()
            | _ ->
 *)
+          (* Claude: only emit the quantifier when there are variables to bind;
+             Lean rejects an empty "forall ," *)
+          if quantified_proof_assistant_vars <> [] then begin
               output_string fd "forall";
 (* the second version, with explicit type annotations, is pretty noisy, and probably not idiomatic. For l1.ott, we need it only for b:bool, where Lean type inference seems to get confused? *)
 (*              List.iter (fun (var,ty,_) -> Printf.fprintf fd " %s" (leanTODO "19" var))
 	        quantified_proof_assistant_vars;
-*)              List.iter (fun (var,ty,_) -> Printf.fprintf fd " (%s:%s)" var ty)
+*)              (* Claude: use the third component (the Coq/Lean type), not the
+                   second (the HOL type, which is the "dummy" placeholder here);
+                   qualify simple type names with _root_. so they are not
+                   shadowed by a same-named bound variable (e.g. (D:G) after
+                   (G:G)) *)
+                List.iter (fun (var,_,(ty,_)) ->
+                  let ty = if String.contains ty ' ' then ty else "_root_." ^ ty in
+                  Printf.fprintf fd " (%s:%s)" var ty)
 	        quantified_proof_assistant_vars;
-              output_string fd ",\n";
+              output_string fd ",\n"
+          end;
 (*
 );
 *)
+          (* Claude: emit the premises-arrow chain only when there are premises;
+             with none the constructor type is just the conclusion *)
           if (snd ppd_premises)<>[] || ppd_subntrs<>[] then
 	    begin
               (* output_string fd " &&\n(";*)
 	      iter_asep fd " ->\n"
-		(fun s -> output_string fd "("; output_string fd s; output_string fd ")") 
+		(fun s -> output_string fd "("; output_string fd s; output_string fd ")")
 		(ppd_subntrs @ snd ppd_premises);
-	      output_string fd "\n"
-            end
-	  else
-	    output_string fd "true\n"; 
-          output_string fd " -> \n";
-          output_string fd ppd_conclusion; 
+	      output_string fd "\n -> \n"
+            end;
+          output_string fd ppd_conclusion;
           output_string fd "\n\n"
 
 
@@ -532,13 +544,14 @@ let pp_defn fd (m:pp_mode) (xd:syntaxdefn) lookup (defnclass_wrapper:string) (un
 
       let prod_name = defnclass_wrapper ^ d.d_name in
 
-      let type_defn = 
+      let type_defn =
         let es = (Auxl.prod_of_prodname xd prod_name).prod_es in
         let ss = (Auxl.option_map (Grammar_pp.pp_element m xd [] true) es) in
+        (* Claude: Lean inductives use "where", not the deprecated ":=" *)
         match ss with
-        | [] -> universe^" :="
-        | [s] -> s ^ " -> "^universe^" :="      
-        | _ -> String.concat " -> " ss ^ " -> " ^ universe^" where" in        
+        | [] -> universe^" where"
+        | [s] -> s ^ " -> "^universe^" where"
+        | _ -> String.concat " -> " ss ^ " -> " ^ universe^" where" in
       Printf.fprintf fd "%s%s : %s    /- defn %s -/\n" defnclass_wrapper d.d_name type_defn d.d_name;
       iter_nosep (fun psr -> pp_processed_semiraw_rule fd m xd "" psr) d.d_rules
 
@@ -684,11 +697,17 @@ let pp_defnclass fd (m:pp_mode) (xd:syntaxdefn) lookup (dc:defnclass) =
       List.iter (output_string fd) !(co.coq_list_aux_defns.newly_defined);
       output_string fd ".\n"
 
-  | Lean co -> 
-      Printf.fprintf fd "\n/- defns %s -/\ninductive " dc.dc_name;
+  | Lean co ->
+      (* Claude: a defn class with several judgements is mutually recursive, so
+         wrap it in a Lean "mutual ... end" block, as the Coq backend uses
+         "Inductive ... with ..." *)
+      let is_mutual = List.length dc.dc_defns > 1 in
+      Printf.fprintf fd "\n/- defns %s -/\n%sinductive " dc.dc_name
+        (if is_mutual then "mutual\n" else "");
       iter_asep fd "\ninductive "
         (fun d -> pp_defn fd m xd lookup dc.dc_wrapper universe d)
-	dc.dc_defns
+	dc.dc_defns;
+      if is_mutual then output_string fd "\nend\n"
 
   | Twf wo -> 
       let twf_type_of_defn : syntaxdefn -> defn -> string = 
