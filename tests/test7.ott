@@ -227,15 +227,17 @@ r and     flatten_G ([[G]]::Gs) = append_G [[G]] (flatten_G Gs)
 r }}
 r 
 r   {{ lean
-r (** embedded definitions of operations on type environments **)
-r val append_G : G -> G -> G
-r let rec  append_G [[G]] [[empty]] = [[G]]
-r and      append_G [[G]] [[G',X<:T]] = (let [[G'']] = append_G [[G]] [[G']] in [[G'',X<:T]])
-r and      append_G [[G]] [[G',x:T]] = (let [[G'']] = append_G [[G]] [[G']] in [[G'',x:T]])
-r val flatten_G : List G -> G
-r let rec flatten_G [] = [[empty]]
-r and     flatten_G ([[G]]::Gs) = append_G [[G]] (flatten_G Gs)
-r }}
+r /- embedded definitions of operations on type environments -/
+r def append_G (g1:[[G]]) (g2:[[G]]) :=
+r   match g2 with
+r   | G_empty => g1
+r   | G_type gh tv t => G_type (append_G g1 gh) tv t
+r   | G_term gh v t => G_term (append_G g1 gh) v t
+r /- def flatten_G (gl:list_G) : G :=                   -/
+r /-   match gl with                                    -/
+r /-   | Nil_list_G => G_empty                          -/
+r /-   | Cons_list_G g gs => append_G g (flatten_G gs)  -/
+r  }}
 r 
 
 defns
