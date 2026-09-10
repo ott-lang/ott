@@ -698,22 +698,23 @@ let rec pp_subst_symterm
 		^ nt_s
 		^ ")" 
                )
-            | Lean _ -> 
-                leanTODO "10" ( 
+            | Lean _ ->
+                leanTODO "10" (
 		"("
 		^ Auxl.subst_name subst.sb_name dep_name ^ " "
 		^ (match bound_things_glommed with
-		| Empty -> sub_var 
-		| _ -> 
+		| Empty -> sub_var
+		| _ ->
+                    (* Claude: Lean's List.filter takes the predicate first, then the list *)
                     "(List.filter "
-                    ^ sub_var ^ " "
-                    ^ "(fun ("^ that_s ^","^ this_s ^") => " 
+                    ^ "(fun ("^ that_s ^","^ this_s ^") => "
                     ^ "not ("^that_in_bound_things()^")"
                     ^ ")"
+                    ^ " " ^ sub_var
                     ^")")
 		^ " "
 		^ nt_s
-		^ ")" 
+		^ ")"
                )
             | Coq co -> 
 		"("
@@ -975,7 +976,49 @@ and pp_subst_symterm_list_body
 	       ("", "Cons_"^suf^" "^lp^" "^rp,
 		"Cons_"^suf^" " ^ rhs ^ " (" ^ id ^ " " ^ common_lhs ^ " "^rp^")" ) ] } ])
 
-    | Lean _ -> (leanTODO "11" "",[]) 
+    | Lean _ ->
+        (* Claude: mirror the Coq coq_expand_lists branch, but recurse over the
+           native list spine and rebuild the (possibly n-ary) tuple element
+           directly, so no separate tuple helper is needed *)
+        let elem_ty =
+          let tys =
+            List.map (fun ((x,_),_) ->
+              Grammar_pp.pp_nt_or_mv_root_ty m xd
+                (Auxl.promote_ntmvr xd (Auxl.primary_nt_or_mv_of_nt_or_mv xd x)))
+              de1i.de1_ntmvsns in
+          ( match tys with
+          | [t] -> t
+          | _ -> "(" ^ String.concat " \195\151 " tys ^ ")" ) in
+        let list_ty = "List " ^ elem_ty in
+        let tl_id = de1i.de1_compound_id ^ "_" in
+        let params =
+          ( if subst.sb_multiple
+            then
+              " (" ^ sub_var ^ ":List ("
+              ^ Grammar_pp.pp_nt_or_mv_root_ty m xd subst.sb_that
+              ^ "×" ^ Grammar_pp.pp_nontermroot_ty m xd subst.sb_this ^ "))"
+            else
+              " (" ^ Grammar_pp.pp_nonterm m xd this_var ^ ":"
+              ^ Grammar_pp.pp_nontermroot_ty m xd subst.sb_this ^ ")"
+              ^ " (" ^ Grammar_pp.pp_nt_or_mv m xd that_var ^ ":"
+              ^ Grammar_pp.pp_nt_or_mv_root_ty m xd subst.sb_that ^ ")" )
+          ^ " (" ^ de1i.de1_compound_id ^ ":" ^ list_ty ^ ")" in
+        (* Claude: the helper is named subst_name ^ element-type-name ^ "_list";
+           like the Coq coq_expand_lists branch this is not disambiguated when one
+           production has two lists of the same element-type tuple. *)
+        let header =
+          ( id ^ leanTODO "11" params,
+            "",
+            " : " ^ list_ty ^ " :=\n  match " ^ de1i.de1_compound_id ^ " with\n" ) in
+        ( id,
+          [ { r_fun_id = id;
+              r_fun_dep = id :: !dependencies;
+              r_fun_type = name;
+              r_fun_header = header;
+              r_fun_clauses =
+                [ ( "", "[]", "[]" );
+                  ( "", de1i.de1_pattern ^ " :: " ^ tl_id,
+                    pp_body ^ " :: (" ^ id ^ " " ^ common_lhs ^ " " ^ tl_id ^ ")" ) ] } ] )
 
     | Caml _ -> ("",[])
 
@@ -1102,16 +1145,13 @@ and pp_subst_symterm_list_body
               ^ ")", [] )
 
     | Lean _ ->
+        (* Claude: use the mutually-recursive _list helper built by
+           make_aux_funcs_list, as the Coq backend does for coq_expand_lists *)
         let l = Str.split (Str.regexp "(\\|,\\|)") de1i.de1_pattern in
-        if List.length l = 1 then	
-          ( leanTODO "12" ("(List.map (fun ("^de1i.de1_pattern^":" ^ de1i.de1_coq_type_of_pattern ^ ") => "^pp_body^") "
-            ^ de1i.de1_compound_id
-            ^ ")"), [] )
+        if List.length l = 1 then
+          ( leanTODO "12" body, funcs )
         else
-          ( leanTODO "13" ("(List.map (fun (pat_:" ^ de1i.de1_coq_type_of_pattern ^ ") => match pat_ with " (* FZ freshen pat_ *)
-            ^ "| " ^ de1i.de1_pattern^" => " ^pp_body^" ) "  
-            ^ de1i.de1_compound_id
-            ^ ")"), [] )
+          ( leanTODO "13" body, funcs )
 
     | Caml _ ->
         ( "(List.map (fun "^de1i.de1_pattern^" -> "^pp_body^") "
@@ -1470,13 +1510,15 @@ let pp_subst_rule : subst -> pp_mode -> syntaxdefn -> nontermroot list -> rule -
 	       (leanTODO "15" (" (" ^ sub_var ^ ":List (" 
 	       ^ Grammar_pp.pp_nt_or_mv_root_ty m xd subst.sb_that 
 	       ^ "×" ^ Grammar_pp.pp_nontermroot_ty m xd subst.sb_this ^ "))" ))
-	     else 
+	     else
 	      (leanTODO "16" ( " (" ^ Grammar_pp.pp_nonterm m xd this_var ^ ":"
                ^ Grammar_pp.pp_nontermroot_ty m xd subst.sb_this ^")"
 	       ^ " (" ^ Grammar_pp.pp_nt_or_mv m xd that_var ^ ":"
-               ^ Grammar_pp.pp_nt_or_mv_root_ty m xd subst.sb_that ^ ")" )
+               ^ Grammar_pp.pp_nt_or_mv_root_ty m xd subst.sb_that ^ ")" )))
+	     (* Claude: the scrutinee parameter is appended after the if, so it is
+	        emitted for multiple substitutions as well as single ones *)
 	     ^ " (" ^ Grammar_pp.pp_nonterm m xd in_var ^ ":"
-             ^ Grammar_pp.pp_nontermroot_ty m xd r.rule_ntr_name ^")"))),
+             ^ Grammar_pp.pp_nontermroot_ty m xd r.rule_ntr_name ^")"),
      ""(*" {struct " ^ Grammar_pp.pp_nonterm m xd in_var ^"}"*), 
              " : " ^ Grammar_pp.pp_nontermroot_ty m xd r.rule_ntr_name ^ " :=\n" 
 	     ^ "  match " ^ Grammar_pp.pp_nonterm m xd in_var ^ " with\n" )
@@ -1918,11 +1960,36 @@ and pp_fv_symterm_list_body
 		 ^ de1i.de1_compound_id
 		 ^ "))"), funcs
 	  | Lean _ ->
-              let pp_body = String.concat (leanTODO "17" " ++ ") pp_body_elements in
-              Some 
-		("(List.concat (List.map (fun "^de1i.de1_pattern^" => "^pp_body^") "
-		 ^ de1i.de1_compound_id
-		 ^ "))"), funcs
+	      (* Claude: generate a mutually-recursive _list helper: Lean's structural
+		 recursion cannot follow a recursive call under a pair projection
+		 inside a List *)
+	      let post_name = Grammar_pp.make_name_elements m xd false stlb.stl_elements in
+	      let id_list = Auxl.fv_name fv.fv_name post_name ^ "_list" in
+	      let output_typ = "List " ^ Grammar_pp.pp_nt_or_mv_root_ty m xd fv.fv_that in
+	      let elem_ty =
+		let tys =
+		  List.map (fun ((x,_),_) ->
+		    Grammar_pp.pp_nt_or_mv_root_ty m xd
+		      (Auxl.promote_ntmvr xd (Auxl.primary_nt_or_mv_of_nt_or_mv xd x)))
+		    de1i.de1_ntmvsns in
+		( match tys with
+		| [t] -> t
+		| _ -> "(" ^ String.concat " \195\151 " tys ^ ")" ) in
+	      let tl_id = de1i.de1_compound_id ^ "_" in
+	      let header =
+		( id_list ^ " (" ^ de1i.de1_compound_id ^ ":List " ^ elem_ty ^ ")",
+		  "",
+		  " : " ^ output_typ ^ " :=\n  match " ^ de1i.de1_compound_id ^ " with\n" ) in
+	      Some (leanTODO "17" ("(" ^ id_list ^ " " ^ de1i.de1_compound_id ^ ")")),
+	      ( { r_fun_id = id_list;
+		  r_fun_dep = id_list :: !dependencies;
+		  r_fun_type = Grammar_pp.pp_nt_or_mv_root_ty m xd fv.fv_that;
+		  r_fun_header = header;
+		  r_fun_clauses =
+		  [ ("", "[]", "[]");
+		    ("", de1i.de1_pattern ^ " :: " ^ tl_id,
+		     body_elements ^ list_append m ^ "(" ^ id_list ^ " " ^ tl_id ^ ")") ] }
+		:: funcs )
 	  | Coq co when co.coq_expand_lists -> 
 	      let var_list = Str.split (Str.regexp "(\\|,\\|)") de1i.de1_pattern in
               let args = 

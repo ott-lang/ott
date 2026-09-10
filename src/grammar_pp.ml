@@ -2076,7 +2076,54 @@ and pp_mse m xd sie de isa_list_name_flag prod_name ntmvro mse : string * nonter
 
       | Twf _ -> raise TwelfNotImplemented
       | Caml _ ->  ( "(List.flatten (List.map "^Auxl.auxfn_name f ntrp ntrp ^" ("^pp_ntlist^")))" ), [], [] 
-      | Lean _ ->  (leanTODO "2" ( "(List.flatten (List.map "^Auxl.auxfn_name f ntrp ntrp ^" ("^pp_ntlist^")))" )), [], [] 
+      | Lean _ ->
+          (* Claude: generate a mutually-recursive _list helper: Lean's structural
+             recursion cannot follow a recursive call under a pair projection
+             inside a List, so we recurse over the list spine explicitly *)
+          let es = stlb.stl_elements in
+          let (de1,_) = de in
+          let de1i = de1_lookup de1 b in
+          let rec make_aux_calls_se prod_es =
+            ( match prod_es with
+            | [] -> []
+            | (Lang_nonterm (ntr,_))::t -> (Auxl.auxfn_name f ntr ntr) :: make_aux_calls_se t
+            | _ :: t -> make_aux_calls_se t ) in
+          let ce = make_aux_calls_se dummy_prod_es in
+          let main_id =
+            ( match ce with c :: _ -> c | [] -> Auxl.auxfn_name f ntrp ntrp ) in
+          let list_id = main_id ^ "_list" in
+          let out_ty =
+            ( match ntmvro with
+            | Some ntmvr -> "List " ^ pp_nt_or_mv_root_ty m xd ntmvr
+            | None -> "<<<None_in_ntmvro_pp_mse>>>" ) in
+          let elem_ty =
+            let tys =
+              List.map
+                (fun ((x,_),_) ->
+                  pp_nt_or_mv_root_ty m xd
+                    (Auxl.promote_ntmvr xd (Auxl.primary_nt_or_mv_of_nt_or_mv xd x)))
+                de1i.de1_ntmvsns in
+            ( match tys with
+            | [t] -> t
+            | _ -> "(" ^ String.concat " \195\151 " tys ^ ")" ) in
+          let pp_body =
+            let se = pp_symterm_elements m xd ((Si_var ("_",0))::sie) de false dummy_prod_es es in
+            let tmp = String.concat "," (List.map2 (fun x y -> x^" "^y) ce se) in
+            if (List.length es) > 1 then "("^tmp^")" else tmp in
+          let tl_id = de1i.de1_compound_id ^ "_" in
+          ( leanTODO "2" ("(" ^ list_id ^ " " ^ de1i.de1_compound_id ^ ")") ),
+          [ list_id ],
+          [ { r_fun_id = list_id;
+              r_fun_dep = [ main_id; list_id ];
+              r_fun_type = ntrp;
+              r_fun_header =
+                ( list_id ^ " (" ^ de1i.de1_compound_id ^ ":List " ^ elem_ty ^ ")",
+                  "",
+                  " : " ^ out_ty ^ " :=\n  match " ^ de1i.de1_compound_id ^ " with\n" );
+              r_fun_clauses =
+                [ ( "", "[]", "[]" );
+                  ( "", de1i.de1_pattern ^ " :: " ^ tl_id,
+                    "(" ^ pp_body ^ ")" ^ list_append m ^ "(" ^ list_id ^ " " ^ tl_id ^ ")" ) ] } ]
       | Lem _ ->  
 	  let ntrp_s = pp_nontermroot m xd ntrp in
           ( lemTODO "9" " (List.concat (List.map "^Auxl.auxfn_name f ntrp_s ntrp_s ^" ("^pp_ntlist^")))" ), [], [] 

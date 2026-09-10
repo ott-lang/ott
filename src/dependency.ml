@@ -687,10 +687,10 @@ let print m xd (sorting,refl) =
 	  then "def " ^ h1 ^ h2 ^ h3 ^ s ^ "\n\n" 
 	  else "def " ^ h1 ^ h3 ^ s ^ (if String.compare h3 "" = 0 then "\n\n" else "\n\n")
 	else
-	  "def "
-	  ^ (String.concat "\nwith " 
-               (List.map (fun (_,((h1,h2,h3),s,_)) -> h1 ^ h2 ^ h3 ^ s) block))
-	  ^ "\n\n" in
+	  "mutual\n"
+	  ^ (String.concat ""
+               (List.map (fun (_,((h1,h2,h3),s,_)) -> "def " ^ h1 ^ h2 ^ h3 ^ s) block))
+	  ^ "end\n\n" in
       leanTODO "21" (String.concat "" (List.map print_block sorting))
 
   | Twf _ ->

@@ -309,10 +309,40 @@ let pp_subrules m xd srs : int_funcs_collapsed =
 	      ^ de1i.de1_compound_id
 	      ^ ")")], deps, []
         | Lean _ ->
-          [ leanTODO "7" (" (List.all "
-	                  ^ de1i.de1_compound_id ^ " "
-                          ^ "(fun "^de1i.de1_pattern^" => "^conjuncted_conjuncts^") "
-	      ^ ")")], deps, []
+	    (* Claude: generate a mutually-recursive _list helper: Lean's structural
+	       recursion cannot follow a recursive call under a pair projection
+	       inside a List, nor through List.all *)
+	    let post_name =  (* promoted args *)
+	      String.concat "_"
+		(List.map (fun ((r,s),y) ->
+		  Grammar_pp.pp_nt_or_mv_with_sie m xd ((Si_punct "")::sie)
+		    ((Auxl.promote_ntmvr xd r), s))
+		 de1i.de1_ntmvsns) in
+	    let id = (Auxl.pp_is srl post_name) ^ "_list" in
+	    let elem_ty =
+	      let tys =
+		List.map (fun ((x,_),_) ->
+		  Grammar_pp.pp_nt_or_mv_root_ty m xd
+		    (Auxl.promote_ntmvr xd (Auxl.primary_nt_or_mv_of_nt_or_mv xd x)))
+		  de1i.de1_ntmvsns in
+	      ( match tys with
+	      | [t] -> t
+	      | _ -> "(" ^ String.concat " \195\151 " tys ^ ")" ) in
+	    let tl_id = de1i.de1_compound_id ^ "_" in
+	    let header =
+	      ( id ^ " (" ^ de1i.de1_compound_id ^ ":List " ^ elem_ty ^ ")",
+		"",
+		" : Bool :=\n  match " ^ de1i.de1_compound_id ^ " with\n" ) in
+	    [ leanTODO "7" (id ^ " " ^ de1i.de1_compound_id) ],
+	    id :: deps,
+	    ( { r_fun_id = id;
+		r_fun_dep = id :: deps;
+		r_fun_type = sru;
+		r_fun_header = header;
+		r_fun_clauses =
+		[ ("", "[]", "true");
+		  ("", de1i.de1_pattern ^ " :: " ^ tl_id,
+		   "(" ^ conjuncted_conjuncts ^ ") && (" ^ id ^ " " ^ tl_id ^ ")") ] } :: funcs )
 	| Coq co when not co.coq_expand_lists ->
 	    let e = 
 	      if List.length (Str.split (Str.regexp "(\\|,\\|)") de1i.de1_pattern) = 1
