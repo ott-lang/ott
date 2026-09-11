@@ -2,7 +2,10 @@
 #
 # install-provers.sh — install the theorem provers Ott targets (Rocq/Coq,
 # HOL4, Isabelle, Lean) on an Ubuntu system that already has opam and an
-# OCaml switch set up.
+# OCaml switch set up. Runs entirely as the current user: no sudo.
+#
+# Run install-provers-prerequisites.sh first (as a user with sudo rights)
+# to get the apt packages these installs need.
 #
 # Claude: written to be re-run safely — each section skips work it has
 # already done, so a failed run can just be re-invoked.
@@ -14,35 +17,38 @@
 # Recognised names: rocq, hol4, isabelle, lean
 #
 # Environment overrides:
-#   HOL_DIR            where to clone/build HOL4      (default: $HOME/HOL)
-#   ISABELLE_VERSION    Isabelle release to install    (default: Isabelle2025)
-#   ISABELLE_DIR        where to unpack Isabelle        (default: $HOME/.isabelle)
+#   HOL_DIR             where to clone/build HOL4      (default: $HOME/HOL)
+#   ISABELLE_VERSION    Isabelle release to install     (default: Isabelle2025)
+#   ISABELLE_DIR        where to unpack Isabelle         (default: $HOME/Isabelle)
 
 set -euo pipefail
 
 log() { printf '\n== %s ==\n' "$*"; }
 
-HOL_DIR="${HOL_DIR:-$HOME/HOL}"
-ISABELLE_VERSION="${ISABELLE_VERSION:-Isabelle2025}"
-ISABELLE_DIR="${ISABELLE_DIR:-$HOME/.isabelle}"
-
-# Claude: packages needed across the four installs, not by any one prover
-# alone (opam packages like coq-ott and ocamlgraph need libgmp-dev and
-# pkg-config too).
-apt_prereqs() {
-  log "apt prerequisites"
-  sudo apt-get update
-  sudo apt-get install -y \
-    build-essential git curl ca-certificates m4 unzip \
-    pkg-config libgmp-dev
+# Claude: fail early with a clear pointer at the prerequisites script,
+# rather than partway through a build with a confusing "command not found".
+need() {
+  command -v "$1" >/dev/null 2>&1 || {
+    echo "missing: $1 — run install-provers-prerequisites.sh first" >&2
+    exit 1
+  }
 }
 
+HOL_DIR="${HOL_DIR:-$HOME/HOL}"
+ISABELLE_VERSION="${ISABELLE_VERSION:-Isabelle2025}"
+ISABELLE_DIR="${ISABELLE_DIR:-$HOME/Isabelle}"
+
+# Claude: directories the installs below add to, collected here so we can
+# print one suggested PATH line at the end instead of scattered ones.
+path_additions=()
+
 install_rocq() {
-  log "Rocq (Coq)"
+  log "Rocq"
   if command -v coqc >/dev/null 2>&1; then
     echo "already installed: $(coqc --version | head -1)"
     return
   fi
+  need opam
   opam update
   # Claude: "coq" was renamed "rocq-prover" upstream.
   opam install -y rocq-prover
@@ -54,7 +60,8 @@ install_hol4() {
     echo "already installed in $HOL_DIR"
     return
   fi
-  sudo apt-get install -y polyml libpolyml-dev
+  need git
+  need poly
   if [ ! -d "$HOL_DIR" ]; then
     git clone https://github.com/HOL-Theorem-Prover/HOL.git "$HOL_DIR"
   fi
@@ -63,7 +70,7 @@ install_hol4() {
     poly < tools/smart-configure.sml
     bin/build
   )
-  echo "add to PATH: $HOL_DIR/bin"
+  path_additions+=("$HOL_DIR/bin")
 }
 
 install_isabelle() {
@@ -72,6 +79,8 @@ install_isabelle() {
     echo "already installed: $(isabelle version)"
     return
   fi
+  need curl
+  need tar
   mkdir -p "$ISABELLE_DIR"
   if [ ! -d "$ISABELLE_DIR/$ISABELLE_VERSION" ]; then
     curl -fL -o /tmp/"$ISABELLE_VERSION"_linux.tar.gz \
@@ -79,7 +88,7 @@ install_isabelle() {
     tar -xzf /tmp/"$ISABELLE_VERSION"_linux.tar.gz -C "$ISABELLE_DIR"
     rm -f /tmp/"$ISABELLE_VERSION"_linux.tar.gz
   fi
-  echo "add to PATH: $ISABELLE_DIR/$ISABELLE_VERSION/bin"
+  path_additions+=("$ISABELLE_DIR/$ISABELLE_VERSION/bin")
 }
 
 install_lean() {
@@ -88,15 +97,15 @@ install_lean() {
     echo "already installed: $(lean --version 2>/dev/null || elan --version)"
     return
   fi
+  need curl
   curl -fL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
     | sh -s -- -y
-  echo "add to PATH: \$HOME/.elan/bin"
+  path_additions+=("$HOME/.elan/bin")
 }
 
 targets=("$@")
 [ ${#targets[@]} -eq 0 ] && targets=(rocq hol4 isabelle lean)
 
-apt_prereqs
 for t in "${targets[@]}"; do
   case "$t" in
     rocq)     install_rocq ;;
@@ -108,5 +117,16 @@ for t in "${targets[@]}"; do
 done
 
 log "done"
-echo "Start a new shell, or source ~/.bashrc after adding the PATH lines above,"
-echo "for hol/isabelle/lean to be found."
+if [ ${#path_additions[@]} -gt 0 ]; then
+  # Claude: join with ':' by hand rather than `IFS=: "${path_additions[*]}"`,
+  # so this still reads clearly if entries are ever added with spaces in them.
+  joined=""
+  for d in "${path_additions[@]}"; do
+    joined="${joined:+$joined:}$d"
+  done
+  echo "Add this to ~/.profile, then log in again (or run it directly now):"
+  echo
+  echo "  export PATH=\"$joined:\$PATH\""
+else
+  echo "Nothing new needs adding to PATH."
+fi
