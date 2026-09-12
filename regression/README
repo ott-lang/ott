@@ -1,50 +1,93 @@
 This is infrastructure for regression testing the Ott implementation (by FZN, but this README is much later by PS; it might be wrong).
 
-`./regression`, from `regression.ml`, runs Ott on a set of tests and runs Coq, Isabelle, HOL4, Lem, Lean, OCaml, and Latex on the generated code. 
+`./regression`, from `regression.ml`, runs Ott on a set of tests and runs Coq, Isabelle, HOL4, Lem, Lean, OCaml, and Latex on the generated code.  For some tests, not all of those are intended to work, so the harness does two separate jobs, and each is a separate invocation.
 
-
-
-This is infrastructure for regression testing the Ott implementation (by FZN, but this README is much later by PS).
-
-`./regression`, from `regression.ml`, runs Ott on a set of tests and runs Coq, Isabelle, HOL4, Lem, Lean, OCaml, and Latex on the generated code.   For some tests, not all of those are intended to work, so this is set up to either compute and save a baseline or to compare against such a baseline.  Baselines are in some internal `.bl` format, but can be pretty-printed with the `-dump_baseline` option. Here in each backend column the first `+`/`-` records whether Ott successfully generated that output and the second `+`/`-` whether the relevant tool successfully built it.
+Running the tests writes a report:
 
 ```
-Coq CoqNL Isa  HOL  Lem Lean OCaml LaTeX
-[...]
- + +  + -  + -  + +  + +  + +  + +  + + ../tests/test10.ott
- + +  + -  + -  + +  + +  -    -    + + ../tests/test10st.ott
-[...] 
+$ ./regression -run report.txt -todo_list
 ```
 
-Note that for Lem and Lean, as for the other targets, Ott refuses to
-generate output for a source file whose meta or sugar productions lack a
-hom for that target, so many tests show `-` in the Lean column purely
-because the test has not been given `lean` homs.  That is recorded in the
-baseline like any other outcome.
+Comparing two such reports shows what changed:
 
-The provers themselves are not part of this repository.  `install-provers.sh`
-installs Rocq, HOL4, Isabelle, Lean, and Lem; run
-`install-provers-prerequisites.sh` first.  The Lem check runs `lem` with no
-backend flag, which typechecks without writing output, and the Lean check
-runs `lean` on the generated file.
+```
+$ ./regression -compare report-2026-09-12.txt report.txt
+```
+
+`./regression -help` shows the command-line options.
 
 
-`./regression -help` shows the command-line options. 
+REPORTS
+=======
+
+A report is a plain text file.  It records, for each test and each tool, two characters: whether Ott generated the output for that tool, and whether the tool then accepted it.
+
+```
++  succeeded
+-  failed
+s  skipped, by a -no_<tool> flag or by the config file
+.  not reached, because the step before it failed
+```
+
+So `++` is a clean pass, `+-` means Ott generated output that the tool rejected, and `-.` means Ott declined to generate and so the tool never ran.  `-.` is common and is not in itself a problem: Ott refuses to generate output for a source file whose meta or sugar productions lack a hom for that target, so a test with no `lean` homs shows `-.` in the Lean column.
+
+The `# tools` line names the columns, so a report written before a backend existed can still be compared against one written after; the comparison uses the columns they have in common and says which columns are in only one of them.
+
+```
+# ott-regression-report 1
+# date 2026-09-12T12:02:50
+# ott Ott version 0.34   distribution of Mon Dec 30 10:12:45 GMT 2024
+# tools Coq CoqNL Isa HOL Lem Lean OCaml LaTeX
+
+test                   Coq CoqNL  Isa  HOL  Lem Lean OCaml LaTeX
+../tests/test10.ott     ++    ++   ss   ss   ++   -.    ++    ss
+../tests/test10st.ott   ++    ++   ss   ss   ++   ++    -.    ss
+
+totals                 Coq CoqNL  Isa  HOL  Lem Lean OCaml LaTeX   all
+generated                2     2    0    0    2    1     1     0     8
+ott-failed               0     0    0    0    0    1     1     0     2
+passed                   2     2    0    0    2    1     1     0     8
+failed                   0     0    0    0    0    0     0     0     0
+skipped                  0     0    2    2    0    0     0     2     6
+```
+
+The totals at the foot count each outcome per tool, with an `all` column summing across tools.
 
 
-$ ./regression -baseline -todo_list
+COMPARISONS
+===========
 
-computes a new baseline for all packages.
+A comparison lists each test whose results changed, and under it only the tools whose cell differs.  A tool going from failing to passing is a progression, the reverse is a regression, and anything else, such as a tool becoming skipped, is just a change.  Tests present in only one of the two reports are called out.  The same shape of totals block goes at the foot.
 
-$ ./regression -dump_baseline
+```
+*** comparison
+*** A report-2026-09-12.txt   2026-09-12T10:00:00
+*** B report.txt              2026-09-12T12:02:50
 
-dumps the baseline
+../tests/test10.ott    CoqNL  +- -> ++  progression
+                       Lean   ++ -> -.  regression
+../tests/test5.ott     only in B
 
-$ ./regression -baseline  <test.ott>
+totals                 Coq CoqNL  Isa  HOL  Lem Lean OCaml LaTeX   all
+progressions             0     1    0    0    0    0     0     0     1
+regressions              0     0    0    0    0    1     0     0     1
+changes                  0     0    0    0    0    0     0     0     0
+```
 
-Baselines carry a format stamp naming their columns.  Adding or removing a
-backend column invalidates existing `.bl` files, and `./regression` refuses
-to read one rather than misinterpreting it, so recompute the baseline after
-such a change.  Baselines written before the Lem and Lean columns existed
-cannot be read by the current `./regression`; their dumped `.txt` forms are
-still the thing to compare against for the older columns.
+
+THE CONFIG FILE
+===============
+
+`config.otr`, used with `-use_config`, says which tools to run for which tests.  It names its columns in a `# tools` header rather than relying on position, so adding or reordering a backend does not silently change what every existing line means.  `+` runs that tool, `.` skips it and records `ss`.
+
+
+PROVERS
+=======
+
+The provers are not part of this repository.  `install-provers.sh` installs Rocq, HOL4, Isabelle, Lean, and Lem; run `install-provers-prerequisites.sh` first.  The Lem check runs `lem` with no backend flag, which typechecks without writing output, and the Lean check runs `lean` on the generated file.
+
+
+OLDER BASELINES
+===============
+
+Before this was reorganised, runs wrote a binary `.bl` file via `Marshal` and the comparison was folded into the run.  The `.bl` files can no longer be read, and the `.txt` dumps beside them (`baseline-2022-03.txt`, `baseline-2026-09-12.txt`) are in the older layout, where a skipped tool was rendered as blanks.  They are kept as historical artifacts to read by eye.  `-compare` will not parse them.

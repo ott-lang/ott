@@ -46,37 +46,31 @@ regression_p: regression_p_client.ml regression_p_master.ml
 regression_para: regression_para.ml
 	ocamlp3lopt -par unix.cmxa str.cmxa -o regression_para regression_para.ml
 
-reg: regression 
-	./regression -no_hol -report ../tests/test*.ott
+# The report a run is compared against by "make compare".  Point this at
+# whichever report you are treating as the reference.
+REFERENCE ?= report-2026-09-12.txt
+REPORT    ?= report.txt
 
-regb: regression
-	./regression -no_hol -baseline ../tests/test*.ott
+reg: regression 
+	./regression -no_hol -run $(REPORT) ../tests/test*.ott
 
 regh: regression
-	./regression -report ../tests/test*.ott
-
-regbh: regression
-	./regression -baseline ../tests/test*.ott
+	./regression -run $(REPORT) ../tests/test*.ott
 
 simple: regression
 	$(MAKE) clean-regr
 	-make -C ../coq
-	./regression  -todo_list -todo_list_file regression-small.otl -keep_temp
+	./regression  -todo_list -todo_list_file regression-small.otl -keep_temp -run report-small.txt
 
+# compare the latest run against the reference report
+compare: regression
+	./regression -compare $(REFERENCE) $(REPORT)
 
-# 2026-09-12 compare against the most recent baseline
-baseline-2026-09-12.bl baseline-2026-09-12.txt baseline-2026-09-12-log.txt: regression
+# a full run over regression.otl, kept under a dated name
+report-2026-09-12.txt: regression
 	$(MAKE) clean-regr
 	-make -C ../coq
-	time ./regression -baseline -baseline_file baseline-2026-09-12.bl -todo_list -todo_list_file regression.otl -keep_temp -report 2>&1 | tee baseline-2026-09-12-log.txt
-	./regression -dump_baseline -baseline_file baseline-2026-09-12.bl > baseline-2026-09-12.txt
-
-# 2026-09-12 first baseline including the Lem and Lean columns
-baseline-2026-09-12-lem-lean.bl baseline-2026-09-12-lem-lean.txt baseline-2026-09-12-lem-lean-log.txt: regression
-	$(MAKE) clean-regr
-	-make -C ../coq
-	time ./regression -baseline -baseline_file baseline-2026-09-12-lem-lean.bl -todo_list -todo_list_file regression.otl -keep_temp -report 2>&1 | tee baseline-2026-09-12-lem-lean-log.txt
-	./regression -dump_baseline -baseline_file baseline-2026-09-12-lem-lean.bl > baseline-2026-09-12-lem-lean.txt
+	time ./regression -todo_list -todo_list_file regression.otl -keep_temp -run $@ 2>&1 | tee report-2026-09-12-log.txt
 
 clean:
 	rm -rf *~
@@ -97,4 +91,5 @@ clean-regr:
 # 	ocamlc unix.cma str.cma -o regression-jenkins -dtypes regression-jenkins.ml
 
 run-jenkins: regression
-	./regression -baseline_file baseline-jenkins.bl -todo_list -jenkins
+	./regression -todo_list -run jenkins-report.txt
+	./regression -compare baseline-jenkins.txt jenkins-report.txt -jenkins
