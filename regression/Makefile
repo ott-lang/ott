@@ -69,12 +69,14 @@ compare: regression
 # a full run over regression.otl, kept under a dated name
 report-2026-09-12.txt: regression
 	rm -f temp_dir/*
-	-make -C ../coq
+	-make -C ../coq clean
+	-make -C ../coq 
 	time ./regression -run_ott_and_targets report-2026-09-12.txt -all -todo_list regression.otl -temp_dir temp_dir -keep_temp  2>&1 | tee report-2026-09-12-log.txt
 
 # the same but just for a test or two, for testing the regression machinery quickly
 report-2026-09-12-small.txt: regression
 	rm -f temp_dir-small/*
+	-make -C ../coq clean
 	-make -C ../coq
 	time ./regression -run_ott_and_targets report-2026-09-12-small.txt -all -todo_list regression-small.otl -temp_dir temp_dir-small -keep_temp  2>&1 | tee report-2026-09-12-small-log.txt
 
