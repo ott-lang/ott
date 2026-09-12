@@ -34,7 +34,6 @@ need() {
     echo "missing: $1 — run install-provers-prerequisites.sh first" >&2
     exit 1
   }
-}
 
 # Claude: show curl's normal progress meter when run interactively; suppress
 # it when stdout isn't a terminal (e.g. piped to a log file), where it's just
