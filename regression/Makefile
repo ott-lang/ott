@@ -46,16 +46,16 @@ regression_p: regression_p_client.ml regression_p_master.ml
 regression_para: regression_para.ml
 	ocamlp3lopt -par unix.cmxa str.cmxa -o regression_para regression_para.ml
 
-reg: regression ott
+reg: regression 
 	./regression -no_hol -report ../tests/test*.ott
 
-regb: regression ott
+regb: regression
 	./regression -no_hol -baseline ../tests/test*.ott
 
-regh: regression ott
+regh: regression
 	./regression -report ../tests/test*.ott
 
-regbh: regression ott
+regbh: regression
 	./regression -baseline ../tests/test*.ott
 
 simple: regression
@@ -63,9 +63,17 @@ simple: regression
 	-make -C ../coq
 	./regression  -todo_list -todo_list_file regression-small.otl -keep_temp
 
+
+# 2026-09-12 compare against the most recent baseline
+baseline-2026-09-12.bl baseline-2026-09-12.txt baseline-2026-09-12-log.txt: regression
+	$(MAKE) clean-regr
+	-make -C ../coq
+	time ./regression -baseline -baseline_file baseline-2026-09-12.bl -todo_list -todo_list_file regression.otl -keep_temp -report 2>&1 | tee baseline-2026-09-12-log.txt
+	./regression -dump_baseline -baseline_file baseline-2026-09-12.bl > baseline-2026-09-12.txt
+
 clean:
 	rm -rf *~
-	rm -rf regression
+	rm -rf regression regression.annot regression.cmi regression.cmx
 	rm -rf testRegr*
 	rm -rf .testRegr*
 	rm -rf ._ott_coqrc.aux
