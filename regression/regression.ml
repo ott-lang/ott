@@ -199,23 +199,23 @@ let skipped_cell = { gen = Skipped; chk = Skipped }
    adding a backend is a single entry here plus its -no_ flag. *)
 type tool =
   { t_name : string;                        (* report column name *)
-    t_flag : string;                        (* command-line flag that disables it *)
-    t_enabled : bool ref;                   (* cleared by that flag *)
+    t_flag : string;                        (* command-line flag that selects it *)
+    t_enabled : bool ref;                   (* set by that flag, or by -all *)
     t_gen : string -> string -> string;     (* inputs -> base -> ott command *)
     t_check : string -> string;             (* base -> tool command *)
     t_artefacts : string -> string list }   (* base -> files to clean up *)
 
-let isa_test = ref true
-let caml_test = ref true
-let coq_test = ref true
-let hol_test = ref true
-let lem_test = ref true
-let lean_test = ref true
-let latex_test = ref true
+let isa_test = ref false
+let caml_test = ref false
+let coq_test = ref false
+let hol_test = ref false
+let lem_test = ref false
+let lean_test = ref false
+let latex_test = ref false
 
 let tools =
   [ { t_name = "Coq";
-      t_flag = "-no_coq";
+      t_flag = "-coq";
       t_enabled = coq_test;
       t_gen = (fun t base ->
         "../bin/ott -show_sort false -show_defns false " ^ t ^ " -o " ^ base ^ ".v");
@@ -225,7 +225,7 @@ let tools =
         [ base ^ ".v"; base ^ ".vo"; base ^ ".glob"; base ^ ".coq.out" ]) };
 
     { t_name = "CoqNL";
-      t_flag = "-no_coq";
+      t_flag = "-coq";
       t_enabled = coq_test;
       t_gen = (fun t base ->
         "../bin/ott -coq_expand_list_types false " ^ t ^ " -o " ^ base ^ ".v");
@@ -235,7 +235,7 @@ let tools =
         [ base ^ ".v"; base ^ ".vo"; base ^ ".glob"; base ^ ".coqnl.out" ]) };
 
     { t_name = "Isa";
-      t_flag = "-no_isa";
+      t_flag = "-isa";
       t_enabled = isa_test;
       t_gen = (fun t base -> "../bin/ott " ^ t ^ " -o " ^ base ^ ".thy");
       t_check = (fun base ->
@@ -244,7 +244,7 @@ let tools =
       t_artefacts = (fun base -> [ base ^ ".thy"; base ^ ".isa.out" ]) };
 
     { t_name = "HOL";
-      t_flag = "-no_hol";
+      t_flag = "-hol";
       t_enabled = hol_test;
       t_gen = (fun t base -> "../bin/ott " ^ t ^ " -o " ^ base ^ "Script.sml");
       t_check = (fun base ->
@@ -254,7 +254,7 @@ let tools =
           base ^ "Theory.ui"; base ^ "Theory.uo"; base ^ ".hol.out" ]) };
 
     { t_name = "Lem";
-      t_flag = "-no_lem";
+      t_flag = "-lem";
       t_enabled = lem_test;
       t_gen = (fun t base -> "../bin/ott " ^ t ^ " -o " ^ base ^ ".lem");
       t_check = (fun base ->
@@ -262,7 +262,7 @@ let tools =
       t_artefacts = (fun base -> [ base ^ ".lem"; base ^ ".lem.out" ]) };
 
     { t_name = "Lean";
-      t_flag = "-no_lean";
+      t_flag = "-lean";
       t_enabled = lean_test;
       t_gen = (fun t base -> "../bin/ott " ^ t ^ " -o " ^ base ^ ".lean");
       t_check = (fun base ->
@@ -270,7 +270,7 @@ let tools =
       t_artefacts = (fun base -> [ base ^ ".lean"; base ^ ".lean.out" ]) };
 
     { t_name = "OCaml";
-      t_flag = "-no_caml";
+      t_flag = "-ocaml";
       t_enabled = caml_test;
       t_gen = (fun t base -> "../bin/ott " ^ t ^ " -o " ^ base ^ ".ml");
       t_check = (fun base ->
@@ -282,7 +282,7 @@ let tools =
           "a.out" ]) };
 
     { t_name = "LaTeX";
-      t_flag = "-no_latex";
+      t_flag = "-latex";
       t_enabled = latex_test;
       t_gen = (fun t base -> "../bin/ott " ^ t ^ " -o " ^ base ^ ".tex");
       t_check = (fun base ->
@@ -481,23 +481,32 @@ let check_config t tp =
 let compare_a = ref ""
 let compare_b = ref ""
 
-(* Claude: -no_coq turns off both the Coq and CoqNL columns, as it always has,
-   because those two share one flag name; so emit each distinct flag once and
-   let it clear every enable ref that names it. *)
-let no_tool_options =
+let enable_all () = List.iter (function tl -> tl.t_enabled := true) tools
+
+let any_tool_enabled () =
+  List.exists (function tl -> !(tl.t_enabled)) tools
+
+(* Claude: no target runs unless it is asked for, by name or by -all.  -coq
+   selects both the Coq and CoqNL columns, since those two share one flag
+   name; so emit each distinct flag once and let it set every enable ref that
+   names it. *)
+let tool_options =
   let flags =
     List.sort_uniq compare (List.map (function tl -> tl.t_flag) tools) in
-  List.map
-    ( function f ->
-      let affected =
-        List.filter (function tl -> tl.t_flag = f) tools in
-      ( f,
-        Arg.Unit (function () ->
-          List.iter (function tl -> tl.t_enabled := false) affected),
-        " do not run the "
-        ^ String.concat " or " (List.map (function tl -> tl.t_name) affected)
-        ^ " test" ) )
-    flags
+  ( "-all",
+    Arg.Unit enable_all,
+    " run every target" )
+  :: List.map
+       ( function f ->
+         let affected =
+           List.filter (function tl -> tl.t_flag = f) tools in
+         ( f,
+           Arg.Unit (function () ->
+             List.iter (function tl -> tl.t_enabled := true) affected),
+           " run the "
+           ^ String.concat " and " (List.map (function tl -> tl.t_name) affected)
+           ^ " target" ) )
+       flags
 
 let options =
   Arg.align
@@ -522,7 +531,7 @@ let options =
       (* Claude: -no_coq turns off both the Coq and CoqNL columns, as it always
          has, because the two share one enable flag; so filter the generated
          options by flag identity rather than emitting one per column. *)
-      @ no_tool_options
+      @ tool_options
       @ [ ("-night",
            Arg.Unit (fun () -> night := true),
            " perform the nightly regression test");
@@ -615,8 +624,13 @@ let run_fc () =
 
 type change = Progression | Regression | Change
 
+(* Claude: a target that was simply not selected on one of the two runs has
+   not progressed or regressed, whatever its other side says, so any cell with
+   a skip on either side is only ever a change. *)
 let classify a b =
-  if (a.gen = Ok && b.gen = Failed) || (a.chk = Ok && b.chk = Failed)
+  if a.gen = Skipped || b.gen = Skipped
+  then Change
+  else if (a.gen = Ok && b.gen = Failed) || (a.chk = Ok && b.chk = Failed)
   then Regression
   else if (a.gen <> Ok && b.gen = Ok) || (a.chk = Failed && b.chk = Ok)
   then Progression
@@ -740,6 +754,8 @@ let _ =
   let comparing = !compare_a <> "" && !compare_b <> "" in
   if (List.length !tests) = 0 && not comparing && not !todo_list
   then error "specify at least one test";
+  if not comparing && not (any_tool_enabled ())
+  then error "specify at least one target (for example -coq -lean), or -all";
   if !temp_dir <> "" then execute_cmd_list ["mkdir -p " ^ !temp_dir] else ();
   if !night
   then begin

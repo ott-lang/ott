@@ -5,10 +5,12 @@ This is infrastructure for regression testing the Ott implementation (by FZN, bu
 
 `./regression`, from `regression.ml`, runs Ott on a set of tests and runs Coq, Isabelle, HOL4, Lem, Lean, OCaml, and Latex on the generated code.  For some tests, not all of those are intended to work, so the harness does two separate jobs, and each is a separate invocation.
 
+No target runs unless you ask for it. `-all` runs every target, or name the ones you want: `-coq` (which covers both the Coq and CoqNL columns), `-isa`, `-hol`, `-lem`, `-lean`, `-ocaml`, `-latex`. A target you did not ask for records `ss`, the same as one turned off in the config file.
+
 Running the tests writes a report:
 
 ```
-$ ./regression -run report.txt -todo_list
+$ ./regression -all -run report.txt -todo_list
 ```
 
 Comparing two such reports shows what changed:
@@ -28,7 +30,7 @@ A report is a plain text file.  It records, for each test and each tool, two cha
 ```
 +  succeeded
 -  failed
-s  skipped, by a -no_<tool> flag or by the config file
+s  skipped: not asked for on the command line, or turned off in the config file
 .  not reached, because the step before it failed
 ```
 

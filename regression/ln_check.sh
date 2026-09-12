@@ -1,2 +1,2 @@
-./regression -todo_list -todo_list_file ln.otl -no_hol -no_isa -no_caml -run ln-report.txt
+./regression -coq -lem -lean -latex -todo_list -todo_list_file ln.otl -run ln-report.txt
 

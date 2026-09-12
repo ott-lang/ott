@@ -52,15 +52,15 @@ REFERENCE ?= report-2026-09-12.txt
 REPORT    ?= report.txt
 
 reg: regression 
-	./regression -no_hol -run $(REPORT) ../tests/test*.ott
+	./regression -coq -isa -lem -lean -ocaml -latex -run $(REPORT) ../tests/test*.ott
 
 regh: regression
-	./regression -run $(REPORT) ../tests/test*.ott
+	./regression -all -run $(REPORT) ../tests/test*.ott
 
 simple: regression
 	$(MAKE) clean-regr
 	-make -C ../coq
-	./regression  -todo_list -todo_list_file regression-small.otl -keep_temp -run report-small.txt
+	./regression -all -todo_list -todo_list_file regression-small.otl -keep_temp -run report-small.txt
 
 # compare the latest run against the reference report
 compare: regression
@@ -70,7 +70,7 @@ compare: regression
 report-2026-09-12.txt: regression
 	$(MAKE) clean-regr
 	-make -C ../coq
-	time ./regression -todo_list -todo_list_file regression.otl -keep_temp -run $@ 2>&1 | tee report-2026-09-12-log.txt
+	time ./regression -all -todo_list -todo_list_file regression.otl -keep_temp -run $@ 2>&1 | tee report-2026-09-12-log.txt
 
 clean:
 	rm -rf *~
@@ -91,5 +91,5 @@ clean-regr:
 # 	ocamlc unix.cma str.cma -o regression-jenkins -dtypes regression-jenkins.ml
 
 run-jenkins: regression
-	./regression -todo_list -run jenkins-report.txt
+	./regression -all -todo_list -run jenkins-report.txt
 	./regression -compare baseline-jenkins.txt jenkins-report.txt -jenkins
