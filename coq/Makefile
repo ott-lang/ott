@@ -6,7 +6,7 @@ clean: Makefile.coq
 	@rm -f Makefile.coq Makefile.coq.conf
 
 Makefile.coq: _CoqProject
-	coq_makefile -f _CoqProject -o Makefile.coq
+	rocq makefile -f _CoqProject -o Makefile.coq
 
 force _CoqProject Makefile: ;
 

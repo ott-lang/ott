@@ -79,7 +79,7 @@ let pp_subntr (m: pp_mode) (xd: syntaxdefn): (nontermroot * nontermroot * nonter
 	Auxl.pp_is ntrl ntru ^ " " 
 	^ Auxl.hide_isa_trailing_underscore m
 	    (( match m with Twf _ -> String.uppercase_ascii ntr' 
-	    | Coq _ | Isa _ | Hol _ | Lem _ -> ntr'
+	    | Coq _ | Lean _ | Isa _ | Hol _ | Lem _ -> ntr'
 	    | Caml _ | Tex _ | Ascii _ | Lex _ | Menhir _ -> raise Auxl.ThisCannotHappen )
 	     ^ Grammar_pp.pp_suffix_with_sie m xd Bounds.sie_project suff)
       in ( match m with
@@ -116,6 +116,13 @@ let pp_listsubntr : pp_mode -> syntaxdefn -> ((nontermroot * nontermroot * nonte
                      lemTODO "1" "List.all "
                      ^ "(fun "^pp_pattern^" -> "^pp_subntr m xd subntr^") "
                      ^ pp_squished_vars
+
+                 | Lean _ ->
+                     (* Claude: Lean's List.all takes the list first, then a
+                        Bool-valued predicate with "=>" *)
+                     leanTODO "17" "List.all "
+                     ^ pp_squished_vars
+                     ^ " (fun "^pp_pattern^" => "^pp_subntr m xd subntr^")"
 
                  | Coq co -> 
 	             let ty_list = Str.split (Str.regexp "(\\|*\\|)") coq_type_pattern in
@@ -245,7 +252,7 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
         (Grammar_pp.pp_tex_DRULE_NAME_NAME m)
         (Auxl.pp_tex_escape dr.drule_name)
         pp_com
-  | Isa _ | Hol _ | Lem _ | Coq _ | Twf _ ->
+  | Isa _ | Hol _ | Lem _ | Coq _ | Lean _ | Twf _ ->
       let non_free_ntrs = Subrules_pp.non_free_ntrs m xd xd.xd_srs in
 
       (* find all the nonterms used at non-free types *)
@@ -277,7 +284,7 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
         List.map (pp_subntr m xd) nonlist_subntrs 
         @ pp_listsubntr m xd list_subntrs in
 
-      (* collect all the isa/coq/hol variables that should be quantified *)
+      (* collect all the isa/coq/hol/lean variables that should be quantified *)
       (* for this clause *)
 
       let quantified_proof_assistant_vars = 
@@ -402,6 +409,54 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
           output_string fd ppd_conclusion; 
           output_string fd "\n\n"
 
+
+      | Lean _ ->
+          Printf.fprintf fd "%s%s%s: " 
+            (leanTODO "18" "") 
+            "" (*("(*"^Location.pp_loc dr.drule_loc^"*)")*)
+            ("| " ^ dr.drule_name); 
+(* Lem currrently requires a forall even if there are no quantified variables,
+   and a "true ==>" if there are no premises *)
+(*
+          (match quantified_proof_assistant_vars with
+           | [] -> ()
+           | _ ->
+*)
+          (* Claude: only emit the quantifier when there are variables to bind;
+             Lean rejects an empty "forall ," *)
+          if quantified_proof_assistant_vars <> [] then begin
+              output_string fd "forall";
+(* the second version, with explicit type annotations, is pretty noisy, and probably not idiomatic. For l1.ott, we need it only for b:bool, where Lean type inference seems to get confused? *)
+(*              List.iter (fun (var,ty,_) -> Printf.fprintf fd " %s" (leanTODO "19" var))
+	        quantified_proof_assistant_vars;
+*)              (* Claude: use the third component (the Coq/Lean type), not the
+                   second (the HOL type, which is the "dummy" placeholder here);
+                   qualify simple type names with _root_. so they are not
+                   shadowed by a same-named bound variable (e.g. (D:G) after
+                   (G:G)) *)
+                List.iter (fun (var,_,(ty,_)) ->
+                  let ty = if String.contains ty ' ' then ty else "_root_." ^ ty in
+                  Printf.fprintf fd " (%s:%s)" var ty)
+	        quantified_proof_assistant_vars;
+              output_string fd ",\n"
+          end;
+(*
+);
+*)
+          (* Claude: emit the premises-arrow chain only when there are premises;
+             with none the constructor type is just the conclusion *)
+          if (snd ppd_premises)<>[] || ppd_subntrs<>[] then
+	    begin
+              (* output_string fd " &&\n(";*)
+	      iter_asep fd " ->\n"
+		(fun s -> output_string fd "("; output_string fd s; output_string fd ")")
+		(ppd_subntrs @ snd ppd_premises);
+	      output_string fd "\n -> \n"
+            end;
+          output_string fd ppd_conclusion;
+          output_string fd "\n\n"
+
+
       | Coq co -> 
 	  let rec remove_dupl l = match l with
 	    | [] -> []
@@ -484,6 +539,22 @@ let pp_defn fd (m:pp_mode) (xd:syntaxdefn) lookup (defnclass_wrapper:string) (un
   | Lem _ ->
       Printf.fprintf fd "(* defn %s *)\n\n" d.d_name;
       iter_sep (pp_processed_semiraw_rule fd m xd) "and\n" d.d_rules
+  | Lean _ ->
+      (*Printf.fprintf fd "/- defn %s -/\n\n" d.d_name;*)
+
+      let prod_name = defnclass_wrapper ^ d.d_name in
+
+      let type_defn =
+        let es = (Auxl.prod_of_prodname xd prod_name).prod_es in
+        let ss = (Auxl.option_map (Grammar_pp.pp_element m xd [] true) es) in
+        (* Claude: Lean inductives use "where", not the deprecated ":=" *)
+        match ss with
+        | [] -> universe^" where"
+        | [s] -> s ^ " -> "^universe^" where"
+        | _ -> String.concat " -> " ss ^ " -> " ^ universe^" where" in
+      Printf.fprintf fd "%s%s : %s    /- defn %s -/\n" defnclass_wrapper d.d_name type_defn d.d_name;
+      iter_nosep (fun psr -> pp_processed_semiraw_rule fd m xd "" psr) d.d_rules
+
   | Coq co -> (* FZ factor this code ? *)
 
       let prod_name = defnclass_wrapper ^ d.d_name in
@@ -626,6 +697,18 @@ let pp_defnclass fd (m:pp_mode) (xd:syntaxdefn) lookup (dc:defnclass) =
       List.iter (output_string fd) !(co.coq_list_aux_defns.newly_defined);
       output_string fd ".\n"
 
+  | Lean co ->
+      (* Claude: a defn class with several judgements is mutually recursive, so
+         wrap it in a Lean "mutual ... end" block, as the Coq backend uses
+         "Inductive ... with ..." *)
+      let is_mutual = List.length dc.dc_defns > 1 in
+      Printf.fprintf fd "\n/- defns %s -/\n%sinductive " dc.dc_name
+        (if is_mutual then "mutual\n" else "");
+      iter_asep fd "\ninductive "
+        (fun d -> pp_defn fd m xd lookup dc.dc_wrapper universe d)
+	dc.dc_defns;
+      if is_mutual then output_string fd "\nend\n"
+
   | Twf wo -> 
       let twf_type_of_defn : syntaxdefn -> defn -> string = 
         fun xd d ->  
@@ -669,7 +752,7 @@ let pp_funclause (m:pp_mode) (xd:syntaxdefn) (fc:funclause) : string =
       ppd_lhs ^ " === " ^ ppd_rhs ^ "\n"
   | Tex _ ->                                  
       Grammar_pp.pp_tex_FUNCLAUSE_NAME m^"{"^ppd_lhs^"}"^"{"^ppd_rhs^"}%\n"
-  | Isa _ | Hol _ | Lem _ | Coq _ | Caml _ | Twf _ | Lex _ | Menhir _ -> 
+  | Isa _ | Hol _ | Lem _ | Coq _ | Lean _ | Caml _ | Twf _ | Lex _ | Menhir _ -> 
       Auxl.errorm m "pp_funclause"
 
 let rec insert_commas l =
@@ -694,7 +777,7 @@ let pp_symterm_node_lhs m xd sie de st =
         with Not_found -> Auxl.int_error "pp_symterm_node_lhs" in
       let hom =
 	match m with
-	| Coq _ | Caml _ | Lem _ (* LemTODO4: really? *) -> (insert_commas hom)
+	| Coq _ | Lean _ | Caml _ | Lem _ (* LemTODO4: really? *) -> (insert_commas hom)
 	| Hol _ | Isa _  -> hom
 	| Twf _ | Ascii _ | Tex _ | Lex _ | Menhir _ -> raise Auxl.ThisCannotHappen
       in String.concat " " (Grammar_pp.apply_hom_spec m xd hom pes)
@@ -850,7 +933,7 @@ let pp_fundefn (m:pp_mode) (xd:syntaxdefn) lookup (fd:fundefn) : string =
       ^ "\\end{"^Grammar_pp.pp_tex_FUNDEFN_BLOCK_NAME m ^"}" 
       ^ "}\n\n"
 
-  | Isa _ | Hol _ | Lem _ | Coq _ | Twf _ | Caml _ | Lex _ | Menhir _ -> 
+  | Isa _ | Hol _ | Lem _ | Coq _ | Lean _ | Twf _ | Caml _ | Lex _ | Menhir _ -> 
       Auxl.errorm m "pp_fundefn"
 
 let pp_fundefnclass (m:pp_mode) (xd:syntaxdefn) lookup (fdc:fundefnclass) : string =
@@ -873,7 +956,7 @@ let pp_fundefnclass (m:pp_mode) (xd:syntaxdefn) lookup (fdc:fundefnclass) : stri
            (List.map (function fd -> Grammar_pp.tex_fundefn_name m fd.fd_name^"{}") fdc.fdc_fundefns))
       ^ "}\n\n"
  
-  | Isa _ | Coq _ | Hol _ | Lem _ | Caml _ ->
+  | Isa _ | Coq _ | Lean _ | Hol _ | Lem _ | Caml _ ->
       let proof = 
 	let pp_proof h =
 	  ( match h with 
@@ -881,7 +964,7 @@ let pp_fundefnclass (m:pp_mode) (xd:syntaxdefn) lookup (fdc:fundefnclass) : stri
 	  | None -> None
    | _ -> Auxl.warning (Some fdc.fdc_loc)  "malformed isa-proof/hol-proof hom"; Some "<<<malformed isa-proof/hol-proof hom>>>" ) in 
 	( match m with
-	| Coq _ | Caml _ | Lem _ -> None
+	| Coq _ | Caml _ | Lem _ | Lean _ -> None
 	| Isa _ -> pp_proof (Auxl.hom_spec_for_hom_name "isa-proof" fdc.fdc_homs) 
 	| Hol _ -> pp_proof (Auxl.hom_spec_for_hom_name "hol-proof" fdc.fdc_homs)
 	| _ -> raise Auxl.ThisCannotHappen ) in
@@ -950,6 +1033,9 @@ let pp_fun_or_reln_defnclass_list
           List.iter (fun frdc -> pp_fun_or_reln_defnclass fd m xd lookup frdc) frdcs
       | Twf _ -> 
 	  output_string fd "%%% definitions %%%\n\n";
+          List.iter (fun frdc -> pp_fun_or_reln_defnclass fd m xd lookup frdc) frdcs
+      | Lean _ -> 
+	  output_string fd "/- definitions -/\n\n";
           List.iter (fun frdc -> pp_fun_or_reln_defnclass fd m xd lookup frdc) frdcs
       | Coq co ->
           pp_auxiliary_list_rules fd m xd frdcs;

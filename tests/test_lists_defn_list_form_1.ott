@@ -1,7 +1,7 @@
 %% Test of a defn production containing a list form
 
-indexvar i, j, k, l, m, n ::= {{ coq nat }}
-metavar x ::= {{ coq nat }}
+indexvar i, j, k, l, m, n ::= {{ coq nat }} {{ lean natish }}
+metavar x ::= {{ coq nat }} {{ lean natish }}
 grammar
   e :: e_ ::=
     | ( x1 , .. , xn )                          ::   :: tuple

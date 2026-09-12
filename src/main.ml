@@ -59,6 +59,9 @@ let lem_filter_filename_dsts = ref ([] :  string list)
 let coq_filter_filenames = ref ([] : (string * string) list)
 let coq_filter_filename_srcs = ref ([] : string list)
 let coq_filter_filename_dsts = ref ([] :  string list)
+let lean_filter_filenames = ref ([] : (string * string) list)
+let lean_filter_filename_srcs = ref ([] : string list)
+let lean_filter_filename_dsts = ref ([] :  string list)
 let twf_filter_filenames = ref ([] : (string * string) list)
 let twf_filter_filename_srcs = ref ([] : string list)
 let twf_filter_filename_dsts = ref ([] :  string list)
@@ -93,6 +96,8 @@ let coq_expand_lists = ref false
 let coq_lngen = ref false
 let coq_names_in_rules = ref true
 let coq_use_filter_fn = ref false
+let lean_expand_lists = ref false
+let lean_names_in_rules = ref true
 let merge_fragments = ref false
 let picky_multiple_parses = ref false
 let caml_include_terminals = ref false
@@ -128,6 +133,10 @@ let options = Arg.align [
     Arg.Tuple[Arg.String (fun s -> coq_filter_filename_srcs := s :: !coq_filter_filename_srcs);
               Arg.String (fun s -> coq_filter_filename_dsts := s :: !coq_filter_filename_dsts)],
     "<src><dst>  Files to Coq filter" ); 
+  ( "-lean_filter", 
+    Arg.Tuple[Arg.String (fun s -> lean_filter_filename_srcs := s :: !lean_filter_filename_srcs);
+              Arg.String (fun s -> lean_filter_filename_dsts := s :: !lean_filter_filename_dsts)],
+    "<src><dst>  Files to Lean filter" ); 
   ( "-hol_filter", 
     Arg.Tuple[Arg.String (fun s -> hol_filter_filename_srcs := s :: !hol_filter_filename_srcs);
               Arg.String (fun s -> hol_filter_filename_dsts := s :: !hol_filter_filename_dsts)],
@@ -248,6 +257,12 @@ let options = Arg.align [
     Arg.Bool (fun b -> coq_use_filter_fn := b),
     "<"^string_of_bool !coq_use_filter_fn^">  Use list_filter instead of list_minus2 in substitutions" ); 
 (* options for OCaml output *)
+  ( "-lean_expand_list_types", 
+    Arg.Bool (fun b -> lean_expand_lists := b),
+    "<"^string_of_bool !lean_expand_lists^">  Expand list types in Lean output (not yet implemented)" ); 
+  ( "-lean_names_in_rules", 
+    Arg.Bool (fun b -> lean_names_in_rules := b),
+    "<"^string_of_bool !lean_names_in_rules^">  Copy user names in rule definitions" ); 
   ( "-ocaml_include_terminals",
     Arg.Bool (fun b -> caml_include_terminals := b),
     "<"^string_of_bool !caml_include_terminals^">  Include terminals in OCaml output (experimental!)" );
@@ -318,6 +333,7 @@ let _ = hol_filter_filenames := List.combine (!hol_filter_filename_srcs) (!hol_f
 let _ = lem_filter_filenames := List.combine (!lem_filter_filename_srcs) (!lem_filter_filename_dsts)
 let _ = isa_filter_filenames := List.combine (!isa_filter_filename_srcs) (!isa_filter_filename_dsts)
 let _ = coq_filter_filenames := List.combine (!coq_filter_filename_srcs) (!coq_filter_filename_dsts)
+let _ = lean_filter_filenames := List.combine (!lean_filter_filename_srcs) (!lean_filter_filename_dsts)
 let _ = twf_filter_filenames := List.combine (!twf_filter_filename_srcs) (!twf_filter_filename_dsts)
 let _ = caml_filter_filenames := List.combine (!caml_filter_filename_srcs) (!caml_filter_filename_dsts)
 
@@ -325,6 +341,7 @@ let types_of_extensions =
     [ "ott","ott";
       "tex","tex"; 
       "v",  "coq"; 
+      "lean",  "lean"; 
       "thy","isa"; 
       "sml","hol"; 
       "lem","lem"; 
@@ -345,7 +362,7 @@ let file_type name =
   with
     _ -> None 
 
-let non_tex_output_types = ["coq"; "isa"; "hol"; "lem"; "twf"; "ocaml"]
+let non_tex_output_types = ["coq"; "lean"; "isa"; "hol"; "lem"; "twf"; "ocaml"]
 let output_types =  "tex" :: "lex" :: "menhir" :: non_tex_output_types
 let input_types = "ott" :: output_types
 
@@ -373,7 +390,7 @@ let classify_file_argument arg =
 (*                                                                           *)                  
 (*   values, containing first all the ott source files from the end of       *)
 (*   the command line, if any, then all the explicit -in and -out arguments, *)
-(*   and finally any -tex/-coq/-hol/-isabelle/-lem/-ocaml arguments               *)
+(*   and finally any -tex/-coq/-lean/-hol/-isabelle/-lem/-ocaml arguments               *)
 
 let all_file_arguments = 
   List.map classify_file_argument (List.rev (!file_arguments))
@@ -392,7 +409,7 @@ let targets_in ts =
 
 let targets_non_tex = targets_in non_tex_output_types
 let targets = targets_in output_types
-let targets_for_non_picky = targets_in [(*"lex";"ocaml";*)"hol";"lem";"isa";"twf";"coq";"tex"]
+let targets_for_non_picky = targets_in [(*"lex";"ocaml";*)"hol";"lem";"isa";"twf";"coq";"lean";"tex"]
 
 (* collect the source filenames *)
 let source_filenames = 
@@ -424,6 +441,9 @@ let m_isa = Isa { ppi_isa_primrec = !isa_primrec;
 		  ppi_generate_lemmas = !isa_generate_lemmas }  
 let m_hol = Hol { hol_library = ref ("",[]); }
 let m_lem = Lem { lem_library = ref ("",[]); }
+let m_lean = Lean { lean_library = ref ("",[]);
+                    lean_expand_lists = !lean_expand_lists;
+                    lean_names_in_rules = !lean_names_in_rules}
 let m_twf = Twf { twf_current_defn = ref "";
 		  twf_library = ref ("",[]) }
 let m_coq = Coq { coq_expand_lists = !coq_expand_lists;
@@ -527,6 +547,7 @@ let _ =
              "isa",m_isa;
              "twf",m_twf;
              "coq",m_coq ;
+             "lean",m_lean ;
              "tex",m_tex ]) 
         targets_for_non_picky)
 
@@ -774,6 +795,8 @@ let output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux) =
           System_pp.pp_systemdefn_core_io m_hol sd lookup fi !merge_fragments
       | "lem" ->
           System_pp.pp_systemdefn_core_io m_lem sd lookup fi !merge_fragments
+      | "lean" ->
+          System_pp.pp_systemdefn_core_io m_lean sd lookup fi !merge_fragments
       | "twf" -> 
           System_pp.pp_systemdefn_core_io m_twf sd lookup fi !merge_fragments
       | "ocaml" -> 
@@ -856,6 +879,7 @@ let output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux) =
 
   (List.iter (filter m_tex) (!tex_filter_filenames));
   (List.iter (filter m_coq) (!coq_filter_filenames));
+  (List.iter (filter m_lean) (!lean_filter_filenames));
   (List.iter (filter m_isa) (!isa_filter_filenames));
   (List.iter (filter m_hol) (!hol_filter_filenames));
   (List.iter (filter m_lem) (!lem_filter_filenames));

@@ -1,9 +1,9 @@
 
-#OTT=../../bin/ott
-OTT=ott
+OTT=../../bin/ott
+#OTT=ott
 
 l1: l1.ott
-	$(OTT) -pp_grammar -isa_syntax true l1.ott -o l1.tex -o l1.thy -o l1.lem -o l1.v
+	$(OTT) -pp_grammar -isa_syntax true l1.ott -o l1.tex -o l1.v -o l1.lean # -o l1.thy -o l1.lem 
 	$(OTT) -tex_wrap false l1.ott -o l1_nowrap.tex 
 	pdflatex l1.tex
 	lem l1.lem  -isa

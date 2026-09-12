@@ -1,39 +1,45 @@
+embed
+{{ lean
+set_option linter.unusedVariables false
+}}
 metavar termvar, x ::=
-  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}  {{ lem string }} {{ ocaml int }}
+  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}  {{ lem string }} {{ ocaml int }} {{ lean String }}
   {{ tex \mathit{[[termvar]]} }} {{ com term variable }} 
 
 metavar typvar, X ::=
-  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}  {{ lem string }} {{ ocaml int }}
+  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}  {{ lem string }} {{ ocaml int }} {{ lean String }}
   {{ tex \mathit{[[typvar]]} }} {{ com type variable }} 
 
 grammar
-  t :: 't_' ::=                                         {{ com term }}
+  t {{ lean-type Term }}  :: 't_' ::=                                         {{ com term }}
     | x                   ::   :: Var                     {{ com variable }}         
     | \ x . t             ::   :: Lam  (+ bind x in t +)  {{ com abstraction }}      
     | t t'                ::   :: App                     {{ com application }}      
-    | ( t )               :: S :: paren   {{ ichl [[t]] }} {{ ocaml int }}
-    | { t / x } t'        :: M :: tsub    {{ ichl ( tsubst_t [[t]] [[x]] [[t']] ) }} {{ ocaml int }}
+    | ( t )               :: S :: paren   {{ ichlLo [[t]] }} 
+    | { t / x } t'        :: M :: tsub    {{ ichlLo ( tsubst_t [[t]] [[x]] [[t']] ) }}
 
   v :: 'v_' ::=                                         {{ com  value }}
     | \ x . t             ::   :: Lam                     {{ com abstraction }}
 
-  T :: T_ ::=                                           {{ com type }}
+  T {{ lean-type Typ }} :: T_ ::=                                           {{ com type }}
     | X                   ::   :: var                     {{ com variable }}
     | T -> T'             ::   :: arrow                   {{ com function }}
-    | ( T )               :: S :: paren {{ ichl [[T]] }} {{ ocaml int }}
+    | ( T )               :: S :: paren {{ ichlLo [[T]] }}
 
-  G {{ tex \Gamma }} :: G_ ::= {{ isa (termvar*T) list }} {{ coq list (termvar*T) }} {{ ocaml (termvar*T) list }} {{ lem list (termvar*T) }}
+  G {{ tex \Gamma }} :: G_ ::= {{ isa (termvar*T) list }} {{ coq list (termvar*T) }} {{ ocaml (termvar*T) list }} {{ lem list (termvar*T) }} {{ lean List (termvar×Typ) }}
                                {{ hol (termvar#T) list }} {{ com type environment }}
     | empty               ::   :: em 
         {{ isa Nil }}
         {{ coq G_nil }}
         {{ hol [] }}
         {{ lem [] }}
+        {{ lean [] }}
     | G , x : T           ::   :: vn 
         {{ isa ([[x]],[[T]])#[[G]] }}
         {{ coq (cons ([[x]],[[T]]) [[G]]) }}
         {{ hol (([[x]],[[T]])::[[G]]) }}
         {{ lem (([[x]],[[T]])::[[G]]) }}
+        {{ lean (([[x]],[[T]])::[[G]]) }}
 
   terminals :: 'terminals_' ::=
     | \                   ::   :: lambda     {{ tex \lambda }}
@@ -49,12 +55,14 @@ grammar
        {{ coq (not [[formula]]) }}
        {{ hol (~[[formula]]) }}
        {{ lem (not [[formula]]) }}
+       {{ lean (not [[formula]]) }}
     | x = x'              ::   :: eqv 
-       {{ ichl [[x]]=[[x']] }}
+       {{ ichlL [[x]]=[[x']] }}
     | x : T in G          ::   :: xTG 
        {{ isa ? G1 G2. [[G]] = G1 @ ([[x]],[[T]])#[[G2]] & [[x]]~:fst ` set G1 }}
        {{ coq (bound [[x]] [[T]] [[G]])  }}
        {{ lem (bound [[x]] [[T]] [[G]])  }}
+       {{ lean (bound [[x]] [[T]] [[G]])  }}
        {{ hol ? G1 G2. ([[G]] = G1 ++ ([[x]],[[T]])::[[G2]]) /\ ~(MEM [[x]] (MAP FST G1)) }}
 
 embed
@@ -71,6 +79,12 @@ let rec bound x t0 g =
   | (x',t')::g' -> if x=x' then t0=t' else bound x t0 g'
   | [] -> false
   end
+}}
+{{ lean
+def bound (x:termvar) (t0:Typ) (g:G) :=
+  match g with
+  | (x',t')::g' => if x=x' then t0=t' else bound x t0 g'
+  | [] => false
 }}
 
 subrules

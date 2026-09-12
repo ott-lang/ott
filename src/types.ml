@@ -816,6 +816,10 @@ and pp_coq_opts =
       coq_lngen : bool;
       coq_use_filter_fn : bool;
       coq_names_in_rules : bool } (* co *)
+and pp_lean_opts = 
+  { lean_library : (string * string list) ref;
+    lean_expand_lists : bool;  (* Claude: accepted but not yet acted on *)
+    lean_names_in_rules : bool } (* lno *)
 and pp_isa_opts = 
     { ppi_isa_primrec : bool;
       ppi_isa_inductive : bool;
@@ -859,6 +863,7 @@ type pp_yacc_opts = unit (* yo *)
 
 type pp_mode =  (* m *)
   | Coq of pp_coq_opts
+  | Lean of pp_lean_opts
   | Isa of pp_isa_opts
   | Hol of pp_hol_opts
   | Lem of pp_lem_opts
@@ -962,6 +967,12 @@ let lemTODO s1 s2 = if !lem_debug then "(* lemTODO "^s1^"*) "^s2 else s2
 let lemTODOm m s1 s2 = match m with Lem _ -> lemTODO s1 s2 | _ -> s2
 let lemTODOmo m s1 s2o = match s2o with None -> None | Some s2 -> Some (lemTODOm m s1 s2) 
 
+
+(** ************************ *)
+(** lean debug    *)
+(** ************************ *)
+let lean_debug = ref false
+let leanTODO s1 s2 = if !lean_debug then "(* leanTODO "^s1^"*) "^s2 else s2
 
 
 (* from grammar_typecheck *)

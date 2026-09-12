@@ -843,6 +843,7 @@ For this, one can add a \mykw{coq}, \mykw{hol}, \mykw{isa}, or
 \mykw{ocaml} hom to the primary nonterminal root.  In the example
 below, the user can write \texttt{T}, \texttt{T'} etc. in their Ott
 source, but the generated HOL type is \texttt{Typ}.
+(TODO: this should work as stated for Lean, but such a hom also affects variable printing -- maybe that's a bug. Added a \mykw{lean-type} hom.)
 \begin{alltt}
 T \mysym{\mylb\mylb{}} \mykw{hol} Typ \mysym{\myrb\myrb{}}\mysym{,} S\mysym{,} U \mysym{::} 'T_' \mysym{::=}                    \mysym{\mylb\mylb{}} \mykw{com} type  \mysym{\myrb\myrb{}}
   \mysym{|} T -> T'                          \mysym{::} \mysym{::} Fun          \mysym{\mylb\mylb{}} \mykw{com} type of functions \mysym{\myrb\myrb{}}

@@ -62,6 +62,12 @@ let pp_list_minus_lem =
   ^ "  | h::t -> if (List.elem h l2) then list_minus t l2 else h::(list_minus t l2)\n"
   ^ "  end\n"
   ^ "\n")
+let pp_list_minus_lean = 
+  ("def list_minus [BEq a] (l1:List a) (l2:List a) : (List a) :=\n"
+  ^ "  match l1 with\n"
+  ^ "  | [] => []\n"
+  ^ "  | h::t => if List.elem h l2 then list_minus t l2 else h::(list_minus t l2)\n"
+  ^ "\n")
 let pp_list_minus_isa =
   ( "primrec\n"
   ^ "list_minus :: \"'a list => 'a list => 'a list\"\n"
@@ -120,6 +126,14 @@ let pp_list_assoc_coq =
   ^ "end.\n"
   ^ "Arguments list_assoc [A B] _ _ _.\n\n")
 
+let pp_list_assoc_lean =
+  "def list_assoc [DecidableEq a] (l:List (a × b)) (x:a) : Option b :=\n"
+  ^ "match l with\n"
+  ^ "| [] => none\n"
+  ^ "| (x',y')::t => if x=x' then some y' else list_assoc t x\n\n"
+
+
+
 (* this is a temporary workaround, to be replaced when the Lem library
 List.assoc have been updated to return an option type *)
 let pp_list_assoc_lem =
@@ -146,12 +160,12 @@ let pp_list_all_cong_lemma_isa =
  
 let pp_list_mem m = match m with 
   | Coq co -> Auxl.add_to_lib co.coq_library "list_mem" pp_list_mem_coq
-  | Caml _ | Hol _ | Lem _ | Isa _ | Tex _ | Twf _ | Ascii _ | Lex _ | Menhir _ 
+  | Caml _ | Hol _ | Lem _ | Lean _ | Isa _ | Tex _ | Twf _ | Ascii _ | Lex _ | Menhir _ 
     -> Auxl.errorm m "pp_list_mem"
 
 let pp_list_filter m = match m with
   | Coq co -> Auxl.add_to_lib co.coq_library "list_filter" pp_list_filter_coq
-  | Isa _ | Hol _ | Lem _ | Caml _ | Tex _ | Twf _ | Ascii _ | Lex _ | Menhir _ 
+  | Isa _ | Hol _ | Lem _ | Lean _ | Caml _ | Tex _ | Twf _ | Ascii _ | Lex _ | Menhir _ 
     -> Auxl.errorm m "pp_list_filter"
 
 let pp_list_minus m = match m with 
@@ -159,6 +173,7 @@ let pp_list_minus m = match m with
   | Lem oo -> Auxl.add_to_lib oo.lem_library "list_minus" pp_list_minus_lem
   | Isa io  -> Auxl.add_to_lib io.isa_library "list_minus" pp_list_minus_isa
   | Hol ho  -> ()
+  | Lean lno  -> Auxl.add_to_lib lno.lean_library "list_minus" pp_list_minus_lean
   | Coq co  ->
       pp_list_mem m;
       Auxl.add_to_lib co.coq_library "list_minus" pp_list_minus_coq
@@ -168,7 +183,7 @@ let pp_list_minus2 m = match m with
   | Coq co ->
       pp_list_mem m;
       Auxl.add_to_lib co.coq_library "list_minus2" pp_list_minus2_coq
-  | Caml _ | Hol _ | Lem _ | Isa _ | Twf _ | Tex _ | Ascii _ | Lex _ | Menhir _ 
+  | Caml _ | Hol _ | Lem _ | Lean _ | Isa _ | Twf _ | Tex _ | Ascii _ | Lex _ | Menhir _ 
     -> Auxl.errorm m "pp_list_minus2"
 
 let pp_list_assoc m = match m with 
@@ -176,6 +191,7 @@ let pp_list_assoc m = match m with
   | Hol ho -> ()
   | Lem lo -> Auxl.add_to_lib lo.lem_library "list_assoc" pp_list_assoc_lem
   | Coq co -> Auxl.add_to_lib co.coq_library "list_assoc" pp_list_assoc_coq
+  | Lean lno -> Auxl.add_to_lib lno.lean_library "list_assoc" pp_list_assoc_lean
   | Caml _ | Twf _ | Tex _ | Ascii _ | Lex _ | Menhir _ 
     -> Auxl.errorm m "pp_list_assoc"
 
@@ -320,6 +336,16 @@ let pp_auxfn_clauses m xd f ntr ntmvr =
           "", 
           " : list " ^ Grammar_pp.pp_nt_or_mv_root_ty m xd ntmvr ^ " :=\n" 
 	  ^ "  match " ^ Grammar_pp.pp_nonterm m xd pat_var ^ " with\n" ) 
+    | Lean _ -> 
+        let nts_used = Context_pp.nts_used_in_lhss m xd (Auxl.rule_of_ntr xd ntr) in
+        let fresh_var_ntr = Auxl.secondary_ntr xd ntr  in
+	let pat_var  = Auxl.fresh_nt nts_used (fresh_var_ntr,[]) in
+	( (leanTODO "8" (Auxl.auxfn_name f ntrn ntrn (* FZ *)
+	  ^ " (" ^ Grammar_pp.pp_nonterm m xd pat_var 
+          ^ ":" ^ Grammar_pp.pp_nontermroot_ty m xd ntr ^ ")")), 
+          "", 
+          " : List " ^ Grammar_pp.pp_nt_or_mv_root_ty m xd ntmvr ^ " :=\n" 
+	  ^ "  match " ^ Grammar_pp.pp_nonterm m xd pat_var ^ " with\n" )
     | Lem _ 
     | Caml _ -> 
         let nts_used = Context_pp.nts_used_in_lhss m xd (Auxl.rule_of_ntr xd ntr) in
@@ -593,6 +619,11 @@ let rec pp_subst_symterm
               ^ that_s 
               ^ " "
               ^ "(" ^ Grammar_pp.pp_mse_string m xd sie de bound_things_glommed ^ ")"
+          | Lean _ ->
+              leanTODO "9" " List.elem "
+              ^ that_s 
+              ^ " "
+              ^ "(" ^ Grammar_pp.pp_mse_string m xd sie de bound_things_glommed ^ ")"
           | Coq _ -> 
 	      pp_list_mem m; 
 	      "list_mem "
@@ -666,6 +697,24 @@ let rec pp_subst_symterm
 		^ " "
 		^ nt_s
 		^ ")" 
+               )
+            | Lean _ ->
+                leanTODO "10" (
+		"("
+		^ Auxl.subst_name subst.sb_name dep_name ^ " "
+		^ (match bound_things_glommed with
+		| Empty -> sub_var
+		| _ ->
+                    (* Claude: Lean's List.filter takes the predicate first, then the list *)
+                    "(List.filter "
+                    ^ "(fun ("^ that_s ^","^ this_s ^") => "
+                    ^ "not ("^that_in_bound_things()^")"
+                    ^ ")"
+                    ^ " " ^ sub_var
+                    ^")")
+		^ " "
+		^ nt_s
+		^ ")"
                )
             | Coq co -> 
 		"("
@@ -927,6 +976,49 @@ and pp_subst_symterm_list_body
 	       ("", "Cons_"^suf^" "^lp^" "^rp,
 		"Cons_"^suf^" " ^ rhs ^ " (" ^ id ^ " " ^ common_lhs ^ " "^rp^")" ) ] } ])
 
+    | Lean _ ->
+        (* Claude: mirror the Coq coq_expand_lists branch, but recurse over the
+           native list spine and rebuild the (possibly n-ary) tuple element
+           directly, so no separate tuple helper is needed *)
+        let elem_ty =
+          let tys =
+            List.map (fun ((x,_),_) ->
+              Grammar_pp.pp_nt_or_mv_root_ty m xd
+                (Auxl.promote_ntmvr xd (Auxl.primary_nt_or_mv_of_nt_or_mv xd x)))
+              de1i.de1_ntmvsns in
+          ( match tys with
+          | [t] -> t
+          | _ -> "(" ^ String.concat " \195\151 " tys ^ ")" ) in
+        let list_ty = "List " ^ elem_ty in
+        let tl_id = de1i.de1_compound_id ^ "_" in
+        let params =
+          ( if subst.sb_multiple
+            then
+              " (" ^ sub_var ^ ":List ("
+              ^ Grammar_pp.pp_nt_or_mv_root_ty m xd subst.sb_that
+              ^ "×" ^ Grammar_pp.pp_nontermroot_ty m xd subst.sb_this ^ "))"
+            else
+              " (" ^ Grammar_pp.pp_nonterm m xd this_var ^ ":"
+              ^ Grammar_pp.pp_nontermroot_ty m xd subst.sb_this ^ ")"
+              ^ " (" ^ Grammar_pp.pp_nt_or_mv m xd that_var ^ ":"
+              ^ Grammar_pp.pp_nt_or_mv_root_ty m xd subst.sb_that ^ ")" )
+          ^ " (" ^ de1i.de1_compound_id ^ ":" ^ list_ty ^ ")" in
+        (* Claude: the helper is named subst_name ^ element-type-name ^ "_list";
+           like the Coq coq_expand_lists branch this is not disambiguated when one
+           production has two lists of the same element-type tuple. *)
+        let header =
+          ( id ^ leanTODO "11" params,
+            "",
+            " : " ^ list_ty ^ " :=\n  match " ^ de1i.de1_compound_id ^ " with\n" ) in
+        ( id,
+          [ { r_fun_id = id;
+              r_fun_dep = id :: !dependencies;
+              r_fun_type = name;
+              r_fun_header = header;
+              r_fun_clauses =
+                [ ( "", "[]", "[]" );
+                  ( "", de1i.de1_pattern ^ " :: " ^ tl_id,
+                    pp_body ^ " :: (" ^ id ^ " " ^ common_lhs ^ " " ^ tl_id ^ ")" ) ] } ] )
 
     | Caml _ -> ("",[])
 
@@ -1052,6 +1144,15 @@ and pp_subst_symterm_list_body
               ^ de1i.de1_compound_id
               ^ ")", [] )
 
+    | Lean _ ->
+        (* Claude: use the mutually-recursive _list helper built by
+           make_aux_funcs_list, as the Coq backend does for coq_expand_lists *)
+        let l = Str.split (Str.regexp "(\\|,\\|)") de1i.de1_pattern in
+        if List.length l = 1 then
+          ( leanTODO "12" body, funcs )
+        else
+          ( leanTODO "13" body, funcs )
+
     | Caml _ ->
         ( "(List.map (fun "^de1i.de1_pattern^" -> "^pp_body^") "
         ^ de1i.de1_compound_id
@@ -1086,7 +1187,7 @@ let pp_subst_prod
     let lhs_pat = Grammar_pp.pp_symterm m xd sie de lhs_st in
     let lhs = 
       ( match m with 
-      | Coq _ | Caml _ | Lem _ -> lhs_pat  
+      | Coq _ | Lean _ | Caml _ | Lem _ -> lhs_pat  
       | Isa _ | Hol _ | Twf _ -> 
 (*           Auxl.subst_name subst.sb_name rule_ntr_name  ^ " " *)
           ( if subst.sb_multiple then sub_var
@@ -1112,7 +1213,7 @@ let pp_subst_prod
 
     let substituted_singleton_rhs thing_s =
       ( match m with
-      | Coq _ | Isa _ | Hol _ | Lem _ | Caml _ ->
+      | Coq _ | Isa _ | Hol _ | Lem _ | Lean _ | Caml _ ->
 	  let ssr = 
 	    if subst.sb_multiple then 
               (match m with
@@ -1149,6 +1250,19 @@ let pp_subst_prod
 		  ^ " -> " ^ Grammar_pp.pp_nonterm m xd this_var 
 		  ^ " end)"
                  )
+              | Lean _ -> 
+		  pp_list_assoc m;
+		  (* tentative hol code for multiple subst *)
+                  leanTODO "14" (
+		  "(match list_assoc " 
+		  ^ sub_var ^ " " 
+		  ^ thing_s 
+		  ^ " with "
+		  ^ "| none => " ^ lhs_pat
+		  ^ "| some " ^ Grammar_pp.pp_nonterm m xd this_var 
+		  ^ " => " ^ Grammar_pp.pp_nonterm m xd this_var 
+		  ^ " )"
+                 )
               | Coq coq_opt -> 
 		  pp_list_assoc m;
 		  "(match list_assoc " (* A B eq *)
@@ -1176,7 +1290,7 @@ let pp_subst_prod
 	      let that_s = Grammar_pp.pp_nt_or_mv m xd that_var in
 	      let eq_s = 
 		( match m with
-		| Isa _ | Hol _ | Lem _ | Caml _ -> thing_s ^ "=" ^ that_s
+		| Isa _ | Hol _ | Lem _ | Lean _ | Caml _ -> thing_s ^ "=" ^ that_s
 		| Twf _ -> raise Auxl.ThisCannotHappen
 		| Coq _ ->
 		    ( if Auxl.require_locally_nameless xd 
@@ -1389,6 +1503,25 @@ let pp_subst_rule : subst -> pp_mode -> syntaxdefn -> nontermroot list -> rule -
              " {struct " ^ Grammar_pp.pp_nonterm m xd in_var ^"}", 
              " : " ^ Grammar_pp.pp_nontermroot_ty m xd r.rule_ntr_name ^ " :=\n" 
 	     ^ "  match " ^ Grammar_pp.pp_nonterm m xd in_var ^ " with\n" ) )
+      | Lean _ ->       
+	  ( (id
+             ^ ( if subst.sb_multiple 
+	     then 
+	       (leanTODO "15" (" (" ^ sub_var ^ ":List (" 
+	       ^ Grammar_pp.pp_nt_or_mv_root_ty m xd subst.sb_that 
+	       ^ "×" ^ Grammar_pp.pp_nontermroot_ty m xd subst.sb_this ^ "))" ))
+	     else
+	      (leanTODO "16" ( " (" ^ Grammar_pp.pp_nonterm m xd this_var ^ ":"
+               ^ Grammar_pp.pp_nontermroot_ty m xd subst.sb_this ^")"
+	       ^ " (" ^ Grammar_pp.pp_nt_or_mv m xd that_var ^ ":"
+               ^ Grammar_pp.pp_nt_or_mv_root_ty m xd subst.sb_that ^ ")" )))
+	     (* Claude: the scrutinee parameter is appended after the if, so it is
+	        emitted for multiple substitutions as well as single ones *)
+	     ^ " (" ^ Grammar_pp.pp_nonterm m xd in_var ^ ":"
+             ^ Grammar_pp.pp_nontermroot_ty m xd r.rule_ntr_name ^")"),
+     ""(*" {struct " ^ Grammar_pp.pp_nonterm m xd in_var ^"}"*), 
+             " : " ^ Grammar_pp.pp_nontermroot_ty m xd r.rule_ntr_name ^ " :=\n" 
+	     ^ "  match " ^ Grammar_pp.pp_nonterm m xd in_var ^ " with\n" )
       | Lem _ 
       | Caml _ ->       
           
@@ -1499,7 +1632,7 @@ let pp_freevar_rule_const (fv : freevar) (m: pp_mode) (xd: syntaxdefn)
 (** fv for a symterm *)
 (** **************** *)
 
-let list_append m = match m with | Lem _ | Hol _ -> " ++ " | _ -> " @ "
+let list_append m = match m with | Lem _ | Hol _ | Lean _ -> " ++ " | _ -> " @ "
 
 (* todo: is there a better idiom than this insane list of arguments? *)
 let rec pp_fv_symterm
@@ -1541,7 +1674,7 @@ let rec pp_fv_symterm
 	    let call = Auxl.fv_name fv.fv_name id (* (Auxl.promote_ntr xd ntrp) *) ^ " " ^ nt_s in
 	    ( match m with 
 	    | Twf _ -> Some call
-	    | Isa _ | Hol _ | Lem _ | Caml _ | Coq _ -> Some ("("^call^")")
+	    | Isa _ | Hol _ | Lem _ | Caml _ | Coq _ | Lean _ -> Some ("("^call^")")
             | Tex _ | Ascii _ | Lex _ | Menhir _ -> assert false))
         else 
           None in
@@ -1575,13 +1708,13 @@ let rec pp_fv_symterm
 	  | Isa _ when has_isa_set_hom fv ->
 	      "(" ^ s ^ " - set "
               ^ Grammar_pp.pp_mse_string m xd sie de bound_things_glommed ^")"
-          | Isa _ | Hol _ | Lem _ | Caml _ | Coq _ -> 
+          | Isa _ | Hol _ | Lem _ | Caml _ | Coq _ | Lean _ -> 
 	      pp_list_minus m;
               "(list_minus "
 	      ^ 
 		(match m with (* HACK is the name eq_thing always correct? *) 
 		| Ascii _ | Tex _ | Twf _ | Lex _ | Menhir _ -> Auxl.errorm m "list_minus"
-		| Isa _ | Hol _ | Lem _ | Caml _ -> "" 
+		| Isa _ | Hol _ | Lem _ | Lean _ | Caml _ -> "" 
 		| Coq _ -> "eq_" ^ (Grammar_pp.pp_nt_or_mv_root_ty m xd fv.fv_that) ^ " " ) 
               ^ s ^" "
               ^ Grammar_pp.pp_mse_string m xd sie de bound_things_glommed ^")")  )
@@ -1622,7 +1755,7 @@ and pp_fv_symterm_element
       then
         Some 
           (match m with 
-          | Isa _ | Hol _ | Lem _ | Caml _ -> ("["^mv_s^"]") 
+          | Isa _ | Hol _ | Lem _ | Lean _ | Caml _ -> ("["^mv_s^"]") 
           | Coq _ -> ("(cons "^mv_s^" nil)") 
 	  | Twf _ -> ("(natlist/cons "^mv_s^" natlist/nil)") 
           | Ascii _ | Tex _ | Lex _ | Menhir _ -> Auxl.errorm m "pp_fv_symterm_element"
@@ -1717,7 +1850,7 @@ and pp_fv_symterm_list_body
   (* TODO optimise the output in the common case of a list of singletons *)
   match m with
   | Twf _ | Tex _ | Ascii _ | Lex _ | Menhir _ -> Auxl.errorm m "pp_fv_symterm_list_body"
-  | Isa _ | Coq _ | Hol _ | Lem _ | Caml _ ->
+  | Isa _ | Coq _ | Lean _ | Hol _ | Lem _ | Caml _ ->
       let pp_body_elements, funcs =
 	let body_options, funcs = 
 	  List.split
@@ -1733,7 +1866,7 @@ and pp_fv_symterm_list_body
           ( match m with
           | Coq _ -> Auxl.insert_append m pp_body_elements
           | Isa _ when has_isa_set_hom fv -> String.concat " \\<union> " pp_body_elements
-          | _ -> String.concat (list_append m) pp_body_elements ) in
+          | (Lean _ | _) -> String.concat (list_append m) pp_body_elements ) in
         if List.length pp_body_elements = 1 
         then tmp
         else "(" ^ tmp ^ ")" in
@@ -1826,6 +1959,37 @@ and pp_fv_symterm_list_body
 		("(List.concat (List.map (fun "^de1i.de1_pattern^" -> "^pp_body^") "
 		 ^ de1i.de1_compound_id
 		 ^ "))"), funcs
+	  | Lean _ ->
+	      (* Claude: generate a mutually-recursive _list helper: Lean's structural
+		 recursion cannot follow a recursive call under a pair projection
+		 inside a List *)
+	      let post_name = Grammar_pp.make_name_elements m xd false stlb.stl_elements in
+	      let id_list = Auxl.fv_name fv.fv_name post_name ^ "_list" in
+	      let output_typ = "List " ^ Grammar_pp.pp_nt_or_mv_root_ty m xd fv.fv_that in
+	      let elem_ty =
+		let tys =
+		  List.map (fun ((x,_),_) ->
+		    Grammar_pp.pp_nt_or_mv_root_ty m xd
+		      (Auxl.promote_ntmvr xd (Auxl.primary_nt_or_mv_of_nt_or_mv xd x)))
+		    de1i.de1_ntmvsns in
+		( match tys with
+		| [t] -> t
+		| _ -> "(" ^ String.concat " \195\151 " tys ^ ")" ) in
+	      let tl_id = de1i.de1_compound_id ^ "_" in
+	      let header =
+		( id_list ^ " (" ^ de1i.de1_compound_id ^ ":List " ^ elem_ty ^ ")",
+		  "",
+		  " : " ^ output_typ ^ " :=\n  match " ^ de1i.de1_compound_id ^ " with\n" ) in
+	      Some (leanTODO "17" ("(" ^ id_list ^ " " ^ de1i.de1_compound_id ^ ")")),
+	      ( { r_fun_id = id_list;
+		  r_fun_dep = id_list :: !dependencies;
+		  r_fun_type = Grammar_pp.pp_nt_or_mv_root_ty m xd fv.fv_that;
+		  r_fun_header = header;
+		  r_fun_clauses =
+		  [ ("", "[]", "[]");
+		    ("", de1i.de1_pattern ^ " :: " ^ tl_id,
+		     body_elements ^ list_append m ^ "(" ^ id_list ^ " " ^ tl_id ^ ")") ] }
+		:: funcs )
 	  | Coq co when co.coq_expand_lists -> 
 	      let var_list = Str.split (Str.regexp "(\\|,\\|)") de1i.de1_pattern in
               let args = 
@@ -1903,7 +2067,7 @@ let pp_freevar_prod
       let rhs =
         (match m with 
 	| Isa _ when (List.exists (fun (x,_) -> x = "isa-set") fv.fv_homs) -> "{"^thing_s^"}"
-        | Isa _ | Hol _ | Lem _ | Caml _ -> ("["^thing_s^"]") 
+        | Isa _ | Hol _ | Lem _ | Lean _ | Caml _ -> ("["^thing_s^"]") 
         | Coq co ->
 	    if not !(co.coq_locally_nameless)
 	    then "(cons "^thing_s^" nil)"
@@ -1950,7 +2114,7 @@ let pp_freevar_prod
           | [] -> 
 	      (match m with 
 	      | Isa _ when has_isa_set_hom fv -> "{}"
-	      | Isa _ | Hol _ | Lem _ | Caml _ -> "[]" 
+	      | Isa _ | Hol _ | Lem _ | Lean _ | Caml _ -> "[]" 
 	      | Coq co -> 
 		  if not !(co.coq_locally_nameless)
 		  then "nil"
@@ -1960,7 +2124,7 @@ let pp_freevar_prod
           | _ -> 
 	      ( match m with 
 	      | Isa _ when has_isa_set_hom fv -> String.concat " \\<union> " rhs_elements
-              | Isa _ | Caml _ | Lem _ -> String.concat (list_append m) rhs_elements 
+              | Isa _ | Caml _ | Lem _ | Lean _ -> String.concat (list_append m) rhs_elements 
               | Hol _ -> String.concat " ++ " rhs_elements 
 	      | Coq co -> 
 		  if not !(co.coq_locally_nameless)
@@ -2032,6 +2196,22 @@ let pp_freevar_rule : freevar -> pp_mode -> syntaxdefn -> nontermroot list -> ru
 	    | Lem _ -> " list " ^ Grammar_pp.pp_nt_or_mv_root_ty m xd fv.fv_that
 	    )
           ^ " =\n  match " ^ Grammar_pp.pp_nonterm m xd fresh_var ^ " with\n" 
+
+      | Lean _ -> 
+	  let nts_used = Context_pp.nts_used_in_lhss m xd r in
+          let fresh_var_ntr = Auxl.secondary_ntr xd r.rule_ntr_name  in
+	  let fresh_var = Auxl.fresh_nt nts_used (fresh_var_ntr,[]) in
+          let ntrn = Grammar_pp.pp_nontermroot m xd r.rule_ntr_name in
+
+	  lemTODOm m "24" (
+          Auxl.fv_name fv.fv_name ntrn (* r.rule_ntr_name *)
+	  ^ " (" ^ Grammar_pp.pp_nonterm m xd fresh_var
+	  ^ ":" ^ Grammar_pp.pp_nontermroot_ty m xd r.rule_ntr_name 
+	  ^ ") "),
+          "",
+	  ": " 
+	  ^ " List " ^ Grammar_pp.pp_nt_or_mv_root_ty m xd fv.fv_that
+          ^ " :=\n  match " ^ Grammar_pp.pp_nonterm m xd fresh_var ^ " with\n" 
          
       | Twf _ ->
 	  ( Auxl.fv_name fv.fv_name r.rule_ntr_name ^ " : "

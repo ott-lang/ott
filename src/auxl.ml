@@ -48,6 +48,7 @@ let mode_name m = match m with
   | Hol _ -> "HOL"
   | Lem _ -> "Lem"
   | Coq _ -> "Coq"
+  | Lean _ -> "Lean"
   | Twf _ -> "Twelf"
   | Caml _ -> "OCaml"
   | Lex _ -> "Lex"
@@ -602,6 +603,7 @@ let hom_name_for_pp_mode m
     | Isa _ -> "isa"
     | Hol _ -> "hol"
     | Lem _ -> "lem"
+    | Lean _ -> "lean"
     | Coq _ -> "coq"
     | Twf _ -> "twf"
     | Caml _ -> "ocaml"
@@ -628,6 +630,9 @@ let hom_spec_for_hom_name hn homs =
 
 let hom_spec_for_pp_mode m homs = 
   hom_spec_for_hom_name (hom_name_for_pp_mode m) homs
+
+let hom_spec_for_pp_mode_dash_type m homs = 
+  hom_spec_for_hom_name (hom_name_for_pp_mode m ^ "-type") homs
 
 let loc_of_symterm st = match st with
   | St_node (l,_) -> l  
@@ -818,6 +823,7 @@ let split3 (l : ('a * 'b * 'c) list) : 'a list * 'b list * 'c list =
 let big_line_comment m s = 
   match m with
   | Coq _ | Hol _ | Lem _ | Isa _ | Caml _ -> "(** "^s^" *)\n"
+  | Lean _ -> "/- - "^s^" - -/\n"
   | Twf _ -> "%%% "^s^" %%%\n\n"
   | Tex _ -> "% "^s^"\n"
   | Menhir _ | Lex _ | Ascii _ -> errorm m "big_line_comment"
@@ -1604,7 +1610,7 @@ let pp_true m in_prop =
       else "true"
   | Hol _ -> "T" 
   | Caml _ -> "true" 
-  | Lem _ -> "true" 
+  | Lem _ | Lean _ -> "true" 
   | Ascii _ | Tex _ | Twf _ | Lex _ | Menhir _ -> errorm m "pp_true"
 
 let pp_false m in_prop =
@@ -1616,7 +1622,7 @@ let pp_false m in_prop =
       else "false"
   | Hol _ -> "F" 
   | Caml _ -> "false"
-  | Lem _ -> "false"
+  | Lem _ | Lean _ -> "false"
   | Ascii _ | Tex _ | Twf _ | Lex _ | Menhir _ -> errorm m "pp_false"
 
 let pp_and m in_prop =
@@ -1629,6 +1635,7 @@ let pp_and m in_prop =
       then " /\\ "     
       else " && "
   | Hol _ -> " /\\ "
+  | Lean _ -> " /\\ "
   | Ascii _ | Tex _ | Twf _ | Lex _ | Menhir _ -> errorm m "pp_and"
 
 let pp_or m in_prop =
@@ -1639,6 +1646,7 @@ let pp_or m in_prop =
       then " \\/ "     
       else " || "
   | Hol _ -> " \\/ " 
+  | Lean _ -> " \\/ " 
   | Caml _ -> " || "
   | Lem _ -> " || "
   | Ascii _ | Tex _ | Twf _ | Lex _ | Menhir _ -> errorm m "pp_or"
@@ -1684,7 +1692,7 @@ let insert_append m l =
 	  ^ ( String.concat " <- " 
 	      (List.map2 (fun s nl -> s ^ " " ^ nl) l list_nl) )
 	  ^ final_append )
-  | Caml _ | Tex _ | Ascii _ | Hol _ | Lem _ | Isa _ | Lex _ | Menhir _ -> raise ThisCannotHappen
+  | Caml _ | Tex _ | Ascii _ | Hol _ | Lem _ | Lean _ | Isa _ | Lex _ | Menhir _ -> raise ThisCannotHappen
 
 (* skip a nonterm or a metavar in a list of elements *)
 let rec skip_nt_mv (es:element list) =

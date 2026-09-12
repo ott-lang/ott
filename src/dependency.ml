@@ -531,6 +531,15 @@ let coq_collapse m xd funcs =
     (f.r_fun_id, f.r_fun_dep, (f.r_fun_header, (collapse_clauses m f.r_fun_id f.r_fun_clauses), Footer_empty)) in
   List.map (collapse_func m) funcs.i_funcs
 
+let lean_collapse m xd funcs = 
+  let collapse_clause m id (_,lhs, rhs) =
+    "  | " ^ lhs ^ " => " ^ rhs ^ "\n" in
+  let collapse_clauses m id clauses =
+    String.concat "" (List.map (collapse_clause m id) clauses) in
+  let collapse_func m f =
+    (f.r_fun_id, f.r_fun_dep, (f.r_fun_header, (collapse_clauses m f.r_fun_id f.r_fun_clauses), Footer_empty)) in
+  List.map (collapse_func m) funcs.i_funcs
+
 let twf_collapse m xd funcs = 
   let collapse_clause m id (pfx, lhs, rhs) =
     "" ^ id ^ "/" ^ pfx ^ " : " ^ id ^ " " ^ lhs ^ " " ^ rhs ^ ".\n" in
@@ -574,6 +583,7 @@ let collapse m xd (funcs:int_funcs) : int_funcs_collapsed =
   | Hol _ -> hol_collapse m xd funcs
   | Lem _ -> lem_collapse m xd funcs
   | Coq _ -> coq_collapse m xd funcs
+  | Lean _ -> lean_collapse m xd funcs
   | Twf _ -> twf_collapse m xd funcs
   | Caml _ -> caml_collapse m xd funcs
   | Tex _ | Ascii _ -> Auxl.error None "internal: collapse of Tex-Ascii\n"
@@ -667,6 +677,21 @@ let print m xd (sorting,refl) =
                (List.map (fun (_,((h1,h2,h3),s,_)) -> h1 ^ h2 ^ h3 ^ s) block))
 	  ^ "end.\n\n" in
       String.concat "" (List.map print_block sorting)
+
+  | Lean _ ->
+      let print_block block =
+	if ((List.length block) = 1) 
+	then 
+	  let (nt,((h1,h2,h3),s,_)) = List.hd block in
+	  if (List.mem nt refl) 
+	  then "def " ^ h1 ^ h2 ^ h3 ^ s ^ "\n\n" 
+	  else "def " ^ h1 ^ h3 ^ s ^ (if String.compare h3 "" = 0 then "\n\n" else "\n\n")
+	else
+	  "mutual\n"
+	  ^ (String.concat ""
+               (List.map (fun (_,((h1,h2,h3),s,_)) -> "def " ^ h1 ^ h2 ^ h3 ^ s) block))
+	  ^ "end\n\n" in
+      leanTODO "21" (String.concat "" (List.map print_block sorting))
 
   | Twf _ ->
       (* PLACEHOLDER CODE *)
