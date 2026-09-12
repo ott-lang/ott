@@ -1,16 +1,20 @@
+embed
+{{ lean
+set_option linter.unusedVariables false
+}}
+
 metavar var, x ::=   {{ com  term variable }} 
 {{ isa string}} {{ coq nat}} {{ hol string}} {{ lem string }} {{ coq-equality }}
-{{ ocaml int}} {{ lex alphanum}} {{ tex \mathit{[[var]]} }}
+{{ ocaml int}} {{ lean String}} {{ lex alphanum}} {{ tex \mathit{[[var]]} }}
 
 grammar
 term, t :: 't_' ::=                          {{ com term    }}
   | x            ::   :: var                   {{ com variable}}
   | \ x . t      ::   :: lam (+ bind x in t +) {{ com lambda  }}
   | t t'         ::   :: app                   {{ com app     }}
-  | ( t )        :: S :: paren                 {{ icho [[t]]  }}  {{ lem [[t]] }}
+  | ( t )        :: S :: paren                 {{ ichlLo [[t]]  }}
   | { t / x } t' :: M :: sub  
-                         {{ icho (tsubst_term [[t]] [[x]] [[t']])}}
-  {{ lem (tsubst_term [[t]] [[x]] [[t']]) }}
+                         {{ ichlLo (tsubst_term [[t]] [[x]] [[t']])}}
 val,v :: 'v_' ::=                            {{ com value   }}
   | \ x . t      ::   :: lam                   {{ com lambda  }}
 
