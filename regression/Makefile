@@ -71,6 +71,13 @@ baseline-2026-09-12.bl baseline-2026-09-12.txt baseline-2026-09-12-log.txt: regr
 	time ./regression -baseline -baseline_file baseline-2026-09-12.bl -todo_list -todo_list_file regression.otl -keep_temp -report 2>&1 | tee baseline-2026-09-12-log.txt
 	./regression -dump_baseline -baseline_file baseline-2026-09-12.bl > baseline-2026-09-12.txt
 
+# 2026-09-12 first baseline including the Lem and Lean columns
+baseline-2026-09-12-lem-lean.bl baseline-2026-09-12-lem-lean.txt baseline-2026-09-12-lem-lean-log.txt: regression
+	$(MAKE) clean-regr
+	-make -C ../coq
+	time ./regression -baseline -baseline_file baseline-2026-09-12-lem-lean.bl -todo_list -todo_list_file regression.otl -keep_temp -report 2>&1 | tee baseline-2026-09-12-lem-lean-log.txt
+	./regression -dump_baseline -baseline_file baseline-2026-09-12-lem-lean.bl > baseline-2026-09-12-lem-lean.txt
+
 clean:
 	rm -rf *~
 	rm -rf regression regression.annot regression.cmi regression.cmx

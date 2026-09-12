@@ -1,20 +1,32 @@
 This is infrastructure for regression testing the Ott implementation (by FZN, but this README is much later by PS; it might be wrong).
 
-`./regression`, from `regression.ml`, runs Ott on a set of tests and runs Coq, Isabelle, HOL4, OCaml, and Latex on the generated code. 
+`./regression`, from `regression.ml`, runs Ott on a set of tests and runs Coq, Isabelle, HOL4, Lem, Lean, OCaml, and Latex on the generated code. 
 
 
 
 This is infrastructure for regression testing the Ott implementation (by FZN, but this README is much later by PS).
 
-`./regression`, from `regression.ml`, runs Ott on a set of tests and runs Coq, Isabelle, HOL4, OCaml, and Latex on the generated code.   For some tests, not all of those are intended to work, so this is set up to either compute and save a baseline or to compare against such a baseline.  Baselines are in some internal `.bl` format, but can be pretty-printed with the `-dump_baseline` option. Here in each backend column the first `+`/`-` records whether Ott successfully generated that output and the second `+`/`-` whether the relevant tool successfully built it.
+`./regression`, from `regression.ml`, runs Ott on a set of tests and runs Coq, Isabelle, HOL4, Lem, Lean, OCaml, and Latex on the generated code.   For some tests, not all of those are intended to work, so this is set up to either compute and save a baseline or to compare against such a baseline.  Baselines are in some internal `.bl` format, but can be pretty-printed with the `-dump_baseline` option. Here in each backend column the first `+`/`-` records whether Ott successfully generated that output and the second `+`/`-` whether the relevant tool successfully built it.
 
 ```
-Coq CoqNL Isa  HOL OCaml LaTeX
+Coq CoqNL Isa  HOL  Lem Lean OCaml LaTeX
 [...]
- + +  + -  + -  + +  + +  + + ../tests/test10.ott
- + +  + -  + -  + +  -    + + ../tests/test10st.ott
+ + +  + -  + -  + +  + +  + +  + +  + + ../tests/test10.ott
+ + +  + -  + -  + +  + +  -    -    + + ../tests/test10st.ott
 [...] 
 ```
+
+Note that for Lem and Lean, as for the other targets, Ott refuses to
+generate output for a source file whose meta or sugar productions lack a
+hom for that target, so many tests show `-` in the Lean column purely
+because the test has not been given `lean` homs.  That is recorded in the
+baseline like any other outcome.
+
+The provers themselves are not part of this repository.  `install-provers.sh`
+installs Rocq, HOL4, Isabelle, Lean, and Lem; run
+`install-provers-prerequisites.sh` first.  The Lem check runs `lem` with no
+backend flag, which typechecks without writing output, and the Lean check
+runs `lean` on the generated file.
 
 
 `./regression -help` shows the command-line options. 
@@ -29,3 +41,10 @@ $ ./regression -dump_baseline
 dumps the baseline
 
 $ ./regression -baseline  <test.ott>
+
+Baselines carry a format stamp naming their columns.  Adding or removing a
+backend column invalidates existing `.bl` files, and `./regression` refuses
+to read one rather than misinterpreting it, so recompute the baseline after
+such a change.  Baselines written before the Lem and Lean columns existed
+cannot be read by the current `./regression`; their dumped `.txt` forms are
+still the thing to compare against for the older columns.

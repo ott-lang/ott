@@ -43,6 +43,8 @@ type result =
       coq_t : tp_result ref;
       coq_no_list_t : tp_result ref;
       hol_t : tp_result ref;
+      lem_t : tp_result ref;
+      lean_t : tp_result ref;
       isa_t : tp_result ref;
 (*      isa07_t : tp_result ref; *)
 (*      twelf_t : tp_result ref; *)
@@ -62,6 +64,8 @@ let isa_test = ref true
 let caml_test = ref true
 let coq_test = ref true
 let hol_test = ref true
+let lem_test = ref true
+let lean_test = ref true
 (* let twelf_test = ref true *)
 let latex_test = ref true
 let dump_baseline = ref false
@@ -89,6 +93,10 @@ let isa_regressions = ref 0
 (* let isa07_regressions = ref 0 *)
 let hol_progressions = ref 0
 let hol_regressions = ref 0
+let lem_progressions = ref 0
+let lem_regressions = ref 0
+let lean_progressions = ref 0
+let lean_regressions = ref 0
 let latex_progressions = ref 0
 let latex_regressions = ref 0
 (* let twelf_progressions = ref 0 *)
@@ -221,17 +229,19 @@ let parse_config_file () =
       let l = input_line fd in
       let pl = Str.split (Str.regexp "[ \t]+") l in
       match pl with
-      | c::cl::i::h::o::l::n::[] -> 
+      | c::cl::i::h::lm::ln::o::l::n::[] -> 
           let c = convert c in
           let cl = convert cl in
           let i = convert i in
 (*          let i07 = convert i07 in *)
           let h = convert h in
 (*	  let t = convert t in *)
+          let lm = convert lm in
+          let ln = convert ln in
           let o = convert o in
 	  let l = convert l in
-          config_state := (n,(c,cl,i,h,o,l))::!config_state;
-	  Printf.printf "config: %s %b %b %b %b %b %b\n" n c cl i h o l;
+          config_state := (n,(c,cl,i,h,lm,ln,o,l))::!config_state;
+	  Printf.printf "config: %s %b %b %b %b %b %b %b %b\n" n c cl i h lm ln o l;
           parse_lines fd
       | _ -> error ("malformed line in config file: "^l)
     with End_of_file -> () in
@@ -270,6 +280,12 @@ let options =
       ("-no_hol",
        Arg.Unit (fun () -> hol_test := false),
        " do not run the HOL test");
+      ("-no_lem",
+       Arg.Unit (fun () -> lem_test := false),
+       " do not run the Lem test");
+      ("-no_lean",
+       Arg.Unit (fun () -> lean_test := false),
+       " do not run the Lean test");
 (*       ("-no_twelf", *)
 (*        Arg.Unit (fun () -> twelf_test := false), *)
 (*        " do not run the Twelf test"); *)
@@ -318,14 +334,16 @@ let check_config t tp =
     then
       let entry = search t !config_state in
       ( match tp, entry with
-      | "Coq", (c,_,_,_,_,_) -> c
-      | "CoqNL", (_,cl,_,_,_,_) -> cl
-      | "Isa", (_,_,i,_,_,_) -> i
+      | "Coq", (c,_,_,_,_,_,_,_) -> c
+      | "CoqNL", (_,cl,_,_,_,_,_,_) -> cl
+      | "Isa", (_,_,i,_,_,_,_,_) -> i
 (*      | "Isa07", (_,_,_,i07,_,_,_,_) -> i07 *)
-      | "HOL", (_,_,_,h,_,_) -> h
+      | "HOL", (_,_,_,h,_,_,_,_) -> h
 (*      | "Twelf", (_,_,_,_,_,t,_,_) -> t *)
-      | "OCaml", (_,_,_,_,o,_) -> o 
-      | "LaTeX", (_,_,_,_,_,l) -> l
+      | "Lem", (_,_,_,_,lm,_,_,_) -> lm
+      | "Lean", (_,_,_,_,_,ln,_,_) -> ln
+      | "OCaml", (_,_,_,_,_,_,o,_) -> o 
+      | "LaTeX", (_,_,_,_,_,_,_,l) -> l
       | _,_ -> failwith "Never happen" )
     else true
   with Not_found -> print_endline ("*** test "^t^" not found in config file"); true
@@ -347,6 +365,8 @@ let run_test i n (tn,tl) =
                  coq_t = ref { ott = false; tp = Undone };
 		 coq_no_list_t = ref { ott = false; tp = Undone };
                  hol_t = ref { ott = false; tp = Undone };
+                 lem_t = ref { ott = false; tp = Undone };
+                 lean_t = ref { ott = false; tp = Undone };
                  isa_t = ref { ott = false; tp = Undone };
 (*                  isa07_t = ref { ott = false; tp = Undone }; *)
 (* 		 twelf_t = ref { ott = false; tp = Undone }; *)
@@ -499,6 +519,58 @@ let run_test i n (tn,tl) =
       pp_failure tgt test_pretty_name;  
   end;
 
+  (* ** run Lem *)
+  if (not !lem_test) || (not (check_config tn "Lem"))
+  then result.lem_t := { ott = false; tp = Skipped }
+  else begin
+    let cmd = "../bin/ott "^t^" -o "^test_tmp_filename^".lem" in
+    let tgt = "Ott-Lem" in
+    pp_tgt i_of_n tgt cmd;
+    if (command cmd) = 0
+    then begin
+      pp_success tgt test_pretty_name;
+      let cmd = "lem "^test_tmp_filename^".lem > " ^ test_tmp_filename ^ ".lem.out 2>&1" in
+      let tgt = "Lem" in
+      pp_tgt i_of_n tgt cmd;
+      if (command cmd) = 0 then begin
+	result.lem_t := { ott = true; tp = Success };
+	pp_success tgt test_pretty_name;
+      end else begin
+	result.lem_t := { ott = true; tp = Failure };
+	pp_failure tgt test_pretty_name;
+      end;
+      maybe_remove (test_tmp_filename^".lem.out");
+      maybe_remove (test_tmp_filename^".lem")
+    end else
+      pp_failure tgt test_pretty_name;  
+  end;
+
+  (* ** run Lean *)
+  if (not !lean_test) || (not (check_config tn "Lean"))
+  then result.lean_t := { ott = false; tp = Skipped }
+  else begin
+    let cmd = "../bin/ott "^t^" -o "^test_tmp_filename^".lean" in
+    let tgt = "Ott-Lean" in
+    pp_tgt i_of_n tgt cmd;
+    if (command cmd) = 0
+    then begin
+      pp_success tgt test_pretty_name;
+      let cmd = "lean "^test_tmp_filename^".lean > " ^ test_tmp_filename ^ ".lean.out 2>&1" in
+      let tgt = "Lean" in
+      pp_tgt i_of_n tgt cmd;
+      if (command cmd) = 0 then begin
+	result.lean_t := { ott = true; tp = Success };
+	pp_success tgt test_pretty_name;
+      end else begin
+	result.lean_t := { ott = true; tp = Failure };
+	pp_failure tgt test_pretty_name;
+      end;
+      maybe_remove (test_tmp_filename^".lean.out");
+      maybe_remove (test_tmp_filename^".lean")
+    end else
+      pp_failure tgt test_pretty_name;  
+  end;
+
   (* ** run Twelf *)
 (*   if (not !twelf_test) || (not (check_config tn "Twelf")) *)
 (*   then result.twelf_t := { ott = false; tp = Skipped } *)
@@ -604,6 +676,8 @@ let report tp a b =
     | "Isa" -> isa_progressions := !isa_progressions + 1
 (*    | "Isa07" -> isa07_progressions := !isa07_progressions + 1 *)
     | "HOL" -> hol_progressions := !hol_progressions + 1
+    | "Lem" -> lem_progressions := !lem_progressions + 1
+    | "Lean" -> lean_progressions := !lean_progressions + 1
 (*    | "Twelf" -> twelf_progressions := !twelf_progressions + 1 *)
     | "OCaml" -> caml_progressions := !caml_progressions + 1
     | "LaTeX" -> latex_progressions := !latex_progressions + 1
@@ -618,6 +692,8 @@ let report tp a b =
     | "Isa" -> isa_regressions := !isa_regressions + 1
 (*    | "Isa07" -> isa07_regressions := !isa07_regressions + 1 *)
     | "HOL" -> hol_regressions := !hol_regressions + 1
+    | "Lem" -> lem_regressions := !lem_regressions + 1
+    | "Lean" -> lean_regressions := !lean_regressions + 1
 (*    | "Twelf" -> twelf_regressions := !twelf_regressions + 1 *)
     | "OCaml" -> caml_regressions := !caml_regressions + 1
     | "LaTeX" -> latex_regressions := !latex_regressions + 1
@@ -637,12 +713,32 @@ let print_result r =
   | Undone  -> "  " )
 
 
-let dump_baseline_fc () = 
+(* Claude: a baseline is an untagged Marshal image of the result record, so
+   one written before the Lem and Lean columns existed would be read back into
+   a record of the wrong width, with undefined results rather than an error.
+   Stamp each baseline with a format line and refuse to read a mismatch. *)
+let baseline_magic = "ott-regression-baseline-format-2 (coq coqnl isa hol lem lean ocaml latex)"
+
+let open_baseline_in () =
   if not (file_exists !baseline_file_name)
   then error ("baseline file does not exists");
-  let baseline_fd = open_in !baseline_file_name in
-  let baseline = Marshal.from_channel baseline_fd in
-  pp " Coq CoqNL Isa  HOL OCaml LaTeX";
+  let baseline_fd = open_in_bin !baseline_file_name in
+  let magic = try input_line baseline_fd with End_of_file -> "" in
+  if magic <> baseline_magic
+  then error ("baseline file " ^ !baseline_file_name
+              ^ " is not in the current format - recompute it with -baseline");
+  baseline_fd
+
+let open_baseline_out () =
+  if file_exists !baseline_file_name then remove !baseline_file_name;
+  let baseline_fd = open_out_bin !baseline_file_name in
+  output_string baseline_fd (baseline_magic ^ "\n");
+  baseline_fd
+
+let dump_baseline_fc () = 
+  let baseline_fd = open_baseline_in () in
+  let baseline = (Marshal.from_channel baseline_fd : (string * result) list) in
+  pp " Coq CoqNL Isa  HOL  Lem Lean OCaml LaTeX";
   List.iter
     ( fun (t,r) ->
       pp
@@ -652,6 +748,8 @@ let dump_baseline_fc () =
 (*	  ^ print_result !(r.isa07_t) *)
 	  ^ print_result !(r.hol_t)
 (*	  ^ print_result !(r.twelf_t) *)
+	  ^ print_result !(r.lem_t)
+	  ^ print_result !(r.lean_t)
 	  ^ print_result !(r.caml_t)
 	  ^ print_result !(r.latex_t)
 	  ^ t) )
@@ -667,17 +765,14 @@ let compute_baseline_fc () =
       let result_t = run_test i n_tests t in
       baseline := ((fst t),result_t)::!baseline )
     (List.rev !tests);
-  if file_exists !baseline_file_name then remove !baseline_file_name;
-  let baseline_fd = open_out_bin !baseline_file_name in
+  let baseline_fd = open_baseline_out () in
   Marshal.to_channel baseline_fd (List.rev !baseline) [];
   close_out baseline_fd;
   pp "\n*** baseline built succesfully"
 
 let test_fc auto =
   (* ** open the baseline file *)
-  if not (file_exists !baseline_file_name)
-  then error ("baseline file does not exists");
-  let baseline_fd = open_in_bin !baseline_file_name in
+  let baseline_fd = open_baseline_in () in
   let baseline = (Marshal.from_channel baseline_fd : (string * result) list) in
   print_endline "content of baseline";
   List.iter (fun (n,_) -> print_endline n) baseline;
@@ -697,6 +792,8 @@ let test_fc auto =
         report "Isa" !(result_t.isa_t) !(result_baseline.isa_t);
 (*        report "Isa07" !(result_t.isa07_t) !(result_baseline.isa07_t); *)
         report "HOL" !(result_t.hol_t) !(result_baseline.hol_t);
+        report "Lem" !(result_t.lem_t) !(result_baseline.lem_t);
+        report "Lean" !(result_t.lean_t) !(result_baseline.lean_t);
 (*        report "Twelf" !(result_t.twelf_t) !(result_baseline.twelf_t); *)
         report "OCaml" !(result_t.caml_t) !(result_baseline.caml_t);
         report "LaTeX" !(result_t.latex_t) !(result_baseline.latex_t);
@@ -707,7 +804,7 @@ let test_fc auto =
 
   let pretty_name_max_length = List.fold_left (function n -> function (t,r) -> max n (String.length r.pretty_name)) 0 !summary in 
   let pad s = s ^ String.make (pretty_name_max_length - String.length s + 1) ' ' in
-  let header = String.make (pretty_name_max_length + 1) ' ' ^ " Coq CoqNL Isa HOL OCaml LaTeX" in 
+  let header = String.make (pretty_name_max_length + 1) ' ' ^ " Coq CoqNL Isa  HOL  Lem Lean OCaml LaTeX" in 
 
   if !dump_report then begin
     pp_report "\n*** results";
@@ -722,6 +819,8 @@ let test_fc auto =
 (*	    ^ print_result !(r.isa07_t) *)
 	    ^ print_result !(r.hol_t)
 (*	    ^ print_result !(r.twelf_t) *)
+	    ^ print_result !(r.lem_t)
+	    ^ print_result !(r.lean_t)
             ^ print_result !(r.caml_t)
             ^ print_result !(r.latex_t)
 	    ^ pp_fn t ) )
@@ -736,6 +835,8 @@ let test_fc auto =
       ^ " (Isa : " ^ (string_of_int !isa_progressions)^")"
 (*      ^ " (Isa07 : " ^ (string_of_int !isa07_progressions)^")" *)
       ^ " (Hol : " ^ (string_of_int !hol_progressions)^")" 
+      ^ " (Lem : " ^ (string_of_int !lem_progressions)^")" 
+      ^ " (Lean : " ^ (string_of_int !lean_progressions)^")" 
 (*      ^ " (Twelf : " ^ (string_of_int !twelf_progressions)^")"  *)
       ^ " (OCaml : " ^ (string_of_int !caml_progressions)^")" 
       ^ " (LaTeX : " ^ (string_of_int !latex_progressions)^")" );
@@ -747,9 +848,11 @@ let test_fc auto =
      ^ " (Isa : " ^ (string_of_int !isa_regressions)^")"
 (*     ^ " (Isa07 : " ^ (string_of_int !isa07_regressions)^")" *)
      ^ " (Hol : " ^ (string_of_int !hol_regressions)^")"
+     ^ " (Lem : " ^ (string_of_int !lem_regressions)^")"
+     ^ " (Lean : " ^ (string_of_int !lean_regressions)^")"
 (*     ^ " (Twelf : " ^ (string_of_int !twelf_regressions)^")"  *)
      ^ " (OCaml : " ^ (string_of_int !caml_regressions)^")"
-     ^ " (LaTeX : " ^ (string_of_int !latex_progressions)^")" );
+     ^ " (LaTeX : " ^ (string_of_int !latex_regressions)^")" );
   
   let p_out n b =
     let s_ott =
@@ -770,24 +873,25 @@ let test_fc auto =
       try
 	let b = List.assoc t baseline in
         pp_report
-          ( "foo" ^ pad r.pretty_name 
+          ( pad r.pretty_name 
             ^ p_out !(r.coq_t) !(b.coq_t)
 	    ^ p_out !(r.coq_no_list_t) !(b.coq_no_list_t)
 	    ^ p_out !(r.isa_t) !(b.isa_t)
 (*	    ^ p_out !(r.isa07_t) !(b.isa07_t) *)
 	    ^ p_out !(r.hol_t) !(b.hol_t)
 (*	    ^ p_out !(r.twelf_t) !(b.twelf_t) *)
+	    ^ p_out !(r.lem_t) !(b.lem_t)
+	    ^ p_out !(r.lean_t) !(b.lean_t)
 	    ^ p_out !(r.caml_t) !(b.caml_t)
 	    ^ p_out !(r.latex_t) !(b.latex_t)
 	    ^ pp_fn t )
-      with Not_found -> pp_report ("  ?    ?    ?    ?    ?     ?  " ^ t) )
+      with Not_found -> pp_report ("  ?    ?    ?    ?    ?    ?    ?     ?  " ^ t) )
     !summary;
   close_in baseline_fd;
 
   if auto && (!regressions = 0) && (!progressions > 0)
   then begin
-    if file_exists !baseline_file_name then remove !baseline_file_name;
-    let baseline_fd = open_out_bin !baseline_file_name in
+    let baseline_fd = open_baseline_out () in
     Marshal.to_channel baseline_fd !summary [];
     close_out baseline_fd;
   end
