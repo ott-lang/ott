@@ -5,7 +5,9 @@ This is infrastructure for regression testing the Ott implementation (by FZN, bu
 
 `./regression`, from `regression.ml`, runs Ott on a set of tests and runs Coq, Isabelle, HOL4, Lem, Lean, OCaml, and Latex on the generated code.  For some tests, not all of those are intended to work, so the harness does two separate jobs, and each is a separate invocation.
 
-No target runs unless you ask for it. `-all` runs every target, or name the ones you want: `-coq` (which covers both the Coq and CoqNL columns), `-isa`, `-hol`, `-lem`, `-lean`, `-ocaml`, `-latex`. A target you did not ask for records `ss`, the same as one turned off in the config file.
+The `NL` columns are the native-list variants. `Coq` generates with `-coq_expand_list_types true` and `CoqNL` with `false`; `Lean` and `LeanNL` pair up the same way through `-lean_expand_list_types`, though that flag is accepted and not yet acted on, so the two Lean columns currently agree.
+
+No target runs unless you ask for it. `-all` runs every target, or name the ones you want: `-coq` (which covers both the Coq and CoqNL columns), `-isa`, `-hol`, `-lem`, `-lean` (likewise Lean and LeanNL), `-ocaml`, `-latex`. A target you did not ask for records `ss`, the same as one turned off in the config file.
 
 By default the generated files are written into the regression directory and cleaned up afterwards. `-temp_dir <dir>` creates that directory if need be, puts every generated file there, and runs each target tool inside it, so nothing is left lying around here. Paths the tool commands need, the Ott binary and the Coq and HOL4 support libraries, are resolved to absolute paths so they still work from inside that directory.
 
@@ -61,18 +63,18 @@ The `# tools` line names the columns, so a report written before a backend exist
 # ott-regression-report 1
 # date 2026-09-12T12:02:50
 # ott Ott version 0.34   distribution of Mon Dec 30 10:12:45 GMT 2024
-# tools Coq CoqNL Isa HOL Lem Lean OCaml LaTeX
+# tools Coq CoqNL Isa HOL Lem Lean LeanNL OCaml LaTeX
 
-test                   Coq CoqNL  Isa  HOL  Lem Lean OCaml LaTeX
-../tests/test10.ott     ++    ++   ss   ss   ++   -.    ++    ss
-../tests/test10st.ott   ++    ++   ss   ss   ++   ++    -.    ss
+test                   Coq CoqNL  Isa  HOL  Lem Lean LeanNL OCaml LaTeX
+../tests/test10st.ott   ++    ++   ++   +-   ++   ++     ++    -.    +-
+../tests/test10.ott     ++    ++   ++   +-   ++   -.     -.    ++    +-
 
-totals                 Coq CoqNL  Isa  HOL  Lem Lean OCaml LaTeX   all
-generated                2     2    0    0    2    1     1     0     8
-ott-failed               0     0    0    0    0    1     1     0     2
-passed                   2     2    0    0    2    1     1     0     8
-failed                   0     0    0    0    0    0     0     0     0
-skipped                  0     0    2    2    0    0     0     2     6
+totals                 Coq CoqNL  Isa  HOL  Lem Lean LeanNL OCaml LaTeX   all
+generated                2     2    2    2    2    1      1     1     2    15
+ott-failed               0     0    0    0    0    1      1     1     0     3
+passed                   2     2    2    0    2    1      1     1     0    11
+failed                   0     0    0    2    0    0      0     0     2     4
+skipped                  0     0    0    0    0    0      0     0     0     0
 ```
 
 The totals at the foot count each outcome per tool, with an `all` column summing across tools.
@@ -92,10 +94,10 @@ A comparison lists each test whose results changed, and under it only the tools 
                        Lean   ++ -> -.  regression
 ../tests/test5.ott     only in B
 
-totals                 Coq CoqNL  Isa  HOL  Lem Lean OCaml LaTeX   all
-progressions             0     1    0    0    0    0     0     0     1
-regressions              0     0    0    0    0    1     0     0     1
-changes                  0     0    0    0    0    0     0     0     0
+totals                 Coq CoqNL  Isa  HOL  Lem Lean LeanNL OCaml LaTeX   all
+progressions             0     1    0    0    0    0      0     0     0     1
+regressions              0     0    0    0    0    1      0     0     0     1
+changes                  0     0    0    0    0    0      0     0     0     0
 ```
 
 

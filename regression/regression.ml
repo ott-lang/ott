@@ -244,7 +244,8 @@ let tools =
       t_flag = "-coq";
       t_enabled = coq_test;
       t_gen = (fun t base ->
-        ott_bin ^ " -show_sort false -show_defns false " ^ t ^ " -o " ^ base ^ ".v");
+        ott_bin ^ " -show_sort false -show_defns false -coq_expand_list_types true "
+        ^ t ^ " -o " ^ base ^ ".v");
       t_check = (fun base ->
         "rocq compile -Q " ^ coq_lib ^ " Ott " ^ base ^ ".v > " ^ base ^ ".coq.out 2>&1");
       t_artefacts = (fun base ->
@@ -297,10 +298,21 @@ let tools =
       t_out = ".lean";
       t_flag = "-lean";
       t_enabled = lean_test;
-      t_gen = (fun t base -> ott_bin ^ " " ^ t ^ " -o " ^ base ^ ".lean");
+      t_gen = (fun t base ->
+        ott_bin ^ " -lean_expand_list_types true " ^ t ^ " -o " ^ base ^ ".lean");
       t_check = (fun base ->
         "lean " ^ base ^ ".lean > " ^ base ^ ".lean.out 2>&1");
       t_artefacts = (fun base -> [ base ^ ".lean"; base ^ ".lean.out" ]) };
+
+    { t_name = "LeanNL";
+      t_out = ".lean";
+      t_flag = "-lean";
+      t_enabled = lean_test;
+      t_gen = (fun t base ->
+        ott_bin ^ " -lean_expand_list_types false " ^ t ^ " -o " ^ base ^ ".lean");
+      t_check = (fun base ->
+        "lean " ^ base ^ ".lean > " ^ base ^ ".leannl.out 2>&1");
+      t_artefacts = (fun base -> [ base ^ ".lean"; base ^ ".leannl.out" ]) };
 
     { t_name = "OCaml";
       t_out = ".ml";
