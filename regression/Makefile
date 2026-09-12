@@ -39,12 +39,12 @@ regression: regression.ml
 	ocamlopt -I +unix -I +str unix.cmxa str.cmxa -o regression -dtypes regression.ml
 #	ocamlc -I +unix -I +str unix.cma str.cma -o regression -dtypes regression.ml
 
-regression_p: regression_p_client.ml regression_p_master.ml
-	ocamlc -I +unix -I +str unix.cma str.cma -o regression_p_client regression_p_client.ml
-	ocamlc -I +unix -I +str unix.cma str.cma -o regression_p_master regression_p_master.ml
-
-regression_para: regression_para.ml
-	ocamlp3lopt -par unix.cmxa str.cmxa -o regression_para regression_para.ml
+#regression_p: regression_p_client.ml regression_p_master.ml
+#	ocamlc -I +unix -I +str unix.cma str.cma -o regression_p_client regression_p_client.ml
+#	ocamlc -I +unix -I +str unix.cma str.cma -o regression_p_master regression_p_master.ml
+#
+#regression_para: regression_para.ml
+#	ocamlp3lopt -par unix.cmxa str.cmxa -o regression_para regression_para.ml
 
 # The report a run is compared against by "make compare".  Point this at
 # whichever report you are treating as the reference.
@@ -52,25 +52,31 @@ REFERENCE ?= report-2026-09-12.txt
 REPORT    ?= report.txt
 
 reg: regression 
-	./regression -coq -isa -lem -lean -ocaml -latex -run $(REPORT) ../tests/test*.ott
+	./regression -coq -isa -lem -lean -ocaml -latex -run_ott_and_targets $(REPORT) ../tests/test*.ott
 
 regh: regression
-	./regression -all -run $(REPORT) ../tests/test*.ott
+	./regression -all -run_ott_and_targets $(REPORT) ../tests/test*.ott
 
 simple: regression
 	$(MAKE) clean-regr
 	-make -C ../coq
-	./regression -all -todo_list -todo_list_file regression-small.otl -keep_temp -run report-small.txt
+	./regression -all -todo_list regression-small.otl -keep_temp -run_ott_and_targets report-small.txt
 
 # compare the latest run against the reference report
 compare: regression
-	./regression -compare $(REFERENCE) $(REPORT)
+	./regression -compare_reports $(REFERENCE) $(REPORT)
 
 # a full run over regression.otl, kept under a dated name
 report-2026-09-12.txt: regression
-	$(MAKE) clean-regr
+	rm -f temp_dir/*
 	-make -C ../coq
-	time ./regression -all -todo_list -todo_list_file regression.otl -keep_temp -run $@ 2>&1 | tee report-2026-09-12-log.txt
+	time ./regression -run_ott_and_targets report-2026-09-12.txt -all -todo_list regression.otl -temp_dir temp_dir -keep_temp  2>&1 | tee report-2026-09-12-log.txt
+
+# the same but just for a test or two, for testing the regression machinery quickly
+report-2026-09-12-small.txt: regression
+	rm -f temp_dir-small/*
+	-make -C ../coq
+	time ./regression -run_ott_and_targets report-2026-09-12-small.txt -all -todo_list regression-small.otl -temp_dir temp_dir-small -keep_temp  2>&1 | tee report-2026-09-12-small-log.txt
 
 clean:
 	rm -rf *~
@@ -91,5 +97,5 @@ clean-regr:
 # 	ocamlc unix.cma str.cma -o regression-jenkins -dtypes regression-jenkins.ml
 
 run-jenkins: regression
-	./regression -all -todo_list -run jenkins-report.txt
-	./regression -compare baseline-jenkins.txt jenkins-report.txt -jenkins
+	./regression -all -todo_list regression.otl -run_ott_and_targets jenkins-report.txt
+	./regression -compare_reports baseline-jenkins.txt jenkins-report.txt -jenkins

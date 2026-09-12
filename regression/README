@@ -7,17 +7,35 @@ This is infrastructure for regression testing the Ott implementation (by FZN, bu
 
 No target runs unless you ask for it. `-all` runs every target, or name the ones you want: `-coq` (which covers both the Coq and CoqNL columns), `-isa`, `-hol`, `-lem`, `-lean`, `-ocaml`, `-latex`. A target you did not ask for records `ss`, the same as one turned off in the config file.
 
-Running the tests writes a report:
+By default the generated files are written into the regression directory and cleaned up afterwards. `-temp_dir <dir>` creates that directory if need be, puts every generated file there, and runs each target tool inside it, so nothing is left lying around here. Paths the tool commands need, the Ott binary and the Coq and HOL4 support libraries, are resolved to absolute paths so they still work from inside that directory.
+
+Running writes a report. `-run_ott_and_targets` runs Ott and then each target tool on what it produced:
 
 ```
-$ ./regression -all -run report.txt -todo_list
+$ ./regression -all -run_ott_and_targets report.txt -todo_list regression.otl
+```
+
+`-run_ott` stops after Ott, recording only whether it generated each output. It is much faster, seconds rather than minutes, and is the one to use when the question is about Ott itself rather than about whether the provers accept its output. The target half of each cell is then `s`, not asked for, so comparing an Ott-only report against a full one shows changes rather than spurious progressions.
+
+```
+$ ./regression -all -run_ott report.txt -todo_list regression.otl
 ```
 
 Comparing two such reports shows what changed:
 
 ```
-$ ./regression -compare report-2026-09-12.txt report.txt
+$ ./regression -compare_reports report-2026-09-12.txt report.txt
 ```
+
+Comparing the files of two runs shows whether Ott's output itself changed:
+
+```
+$ ./regression -compare_ott_generated_files tmp-old tmp-new
+```
+
+Exactly one of `-run_ott`, `-run_ott_and_targets`, `-compare_reports`, `-compare_ott_generated_files` and `-compare_all_files` must be given. Naming none of them, or more than one, is an error.
+
+The tests to run come either from a `-todo_list` or from names on the command line, not both. Giving neither, or both, is an error.
 
 `./regression -help` shows the command-line options.
 
@@ -30,7 +48,8 @@ A report is a plain text file.  It records, for each test and each tool, two cha
 ```
 +  succeeded
 -  failed
-s  skipped: not asked for on the command line, or turned off in the config file
+s  skipped: not asked for on the command line, turned off in the config file,
+   or, in the target half under -run_ott, not run at all
 .  not reached, because the step before it failed
 ```
 
@@ -80,10 +99,24 @@ changes                  0     0    0    0    0    0     0     0     0
 ```
 
 
+COMPARING FILES
+===============
+
+Two modes take the `-temp_dir` directories of two earlier runs and compare the files in them by name. Each lists the files that differ in content or are present in only one directory, then counts all four outcomes.
+
+Both runs have to have been made with `-temp_dir` and `-keep_temp`. Generated files are kept if and only if `-keep_temp` is given, in either run mode, so without it the harness deletes everything and there is nothing left to compare. Two directories that hold no matching files at all are reported as an error rather than as no differences.
+
+`-compare_ott_generated_files` looks only at what Ott wrote: the `.v`, `.thy`, `Script.sml`, `.lem`, `.lean`, `.ml` and `.tex` files. This is the one to use when asking whether a change to Ott changed its output, and it pairs naturally with `-run_ott`. Two runs of the same Ott over the same tests compare equal.
+
+`-compare_all_files` looks at everything in the directories, so it also covers what the target tools produced, the `.vo`, `.glob`, `.cmi`, `.cmo` and the captured tool logs. It is noisier by design. Some of those files always differ between two runs because they record where they ran or how long they took; Rocq's hidden `.<name>.aux`, which holds the absolute source path and per-proof timings, differs every time.
+
+Files are classified by suffix, so neither mode needs to know which tests produced what.
+
+
 THE CONFIG FILE
 ===============
 
-`config.otr`, used with `-use_config`, says which tools to run for which tests.  It names its columns in a `# tools` header rather than relying on position, so adding or reordering a backend does not silently change what every existing line means.  `+` runs that tool, `.` skips it and records `ss`.
+`-use_config <file.otr>` says which tools to run for which tests; `config.otr` is the one in this directory.  It names its columns in a `# tools` header rather than relying on position, so adding or reordering a backend does not silently change what every existing line means.  `+` runs that tool, `.` skips it and records `ss`.
 
 
 PROVERS
@@ -95,4 +128,4 @@ The provers are not part of this repository.  `install-provers.sh` installs Rocq
 OLDER BASELINES
 ===============
 
-Before this was reorganised, runs wrote a binary `.bl` file via `Marshal` and the comparison was folded into the run.  The `.bl` files can no longer be read, and the `.txt` dumps beside them (`baseline-2022-03.txt`, `baseline-2026-09-12.txt`) are in the older layout, where a skipped tool was rendered as blanks.  They are kept as historical artifacts to read by eye.  `-compare` will not parse them.
+Before this was reorganised, runs wrote a binary `.bl` file via `Marshal` and the comparison was folded into the run.  The `.bl` files can no longer be read, and the `.txt` dumps beside them (`baseline-2022-03.txt`, `baseline-2026-09-12.txt`) are in the older layout, where a skipped tool was rendered as blanks.  They are kept as historical artifacts to read by eye.  `-compare_reports` will not parse them.

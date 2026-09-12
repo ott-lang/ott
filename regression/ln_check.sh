@@ -1,2 +1,2 @@
-./regression -coq -lem -lean -latex -todo_list -todo_list_file ln.otl -run ln-report.txt
+./regression -coq -lem -lean -latex -todo_list ln.otl -run_ott_and_targets ln-report.txt
 

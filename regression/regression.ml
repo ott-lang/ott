@@ -49,6 +49,30 @@ let emails = ref []
 let keep_temporary_files = ref false
 let colour_output = ref true
 
+(* Claude: with -temp_dir the target tools run inside that directory, so every
+   path a command mentions has to be absolute rather than relative to the
+   regression directory.  These are resolved once, before anything chdirs. *)
+let regression_dir = Sys.getcwd ()
+let ott_dir = Filename.dirname regression_dir
+let ott_bin = Filename.concat ott_dir "bin/ott"
+let coq_lib = Filename.concat ott_dir "coq"
+let hol_lib = Filename.concat ott_dir "hol"
+
+let in_temp_dir cmd =
+  if !temp_dir = "" then cmd
+  else "cd " ^ Filename.quote !temp_dir ^ " && " ^ cmd
+
+let in_temp_dir_path f =
+  Filename.concat !temp_dir f
+
+(* Claude: Ott writes the -o path into the generated file, as the Isabelle
+   theory name and HOL new_theory name, so the output argument must stay a
+   bare filename.  That means generating inside -temp_dir too, and giving the
+   inputs as absolute paths since they are relative to the regression
+   directory. *)
+let absolute p =
+  if Filename.is_relative p then Filename.concat regression_dir p else p
+
 (* ** state *)
 let regression_count = ref 0
 let report_fd = ref Stdlib.stdout
@@ -201,6 +225,7 @@ type tool =
   { t_name : string;                        (* report column name *)
     t_flag : string;                        (* command-line flag that selects it *)
     t_enabled : bool ref;                   (* set by that flag, or by -all *)
+    t_out : string;                         (* suffix Ott writes for it *)
     t_gen : string -> string -> string;     (* inputs -> base -> ott command *)
     t_check : string -> string;             (* base -> tool command *)
     t_artefacts : string -> string list }   (* base -> files to clean up *)
@@ -215,64 +240,73 @@ let latex_test = ref false
 
 let tools =
   [ { t_name = "Coq";
+      t_out = ".v";
       t_flag = "-coq";
       t_enabled = coq_test;
       t_gen = (fun t base ->
-        "../bin/ott -show_sort false -show_defns false " ^ t ^ " -o " ^ base ^ ".v");
+        ott_bin ^ " -show_sort false -show_defns false " ^ t ^ " -o " ^ base ^ ".v");
       t_check = (fun base ->
-        "rocq compile -Q ../coq " ^ base ^ ".v > " ^ base ^ ".coq.out 2>&1");
+        "rocq compile -Q " ^ coq_lib ^ " Ott " ^ base ^ ".v > " ^ base ^ ".coq.out 2>&1");
       t_artefacts = (fun base ->
-        [ base ^ ".v"; base ^ ".vo"; base ^ ".glob"; base ^ ".coq.out" ]) };
+        [ base ^ ".v"; base ^ ".vo"; base ^ ".glob"; base ^ ".coq.out";
+          Filename.concat (Filename.dirname base) ("." ^ Filename.basename base ^ ".aux") ]) };
 
     { t_name = "CoqNL";
+      t_out = ".v";
       t_flag = "-coq";
       t_enabled = coq_test;
       t_gen = (fun t base ->
-        "../bin/ott -coq_expand_list_types false " ^ t ^ " -o " ^ base ^ ".v");
+        ott_bin ^ " -coq_expand_list_types false " ^ t ^ " -o " ^ base ^ ".v");
       t_check = (fun base ->
-        "rocq compile -Q ../coq " ^ base ^ ".v > " ^ base ^ ".coqnl.out 2>&1");
+        "rocq compile -Q " ^ coq_lib ^ " Ott " ^ base ^ ".v > " ^ base ^ ".coqnl.out 2>&1");
       t_artefacts = (fun base ->
-        [ base ^ ".v"; base ^ ".vo"; base ^ ".glob"; base ^ ".coqnl.out" ]) };
+        [ base ^ ".v"; base ^ ".vo"; base ^ ".glob"; base ^ ".coqnl.out";
+          Filename.concat (Filename.dirname base) ("." ^ Filename.basename base ^ ".aux") ]) };
 
     { t_name = "Isa";
+      t_out = ".thy";
       t_flag = "-isa";
       t_enabled = isa_test;
-      t_gen = (fun t base -> "../bin/ott " ^ t ^ " -o " ^ base ^ ".thy");
+      t_gen = (fun t base -> ott_bin ^ " " ^ t ^ " -o " ^ base ^ ".thy");
       t_check = (fun base ->
         "isabelle process_theories -U -O -f \"" ^ base ^ ".thy\" > "
         ^ base ^ ".isa.out 2>&1");
       t_artefacts = (fun base -> [ base ^ ".thy"; base ^ ".isa.out" ]) };
 
     { t_name = "HOL";
+      t_out = "Script.sml";
       t_flag = "-hol";
       t_enabled = hol_test;
-      t_gen = (fun t base -> "../bin/ott " ^ t ^ " -o " ^ base ^ "Script.sml");
+      t_gen = (fun t base -> ott_bin ^ " " ^ t ^ " -o " ^ base ^ "Script.sml");
       t_check = (fun base ->
-        "Holmake -I ../hol/ " ^ base ^ "Theory.uo > " ^ base ^ ".hol.out 2>&1");
+        "Holmake -I " ^ hol_lib ^ " " ^ base ^ "Theory.uo > " ^ base ^ ".hol.out 2>&1");
       t_artefacts = (fun base ->
         [ base ^ "Script.sml"; base ^ "Theory.sml"; base ^ "Theory.sig";
           base ^ "Theory.ui"; base ^ "Theory.uo"; base ^ ".hol.out" ]) };
 
     { t_name = "Lem";
+      t_out = ".lem";
       t_flag = "-lem";
       t_enabled = lem_test;
-      t_gen = (fun t base -> "../bin/ott " ^ t ^ " -o " ^ base ^ ".lem");
+      t_gen = (fun t base -> ott_bin ^ " " ^ t ^ " -o " ^ base ^ ".lem");
       t_check = (fun base ->
         "lem " ^ base ^ ".lem > " ^ base ^ ".lem.out 2>&1");
       t_artefacts = (fun base -> [ base ^ ".lem"; base ^ ".lem.out" ]) };
 
     { t_name = "Lean";
+      t_out = ".lean";
       t_flag = "-lean";
       t_enabled = lean_test;
-      t_gen = (fun t base -> "../bin/ott " ^ t ^ " -o " ^ base ^ ".lean");
+      t_gen = (fun t base -> ott_bin ^ " " ^ t ^ " -o " ^ base ^ ".lean");
       t_check = (fun base ->
         "lean " ^ base ^ ".lean > " ^ base ^ ".lean.out 2>&1");
       t_artefacts = (fun base -> [ base ^ ".lean"; base ^ ".lean.out" ]) };
 
     { t_name = "OCaml";
+      t_out = ".ml";
       t_flag = "-ocaml";
       t_enabled = caml_test;
-      t_gen = (fun t base -> "../bin/ott " ^ t ^ " -o " ^ base ^ ".ml");
+      t_gen = (fun t base -> ott_bin ^ " " ^ t ^ " -o " ^ base ^ ".ml");
       t_check = (fun base ->
         "ocamlc " ^ base ^ ".ml > " ^ base ^ ".ocaml.out 2>&1");
       (* Claude: ocamlc links as well as compiles, so it drops an a.out in the
@@ -282,9 +316,10 @@ let tools =
           "a.out" ]) };
 
     { t_name = "LaTeX";
+      t_out = ".tex";
       t_flag = "-latex";
       t_enabled = latex_test;
-      t_gen = (fun t base -> "../bin/ott " ^ t ^ " -o " ^ base ^ ".tex");
+      t_gen = (fun t base -> ott_bin ^ " " ^ t ^ " -o " ^ base ^ ".tex");
       t_check = (fun base ->
         "pdflatex -interaction=batchmode " ^ base ^ ".tex > "
         ^ base ^ ".latex.out 2>&1");
@@ -293,6 +328,16 @@ let tools =
           base ^ ".latex.out" ]) } ]
 
 let tool_names = List.map (function tl -> tl.t_name) tools
+
+(* Claude: classify a file in a -temp_dir by suffix rather than by test name,
+   so the file comparison does not need to know which tests produced it.
+   Anything ending in one of these is something Ott wrote; everything else in
+   the directory is a by-product of a target tool. *)
+let generated_suffixes =
+  List.sort_uniq compare (List.map (function tl -> tl.t_out) tools)
+
+let is_ott_generated f =
+  List.exists (function sfx -> Filename.check_suffix f sfx) generated_suffixes
 
 (** ***************************************************************** *)
 (** reports                                                           *)
@@ -429,7 +474,7 @@ let parse_todo_list () =
     with End_of_file -> ()
   in
   if not (file_exists !todo_list_file)
-  then error ("todo_list file does not exists");
+  then error ("todo list " ^ !todo_list_file ^ " does not exist");
   let todo_fd = open_in !todo_list_file in
   parse_lines todo_fd;
   close_in todo_fd
@@ -445,7 +490,7 @@ let parse_config_file () =
     | _ -> error "malformed entry in config file" in
   let cols = ref [] in
   if not (file_exists !config_file_name)
-  then error ("config file does not exists");
+  then error ("config file " ^ !config_file_name ^ " does not exist");
   let fd = open_in !config_file_name in
   ( try
       while true do
@@ -478,8 +523,45 @@ let check_config t tp =
     with Not_found ->
       print_endline ("*** test "^t^" not found in config file"); true
 
+let run_ott_given = ref false
+let run_targets_given = ref false
 let compare_a = ref ""
 let compare_b = ref ""
+let compare_gen_a = ref ""
+let compare_gen_b = ref ""
+let compare_all_a = ref ""
+let compare_all_b = ref ""
+
+(* Claude: exactly one mode flag must be given, so record which were seen
+   rather than inferring the mode from whether a filename happens to be set. *)
+type mode =
+  | RunOtt | RunOttAndTargets | Compare | CompareGenerated | CompareAll
+
+let mode_flags =
+  [ "-run_ott"; "-run_ott_and_targets"; "-compare_reports";
+    "-compare_ott_generated_files"; "-compare_all_files" ]
+
+let english_list ss =
+  match List.rev ss with
+  | last :: (_ :: _ as rest) -> String.concat ", " (List.rev rest) ^ " and " ^ last
+  | _ -> String.concat "" ss
+
+let selected_modes () =
+  ( if !run_ott_given then [ ("-run_ott", RunOtt) ] else [] )
+  @ ( if !run_targets_given
+      then [ ("-run_ott_and_targets", RunOttAndTargets) ] else [] )
+  @ ( if !compare_a <> "" then [ ("-compare_reports", Compare) ] else [] )
+  @ ( if !compare_gen_a <> ""
+      then [ ("-compare_ott_generated_files", CompareGenerated) ] else [] )
+  @ ( if !compare_all_a <> "" then [ ("-compare_all_files", CompareAll) ] else [] )
+
+let selected_mode () =
+  match selected_modes () with
+  | [ (_,m) ] -> m
+  | [] -> error ("specify exactly one of " ^ english_list mode_flags)
+  | ms ->
+      error (english_list mode_flags ^ " are mutually exclusive, but "
+             ^ english_list (List.map fst ms) ^ " were given")
 
 let enable_all () = List.iter (function tl -> tl.t_enabled := true) tools
 
@@ -495,7 +577,7 @@ let tool_options =
     List.sort_uniq compare (List.map (function tl -> tl.t_flag) tools) in
   ( "-all",
     Arg.Unit enable_all,
-    " run every target" )
+    " build and optionally run every target" )
   :: List.map
        ( function f ->
          let affected =
@@ -503,81 +585,121 @@ let tool_options =
          ( f,
            Arg.Unit (function () ->
              List.iter (function tl -> tl.t_enabled := true) affected),
-           " run the "
+           " build and optionally run the "
            ^ String.concat " and " (List.map (function tl -> tl.t_name) affected)
            ^ " target" ) )
        flags
 
+(* Claude: -no_coq turns off both the Coq and CoqNL columns, as it always
+   has, because the two share one enable flag; so filter the generated
+   options by flag identity rather than emitting one per column. *)
+       
+(* Claude: Arg takes the next word as an option's argument even when that word
+   is plainly another flag, so "-run_ott_and_targets -all ..." quietly used
+   "-all" as the report filename and then complained that no target had been
+   selected.  Reject arguments that look like options. *)
+let arg_value flag s =
+  if String.length s > 0 && s.[0] = '-'
+  then error (flag ^ " expects an argument, but was given the option " ^ s
+              ^ " - did you leave its argument out?")
+  else s
+
+let set_arg flag r = Arg.String (function s -> r := arg_value flag s)
+
 let options =
   Arg.align
-    ( [ ("-run",
-         Arg.String (fun s -> report_file := s),
-         "<"^ !report_file^">  run the tests and write the report here");
-        ("-compare",
-         Arg.Tuple [ Arg.Set_string compare_a; Arg.Set_string compare_b ],
+    ( [ ("-run_ott",
+         Arg.String (fun s ->
+           run_ott_given := true; report_file := arg_value "-run_ott" s),
+         "<"^ !report_file^">  run Ott only, and write the report here");
+        ("-run_ott_and_targets",
+         Arg.String (fun s ->
+           run_targets_given := true;
+           report_file := arg_value "-run_ott_and_targets" s),
+         "<"^ !report_file^">  run Ott and the target tools, and report here");
+        ("-compare_reports",
+         Arg.Tuple [ set_arg "-compare_reports" compare_a;
+                     set_arg "-compare_reports" compare_b ],
          " <a.txt> <b.txt>  compare two reports instead of running tests");
+        ("-compare_ott_generated_files",
+         Arg.Tuple [ set_arg "-compare_ott_generated_files" compare_gen_a;
+                     set_arg "-compare_ott_generated_files" compare_gen_b ],
+         " <dirA> <dirB>  compare the files Ott generated in two -temp_dir runs");
+        ("-compare_all_files",
+         Arg.Tuple [ set_arg "-compare_all_files" compare_all_a;
+                     set_arg "-compare_all_files" compare_all_b ],
+         " <dirA> <dirB>  as above, plus the files the target tools generated");
         ("-todo_list",
-         Arg.Unit (fun () -> todo_list := true),
-         " use todo_list");
-        ("-todo_list_file",
-         Arg.String (fun s -> todo_list_file := s),
-         "<"^ !todo_list_file^">  name of todo_list file");
+         Arg.String (fun s ->
+           todo_list := true; todo_list_file := arg_value "-todo_list" s),
+         "<"^ !todo_list_file^">  take the tests from this todo list instead of the command line");
         ("-use_config",
-         Arg.Unit (fun () -> use_config := true),
-         " use a configuration file");
-        ("-config_file",
-         Arg.String (fun s -> config_file_name := s),
-         "<"^ !config_file_name^">  name of config file") ]
-      (* Claude: -no_coq turns off both the Coq and CoqNL columns, as it always
-         has, because the two share one enable flag; so filter the generated
-         options by flag identity rather than emitting one per column. *)
+         Arg.String (fun s ->
+           use_config := true; config_file_name := arg_value "-use_config" s),
+         "<"^ !config_file_name^">  take per-test target choices from this config file");
+        ("-temp_dir",
+         set_arg "-temp_dir" temp_dir,
+         "<dir>  put generated files here and run the tools inside it");
+        ("-keep_temp",
+         Arg.Unit (fun () -> keep_temporary_files := true),
+         " do not clean up temporary files");
+        ("-no_colour",
+         Arg.Unit (fun () -> colour_output := false),
+         " do not use colour in output")      ]
       @ tool_options
       @ [ ("-night",
            Arg.Unit (fun () -> night := true),
-           " perform the nightly regression test");
+           " (likely bitrotted) perform the nightly regression test");
           ("-jenkins",
            Arg.Unit (fun () -> jenkins := true),
-           " output result in XML format for Jenkins");
+           " (likely bitrotted) output result in XML format for Jenkins");
           ("-email",
-           Arg.String (fun s -> emails := s::!emails),
-           "<email> send the night report to");
-          ("-keep_temp",
-           Arg.Unit (fun () -> keep_temporary_files := true),
-           " do not clean up temporary files");
-          ("-no_colour",
-           Arg.Unit (fun () -> colour_output := false),
-           " do not use colour in output") ] )
+           Arg.String (fun s -> emails := (arg_value "-email" s) :: !emails),
+           "<email> (likely bitrotted) send the night report to");
+] )
+
+
 
 (** ***************************************************************** *)
 (** running the tests                                                 *)
 (** ***************************************************************** *)
 
-let run_tool i_of_n tn name base t tl =
+(* Claude: in -run_ott mode the target tool is never invoked, so its half of
+   the cell is a skip rather than an unreached mark: nothing failed, we simply
+   did not ask.  Comparing an Ott-only report against a full one then shows
+   those cells as changes, not as progressions. *)
+let run_tool with_targets i_of_n tn name stem t tl =
   if (not !(tl.t_enabled)) || (not (check_config tn tl.t_name))
   then skipped_cell
   else begin
-    let gen_cmd = tl.t_gen t base in
+    let gen_cmd = in_temp_dir (tl.t_gen t stem) in
     let gen_tgt = "Ott-" ^ tl.t_name in
+    pp "";
     pp_tgt i_of_n gen_tgt gen_cmd;
     let c =
       if (command gen_cmd) <> 0
       then begin
         pp_failure gen_tgt name;
-        { gen = Failed; chk = Unreached }
+        { gen = Failed; chk = if with_targets then Unreached else Skipped }
+      end else if not with_targets
+      then begin
+        pp_success gen_tgt name;
+        { gen = Ok; chk = Skipped }
       end else begin
         pp_success gen_tgt name;
-        let chk_cmd = tl.t_check base in
+        let chk_cmd = in_temp_dir (tl.t_check stem) in
         pp_tgt i_of_n tl.t_name chk_cmd;
         if (command chk_cmd) = 0
         then begin pp_success tl.t_name name; { gen = Ok; chk = Ok } end
         else begin pp_failure tl.t_name name; { gen = Ok; chk = Failed } end
       end in
-    List.iter maybe_remove (tl.t_artefacts base);
+    List.iter maybe_remove (List.map in_temp_dir_path (tl.t_artefacts stem));
     c
   end
 
-let run_test i n (tn,tl) =
+let run_test with_targets i n (tn,tl) =
   let i_of_n = Printf.sprintf "(%d/%d)" i n in
+  let tl = if !temp_dir = "" then tl else List.map absolute tl in
   let t =
     if List.length tl = 1
     then "-i "^(List.hd tl)
@@ -585,10 +707,13 @@ let run_test i n (tn,tl) =
   let name = Filename.remove_extension (Filename.basename tn) in
   let base_name =
     String.map (function c -> match c with '.' -> '_' | '-' -> '_' | _ -> c) name in
-  let base = Filename.concat !temp_dir ("testRegr_" ^ base_name ^ "_") in
-  pp ("\n*** " ^ i_of_n ^ " " ^ tn ^ "\n");
+  let stem = "testRegr_" ^ base_name in
+  pp ("*** " ^ i_of_n ^ " " ^ tn ^ "\n");
   ( tn,
-    List.map (function tool -> (tool.t_name, run_tool i_of_n tn name base t tool)) tools )
+    List.map
+      (function tool ->
+        (tool.t_name, run_tool with_targets i_of_n tn name stem t tool))
+      tools )
 
 let now () =
   let d = Unix.localtime (Unix.time ()) in
@@ -598,7 +723,7 @@ let now () =
 let ott_version () =
   let fn = Filename.concat (Filename.get_temp_dir_name ()) "ott_version_regr" in
   let v =
-    if (command ("../bin/ott -help > " ^ fn ^ " 2>&1")) >= 0 && file_exists fn
+    if (command (ott_bin ^ " -help > " ^ fn ^ " 2>&1")) >= 0 && file_exists fn
     then ( let fd = open_in fn in
            let l = try input_line fd with End_of_file -> "" in
            close_in fd; l )
@@ -606,9 +731,10 @@ let ott_version () =
   maybe_remove fn;
   v
 
-let run_fc () =
+let run_fc with_targets =
   let n_tests = List.length !tests in
-  let rows = List.mapi (function i -> function t -> run_test i n_tests t) !tests in
+  let rows =
+    List.mapi (function i -> function t -> run_test with_targets i n_tests t) !tests in
   let rep =
     { r_meta = [ ("date", now ()); ("ott", ott_version ()) ];
       r_cols = tool_names;
@@ -741,22 +867,102 @@ let compare_fc fn_a fn_b =
     List.fold_left (function n -> function c ->
       n + !(List.assoc "regressions" (List.assoc c counts))) 0 cols
 
+(** ***************************************************************** *)
+(** comparing the generated files of two runs                         *)
+(** ***************************************************************** *)
+
+(* Claude: this compares the -temp_dir directories of two runs, so both runs
+   have to have been made with -temp_dir and -keep_temp; without the latter
+   the harness deletes everything it generated and there is nothing left to
+   compare. *)
+let dir_files d =
+  if not (file_exists d) then error (d ^ " does not exist");
+  if not (Sys.is_directory d) then error (d ^ " is not a directory");
+  List.sort compare
+    ( List.filter
+        (function f -> not (Sys.is_directory (Filename.concat d f)))
+        (Array.to_list (Sys.readdir d)) )
+
+let file_contents fn =
+  let ic = open_in_bin fn in
+  let n = in_channel_length ic in
+  let s = really_input_string ic n in
+  close_in ic;
+  s
+
+let compare_files_fc what keep da db =
+  let filter = List.filter keep in
+  let fa = filter (dir_files da) and fb = filter (dir_files db) in
+  (* Claude: two empty directories are not two matching runs.  Say so rather
+     than reporting "no differences" over nothing, which is how a forgotten
+     -temp_dir or -keep_temp used to look like success. *)
+  if fa = [] && fb = []
+  then error ("neither " ^ da ^ " nor " ^ db ^ " holds any of the " ^ what
+              ^ " - were both runs made with -temp_dir and -keep_temp?");
+  let all = List.sort_uniq compare (fa @ fb) in
+  let labels = [ "same"; "differ"; "only in A"; "only in B" ] in
+  let w =
+    List.fold_left (function n -> function s -> max n (String.length s))
+      (String.length "only in A") ("totals" :: all) in
+  pp_report ("\n*** file comparison (" ^ what ^ ")");
+  pp_report ("*** A " ^ da);
+  pp_report ("*** B " ^ db);
+  pp_report "";
+  let counts = List.map (function l -> (l, ref 0)) labels in
+  let bump l = let r = List.assoc l counts in r := !r + 1 in
+  List.iter
+    ( function f ->
+      match List.mem f fa, List.mem f fb with
+      | true, true ->
+          if file_contents (Filename.concat da f) = file_contents (Filename.concat db f)
+          then bump "same"
+          else begin bump "differ"; pp_report (pad_right w f ^ "  differs") end
+      | true, false ->
+          bump "only in A"; pp_report (pad_right w f ^ "  only in A")
+      | false, true ->
+          bump "only in B"; pp_report (pad_right w f ^ "  only in B")
+      | false, false -> () )
+    all;
+  if !(List.assoc "same" counts) = List.length all
+  then pp_report "no differences";
+  pp_report "";
+  pp_report (pad_right w "totals" ^ pad_left 6 "files");
+  List.iter
+    ( function l ->
+      pp_report (pad_right w l ^ pad_left 6 (string_of_int !(List.assoc l counts))) )
+    labels
+
 let main () =
-  if !compare_a <> "" && !compare_b <> ""
-  then compare_fc !compare_a !compare_b
-  else run_fc ()
+  match selected_mode () with
+  | RunOtt -> run_fc false
+  | RunOttAndTargets -> run_fc true
+  | Compare -> compare_fc !compare_a !compare_b
+  | CompareGenerated ->
+      compare_files_fc "files generated by Ott" is_ott_generated
+        !compare_gen_a !compare_gen_b
+  | CompareAll ->
+      compare_files_fc "all files" (function _ -> true)
+        !compare_all_a !compare_all_b
 
 let _ =
   Arg.parse options
     (fun s -> tests := (s,[s]) :: !tests)
     ("\n" ^ "regression <options> <test1> .. <testn> \n");
   tests := List.rev !tests;
-  let comparing = !compare_a <> "" && !compare_b <> "" in
-  if (List.length !tests) = 0 && not comparing && not !todo_list
-  then error "specify at least one test";
-  if not comparing && not (any_tool_enabled ())
+  let running =
+    match selected_mode () with
+    | RunOtt | RunOttAndTargets -> true
+    | Compare | CompareGenerated | CompareAll -> false in
+  if running then
+    ( match !todo_list, !tests with
+    | true, _::_ ->
+        error "-todo_list and tests named on the command line are mutually exclusive"
+    | false, [] -> error "specify at least one test, or a -todo_list"
+    | _, _ -> () );
+  if running && not (any_tool_enabled ())
   then error "specify at least one target (for example -coq -lean), or -all";
-  if !temp_dir <> "" then execute_cmd_list ["mkdir -p " ^ !temp_dir] else ();
+  if running && !temp_dir <> ""
+  then execute_cmd_list ["mkdir -p " ^ Filename.quote !temp_dir] else ();
   if !night
   then begin
     putenv "PATH" "/home/yquem/moscova/zappa/bin:/home/yquem/moscova/zappa/source/godi/bin:/usr/bin:/bin";
@@ -767,7 +973,7 @@ let _ =
     report_fd := open_out "report.txt";
   end;
   if !use_config then parse_config_file ();
-  if !todo_list && not comparing then parse_todo_list ();
+  if !todo_list && running then parse_todo_list ();
   main ();
   if !night then begin
     close_out !report_fd;
@@ -785,7 +991,7 @@ let _ =
   end;
 
   (* Claude: the Jenkins verdict comes from the comparison, so it is only
-     meaningful in -compare mode; a bare run has nothing to regress against. *)
+     meaningful in -compare_reports mode; a bare run has nothing to regress against. *)
   if !jenkins then begin
     let fd = open_out "tests.xml" in
     output_string fd "<testsuite tests=\"1\">\n";
