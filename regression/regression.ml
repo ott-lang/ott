@@ -253,16 +253,19 @@ let tools =
           Filename.concat (Filename.dirname base) ("." ^ Filename.basename base ^ ".aux") ]) };
 
     { t_name = "CoqNL";
-      t_out = ".v";
+      t_out = "NL.v";
       t_flag = "-coq";
       t_enabled = coq_test;
+      (* Claude: generate into base^"NL.v", as the LeanNL column does: with a
+         bare base^".v" this overwrote the Coq column's output and then the
+         check compiled a base^"NL.v" that had never been written. *)
       t_gen = (fun t base ->
-        ott_bin ^ " -coq_expand_list_types false " ^ t ^ " -o " ^ base ^ ".v");
+        ott_bin ^ " -coq_expand_list_types false " ^ t ^ " -o " ^ base ^ "NL.v");
       t_check = (fun base ->
         "rocq compile -Q " ^ coq_lib ^ " Ott " ^ base ^ "NL.v > " ^ base ^ "NL.coq.out 2>&1");
       t_artefacts = (fun base ->
         [ base ^ "NL.v"; base ^ "NL.vo"; base ^ "NL.glob"; base ^ "NL.coq.out";
-          Filename.concat (Filename.dirname base) ("." ^ Filename.basename base ^ ".aux") ]) };
+          Filename.concat (Filename.dirname base) ("." ^ Filename.basename base ^ "NL.aux") ]) };
 
     { t_name = "Isa";
       t_out = ".thy";
