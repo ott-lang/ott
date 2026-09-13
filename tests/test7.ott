@@ -24,14 +24,14 @@ metavar termvar, x ::=
  {{ isa string }} {{ coq nat }} {{ hol string }}  {{ lem string }} {{ lean String }} {{ coq-equality }} {{ lex alphanum }}  
  {{ tex \mathit{[[termvar]]} }} {{ com  term variable  }} 
  {{ isavar ''[[termvar]]'' }} {{ holvar "[[termvar]]" }} 
- {{ lemvar "[[typevar]]" }} 
- {{ leanvar "[[typevar]]" }} 
+ {{ lemvar "[[termvar]]" }} 
+ {{ leanvar "[[termvar]]" }} 
  {{ texvar \mathrm{[[termvar]]} }} 
  {{ ocamlvar "[[termvar]]" }}
 
 rmetavar label, l, k ::=
 r {{ isa string }} {{ coq nat }} {{ hol string }} {{ lem string }} {{ lean String }} {{ lex alphanum }}  {{ tex \mathit{[[label]]} }} 
-r {{ com  field label  }}  {{ isavar ''[[label]]'' }} {{ holvar "[[label]]" }} {{ lemvar "[[typevar]]" }} {{ leanvar "[[typevar]]" }} 
+r {{ com  field label  }}  {{ isavar ''[[label]]'' }} {{ holvar "[[label]]" }} {{ lemvar "[[label]]" }} {{ leanvar "[[label]]" }} 
 r {{ ocamlvar "[[label]]" }}
 
 indexvar index, i, j, n, m  ::= {{ isa nat }} {{ coq nat }} {{ hol num }} {{ lem num}} {{ lean Nat}} {{ lex numeral }}
@@ -48,8 +48,8 @@ r  | { l1 : T1 , .. , ln : Tn }      :: :: Rec           {{ com record }}
 %R  | { }                              :: :: Rec_empty        {{ com empty record }}
 %R  | { Trb }                          :: :: Rec_ne           {{ com nonempty record }}
 % {{ com record type }}    
-  | ( T )                            :: S :: paren {{ ichlL [[T]] }}
-  | [ X |-> T ] T'                   :: M :: sub   {{ ichlL (Tsubst_T [[T]] [[X]] [[T']]) }} 
+  | ( T )                            :: S :: paren {{ ichlLo [[T]] }}
+  | [ X |-> T ] T'                   :: M :: sub   {{ ichlLo (Tsubst_T [[T]] [[X]] [[T']]) }} 
 
 %R Trb :: 'Trb_' ::=
 %R  | l : T                            :: :: rb1
@@ -66,11 +66,11 @@ t :: 't_' ::=                                                      {{ com  term 
 r  | { l1 = t1 ,  .. , ln = tn }      :: :: Rec                      {{ com record }}
 r  | t . l                            :: :: Proj                     {{ com projection }} 
 r  | let p = t in t'                  :: :: Let (+ bind b(p) in t' +){{ com pattern binding}}
-  | ( t )                            :: S :: paren {{ ichlL [[t]] }} 
-  | [ x |-> t ] t'                   :: M :: tsub  {{ ichlL ( tsubst_t [[t]] [[x]] [[t']] ) }}
-  | [ X |-> T ] t                    :: M :: Tsub  {{ ichlL ( Tsubst_t [[T]] [[X]] [[t]] ) }} 
+  | ( t )                            :: S :: paren {{ ichlLo [[t]] }} 
+  | [ x |-> t ] t'                   :: M :: tsub  {{ ichlLo ( tsubst_t [[t]] [[x]] [[t']] ) }}
+  | [ X |-> T ] t                    :: M :: Tsub  {{ ichlLo ( Tsubst_t [[T]] [[X]] [[t]] ) }} 
 %  | E [ t ]                          :: M :: ctx 
-r  | s t                              :: M :: tsubs {{ ichlL ( m_t_subst_t [[s]] [[t]] ) }}
+r  | s t                              :: M :: tsubs {{ ichlLo ( m_t_subst_t [[s]] [[t]] ) }}
 
 r p :: 'P_' ::=                                                {{ com  pattern }}
 r  | x : T                            :: :: Var (+ b = x  +)     {{ com variable pattern }}
@@ -118,10 +118,10 @@ r  | \/                     ::   :: vee       {{ tex \vee }}
 
 formula :: formula_ ::=          
   | judgement              :: :: judgement
-% | G = G'                 :: :: Geq     {{ ichlL [[G]] = [[G']] }}
-  | x = x'                 :: :: xeq     {{ ichlL [[x]] = [[x']]  }} {{ lean [[x]] = [[x']] }}
-  | X = X'                 :: :: Xeq     {{ ichlL [[X]] = [[X']]  }} {{ lean [[X]] = [[X']] }}
-  | ( formula )            :: :: paren   {{ ichlL ( [[formula]] ) }}
+% | G = G'                 :: :: Geq     {{ ichlLo [[G]] = [[G']] }}
+  | x = x'                 :: :: xeq     {{ ichlLo [[x]] = [[x']]  }} {{ lean [[x]] = [[x']] }}
+  | X = X'                 :: :: Xeq     {{ ichlLo [[X]] = [[X']]  }} {{ lean [[X]] = [[X']] }}
+  | ( formula )            :: :: paren   {{ ichlLo ( [[formula]] ) }}
   | not formula            :: :: not     {{ isa Not( [[formula]] ) }}
                                          {{ coq not( [[formula]] ) }}
                                          {{ lem not( [[formula]] ) }}
@@ -423,7 +423,7 @@ r G |- k S <:f { l : T , l1 : T1 , .. , ln : Tn }
 
 
 defn
-G |- t : T ::  :: Ty :: Ty_  {{ com term $[[t]]$ has type $[[T]]$ }} by 
+G |- t : T ::  :: Ty :: TyCh_  {{ com term $[[t]]$ has type $[[T]]$ }} by 
 
 G |- ok
 x:T isin G

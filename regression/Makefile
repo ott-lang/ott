@@ -57,10 +57,17 @@ reg: regression
 regh: regression
 	./regression -all -run_ott_and_targets $(REPORT) ../tests/test*.ott
 
-simple: regression
+small: regression
 	$(MAKE) clean-regr
 	-make -C ../coq
 	./regression -all -todo_list regression-small.otl -keep_temp -run_ott_and_targets report-small.txt
+
+small-test7: regression
+	$(MAKE) -C .. tests/tmp_test7.ott
+	$(MAKE) clean-regr
+	-make -C ../coq
+	./regression -all -keep_temp -run_ott_and_targets report-small.txt  ../tests/tmp_test7.ott
+
 
 # compare the latest run against the reference report
 compare: regression
@@ -71,6 +78,7 @@ report-2026-09-12.txt: regression
 	rm -f report-2026-09-12-dir/*
 	-make -C ../coq clean
 	-make -C ../coq 
+	$(MAKE) -C .. tests/tmp_test7.ott
 	time ./regression -run_ott_and_targets report-2026-09-12.txt -all -todo_list regression.otl -temp_dir report-2026-09-12-dir -keep_temp  2>&1 | tee report-2026-09-12-log.txt
 
 
@@ -78,6 +86,7 @@ report-2026-09-13.txt: regression
 	rm -f report-2026-09-13-dir/*
 	-make -C ../coq clean
 	-make -C ../coq 
+	$(MAKE) -C .. tests/tmp_test7.ott
 	time ./regression -run_ott_and_targets report-2026-09-13.txt -all -todo_list regression.otl -temp_dir report-2026-09-13-dir -keep_temp  2>&1 | tee report-2026-09-13-log.txt
 
 
