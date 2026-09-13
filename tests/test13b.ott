@@ -162,7 +162,7 @@ Phi;e1..en |- f=mse ok
 
 
 defn
-Phi |- prod ok :: :: ProdOk :: ProdOk_ by
+Phi |- prod ok :: :: ProdOK :: ProdOK_ by
 
 forall i isin 1--m. Phi;e1..en |- bsi ok
 prod = | e1..en :: :: prodname (+ bs1..bsm +) 

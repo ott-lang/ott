@@ -84,6 +84,10 @@ let pp_functions_locally_nameless fd m sd xd_transformed =
   let aux_list_functions =
     ( match m with
     | Coq co -> !(Auxl.the co.coq_list_aux_funcs) 
+    (* Claude: this emitter, unlike pp_systemdefn_core_io, does not print the
+       embed that expand_lists_in_syntaxdefn synthesises, so the auxiliary list
+       functions have to come from the stash, for Lean as for Coq *)
+    | Lean lno -> !(Auxl.the lno.lean_list_aux_funcs)
     | _ -> "" ) in
   output_string fd "(* EXPERIMENTAL *)\n";
   output_string fd (Auxl.big_line_comment m "auxiliary functions on the new list types");
@@ -160,6 +164,10 @@ let pp_functions fd m sd lookup =
   let aux_list_functions =
     ( match m with
     | Coq co -> !(Auxl.the co.coq_list_aux_funcs) 
+    (* Claude: this emitter, unlike pp_systemdefn_core_io, does not print the
+       embed that expand_lists_in_syntaxdefn synthesises, so the auxiliary list
+       functions have to come from the stash, for Lean as for Coq *)
+    | Lean lno -> !(Auxl.the lno.lean_list_aux_funcs)
     | _ -> "" ) in
   output_string fd (Auxl.big_line_comment m "auxiliary functions on the new list types");
   output_string fd aux_list_functions;

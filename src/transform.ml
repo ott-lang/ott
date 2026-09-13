@@ -393,6 +393,7 @@ let expand_lists_in_syntaxdefn (m:pp_mode) (xd:syntaxdefn) (structure: structure
   let record_list_aux_funcs s =
     match m with
     | Coq co -> Auxl.the (co.coq_list_aux_funcs) := s
+    | Lean lno -> Auxl.the (lno.lean_list_aux_funcs) := s
     | _ -> () in
   let emit_aux_list_funcs b xd t s =
     match m with
