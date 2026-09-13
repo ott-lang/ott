@@ -1126,13 +1126,23 @@ and pp_nt_or_mv_with_de_with_sie_internal as_type m xd sie (de :dotenv) ((ntmvr,
                 | None -> ""
                 | Some suffi -> " - "^pp_plain_suffix_item suffi)
               ^ ")))"
-          | Lean _ ->
+          | Lean lno ->
 leanTODO "1" (
               (* Claude: Lean lambda uses "=>", not Isabelle's "|->", and Lean 4
                  has no List.nth: use the panic-on-out-of-bounds indexing l[i]!
-                 (the element inductives carry a derived Inhabited instance) *)
+                 (the element inductives carry a derived Inhabited instance).
+                 With lists expanded the bound variable is the generated
+                 inductive, which has no GetElem instance, so index into its
+                 unmake_ instead - the Coq backend hoists an nth_list_ premise
+                 here, which Lean has no machinery for. *)
+              let over =
+                if lno.lean_expand_lists
+                then "(unmake_list_"
+                     ^ expanded_list_type_suffix_ntmvsns m xd de1i.de1_ntmvsns
+                     ^ " " ^ de1i.de1_compound_id ^ ")"
+                else de1i.de1_compound_id in
               "((fun "^de1i.de1_pattern^" => "^pp_nt_or_mv_with_sie m xd ((Si_var ("_",0))::sie) (ntmvr,suff)^")"
-              ^ " (" ^ de1i.de1_compound_id ^ "["
+              ^ " (" ^ over ^ "["
               ^ pp_plain_suffix_item suffi
               ^
                 (match non_zero_lower_of_bound bound with
@@ -1856,6 +1866,18 @@ and pp_mse m xd sie de isa_list_name_flag prod_name ntmvro mse : string * nonter
              (pp_symterm_list_body m xd sie de dummy_tmopt false dummy_prod_es stlb)) in
       ( match m with
       | Lex _ | Menhir _ -> Auxl.errorm m "pp_mse"
+      (* Claude: as the Coq arm below, the binder is the generated inductive and
+         has to be unpacked to the target's own list.  The fallback names the
+         list by the metavar's primary root printed as a type, which is how the
+         inductive itself is named. *)
+      | Lean lno when lno.lean_expand_lists ->
+	  ( match ntmvro with
+	  | Some ntmvr ->
+	      let typ = pp_nt_or_mv_root_ty m xd ntmvr in
+	      "(unmake_list_"^typ^" "^fake^")", [], []
+	  | None ->
+	      let s = pp_metavarroot_ty m xd (Auxl.primary_mvr_of_mvr xd (fst mv)) in
+	      "(unmake_list_"^s ^" "^fake^")", [], [] )
       | Coq co when co.coq_expand_lists ->  (* FZ this should be optimized *)
 	  ( match ntmvro with
 	  | Some ntmvr ->
@@ -1880,6 +1902,15 @@ and pp_mse m xd sie de isa_list_name_flag prod_name ntmvro mse : string * nonter
 	     (pp_symterm_list_body m xd sie de dummy_tmopt false dummy_prod_es stlb)) in 
       ( match m with
       | Lex _ | Menhir _ -> Auxl.errorm m "pp_mse"
+      (* Claude: as the Coq arm below *)
+      | Lean lno when lno.lean_expand_lists ->
+	  ( match ntmvro with
+	  | Some ntmvr ->
+	      let typ = pp_nt_or_mv_root_ty m xd ntmvr in
+	      "(unmake_list_"^typ^" "^fake^")", [], []
+	  | None ->
+ 	      let s = pp_nontermroot_ty m xd (Auxl.primary_ntr_of_ntr xd (fst nt)) in
+	      "(unmake_list_"^s^" "^fake^")", [], [] )
       | Coq co when co.coq_expand_lists -> (* FZ this should be optimized *)
 	  ( match ntmvro with
 	  | Some ntmvr ->
@@ -2079,6 +2110,62 @@ and pp_mse m xd sie de isa_list_name_flag prod_name ntmvro mse : string * nonter
 
       | Twf _ -> raise TwelfNotImplemented
       | Caml _ ->  ( "(List.flatten (List.map "^Auxl.auxfn_name f ntrp ntrp ^" ("^pp_ntlist^")))" ), [], [] 
+      | Lean lno when lno.lean_expand_lists ->
+          (* Claude: as the Coq coq_expand_lists arm below: the auxiliary
+             function recurses over the generated list_... inductive, so no
+             separate spine helper over List is needed *)
+          let (de1,_) = de in
+          let de1i = de1_lookup de1 b in
+          let var_list = Str.split (Str.regexp "(\\|,\\|)") de1i.de1_pattern in
+          let suf = "list_" ^ expanded_list_type_suffix_ntmvsns m xd de1i.de1_ntmvsns in
+          let output_typ =
+            ( match ntmvro with
+            | Some ntmvr -> "List " ^ pp_nt_or_mv_root_ty m xd ntmvr
+            | None -> "<<<None_in_ntmvro_pp_mse>>>" ) in
+          let args =
+            String.concat "_"
+              (List.map (fun ((x,_),_) ->
+                pp_nt_or_mv_root m xd
+                  (Auxl.promote_ntmvr xd (Auxl.primary_nt_or_mv_of_nt_or_mv xd x)))
+                 de1i.de1_ntmvsns) in
+          let id_list = Auxl.auxfn_name f ntrp (args ^ "_list") in
+          let ntrs =
+            Auxl.option_map
+              (fun ((x,s),_) -> ( match x with Ntr y -> Some (y,s) | _ -> None ))
+              de1i.de1_ntmvsns in
+          let (auxfn_def_types,_) = List.assoc f xd.xd_axs in
+          let interesting_ntrs =
+            List.filter
+              ( fun (ntr,s) -> List.mem (Auxl.primary_ntr_of_ntr xd ntr) auxfn_def_types )
+              ntrs in
+          let rhs =
+            if interesting_ntrs = [] then "[]"
+            else
+              String.concat (list_append m)
+                (List.map (fun (ntr,s) ->
+                  let fname =
+                    Auxl.auxfn_name f (Auxl.primary_ntr_of_ntr xd ntr) (Auxl.primary_ntr_of_ntr xd ntr) in
+                  "(" ^ fname ^ " " ^ ntr^(pp_suffix_with_sie m xd ((Si_var ("_",0))::sie) s)^")")
+                   interesting_ntrs) in
+          let tuple_deps =
+            List.map
+              (fun (ntr,_) ->
+                Auxl.auxfn_name f (Auxl.primary_ntr_of_ntr xd ntr) (Auxl.primary_ntr_of_ntr xd ntr))
+              interesting_ntrs in
+          ( leanTODO "2" ("(" ^ id_list ^ " " ^ de1i.de1_compound_id ^ ")") ),
+          [ id_list ],
+          [ { r_fun_id = id_list;
+              r_fun_dep = id_list :: tuple_deps;
+              r_fun_type = suf;
+              r_fun_header = ( id_list ^ " (l:" ^ suf ^ ")",
+                               "",
+                               " : " ^ output_typ ^ " :=\n  match l with\n");
+              r_fun_clauses =
+              [ ( "", "Nil_"^suf, "[]" );
+                ( "", "Cons_"^suf^" "^ (String.concat " " var_list) ^" "^args^"_list_",
+                  "("^rhs^")" ^ list_append m ^ "(" ^ id_list ^ " " ^ args^"_list_)" )
+              ] } ]
+
       | Lean _ ->
           (* Claude: generate a mutually-recursive _list helper: Lean's structural
              recursion cannot follow a recursive call under a pair projection
@@ -2390,17 +2477,27 @@ and pp_element m xd sie in_type e =
             | Coq co -> 
 	        if co.coq_expand_lists 
 	        then
-		  ( match pp_elements m xd sie elb.elb_es false false true true with
-		  | None -> None   (* FZ should be unit list, but list_unit is undefined*)
-		  | Some s -> Some (None, "(list_"^s^")") )
+                  (* Claude: the name of the generated inductive, built by the
+                     one function that builds it everywhere else *)
+		  ( match expanded_list_type_suffix m xd elb.elb_es with
+		  | "" -> None   (* FZ should be unit list, but list_unit is undefined*)
+		  | s -> Some (None, "(list_"^s^")") )
 	        else
 		  ( match pp_elements m xd sie elb.elb_es true false true true with
 		  | None -> Some (None, "list unit")
 		  | Some s -> Some (None, "list "^s) )
-            | Lean _ -> 
-                ( match pp_elements m xd sie elb.elb_es true false true true with
-	        | None -> Some (None, "List ()")
-	        | Some s -> Some (None, "List "^s) )
+            | Lean lno -> 
+                (* Claude: as the Coq case above, a list is either the generated
+                   list_... inductive or the target's own list type *)
+                if lno.lean_expand_lists
+                then
+                  ( match expanded_list_type_suffix m xd elb.elb_es with
+                  | "" -> None
+                  | s -> Some (None, "(list_"^s^")") )
+                else
+                  ( match pp_elements m xd sie elb.elb_es true false true true with
+	          | None -> Some (None, "List ()")
+	          | Some s -> Some (None, "List "^s) )
             | Isa _ | Hol _  -> 
 	        ( match pp_elements m xd sie elb.elb_es true false true true with  
                 | None -> Some (None, "unit list")    
@@ -3482,8 +3579,17 @@ and pp_symterm_node_body m xd sie de stnb : string =
                           let nt_stnb = pp_symterm_node_body m xd ((Si_var ("_",0))::sie) de stnb0 in
                           let de1i = de1_lookup (fst de) stlb.stl_bound in
                           let x = de1i.de1_compound_id ^ "_" in
+                          (* Claude: with lists expanded the bound variable is the
+                             generated inductive, so iterate over its unmake_ *)
+                          let over =
+                            ( match m with
+                            | Lean lno when lno.lean_expand_lists ->
+                                "(unmake_list_"
+                                ^ expanded_list_type_suffix_ntmvsns m xd de1i.de1_ntmvsns
+                                ^ " " ^ de1i.de1_compound_id ^ ")"
+                            | _ -> de1i.de1_compound_id ) in
                           leanTODO "3" (
-                            "(\xe2\x88\x80 " ^ x ^ " \xe2\x88\x88 " ^ de1i.de1_compound_id
+                            "(\xe2\x88\x80 " ^ x ^ " \xe2\x88\x88 " ^ over
                             ^ ", (fun " ^ de1i.de1_pattern ^ " => " ^ nt_stnb ^ ") " ^ x ^ ")" )
                       | _ -> leanTODO "3" " <<< multiple slti in formula_dots not implemented >>> " )
                   | _ ->
@@ -3853,14 +3959,14 @@ and pp_symterm_elements' m xd sie de include_terminals prod_es es : (string * te
   f prod_es es
 
             
-(* Claude: the "list_..." name for an expanded Coq list type is minted in
+(* Claude: the "list_..." name for an expanded list type is minted in
    Transform.expand_element as "list_" ^ the promoted root of each element of
    the list, printed as a type.  Every use site - Nil_, Cons_, app_, make_list_
    - has to spell that name exactly the same way, so they all go through this
    one function rather than each rebuilding it.  The flag records whether the
    element's rule carries a coq hom, in which case Transform.expand_rule does
    not expand it and no list_... inductive exists. *)
-and coq_list_type_elements m xd es =
+and expanded_list_type_elements m xd es =
   let rec intern ls =
     ( match ls with
     | [] -> []
@@ -3870,11 +3976,19 @@ and coq_list_type_elements m xd es =
         (pp_nt_or_mv_root_ty m xd (Ntr (Auxl.promote_ntr xd ntr)),b) :: (intern t)
     | (Lang_metavar(mvr,_))::t -> (pp_nt_or_mv_root_ty m xd (Mvr mvr),false) :: (intern t)
     | (Lang_terminal _)::t -> intern t
-    | _::t -> Auxl.warning None "internal: coq_list_type_elements never happen\n"; intern t )
+    | _::t -> Auxl.warning None "internal: expanded_list_type_elements never happen\n"; intern t )
   in intern es
 
-and coq_list_type_suffix m xd es =
-  String.concat "_" (List.map fst (coq_list_type_elements m xd es))
+and expanded_list_type_suffix m xd es =
+  String.concat "_" (List.map fst (expanded_list_type_elements m xd es))
+
+(* Claude: the same suffix, computed from a dotenv entry's ntmvsns rather than
+   from the elements of a production - the form the list helpers have to hand *)
+and expanded_list_type_suffix_ntmvsns m xd ntmvsns =
+  String.concat "_"
+    (List.map (fun ((x,_),_) ->
+      pp_nt_or_mv_root_ty m xd
+        (Auxl.promote_ntmvr xd (Auxl.primary_nt_or_mv_of_nt_or_mv xd x))) ntmvsns)
 
 and pp_symterm_list_items m xd sie (de :dotenv) tmopt prod_es stlis : (string * tex_token_category) list =
   debug("pp_symterm_list_items entry:\nstlis= [" ^String.concat " ; " (List.map pp_plain_symterm_list_item stlis)^"]\nprod_es= ["^String.concat " ; "(List.map pp_plain_element prod_es)^"]\n\n");
@@ -3895,10 +4009,14 @@ and pp_symterm_list_items m xd sie (de :dotenv) tmopt prod_es stlis : (string * 
       | Isa _ -> ["[]",TTC_dummy]
       | Caml _ -> ["[]",TTC_dummy]
       | Lem _ -> ["[]",TTC_dummy]
+      (* Claude: as the Coq case below, the empty list is the generated
+         inductive's Nil_ when lists are expanded *)
+      | Lean lno when lno.lean_expand_lists ->
+         ["Nil_list_"^(expanded_list_type_suffix m xd prod_es),TTC_dummy ]
       | Lean _ -> ["[]",TTC_dummy]
       | Coq co -> 
          if co.coq_expand_lists then 
-           ["Nil_list_"^(coq_list_type_suffix m xd prod_es),TTC_dummy ]
+           ["Nil_list_"^(expanded_list_type_suffix m xd prod_es),TTC_dummy ]
          else
            ["nil",TTC_dummy]
       | Hol _ -> ["NIL",TTC_dummy]
@@ -3940,6 +4058,18 @@ and pp_symterm_list_items m xd sie (de :dotenv) tmopt prod_es stlis : (string * 
                     (Auxl.list_concat [ "++" ]
                        pp_stlis) 
                 ^ ")")]
+          (* Claude: as the Coq case below, concatenation is the generated
+             app_list_ when lists are expanded *)
+          | Lean lno when lno.lean_expand_lists ->
+              let l = List.flatten pp_stlis in
+              let t = expanded_list_type_suffix m xd prod_es in
+              if List.length l > 1
+              then
+                [ leanTODO "4" ("("
+                  ^ (List.fold_right
+                       (fun x s -> "(app_list_"^t^" "^x^" "^s^")") l ("Nil_list_"^t))
+                  ^ ")") ]
+              else [ List.hd l ]
           | Lean _ -> 
               [ leanTODO "4" ("("
                 ^ String.concat " " 
@@ -3955,7 +4085,7 @@ and pp_symterm_list_items m xd sie (de :dotenv) tmopt prod_es stlis : (string * 
 	        let app,nil = 
 	          if co.coq_expand_lists
 	          then 
-		    let t = (*Auxl.pp_coq_type_name*) (coq_list_type_suffix m xd prod_es) in
+		    let t = (*Auxl.pp_coq_type_name*) (expanded_list_type_suffix m xd prod_es) in
 		    ("app_list_"^t, "Nil_list_"^t)
 	          else
 		    ("app", "nil") in
@@ -3977,11 +4107,16 @@ and pp_symterm_list_item m xd sie (de :dotenv) tmopt include_terminals prod_es s
       (match m with
       | Ascii ao -> if ao.ppa_ugly then [col_magenta ao "[stli_single",TTC_dummy] @ pp_es' @ [col_magenta ao "stli_single]",TTC_dummy]  else pp_es'
       | Tex _ -> pp_es'
+      (* Claude: as the Coq case below, a singleton is Cons_ onto Nil_ when
+         lists are expanded *)
+      | Lean lno when lno.lean_expand_lists ->
+          let name = expanded_list_type_suffix m xd prod_es in
+          ["(Cons_list_" ^ name ^ " " ^ String.concat " " pp_es ^ " Nil_list_" ^ name ^")",TTC_dummy]
       | Caml _ | Isa _ | Hol _ | Lem _ | Lean _ -> 
           ["[(" ^ String.concat "," pp_es ^ ")]",TTC_dummy]
       | Coq co ->
           if co.coq_expand_lists then
-	    let name = (coq_list_type_suffix m xd prod_es) in
+	    let name = (expanded_list_type_suffix m xd prod_es) in
 	    ["(Cons_list_" ^ name ^ " " ^ String.concat " " pp_es ^ " Nil_list_" ^ name ^")",TTC_dummy]
           else
             if List.length pp_es = 1
@@ -4134,6 +4269,29 @@ and pp_symterm_list_body m xd sie (de :dotenv) tmopt include_terminals prod_es s
             [lemTODO "7" ("(List.map (fun "^de1i.de1_pattern^" -> "^pp_body^") "
              ^ de1i.de1_compound_id
 	     ^ ")")]
+        (* Claude: as the Coq arm below: map over the generated inductive with
+           its own map_list_, whose function argument is curried over the
+           components, and repack with make_list_ when the result is a list of
+           the same expanded type *)
+        | Lean lno when lno.lean_expand_lists ->
+            let ty_list =
+              List.map (fun ((x,_),_) ->
+                pp_nt_or_mv_root_ty m xd
+                  (Auxl.promote_ntmvr xd (Auxl.primary_nt_or_mv_of_nt_or_mv xd x)))
+                de1i.de1_ntmvsns in
+            let var_list = Str.split (Str.regexp "(\\|,\\|)") de1i.de1_pattern in
+            let map_fun = "map_list_" ^ String.concat "_" ty_list in
+            let header, footer =
+              let (el,bl) = List.split (expanded_list_type_elements m xd prod_es) in
+              if List.exists (fun x -> x) bl
+              then "",""
+              else ("(make_list_" ^ String.concat "_" el ^ " ", ")") in
+            (* Claude: the binders need no type annotations - map_list_ fixes
+               them - and var_list and ty_list are not always the same length *)
+            let pat_fun = String.concat " " var_list in
+            [ leanTODO "5" (header
+              ^ "("^map_fun^" (fun "^pat_fun^" => "^pp_body^") "
+              ^ de1i.de1_compound_id ^")" ^ footer) ]
         | Lean _ -> 
             [leanTODO "5" ("(List.map (fun "^de1i.de1_pattern^" => "^pp_body^") "
              ^ de1i.de1_compound_id
@@ -4152,7 +4310,7 @@ and pp_symterm_list_body m xd sie (de :dotenv) tmopt include_terminals prod_es s
 	      else "map" in
 
             let header, footer =
-              let (el,bl) = List.split (coq_list_type_elements m xd prod_es) in
+              let (el,bl) = List.split (expanded_list_type_elements m xd prod_es) in
               if (not co.coq_expand_lists) || List.exists (fun x -> x) bl 
               then "",""
               else (
@@ -4438,9 +4596,12 @@ and make_dep_elements es =
 (* extract variables from a symterm - this should go in Aux *)
 
 let extract_quantified_proof_assistant_vars m xd de1 de2 de3 =
-  let coq_expand_list = 
+  let expand_list = 
     ( match m with
     | Coq co when co.coq_expand_lists -> true
+    (* Claude: the Lean backend expands lists the same way when asked to, and
+       then a list-typed binder has the generated inductive as its type *)
+    | Lean lno when lno.lean_expand_lists -> true
     | _ -> false ) in
     
   let is_judgement_ntmv ntmv = match ntmv with
@@ -4461,11 +4622,11 @@ let extract_quantified_proof_assistant_vars m xd de1 de2 de3 =
 		     (Auxl.primary_nt_or_mv_of_nt_or_mv xd ntmv_root))))
            de1i.de1_ntmvsns) in
       let tmp =
-	if coq_expand_list
+	if expand_list
 	then String.concat "_" coq_type_pp1
 	else String.concat "*" coq_type_pp1 in
       let coq_type_var =
-	if coq_expand_list
+	if expand_list
 	then "list_" ^tmp
 	else
           ( match m with

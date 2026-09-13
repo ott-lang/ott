@@ -45,6 +45,59 @@ type int_code =
 
 let dummy_ret_type = Ntr "dummy_ret_type"
 
+(* Claude: the Lean counterpart of make_aux_list_funcs below, emitting the same
+   five helpers over a generated list_... inductive in Lean 4 syntax: List for
+   the target's own lists, [] and :: for its constructors, x for the pair type,
+   and implicit {A : Type} in place of Coq's explicit argument plus Arguments
+   declaration. *)
+let make_aux_list_funcs_lean (b : Buffer.t) xd t s =
+  let l =
+    let ntrs = List.map (fun r -> r.rule_ntr_name) xd.xd_rs in
+    let mvrs = List.map (fun mvd -> mvd.mvd_name) xd.xd_mds in
+    let used = ntrs @ mvrs in
+    let rec find_unused_suffix n =
+      let ns = string_of_int n in
+      if List.mem ("l"^ns) used then find_unused_suffix (n+1) else ns in
+    if List.mem "l" used then "l"^(find_unused_suffix 0) else "l"
+  in
+  let hl =
+    if List.length t = 1 then [ "h" ]
+    else
+      let c = ref (-1) in
+      List.map (fun _ -> c:=!c+1; "h"^(string_of_int !c)) t in
+  let h = String.concat " " hl in
+  let h_us = String.concat " " (List.map (fun _ -> "_") hl) in
+  let h_comma = if List.length hl = 1 then h else "(" ^ String.concat "," hl ^ ")" in
+  let t_arrow = String.concat " -> " t in
+  let t' = if List.length t = 1 then t_arrow else "(" ^ String.concat " \xc3\x97 " t ^ ")" in
+  (* map *)
+  Printf.bprintf b "def map_%s {A : Type} (f : %s -> A) (%s : %s) : List A :=\n" s t_arrow l s;
+  Printf.bprintf b "  match %s with\n" l;
+  Printf.bprintf b "  | Nil_%s => []\n" s;
+  Printf.bprintf b "  | Cons_%s %s tl_ => (f %s) :: (map_%s f tl_)\n\n" s h h s;
+  (* make *)
+  Printf.bprintf b "def make_%s (%s : List %s) : %s :=\n" s l t' s;
+  Printf.bprintf b "  match %s with\n" l;
+  Printf.bprintf b "  | [] => Nil_%s\n" s;
+  Printf.bprintf b "  | %s :: tl_ => Cons_%s %s (make_%s tl_)\n\n" h_comma s h s;
+  (* unmake *)
+  Printf.bprintf b "def unmake_%s (%s : %s) : List %s :=\n" s l s t';
+  Printf.bprintf b "  match %s with\n" l;
+  Printf.bprintf b "  | Nil_%s => []\n" s;
+  Printf.bprintf b "  | Cons_%s %s tl_ => %s :: (unmake_%s tl_)\n\n" s h h_comma s;
+  (* nth *)
+  Printf.bprintf b "def nth_%s (n : Nat) (%s : %s) : Option %s :=\n" s l s t';
+  Printf.bprintf b "  match n, %s with\n" l;
+  Printf.bprintf b "  | 0, Cons_%s %s tl_ => some %s\n" s h h_comma;
+  Printf.bprintf b "  | 0, _ => none\n";
+  Printf.bprintf b "  | _+1, Nil_%s => none\n" s;
+  Printf.bprintf b "  | k+1, Cons_%s %s tl_ => nth_%s k tl_\n\n" s h_us s;
+  (* app *)
+  Printf.bprintf b "def app_%s (%s m : %s) : %s :=\n" s l s s;
+  Printf.bprintf b "  match %s with\n" l;
+  Printf.bprintf b "  | Nil_%s => m\n" s;
+  Printf.bprintf b "  | Cons_%s %s tl_ => Cons_%s %s (app_%s tl_ m)\n\n" s h s h s
+
 let make_aux_list_funcs (b : Buffer.t) xd t s =
   (* the variable l should be fresh wrt all types - mvrs and ntrs *)
   (* the code below is an hack and does not guarantee freshening if mv/rule homs are used *)
@@ -97,7 +150,26 @@ let make_aux_list_funcs (b : Buffer.t) xd t s =
   Printf.bprintf b "  | Cons_%s %s tl_ => Cons_%s %s (app_%s tl_ m)\n" s h s h s;
   Printf.bprintf b "  end.\n\n"
 
-let pp_list_rule (fd : out_channel) xd (ss:nt_or_mv_root list) : unit  =
+let pp_list_rule (fd : out_channel) (m:pp_mode) xd (ss:nt_or_mv_root list) : unit  =
+  match m with
+  | Lean _ ->
+      (* Claude: the Lean counterpart of the Coq case below.  The components are
+         named by their Lean type names, as everywhere else that builds a
+         list_... name, rather than by their bare roots. *)
+      let sss = List.map (Grammar_pp.pp_nt_or_mv_root_ty m xd) ss in
+      let id = "list_" ^ String.concat "_" sss in
+      Printf.fprintf fd "inductive %s where\n" id;
+      Printf.fprintf fd "    | Nil_%s : %s\n" id id;
+      Printf.fprintf fd "    | Cons_%s : " id;
+      List.iter (fun s -> Printf.fprintf fd "%s -> " s) sss;
+      Printf.fprintf fd "%s -> %s\n  deriving Inhabited\n" id id;
+      (* Claude: Lean puts an inductive's constructors in its own namespace, so
+         open it, as pp_rule_list does for the grammar inductives *)
+      Printf.fprintf fd "open %s\n\n" id;
+      let b = Buffer.create 2040 in
+      make_aux_list_funcs_lean b xd sss id;
+      Buffer.output_buffer fd b
+  | _ ->
   let to_string ntmvr =
     match ntmvr with Ntr ntr -> ntr | Mvr mvr -> mvr in
   let sss = List.map to_string ss in
@@ -294,8 +366,32 @@ let rec remove_duplicates_expanded_rules er =
   | [] -> []
 
 let expand_lists_in_syntaxdefn (m:pp_mode) (xd:syntaxdefn) (structure: structure) : syntaxdefn * structure =
-  match m with 
-  | Coq co when co.coq_expand_lists ->
+  (* Claude: this pass was Coq-only; the Lean backend now uses it too, on the
+     same terms, when -lean_expand_list_types true is given.  The mode-specific
+     parts are the hom name the synthesised auxiliary functions are embedded
+     under, the syntax those functions are written in, and which option record
+     records the names of the list_... rules. *)
+  let expanding =
+    match m with
+    | Coq co -> co.coq_expand_lists
+    | Lean lno -> lno.lean_expand_lists
+    | _ -> false in
+  let hn = Auxl.hom_name_for_pp_mode m in
+  let record_list_types ns =
+    match m with
+    | Coq co -> co.coq_list_types := ns
+    | Lean lno -> lno.lean_list_types := ns
+    | _ -> () in
+  let record_list_aux_funcs s =
+    match m with
+    | Coq co -> Auxl.the (co.coq_list_aux_funcs) := s
+    | _ -> () in
+  let emit_aux_list_funcs b xd t s =
+    match m with
+    | Lean _ -> make_aux_list_funcs_lean b xd t s
+    | _ -> make_aux_list_funcs b xd t s in
+  if not expanding then (xd, structure) else
+    begin
       let expanded_list_ntrs = ref [] in
       let newstruct = ref [] in
 
@@ -328,14 +424,14 @@ let expand_lists_in_syntaxdefn (m:pp_mode) (xd:syntaxdefn) (structure: structure
           match !newstruct with
           | [] -> ""
           | l ->  let b = Buffer.create (2000 * List.length l) in
-          List.iter (fun x -> make_aux_list_funcs b xd (extract_type x) x) l;
+          List.iter (fun x -> emit_aux_list_funcs b xd (extract_type x) x) l;
           Buffer.contents b
         in
 
         if exp_list_aux_funcs = ""
         then [(Struct_rs (!newstruct@br), Some exp)]
         else [(Struct_rs (!newstruct@br), Some exp); 
-              (Struct_embed (dummy_loc, "coq", [Embed_string (dummy_loc, exp_list_aux_funcs)]), None)] in 
+              (Struct_embed (dummy_loc, hn, [Embed_string (dummy_loc, exp_list_aux_funcs)]), None)] in 
       
       let (expanded_structure,exp) = 
         List.split (List.concat (List.map
@@ -361,7 +457,7 @@ let expand_lists_in_syntaxdefn (m:pp_mode) (xd:syntaxdefn) (structure: structure
       (*     (Auxl.remove_duplicates (List.concat z))) *)
       (*     (Auxl.split3 (List.map (expand_rule xd) xd.xd_rs)) in *)
 
-      co.coq_list_types := new_rule_names;
+      record_list_types new_rule_names;
 
       (* WILL BE DEAD CODE FROM HERE *)
       let list_aux_funcs =
@@ -377,12 +473,12 @@ let expand_lists_in_syntaxdefn (m:pp_mode) (xd:syntaxdefn) (structure: structure
           Auxl.option_map (fun e -> Grammar_pp.pp_element m xd [] true e) e in
         match new_rule_names with [] -> "" | l -> 
         let b = Buffer.create (2000 * List.length l) in
-        List.iter (fun x -> make_aux_list_funcs b xd (extract_type x) x) l;
+        List.iter (fun x -> emit_aux_list_funcs b xd (extract_type x) x) l;
         Buffer.contents b
       in
 
       (* first update the aux list funcs *)
-      Auxl.the (co.coq_list_aux_funcs) := list_aux_funcs;
+      record_list_aux_funcs list_aux_funcs;
       (* TO HERE *)
 
       (* concat and merge later *)
@@ -405,12 +501,11 @@ let expand_lists_in_syntaxdefn (m:pp_mode) (xd:syntaxdefn) (structure: structure
  
       let expanded_deps = 
 	Dependency.compute_dependencies 
-	  { xd with xd_rs = expanded_rules; xd_dep = [] } "coq" in
+	  { xd with xd_rs = expanded_rules; xd_dep = [] } hn in
       { xd with
 	xd_rs = expanded_rules;
-	xd_dep = [ ("coq", expanded_deps); ("ascii", expanded_deps) ];
+	xd_dep = [ (hn, expanded_deps); ("ascii", expanded_deps) ];
         xd_axs = expanded_auxfns },
       expanded_structure
-
-  | _ -> xd, structure
+    end
 

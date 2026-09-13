@@ -308,6 +308,32 @@ let pp_subrules m xd srs : int_funcs_collapsed =
             [ lemTODO "15" (" (List.all (fun "^de1i.de1_pattern^" -> "^conjuncted_conjuncts^") "
 	      ^ de1i.de1_compound_id
 	      ^ ")")], deps, []
+        | Lean lno when lno.lean_expand_lists ->
+	    (* Claude: as the Coq coq_expand_lists arm below, recurse over the
+	       generated list_... inductive; Bool-valued, as the Lean arm below *)
+	    let var_list = Str.split (Str.regexp "(\\|,\\|)") de1i.de1_pattern in
+	    let post_name =  (* promoted args *)
+	      String.concat "_"
+		(List.map (fun ((r,s),y) ->
+		  Grammar_pp.pp_nt_or_mv_with_sie m xd ((Si_punct "")::sie)
+		    ((Auxl.promote_ntmvr xd r), s))
+		 de1i.de1_ntmvsns) in
+	    let suf = "list_" ^ Grammar_pp.expanded_list_type_suffix_ntmvsns m xd de1i.de1_ntmvsns in
+	    let id = (Auxl.pp_is srl post_name) ^ "_list" in
+	    let header =
+	      ( id ^ " (l:" ^ suf ^ ")",
+		"",
+		" : Bool :=\n  match l with\n" ) in
+	    [ leanTODO "7" (id ^ " " ^ de1i.de1_compound_id) ],
+	    id :: deps,
+	    ( { r_fun_id = id;
+		r_fun_dep = id :: deps;
+		r_fun_type = suf;
+		r_fun_header = header;
+		r_fun_clauses =
+		[ ("", "Nil_"^suf, "true");
+		  ("", "Cons_"^suf^" "^(String.concat " " var_list)^" "^de1i.de1_compound_id^"_",
+		   "(" ^ conjuncted_conjuncts ^ ") && (" ^ id ^ " " ^ de1i.de1_compound_id ^ "_)") ] } :: funcs )
         | Lean _ ->
 	    (* Claude: generate a mutually-recursive _list helper: Lean's structural
 	       recursion cannot follow a recursive call under a pair projection

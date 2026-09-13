@@ -86,12 +86,15 @@ let pp_subntr (m: pp_mode) (xd: syntaxdefn): (nontermroot * nontermroot * nonter
       | Coq co when not co.coq_expand_lists -> "Is_true ("^s^")"
       | _ -> s )
           
-let pp_listsubntr : pp_mode -> syntaxdefn -> ((nontermroot * nontermroot * nonterm) list * string * string * string) list -> string list =
+(* Claude: the last component is the suffix of the generated list_... inductive
+   for this list, which the Lean arm needs and cannot get from
+   de1_coq_type_of_pattern (that is "dummy" for a non-Coq mode) *)
+let pp_listsubntr : pp_mode -> syntaxdefn -> ((nontermroot * nontermroot * nonterm) list * string * string * string * string) list -> string list =
   fun m xd listsubntrs -> 
     let clauses = 
       List.flatten
         (List.map 
-           (function (subntrs,pp_squished_vars,pp_pattern,coq_type_pattern) ->
+           (function (subntrs,pp_squished_vars,pp_pattern,coq_type_pattern,list_type_suffix) ->
              List.map
                (function subntr ->
                  match m with
@@ -116,6 +119,13 @@ let pp_listsubntr : pp_mode -> syntaxdefn -> ((nontermroot * nontermroot * nonte
                      lemTODO "1" "List.all "
                      ^ "(fun "^pp_pattern^" -> "^pp_subntr m xd subntr^") "
                      ^ pp_squished_vars
+
+                 | Lean lno when lno.lean_expand_lists ->
+                     (* Claude: as the Coq arm below, the predicate runs over the
+                        unmake_ of the generated inductive *)
+                     leanTODO "17" "List.all "
+                     ^ "(unmake_list_" ^ list_type_suffix ^ " " ^ pp_squished_vars ^ ")"
+                     ^ " (fun "^pp_pattern^" => "^pp_subntr m xd subntr^")"
 
                  | Lean _ ->
                      (* Claude: Lean's List.all takes the list first, then a
@@ -274,10 +284,11 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
       let nonlist_subntrs = subntrs_of_ntmvsns de3 in
 
       (* and second the list nonterms used at non-free types *)
-      let list_subntrs :((nontermroot * nontermroot * nonterm) list * string * string * string) list = 
+      let list_subntrs :((nontermroot * nontermroot * nonterm) list * string * string * string * string) list = 
         List.map  
           (function (bound,de1i (*(ntmvsns,pp_squished_vars,pp_pattern,coq_type_pattern,hol_type_var)*)) ->
-            subntrs_of_ntmvsns de1i.de1_ntmvsns,de1i.de1_compound_id,de1i.de1_pattern,de1i.de1_coq_type_of_pattern)
+            subntrs_of_ntmvsns de1i.de1_ntmvsns,de1i.de1_compound_id,de1i.de1_pattern,de1i.de1_coq_type_of_pattern,
+            Grammar_pp.expanded_list_type_suffix_ntmvsns m xd de1i.de1_ntmvsns)
           de1 in
 
       let ppd_subntrs = 
@@ -994,8 +1005,30 @@ let pp_fun_or_reln_defnclass fd m xd lookup frdc = match frdc with
 | FDC fdc -> output_string fd (pp_fundefnclass m xd lookup fdc)
 | RDC dc -> pp_defnclass fd m xd lookup dc
 
-let pp_auxiliary_list_rules fd m xd frdcs = match m with
-  | Coq co when co.coq_expand_lists ->
+let pp_auxiliary_list_rules fd m xd frdcs =
+  (* Claude: list types that occur only in a defn get their inductive here
+     rather than from Transform.expand_lists_in_syntaxdefn; the Lean backend
+     needs them on the same terms *)
+  let expanding =
+    ( match m with
+    | Coq co -> co.coq_expand_lists
+    | Lean lno -> lno.lean_expand_lists
+    | _ -> false ) in
+  let known () =
+    ( match m with
+    | Coq co -> !(co.coq_list_types)
+    | Lean lno -> !(lno.lean_list_types)
+    | _ -> [] ) in
+  let record s =
+    ( match m with
+    | Coq co -> co.coq_list_types := s :: !(co.coq_list_types)
+    | Lean lno -> lno.lean_list_types := s :: !(lno.lean_list_types)
+    | _ -> () ) in
+  let root_name ntmvr =
+    ( match m with
+    | Lean _ -> Grammar_pp.pp_nt_or_mv_root_ty m xd ntmvr
+    | _ -> Grammar_pp.pp_nt_or_mv_root m xd ntmvr ) in
+  if not expanding then () else begin
 
     let b = Buffer.create 120 in
  
@@ -1012,12 +1045,12 @@ let pp_auxiliary_list_rules fd m xd frdcs = match m with
               Auxl.promote_ntmvr xd
                 (Auxl.primary_nt_or_mv_of_nt_or_mv xd ntmvr) in
             Buffer.add_char b '_';
-            Buffer.add_string b (Grammar_pp.pp_nt_or_mv_root m xd ntmvr);
+            Buffer.add_string b (root_name ntmvr);
             ntmvr) de1i.de1_ntmvsns in
         let s = Buffer.contents b in
-        if not (List.mem s !(co.coq_list_types)) then begin
-          Transform.pp_list_rule fd xd ntmvrl;
-          co.coq_list_types := s :: !(co.coq_list_types)
+        if not (List.mem s (known ())) then begin
+          Transform.pp_list_rule fd m xd ntmvrl;
+          record s
         end) de1 in
   
       List.iter
@@ -1028,8 +1061,7 @@ let pp_auxiliary_list_rules fd m xd frdcs = match m with
                   | PSR_Rule dr -> list_types_drule dr
                   | PSR_Defncom _ -> ()) d.d_rules) dc.dc_defns
          | FDC _ -> ()) frdcs
-
-  | _ -> ()
+  end
 
 let pp_fun_or_reln_defnclass_list
   (fd : out_channel) (m: pp_mode) (xd: syntaxdefn)
@@ -1042,6 +1074,8 @@ let pp_fun_or_reln_defnclass_list
 	  output_string fd "%%% definitions %%%\n\n";
           List.iter (fun frdc -> pp_fun_or_reln_defnclass fd m xd lookup frdc) frdcs
       | Lean _ -> 
+          (* Claude: as the Coq arm below *)
+          pp_auxiliary_list_rules fd m xd frdcs;
 	  output_string fd "/- definitions -/\n\n";
           List.iter (fun frdc -> pp_fun_or_reln_defnclass fd m xd lookup frdc) frdcs
       | Coq co ->

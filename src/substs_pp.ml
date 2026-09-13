@@ -980,6 +980,57 @@ and pp_subst_symterm_list_body
 	       ("", "Cons_"^suf^" "^lp^" "^rp,
 		"Cons_"^suf^" " ^ rhs ^ " (" ^ id ^ " " ^ common_lhs ^ " "^rp^")" ) ] } ])
 
+    | Lean lno when lno.lean_expand_lists ->
+        (* Claude: as the Coq coq_expand_lists branch above, map over the
+           generated list_... inductive, rebuilding it as we go *)
+        let suf = "list_" ^ Grammar_pp.expanded_list_type_suffix_ntmvsns m xd de1i.de1_ntmvsns in
+        let params =
+          ( if subst.sb_multiple
+            then
+              " (" ^ sub_var ^ ":List ("
+              ^ Grammar_pp.pp_nt_or_mv_root_ty m xd subst.sb_that
+              ^ "\195\151" ^ Grammar_pp.pp_nontermroot_ty m xd subst.sb_this ^ "))"
+            else
+              " (" ^ Grammar_pp.pp_nonterm m xd this_var ^ ":"
+              ^ Grammar_pp.pp_nontermroot_ty m xd subst.sb_this ^ ")"
+              ^ " (" ^ Grammar_pp.pp_nt_or_mv m xd that_var ^ ":"
+              ^ Grammar_pp.pp_nt_or_mv_root_ty m xd subst.sb_that ^ ")" )
+          ^ " (" ^ Grammar_pp.pp_nonterm m xd in_var ^ ":" ^ suf ^ ")" in
+        let args = (* FZ find a less hacky way *)
+          Str.split (Str.regexp "(\\|*\\|)") (Grammar_pp.make_name_elements m xd true stlb.stl_elements) in
+        let new_id =  (* FZ freshen properly *)
+          let c = ref 0 in
+          fun x -> c:=!c+1; x^(string_of_int !c) in
+        let fresh_args =
+          if List.length args > 1 then List.map (fun x -> new_id x) args else args in
+        let lp = String.concat " " fresh_args in
+        let rp = name^"_tl" in
+        let rhs_deps = ref [] in
+        let rhs =
+          String.concat " "
+            (List.map2
+               (fun n x ->
+                 if (List.mem n domain)
+                 then
+                   let sn = Auxl.subst_name subst.sb_name n in
+                   rhs_deps := sn :: !rhs_deps;
+                   "(" ^ sn ^ " " ^ common_lhs ^ " " ^ x ^")"
+                 else x)
+               args fresh_args) in
+        let header =
+          ( id ^ leanTODO "11" params,
+            "",
+            " : " ^ suf ^ " :=\n  match " ^ Grammar_pp.pp_nonterm m xd in_var ^ " with\n" ) in
+        ( id,
+          [ { r_fun_id = id;
+              r_fun_dep = id :: !rhs_deps;
+              r_fun_type = suf;
+              r_fun_header = header;
+              r_fun_clauses =
+                [ ("", "Nil_"^suf, "Nil_"^suf);
+                  ("", "Cons_"^suf^" "^lp^" "^rp,
+                   "Cons_"^suf^" " ^ rhs ^ " (" ^ id ^ " " ^ common_lhs ^ " "^rp^")" ) ] } ] )
+
     | Lean _ ->
         (* Claude: mirror the Coq coq_expand_lists branch, but recurse over the
            native list spine and rebuild the (possibly n-ary) tuple element
@@ -1963,6 +2014,34 @@ and pp_fv_symterm_list_body
 		("(List.concat (List.map (fun "^de1i.de1_pattern^" -> "^pp_body^") "
 		 ^ de1i.de1_compound_id
 		 ^ "))"), funcs
+	  | Lean lno when lno.lean_expand_lists ->
+	      (* Claude: as the Coq coq_expand_lists arm below, recurse over the
+		 generated list_... inductive rather than over List *)
+	      let var_list = Str.split (Str.regexp "(\\|,\\|)") de1i.de1_pattern in
+	      let args =
+	        String.concat "_"
+		  (List.map (fun (x,y) ->
+		    Grammar_pp.pp_nt_or_mv_with_sie m xd ((Si_var ("",0))::sie) x) de1i.de1_ntmvsns) in
+	      let post_name = Grammar_pp.make_name_elements m xd false stlb.stl_elements in
+	      (* Claude: the function keeps the root-name suffix, but the type and
+	         its constructors must be the generated inductive's own name *)
+	      let suf = "list_" ^ Grammar_pp.expanded_list_type_suffix_ntmvsns m xd de1i.de1_ntmvsns in
+	      let id_list = Auxl.fv_name fv.fv_name post_name ^ "_list" in
+	      let output_typ = "List " ^ Grammar_pp.pp_nt_or_mv_root_ty m xd fv.fv_that in
+	      let header =
+		( id_list ^ " (l:" ^ suf ^ ")",
+		  "",
+		  " : " ^ output_typ ^ " :=\n  match l with\n" ) in
+	      Some (leanTODO "17" ("(" ^ id_list ^ " " ^ args ^ "_list)")),
+	      ( { r_fun_id = id_list;
+		  r_fun_dep = id_list :: !dependencies;
+		  r_fun_type = suf;
+		  r_fun_header = header;
+		  r_fun_clauses =
+		  [ ("", "Nil_" ^ suf, "[]");
+		    ("", "Cons_" ^ suf ^ " " ^ (String.concat " " var_list) ^ " " ^ args ^ "_list_",
+		     body_elements ^ list_append m ^ "(" ^ id_list ^ " " ^ args ^ "_list_)") ] }
+		:: funcs )
 	  | Lean _ ->
 	      (* Claude: generate a mutually-recursive _list helper: Lean's structural
 		 recursion cannot follow a recursive call under a pair projection

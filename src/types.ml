@@ -818,7 +818,10 @@ and pp_coq_opts =
       coq_names_in_rules : bool } (* co *)
 and pp_lean_opts = 
   { lean_library : (string * string list) ref;
-    lean_expand_lists : bool;  (* Claude: accepted but not yet acted on *)
+    lean_expand_lists : bool;
+    (* Claude: as coq_list_types: the names of the list_... rules synthesised
+       by Transform.expand_lists_in_syntaxdefn for this run *)
+    lean_list_types : string list ref;
     lean_names_in_rules : bool } (* lno *)
 and pp_isa_opts = 
     { ppi_isa_primrec : bool;

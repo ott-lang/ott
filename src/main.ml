@@ -443,6 +443,7 @@ let m_hol = Hol { hol_library = ref ("",[]); }
 let m_lem = Lem { lem_library = ref ("",[]); }
 let m_lean = Lean { lean_library = ref ("",[]);
                     lean_expand_lists = !lean_expand_lists;
+                    lean_list_types = ref [];
                     lean_names_in_rules = !lean_names_in_rules}
 let m_twf = Twf { twf_current_defn = ref "";
 		  twf_library = ref ("",[]) }
