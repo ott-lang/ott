@@ -1,7 +1,6 @@
-Claude: this README is largely written by Claude, the AI assistant, and should
-be read with the scepticism that deserves.
+Claude: this README is largely written by Claude, adapted by PS.
 
-This is infrastructure for regression testing the Ott implementation (by FZN, but this README is much later, by PS and by Claude; it might be wrong).
+This is infrastructure for regression testing the Ott implementation (originally by FZN; rewritten by PS+Claude; it might be wronger).
 
 `./regression`, from `regression.ml`, runs Ott on a set of tests and runs Coq, Isabelle, HOL4, Lem, Lean, OCaml, and Latex on the generated code.  For some tests, not all of those are intended to work, so the harness does two separate jobs, and each is a separate invocation.
 
@@ -11,33 +10,41 @@ No target runs unless you ask for it. `-all` runs every target, or name the ones
 
 By default the generated files are written into the regression directory and cleaned up afterwards. `-temp_dir <dir>` creates that directory if need be, puts every generated file there, and runs each target tool inside it, so nothing is left lying around here. Paths the tool commands need, the Ott binary and the Coq and HOL4 support libraries, are resolved to absolute paths so they still work from inside that directory.
 
-Running writes a report. `-run_ott_and_targets` runs Ott and then each target tool on what it produced:
 
-```
-$ ./regression -all -run_ott_and_targets report.txt -todo_list regression.otl
-```
 
-`-run_ott` stops after Ott, recording only whether it generated each output. It is much faster, seconds rather than minutes, and is the one to use when the question is about Ott itself rather than about whether the provers accept its output. The target half of each cell is then `s`, not asked for, so comparing an Ott-only report against a full one shows changes rather than spurious progressions.
+- `-run_ott <report.txt>` runs Ott on the chosen tests, specified either on the command line or with a `-todo_list <regression.otl>`, and writes a report. 
 
-```
-$ ./regression -all -run_ott report.txt -todo_list regression.otl
-```
+        $ ./regression -run_ott report.txt -all -todo_list regression.otl
+        
+- `-run_ott_and_targets` runs Ott and then each target tool on what it produced:
 
-Comparing two such reports shows what changed:
+        $ ./regression -run_ott_and_targets report.txt -all -todo_list regression.otl
 
-```
-$ ./regression -compare_reports report-2026-09-12.txt report.txt
-```
+    This is much slower, so one should use the above when the question is about Ott itself rather than about whether the provers accept its output. 
 
-Comparing the files of two runs shows whether Ott's output itself changed:
 
-```
-$ ./regression -compare_ott_generated_files tmp-old tmp-new
-```
+- Comparing two such reports shows what changed:
+
+        $ ./regression -compare_reports report-2026-09-12.txt report.txt
+
+- Comparing the Ott-generated files of two runs shows whether Ott's output itself changed:
+
+        $ ./regression -compare_ott_generated_files tmp-old tmp-new
+
+- Comparing the Ott-generated files and the target-tool generated files of two runs shows whether either changed (some may have trivially done so, as some of the tools include timestamps or paths). 
+
+        $ ./regression -compare_all_files tmp-old tmp-new
+
 
 Exactly one of `-run_ott`, `-run_ott_and_targets`, `-compare_reports`, `-compare_ott_generated_files` and `-compare_all_files` must be given. Naming none of them, or more than one, is an error.
 
 The tests to run come either from a `-todo_list` or from names on the command line, not both. Giving neither, or both, is an error.
+
+One can specify a config file with `-use_config <config.otr>` to suppress trying some tools on some targets.
+
+To try only some (or no) targets, omit `-all` and instead use whichever of `-coq`, `-hol`, `-isa`, `-latex`, `-lean`, `-lem`, and/or `-ocaml` one wants.
+
+The `-no-colour` suppresses terminal colour highlighting in the output.
 
 `./regression -help` shows the command-line options.
 
@@ -130,4 +137,4 @@ The provers are not part of this repository.  `install-provers.sh` installs Rocq
 OLDER BASELINES
 ===============
 
-Before this was reorganised, runs wrote a binary `.bl` file via `Marshal` and the comparison was folded into the run.  The `.bl` files can no longer be read, and the `.txt` dumps beside them (`baseline-2022-03.txt`, `baseline-2026-09-12.txt`) are in the older layout, where a skipped tool was rendered as blanks.  They are kept as historical artifacts to read by eye.  `-compare_reports` will not parse them.
+Before this was reorganised, runs wrote a binary `.bl` file via `Marshal` and the comparison was folded into the run.  The `.bl` files can no longer be read, and the `.txt` dumps beside them (`baseline-2022-03.txt`, `baseline-2026-09-12.txt`) are in the older layout, where a skipped tool was rendered as blanks.  They are kept as historical artifacts to read by eye, in the `old-baselines` directory.  `-compare_reports` will not parse them.
