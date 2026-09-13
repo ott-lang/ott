@@ -3039,24 +3039,39 @@ and pp_rule_list m xd rs =
      only when every type in the group has a constructor that avoids the
      group; a list of a group type does not count as recursion, since [] 
      inhabits it. *)
+  (* Claude: the test has to be transitive as well as group-local: deriving
+     succeeds only if the argument types of the chosen constructor themselves
+     have an Inhabited instance.  The groups are emitted in dependency order,
+     so accumulate the types that have been given one as we go, and memoise the
+     answer per group, since the separator and terminator both ask. *)
+  let lean_inhabited_known = ref [] in
+  let lean_inhabited_memo = ref [] in
   let lean_group_inhabited grp =
+    let key = String.concat "," (List.map (function r -> r.rule_ntr_name) grp) in
+    try List.assoc key !lean_inhabited_memo with Not_found ->
     (* Claude: compare promoted nonterminals, so that a production mentioning
        a subrule of a group type counts as recursion: it is represented by
        the promoted type in the Lean output, not by one of its own. *)
     let ntrs = 
       List.map (function r -> Auxl.promote_ntr xd r.rule_ntr_name) grp in
+    let arg_inhabited e =
+      ( match e with
+      | Lang_nonterm (ntr,_) ->
+          let n = Auxl.promote_ntr xd ntr in
+          not (List.mem n ntrs) && List.mem n !lean_inhabited_known
+      (* a list is inhabited by [], whatever its element type *)
+      | Lang_list _ -> true
+      | _ -> true ) in
     let base_prod p =
-      not p.prod_meta
-      && not (List.exists
-                (function
-                  | Lang_nonterm (ntr,_) -> 
-                      List.mem (Auxl.promote_ntr xd ntr) ntrs
-                  | _ -> false)
-                p.prod_es) in
-    List.for_all
-      (function r ->
-        r.rule_meta || r.rule_phantom || List.exists base_prod r.rule_ps)
-      grp in
+      not p.prod_meta && List.for_all arg_inhabited p.prod_es in
+    let result = 
+      List.for_all
+        (function r ->
+          r.rule_meta || r.rule_phantom || List.exists base_prod r.rule_ps)
+        grp in
+    lean_inhabited_memo := (key,result) :: !lean_inhabited_memo;
+    if result then lean_inhabited_known := ntrs @ !lean_inhabited_known;
+    result in
 
   match m with 
   | Ascii ao -> 
