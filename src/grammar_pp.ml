@@ -3853,19 +3853,32 @@ and pp_symterm_elements' m xd sie de include_terminals prod_es es : (string * te
   f prod_es es
 
             
+(* Claude: the "list_..." name for an expanded Coq list type is minted in
+   Transform.expand_element as "list_" ^ the promoted root of each element of
+   the list, printed as a type.  Every use site - Nil_, Cons_, app_, make_list_
+   - has to spell that name exactly the same way, so they all go through this
+   one function rather than each rebuilding it.  The flag records whether the
+   element's rule carries a coq hom, in which case Transform.expand_rule does
+   not expand it and no list_... inductive exists. *)
+and coq_list_type_elements m xd es =
+  let rec intern ls =
+    ( match ls with
+    | [] -> []
+    | (Lang_nonterm(ntr,_))::t ->
+        let r = Auxl.rule_of_ntr xd ntr in
+        let b = (List.exists (fun (h,_) -> String.compare h "coq" = 0) r.rule_homs) in
+        (pp_nt_or_mv_root_ty m xd (Ntr (Auxl.promote_ntr xd ntr)),b) :: (intern t)
+    | (Lang_metavar(mvr,_))::t -> (pp_nt_or_mv_root_ty m xd (Mvr mvr),false) :: (intern t)
+    | (Lang_terminal _)::t -> intern t
+    | _::t -> Auxl.warning None "internal: coq_list_type_elements never happen\n"; intern t )
+  in intern es
+
+and coq_list_type_suffix m xd es =
+  String.concat "_" (List.map fst (coq_list_type_elements m xd es))
+
 and pp_symterm_list_items m xd sie (de :dotenv) tmopt prod_es stlis : (string * tex_token_category) list =
   debug("pp_symterm_list_items entry:\nstlis= [" ^String.concat " ; " (List.map pp_plain_symterm_list_item stlis)^"]\nprod_es= ["^String.concat " ; "(List.map pp_plain_element prod_es)^"]\n\n");
   let debug_string = "" (*  ("(* pp_symterm_list_items entry:\nstlis= [" ^String.concat " ; " (List.map pp_plain_symterm_list_item stlis)^"]\nprod_es= ["^String.concat " ; "(List.map pp_plain_element prod_es)^"] *)\n\n")*) in
-  let elements_to_string ls =  (* FZ duplicated a few lines below *)
-    let rec intern ls =
-      ( match ls with
-      | [] -> []
-      | (Lang_nonterm(ntr,_))::t -> ntr :: (intern t)
-      | (Lang_metavar(mvr,_))::t -> mvr :: (intern t)
-      | (Lang_terminal _)::t -> intern t
-      | _::t -> Auxl.warning None "internal: elements_to_string never happen\n"; intern t )
-    in (* List.rev *) (intern ls) in
-
   let include_terminals = 
     match m with
     | Ascii _ | Tex _ | Lex _ | Menhir _ -> true
@@ -3885,7 +3898,7 @@ and pp_symterm_list_items m xd sie (de :dotenv) tmopt prod_es stlis : (string * 
       | Lean _ -> ["[]",TTC_dummy]
       | Coq co -> 
          if co.coq_expand_lists then 
-           ["Nil_list_"^(String.concat "_" (elements_to_string prod_es)),TTC_dummy ]
+           ["Nil_list_"^(coq_list_type_suffix m xd prod_es),TTC_dummy ]
          else
            ["nil",TTC_dummy]
       | Hol _ -> ["NIL",TTC_dummy]
@@ -3942,7 +3955,7 @@ and pp_symterm_list_items m xd sie (de :dotenv) tmopt prod_es stlis : (string * 
 	        let app,nil = 
 	          if co.coq_expand_lists
 	          then 
-		    let t = (*Auxl.pp_coq_type_name*) (String.concat "_" (elements_to_string prod_es)) in
+		    let t = (*Auxl.pp_coq_type_name*) (coq_list_type_suffix m xd prod_es) in
 		    ("app_list_"^t, "Nil_list_"^t)
 	          else
 		    ("app", "nil") in
@@ -3957,16 +3970,6 @@ and pp_symterm_list_items m xd sie (de :dotenv) tmopt prod_es stlis : (string * 
 and pp_symterm_list_item m xd sie (de :dotenv) tmopt include_terminals prod_es stli : (string * tex_token_category) list =
   debug ("pp_symterm_list_item entry:\nstli= "^pp_plain_symterm_list_item stli^"\nprod_es= "^String.concat "  " (List.map pp_plain_element prod_es)^"\n\n");
 
-  let elements_to_string ls =  (* FZ duplicated a few lines below *)
-    let rec intern ls =
-      ( match ls with
-      | [] -> []
-      | (Lang_nonterm(ntr,_))::t -> ntr :: (intern t)
-      | (Lang_metavar(mvr,_))::t -> mvr :: (intern t)
-      | (Lang_terminal _)::t -> intern t
-      | _::t -> Auxl.warning None "internal: elements_to_string never happen\n"; intern t )
-    in (* List.rev *) (intern ls) in
-
   match stli with
   | Stli_single (l,stes) -> 
       let pp_es' = pp_symterm_elements' m xd sie de include_terminals prod_es stes in
@@ -3978,7 +3981,7 @@ and pp_symterm_list_item m xd sie (de :dotenv) tmopt include_terminals prod_es s
           ["[(" ^ String.concat "," pp_es ^ ")]",TTC_dummy]
       | Coq co ->
           if co.coq_expand_lists then
-	    let name = (String.concat "_" (elements_to_string prod_es)) in
+	    let name = (coq_list_type_suffix m xd prod_es) in
 	    ["(Cons_list_" ^ name ^ " " ^ String.concat " " pp_es ^ " Nil_list_" ^ name ^")",TTC_dummy]
           else
             if List.length pp_es = 1
@@ -4136,19 +4139,6 @@ and pp_symterm_list_body m xd sie (de :dotenv) tmopt include_terminals prod_es s
              ^ de1i.de1_compound_id
 	     ^ ")")]
 	| Coq co ->
-            let convert_elements ls =
-              let rec intern ls =
-                ( match ls with
-                | [] -> []
-                | (Lang_nonterm(ntr,_))::t -> 
-                    let r = Auxl.rule_of_ntr xd ntr in
-                    let b = (List.exists (fun (h,_) -> String.compare h "coq" = 0) r.rule_homs) in
-                    (Auxl.promote_ntr xd ntr,b) :: (intern t)
-                | (Lang_metavar(mvr,_))::t -> (mvr,false) :: (intern t)
-                | (Lang_terminal _)::t -> intern t
-                | _::t -> Auxl.warning None "internal: elements_to_string never happen\n"; intern t )
-              in (* List.rev *) (intern ls) in
-
 	    let ty_list = Str.split (Str.regexp "(\\|*\\|)") de1i.de1_coq_type_of_pattern in
 	    let var_list = Str.split (Str.regexp "(\\|,\\|)") de1i.de1_pattern in
 	    let map_fun =
@@ -4162,7 +4152,7 @@ and pp_symterm_list_body m xd sie (de :dotenv) tmopt include_terminals prod_es s
 	      else "map" in
 
             let header, footer =
-              let (el,bl) = List.split (convert_elements prod_es) in
+              let (el,bl) = List.split (coq_list_type_elements m xd prod_es) in
               if (not co.coq_expand_lists) || List.exists (fun x -> x) bl 
               then "",""
               else (
