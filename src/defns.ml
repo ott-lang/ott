@@ -701,13 +701,20 @@ let pp_defnclass fd (m:pp_mode) (xd:syntaxdefn) lookup (dc:defnclass) =
       (* Claude: a defn class with several judgements is mutually recursive, so
          wrap it in a Lean "mutual ... end" block, as the Coq backend uses
          "Inductive ... with ..." *)
-      let is_mutual = List.length dc.dc_defns > 1 in
-      Printf.fprintf fd "\n/- defns %s -/\n%sinductive " dc.dc_name
-        (if is_mutual then "mutual\n" else "");
-      iter_asep fd "\ninductive "
-        (fun d -> pp_defn fd m xd lookup dc.dc_wrapper universe d)
-	dc.dc_defns;
-      if is_mutual then output_string fd "\nend\n"
+      (* Claude: an empty defn class used to emit a bare "inductive" with no
+         name and no constructors, which does not parse.  Emit just the
+         comment. *)
+      if dc.dc_defns = [] then
+        Printf.fprintf fd "\n/- defns %s: none -/\n" dc.dc_name
+      else begin
+        let is_mutual = List.length dc.dc_defns > 1 in
+        Printf.fprintf fd "\n/- defns %s -/\n%sinductive " dc.dc_name
+          (if is_mutual then "mutual\n" else "");
+        iter_asep fd "\ninductive "
+          (fun d -> pp_defn fd m xd lookup dc.dc_wrapper universe d)
+	  dc.dc_defns;
+        if is_mutual then output_string fd "\nend\n"
+      end
 
   | Twf wo -> 
       let twf_type_of_defn : syntaxdefn -> defn -> string = 

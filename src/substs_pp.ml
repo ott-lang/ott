@@ -63,7 +63,10 @@ let pp_list_minus_lem =
   ^ "  end\n"
   ^ "\n")
 let pp_list_minus_lean = 
-  ("def list_minus [BEq a] (l1:List a) (l2:List a) : (List a) :=\n"
+  (* Claude: bind the type variable explicitly, and under a name Ott cannot
+     generate.  A bare "a" is resolved by Lean to a generated inductive type
+     called a, wherever the theory has one, instead of being auto-bound. *)
+  ("def list_minus {α : Type} [BEq α] (l1:List α) (l2:List α) : (List α) :=\n"
   ^ "  match l1 with\n"
   ^ "  | [] => []\n"
   ^ "  | h::t => if List.elem h l2 then list_minus t l2 else h::(list_minus t l2)\n"
@@ -127,7 +130,8 @@ let pp_list_assoc_coq =
   ^ "Arguments list_assoc [A B] _ _ _.\n\n")
 
 let pp_list_assoc_lean =
-  "def list_assoc [DecidableEq a] (l:List (a × b)) (x:a) : Option b :=\n"
+  (* Claude: as for list_minus, bind the type variables explicitly. *)
+  "def list_assoc {α β : Type} [DecidableEq α] (l:List (α × β)) (x:α) : Option β :=\n"
   ^ "match l with\n"
   ^ "| [] => none\n"
   ^ "| (x',y')::t => if x=x' then some y' else list_assoc t x\n\n"

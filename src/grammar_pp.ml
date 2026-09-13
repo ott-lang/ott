@@ -2907,8 +2907,17 @@ and pp_rule_list m xd rs =
             (* or not, in which case we generate an inductive type definition *)
             | b ->    
                 let b = List.rev b in (* FZ this ensures that the output follows the source order *)
+                (* Claude: the group's rules, so that the separator and
+                   terminator can depend on them as the prefix already does *)
+                let grp = 
+                  Auxl.option_map 
+		    ( fun nm -> 
+		      ( match nm with
+		      | Mvr mvr -> None
+		      | Ntr ntr -> Some (Auxl.rule_of_ntr xd ntr) ))
+		    b in
 	        let def_string =
-	          String.concat md 
+	          String.concat (md grp)
 		    ( Auxl.option_map 
 		        ( fun nm -> 
 		          ( match nm with
@@ -2917,39 +2926,72 @@ and pp_rule_list m xd rs =
 		        b ) in
 	        if (String.length def_string) = 0 then ""
 	        else 
-                  let tds = 
-                    td ( Auxl.option_map 
-		         ( fun nm -> 
-		           ( match nm with
-		           | Mvr mvr -> None
-		           | Ntr ntr -> Some (Auxl.rule_of_ntr xd ntr) ))
-		         b ) in
-                      
-                  tds ^ def_string ^ fd ^ "\n")
+                  let tds = td grp in
+                  tds ^ def_string ^ fd grp ^ "\n")
 	  rule_groups)
   in
+
+  (* Claude: Lean's "deriving Inhabited" fails outright on a type with no
+     terminating constructor, and several grammars here have one: an
+     inductive with no productions at all, or one whose every production
+     mentions a type of the same mutually-recursive group.  Emit the clause
+     only when every type in the group has a constructor that avoids the
+     group; a list of a group type does not count as recursion, since [] 
+     inhabits it. *)
+  let lean_group_inhabited grp =
+    (* Claude: compare promoted nonterminals, so that a production mentioning
+       a subrule of a group type counts as recursion: it is represented by
+       the promoted type in the Lean output, not by one of its own. *)
+    let ntrs = 
+      List.map (function r -> Auxl.promote_ntr xd r.rule_ntr_name) grp in
+    let base_prod p =
+      not p.prod_meta
+      && not (List.exists
+                (function
+                  | Lang_nonterm (ntr,_) -> 
+                      List.mem (Auxl.promote_ntr xd ntr) ntrs
+                  | _ -> false)
+                p.prod_es) in
+    List.for_all
+      (function r ->
+        r.rule_meta || r.rule_phantom || List.exists base_prod r.rule_ps)
+      grp in
 
   match m with 
   | Ascii ao -> 
       if (Auxl.select_dep_ts m xd.xd_dep) = [] 
       then String.concat "\n" (Auxl.option_map (pp_rule m xd) rs) ^ "\n" 
-      else int_rule_list_dep m xd rs (fun rs -> "\n") "\n" ""
+      else int_rule_list_dep m xd rs (fun rs -> "\n") (fun _ -> "\n") (fun _ -> "")
   | Isa io ->
       int_rule_list_dep m xd rs 
         ( fun rs -> 
           if Auxl.rules_require_nominal m xd rs then "nominal_datatype " else "datatype ")
-        "and " ""
+        (fun _ -> "and ") (fun _ -> "")
   | Hol ho ->
-      int_rule_list_dep m xd rs (fun rs -> "val _ = Hol_datatype ` \n") ";\n" "`;"
+      int_rule_list_dep m xd rs (fun rs -> "val _ = Hol_datatype ` \n") (fun _ -> ";\n") (fun _ -> "`;")
   | Coq co ->
-      let def = int_rule_list_dep m xd rs (fun rs -> "\nInductive ") "\nwith " "." in
+      let def = int_rule_list_dep m xd rs (fun rs -> "\nInductive ") (fun _ -> "\nwith ") (fun _ -> ".") in
       let coq_equality_code = !pp_internal_coq_buffer in
       pp_internal_coq_buffer := "";
       def ^ coq_equality_code
   | Lean _ ->
       (* Claude: derive Inhabited so panic-indexing (l[i]!) into these types
-         elaborates in specs *)
-      let def = int_rule_list_dep m xd rs (fun rs -> "\ninductive ") "\nwhere " "\n  deriving Inhabited" in
+         elaborates in specs.
+
+         Claude: a dependency group of datatypes is mutually recursive, and
+         Lean spells that "mutual / inductive A .. / inductive B .. / end",
+         repeating the keyword, where Coq writes "Inductive A .. with B ..".
+         Emitting Coq's shape here produced a parse error on the second and
+         later types of every group.  A "mutual" block holding a single
+         inductive is legal, so this wraps unconditionally rather than
+         counting the group.  "deriving" goes on each inductive; it is not
+         accepted once for the block. *)
+      let deriv grp = if lean_group_inhabited grp then "\n  deriving Inhabited" else "" in
+      let def = 
+        int_rule_list_dep m xd rs 
+          (fun rs -> "\nmutual\ninductive ") 
+          (fun grp -> deriv grp ^ "\ninductive ") 
+          (fun grp -> deriv grp ^ "\nend") in
       let lean_equality_code = 
       "open " ^ String.concat " " (Auxl.option_map (fun r -> if r.rule_meta || r.rule_phantom || (try (List.assoc "lean" r.rule_homs);true with Not_found -> false)  then None else Some (pp_nontermroot_ty m xd r.rule_ntr_name)) rs) ^ "\n" in
 
@@ -2958,11 +3000,11 @@ and pp_rule_list m xd rs =
       def ^ (*^ coq_equality_code*)
       lean_equality_code
   | Twf wo ->
-      int_rule_list_dep m xd rs (fun rs -> "") "\n" ""
+      int_rule_list_dep m xd rs (fun rs -> "") (fun _ -> "\n") (fun _ -> "")
   | Caml oo ->
-      int_rule_list_dep m xd rs (fun rs -> "\ntype \n") "\nand " ""
+      int_rule_list_dep m xd rs (fun rs -> "\ntype \n") (fun _ -> "\nand ") (fun _ -> "")
   | Lem lo ->
-      int_rule_list_dep m xd rs (fun rs -> "\ntype ") "\nand " ""
+      int_rule_list_dep m xd rs (fun rs -> "\ntype ") (fun _ -> "\nand ") (fun _ -> "")
   | Tex xo ->
       String.concat "\n" (Auxl.option_map (pp_rule m xd) rs) 
       ^ "\n" 
