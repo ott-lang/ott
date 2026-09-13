@@ -209,11 +209,24 @@ r   match g2 with
 r   | G_empty => g1
 r   | G_type gh tv t => G_type (append_G g1 gh) tv t
 r   | G_term gh v t => G_term (append_G g1 gh) v t
-r end.
+r end.  }}
+r
+r % Claude: flatten_G takes the list of G built by the "G1 , .. , Gn"
+r % production, whose Coq representation depends on the flag: the generated
+r % list_G inductive with -coq_expand_list_types true, and a plain Coq list G
+r % with false.  So it is written once for each, in the gated embeds.
+r {{ coq-expand-list-types-true
 r Fixpoint flatten_G (gl:list_G) : G :=
 r   match gl with 
 r   | Nil_list_G => G_empty
 r   | Cons_list_G g gs => append_G g (flatten_G gs)
+r end.  }}
+r
+r {{ coq-expand-list-types-false
+r Fixpoint flatten_G (gl:list G) : G :=
+r   match gl with 
+r   | nil => G_empty
+r   | cons g gs => append_G g (flatten_G gs)
 r end.  }}
 r   {{ lem
 r (** embedded definitions of operations on type environments **)
