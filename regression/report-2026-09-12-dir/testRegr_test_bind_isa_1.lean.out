@@ -1,0 +1,18 @@
+testRegr_test_bind_isa_1.lean:6:16: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test_bind_isa_1.lean:10:11: error: failed to generate `Inhabited` instance for `value_name`
+testRegr_test_bind_isa_1.lean:15:11: error: failed to generate `Inhabited` instance for `pattern`
+testRegr_test_bind_isa_1.lean:19:4: error: Constructor field `let_binding` of `expr.Expr_let` contains universe level metavariables at the expression
+  Sort ?u.6
+in its type
+  Sort ?u.6
+testRegr_test_bind_isa_1.lean:21:0: error: unexpected token 'where'; expected command
+testRegr_test_bind_isa_1.lean:24:10: error: unexpected identifier; expected 'instance'
+testRegr_test_bind_isa_1.lean:32:4: error: Constructor field `expr` of `multiple_matching.MM_patterns` contains universe level metavariables at the expression
+  Sort ?u.8
+in its type
+  Sort ?u.8
+testRegr_test_bind_isa_1.lean:35:24: error: unknown namespace `expr`
+testRegr_test_bind_isa_1.lean:38:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+
+Hint: Using `pattern.P_var` would be valid:
+  [apply] `pattern.P_var`

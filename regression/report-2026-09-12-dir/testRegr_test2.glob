@@ -1,0 +1,27 @@
+DIGEST ea23acd2c1620ff6922c110ca655b413
+FtestRegr_test2
+R108:112 Stdlib.Arith.Arith <> <> lib
+R130:133 Stdlib.Bool.Bool <> <> lib
+R151:154 Stdlib.Lists.List <> <> lib
+R172:188 Ott.ott_list_core <> <> lib
+def 231:235 <> ident
+R246:248 Corelib.Init.Datatypes <> nat ind
+ind 289:289 <> T
+constr 304:312 <> T_integer
+constr 321:327 <> T_float
+R316:316 testRegr_test2 <> T:1 ind
+R331:331 testRegr_test2 <> T:1 ind
+scheme 289:289 <> T_rect
+scheme 289:289 <> T_ind
+scheme 289:289 <> T_rec
+scheme 289:289 <> T_sind
+def 346:346 <> E
+R357:360 Corelib.Init.Datatypes <> list ind
+R368:370 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R363:367 testRegr_test2 <> ident def
+R371:371 testRegr_test2 <> T ind
+def 387:387 <> F
+R398:401 Corelib.Init.Datatypes <> list ind
+R409:411 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R404:408 testRegr_test2 <> ident def
+R412:416 testRegr_test2 <> ident def

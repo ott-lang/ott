@@ -1,0 +1,7 @@
+testRegr_test_mjp.lean:6:12: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test_mjp.lean:9:4: error: Constructor field `h` of `s.state` contains universe level metavariables at the expression
+  Sort ?u.5
+in its type
+  Sort ?u.5
+testRegr_test_mjp.lean:15:11: error: failed to generate `Inhabited` instance for `A`
+testRegr_test_mjp.lean:16:5: error: unknown namespace `s`

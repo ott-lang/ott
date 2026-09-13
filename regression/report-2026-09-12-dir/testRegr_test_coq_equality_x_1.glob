@@ -1,0 +1,21 @@
+DIGEST eaad1e8dc247bf966c9d367043e966fa
+FtestRegr_test_coq_equality_x_1
+R124:128 Stdlib.Arith.Arith <> <> lib
+R146:149 Stdlib.Bool.Bool <> <> lib
+R167:170 Stdlib.Lists.List <> <> lib
+R188:204 Ott.ott_list_core <> <> lib
+def 220:220 <> x
+R231:233 Corelib.Init.Datatypes <> nat ind
+prf 242:245 <> eq_x
+R263:263 testRegr_test_coq_equality_x_1 <> x def
+binder 256:257 <> x':1
+binder 259:259 <> y:2
+R267:267 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R274:278 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R286:286 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R270:272 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R268:269 testRegr_test_coq_equality_x_1 <> x':1 var
+R273:273 testRegr_test_coq_equality_x_1 <> y:2 var
+R281:284 Corelib.Init.Logic <> ::type_scope:x_'<>'_x not
+R279:280 testRegr_test_coq_equality_x_1 <> x':1 var
+R285:285 testRegr_test_coq_equality_x_1 <> y:2 var

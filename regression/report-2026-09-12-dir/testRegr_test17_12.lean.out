@@ -1,0 +1,10 @@
+testRegr_test17_12.lean:6:18: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test17_12.lean:7:18: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test17_12.lean:8:16: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test17_12.lean:9:16: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test17_12.lean:11:0: error: (kernel) invalid nested inductive datatype 'List', nested inductive datatypes parameters cannot contain local variables.
+testRegr_test17_12.lean:20:0: error: (kernel) invalid nested inductive datatype 'List', nested inductive datatypes parameters cannot contain local variables.
+testRegr_test17_12.lean:36:9: error: unknown namespace `G`
+testRegr_test17_12.lean:42:15: error: Invalid resulting type: Expected a sort or an indexed family of sorts
+
+Hint: Examples of valid sorts include `Type _`, `Sort _`, and `Prop`

@@ -1,0 +1,10 @@
+testRegr_test2.lean:6:16: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test2.lean:16:4: error: Constructor field `ident` of `E.E_ident` contains universe level metavariables at the expression
+  Sort ?u.8
+in its type
+  Sort ?u.8
+testRegr_test2.lean:22:4: error: Constructor field `E` of `F.F_ident` contains universe level metavariables at the expression
+  Sort ?u.7
+in its type
+  Sort ?u.7
+testRegr_test2.lean:25:7: error: unknown namespace `E`

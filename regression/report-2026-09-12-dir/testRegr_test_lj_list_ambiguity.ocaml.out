@@ -1,0 +1,7 @@
+File "testRegr_test_lj_list_ambiguity.ml", lines 6-9, characters 0-21:
+6 | type 
+7 | t = 
+8 |    T_one of t
+9 |  | T_many of (t) list
+Error: Multiple definition of the type name t.
+       Names must be unique in a given structure or signature.

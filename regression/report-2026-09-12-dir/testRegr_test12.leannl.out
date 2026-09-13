@@ -1,0 +1,21 @@
+testRegr_test12.lean:8:4: error: Constructor field `b` of `a.a_b` contains universe level metavariables at the expression
+  Sort ?u.5
+in its type
+  Sort ?u.5
+testRegr_test12.lean:11:0: error: unexpected token 'where'; expected command
+testRegr_test12.lean:14:10: error: unexpected identifier; expected 'instance'
+testRegr_test12.lean:17:4: error: Constructor field `a` of `c.c_a` contains universe level metavariables at the expression
+  Sort ?u.5
+in its type
+  Sort ?u.5
+testRegr_test12.lean:22:4: error: Constructor field `f` of `e.e_f` contains universe level metavariables at the expression
+  Sort ?u.5
+in its type
+  Sort ?u.5
+testRegr_test12.lean:25:0: error: unexpected token 'where'; expected command
+testRegr_test12.lean:28:10: error: unexpected identifier; expected 'instance'
+testRegr_test12.lean:31:4: error: Constructor field `a` of `d.d_a` contains universe level metavariables at the expression
+  Sort ?u.5
+in its type
+  Sort ?u.5
+testRegr_test12.lean:34:5: error: unknown namespace `e`

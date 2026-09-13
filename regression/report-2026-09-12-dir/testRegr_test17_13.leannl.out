@@ -1,0 +1,40 @@
+testRegr_test17_13.lean:6:21: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test17_13.lean:7:16: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test17_13.lean:16:0: error: unexpected token 'where'; expected command
+testRegr_test17_13.lean:20:10: error: unexpected identifier; expected 'instance'
+testRegr_test17_13.lean:21:7: error: unknown namespace `c`
+testRegr_test17_13.lean:29:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+testRegr_test17_13.lean:37:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+
+Hint: Using `a.a_x` would be valid:
+  [apply] `a.a_x`
+testRegr_test17_13.lean:49:4: warning: Variable name `x_` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _x_
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test17_13.lean:59:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+testRegr_test17_13.lean:71:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+
+Hint: Using `a.a_x` would be valid:
+  [apply] `a.a_x`
+testRegr_test17_13.lean:82:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+
+Hint: Using `a.a_x` would be valid:
+  [apply] `a.a_x`
+testRegr_test17_13.lean:100:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+testRegr_test17_13.lean:112:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+
+Hint: Using `a.a_x` would be valid:
+  [apply] `a.a_x`
+testRegr_test17_13.lean:130:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+testRegr_test17_13.lean:142:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+
+Hint: Using `a.a_x` would be valid:
+  [apply] `a.a_x`
+testRegr_test17_13.lean:152:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+testRegr_test17_13.lean:164:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+
+Hint: Using `a.a_x` would be valid:
+  [apply] `a.a_x`

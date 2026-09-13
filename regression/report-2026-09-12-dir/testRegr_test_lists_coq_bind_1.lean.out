@@ -1,0 +1,10 @@
+testRegr_test_lists_coq_bind_1.lean:6:16: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test_lists_coq_bind_1.lean:7:21: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test_lists_coq_bind_1.lean:10:4: error: Constructor field `value_name` of `pattern.P_var` contains universe level metavariables at the expression
+  Sort ?u.5
+in its type
+  Sort ?u.5
+testRegr_test_lists_coq_bind_1.lean:17:0: error: unexpected token 'where'; expected command
+testRegr_test_lists_coq_bind_1.lean:23:10: error: unexpected identifier; expected 'instance'
+testRegr_test_lists_coq_bind_1.lean:24:5: error: unknown namespace `pattern`
+testRegr_test_lists_coq_bind_1.lean:27:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`

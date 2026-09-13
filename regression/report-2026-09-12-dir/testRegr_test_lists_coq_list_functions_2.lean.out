@@ -1,0 +1,7 @@
+testRegr_test_lists_coq_list_functions_2.lean:6:12: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test_lists_coq_list_functions_2.lean:27:16: warning: Variable name `constant` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _constant
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`

@@ -1,0 +1,151 @@
+DIGEST 13191a1068f92384505951218f133dda
+FtestRegr_test13b
+R110:114 Stdlib.Arith.Arith <> <> lib
+R132:135 Stdlib.Bool.Bool <> <> lib
+R153:156 Stdlib.Lists.List <> <> lib
+R174:190 Ott.ott_list_core <> <> lib
+def 206:213 <> terminal
+R224:226 Corelib.Init.Datatypes <> nat ind
+def 240:250 <> metavarroot
+R261:263 Corelib.Init.Datatypes <> nat ind
+def 277:287 <> nontermroot
+R298:300 Corelib.Init.Datatypes <> nat ind
+def 314:319 <> suffix
+R330:332 Corelib.Init.Datatypes <> nat ind
+def 346:350 <> auxfn
+R361:363 Corelib.Init.Datatypes <> nat ind
+def 377:384 <> prodname
+R395:397 Corelib.Init.Datatypes <> nat ind
+def 411:415 <> index
+R426:428 Corelib.Init.Datatypes <> nat ind
+ind 442:448 <> metavar
+constr 463:466 <> mv_1
+R482:492 testRegr_test13b <> metavarroot def
+binder 469:480 <> metavarroot5:3
+R504:509 testRegr_test13b <> suffix def
+binder 496:502 <> suffix5:4
+scheme 442:448 <> metavar_rect
+scheme 442:448 <> metavar_ind
+scheme 442:448 <> metavar_rec
+scheme 442:448 <> metavar_sind
+ind 524:530 <> nonterm
+constr 545:548 <> nt_1
+R564:574 testRegr_test13b <> nontermroot def
+binder 551:562 <> nontermroot5:7
+R586:591 testRegr_test13b <> suffix def
+binder 578:584 <> suffix5:8
+scheme 524:530 <> nonterm_rect
+scheme 524:530 <> nonterm_ind
+scheme 524:530 <> nonterm_rec
+scheme 524:530 <> nonterm_sind
+ind 606:608 <> mse
+constr 623:628 <> mse_mv
+constr 652:656 <> mse_f
+constr 695:703 <> mse_union
+constr 730:738 <> mse_empty
+R640:646 testRegr_test13b <> metavar ind
+binder 631:638 <> metavar5:11
+R666:670 testRegr_test13b <> auxfn def
+binder 659:664 <> auxfn5:12
+R683:689 testRegr_test13b <> nonterm ind
+binder 674:681 <> nonterm5:13
+R711:713 testRegr_test13b <> mse:9 ind
+binder 706:709 <> mse5:14
+R722:724 testRegr_test13b <> mse:9 ind
+binder 717:720 <> mse':15
+R742:744 testRegr_test13b <> mse:9 ind
+scheme 606:608 <> mse_rect
+scheme 606:608 <> mse_ind
+scheme 606:608 <> mse_rec
+scheme 606:608 <> mse_sind
+ind 758:764 <> element
+constr 779:782 <> e_tm
+constr 808:811 <> e_mv
+constr 835:838 <> e_nt
+R795:802 testRegr_test13b <> terminal def
+binder 785:793 <> terminal5:18
+R823:829 testRegr_test13b <> metavar ind
+binder 814:821 <> metavar5:19
+R850:856 testRegr_test13b <> nonterm ind
+binder 841:848 <> nonterm5:20
+scheme 758:764 <> element_rect
+scheme 758:764 <> element_ind
+scheme 758:764 <> element_rec
+scheme 758:764 <> element_sind
+ind 871:878 <> bindspec
+constr 893:899 <> bs_bind
+constr 934:941 <> bs_auxfn
+R907:909 testRegr_test13b <> mse ind
+binder 902:905 <> mse5:23
+R922:928 testRegr_test13b <> nonterm ind
+binder 913:920 <> nonterm5:24
+R951:955 testRegr_test13b <> auxfn def
+binder 944:949 <> auxfn5:25
+R964:966 testRegr_test13b <> mse ind
+binder 959:962 <> mse5:26
+scheme 871:878 <> bindspec_rect
+scheme 871:878 <> bindspec_ind
+scheme 871:878 <> bindspec_rec
+scheme 871:878 <> bindspec_sind
+ind 981:984 <> prod
+constr 999:1001 <> p_1
+R1006:1009 Corelib.Init.Datatypes <> list ind
+R1011:1017 testRegr_test13b <> element ind
+R1031:1038 testRegr_test13b <> prodname def
+binder 1021:1029 <> prodname5:29
+R1044:1047 Corelib.Init.Datatypes <> list ind
+R1049:1056 testRegr_test13b <> bindspec ind
+scheme 981:984 <> prod_rect
+scheme 981:984 <> prod_ind
+scheme 981:984 <> prod_rec
+scheme 981:984 <> prod_sind
+ind 1071:1074 <> rule
+constr 1089:1091 <> r_1
+R1107:1117 testRegr_test13b <> nontermroot def
+binder 1094:1105 <> nontermroot5:32
+R1123:1126 Corelib.Init.Datatypes <> list ind
+R1128:1131 testRegr_test13b <> prod ind
+scheme 1071:1074 <> rule_rect
+scheme 1071:1074 <> rule_ind
+scheme 1071:1074 <> rule_rec
+scheme 1071:1074 <> rule_sind
+ind 1146:1155 <> auxfn_type
+constr 1170:1173 <> at_1
+R1178:1181 Corelib.Init.Datatypes <> list ind
+R1183:1193 testRegr_test13b <> nontermroot def
+R1210:1220 testRegr_test13b <> metavarroot def
+binder 1197:1208 <> metavarroot5:35
+scheme 1146:1155 <> auxfn_type_rect
+scheme 1146:1155 <> auxfn_type_ind
+scheme 1146:1155 <> auxfn_type_rec
+scheme 1146:1155 <> auxfn_type_sind
+ind 1235:1247 <> grammar_rules
+constr 1262:1264 <> g_1
+R1269:1272 Corelib.Init.Datatypes <> list ind
+R1274:1277 testRegr_test13b <> rule ind
+scheme 1235:1247 <> grammar_rules_rect
+scheme 1235:1247 <> grammar_rules_ind
+scheme 1235:1247 <> grammar_rules_rec
+scheme 1235:1247 <> grammar_rules_sind
+ind 1292:1305 <> auxfn_type_env
+constr 1320:1324 <> ate_1
+constr 1346:1350 <> ate_2
+R1328:1341 testRegr_test13b <> auxfn_type_env:38 ind
+R1357:1370 testRegr_test13b <> auxfn_type_env:38 ind
+binder 1353:1355 <> Phi:40
+R1381:1385 testRegr_test13b <> auxfn def
+binder 1374:1379 <> auxfn5:41
+R1401:1410 testRegr_test13b <> auxfn_type ind
+binder 1389:1399 <> auxfn_type5:42
+scheme 1292:1305 <> auxfn_type_env_rect
+scheme 1292:1305 <> auxfn_type_env_ind
+scheme 1292:1305 <> auxfn_type_env_rec
+scheme 1292:1305 <> auxfn_type_env_sind
+ind 1425:1436 <> grammar_type
+constr 1451:1454 <> gt_1
+R1459:1462 Corelib.Init.Datatypes <> list ind
+R1464:1474 testRegr_test13b <> nontermroot def
+scheme 1425:1436 <> grammar_type_rect
+scheme 1425:1436 <> grammar_type_ind
+scheme 1425:1436 <> grammar_type_rec
+scheme 1425:1436 <> grammar_type_sind

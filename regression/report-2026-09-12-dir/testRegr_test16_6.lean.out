@@ -1,0 +1,8 @@
+testRegr_test16_6.lean:6:21: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test16_6.lean:7:16: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test16_6.lean:10:4: error: Constructor field `value_name` of `a.a_x` contains universe level metavariables at the expression
+  Sort ?u.5
+in its type
+  Sort ?u.5
+testRegr_test16_6.lean:14:5: error: unknown namespace `a`
+testRegr_test16_6.lean:24:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`

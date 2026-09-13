@@ -1,0 +1,11 @@
+testRegr_test_lj_list_ambiguity.lean:6:12: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test_lj_list_ambiguity.lean:7:12: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test_lj_list_ambiguity.lean:10:4: error: Constructor field `t` of `T.T_one` contains universe level metavariables at the expression
+  Sort ?u.5
+in its type
+  Sort ?u.5
+testRegr_test_lj_list_ambiguity.lean:14:5: error: unknown namespace `T`
+testRegr_test_lj_list_ambiguity.lean:20:12: error(lean.ctorResultingTypeMismatch): Unexpected resulting type for constructor `foo_bar.foo_t_ti`: Expected an application of
+  foo_bar
+but found
+  ?m.3

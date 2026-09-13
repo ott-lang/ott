@@ -1,0 +1,24 @@
+testRegr_test17_6.lean:6:21: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test17_6.lean:7:16: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test17_6.lean:10:4: error: Constructor field `value_name` of `c.c_C` contains universe level metavariables at the expression
+  Sort ?u.5
+in its type
+  Sort ?u.5
+testRegr_test17_6.lean:19:7: error: unknown namespace `c`
+testRegr_test17_6.lean:22:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+testRegr_test17_6.lean:28:8: warning: Variable name `c'_` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _c'_
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test17_6.lean:28:12: warning: Variable name `c''_` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _c''_
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test17_6.lean:33:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+
+Hint: Using `a.a_x` would be valid:
+  [apply] `a.a_x`
