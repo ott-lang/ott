@@ -2337,7 +2337,17 @@ and pp_mse m xd sie de isa_list_name_flag prod_name ntmvro mse : string * nonter
 	   f1 @ f2)
       | Caml _ -> ( pp_mse_string m xd sie de mse ^list_append m^ pp_mse_string m xd sie de mse' ), [], []
       | Lem _ -> ( pp_mse_string m xd sie de mse ^list_append m^ pp_mse_string m xd sie de mse' ), [], []
-      | Lean _ -> ( pp_mse_string m xd sie de mse ^list_append m^ pp_mse_string m xd sie de mse' ), [], []
+      | Lean _ -> 
+          (* Claude: recurse, as the Isabelle and Coq arms do, rather than going
+             through pp_mse_string: that discards the dependencies and the
+             auxiliary _list functions the two sides generate, so a clause built
+             from a union of two list auxiliaries called a helper that was never
+             defined (tests/test15.4d.ott). *)
+	  let (s1,d1,f1) =  pp_mse m xd sie de isa_list_name_flag prod_name ntmvro mse in
+	  let (s2,d2,f2) =  pp_mse m xd sie de isa_list_name_flag prod_name ntmvro mse' in
+	  (s1 ^ list_append m ^ s2,
+	   d1 @ d2,
+	   f1 @ f2)
       | Hol _ -> ( "("^pp_mse_string m xd sie de mse ^list_append m^ pp_mse_string m xd sie de mse' ^")"), [], []
       | Coq _ -> 
 	  let (s1,d1,f1) =  pp_mse m xd sie de isa_list_name_flag prod_name ntmvro mse in
