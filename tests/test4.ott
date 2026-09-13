@@ -1,8 +1,8 @@
 
-metavar ident , x  ::= {{ coq-equality auto with arith. }}
+metavar ident , x  ::= {{ lean Nat }} {{ coq-equality auto with arith. }}
   {{ isa string }} {{ coq nat }}  {{ lex alphanum }}
 
-indexvar index , j , n ::=
+indexvar index , j , n ::= {{ lean Nat }}
   {{ isa nat }} {{ coq nat }}  {{ lex numeral }}
 
 grammar
@@ -38,7 +38,7 @@ grammar
  formula :: formula_ ::=          
                       |   judgement             ::   :: judgement
                       |   formula1 .. formulan    ::   :: dotdot 
-%                                           {{ isa list_all (%(b).b)  [[formula1 .. formulan ]] }}
+%                                           {{ isa list_all (%(b).b)  [[formula1 .. formulan ]] }} {{ lean list_all (%(b).b)  [[formula1 .. formulan ]] }}
 
 terminals :: terminals_ ::=
 %        |  \                     ::   :: lambda  {{ tex  \lambda }}

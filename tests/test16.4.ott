@@ -3,7 +3,7 @@
 
 % ISA FAILS, but succeeds if we hand-edit the consts and primrecs into single ones
 
-metavar value_name , x ::=
+metavar value_name , x ::= {{ lean Nat }}
   {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}
 
   grammar

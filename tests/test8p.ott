@@ -1,23 +1,23 @@
-metavar value_name , x ::=
+metavar value_name , x ::= {{ lean Nat }}
   {{ isa string }} {{ coq nat }} 
 %  {{ lex \([a-z]\|[_]\)\([A-Z]\|[a-z]\|[0-9]\|[_]\|[']\)* }} 
   {{ lex alphanum }}
-metavar ident  ::=
+metavar ident  ::= {{ lean Nat }}
   {{ isa string }} {{ coq nat }} 
 %  {{ lex \([A-Z][a-z]\|[_]\)\([A-Z]\|[a-z]\|[0-9]\|[_]\|[']\)* }} 
   {{ lex alphanum }}
-metavar integer_literal ::=
+metavar integer_literal ::= {{ lean Nat }}
   {{ isa int }} {{ coq nat }} 
 % {{ lex  -?[0-9]+ }}
   {{ lex numeral }}
-metavar label , l , k ::=
+metavar label , l , k ::= {{ lean Nat }}
   {{ isa string }} {{ coq nat }} 
 % {{ lex [A-Z]+ }}  
   {{ lex Alphanum }}
   {{ tex \mathit{[[label]]} }} 
   {{ com  field label  }}
 
-indexvar index , i , j , n , m ::=
+indexvar index , i , j , n , m ::= {{ lean Nat }}
   {{ isa nat }} {{ coq positive }} 
 % {{ lex [0-9]+ }}
   {{ lex numeral}}
@@ -38,12 +38,12 @@ typexpr , t :: TE_ ::=
   | typexpr -> typexpr'                ::   :: arrow
   | typeconstr                         ::   :: constr0
   | '{' l1 : typexpr1 , .. , ln : typexprn '}'   ::   :: Rec                      
-  | ( typexpr )                        :: M :: paren {{ isa [[typexpr]] }}
+  | ( typexpr )                        :: M :: paren {{ isa [[typexpr]] }} {{ lean [[typexpr]] }}
 
 typscheme :: TS_ ::=  
   | ( typvar1 , .. , typvarn ) typexpr ::   :: ts  (+ bind typvar1 .. typvarn in typexpr +) 
 
-  | generalise ( G , t )          :: M :: ts3 {{ isa (TS_ts (List.remdups (list_minus (ftv_typexpr [[t]]) (ftv_G [[G]]))) [[t]]) }}
+  | generalise ( G , t )          :: M :: ts3 {{ isa (TS_ts (List.remdups (list_minus (ftv_typexpr [[t]]) (ftv_G [[G]]))) [[t]]) }} {{ lean (TS_ts (List.remdups (list_minus (ftv_typexpr [[t]]) (ftv_G [[G]]))) [[t]]) }}
 
 %TODO: it might be nicer to have ftv remove duplicates 
 
@@ -63,10 +63,10 @@ expr , e :: E_ ::=
   | let p = expr in expr'              ::   :: let      (+ bind b(p) in expr' +)
   | '{' l1 = e1 ,  .. , ln = en '}'    :: :: Rec                     
   | e . l                              :: :: Proj                   {{ com projection }} 
-  | ( expr )                           :: M :: paren {{ isa [[expr]] }}
-  | '{' v / x '}' e                    :: M :: subst {{ isa subst_expr [[v]] [[x]] [[e]] }}
+  | ( expr )                           :: M :: paren {{ isa [[expr]] }} {{ lean [[expr]] }}
+  | '{' v / x '}' e                    :: M :: subst {{ isa subst_expr [[v]] [[x]] [[e]] }} {{ lean subst_expr [[v]] [[x]] [[e]] }}
   | s e                              :: M :: tsubs {{ isa msubst_e [[s]] [[e]] }}
-                                                     {{ coq ( msubst_e [[s]] [[e]] ) }}
+                                                     {{ coq ( msubst_e [[s]] [[e]] ) }} {{ lean ( msubst_e [[s]] [[e]] ) }}
 
 p :: 'P_' ::=                                                     {{ com  pattern }}
   | x                                :: :: Var (+ b = x  +)     {{ com variable pattern }}
@@ -93,26 +93,29 @@ s {{ tex \sigma }} :: 'S_' ::= {{ com multiple term substitution }} {{ isa (valu
 
 formula :: formula_ ::=
   | judgement                          ::   :: judgement
-  | not ( formula )                    ::   :: not  {{ isa Not([[formula]]) }}
+  | not ( formula )                    ::   :: not  {{ isa Not([[formula]]) }} {{ lean Not ([[formula]]) }}
          | ( formula )           ::   :: paren {{ isa ( [[formula]] ) }}
-                                               {{ coq ( [[formula]] ) }}
+                                               {{ coq ( [[formula]] ) }} {{ lean ( [[formula]] ) }}
   | typscheme > t                      ::   :: gen 
         {{ isa ? typvars . ? typexpr . ? s . 
              [[typscheme]] = TS_ts typvars typexpr 
              & typvars=List.map fst s 
+             & tsubst_typexpr s typexpr = [[t]] }} {{ lean ? typvars . ? typexpr . ? s . 
+             [[typscheme]] = TS_ts typvars typexpr 
+             & typvars=List.map fst s 
              & tsubst_typexpr s typexpr = [[t]] }}
 
-  | typscheme = typscheme'             ::   :: eqt {{ isa [[typscheme]]=[[typscheme']] }}
-  | value_name = value_name'           ::   :: eqv {{ isa [[value_name]]=[[value_name']] }}
+  | typscheme = typscheme'             ::   :: eqt {{ isa [[typscheme]]=[[typscheme']] }} {{ lean [[typscheme]]=[[typscheme']] }}
+  | value_name = value_name'           ::   :: eqv {{ isa [[value_name]]=[[value_name']] }} {{ lean [[value_name]]=[[value_name']] }}
   | formula1 .. formulan  ::   :: formuladots
          | forall i isin 1 -- m . formula :: :: forall 
                                       {{ tex \forall [[i]] \in 1 .. [[m]]. [[formula]] }} 
-                                      {{ isa ![[i]]. (1<=[[i]] & i<=[[m]]) => [[formula]] }} 
+                                      {{ isa ![[i]]. (1<=[[i]] & i<=[[m]]) => [[formula]] }} {{ lean ![[i]]. (1<=[[i]] & i<=[[m]]) => [[formula]] }} 
          | exists i isin 1 -- m . formula :: :: exists 
                                       {{ tex \exists [[i]] \in 1 .. [[m]]. [[formula]] }}
-                                      {{ isa ?[[i]]. (1<=[[i]] & i<=[[m]]) => [[formula]] }} 
-         | formula /\ formula'   :: :: and  {{ isa ([[formula]] & [[formula']]) }}
-         | l = l'                :: :: leq  {{ isa ([[l]]=[[l']]) }}
+                                      {{ isa ?[[i]]. (1<=[[i]] & i<=[[m]]) => [[formula]] }} {{ lean ?[[i]]. (1<=[[i]] & i<=[[m]]) => [[formula]] }} 
+         | formula /\ formula'   :: :: and  {{ isa ([[formula]] & [[formula']]) }} {{ lean ([[formula]] & [[formula']]) }}
+         | l = l'                :: :: leq  {{ isa ([[l]]=[[l']]) }} {{ lean ([[l]]=[[l']]) }}
 
 terminals :: terminals_ ::=
         |  ->                    ::   :: arrow {{ tex  \rightarrow }}

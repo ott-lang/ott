@@ -1,10 +1,10 @@
-metavar terminal, t			::= {{ isa string }} {{ coq nat }} {{ hol string }} 
-metavar metavarroot, mvr  	::= {{ isa string }} {{ coq nat }} {{ hol string }} 
-metavar nontermroot, ntr  	::= {{ isa string }} {{ coq nat }} {{ hol string }} 
-metavar suffix, suff       ::= {{ isa string }} {{ coq nat }} {{ hol string }} 
-metavar auxfn, f          ::= {{ isa string }} {{ coq nat }} {{ hol string }} 
-metavar prodname, pn     ::= {{ isa string }} {{ coq nat }} {{ hol string }} 
-indexvar index, i, j, n, m  ::= {{ isa string }} {{ coq nat }} {{ hol num }}  
+metavar terminal, t			::= {{ lean Nat }} {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar metavarroot, mvr  	::= {{ lean Nat }} {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar nontermroot, ntr  	::= {{ lean Nat }} {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar suffix, suff       ::= {{ lean Nat }} {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar auxfn, f          ::= {{ lean Nat }} {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar prodname, pn     ::= {{ lean Nat }} {{ isa string }} {{ coq nat }} {{ hol string }} 
+indexvar index, i, j, n, m  ::= {{ lean Nat }} {{ isa string }} {{ coq nat }} {{ hol num }}  
 
 grammar
 
@@ -40,7 +40,7 @@ grammar_rules, g :: 'g_' ::=
   | 'grammar' rule1 .. rulem :: :: 1
 
 
-auxfn_type, at :: 'at_' ::=
+auxfn_type, at {{ lean aty }} :: 'at_' ::=
   | nontermroot1 .. nontermrootn -> metavarroot :: :: 1
 
 auxfn_type_env, Phi {{ tex \Phi }} :: 'ate_' ::=
@@ -53,33 +53,33 @@ grammar_type, G {{ tex \Gamma }} :: 'gt_' ::=
 
 formula :: 'formula_' ::=          
   | judgement           ::   :: judgement
-  | i = j              ::   :: ieq {{ ich ([[i]] = [[j]]) }}
-  | f = f'              ::   :: feq {{ ich ([[f]] = [[f']]) }}
-  | mvr = mvr'              ::   :: mvreq {{ ich ([[mvr]] = [[mvr']]) }}
-  | ntr = ntr'              ::   :: ntreq {{ ich ([[ntr]] = [[ntr']]) }}
-  | mv = mv'              ::   :: mveq {{ ich ([[mv]] = [[mv']]) }}
-  | nt = nt'              ::   :: nteq {{ ich ([[nt]] = [[nt']]) }}
-  | e = e'              ::   :: eeq {{ ich ([[e]] = [[e']]) }}
-  | mse = mse'              ::   :: mseeq {{ ich ([[mse]] = [[mse']]) }}
-  | bs = bs'              ::   :: bseq {{ ich ([[bs]] = [[bs']]) }}
-  | p = p'              ::   :: peq {{ ich ([[p]] = [[p']]) }}
-  | r = r'              ::   :: req {{ ich ([[r]] = [[r']]) }}
-  | g = g'              ::   :: geq {{ ich ([[g]] = [[g']]) }}
-  | ( formula )            :: :: paren   {{ ich ( [[formula]] ) }}
-  | not formula            :: :: not     {{ isa Not( [[formula]] ) }} {{ hol ~( [[formula]] ) }}
+  | i = j              ::   :: ieq {{ ich ([[i]] = [[j]]) }} {{ lean ([[i]] = [[j]]) }}
+  | f = f'              ::   :: feq {{ ich ([[f]] = [[f']]) }} {{ lean ([[f]] = [[f']]) }}
+  | mvr = mvr'              ::   :: mvreq {{ ich ([[mvr]] = [[mvr']]) }} {{ lean ([[mvr]] = [[mvr']]) }}
+  | ntr = ntr'              ::   :: ntreq {{ ich ([[ntr]] = [[ntr']]) }} {{ lean ([[ntr]] = [[ntr']]) }}
+  | mv = mv'              ::   :: mveq {{ ich ([[mv]] = [[mv']]) }} {{ lean ([[mv]] = [[mv']]) }}
+  | nt = nt'              ::   :: nteq {{ ich ([[nt]] = [[nt']]) }} {{ lean ([[nt]] = [[nt']]) }}
+  | e = e'              ::   :: eeq {{ ich ([[e]] = [[e']]) }} {{ lean ([[e]] = [[e']]) }}
+  | mse = mse'              ::   :: mseeq {{ ich ([[mse]] = [[mse']]) }} {{ lean ([[mse]] = [[mse']]) }}
+  | bs = bs'              ::   :: bseq {{ ich ([[bs]] = [[bs']]) }} {{ lean ([[bs]] = [[bs']]) }}
+  | p = p'              ::   :: peq {{ ich ([[p]] = [[p']]) }} {{ lean ([[p]] = [[p']]) }}
+  | r = r'              ::   :: req {{ ich ([[r]] = [[r']]) }} {{ lean ([[r]] = [[r']]) }}
+  | g = g'              ::   :: geq {{ ich ([[g]] = [[g']]) }} {{ lean ([[g]] = [[g']]) }}
+  | ( formula )            :: :: paren   {{ ich ( [[formula]] ) }} {{ lean ( [[formula]] ) }}
+  | not formula            :: :: not     {{ isa Not( [[formula]] ) }} {{ lean Not ( [[formula]] ) }} {{ hol ~( [[formula]] ) }}
   | forall i isin 1 -- m . formula :: :: forall 
                                {{ tex \forall [[i]] \in 1 .. [[m]]. [[formula]] }} 
-                               {{ isa (![[i]]. ((1::nat)<=[[i]] & i<=[[m]]) => [[formula]]) }} 
+                               {{ isa (![[i]]. ((1::nat)<=[[i]] & i<=[[m]]) => [[formula]]) }} {{ lean (∀ [[i]], (1<=[[i]] ∧ [[i]]<=[[m]]) → [[formula]]) }} 
                                {{ hol (![[i]]. (1<=[[i]] /\ i<=[[m]]) ==> [[formula]]) }} 
   | exists i isin 1 -- m . formula :: :: exists 
                                {{ tex \exists [[i]] \in 1 .. [[m]]. [[formula]] }}
-                               {{ isa (?[[i]]. ((1::nat)<=[[i]] & i<=[[m]]) => [[formula]]) }} 
+                               {{ isa (?[[i]]. ((1::nat)<=[[i]] & i<=[[m]]) => [[formula]]) }} {{ lean (∃ [[i]], (1<=[[i]] ∧ [[i]]<=[[m]]) ∧ [[formula]]) }} 
                                {{ hol (?[[i]]. (1<=[[i]] /\ i<=[[m]]) ==> [[formula]]) }} 
-  | formula /\ formula'   :: :: and  {{ isa ([[formula]] & [[formula']]) }}
+  | formula /\ formula'   :: :: and  {{ isa ([[formula]] & [[formula']]) }} {{ lean ([[formula]] ∧ [[formula']]) }}
 {{ hol ([[formula]] /\ [[formula']]) }}
-  | formula => formula'   :: :: implies  {{ isa ([[formula]] ==> [[formula']]) }}
+  | formula => formula'   :: :: implies  {{ isa ([[formula]] ==> [[formula']]) }} {{ lean ([[formula]] → [[formula']]) }}
 {{ hol ([[formula]] ==> [[formula']]) }}
-  | true :: :: true {{ isa True }} 
+  | true :: :: true {{ isa True }} {{ lean True }} 
  {{ hol T }} 
 
 terminals :: '' ::=

@@ -54,10 +54,10 @@ val _ = hide "S";
 
 }}
 
-metavar name, t, x, v ::= {{ hol string }}
-metavar stamp, i ::= {{ hol num }}
+metavar name, t, x, v ::= {{ lean String }} {{ hol string }}
+metavar stamp, i ::= {{ lean String }} {{ hol num }}
 
-indexvar m ::= {{ hol num }}
+indexvar m ::= {{ lean Nat }} {{ hol num }}
 
 grammar
 
@@ -70,18 +70,18 @@ s :: '' ::=									{{ com Module expressions }}
   | functor ( xi : S ) s	::   :: Ftorexp	(+ bind xi in s +)		{{ com functor abstraction }}
   | s ( p )			::   ::	Ftorapp					{{ com functor application }}
   | s :> S			::   :: Seal					{{ com signature ascription }}
-  | s { xi <- p }		:: M :: subst_s					{{ com substitution }} {{ ich (subst_s [[p]] [[xi]] [[s]]) }}
-  | s { d <- p }		:: M :: msubst_s				{{ ich (msubst_s (build_msubst_d [[p]] [[d]]) [[s]]) }}
-  | s / p			:: M :: sstrengthen				{{ ich (sstrengthen [[s]] [[p]]) }}
-  | ( s )			:: M :: paren_s					{{ ich [[s]] }}
+  | s { xi <- p }		:: M :: subst_s					{{ com substitution }} {{ ich (subst_s [[p]] [[xi]] [[s]]) }} {{ lean (subst_s [[p]] [[xi]] [[s]]) }}
+  | s { d <- p }		:: M :: msubst_s				{{ ich (msubst_s (build_msubst_d [[p]] [[d]]) [[s]]) }} {{ lean (msubst_s (build_msubst_d [[p]] [[d]]) [[s]]) }}
+  | s / p			:: M :: sstrengthen				{{ ich (sstrengthen [[s]] [[p]]) }} {{ lean (sstrengthen [[s]] [[p]]) }}
+  | ( s )			:: M :: paren_s					{{ ich [[s]] }} {{ lean [[s]] }}
  
 d :: '' ::=									{{ com Structure bodies }}
   |				::   :: dNil_d					{{ tex \epsilon }}
   | c ; d			::   :: dCons	(+ bind cbinders(c) in d +)
-  | d1 ; c ; d2			:: M :: d_append				{{ ich (d_append [[d1]] [[c]] [[d2]]) }}
-  | d { xi <- p }		:: M :: subst_d					{{ com substitution }} {{ ich (subst_d [[p]] [[xi]] [[d]]) }}
-  | d / p			:: M :: dstrengthen				{{ ich (dstrengthen [[d]] [[p]]) }}
-  | ( d )			:: M :: paren_d					{{ ich [[d]] }}
+  | d1 ; c ; d2			:: M :: d_append				{{ ich (d_append [[d1]] [[c]] [[d2]]) }} {{ lean (d_append [[d1]] [[c]] [[d2]]) }}
+  | d { xi <- p }		:: M :: subst_d					{{ com substitution }} {{ ich (subst_d [[p]] [[xi]] [[d]]) }} {{ lean (subst_d [[p]] [[xi]] [[d]]) }}
+  | d / p			:: M :: dstrengthen				{{ ich (dstrengthen [[d]] [[p]]) }} {{ lean (dstrengthen [[d]] [[p]]) }}
+  | ( d )			:: M :: paren_d					{{ ich [[d]] }} {{ lean [[d]] }}
 
 c :: '' ::=									{{ com Definitions }}
   | type ti = T			::   ::	Typebind (+ cbinders = ti +)		{{ com type binding (non generative) }}
@@ -92,41 +92,41 @@ c :: '' ::=									{{ com Definitions }}
 % because the identifiers bound by it depend on the signature of the structure
 % expression.  Requiring an explicit signature annotation would fix things.
   | val vi = M			::   :: Valbind	(+ cbinders = vi +)		{{ com value binding }}
-  | c / p			:: M :: cstrengthen				{{ ich (cstrengthen [[c]] [[p]]) }}
-  | ( c )			:: M :: paren_c					{{ ich ([[c]]) }}
+  | c / p			:: M :: cstrengthen				{{ ich (cstrengthen [[c]] [[p]]) }} {{ lean (cstrengthen [[c]] [[p]]) }}
+  | ( c )			:: M :: paren_c					{{ ich ([[c]]) }} {{ lean ([[c]]) }}
 
 
 S :: '' ::=									{{ com Signature expressions }}
   | sig D end			::   ::	Strsig					{{ com simple signature }}
   | functor ( xi : S1 ) S2	::   :: Ftorsig	(+ bind xi in S2 +)		{{ com functor signature }}
-  | S / p			:: M :: Sstrengthen				{{ com strengthening }} {{ ich (Sstrengthen [[S]] [[p]]) }}
-  | S { xi <- p }		:: M :: subst_S					{{ com substitution }} {{ ich (subst_S [[p]] [[xi]] [[S]]) }}
-  | S { D <- p }		:: M :: msubst_S				{{ com substitution }} {{ ich (msubst_S (build_msubst_D [[p]] [[D]]) [[S]]) }}
+  | S / p			:: M :: Sstrengthen				{{ com strengthening }} {{ ich (Sstrengthen [[S]] [[p]]) }} {{ lean (Sstrengthen [[S]] [[p]]) }}
+  | S { xi <- p }		:: M :: subst_S					{{ com substitution }} {{ ich (subst_S [[p]] [[xi]] [[S]]) }} {{ lean (subst_S [[p]] [[xi]] [[S]]) }}
+  | S { D <- p }		:: M :: msubst_S				{{ com substitution }} {{ ich (msubst_S (build_msubst_D [[p]] [[D]]) [[S]]) }} {{ lean (msubst_S (build_msubst_D [[p]] [[D]]) [[S]]) }}
 										{{ tex [[S]]\{n_i \leftarrow [[p]].n | n_i \in BV([[D]])\} }}
-  | ( S )			:: M :: paren_S					{{ ich [[S]] }}
+  | ( S )			:: M :: paren_S					{{ ich [[S]] }} {{ lean [[S]] }}
 
 D :: '' ::=									{{ com Signature bodies }}
   |				::   :: DNil					{{ tex \epsilon }}
   | C ; D			::   :: DCons	(+ bind Cbinders(C) in D +)
-  | D1 ; C ; D2			:: M :: D_append				{{ ich (D_append [[D1]] [[C]] [[D2]]) }}
-  | D / p			:: M :: Dstrengthen				{{ com strengthening }} {{ ich (Dstrengthen [[D]] [[p]]) }}
-  | ( D )			:: M :: paren_D					{{ ich [[D]] }}
+  | D1 ; C ; D2			:: M :: D_append				{{ ich (D_append [[D1]] [[C]] [[D2]]) }} {{ lean (D_append [[D1]] [[C]] [[D2]]) }}
+  | D / p			:: M :: Dstrengthen				{{ com strengthening }} {{ ich (Dstrengthen [[D]] [[p]]) }} {{ lean (Dstrengthen [[D]] [[p]]) }}
+  | ( D )			:: M :: paren_D					{{ ich [[D]] }} {{ lean [[D]] }}
 
 C :: '' ::=									{{ com Specifications }}
   | type ti			::   ::	Otyspec	(+ Cbinders = ti +)		{{ com opaque type specification }}
   | type ti = T			::   ::	Mtyspec	(+ Cbinders = ti +)		{{ com manifest type specification }}
   | structure xi : S		::   ::	Modspec	(+ Cbinders = xi +)		{{ com structure specification }}
   | val vi : T			::   :: Valspec (+ Cbinders = vi +)		{{ com value specification }}
-  | C / p			:: M :: Cstrengthen				{{ com strengthening }} {{ ich (Cstrengthen [[C]] [[p]]) }}
-  | ( C )			:: M :: paren_C					{{ ich [[C]] }}
+  | C / p			:: M :: Cstrengthen				{{ com strengthening }} {{ ich (Cstrengthen [[C]] [[p]]) }} {{ lean (Cstrengthen [[C]] [[p]]) }}
+  | ( C )			:: M :: paren_C					{{ ich [[C]] }} {{ lean [[C]] }}
 
 T {{ hol Ty }} :: '' ::=							{{ com Types }}
   | ti				::   :: Tyvar					{{ com lexical type reference }}
   | p . t			::   :: Typath					{{ com structure-based type reference }}
   | T1 -> T2			::   :: Tyarrow					{{ com function type }}
-  | T { D <- p }		:: M :: msubst_T				{{ com substitution }} {{ ich (msubst_T (build_msubst_D [[p]] [[D]]) [[T]]) }}
+  | T { D <- p }		:: M :: msubst_T				{{ com substitution }} {{ ich (msubst_T (build_msubst_D [[p]] [[D]]) [[T]]) }} {{ lean (msubst_T (build_msubst_D [[p]] [[D]]) [[T]]) }}
 										{{ tex [[T]]\{n_i \leftarrow [[p]].n | n_i \in BV([[D]])\} }}
-  | ( T )			:: M :: paren_T					{{ ich [[T]] }}
+  | ( T )			:: M :: paren_T					{{ ich [[T]] }} {{ lean [[T]] }}
 
 p :: '' ::=									{{ com Structure paths }}
   | xi				::   :: Mid					{{ com lexical structure reference }}
@@ -135,8 +135,8 @@ p :: '' ::=									{{ com Structure paths }}
 E :: '' ::=									{{ com Typing contexts }} {{ hol C list }}
   | 				::   :: ENil					{{ hol [] }}
   | E ; C			::   :: ECons					{{ hol ([[C]] :: [[E]]) }}
-  | E1 ; C ; E2			:: M :: Eappend					{{ hol ([[E2]] ++ [[C]] :: [[E1]]) }}
-  | E ; rev D			:: M :: Dappend					{{ hol (REVERSE (D_to_list [[D]]) ++ [[E]]) }}
+  | E1 ; C ; E2			:: M :: Eappend					{{ hol ([[E2]] ++ [[C]] :: [[E1]]) }} {{ lean ([[E2]] ++ [[C]] :: [[E1]]) }}
+  | E ; rev D			:: M :: Dappend					{{ hol (REVERSE (D_to_list [[D]]) ++ [[E]]) }} {{ lean (REVERSE (D_to_list [[D]]) ++ [[E]]) }}
 
 M :: '' ::=									{{ com Terms }}
   | vi				::   :: Var					{{ com Lexical term reference }}
@@ -144,10 +144,10 @@ M :: '' ::=									{{ com Terms }}
   | lambda vi : T . M		::   :: Fun	(+ bind vi in M +)		{{ com Function expression }}
   | M1 M2			::   :: Fapp					{{ com Function application }}
   | let d in M			::   :: Letexp					{{ com Lexical binding }}
-  | M { vi <- V }		:: M :: subst_M					{{ com substitution }} {{ ich (vsubst_M [[V]] [[vi]] [[M]]) }}
-  | M { d <- p }		:: M :: msubst_M				{{ com substitution }} {{ ich (msubst_M (build_msubst_d [[p]] [[d]]) [[M]]) }}
+  | M { vi <- V }		:: M :: subst_M					{{ com substitution }} {{ ich (vsubst_M [[V]] [[vi]] [[M]]) }} {{ lean (vsubst_M [[V]] [[vi]] [[M]]) }}
+  | M { d <- p }		:: M :: msubst_M				{{ com substitution }} {{ ich (msubst_M (build_msubst_d [[p]] [[d]]) [[M]]) }} {{ lean (msubst_M (build_msubst_d [[p]] [[d]]) [[M]]) }}
 										{{ tex [[M]]\{n_i \leftarrow [[p]].n | n_i \in BV([[d]])\} }}
-  | ( M )			:: M :: paren_M					{{ ich [[M]] }}
+  | ( M )			:: M :: paren_M					{{ ich [[M]] }} {{ lean [[M]] }}
 
 V :: '' ::=									{{ com Values }}
   | lambda vi : T . M		::   :: FunV
@@ -169,8 +169,8 @@ dV :: '' ::=									{{ com Structure body values }}
 delta {{ tex \Delta }} :: '' ::=						{{ com Value environments }} {{ hol c list }}
   | 				::   :: deltaNil				{{ hol [] }}
   | delta ; c			::   :: deltaCons				{{ hol ([[c]] :: [[delta]]) }}
-  | delta1 ; c ; delta2		:: M :: delta_append				{{ hol ([[delta2]] ++ [[c]] :: [[delta1]]) }}
-  | delta ; rev d		:: M :: dVappend				{{ hol (REVERSE (d_to_list [[d]]) ++ [[delta]]) }}
+  | delta1 ; c ; delta2		:: M :: delta_append				{{ hol ([[delta2]] ++ [[c]] :: [[delta1]]) }} {{ lean ([[delta2]] ++ [[c]] :: [[delta1]]) }}
+  | delta ; rev d		:: M :: dVappend				{{ hol (REVERSE (d_to_list [[d]]) ++ [[delta]]) }} {{ lean (REVERSE (d_to_list [[d]]) ++ [[delta]]) }}
 
 terminals :: terminals_ ::=
   | ->				::   ::	rarrow					{{ tex \rightarrow }}

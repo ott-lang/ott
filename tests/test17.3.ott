@@ -2,10 +2,10 @@
 % 
 % auxfn with dot forms and binding thereof
 
-metavar value_name , x ::=
+metavar value_name , x ::= {{ lean Nat }}
   {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ ocaml int }}
 
-indexvar index , n ::= {{ isa nat }} {{ coq nat }} {{ coq-equality }} {{ hol num }} {{ ocaml int }}
+indexvar index , n ::= {{ lean Nat }} {{ isa nat }} {{ coq nat }} {{ coq-equality }} {{ hol num }} {{ ocaml int }}
 
   grammar
 

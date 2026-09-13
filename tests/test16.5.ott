@@ -3,10 +3,10 @@
 
 % ISA FAILS (for the auxfn part already) - I think simply because primrec can't handle the nested pattern 
 
-metavar value_name , x ::=
+metavar value_name , x ::= {{ lean Nat }}
   {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}
 
-indexvar index , n ::= {{ isa nat }} {{ coq nat }} {{ hol num }}
+indexvar index , n ::= {{ lean Nat }} {{ isa nat }} {{ coq nat }} {{ hol num }}
 
   grammar
 

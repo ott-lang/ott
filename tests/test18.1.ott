@@ -2,11 +2,11 @@
 % 
 % nested dot forms in symterms
 
-metavar termvar, x ::=
+metavar termvar, x ::= {{ lean Nat }}
   {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}
   {{ tex \mathit{[[termvar]]} }} {{ com  term variable  }} 
 
-indexvar index, n, m ::= {{ isa nat }} {{ coq nat }} {{ hol num }}
+indexvar index, n, m ::= {{ lean Nat }} {{ isa nat }} {{ coq nat }} {{ hol num }}
 
   grammar
 
@@ -14,7 +14,7 @@ indexvar index, n, m ::= {{ isa nat }} {{ coq nat }} {{ hol num }}
       | AA            :: :: AA
       | C a1 .. an    :: :: C
       | D x a1 .. an    :: :: D
-      | ( a )         :: M :: paren  {{ ich [[a]] }} {{ ocaml [[a]] }}
+      | ( a )         :: M :: paren  {{ ich [[a]] }} {{ lean [[a]] }} {{ ocaml [[a]] }}
 
   terminals :: 'terminals_' ::=
     | |-                  ::   :: turnstile  {{ tex \vdash }}

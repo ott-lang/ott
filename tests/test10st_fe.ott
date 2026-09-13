@@ -1,8 +1,8 @@
-metavar termvar , x ::=
+metavar termvar , x ::= {{ lean Nat }}
   {{ isa string }} {{ coq nat }} {{ coq-equality }} 
   {{ tex \mathit{[[termvar]]} }} {{ com  term variable  }} 
 
-metavar typvar , X ::=
+metavar typvar , X ::= {{ lean Nat }}
   {{ isa string }} {{ coq nat }} {{ coq-equality }} 
   {{ tex \mathit{[[typvar]]} }} {{ com  type variable  }} 
 
@@ -12,8 +12,8 @@ grammar
     | x                   ::   :: Var                     {{ com variable }}         
     | \ x . t             ::   :: Lam  (+ bind x in t +)  {{ com abstraction }}      
     | t t'                ::   :: App                     {{ com application }}      
-    | ( t )               :: M :: paren   {{ ic [[t]] }} 
-    | { t / x } t'        :: M :: tsub    {{ ic ( tsubst_t [[t]] [[x]] [[t']] ) }}
+    | ( t )               :: M :: paren   {{ ic [[t]] }} {{ lean [[t]] }} 
+    | { t / x } t'        :: M :: tsub    {{ ic ( tsubst_t [[t]] [[x]] [[t']] ) }} {{ lean ( tsubst_t [[t]] [[x]] [[t']] ) }}
 
   v :: 'v_' ::=                                         {{ com  value }}
     | \ x . t             ::   :: Lam   
@@ -21,7 +21,7 @@ grammar
   T :: T_ ::=                                           {{ com type }}
     | X                   ::   :: var                     {{ com variable }}
     | T -> T'             ::   :: arrow                   {{ com function }}
-    | ( T )               :: M :: paren {{ ic [[T]] }}
+    | ( T )               :: M :: paren {{ ic [[T]] }} {{ lean [[T]] }}
 
   G {{ tex \Gamma }} :: G_ ::= {{ isa termvar ~=> T }}
                                {{ com type environment }}
@@ -42,11 +42,11 @@ grammar
     | judgement           ::   :: judgement
     | not ( formula )     ::   :: not  
        {{ isa Not([[formula]]) }}
-       {{ coq not ([[formula]]) }}
+       {{ coq not ([[formula]]) }} {{ lean not ([[formula]]) }}
     | x = x'              ::   :: eqv 
-       {{ ic [[x]]=[[x']] }}
+       {{ ic [[x]]=[[x']] }} {{ lean [[x]]=[[x']] }}
     | x : T in G          ::   :: xTG 
-       {{ isa [[G]] [[x]] = Some [[T]] }}
+       {{ isa [[G]] [[x]] = Some [[T]] }} {{ lean [[G]] [[x]] = Some [[T]] }}
 
 subrules
   v <:: t

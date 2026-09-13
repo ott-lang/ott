@@ -1,20 +1,20 @@
 % test17.10.ott  sundry list form test
 
-metavar typevar, X ::=
+metavar typevar, X ::= {{ lean Nat }}
  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ lex Alphanum }}  
  {{ tex \mathit{[[typevar]]} }} {{ com  type variable  }}  
  {{ isavar ''[[typevar]]'' }} {{ texvar \mathrm{[[typevar]]} }} 
 
-metavar termvar, x ::=
+metavar termvar, x ::= {{ lean Nat }}
  {{ isa string }} {{ coq nat }} {{ hol string }}  {{ coq-equality }} {{ lex alphanum }}  
  {{ tex \mathit{[[termvar]]} }} {{ com  term variable  }} 
  {{ isavar ''[[termvar]]'' }} {{ texvar \mathrm{[[termvar]]} }} 
 
-metavar label, l, k ::=
+metavar label, l, k ::= {{ lean Nat }}
  {{ isa string }} {{ coq nat }} {{ hol string }} {{ lex alphanum }}  {{ tex \mathit{[[label]]} }} 
  {{ com  field label  }}
 
-indexvar index, i, j, n, m  ::= {{ isa nat }} {{ coq nat }} {{ hol num }} {{ lex numeral }}
+indexvar index, i, j, n, m  ::= {{ lean Nat }} {{ isa nat }} {{ coq nat }} {{ hol num }} {{ lex numeral }}
   {{ com indices }}
 
 
@@ -40,14 +40,14 @@ G {{ tex \Gamma }}, D {{ tex \Delta }} :: 'G_' ::= {{ com type environment }}
   | empty                            ::   :: empty       
   | G , X <: T                       ::   :: type        
   | G , x : T                        ::    :: term
-  | G , G'                           :: M :: comma {{ ich TODO }} {{ ocaml TODO }}
-  | G1 , .. , Gn                     :: M :: dots {{ ich TODO }} {{ ocaml TODO }}
+  | G , G'                           :: M :: comma {{ ich TODO }} {{ lean TODO }} {{ ocaml TODO }}
+  | G1 , .. , Gn                     :: M :: dots {{ ich TODO }} {{ lean TODO }} {{ ocaml TODO }}
 
 
 formula :: formula_ ::=          
   | judgement              :: :: judgement
   | formula1 .. formulan   :: :: dots
-% {{ isa (List.list_all (\<lambda> b . b) ( [[ formula1 .. formulan ]] ) ) }}
+% {{ isa (List.list_all (\<lambda> b . b) ( [[ formula1 .. formulan ]] ) ) }} {{ lean (List.list_all (\<lambda> b . b) ( [[ formula1 .. formulan ]] ) ) }}
 
 terminals :: terminals_ ::=
   | |-                     ::   :: turnstile {{ tex \vdash }}

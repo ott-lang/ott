@@ -1,7 +1,7 @@
 
-metavar ident , x ::= {{ isa string }} {{ coq positive }}  {{ lex '[A-Z]+' }}
-metavar X ::= {{ isa string }} {{ coq positive }}  {{ lex '[A-Z]+' }}
-metavar U ::= {{ isa string }} {{ coq positive }}  {{ lex '[A-Z]+' }}
+metavar ident , x ::= {{ lean String }} {{ isa string }} {{ coq positive }}  {{ lex '[A-Z]+' }}
+metavar X ::= {{ lean String }} {{ isa string }} {{ coq positive }}  {{ lex '[A-Z]+' }}
+metavar U ::= {{ lean String }} {{ isa string }} {{ coq positive }}  {{ lex '[A-Z]+' }}
 
 grammar
   exp , e :: Exp_ ::= 
@@ -12,7 +12,7 @@ grammar
         | ( exp , exp' )        ::   :: pair      
         | function x : type -> exp      ::   :: 'fun' (+ bind x in exp +)
         | exp exp'              ::   :: app
-        | '{' exp / x '}' exp'  :: M :: subst  {{ isa subst ( [[ exp ]] , [[ x ]] , [[ exp' ]] ) }}
+        | '{' exp / x '}' exp'  :: M :: subst  {{ isa subst ( [[ exp ]] , [[ x ]] , [[ exp' ]] ) }} {{ lean subst ( [[ exp ]] , [[ x ]] , [[ exp' ]] ) }}
         | ( exp )               :: M :: paren
         | Foo val               ::   :: foo
 %       | C . e                 :: M :: context
@@ -77,9 +77,9 @@ grammar
   formula :: formula_ ::=          
         | judgement             ::   :: judgement
         | not ( formula )       ::   :: not
-        | x in dom ( E )        :: M :: indom {{ isa list_ex ( \<lambda>(x',y'). x=x') [[ E ]] }}
-        | x notin c             :: M :: notincol {{ isa not (in [[ x ]] [[ c ]] ) }}
-        | h notin c             :: M :: notincolh {{ isa not (in [[ h ]] [[ c ]] ) }}
+        | x in dom ( E )        :: M :: indom {{ isa list_ex ( \<lambda>(x',y'). x=x') [[ E ]] }} {{ lean list_ex ( \<lambda>(x',y'). x=x') [[ E ]] }}
+        | x notin c             :: M :: notincol {{ isa not (in [[ x ]] [[ c ]] ) }} {{ lean not (in [[ x ]] [[ c ]] ) }}
+        | h notin c             :: M :: notincolh {{ isa not (in [[ h ]] [[ c ]] ) }} {{ lean not (in [[ h ]] [[ c ]] ) }}
 
   terminals :: 'terminals_' ::=
     | \                   ::   :: lambda     {{ tex \lambda }}

@@ -1,6 +1,6 @@
 %% Using a list of tuples in a defn.
-indexvar i , j , k , l , m , n ::= {{ coq nat }}
-metavar x ::= {{ coq nat }}
+indexvar i , j , k , l , m , n ::= {{ lean Nat }} {{ coq nat }}
+metavar x ::= {{ lean Nat }} {{ coq nat }}
 grammar
 foo :: foo_ ::=
   | Foo :: :: foo

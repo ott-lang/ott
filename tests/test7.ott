@@ -119,8 +119,8 @@ r  | \/                     ::   :: vee       {{ tex \vee }}
 formula :: formula_ ::=          
   | judgement              :: :: judgement
 % | G = G'                 :: :: Geq     {{ ichlL [[G]] = [[G']] }}
-  | x = x'                 :: :: xeq     {{ ichlL [[x]] = [[x']]  }}
-  | X = X'                 :: :: Xeq     {{ ichlL [[X]] = [[X']]  }}
+  | x = x'                 :: :: xeq     {{ ichlL [[x]] = [[x']]  }} {{ lean [[x]] = [[x']] }}
+  | X = X'                 :: :: Xeq     {{ ichlL [[X]] = [[X']]  }} {{ lean [[X]] = [[X']] }}
   | ( formula )            :: :: paren   {{ ichlL ( [[formula]] ) }}
   | not formula            :: :: not     {{ isa Not( [[formula]] ) }}
                                          {{ coq not( [[formula]] ) }}

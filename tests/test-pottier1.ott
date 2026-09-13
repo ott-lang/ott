@@ -1,4 +1,4 @@
-metavar termvar , x ::= 
+metavar termvar , x ::= {{ lean Nat }} 
   {{ isa string }} {{ coq nat }} {{ hol string }} {{ coq-equality }} {{ lex [a-z]+ }}
   {{ tex \mathit{[[termvar]]} }} {{ com  term variable  }} 
 

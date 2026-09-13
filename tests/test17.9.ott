@@ -1,8 +1,8 @@
 % test17.9.ott  dot form test
 
-metavar ident, x ::= {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ ocaml int }}
+metavar ident, x ::= {{ lean Nat }} {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ ocaml int }}
 
-indexvar index, n , i ::= {{ isa nat }} {{ coq nat }} {{ hol num }} {{ ocaml int }}
+indexvar index, n , i ::= {{ lean Nat }} {{ isa nat }} {{ coq nat }} {{ hol num }} {{ ocaml int }}
 
   grammar
 
@@ -19,7 +19,7 @@ indexvar index, n , i ::= {{ isa nat }} {{ coq nat }} {{ hol num }} {{ ocaml int
 formula :: formula_ ::=          
   | judgement              :: :: judgement
   | formula1 .. formulan   :: :: dots
-%  | formula1 .. formulan   :: :: realdots {{ isa (List.list_all (\<lambda> b . b) ( [[ formula1 .. formulan ]] ) ) }}
+%  | formula1 .. formulan   :: :: realdots {{ isa (List.list_all (\<lambda> b . b) ( [[ formula1 .. formulan ]] ) ) }} {{ lean (List.list_all (\<lambda> b . b) ( [[ formula1 .. formulan ]] ) ) }}
 
 terminals :: terminals_ ::=
   | |-                     ::   :: turnstile {{ tex \vdash }}

@@ -1,6 +1,6 @@
 %% Using a subrule in a list in a defn.
-indexvar i , j , k , l , m , n ::= {{ coq nat }} {{ isa nat }} {{ hol num }}
-metavar ident , x ::= {{ coq nat }} {{ isa string }} {{ hol string }} {{ coq-equality }}
+indexvar i , j , k , l , m , n ::= {{ lean Nat }} {{ coq nat }} {{ isa nat }} {{ hol num }}
+metavar ident , x ::= {{ lean Nat }} {{ coq nat }} {{ isa string }} {{ hol string }} {{ coq-equality }}
 grammar
   constant :: CONST_ ::=
     | ()                                                ::   :: unit

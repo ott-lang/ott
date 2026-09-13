@@ -1,4 +1,4 @@
-metavar termvar , x ::= 
+metavar termvar , x ::= {{ lean Nat }} 
   {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ lex alphanum }}
   {{ tex \mathit{[[termvar]]} }} {{ com  term variable  }} 
 
@@ -25,8 +25,8 @@ homs 't_'
   :: Var     {{ com variable }}         
   :: Lam     {{ com abstraction }}      
   :: App     {{ com application }}      
-  :: paren   {{ ich [[t]] }} 
-  :: tsub    {{ ich ( tsubst_t [[t]] [[x]] [[t']] ) }}
+  :: paren   {{ ich [[t]] }} {{ lean [[t]] }} 
+  :: tsub    {{ ich ( tsubst_t [[t]] [[x]] [[t']] ) }} {{ lean ( tsubst_t [[t]] [[x]] [[t']] ) }}
 
 homs ''
   :: reduce  {{ com $[[t1]]$ reduces to $[[t2]]$ }} 

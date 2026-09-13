@@ -1,11 +1,12 @@
+% subrule on a production with a list form
 
-metavar termvar , x ::=
+metavar termvar , x ::= {{ lean Nat }}
 {{ isa string }} {{ hol string }} {{ coq nat }} {{ lex alphanum }} {{ com  term variable  }} 
 
-metavar label , l , k ::=
+metavar label , l , k ::= {{ lean Nat }}
 {{ isa string }} {{ hol string }}  {{ coq nat }} {{ lex Alphanum }} {{ com  field label  }} 
 
-indexvar index , i , j , n , m  ::= 
+indexvar index , i , j , n , m  ::= {{ lean Nat }} 
 {{ isa nat }} {{ hol num }} {{ coq nat }} {{ lex numeral }} {{ com indices }}
 
 grammar

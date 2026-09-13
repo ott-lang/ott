@@ -2,7 +2,7 @@
 % 
 % simple subrules
 
-indexvar index , n ::= {{ isa nat }} {{ coq nat }} {{ coq-equality }} {{ hol num }}
+indexvar index , n ::= {{ lean Nat }} {{ isa nat }} {{ coq nat }} {{ coq-equality }} {{ hol num }}
 
   grammar
 

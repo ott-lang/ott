@@ -113,12 +113,12 @@ terminals :: terminals_ ::=
 
 formula :: formula_ ::=          
   | judgement              :: :: judgement
-% | G = G'                 :: :: Geq     {{ ichl [[G]] = [[G']] }}
-  | x = x'                 :: :: xeq     {{ ichl [[x]] = [[x']]  }}
-  | X = X'                 :: :: Xeq     {{ ichl [[X]] = [[X']]  }}
-  | ( formula )            :: :: paren   {{ ichl ( [[formula]] ) }}
+% | G = G'                 :: :: Geq     {{ ichl [[G]] = [[G']] }} {{ lean [[G]] = [[G']] }}
+  | x = x'                 :: :: xeq     {{ ichl [[x]] = [[x']]  }} {{ lean [[x]] = [[x']] }}
+  | X = X'                 :: :: Xeq     {{ ichl [[X]] = [[X']]  }} {{ lean [[X]] = [[X']] }}
+  | ( formula )            :: :: paren   {{ ichl ( [[formula]] ) }} {{ lean ( [[formula]] ) }}
   | not formula            :: :: not     {{ isa Not( [[formula]] ) }}
-                                         {{ coq not( [[formula]] ) }}
+                                         {{ coq not( [[formula]] ) }} {{ lean not ( [[formula]] ) }}
                                          {{ lem not( [[formula]] ) }}
                                          {{ hol ~( [[formula]] ) }}
                                          {{ tex \neg [[ formula]] }}
@@ -130,22 +130,22 @@ formula :: formula_ ::=
                                {{ tex \forall [[i]] \in 1 .. [[m]] . [[formula]] }} 
                                {{ isa ![[i]] . ((1::nat)<=[[i]] & [[i]]<=[[m]]) ==> [[formula]] }} 
                                {{ hol ![[i]] . (1<=[[i]] /\ [[i]]<=[[m]]) ==> [[formula]] }} 
-                               {{ coq (forall [[i]], (1<=[[i]] /\ [[i]] <= m) -> [[formula]]) }}
+                               {{ coq (forall [[i]], (1<=[[i]] /\ [[i]] <= m) -> [[formula]]) }} {{ lean (forall [[i]], (1<=[[i]] /\ [[i]] <= m) -> [[formula]]) }}
                                {{ lem (forall [[i]]. (1<=[[i]] && [[i]] <= m) --> [[formula]]) }}
 
   | exists i isin 1 -- m . formula :: :: exists 
                                {{ tex \exists [[i]] \in 1 .. [[m]]. [[formula]] }}
                                {{ isa ?[[i]]. ((1::nat)<=[[i]] & i<=[[m]]) ==> [[formula]] }} 
                                {{ hol ?[[i]] . (1<=[[i]] /\ [[i]]<=[[m]]) ==> [[formula]] }} 
-                               {{ coq exists [[i]], (1<=[[i]] /\ [[i]] <= [[m]]) -> [[formula]] }}
+                               {{ coq exists [[i]], (1<=[[i]] /\ [[i]] <= [[m]]) -> [[formula]] }} {{ lean exists [[i]], (1<=[[i]] /\ [[i]] <= [[m]]) -> [[formula]] }}
                                {{ lem (exists [[i]]. (1<=[[i]] && [[i]] <= m) && [[formula]]) }}
 
   | formula /\ formula'   :: :: and  {{ isa ([[formula]] & [[formula']]) }}
                                      {{ hol ([[formula]] /\ [[formula']]) }}
-                                     {{ coq ([[formula]] /\ [[formula']]) }}
+                                     {{ coq ([[formula]] /\ [[formula']]) }} {{ lean ([[formula]] /\ [[formula']]) }}
                                      {{ lem ([[formula]] && [[formula']]) }}
 
-  | l = l'                :: :: leq  {{ ichl ([[l]]=[[l']]) }}
+  | l = l'                :: :: leq  {{ ichl ([[l]]=[[l']]) }} {{ lean ([[l]]=[[l']]) }}
  
 % would be nice to write the above as  {{ isa ?[[T]]. [[X<:T isin G]] }}
 
@@ -215,7 +215,14 @@ freevars
  val flatten_G : list G -> G
  let rec flatten_G [] = [[empty]]
  and     flatten_G ([[G]]::Gs) = append_G [[G]] (flatten_G Gs)
- }}
+ }} {{ lean (** embedded definitions of operations on type environments **)
+ val append_G : G -> G -> G
+ let rec  append_G [[G]] [[empty]] = [[G]]
+ and      append_G [[G]] [[G',X<:T]] = (let [[G'']] = append_G [[G]] [[G']] in [[G'',X<:T]])
+ and      append_G [[G]] [[G',x:T]] = (let [[G'']] = append_G [[G]] [[G']] in [[G'',x:T]])
+ val flatten_G : list G -> G
+ let rec flatten_G [] = [[empty]]
+ and     flatten_G ([[G]]::Gs) = append_G [[G]] (flatten_G Gs) }}
  
 
 defns

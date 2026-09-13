@@ -1,13 +1,13 @@
-metavar value_name, x ::=
+metavar value_name, x ::= {{ lean Nat }}
   {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ ocaml int }}
   {{ lex alphanum }} 
-metavar ident ::=
+metavar ident ::= {{ lean Nat }}
   {{ isa string }} {{ coq nat }} {{ hol string }} {{ ocaml int }}
   {{ lex Alphanum }} 
-metavar integer_literal ::=
+metavar integer_literal ::= {{ lean Nat }}
   {{ isa int }} {{ coq nat }} {{ hol num }} {{ ocaml int }}
   {{ lex  numeral }}
-indexvar index, i, j, n, m ::=
+indexvar index, i, j, n, m ::= {{ lean Nat }}
   {{ isa nat }} {{ coq nat }}  {{ hol num }} {{ ocaml int }}
   {{ lex numeral }}
 % the lex specifications above are not accurate - negative numerals, especially, 
@@ -26,14 +26,14 @@ typexpr, t :: TE_ ::=
   | typvar                             ::   :: var
   | typexpr -> typexpr'                ::   :: arrow
   | typeconstr                         ::   :: constr0
-  | ( typexpr )                        :: S :: paren {{ ich [[typexpr]] }} {{ ocaml [[typexpr]] }}
+  | ( typexpr )                        :: S :: paren {{ ich [[typexpr]] }} {{ lean [[typexpr]] }} {{ ocaml [[typexpr]] }}
 
 typscheme, ts :: TS_ ::=  
   | ( typvar1 , .. , typvarn ) typexpr ::   :: ts  (+ bind typvar1 .. typvarn in typexpr +) 
 
   | generalise ( G , t )               :: M :: ts3 
     {{ isa (TS_ts (List.remdups (list_minus (ftv_typexpr [[t]]) (ftv_G [[G]]))) [[t]]) }}
-    {{ coq (TS_ts (remove_duplicates (make_list_typvar (list_minus eq_typvar (ftv_typexpr [[t]]) (ftv_G [[G]])))) [[t]]) }} 
+    {{ coq (TS_ts (remove_duplicates (make_list_typvar (list_minus eq_typvar (ftv_typexpr [[t]]) (ftv_G [[G]])))) [[t]]) }} {{ lean (TS_ts (remove_duplicates (make_list_typvar (list_minus eq_typvar (ftv_typexpr [[t]]) (ftv_G [[G]])))) [[t]]) }} 
     {{ hol (TS_ts (remove_duplicates (list_minus (ftv_typexpr [[t]]) (ftv_G [[G]]))) [[t]]) }}
     {{ ocaml TODO }}
 
@@ -54,10 +54,10 @@ expr, e :: E_ ::=
   | expr expr'                         ::   :: apply
   | function value_name -> expr        ::   :: function (+ bind value_name in expr +)
   | let value_name = expr in expr'     ::   :: let      (+ bind value_name in expr' +)
-  | ( expr )                           :: S :: paren {{ ich [[expr]] }} {{ ocaml [[expr]] }}
+  | ( expr )                           :: S :: paren {{ ich [[expr]] }} {{ lean [[expr]] }} {{ ocaml [[expr]] }}
   | { v / x } e                        :: M :: subst 
     {{ isa subst_expr [[v]] [[x]] [[e]] }}
-    {{ ch (subst_expr [[v]] [[x]] [[e]]) }}
+    {{ ch (subst_expr [[v]] [[x]] [[e]]) }} {{ lean (subst_expr [[v]] [[x]] [[e]]) }}
     {{ ocaml (subst_expr [[v]] [[x]] [[e]]) }}
 
 value, v :: V_ ::=
@@ -72,7 +72,7 @@ formula :: formula_ ::=
   | judgement                          ::   :: judgement
   | not ( formula )                    ::   :: not  
         {{ isa Not([[formula]]) }}
-        {{ coq not([[formula]]) }}
+        {{ coq not([[formula]]) }} {{ lean not ([[formula]]) }}
         {{ hol ~([[formula]]) }}
         {{ ocaml TODO }}
 
@@ -86,6 +86,11 @@ formula :: formula_ ::=
              /\ tvs = make_list_typvar
                     (List.map (fun (x:typvar*typexpr) => match x with (x1,x2) => x1 end) 
                               s)  
+             /\ tsubst_typexpr s txp = [[t]]) }} {{ lean (exists tvs, exists txp, exists s, 
+             [[typscheme]] = TS_ts tvs txp 
+             /\ tvs = make_list_typvar
+                    (List.map (fun (x:typvar*typexpr) => match x with (x1,x2) => x1 end) 
+                              s)  
              /\ tsubst_typexpr s txp = [[t]]) }}
         {{ hol ? typvars typexpr s . 
              ([[typscheme]] = TS_ts typvars typexpr )
@@ -94,9 +99,9 @@ formula :: formula_ ::=
         {{ ocaml TODO }}
 
   | typscheme = typscheme'             ::   :: eqt 
-        {{ ich [[typscheme]]=[[typscheme']] }} {{ ocaml TODO }}
+        {{ ich [[typscheme]]=[[typscheme']] }} {{ lean [[typscheme]]=[[typscheme']] }} {{ ocaml TODO }}
   | value_name = value_name'           ::   :: eqv 
-        {{ ich [[value_name]]=[[value_name']] }} {{ ocaml TODO }}
+        {{ ich [[value_name]]=[[value_name']] }} {{ lean [[value_name]]=[[value_name']] }} {{ ocaml TODO }}
 
 terminals :: terminals_ ::=
   |  ->                                ::   :: arrow      {{ tex \rightarrow }}

@@ -1,5 +1,5 @@
 %% Generation of a list function that is used in two separate defns's.
-indexvar i , j , k , l , m , n ::= {{ isa num }} {{ coq nat }} {{ hol num }}
+indexvar i , j , k , l , m , n ::= {{ lean Nat }} {{ isa num }} {{ coq nat }} {{ hol num }}
 grammar
 data :: data_ ::=
   | ( data1 , .. , datan )                      :: :: tuple

@@ -71,16 +71,16 @@ terminals :: 'terminals_' ::=
 formula :: 'formula_' ::=
   | judgement                ::   :: judgement
   | is_value v               ::   :: is_value
-    {{ coq is_value [[v]] }}
+    {{ coq is_value [[v]] }} {{ lean is_value [[v]] }}
   | uniq G                   ::   :: uniqG
-    {{ coq uniq [[G]] }}
+    {{ coq uniq [[G]] }} {{ lean uniq [[G]] }}
 	 {{ tex \mathsf{uniq}[[G]] }}
   | x : T in G               ::   :: inG
-    {{ coq binds [[x]][[T]][[G]] }}
+    {{ coq binds [[x]][[T]][[G]] }} {{ lean binds [[x]][[T]][[G]] }}
   | x notin fv e             ::   :: fresh
-    {{ coq [[x]] \notin fv[[e]] }}
+    {{ coq [[x]] \notin fv[[e]] }} {{ lean [[x]] \notin fv[[e]] }}
   | x notin dom G            ::   :: notInGx
-    {{ coq ~ AtomSetImpl.In [[x]] (dom [[G]]) }}
+    {{ coq ~ AtomSetImpl.In [[x]] (dom [[G]]) }} {{ lean ~ AtomSetImpl.In [[x]] (dom [[G]]) }}
 
 
 

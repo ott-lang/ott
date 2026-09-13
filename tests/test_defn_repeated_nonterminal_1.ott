@@ -1,5 +1,5 @@
 %% Test case for a repeated nonterminal in a defn.
-indexvar n ::= {{ coq nat }}
+indexvar n ::= {{ lean Nat }} {{ coq nat }}
 
 grammar
 a :: a_ ::=

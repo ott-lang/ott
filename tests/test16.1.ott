@@ -9,7 +9,7 @@
 % properly, and the corresponding primrecs into a single primrec, it succeeds.
 
 
-metavar value_name , x ::=
+metavar value_name , x ::= {{ lean Nat }}
   {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}
 
   grammar

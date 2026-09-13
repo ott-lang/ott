@@ -1,7 +1,7 @@
 %% Lists of foos where foo has a Coq hom
 
-indexvar i , j , k , l , m , n ::= {{ coq nat }}
-metavar ident ::= {{ coq nat }}
+indexvar i , j , k , l , m , n ::= {{ lean Nat }} {{ coq nat }}
+metavar ident ::= {{ lean Nat }} {{ coq nat }}
 
 grammar
   value_name , x :: VN_ ::=
@@ -29,7 +29,7 @@ environment , E :: Env_ ::=
         {{ tex \ottenvironmentappend{[[E]]}{[[EB]]} }}
         {{ coq (@List.cons environment_binding [[EB]] [[E]]) }}
     | E1 , .. , En                     :: M  :: list
-        {{ ich (@List.flat_map _ _ (fun l=>l) [[E1 .. En]]) }}
+        {{ ich (@List.flat_map _ _ (fun l=>l) [[E1 .. En]]) }} {{ lean (@List.flat_map _ _ (fun l=>l) [[E1 .. En]]) }}
 
 grammar
   formula :: formula_ ::=

@@ -1,9 +1,9 @@
-indexvar i , j , k , l , m , n ::=
+indexvar i , j , k , l , m , n ::= {{ lean Nat }}
   {{ isa num }}
   {{ coq nat }}
   {{ lex [0-9]+ }}
 
-metavar x ::= {{ isa num }} {{ coq nat }}
+metavar x ::= {{ lean Nat }} {{ isa num }} {{ coq nat }}
 
 grammar
 t :: t_ ::=

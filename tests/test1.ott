@@ -1,5 +1,5 @@
 
-metavar ident , x ::= 
+metavar ident , x ::= {{ lean Nat }} 
   {{ isa string }} {{ coq nat }} {{ hol string }} {{ ocaml string }} {{ lex [A-Z]+ }} {{ coq-equality }}
 
 grammar
@@ -34,13 +34,13 @@ grammar
         | judgement             ::   :: judgement
         | not ( formula )       ::   :: not 
              {{ isa ~( [[formula]] ) }}
-             {{ coq not([[formula]]) }}
+             {{ coq not([[formula]]) }} {{ lean not ([[formula]]) }}
              {{ hol ~( [[formula]] ) }}
              {{ ocaml not([[formula]]) }}
         | x in dom ( E )        :: M :: indom 
              {{ isa list_ex ( \<lambda>(x',y'). [[x]]=x') [[E]] }}
              {{ ocaml List.exists (fun (x',y') -> [[x]]=x') [[E]] }}
-	     {{ coq (indom [[x]] [[E]]) }}
+	     {{ coq (indom [[x]] [[E]]) }} {{ lean (indom [[x]] [[E]]) }}
              {{ hol (EXISTS ( \(x',y'). [[x]]=x') [[E]]) }}  % TODO 
 
   terminals :: 'terminals_' ::=

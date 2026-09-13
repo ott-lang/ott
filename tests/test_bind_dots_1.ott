@@ -1,7 +1,7 @@
 %% Check what happens if the user writes the wrong number of dots in a
 %% bindspec.
-indexvar i , j , k , l , m , n ::= {{ coq nat }} {{ isa nat }} {{ hol num }}
-metavar x ::= {{ coq nat }} {{ isa nat }} {{ hol num }}
+indexvar i , j , k , l , m , n ::= {{ lean Nat }} {{ coq nat }} {{ isa nat }} {{ hol num }}
+metavar x ::= {{ lean Nat }} {{ coq nat }} {{ isa nat }} {{ hol num }}
 grammar
 thingy :: thingy_ ::=
 foo :: foo_ ::=
