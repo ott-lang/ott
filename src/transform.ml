@@ -158,7 +158,10 @@ let pp_list_rule (fd : out_channel) (m:pp_mode) xd (ss:nt_or_mv_root list) : uni
          list_... name, rather than by their bare roots. *)
       let sss = List.map (Grammar_pp.pp_nt_or_mv_root_ty m xd) ss in
       let id = "list_" ^ String.concat "_" sss in
-      Printf.fprintf fd "inductive %s where\n" id;
+      (* Claude: ": Type" explicitly - without it Lean leaves the sort as a
+         universe metavariable, which then fails when the list type is used as
+         a constructor argument of another inductive *)
+      Printf.fprintf fd "inductive %s : Type where\n" id;
       Printf.fprintf fd "    | Nil_%s : %s\n" id id;
       Printf.fprintf fd "    | Cons_%s : " id;
       List.iter (fun s -> Printf.fprintf fd "%s -> " s) sss;
@@ -346,7 +349,12 @@ let expand_prod (m:pp_mode) (xd:syntaxdefn) (p:prod) : prod * rule list * (auxfn
 let expand_rule (m:pp_mode) (xd:syntaxdefn) (r:rule) : rule list * string list * (auxfn * auxfn_type) list =
   if 
     (String.compare r.rule_ntr_name "formula" = 0) || 
-    (List.exists (fun (h,_) -> String.compare h "coq" = 0) r.rule_homs)
+    (* Claude: a rule whose type is given by a hom for this target is not
+       expanded, since the hom supplies the representation.  This used to test
+       the "coq" hom whatever the mode, which for Lean skipped the expansion of
+       a rule that had a coq hom but no lean one, leaving the generated code
+       referring to a list_... inductive that was never declared. *)
+    (List.exists (fun (h,_) -> String.compare h (Auxl.hom_name_for_pp_mode m) = 0) r.rule_homs)
   then ([r],[],[])
   else
     let expanded_prods, new_rules, extended_auxfns = 

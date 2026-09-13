@@ -2852,7 +2852,11 @@ and pp_rule m xd r = (* returns a string option *)
       then None
       else 
         Some 
-          (strip_surrounding_parens (pp_nontermroot_ty m xd r.rule_ntr_name) ^ (match m with Lean _ -> " where" | _ -> " = ")^pp_com^"\n" 
+          (strip_surrounding_parens (pp_nontermroot_ty m xd r.rule_ntr_name) ^ (match m with 
+                                                                   (* Claude: state the sort: without it Lean leaves a universe
+                                                                      metavariable, which fails as soon as the type is used as a
+                                                                      constructor argument of another inductive *)
+                                                                   | Lean _ -> " : Type where" | _ -> " = ")^pp_com^"\n" 
 	   ^ (match m with Lem _ -> " | " | _ -> "   ")
            ^ String.concat (match m with Lean _ -> "   " | _ -> " | ")
                (List.map 
@@ -3972,7 +3976,8 @@ and expanded_list_type_elements m xd es =
     | [] -> []
     | (Lang_nonterm(ntr,_))::t ->
         let r = Auxl.rule_of_ntr xd ntr in
-        let b = (List.exists (fun (h,_) -> String.compare h "coq" = 0) r.rule_homs) in
+        (* Claude: the hom for this target, not always the coq one *)
+        let b = (List.exists (fun (h,_) -> String.compare h (Auxl.hom_name_for_pp_mode m) = 0) r.rule_homs) in
         (pp_nt_or_mv_root_ty m xd (Ntr (Auxl.promote_ntr xd ntr)),b) :: (intern t)
     | (Lang_metavar(mvr,_))::t -> (pp_nt_or_mv_root_ty m xd (Mvr mvr),false) :: (intern t)
     | (Lang_terminal _)::t -> intern t
