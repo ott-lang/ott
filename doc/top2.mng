@@ -3728,6 +3728,11 @@ file. The table below summarises their meanings.  A \tick{} indicates that argum
 \mykw{tex} &  & embedded \myLaTeX{} output\\
 \mykw{tex-preamble} &  & embedded \myLaTeX{} output, appearing in the \myLaTeX{} preamble\\
 \mykw{coq-lib} &  & do not generate definitions for the listed helper functions\\
+% Claude: the four rows below document the expand-list-types-gated embed homs
+\mykw{coq-expand-list-types-true} &  & embedded Coq output, only when \texttt{-coq\_expand\_list\_types true}\\
+\mykw{coq-expand-list-types-false} &  & embedded Coq output, only when \texttt{-coq\_expand\_list\_types false}\\
+\mykw{lean-expand-list-types-true} &  & embedded Lean output, only when \texttt{-lean\_expand\_list\_types true}\\
+\mykw{lean-expand-list-types-false} &  & embedded Lean output, only when \texttt{-lean\_expand\_list\_types false}\\
 \mykw{isa-auxfn-proof} &  &  Isabelle proof script  \\
 \mykw{isa-subrule-proof} &  &  Isabelle proof script \\
 \end{tabular}

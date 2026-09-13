@@ -428,6 +428,11 @@ let allowable_hom_data =
   ] 
 
 let embed_allowable_homs = ["coq";"lean";"coq-lib";"coq-preamble";"lean-preamble";
+                            (* Claude: as "coq"/"lean", but emitted only when the
+                               -coq_expand_list_types / -lean_expand_list_types
+                               flag has the value named in the hom *)
+                            "coq-expand-list-types-true";"coq-expand-list-types-false";
+                            "lean-expand-list-types-true";"lean-expand-list-types-false";
                             "isa";"isa-import";"isa-auxfn-proof";"isa-subrule-proof";"isa-lib";"isa-preamble";
                             "hol";"hol-preamble";
                             "lem";"lem-preamble";

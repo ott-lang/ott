@@ -67,6 +67,23 @@ and pp_embedmorphism fd m xd lookup (l,hn,es) =
   | (Lex _,  "lex") -> 
       pp_embed_spec fd m xd lookup es;
       output_string fd "\n"
+  (* Claude: a <target>-expand-list-types-<bool> embed is emitted exactly as a
+     plain {{ coq ... }} / {{ lean ... }} embed would be, but only when the
+     -coq_expand_list_types / -lean_expand_list_types flag has that value, so
+     one source file can carry both versions of hand-written code that depends
+     on how lists are represented in the generated definitions. *)
+  | (Coq co, "coq-expand-list-types-true") when co.coq_expand_lists ->
+      pp_embed_spec fd m xd lookup es;
+      output_string fd "\n"
+  | (Coq co, "coq-expand-list-types-false") when not co.coq_expand_lists ->
+      pp_embed_spec fd m xd lookup es;
+      output_string fd "\n"
+  | (Lean lno, "lean-expand-list-types-true") when lno.lean_expand_lists ->
+      pp_embed_spec fd m xd lookup es;
+      output_string fd "\n"
+  | (Lean lno, "lean-expand-list-types-false") when not lno.lean_expand_lists ->
+      pp_embed_spec fd m xd lookup es;
+      output_string fd "\n"
   | (Coq co, "coq-lib") -> 
       let x = co.coq_library in
       x := (fst !x, embed_strings (snd !x) es)
