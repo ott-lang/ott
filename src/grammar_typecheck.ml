@@ -408,17 +408,19 @@ let allowable_hom_data =
                     "nonterminal, metavar or indexvar root"));
     ( Hu_metavar , (["isa";"coq";"lean";"hol";"lem";(*"twf";*)"tex";"ocaml";"com";"coq-equality";"coq-notation";"coq-universe";"lean-equality";"lex";"texvar";"isavar";"holvar";"lemvar";"leanvar";"ocamlvar";"repr-locally-nameless";(*"repr-nominal";*)"phantom";"ocamllex";"ocamllex-remove";"ocamllex-of-string";"pp";"pp-raw";"pp-suppress"],
                     "metavar declaration"));
-    ( Hu_rule    , (["isa";"coq";"lean";"hol";"lem";(*"twf";*)"tex";"ocaml";"com";"coq-equality";"coq-notation";"coq-universe";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ichlL";"ichlLo"; "ic";"ch";"ih";"phantom";"aux";"auxparam";"menhir-start";"menhir-start-type";"quotient-with";"pp";"pp-raw";"pp-suppress";"pp-params";"lex-comment"],
+    ( Hu_rule    , (["isa";"coq";"lean";"hol";"lem";(*"twf";*)"tex";"ocaml";"com";"coq-equality";"coq-notation";"coq-universe";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ichlL";"ichlLo"; "ic";"ch";"ih";"phantom";"aux";"auxparam";"menhir-start";"menhir-start-type";"quotient-with";"pp";"pp-raw";"pp-suppress";"pp-params";"lex-comment";
+                     "coq-expand-list-types-true";"coq-expand-list-types-false";"lean-expand-list-types-true";"lean-expand-list-types-false";],
                     "rule"));
     ( Hu_rule_meta, (["com"], "special rule"));
     ( Hu_prod    , (["isa";"coq";"lean";"hol";"lem";(*"twf";*)"tex";"texlong";"ocaml";"com";"order";"isasyn";"isaprec";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ichlL";"ichlLo";"ic";"ch";"ih";
-                     "disambiguate";"prec";"leftassoc";"rightassoc";"menhir";"quotient-remove";"menhir-prec";"pp";"pp-raw"],
+                     "disambiguate";"prec";"leftassoc";"rightassoc";"menhir";"quotient-remove";"menhir-prec";"pp";"pp-raw";
+                     "coq-expand-list-types-true";"coq-expand-list-types-false";"lean-expand-list-types-true";"lean-expand-list-types-false";],
                     "production"));
     ( Hu_prod_tm , (["isa";                      "tex";"lex";  "com"; "prec";"leftassoc";"rightassoc"],"production of the terminals grammar"));
     ( Hu_drule   , ([                                          "com"],"definition rule"));
     ( Hu_defn    , ([                            "tex";        "com";"isasyn";"isaprec";"disambiguate";"lemwcf"],"definition"));
     ( Hu_defnclass, (["coq-universe"],"defns block"));
-    ( Hu_fundefn , (["isa";"coq";"lean";"hol";"lem";(*"twf";*)"tex";        "com";"order";"isasyn";"isaprec";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ichlL";"ichlLo";"ic";"ch";"ih";"coq-struct"],"function definition"));
+    ( Hu_fundefn , (["isa";"coq";"lean";"hol";"lem";(*"twf";*)"tex";        "com";"order";"isasyn";"isaprec";(*"icht";*)"icho";"ichlo";"ich";"ichl";"ichlL";"ichlLo";"ic";"ch";"ih";"coq-struct";"coq-expand-list-types-true";"coq-expand-list-types-false";"lean-expand-list-types-true";"lean-expand-list-types-false";],"function definition"));
     ( Hu_fundefnclass, ([(* "isa-proof";*)"hol-proof"],"funs block"));
     ( Hu_subrule,  (["isa-proof"],"subrule definition"));
     ( Hu_subst,    (["isa-proof"],"substitution definition"));
@@ -441,7 +443,11 @@ let embed_allowable_homs = ["coq";"lean";"coq-lib";"coq-preamble";"lean-preamble
                             "ocaml";"ocaml-preamble";
                             "menhir"]
 
-let list_form_allowable_homs =["isa";"coq";"lean";"hol";"lem";"ic";"ch";"ih";"ich";"ichl";"ichlL";"ichlLo";"icho";"ichlo";(*"icht";*)"coq-struct";"ocaml"] 
+let list_form_allowable_homs =["isa";"coq";"lean";"hol";"lem";"ic";"ch";"ih";"ich";"ichl";"ichlL";"ichlLo";"icho";"ichlo";(*"icht";*)"coq-struct";"ocaml";
+                               (* Claude: a hom specialised by list representation may refer to a
+                                  dot form just as the plain one it stands in for may *)
+                               "coq-expand-list-types-true";"coq-expand-list-types-false";
+                               "lean-expand-list-types-true";"lean-expand-list-types-false"] 
 
 let cd_disambiguate_hom name rhs hs =
   try 

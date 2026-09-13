@@ -628,8 +628,27 @@ let hom_spec_for_hom_name hn homs =
   try Some (List.assoc hn homs)
   with Not_found -> None
 
+(* Claude: a hom can be specialised by list representation, with the same
+   spellings the embed section accepts: looking up the hom for a target first
+   tries <target>-expand-list-types-true or -false, according to the flag this
+   run was given, and falls back to the plain <target>.  That lets one grammar
+   carry both versions of a hom whose right-hand side depends on whether a
+   list is the target's own or a generated list_... inductive. *)
+let hom_name_expand_list_types_for_pp_mode m =
+  let gated b = Some (hom_name_for_pp_mode m ^ "-expand-list-types-" ^ (if b then "true" else "false")) in
+  match m with
+  | Coq co -> gated co.coq_expand_lists
+  | Lean lno -> gated lno.lean_expand_lists
+  | _ -> None
+
 let hom_spec_for_pp_mode m homs = 
-  hom_spec_for_hom_name (hom_name_for_pp_mode m) homs
+  let gated = 
+    ( match hom_name_expand_list_types_for_pp_mode m with
+    | Some hn -> hom_spec_for_hom_name hn homs
+    | None -> None ) in
+  ( match gated with
+  | Some hs -> Some hs
+  | None -> hom_spec_for_hom_name (hom_name_for_pp_mode m) homs )
 
 let hom_spec_for_pp_mode_dash_type m homs = 
   hom_spec_for_hom_name (hom_name_for_pp_mode m ^ "-type") homs

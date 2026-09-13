@@ -7,7 +7,11 @@ grammar
 formula :: formula_ ::=
   | DISTINCT l1 .. ln                                   ::   :: Distinct
         {{ coq (Is_true (all_distinct eq_label (unmake_list'label [[l1..ln]]))) }}
-        {{ lean (List.Nodup [[l1..ln]]) }}
+        %% Claude: the argument is the generated list_label inductive when
+        %% lists are expanded, and Lean has no equivalent of the Coq tactic
+        %% trick below, so the hom is written once per representation.
+        {{ lean-expand-list-types-true (List.Nodup (unmake_list_label [[l1..ln]])) }}
+        {{ lean-expand-list-types-false (List.Nodup [[l1..ln]]) }}
         {{ hol (ALL_DISTINCT [[l1..ln]]) }}
         {{ isa (distinct [[l1..ln]]) }}
 
