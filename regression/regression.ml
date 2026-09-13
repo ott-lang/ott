@@ -259,9 +259,9 @@ let tools =
       t_gen = (fun t base ->
         ott_bin ^ " -coq_expand_list_types false " ^ t ^ " -o " ^ base ^ ".v");
       t_check = (fun base ->
-        "rocq compile -Q " ^ coq_lib ^ " Ott " ^ base ^ ".v > " ^ base ^ ".coqnl.out 2>&1");
+        "rocq compile -Q " ^ coq_lib ^ " Ott " ^ base ^ "NL.v > " ^ base ^ "NL.coq.out 2>&1");
       t_artefacts = (fun base ->
-        [ base ^ ".v"; base ^ ".vo"; base ^ ".glob"; base ^ ".coqnl.out";
+        [ base ^ "NL.v"; base ^ "NL.vo"; base ^ "NL.glob"; base ^ "NL.coq.out";
           Filename.concat (Filename.dirname base) ("." ^ Filename.basename base ^ ".aux") ]) };
 
     { t_name = "Isa";
@@ -305,14 +305,14 @@ let tools =
       t_artefacts = (fun base -> [ base ^ ".lean"; base ^ ".lean.out" ]) };
 
     { t_name = "LeanNL";
-      t_out = ".lean";
+      t_out = "NL.lean";
       t_flag = "-lean";
       t_enabled = lean_test;
       t_gen = (fun t base ->
-        ott_bin ^ " -lean_expand_list_types false " ^ t ^ " -o " ^ base ^ ".lean");
+        ott_bin ^ " -lean_expand_list_types false " ^ t ^ " -o " ^ base ^ "NL.lean");
       t_check = (fun base ->
-        "lean " ^ base ^ ".lean > " ^ base ^ ".leannl.out 2>&1");
-      t_artefacts = (fun base -> [ base ^ ".lean"; base ^ ".leannl.out" ]) };
+        "lean " ^ base ^ "NL.lean > " ^ base ^ "NL.lean.out 2>&1");
+      t_artefacts = (fun base -> [ base ^ "NL.lean"; base ^ "NL.lean.out" ]) };
 
     { t_name = "OCaml";
       t_out = ".ml";
