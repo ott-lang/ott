@@ -68,7 +68,7 @@ formula :: formula_ ::=
   | x = x'                 :: :: xeq     {{ ich [[x]] = [[x']]  }} {{ lean [[x]] = [[x']] }}
   | ( formula )            :: :: paren   {{ ich ( [[formula]] ) }} {{ lean ( [[formula]] ) }}
   | not formula            :: :: not     {{ isa Not( [[formula]] ) }}
-                                         {{ coq not( [[formula]] ) }} {{ lean not ( [[formula]] ) }}
+                                         {{ coq not( [[formula]] ) }} {{ lean ¬ ( [[formula]] ) }}
                                          {{ hol ~( [[formula]] ) }}
                                          {{ tex \neg [[ formula]] }}
 %  | x isin dom ( G )      :: :: xin    {{ isa ? T. ([[x]],T,[[G]]):tin }} 

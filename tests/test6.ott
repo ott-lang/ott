@@ -42,7 +42,7 @@ grammar
   formula :: formula_ ::=          
         | judgement             ::   :: judgement
         | not ( formula )       ::   :: not  {{ isa not( [[formula]] ) }}
-                                             {{ coq not( [[formula]] ) }} {{ lean not ( [[formula]] ) }}
+                                             {{ coq not( [[formula]] ) }} {{ lean ¬ ( [[formula]] ) }}
         | x in dom ( E )        :: M :: indom {{ isa list_ex ( \<lambda>(x',y'). x=x') [[ E ]] }} {{ lean list_ex ( \<lambda>(x',y'). x=x') [[ E ]] }}
 
   terminals :: terminals_ ::=

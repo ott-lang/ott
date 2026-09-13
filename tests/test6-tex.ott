@@ -92,7 +92,7 @@ grammar
         | judgement             ::   :: judgement
         | not ( formula )       ::   :: not   {{ tex \neg([[formula]]) }}
                                               {{ isa not([[formula]]) }}
-					      {{ coq not([[formula]]) }} {{ lean not ([[formula]]) }}
+					      {{ coq not([[formula]]) }} {{ lean ¬ ([[formula]]) }}
         | x in dom ( E )        :: M :: indom {{ isa list_ex (\<lambda>(x',y'). x=x') [[E]] }} {{ lean list_ex (\<lambda>(x',y'). x=x') [[E]] }}
                                               {{ tex [[x]]\in\mathrm{dom([[E]])} }}
 

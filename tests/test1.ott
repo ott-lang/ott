@@ -17,24 +17,28 @@ grammar
         | type -> type'         ::   :: 'fun'
 
   E :: E_ ::= {{ isa (ident*type) list }} {{ coq list (ident*type) }} {{ hol (ident#type) list }}
+              {{ lean List (ident × type) }}
         | empty         :: :: empty  
              {{ isa [] }} 
              {{ coq nil }}
              {{ hol [] }} 
+             {{ lean [] }}
         | E , x : t      :: :: ident  
              {{ isa (([[x]],[[t]])#[[E]]) }}
              {{ coq (cons ([[x]],[[t]]) [[E]]) }}
              {{ hol (([[x]],[[t]])::[[E]]) }}
+             {{ lean (([[x]],[[t]]) :: [[E]]) }}
         | E , x : t , E' :: :: ident2 
              {{ isa ([[E']] @ ([[x]],[[t]])#[[E]]) }}
              {{ coq (app [[E']] (cons ([[x]],[[t]]) [[E]])) }}
              {{ hol ( [[E']] ++ ([[x]],[[t]])::[[E]] )}}
+             {{ lean ( [[E']] ++ ([[x]],[[t]]) :: [[E]] ) }}
 
   formula :: formula_ ::=          
         | judgement             ::   :: judgement
         | not ( formula )       ::   :: not 
              {{ isa ~( [[formula]] ) }}
-             {{ coq not([[formula]]) }} {{ lean not ([[formula]]) }}
+             {{ coq not([[formula]]) }} {{ lean ¬ ([[formula]]) }}
              {{ hol ~( [[formula]] ) }}
              {{ ocaml not([[formula]]) }}
         | x in dom ( E )        :: M :: indom 
@@ -57,6 +61,15 @@ Fixpoint indom (x:ident) (e:E) { struct e } : Prop :=
   | nil => False
   | cons (x',y') tl => if eq_ident x x' then True else indom x tl
 end. }}
+
+% Claude: the Lean counterpart of the indom above, over the Lean
+% representation of E given by the lean hom on the E rule.
+{{ lean
+def indom (x : ident) (e : E) : Prop :=
+  match e with
+  | [] => False
+  | (x',_) :: tl => if x = x' then True else indom x tl
+ }}
 
 {{ isa
 

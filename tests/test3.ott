@@ -87,7 +87,7 @@ E :: E_ ::=
 formula :: formula_ ::=
   | judgement                                                  ::   :: judgement
   | not ( formula )                 :: :: not  {{ isa Not( [[formula]] ) }}
-                                               {{ coq not( [[formula]] ) }} {{ lean not ( [[formula]] ) }}
+                                               {{ coq not( [[formula]] ) }} {{ lean ¬ ( [[formula]] ) }}
                                                {{ hol ~( [[formula]] ) }}
 
   | E = E'                          ::   :: eq {{ ich [[E]]=[[E']] }} {{ lean [[E]]=[[E']] }}
