@@ -1,4 +1,4 @@
-indexvar index, i, j, n, m  ::= {{ isa nat }} {{ coq nat }} {{ hol num }} {{ lex numeral }}
+indexvar index, i, j, n, m  ::= {{ lean Nat }} {{ isa nat }} {{ coq nat }} {{ hol num }} {{ lex numeral }}
   {{ com indices }} 
 
 grammar
@@ -6,10 +6,12 @@ formula :: formula_ ::=
   | formula1 .. formulan   :: :: dots
   | j INDEXES t1 .. tn                  ::   :: Indexesv
         {{ coq (1 <= [[j]] /\ [[j]] <= length (unmake_list't [[t1..tn]])) }}
+        {{ lean (1 <= [[j]] ∧ [[j]] <= List.length [[t1..tn]]) }}
         {{ hol (1 <= [[j]] /\ [[j]] <= LENGTH [[t1..tn]]) }}
         {{ isa (1 <= [[j]] & [[j]] <= length [[t1..tn]]) }}
   | j INDEXES T1 .. Tn                  ::   :: IndexesT
         {{ coq (1 <= [[j]] /\ [[j]] <= length (unmake_list'T [[T1..Tn]])) }}
+        {{ lean (1 <= [[j]] ∧ [[j]] <= List.length [[T1..Tn]]) }}
         {{ hol (1 <= [[j]] /\ [[j]] <= LENGTH [[T1..Tn]]) }}
         {{ isa (1 <= [[j]] & [[j]] <= length [[T1..Tn]]) }}
 

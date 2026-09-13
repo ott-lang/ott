@@ -1,4 +1,4 @@
-metavar label, l, k ::=
+metavar label, l, k ::= {{ lean Nat }}
  {{ isa string }} {{ coq nat }} {{ hol string }} {{ lex alphanum }}  {{ tex \mathsf{[[label]]} }} 
  {{ coq-equality }}
  {{ com  field label  }}  {{ isavar ''[[label]]'' }} {{ holvar "[[label]]" }}
@@ -7,6 +7,7 @@ grammar
 formula :: formula_ ::=
   | DISTINCT l1 .. ln                                   ::   :: Distinct
         {{ coq (Is_true (all_distinct eq_label (unmake_list'label [[l1..ln]]))) }}
+        {{ lean (List.Nodup [[l1..ln]]) }}
         {{ hol (ALL_DISTINCT [[l1..ln]]) }}
         {{ isa (distinct [[l1..ln]]) }}
 

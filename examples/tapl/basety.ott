@@ -1,4 +1,4 @@
-metavar basetype, A ::=
+metavar basetype, A ::= {{ lean Nat }}
   {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}
   {{ lex Alphanum }} {{ tex \textsf{[[basetype]]} }}
 
