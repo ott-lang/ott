@@ -66,7 +66,7 @@ small-test7: regression
 	$(MAKE) -C .. tests/tmp_test7.ott
 	$(MAKE) clean-regr
 	-make -C ../coq
-	./regression -all -keep_temp -run_ott_and_targets report-small.txt  ../tests/tmp_test7.ott
+	./regression -coq -keep_temp -run_ott_and_targets report-small.txt  ../tests/tmp_test7.ott
 
 
 # compare the latest run against the reference report
