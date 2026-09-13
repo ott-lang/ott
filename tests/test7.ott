@@ -246,9 +246,20 @@ r   match g2 with
 r   | G_empty => g1
 r   | G_type gh tv t => G_type (append_G g1 gh) tv t
 r   | G_term gh v t => G_term (append_G g1 gh) v t
+r  }}
+r
+r % Claude: as for Coq, flatten_G is over the list of G built by the
+r % "G1 , .. , Gn" production, whose Lean representation depends on the flag.
+r {{ lean-expand-list-types-false
 r def flatten_G : List [[G]] -> [[G]]
 r   | [] => G_empty
 r   | g :: gs => append_G g (flatten_G gs)
+r  }}
+r
+r {{ lean-expand-list-types-true
+r def flatten_G : list_G -> [[G]]
+r   | Nil_list_G => G_empty
+r   | Cons_list_G g gs => append_G g (flatten_G gs)
 r  }}
 r 
 
