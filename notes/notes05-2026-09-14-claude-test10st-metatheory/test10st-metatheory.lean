@@ -5,14 +5,9 @@
    satisfy, and to record two places where the statement has to be weaker than
    one might first write it because of how the definitions are generated.
 
-   To check it, compile the generated module first and put it on the path:
-
-     ott -i tests/test10st.ott -o test10st.lean
-     lean -o test10st.olean test10st.lean
-     LEAN_PATH=. lean test10st-metatheory.lean
-
-   It is expected to report "declaration uses 'sorry'" for each result below
-   and nothing else. -/
+   "make" in this directory generates test10st.lean from
+   ../../tests/test10st.ott and checks this file against it.  A successful run
+   reports "declaration uses 'sorry'" for each result below and nothing else. -/
 
 import test10st
 
