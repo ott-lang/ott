@@ -963,7 +963,6 @@ let _ =
   Arg.parse options
     (fun s -> tests := (s,[s]) :: !tests)
     ("\n" ^ "regression <options> <test1> .. <testn> \n");
-  tests := List.rev !tests;
   let running =
     match selected_mode () with
     | RunOtt | RunOttAndTargets -> true
@@ -989,6 +988,7 @@ let _ =
   end;
   if !use_config then parse_config_file ();
   if !todo_list && running then parse_todo_list ();
+  tests := List.rev !tests;
   main ();
   if !night then begin
     close_out !report_fd;

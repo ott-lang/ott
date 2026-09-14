@@ -67,7 +67,7 @@ store {{ lean Store }}, s :: 'store_' ::=  {{ com stores }} {{ lem list (Locatio
    | empty                  ::   :: empty {{ lem [] }} {{ coq [] }}  {{ lean [] }}
    | s , l |-> n            ::   :: extend  {{ lem (([[l]],[[n]])::[[s]]) }} {{ coq (([[l]],[[n]])::[[s]]) }} {{ lean (([[l]],[[n]])::[[s]]) }}
 
-config {{ lean Config }}, c :: 'Config_' ::= {{ com configurations }} {{lem (expr*store) }} {{ coq (expr * store) }} {{ lean ([[Expr]] × [[Store]]) }}
+config {{ lean Config }}, c :: 'Config_' ::= {{ com configurations }} {{lem (expr*store) }} {{ coq (expr * store) }} {{ lean (Expr × Store) }}
    | < e , s >              ::   :: config {{ lem ([[e]], [[s]]) }}  {{ coq ([[e]], [[s]]) }} {{ lean ([[e]], [[s]]) }}
 
 typ {{ lean Typ }}, T :: 't_' ::=         {{ com types }}
@@ -79,7 +79,7 @@ Tloc {{ isa tloc }} {{ coq tloc }} {{ hol tloc }} {{ lem tloc }} {{ ocaml tloc }
   | intref                  ::   :: intref	
 
 
-type_assumption {{ lean Type_assumption }}, ta :: 'TA_' ::= {{ com type assumption }} {{ lean ([[Location]]×[[Tloc]]) }}
+type_assumption {{ lean Type_assumption }}, ta :: 'TA_' ::= {{ com type assumption }} {{ lean (Location×Tloc) }}
   | l : Tloc                ::   :: loc {{ lean ([[l]], [[Tloc]]) }}
 
 G {{ tex \Gamma }} :: G_ ::=     {{ com type environments }} {{ phantom }} {{ lem list type_assumption }} {{ coq list type_assumption }} {{ lean (List Type_assumption) }}
@@ -129,7 +129,7 @@ Jop :: '' ::=
 % Reductions. Want to allow lem hom to specify witness and animation info
 
 defn
-c -> c' :: :: Reduce :: ''  {{ com $\langle[[e]],\,[[s]]\rangle$ reduces to $\langle[[e']],\,[[s']]\rangle$ }} by
+c -> c' :: :: Reduce :: ''  {{ com $[[c]]$ reduces to $[[c']]$ }} by
 
   n1 + n2 = n
 ----------------------   :: op_plus

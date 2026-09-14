@@ -49,7 +49,7 @@ regression: regression.ml
 # The report a run is compared against by "make compare".  Point this at
 # whichever report you are treating as the reference.
 REFERENCE ?= report-2026-09-12.txt
-REPORT    ?= report.txt
+REPORT    ?= report-2026-09-14.txt
 
 reg: regression 
 	./regression -coq -isa -lem -lean -ocaml -latex -run_ott_and_targets $(REPORT) ../tests/test*.ott
@@ -58,15 +58,15 @@ regh: regression
 	./regression -all -run_ott_and_targets $(REPORT) ../tests/test*.ott
 
 small: regression
-	$(MAKE) clean-regr
+	rm -f report-small-dir/*
 	-make -C ../coq
-	./regression -all -todo_list regression-small.otl -keep_temp -run_ott_and_targets report-small.txt
+	./regression -all -todo_list regression-small.otl -keep_temp -temp_dir report-small-dir -run_ott_and_targets report-small.txt
 
 small-test7: regression
 	$(MAKE) -C .. tests/tmp_test7.ott
-	$(MAKE) clean-regr
+	rm -f report-small-test7-dir/*
 	-make -C ../coq
-	./regression -coq -keep_temp -run_ott_and_targets report-small.txt  ../tests/tmp_test7.ott
+	./regression -all -keep_temp -temp_dir report-small-test7-dir -run_ott_and_targets report-small-test7.txt  ../tests/tmp_test7.ott
 
 
 # compare the latest run against the reference report
@@ -88,6 +88,19 @@ report-2026-09-13.txt: regression
 	-make -C ../coq 
 	$(MAKE) -C .. tests/tmp_test7.ott
 	time ./regression -run_ott_and_targets report-2026-09-13.txt -all -todo_list regression.otl -temp_dir report-2026-09-13-dir -keep_temp  2>&1 | tee report-2026-09-13-log.txt
+
+
+# Claude: mkdir as well as rm, so the rule works when the directory is not
+# there yet; and lean is found through ~/.elan/bin, which is not on the PATH of
+# a non-interactive shell
+report-2026-09-14.txt: regression
+	rm -rf report-2026-09-14-dir
+	mkdir -p report-2026-09-14-dir
+	-make -C ../coq clean
+	-make -C ../coq 
+	$(MAKE) -C .. tests/tmp_test7.ott
+	PATH=$$HOME/.elan/bin:$$PATH; export PATH; \
+	time ./regression -run_ott_and_targets report-2026-09-14.txt -all -todo_list regression.otl -temp_dir report-2026-09-14-dir -keep_temp  2>&1 | tee report-2026-09-14-log.txt
 
 
 # the same but just for a test or two, for testing the regression machinery quickly
