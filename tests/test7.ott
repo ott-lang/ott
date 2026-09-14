@@ -97,6 +97,9 @@ G {{ tex \Gamma }} {{ lean-type TypEnv }}, D {{ tex \Delta }} :: 'G_' ::= {{ com
   | G , x : T                        ::    :: term
 %r  | G , G'                           :: M :: comma    {{ ichlL TODO }}
 r  | G1 , .. , Gn                     :: M :: dots {{ ichlL (flatten_G [[G1..Gn]]) }}  
+% Claude: as the t and T rules have, so that a type substitution into a context
+% can be written in the language's own syntax
+  | [ X |-> T ] G                    :: M :: Tsub  {{ ichlLo ( Tsubst_G [[T]] [[X]] [[G]] ) }}
 
 rs {{ tex \sigma }} :: 'S_' ::= {{ com multiple term substitution }} {{ isa (termvar*t) list }} {{ hol (termvar#t) list }} {{ coq list (termvar*t) }} {{ lem list (termvar*t) }} {{ lean List (termvar×t) }}
 r  | [ x |-> t ]                    ::   :: singleton {{ ih [ ([[x]],[[t]]) ] }} {{ coq (cons ([[x]],[[t]]) nil) }} {{ lem [ ([[x]],[[t]]) ] }} {{ lean [ ([[x]],[[t]]) ] }}
