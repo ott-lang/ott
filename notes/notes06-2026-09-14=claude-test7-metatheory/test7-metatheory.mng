@@ -1,0 +1,223 @@
+/- Claude: this file is written by Claude (Opus 5), 2026-09-14.  It states the
+   usual syntactic type soundness results for the language Ott generates from
+   tests/test7.ott - System F<: with records and pattern-matching let - and
+   proves the ones that follow from the others.  The substantial lemmas are
+   left as sorry; the remarks at the end say what each of them would take.
+
+   Unlike the companion file for test10st, this is deliberately not a complete
+   development.  Soundness for F<: with records is the POPLmark challenge: it
+   needs transitivity and narrowing for subtyping, inversion lemmas that see
+   through SA_Trans_TVar, and substitution lemmas for both terms and types, and
+   that is weeks of work rather than an afternoon.  What is here is the
+   statement of each result, in the notation of the language itself, so that
+   the generated definitions can be read against what they are meant to
+   satisfy, and so that the shape of the remaining work is explicit.
+
+   It is the source that Ott's lean_filter turns into test7-metatheory.lean,
+   replacing each piece of object syntax in double square brackets with the
+   Lean that the grammar of test7.ott gives for it.
+
+   Context variables are written G5 and D5 rather than G and D: in the
+   generated Lean the type of contexts is itself called G, and a binder of the
+   same name would shadow it.  (tests/test10st.ott avoids this with a
+   {{ lean-type TypEnv }} hom on its context rule; test7.ott has no such hom,
+   and its {{ lean }} embed refers to the context type through the object
+   syntax, so adding one there is not just a one-line change.)
+
+   "make" in this directory generates test7.lean from ../../tests/tmp_test7.ott,
+   filters this file against it, and checks both with lean. -/
+
+import test7
+
+open Typ p t G
+
+/-! ## Values -/
+
+/-- The subrule predicate is `Bool`-valued, so a proposition about values has to
+    compare it with `true`. -/
+def IsValue (t1 : t) : Prop := is_v_of_t t1 = true
+
+/-- The values are the two abstractions and the records all of whose fields are
+    values.  This is the one result here that is proved outright: it is true by
+    computation on `is_v_of_t`. -/
+theorem isValue_iff {t1 : t} :
+    IsValue t1 ↔
+      (∃ x T11 t12, t1 = t_Lam x T11 t12)
+      ∨ (∃ X T11 t12, t1 = t_TLam X T11 t12)
+      ∨ (∃ l_t_list, t1 = t_Rec l_t_list ∧ is_v_of_l_t_list l_t_list = true) := by
+  cases t1 with
+  | t_Var x => simp [IsValue, is_v_of_t]
+  | t_Lam x T11 t12 => simp [IsValue, is_v_of_t]
+  | t_App t1 t2 => simp [IsValue, is_v_of_t]
+  | t_TLam X T11 t12 => simp [IsValue, is_v_of_t]
+  | t_TApp t1 T2 => simp [IsValue, is_v_of_t]
+  | t_Rec l_t_list => simp [IsValue, is_v_of_t]
+  | t_Proj t1 l => simp [IsValue, is_v_of_t]
+  | t_Let p5 t1 t2 => simp [IsValue, is_v_of_t]
+
+/-! ## Well-formedness
+
+    Typing and subtyping both carry a context, and the rules maintain its
+    well-formedness; these say so. -/
+
+theorem typing_ok {G5 : G} {t1 : t} {T : Typ} : [[ G5 |- t1 : T ]] → [[ G5 |- ok ]] := by
+  sorry
+
+theorem typing_wf {G5 : G} {t1 : t} {T : Typ} : [[ G5 |- t1 : T ]] → [[ G5 |- T ]] := by
+  sorry
+
+theorem sub_ok {G5 : G} {S T : Typ} : [[ G5 |- S <: T ]] → [[ G5 |- ok ]] := by
+  sorry
+
+/-! ## Subtyping -/
+
+/-- Reflexivity.  `SA_Refl_TVar` gives it only for type variables, so this is a
+    genuine induction on the well-formedness of the type. -/
+theorem sub_refl {G5 : G} {T : Typ} : [[ G5 |- ok ]] → [[ G5 |- T ]] → [[ G5 |- T <: T ]] := by
+  sorry
+
+/-- Transitivity.  `SA_Trans_TVar` gives the variable case only; the general
+    statement is proved simultaneously with narrowing, by induction on the
+    middle type, and is the hard half of the POPLmark challenge. -/
+theorem sub_trans {G5 : G} {S T U : Typ} :
+    [[ G5 |- S <: T ]] → [[ G5 |- T <: U ]] → [[ G5 |- S <: U ]] := by
+  sorry
+
+/-- Narrowing: a bound in the context may be replaced by a subtype.  The bound
+    and its replacement are named U and S1 rather than Q and P: inside object
+    syntax only the grammar's own names for a type - T, S and U, with suffixes
+    - are read as type variables of the statement, and anything else is read as
+    a concrete type variable of the language. -/
+theorem sub_narrow {D5 : G} {X : typevar} {S1 U : Typ} {S T : Typ} :
+    [[ D5 , X <: U |- S <: T ]] → [[ D5 |- S1 <: U ]] → [[ D5 , X <: S1 |- S <: T ]] := by
+  sorry
+
+theorem typing_narrow {D5 : G} {X : typevar} {S1 U : Typ} {t1 : t} {T : Typ} :
+    [[ D5 , X <: U |- t1 : T ]] → [[ D5 |- S1 <: U ]] → [[ D5 , X <: S1 |- t1 : T ]] := by
+  sorry
+
+/-! ## Inversion and canonical forms
+
+    Subtyping has to be inverted before the shape of a value of a given type is
+    known, because `SA_Trans_TVar` can stand between a value's type and the type
+    it is being used at. -/
+
+theorem canonical_forms_arrow {G5 : G} {v1 : t} {T1 T2 : Typ} :
+    [[ G5 |- v1 : T1 -> T2 ]] → IsValue v1 → ∃ x T11 t12, v1 = t_Lam x T11 t12 := by
+  sorry
+
+theorem canonical_forms_forall {G5 : G} {v1 : t} {X : typevar} {T1 T2 : Typ} :
+    [[ G5 |- v1 : Forall X <: T1 . T2 ]] → IsValue v1 →
+    ∃ X' T11 t12, v1 = t_TLam X' T11 t12 := by
+  sorry
+
+theorem canonical_forms_record {G5 : G} {v1 : t} {l_T_list : List (label × Typ)} :
+    Ty G5 v1 (Ty_Rec l_T_list) → IsValue v1 →
+    ∃ l_t_list, v1 = t_Rec l_t_list := by
+  sorry
+
+/-! ## Substitution -/
+
+/-- Substituting a term for a term variable.  The conclusion is written in Lean
+    rather than in object syntax: "[ x |-> v1 ] t1" is ambiguous in this
+    grammar, since it is both the substitution production of t and the
+    singleton production of s applied through "s t". -/
+theorem subst_term {G5 : G} {x : termvar} {v1 t1 : t} {T1 T : Typ} :
+    [[ G5 , x : T1 |- t1 : T ]] → [[ empty |- v1 : T1 ]] →
+    Ty G5 (tsubst_t v1 x t1) T := by
+  sorry
+
+/-- Substituting a type for a type variable, in a term and in the context. -/
+theorem subst_type {G5 : G} {X : typevar} {T2 : Typ} {t1 : t} {T : Typ} {T11 : Typ} :
+    [[ G5 , X <: T11 |- t1 : T ]] → [[ G5 |- T2 <: T11 ]] →
+    Ty (Tsubst_G T2 X G5) [[ [ X |-> T2 ] t1 ]] [[ [ X |-> T2 ] T ]] := by
+  sorry
+
+/-- A matching substitution built by `M` from a pattern and a value types the
+    bindings the pattern's typing gives. -/
+theorem match_typing {p5 : p} {v1 : t} {s5 : s} {D5 : G} {T : Typ} {G5 : G} :
+    [[ |- p5 : T => D5 ]] → [[ match ( p5 , v1 ) = s5 ]] → [[ G5 |- v1 : T ]] →
+    ∀ {t2 : t} {T2 : Typ}, [[ G5 |- t2 : T2 ]] → [[ G5 |- s5 t2 : T2 ]] := by
+  sorry
+
+/-! ## Preservation and progress -/
+
+theorem preservation {t1 t2 : t} {T : Typ} :
+    [[ empty |- t1 : T ]] → [[ t1 --> t2 ]] → [[ empty |- t2 : T ]] := by
+  sorry
+
+theorem progress {t1 : t} {T : Typ} :
+    [[ empty |- t1 : T ]] → IsValue t1 ∨ ∃ t2, [[ t1 --> t2 ]] := by
+  sorry
+
+/-! ## Multi-step reduction and safety
+
+    These three do not depend on how the two above are proved, only on their
+    statements, so they are proved here. -/
+
+/-- The reflexive transitive closure of reduction. -/
+inductive Reduces : t → t → Prop where
+  | refl (t1 : t) : Reduces t1 t1
+  | step {t1 t2 t3 : t} : [[ t1 --> t2 ]] → Reduces t2 t3 → Reduces t1 t3
+
+theorem preservation_multi {t1 t2 : t} {T : Typ} :
+    [[ empty |- t1 : T ]] → Reduces t1 t2 → [[ empty |- t2 : T ]] := by
+  intro ht hs
+  revert ht
+  induction hs with
+  | refl t1 => exact id
+  | step h1 _ ih => exact fun ht => ih (preservation ht h1)
+
+theorem safety {t1 t2 : t} {T : Typ} :
+    [[ empty |- t1 : T ]] → Reduces t1 t2 → IsValue t2 ∨ ∃ t3, [[ t2 --> t3 ]] :=
+  fun ht hs => progress (preservation_multi ht hs)
+
+def Stuck (t1 : t) : Prop := ¬ IsValue t1 ∧ ¬ ∃ t2, [[ t1 --> t2 ]]
+
+theorem never_stuck {t1 t2 : t} {T : Typ} :
+    [[ empty |- t1 : T ]] → Reduces t1 t2 → ¬ Stuck t2 := by
+  intro ht hs hstuck
+  rcases safety ht hs with hv | hr
+  · exact hstuck.1 hv
+  · exact hstuck.2 hr
+
+/-! ## What the remaining proofs would take
+
+    **Subtyping transitivity and narrowing** are the POPLmark challenge proper:
+    they are proved simultaneously, by induction on the middle type, and every
+    later result depends on them.  The generated `SA` is the usual algorithmic
+    presentation - `SA_Trans_TVar` for variables, structural rules elsewhere -
+    so transitivity is not immediate.
+
+    **The inversion lemmas** behind canonical forms have to see through
+    `SA_Trans_TVar`, which is where narrowing is needed.
+
+    **Substitution** has the same problem the test10st file records: `tsubst_t`
+    and `Tsubst_t` do not rename bound variables, so the term substituted has to
+    be closed, which is what typing in the empty context gives here.  A
+    development that wanted the open statements would need capture-avoiding
+    substitution or a locally nameless representation in the Ott source.
+
+    **Records and patterns** bring their own work.  `SA_Rcd` and `M_Rcd` in
+    tests/test7.ott are stated through the auxiliary judgements `SAf` and `Mf`,
+    which search the other record field by field; the original rules, kept as
+    comments beside them, used an existential over field indices that Lean 4
+    rejects in a recursive position.  So an induction over a record subtyping
+    derivation is an induction over those searches rather than over a list.
+
+    **The projection rule** `reduce_ProjRcd` selects its field with the
+    panic-indexing `l'_v_list[j - 1]!`, whose problems are recorded in
+    notes02-2026-09-14: out of range it yields the `Inhabited` default rather
+    than failing to apply, so progress and preservation for that rule say less
+    than they appear to.  That encoding should be settled before anyone proves
+    these.
+
+    **One small oddity**: `reduce_LetV` has the premise `is_v_of_t v1` twice,
+    from the subrule check being generated once per occurrence of `v1` in the
+    rule.  Harmless, but it will show up in any case analysis.
+
+    **And one about the grammar**: the term "[ x |-> v1 ] t1" has two parses,
+    as the substitution production of t and as the singleton production of s
+    used through "s t", so it cannot be written in object syntax here.  That is
+    a genuine ambiguity in tests/test7.ott rather than anything about these
+    statements. -/
