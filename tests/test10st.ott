@@ -67,7 +67,8 @@ grammar
 
 embed
 {{ coq
-Notation G_nil := (@nil (termvar*T)).
+(* Claude: "Notation" for an abbreviation is deprecated in Rocq 9.2 *)
+Abbreviation G_nil := (@nil (termvar*T)).
 Definition bound x T0 G :=
   exists G1, exists G2,
     (G = List.app G1 (List.cons (x,T0) G2)) /\
@@ -136,5 +137,8 @@ defns
 
 embed
 {{ coq
-Hint Constructors reduce GtT : rules.
+(* Claude: create the database rather than letting the Hint declare it
+   implicitly, which Rocq 9.2 deprecates, and give the hint a locality *)
+Create HintDb rules.
+#[export] Hint Constructors reduce GtT : rules.
 }}
