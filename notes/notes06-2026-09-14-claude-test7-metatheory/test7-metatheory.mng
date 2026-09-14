@@ -17,19 +17,12 @@
    replacing each piece of object syntax in double square brackets with the
    Lean that the grammar of test7.ott gives for it.
 
-   Context variables are written G5 and D5 rather than G and D: in the
-   generated Lean the type of contexts is itself called G, and a binder of the
-   same name would shadow it.  (tests/test10st.ott avoids this with a
-   {{ lean-type TypEnv }} hom on its context rule; test7.ott has no such hom,
-   and its {{ lean }} embed refers to the context type through the object
-   syntax, so adding one there is not just a one-line change.)
-
    "make" in this directory generates test7.lean from ../../tests/tmp_test7.ott,
    filters this file against it, and checks both with lean. -/
 
 import test7
 
-open Typ p t G
+open Typ p t TypEnv
 
 /-! ## Values -/
 
@@ -60,27 +53,27 @@ theorem isValue_iff {t1 : t} :
     Typing and subtyping both carry a context, and the rules maintain its
     well-formedness; these say so. -/
 
-theorem typing_ok {G5 : G} {t1 : t} {T : Typ} : [[ G5 |- t1 : T ]] → [[ G5 |- ok ]] := by
+theorem typing_ok {G : TypEnv} {t1 : t} {T : Typ} : [[ G |- t1 : T ]] → [[ G |- ok ]] := by
   sorry
 
-theorem typing_wf {G5 : G} {t1 : t} {T : Typ} : [[ G5 |- t1 : T ]] → [[ G5 |- T ]] := by
+theorem typing_wf {G : TypEnv} {t1 : t} {T : Typ} : [[ G |- t1 : T ]] → [[ G |- T ]] := by
   sorry
 
-theorem sub_ok {G5 : G} {S T : Typ} : [[ G5 |- S <: T ]] → [[ G5 |- ok ]] := by
+theorem sub_ok {G : TypEnv} {S T : Typ} : [[ G |- S <: T ]] → [[ G |- ok ]] := by
   sorry
 
 /-! ## Subtyping -/
 
 /-- Reflexivity.  `SA_Refl_TVar` gives it only for type variables, so this is a
     genuine induction on the well-formedness of the type. -/
-theorem sub_refl {G5 : G} {T : Typ} : [[ G5 |- ok ]] → [[ G5 |- T ]] → [[ G5 |- T <: T ]] := by
+theorem sub_refl {G : TypEnv} {T : Typ} : [[ G |- ok ]] → [[ G |- T ]] → [[ G |- T <: T ]] := by
   sorry
 
 /-- Transitivity.  `SA_Trans_TVar` gives the variable case only; the general
     statement is proved simultaneously with narrowing, by induction on the
     middle type, and is the hard half of the POPLmark challenge. -/
-theorem sub_trans {G5 : G} {S T U : Typ} :
-    [[ G5 |- S <: T ]] → [[ G5 |- T <: U ]] → [[ G5 |- S <: U ]] := by
+theorem sub_trans {G : TypEnv} {S T U : Typ} :
+    [[ G |- S <: T ]] → [[ G |- T <: U ]] → [[ G |- S <: U ]] := by
   sorry
 
 /-- Narrowing: a bound in the context may be replaced by a subtype.  The bound
@@ -88,12 +81,12 @@ theorem sub_trans {G5 : G} {S T U : Typ} :
     syntax only the grammar's own names for a type - T, S and U, with suffixes
     - are read as type variables of the statement, and anything else is read as
     a concrete type variable of the language. -/
-theorem sub_narrow {D5 : G} {X : typevar} {S1 U : Typ} {S T : Typ} :
-    [[ D5 , X <: U |- S <: T ]] → [[ D5 |- S1 <: U ]] → [[ D5 , X <: S1 |- S <: T ]] := by
+theorem sub_narrow {D : TypEnv} {X : typevar} {S1 U : Typ} {S T : Typ} :
+    [[ D , X <: U |- S <: T ]] → [[ D |- S1 <: U ]] → [[ D , X <: S1 |- S <: T ]] := by
   sorry
 
-theorem typing_narrow {D5 : G} {X : typevar} {S1 U : Typ} {t1 : t} {T : Typ} :
-    [[ D5 , X <: U |- t1 : T ]] → [[ D5 |- S1 <: U ]] → [[ D5 , X <: S1 |- t1 : T ]] := by
+theorem typing_narrow {D : TypEnv} {X : typevar} {S1 U : Typ} {t1 : t} {T : Typ} :
+    [[ D , X <: U |- t1 : T ]] → [[ D |- S1 <: U ]] → [[ D , X <: S1 |- t1 : T ]] := by
   sorry
 
 /-! ## Inversion and canonical forms
@@ -102,17 +95,17 @@ theorem typing_narrow {D5 : G} {X : typevar} {S1 U : Typ} {t1 : t} {T : Typ} :
     known, because `SA_Trans_TVar` can stand between a value's type and the type
     it is being used at. -/
 
-theorem canonical_forms_arrow {G5 : G} {v1 : t} {T1 T2 : Typ} :
-    [[ G5 |- v1 : T1 -> T2 ]] → IsValue v1 → ∃ x T11 t12, v1 = t_Lam x T11 t12 := by
+theorem canonical_forms_arrow {G : TypEnv} {v1 : t} {T1 T2 : Typ} :
+    [[ G |- v1 : T1 -> T2 ]] → IsValue v1 → ∃ x T11 t12, v1 = t_Lam x T11 t12 := by
   sorry
 
-theorem canonical_forms_forall {G5 : G} {v1 : t} {X : typevar} {T1 T2 : Typ} :
-    [[ G5 |- v1 : Forall X <: T1 . T2 ]] → IsValue v1 →
+theorem canonical_forms_forall {G : TypEnv} {v1 : t} {X : typevar} {T1 T2 : Typ} :
+    [[ G |- v1 : Forall X <: T1 . T2 ]] → IsValue v1 →
     ∃ X' T11 t12, v1 = t_TLam X' T11 t12 := by
   sorry
 
-theorem canonical_forms_record {G5 : G} {v1 : t} {l_T_list : List (label × Typ)} :
-    Ty G5 v1 (Ty_Rec l_T_list) → IsValue v1 →
+theorem canonical_forms_record {G : TypEnv} {v1 : t} {l_T_list : List (label × Typ)} :
+    Ty G v1 (Ty_Rec l_T_list) → IsValue v1 →
     ∃ l_t_list, v1 = t_Rec l_t_list := by
   sorry
 
@@ -122,22 +115,22 @@ theorem canonical_forms_record {G5 : G} {v1 : t} {l_T_list : List (label × Typ)
     rather than in object syntax: "[ x |-> v1 ] t1" is ambiguous in this
     grammar, since it is both the substitution production of t and the
     singleton production of s applied through "s t". -/
-theorem subst_term {G5 : G} {x : termvar} {v1 t1 : t} {T1 T : Typ} :
-    [[ G5 , x : T1 |- t1 : T ]] → [[ empty |- v1 : T1 ]] →
-    Ty G5 (tsubst_t v1 x t1) T := by
+theorem subst_term {G : TypEnv} {x : termvar} {v1 t1 : t} {T1 T : Typ} :
+    [[ G , x : T1 |- t1 : T ]] → [[ empty |- v1 : T1 ]] →
+    Ty G (tsubst_t v1 x t1) T := by
   sorry
 
 /-- Substituting a type for a type variable, in a term and in the context. -/
-theorem subst_type {G5 : G} {X : typevar} {T2 : Typ} {t1 : t} {T : Typ} {T11 : Typ} :
-    [[ G5 , X <: T11 |- t1 : T ]] → [[ G5 |- T2 <: T11 ]] →
-    Ty (Tsubst_G T2 X G5) [[ [ X |-> T2 ] t1 ]] [[ [ X |-> T2 ] T ]] := by
+theorem subst_type {G : TypEnv} {X : typevar} {T2 : Typ} {t1 : t} {T : Typ} {T11 : Typ} :
+    [[ G , X <: T11 |- t1 : T ]] → [[ G |- T2 <: T11 ]] →
+    Ty (Tsubst_G T2 X G) [[ [ X |-> T2 ] t1 ]] [[ [ X |-> T2 ] T ]] := by
   sorry
 
 /-- A matching substitution built by `M` from a pattern and a value types the
     bindings the pattern's typing gives. -/
-theorem match_typing {p5 : p} {v1 : t} {s5 : s} {D5 : G} {T : Typ} {G5 : G} :
-    [[ |- p5 : T => D5 ]] → [[ match ( p5 , v1 ) = s5 ]] → [[ G5 |- v1 : T ]] →
-    ∀ {t2 : t} {T2 : Typ}, [[ G5 |- t2 : T2 ]] → [[ G5 |- s5 t2 : T2 ]] := by
+theorem match_typing {p5 : p} {v1 : t} {s5 : s} {D : TypEnv} {T : Typ} {G : TypEnv} :
+    [[ |- p5 : T => D ]] → [[ match ( p5 , v1 ) = s5 ]] → [[ G |- v1 : T ]] →
+    ∀ {t2 : t} {T2 : Typ}, [[ G |- t2 : T2 ]] → [[ G |- s5 t2 : T2 ]] := by
   sorry
 
 /-! ## Preservation and progress -/
