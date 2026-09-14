@@ -1,13 +1,23 @@
-/- Claude: this file is written by Claude (Opus 5), 2026-09-14.  It states, and
-   does not prove, the usual syntactic type soundness results for the simply
-   typed lambda calculus as Ott generates it from tests/test10st.ott, and
-   proves them.  Two statements are weaker than one might first write them
-   because of how the definitions are generated; the remarks at the end say
-   which and why.
+/- Claude: this file is written by Claude (Opus 5), 2026-09-14.  It states and
+   proves the usual syntactic type soundness results - canonical forms,
+   substitution, preservation, progress and safety - for the simply typed
+   lambda calculus that Ott generates from tests/test10st.ott.
+
+   It is the source that Ott's lean_filter turns into
+   test10st-metatheory.lean, replacing each piece of object syntax in double
+   square brackets with the Lean that the grammar of test10st.ott gives for it.
+   So the statements can be read in the notation of the language being
+   described, while the proofs are ordinary Lean.  (This paragraph cannot show
+   an example: the filter would try to parse it.)
+
+   Two of the statements are weaker than the ones a textbook would give,
+   because of how the definitions are generated; the remarks at the end of the
+   file say which, why, and what would have to change in the Ott source to
+   strengthen them.
 
    "make" in this directory generates test10st.lean from
-   ../../tests/test10st.ott and checks this file against it.  A successful run
-   is silent. -/
+   ../../tests/test10st.ott, filters this file against it, and checks both with
+   lean.  A successful run is silent. -/
 
 import test10st
 
