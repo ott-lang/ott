@@ -798,6 +798,13 @@ let output_stage (sd,lookup,sd_unquotiented,sd_quotiented_unaux) =
       | "lem" ->
           System_pp.pp_systemdefn_core_io m_lem sd lookup fi !merge_fragments
       | "lean" ->
+          (* Claude: as for Coq, rename variables that clash with a primary type
+             name, so the generated binders do not shadow the types they are
+             annotated with *)
+          let sd = 
+            ( match !coq_avoid with
+            | 0 -> sd
+            | _ -> Auxl.avoid_primaries_systemdefn false sd ) in
           System_pp.pp_systemdefn_core_io m_lean sd lookup fi !merge_fragments
       | "twf" -> 
           System_pp.pp_systemdefn_core_io m_twf sd lookup fi !merge_fragments

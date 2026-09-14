@@ -67,6 +67,50 @@ let pp_list_all m = match m with
   | _ -> Auxl.errorm m "pp_list_all"
 *)
 
+(* Claude: the symterm printer leaves runs of spaces where terminals were
+   dropped, and wraps premises in parentheses that are often already there.
+   These tidy the Lean output; they work on expressions, not on embeds, and
+   leave the contents of string literals alone. *)
+let lean_squash s =
+  let b = Buffer.create (String.length s) in
+  let in_string = ref false in
+  let last_space = ref false in
+  String.iter
+    (fun c ->
+      if !in_string then begin
+        Buffer.add_char b c;
+        if c = '"' then in_string := false
+      end else if c = '"' then begin
+        Buffer.add_char b c; in_string := true; last_space := false
+      end else if c = ' ' || c = '\t' then begin
+        if not !last_space then Buffer.add_char b ' ';
+        last_space := true
+      end else begin
+        (* drop a space just inside a parenthesis *)
+        if (c = ')' || c = ',') && !last_space && Buffer.length b > 0
+        then Buffer.truncate b (Buffer.length b - 1);
+        Buffer.add_char b c; last_space := (c = '(')
+      end)
+    s;
+  String.trim (Buffer.contents b)
+
+let lean_parenthesised s =
+  (* true when s is already wrapped in one matching pair of parentheses *)
+  String.length s > 1 && s.[0] = '(' && s.[String.length s - 1] = ')'
+  && (let d = ref 0 in
+      let ok = ref true in
+      String.iteri
+        (fun i c ->
+          if c = '(' then incr d
+          else if c = ')' then begin
+            decr d;
+            if !d = 0 && i < String.length s - 1 then ok := false
+          end)
+        s;
+      !ok)
+
+let lean_paren s = if lean_parenthesised s then s else "(" ^ s ^ ")"
+
 let rn_formula="formula"
 
 (** ******************************** *)
@@ -422,10 +466,10 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
 
 
       | Lean _ ->
-          Printf.fprintf fd "%s%s%s: " 
+          Printf.fprintf fd "%s%s%s : " 
             (leanTODO "18" "") 
             "" (*("(*"^Location.pp_loc dr.drule_loc^"*)")*)
-            ("| " ^ dr.drule_name); 
+            ("  | " ^ dr.drule_name); 
 (* Lem currrently requires a forall even if there are no quantified variables,
    and a "true ==>" if there are no premises *)
 (*
@@ -436,7 +480,7 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
           (* Claude: only emit the quantifier when there are variables to bind;
              Lean rejects an empty "forall ," *)
           if quantified_proof_assistant_vars <> [] then begin
-              output_string fd "forall";
+              output_string fd "\xe2\x88\x80";
 (* the second version, with explicit type annotations, is pretty noisy, and probably not idiomatic. For l1.ott, we need it only for b:bool, where Lean type inference seems to get confused? *)
 (*              List.iter (fun (var,ty,_) -> Printf.fprintf fd " %s" (leanTODO "19" var))
 	        quantified_proof_assistant_vars;
@@ -446,8 +490,7 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
                    shadowed by a same-named bound variable (e.g. (D:G) after
                    (G:G)) *)
                 List.iter (fun (var,_,(ty,_)) ->
-                  let ty = if String.contains ty ' ' then ty else "_root_." ^ ty in
-                  Printf.fprintf fd " (%s:%s)" var ty)
+                  Printf.fprintf fd " (%s : %s)" var ty)
 	        quantified_proof_assistant_vars;
               output_string fd ",\n"
           end;
@@ -458,13 +501,12 @@ let pp_drule fd (m:pp_mode) (xd:syntaxdefn) (dr:drule) : unit =
              with none the constructor type is just the conclusion *)
           if (snd ppd_premises)<>[] || ppd_subntrs<>[] then
 	    begin
-              (* output_string fd " &&\n(";*)
-	      iter_asep fd " ->\n"
-		(fun s -> output_string fd "("; output_string fd s; output_string fd ")")
+	      iter_asep fd " \xe2\x86\x92\n"
+		(fun s -> output_string fd ("      " ^ lean_paren (lean_squash s)))
 		(ppd_subntrs @ snd ppd_premises);
-	      output_string fd "\n -> \n"
+	      output_string fd " \xe2\x86\x92\n"
             end;
-          output_string fd ppd_conclusion;
+          output_string fd ("      " ^ lean_squash ppd_conclusion);
           output_string fd "\n\n"
 
 
@@ -558,12 +600,14 @@ let pp_defn fd (m:pp_mode) (xd:syntaxdefn) lookup (defnclass_wrapper:string) (un
       let type_defn =
         let es = (Auxl.prod_of_prodname xd prod_name).prod_es in
         let ss = (Auxl.option_map (Grammar_pp.pp_element m xd [] true) es) in
-        (* Claude: Lean inductives use "where", not the deprecated ":=" *)
+        (* Claude: Lean inductives use "where", not the deprecated ":=", and its
+           own arrow *)
         match ss with
         | [] -> universe^" where"
-        | [s] -> s ^ " -> "^universe^" where"
-        | _ -> String.concat " -> " ss ^ " -> " ^ universe^" where" in
-      Printf.fprintf fd "%s%s : %s    /- defn %s -/\n" defnclass_wrapper d.d_name type_defn d.d_name;
+        | [s] -> s ^ " \xe2\x86\x92 "^universe^" where"
+        | _ -> String.concat " \xe2\x86\x92 " ss ^ " \xe2\x86\x92 " ^ universe^" where" in
+      (* Claude: the defn name in a doc comment before the declaration *)
+      Printf.fprintf fd "/-- defn %s -/\ninductive %s%s : %s\n" d.d_name defnclass_wrapper d.d_name type_defn;
       iter_nosep (fun psr -> pp_processed_semiraw_rule fd m xd "" psr) d.d_rules
 
   | Coq co -> (* FZ factor this code ? *)
@@ -719,9 +763,11 @@ let pp_defnclass fd (m:pp_mode) (xd:syntaxdefn) lookup (dc:defnclass) =
         Printf.fprintf fd "\n/- defns %s: none -/\n" dc.dc_name
       else begin
         let is_mutual = List.length dc.dc_defns > 1 in
-        Printf.fprintf fd "\n/- defns %s -/\n%sinductive " dc.dc_name
+        (* Claude: the keyword is emitted by pp_defn, so that the defn's doc
+           comment can precede it *)
+        Printf.fprintf fd "\n/- defns %s -/\n%s" dc.dc_name
           (if is_mutual then "mutual\n" else "");
-        iter_asep fd "\ninductive "
+        iter_asep fd "\n"
           (fun d -> pp_defn fd m xd lookup dc.dc_wrapper universe d)
 	  dc.dc_defns;
         if is_mutual then output_string fd "\nend\n"

@@ -1353,12 +1353,18 @@ and pp_metavardefn m xd mvd =
 	    ^ pp_com ^ "\n"
 	| Lean lno -> 
 	    let type_name = pp_metavarroot_ty m xd mvd.mvd_name in 
-	    "abbrev "
+            (* Claude: the comment as a doc comment before the declaration *)
+            let doc = 
+              ( match pp_com_text m xd mvd.mvd_rep [type_name] with
+              | None -> ""
+              | Some c -> "/-- " ^ c ^ " -/\n" ) in
+	    doc
+            ^ "abbrev "
      (* or "def "?  but then we need type class instances... *)
 	    ^ type_name
 	    ^ " := "
 	    ^ pp_metavarrep m xd mvd.mvd_rep type_name mvd.mvd_loc
-	    ^ pp_com ^ "\n"
+	    ^ "\n"
             ^   (match
                   try Some (List.assoc "lean-equality" mvd.mvd_rep) with Not_found -> None
                 with
@@ -1459,6 +1465,28 @@ and pp_com_es m xd homs es =
     | Lean _ ->  " /- " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " -/"
     | Menhir _ -> "/* " ^ String.concat "" (apply_hom_spec m xd hs ss) ^ " */" 
     | Ascii _ | Twf _ -> ""
+
+(* Claude: the comment text itself, for a target that puts it in a doc comment
+   before the declaration rather than in a trailing comment after it *)
+and pp_com_text m xd homs ss =
+  match Auxl.hom_spec_for_hom_name "com" homs with
+  | None -> None
+  | Some hs -> Some (String.concat "" (apply_hom_spec m xd hs ss))
+
+and pp_com_text_es m xd homs es =
+  match Auxl.hom_spec_for_hom_name "com" homs with
+  | None -> None
+  | Some hs ->
+    let ss = 
+      Auxl.option_map (pp_element m xd [] false) 
+      	(List.filter
+           (function 
+             | (Lang_nonterm (_,_)|Lang_metavar (_,_)|Lang_list _) -> true
+             | Lang_terminal _ -> false
+             | (Lang_option _|Lang_sugaroption _) -> 
+               raise (Invalid_argument "com for prods with option or sugaroptions not implemented"))
+           es) in
+    Some (String.concat "" (apply_hom_spec m xd hs ss))
 
 and pp_com_strings m xd homs ss =
   match Auxl.hom_spec_for_hom_name "com" homs with
@@ -2536,9 +2564,9 @@ and pp_element m xd sie in_type e =
           Some t
 
       | Lean lno, Some (Some v,t) when lno.lean_names_in_rules && (not in_type) -> 
-          Some ("("^v^":"^t^")")
+          Some ("(" ^ v ^ " : " ^ t ^ ")")
       | Lean lno, Some (None,t) when lno.lean_names_in_rules && (not in_type) -> 
-          Some ("(_:"^t^")")
+          Some ("(_ : " ^ t ^ ")")
       | Lean lno, Some (v,t) when (not lno.lean_names_in_rules) || in_type -> 
           Some t
 
@@ -2563,7 +2591,9 @@ and pp_elements m xd sie es paren toplevel in_list in_type =
         else 
           ( match m with 
           | Coq co when co.coq_names_in_rules -> " "
-          | Lean lno when lno.lean_names_in_rules -> " -> "
+          (* Claude: Lean's own arrow *)
+          | Lean lno when lno.lean_names_in_rules -> " \xe2\x86\x92 "
+          | Lean _ -> " \xe2\x86\x92 "
           | _ -> " -> " ) in
       let s  = String.concat separator ss in  
       ( match List.length ss with 
@@ -2730,14 +2760,25 @@ and pp_prod m xd rnn rpw p = (* returns a string option *)
             if co.coq_names_in_rules 
             then Some (" | " ^ p.prod_name ^ " " ^ s ^ pp_com)
             else Some (" | " ^ p.prod_name ^ " : " ^ s ^ " -> " ^ pp_nontermroot_ty m xd rnn ^ pp_com) )
-  | Lean _ ->
+  | Lean lno ->
+      (* Claude: Lean style is a doc comment before the constructor and binder
+         form for its arguments - "| C (x : t) : T" rather than
+         "| C : (x:t) -> T" - when the arguments are named at all *)
       if p.prod_meta then
         None
       else
-        ( match pp_elements m xd [] (apply_hom_order m xd p) (*p.prod_es*) false true false false with
-        | None ->  Some (" | " ^ p.prod_name ^ " : " ^ pp_nontermroot_ty m xd rnn ^ pp_com)
-        | Some s -> 
-            Some (" | " ^ p.prod_name ^ " : " ^ s ^ " -> " ^ pp_nontermroot_ty m xd rnn ^ pp_com) )
+        let doc = 
+          ( match pp_com_text_es m xd p.prod_homs p.prod_es with
+          | None -> ""
+          | Some c -> "  /-- " ^ c ^ " -/\n" ) in
+        let ty = pp_nontermroot_ty m xd rnn in
+        let es = Auxl.option_map (pp_element m xd [] false) (apply_hom_order m xd p) in
+        ( match es with
+        | [] -> Some (doc ^ "  | " ^ p.prod_name ^ " : " ^ ty)
+        | _ when lno.lean_names_in_rules ->
+            Some (doc ^ "  | " ^ p.prod_name ^ " " ^ String.concat " " es ^ " : " ^ ty)
+        | _ ->
+            Some (doc ^ "  | " ^ p.prod_name ^ " : " ^ String.concat " \xe2\x86\x92 " es ^ " \xe2\x86\x92 " ^ ty) )
   | Twf _ ->
       if p.prod_meta then
         None
@@ -2857,16 +2898,31 @@ and pp_rule m xd r = (* returns a string option *)
 		     (pp_prod m xd r.rule_ntr_name r.rule_pn_wrapper) 
                      r.rule_ps))
            ^ "")
-  | Hol _ | Lem _ | Lean _ | Caml _ ->
+  | Lean _ ->
+      (* Claude: the rule emits its own "inductive" keyword, so that the comment
+         can go in a doc comment before it, and so that a singleton group needs
+         no mutual block.  ": Type" is explicit: without it Lean leaves the sort
+         a universe metavariable, which fails as soon as the type is used as a
+         constructor argument of another inductive. *)
+      if r.rule_meta || r.rule_phantom 
+      then None
+      else 
+        let doc = 
+          ( match pp_com_text m xd r.rule_homs [pp_nonterm_with_sie m xd [] (r.rule_ntr_name,[])] with
+          | None -> ""
+          | Some c -> "/-- " ^ c ^ " -/\n" ) in
+        Some 
+          (doc ^ "inductive " 
+           ^ strip_surrounding_parens (pp_nontermroot_ty m xd r.rule_ntr_name) ^ " : Type where\n"
+           ^ String.concat "\n" 
+               (Auxl.option_map (pp_prod m xd r.rule_ntr_name r.rule_pn_wrapper) r.rule_ps)
+           ^ "\n")
+  | Hol _ | Lem _ | Caml _ ->
       if r.rule_meta || r.rule_phantom 
       then None
       else 
         Some 
-          (strip_surrounding_parens (pp_nontermroot_ty m xd r.rule_ntr_name) ^ (match m with 
-                                                                   (* Claude: state the sort: without it Lean leaves a universe
-                                                                      metavariable, which fails as soon as the type is used as a
-                                                                      constructor argument of another inductive *)
-                                                                   | Lean _ -> " : Type where" | _ -> " = ")^pp_com^"\n" 
+          (strip_surrounding_parens (pp_nontermroot_ty m xd r.rule_ntr_name) ^ " = "^pp_com^"\n" 
 	   ^ (match m with Lem _ -> " | " | _ -> "   ")
            ^ String.concat (match m with Lean _ -> "   " | _ -> " | ")
                (List.map 
@@ -3112,12 +3168,15 @@ and pp_rule_list m xd rs =
          inductive is legal, so this wraps unconditionally rather than
          counting the group.  "deriving" goes on each inductive; it is not
          accepted once for the block. *)
-      let deriv grp = if lean_group_inhabited grp then "\n  deriving Inhabited" else "" in
+      let deriv grp = if lean_group_inhabited grp then "  deriving Inhabited" else "" in
+      (* Claude: a mutual block only where there is something mutual; the rules
+         themselves carry the "inductive" keyword now *)
+      let mutual_grp grp = List.length grp > 1 in
       let def = 
         int_rule_list_dep m xd rs 
-          (fun rs -> "\nmutual\ninductive ") 
-          (fun grp -> deriv grp ^ "\ninductive ") 
-          (fun grp -> deriv grp ^ "\nend") in
+          (fun grp -> if mutual_grp grp then "\nmutual\n" else "\n") 
+          (fun grp -> deriv grp ^ "\n") 
+          (fun grp -> deriv grp ^ (if mutual_grp grp then "\nend" else "")) in
       let lean_equality_code = 
       "open " ^ String.concat " " (Auxl.option_map (fun r -> if r.rule_meta || r.rule_phantom || (try (List.assoc "lean" r.rule_homs);true with Not_found -> false)  then None else Some (pp_nontermroot_ty m xd r.rule_ntr_name)) rs) ^ "\n" in
 
