@@ -1,0 +1,71 @@
+DIGEST c256128eafdf4b7a3d7544a134847ee9
+FtestRegr_test15_6
+R123:127 Stdlib.Arith.Arith <> <> lib
+R157:160 Stdlib.Bool.Bool <> <> lib
+R190:193 Stdlib.Lists.List <> <> lib
+ind 209:209 <> a
+constr 224:228 <> a_AAA
+constr 237:241 <> a_BBB
+constr 250:253 <> a_CC
+constr 262:264 <> a_a
+R232:232 testRegr_test15_6 <> a:1 ind
+R245:245 testRegr_test15_6 <> a:1 ind
+R257:257 testRegr_test15_6 <> a:1 ind
+R270:270 testRegr_test15_6 <> a:1 ind
+binder 267:268 <> a5:3
+scheme 209:209 <> a_rect
+scheme 209:209 <> a_ind
+scheme 209:209 <> a_rec
+scheme 209:209 <> a_sind
+def 302:312 <> is_avv_of_a
+R319:319 testRegr_test15_6 <> a ind
+binder 315:317 <> a_6:4
+R340:342 testRegr_test15_6 <> a_6:4 var
+R353:357 testRegr_test15_6 <> a_AAA constr
+R362:366 Corelib.Init.Logic <> False ind
+R372:376 testRegr_test15_6 <> a_BBB constr
+R381:385 Corelib.Init.Logic <> False ind
+R391:394 testRegr_test15_6 <> a_CC constr
+R399:403 Corelib.Init.Logic <> False ind
+R410:412 testRegr_test15_6 <> a_a constr
+R422:425 Corelib.Init.Logic <> True ind
+def 445:455 <> is_avB_of_a
+R462:462 testRegr_test15_6 <> a ind
+binder 458:460 <> a_6:6
+R483:485 testRegr_test15_6 <> a_6:6 var
+R496:500 testRegr_test15_6 <> a_AAA constr
+R505:509 Corelib.Init.Logic <> False ind
+R515:519 testRegr_test15_6 <> a_BBB constr
+R525:528 Corelib.Init.Logic <> True ind
+R535:538 testRegr_test15_6 <> a_CC constr
+R544:547 Corelib.Init.Logic <> True ind
+R555:557 testRegr_test15_6 <> a_a constr
+R567:570 Corelib.Init.Logic <> True ind
+def 590:600 <> is_avA_of_a
+R607:607 testRegr_test15_6 <> a ind
+binder 603:605 <> a_6:8
+R628:630 testRegr_test15_6 <> a_6:8 var
+R641:645 testRegr_test15_6 <> a_AAA constr
+R651:654 Corelib.Init.Logic <> True ind
+R661:665 testRegr_test15_6 <> a_BBB constr
+R670:674 Corelib.Init.Logic <> False ind
+R680:683 testRegr_test15_6 <> a_CC constr
+R689:692 Corelib.Init.Logic <> True ind
+R700:702 testRegr_test15_6 <> a_a constr
+R712:715 Corelib.Init.Logic <> True ind
+ind 771:771 <> T
+constr 812:814 <> T_1
+R776:779 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R775:775 testRegr_test15_6 <> a ind
+R781:784 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R780:780 testRegr_test15_6 <> a ind
+R831:831 testRegr_test15_6 <> a ind
+binder 826:829 <> avv5:12
+R856:864 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R840:850 testRegr_test15_6 <> is_avv_of_a def
+R852:855 testRegr_test15_6 <> avv5:12 var
+R865:865 testRegr_test15_6 <> T:10 ind
+R872:875 testRegr_test15_6 <> avv5:12 var
+R867:870 testRegr_test15_6 <> avv5:12 var
+scheme 771:771 <> T_ind
+scheme 771:771 <> T_sind

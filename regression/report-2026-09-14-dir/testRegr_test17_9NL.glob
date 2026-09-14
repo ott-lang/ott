@@ -1,0 +1,135 @@
+DIGEST eac2a9956cc239e5d651e9a4781bfe81
+FtestRegr_test17_9NL
+R123:127 Stdlib.Arith.Arith <> <> lib
+R157:160 Stdlib.Bool.Bool <> <> lib
+R190:193 Stdlib.Lists.List <> <> lib
+R211:227 Ott.ott_list_core <> <> lib
+def 243:247 <> ident
+R258:260 Corelib.Init.Datatypes <> nat ind
+prf 269:276 <> eq_ident
+R293:297 testRegr_test17_9NL <> ident def
+binder 287:287 <> x:1
+binder 289:289 <> y:2
+R301:301 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R307:311 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R318:318 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R303:305 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R302:302 testRegr_test17_9NL <> x:1 var
+R306:306 testRegr_test17_9NL <> y:2 var
+R313:316 Corelib.Init.Logic <> ::type_scope:x_'<>'_x not
+R312:312 testRegr_test17_9NL <> x:1 var
+R317:317 testRegr_test17_9NL <> y:2 var
+def 453:457 <> index
+R468:470 Corelib.Init.Datatypes <> nat ind
+ind 484:484 <> t
+constr 499:504 <> t_unit
+R508:508 testRegr_test17_9NL <> t:3 ind
+scheme 484:484 <> t_rect
+scheme 484:484 <> t_ind
+scheme 484:484 <> t_rec
+scheme 484:484 <> t_sind
+ind 522:522 <> E
+constr 537:539 <> E_2
+R544:547 Corelib.Init.Datatypes <> list ind
+R555:555 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R550:554 testRegr_test17_9NL <> ident def
+R556:556 testRegr_test17_9NL <> t ind
+scheme 522:522 <> E_rect
+scheme 522:522 <> E_ind
+scheme 522:522 <> E_rec
+scheme 522:522 <> E_sind
+ind 572:572 <> K
+constr 587:592 <> K_Type
+R596:596 testRegr_test17_9NL <> K:7 ind
+scheme 572:572 <> K_rect
+scheme 572:572 <> K_ind
+scheme 572:572 <> K_rec
+scheme 572:572 <> K_sind
+ind 646:648 <> Eok
+constr 686:690 <> Eok_1
+constr 717:721 <> Eok_2
+constr 786:790 <> Eok_3
+ind 1077:1078 <> tK
+constr 1120:1123 <> tK_1
+R653:656 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R652:652 testRegr_test17_9NL <> E ind
+R1083:1086 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1082:1082 testRegr_test17_9NL <> t ind
+R1088:1091 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1087:1087 testRegr_test17_9NL <> K ind
+R700:702 testRegr_test17_9NL <> Eok:9 ind
+R705:707 testRegr_test17_9NL <> E_2 constr
+R709:711 Corelib.Init.Datatypes <> nil constr
+R742:745 Corelib.Init.Datatypes <> list ind
+R753:753 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R748:752 testRegr_test17_9NL <> ident def
+R754:754 testRegr_test17_9NL <> t ind
+binder 733:740 <> x_t_list:13
+R764:766 testRegr_test17_9NL <> Eok:9 ind
+R769:771 testRegr_test17_9NL <> E_2 constr
+R773:780 testRegr_test17_9NL <> x_t_list:13 var
+R813:816 Corelib.Init.Datatypes <> list ind
+R826:826 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R824:824 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R819:823 testRegr_test17_9NL <> ident def
+R825:825 testRegr_test17_9NL <> t ind
+R827:827 testRegr_test17_9NL <> K ind
+binder 802:811 <> x_t_K_list:14
+R837:837 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R964:973 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+binder 845:846 <> t_:15
+binder 848:849 <> K_:16
+R950:954 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R963:963 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R852:853 Stdlib.Lists.List <> In def
+R864:866 Corelib.Lists.ListDef <> map def
+R939:948 testRegr_test17_9NL <> x_t_K_list:14 var
+R888:888 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R886:886 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R881:885 testRegr_test17_9NL <> ident def
+R887:887 testRegr_test17_9NL <> t ind
+R889:889 testRegr_test17_9NL <> K ind
+binder 874:877 <> pat_:17
+R902:905 testRegr_test17_9NL <> pat_:17 var
+R912:912 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R915:915 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R918:918 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R921:921 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R926:926 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R929:929 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R932:932 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R927:928 testRegr_test17_9NL <> t_:15 var
+R930:931 testRegr_test17_9NL <> K_:16 var
+R855:855 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R858:858 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R861:861 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R856:857 testRegr_test17_9NL <> t_:15 var
+R859:860 testRegr_test17_9NL <> K_:16 var
+R955:956 testRegr_test17_9NL <> tK:10 ind
+R961:962 testRegr_test17_9NL <> K_:16 var
+R958:959 testRegr_test17_9NL <> t_:15 var
+R974:976 testRegr_test17_9NL <> Eok:9 ind
+R979:981 testRegr_test17_9NL <> E_2 constr
+R984:986 Corelib.Lists.ListDef <> map def
+R1059:1068 testRegr_test17_9NL <> x_t_K_list:14 var
+R1007:1007 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1005:1005 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1000:1004 testRegr_test17_9NL <> ident def
+R1006:1006 testRegr_test17_9NL <> t ind
+R1008:1008 testRegr_test17_9NL <> K ind
+binder 994:997 <> pat_:19
+R1021:1024 testRegr_test17_9NL <> pat_:19 var
+R1031:1031 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1034:1034 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1037:1037 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1040:1040 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1045:1045 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1048:1048 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1051:1051 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1133:1134 testRegr_test17_9NL <> tK:10 ind
+R1143:1148 testRegr_test17_9NL <> K_Type constr
+R1136:1141 testRegr_test17_9NL <> t_unit constr
+scheme 646:648 <> Eok_ind
+scheme 646:648 <> Eok_sind
+scheme 1077:1078 <> tK_ind
+scheme 1077:1078 <> tK_sind

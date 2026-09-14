@@ -1,0 +1,106 @@
+Running Draft ...
+
+Output (line 8 of "Draft/testRegr_test15_4.thy"):
+consts
+  typerep_a_pre_a :: "'a a_pre_a itself ⇒ typerep"
+
+Output (line 8 of "Draft/testRegr_test15_4.thy"):
+consts
+  typerep_a_IITN_a :: "a.a_IITN_a itself ⇒ typerep"
+
+Output (line 8 of "Draft/testRegr_test15_4.thy"):
+consts
+  typerep_a :: "a itself ⇒ typerep"
+
+Output (line 8 of "Draft/testRegr_test15_4.thy"):
+consts
+  term_of_a :: "a ⇒ term"
+
+Output (line 8 of "Draft/testRegr_test15_4.thy"):
+consts
+  partial_term_of_a ::
+    "a itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 8 of "Draft/testRegr_test15_4.thy"):
+consts
+  equal_a :: "a ⇒ a ⇒ bool"
+
+Output (line 19 of "Draft/testRegr_test15_4.thy"):
+consts
+  typerep_n2m_a_is_av_of_a_is_a_of_a_pre_n2m_a ::
+    "('a, 'b, 'c, 'd,
+      'e) is_av_of_a_is_a_of_a.n2m_a_is_av_of_a_is_a_of_a_pre_n2m_a itself
+     ⇒ typerep"
+
+Output (line 19 of "Draft/testRegr_test15_4.thy"):
+consts
+  is_a_of_a_list_a_DD :: "a list ⇒ bool"
+  is_a_of_a_list_a_CC :: "a list ⇒ bool"
+  is_av_of_a_list_a_D_is_a_of_a_list_a_D :: "a list ⇒ bool × bool"
+  is_av_of_a_list_a_C_is_a_of_a_list_a_C :: "a list ⇒ bool × bool"
+  is_av_of_a_is_a_of_a :: "a ⇒ bool × bool"
+
+Output (line 42 of "Draft/testRegr_test15_4.thy"):
+consts
+  is_av_of_a_list_a_D :: "a list ⇒ bool"
+
+Output (line 45 of "Draft/testRegr_test15_4.thy"):
+consts
+  is_a_of_a_list_a_D :: "a list ⇒ bool"
+
+Output (line 48 of "Draft/testRegr_test15_4.thy"):
+consts
+  is_av_of_a_list_a_C :: "a list ⇒ bool"
+
+Output (line 51 of "Draft/testRegr_test15_4.thy"):
+consts
+  is_a_of_a_list_a_C :: "a list ⇒ bool"
+
+Output (line 54 of "Draft/testRegr_test15_4.thy"):
+consts
+  is_av_of_a :: "a ⇒ bool"
+
+Output (line 57 of "Draft/testRegr_test15_4.thy"):
+consts
+  is_a_of_a :: "a ⇒ bool"
+
+Output (line 60 of "Draft/testRegr_test15_4.thy"):
+theorem
+    is_av_of_a_list_a_D [] = True
+    is_av_of_a_list_a_D (?av_XXX # ?av_list_XXX) =
+    (is_av_of_a ?av_XXX ∧ is_av_of_a_list_a_D ?av_list_XXX)
+    is_a_of_a_list_a_D [] = True
+    is_a_of_a_list_a_D (?av_XXX # ?av_list_XXX) =
+    (is_av_of_a ?av_XXX ∧ is_a_of_a_list_a_D ?av_list_XXX)
+    is_av_of_a_list_a_C [] = True
+    is_av_of_a_list_a_C (?a_XXX # ?a_list_XXX) =
+    (is_a_of_a ?a_XXX ∧ is_av_of_a_list_a_C ?a_list_XXX)
+    is_a_of_a_list_a_C [] = True
+    is_a_of_a_list_a_C (?a_XXX # ?a_list_XXX) =
+    (is_a_of_a ?a_XXX ∧ is_a_of_a_list_a_C ?a_list_XXX)
+    is_av_of_a (a_Ax ?x) = False
+    is_av_of_a a_AA = False
+    is_av_of_a (a_a ?a) = is_a_of_a ?a
+    is_av_of_a (a_C ?a_list) = is_av_of_a_list_a_C ?a_list
+    is_av_of_a (a_D ?av_list) = is_av_of_a_list_a_D ?av_list
+    is_av_of_a (a_CC ?a_list) = False
+    is_av_of_a (a_DD ?av_list) = False
+    is_a_of_a (a_Ax ?x) = True
+    is_a_of_a a_AA = True
+    is_a_of_a (a_a ?a) = is_a_of_a ?a
+    is_a_of_a (a_C ?a_list) = is_a_of_a_list_a_C ?a_list
+    is_a_of_a (a_D ?av_list) = is_a_of_a_list_a_D ?av_list
+    is_a_of_a (a_CC ?a_list) = is_a_of_a_list_a_CC ?a_list
+    is_a_of_a (a_DD ?av_list) = is_a_of_a_list_a_DD ?av_list
+
+Output (line 87 of "Draft/testRegr_test15_4.thy"):
+consts
+  typerep_n2m_a_fv_a_pre_n2m_a ::
+    "('a, 'b, 'c) fv_a.n2m_a_fv_a_pre_n2m_a itself ⇒ typerep"
+
+Output (line 87 of "Draft/testRegr_test15_4.thy"):
+consts
+  fv_a_list_a_CC :: "a list ⇒ nat list"
+  fv_a_list_a_C :: "a list ⇒ nat list"
+  fv_a :: "a ⇒ nat list"
+Finished Draft (0:00:05 elapsed time, 0:00:10 cpu time, factor 2.12)

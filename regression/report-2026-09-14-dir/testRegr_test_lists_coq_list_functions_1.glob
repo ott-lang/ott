@@ -1,0 +1,83 @@
+DIGEST 657f98f56ac99934929a62cd4982c660
+FtestRegr_test_lists_coq_list_functions_1
+R146:150 Stdlib.Arith.Arith <> <> lib
+R180:183 Stdlib.Bool.Bool <> <> lib
+R213:216 Stdlib.Lists.List <> <> lib
+def 232:232 <> i
+R243:245 Corelib.Init.Datatypes <> nat ind
+def 259:263 <> ident
+R274:276 Corelib.Init.Datatypes <> nat ind
+ind 290:296 <> typevar
+constr 311:318 <> TV_ident
+R328:332 testRegr_test_lists_coq_list_functions_1 <> ident def
+binder 321:326 <> ident5:3
+scheme 290:296 <> typevar_rect
+scheme 290:296 <> typevar_ind
+scheme 290:296 <> typevar_rec
+scheme 290:296 <> typevar_sind
+ind 347:353 <> typexpr
+constr 368:373 <> TE_var
+R385:391 testRegr_test_lists_coq_list_functions_1 <> typevar ind
+binder 376:383 <> typevar5:6
+scheme 347:353 <> typexpr_rect
+scheme 347:353 <> typexpr_ind
+scheme 347:353 <> typexpr_rec
+scheme 347:353 <> typexpr_sind
+def 407:414 <> typevars
+R426:429 Corelib.Init.Datatypes <> list ind
+R431:437 testRegr_test_lists_coq_list_functions_1 <> typevar ind
+ind 452:461 <> value_name
+constr 476:480 <> VN_id
+R490:494 testRegr_test_lists_coq_list_functions_1 <> ident def
+binder 483:488 <> ident5:9
+scheme 452:461 <> value_name_rect
+scheme 452:461 <> value_name_ind
+scheme 452:461 <> value_name_rec
+scheme 452:461 <> value_name_sind
+ind 509:518 <> typescheme
+constr 533:541 <> TS_forall
+R554:561 testRegr_test_lists_coq_list_functions_1 <> typevars def
+binder 544:552 <> typevars5:12
+R567:573 testRegr_test_lists_coq_list_functions_1 <> typexpr ind
+binder 565:565 <> t:13
+scheme 509:518 <> typescheme_rect
+scheme 509:518 <> typescheme_ind
+scheme 509:518 <> typescheme_rec
+scheme 509:518 <> typescheme_sind
+ind 588:606 <> environment_binding
+constr 621:625 <> EB_vn
+R640:649 testRegr_test_lists_coq_list_functions_1 <> value_name ind
+binder 628:638 <> value_name5:16
+R665:674 testRegr_test_lists_coq_list_functions_1 <> typescheme ind
+binder 653:663 <> typescheme5:17
+scheme 588:606 <> environment_binding_rect
+scheme 588:606 <> environment_binding_ind
+scheme 588:606 <> environment_binding_rec
+scheme 588:606 <> environment_binding_sind
+def 690:700 <> environment
+R711:714 Corelib.Init.Datatypes <> list ind
+R716:734 testRegr_test_lists_coq_list_functions_1 <> environment_binding ind
+ind 784:796 <> JT_value_name
+constr 876:899 <> JT_value_name_value_name
+R811:814 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R800:810 testRegr_test_lists_coq_list_functions_1 <> environment def
+R825:828 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R815:824 testRegr_test_lists_coq_list_functions_1 <> value_name ind
+R836:839 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R829:835 testRegr_test_lists_coq_list_functions_1 <> typexpr ind
+R914:924 testRegr_test_lists_coq_list_functions_1 <> environment def
+binder 911:912 <> E1:20
+R930:939 testRegr_test_lists_coq_list_functions_1 <> value_name ind
+binder 928:928 <> x:21
+R946:955 testRegr_test_lists_coq_list_functions_1 <> typescheme ind
+binder 943:944 <> ts:22
+R962:972 testRegr_test_lists_coq_list_functions_1 <> environment def
+binder 959:960 <> E2:23
+R978:984 testRegr_test_lists_coq_list_functions_1 <> typexpr ind
+binder 976:976 <> t:24
+R993:1005 testRegr_test_lists_coq_list_functions_1 <> JT_value_name:18 ind
+R1262:1262 testRegr_test_lists_coq_list_functions_1 <> t:24 var
+R1260:1260 testRegr_test_lists_coq_list_functions_1 <> x:21 var
+R1010:1022 Stdlib.Lists.List <> flat_map def
+binder 1033:1033 <> l:25
+R1036:1036 testRegr_test_lists_coq_list_functions_1 <> l:25 var

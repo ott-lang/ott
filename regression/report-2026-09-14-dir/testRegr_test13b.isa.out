@@ -1,0 +1,441 @@
+Running Draft ...
+
+Output (line 13 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_metavar_IITN_metavar ::
+    "metavar.metavar_IITN_metavar itself ⇒ typerep"
+
+Output (line 13 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_metavar :: "metavar itself ⇒ typerep"
+
+Output (line 13 of "Draft/testRegr_test13b.thy"):
+consts
+  term_of_metavar :: "metavar ⇒ term"
+
+Output (line 13 of "Draft/testRegr_test13b.thy"):
+consts
+  partial_term_of_metavar ::
+    "metavar itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 13 of "Draft/testRegr_test13b.thy"):
+consts
+  equal_metavar :: "metavar ⇒ metavar ⇒ bool"
+
+Output (line 13 of "Draft/testRegr_test13b.thy"):
+consts
+  random_aux_metavar ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural ⇒ (metavar × (unit ⇒ term)) × natural × natural"
+
+Output (line 13 of "Draft/testRegr_test13b.thy"):
+consts
+  random_metavar ::
+    "natural
+     ⇒ natural × natural ⇒ (metavar × (unit ⇒ term)) × natural × natural"
+
+Output (line 16 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_nonterm_IITN_nonterm ::
+    "nonterm.nonterm_IITN_nonterm itself ⇒ typerep"
+
+Output (line 16 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_nonterm :: "nonterm itself ⇒ typerep"
+
+Output (line 16 of "Draft/testRegr_test13b.thy"):
+consts
+  term_of_nonterm :: "nonterm ⇒ term"
+
+Output (line 16 of "Draft/testRegr_test13b.thy"):
+consts
+  partial_term_of_nonterm ::
+    "nonterm itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 16 of "Draft/testRegr_test13b.thy"):
+consts
+  equal_nonterm :: "nonterm ⇒ nonterm ⇒ bool"
+
+Output (line 16 of "Draft/testRegr_test13b.thy"):
+consts
+  random_aux_nonterm ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural ⇒ (nonterm × (unit ⇒ term)) × natural × natural"
+
+Output (line 16 of "Draft/testRegr_test13b.thy"):
+consts
+  random_nonterm ::
+    "natural
+     ⇒ natural × natural ⇒ (nonterm × (unit ⇒ term)) × natural × natural"
+
+Output (line 19 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_mse_pre_mse :: "'a mse_pre_mse itself ⇒ typerep"
+
+Output (line 19 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_mse_IITN_mse :: "mse.mse_IITN_mse itself ⇒ typerep"
+
+Output (line 19 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_mse :: "mse itself ⇒ typerep"
+
+Output (line 19 of "Draft/testRegr_test13b.thy"):
+consts
+  term_of_mse :: "mse ⇒ term"
+
+Output (line 19 of "Draft/testRegr_test13b.thy"):
+consts
+  partial_term_of_mse ::
+    "mse itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 19 of "Draft/testRegr_test13b.thy"):
+consts
+  equal_mse :: "mse ⇒ mse ⇒ bool"
+
+Output (line 19 of "Draft/testRegr_test13b.thy"):
+consts
+  random_aux_mse ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural ⇒ (mse × (unit ⇒ term)) × natural × natural"
+
+Output (line 19 of "Draft/testRegr_test13b.thy"):
+consts
+  random_mse ::
+    "natural
+     ⇒ natural × natural ⇒ (mse × (unit ⇒ term)) × natural × natural"
+
+Output (line 25 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_element_pre_element :: "element_pre_element itself ⇒ typerep"
+
+Output (line 25 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_element_IITN_element ::
+    "element.element_IITN_element itself ⇒ typerep"
+
+Output (line 25 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_element :: "element itself ⇒ typerep"
+
+Output (line 25 of "Draft/testRegr_test13b.thy"):
+consts
+  term_of_element :: "element ⇒ term"
+
+Output (line 25 of "Draft/testRegr_test13b.thy"):
+consts
+  partial_term_of_element ::
+    "element itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 25 of "Draft/testRegr_test13b.thy"):
+consts
+  equal_element :: "element ⇒ element ⇒ bool"
+
+Output (line 25 of "Draft/testRegr_test13b.thy"):
+consts
+  random_aux_element ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural ⇒ (element × (unit ⇒ term)) × natural × natural"
+
+Output (line 25 of "Draft/testRegr_test13b.thy"):
+consts
+  random_element ::
+    "natural
+     ⇒ natural × natural ⇒ (element × (unit ⇒ term)) × natural × natural"
+
+Output (line 30 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_bindspec_pre_bindspec :: "bindspec_pre_bindspec itself ⇒ typerep"
+
+Output (line 30 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_bindspec_IITN_bindspec ::
+    "bindspec.bindspec_IITN_bindspec itself ⇒ typerep"
+
+Output (line 30 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_bindspec :: "bindspec itself ⇒ typerep"
+
+Output (line 30 of "Draft/testRegr_test13b.thy"):
+consts
+  term_of_bindspec :: "bindspec ⇒ term"
+
+Output (line 30 of "Draft/testRegr_test13b.thy"):
+consts
+  partial_term_of_bindspec ::
+    "bindspec itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 30 of "Draft/testRegr_test13b.thy"):
+consts
+  equal_bindspec :: "bindspec ⇒ bindspec ⇒ bool"
+
+Output (line 30 of "Draft/testRegr_test13b.thy"):
+consts
+  random_aux_bindspec ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural ⇒ (bindspec × (unit ⇒ term)) × natural × natural"
+
+Output (line 30 of "Draft/testRegr_test13b.thy"):
+consts
+  random_bindspec ::
+    "natural
+     ⇒ natural × natural ⇒ (bindspec × (unit ⇒ term)) × natural × natural"
+
+Output (line 34 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_prod_pre_prod :: "prod_pre_prod itself ⇒ typerep"
+
+Output (line 34 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_prod_IITN_prod :: "prod.prod_IITN_prod itself ⇒ typerep"
+
+Output (line 34 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_prod :: "testRegr_test13b.prod itself ⇒ typerep"
+
+Output (line 34 of "Draft/testRegr_test13b.thy"):
+consts
+  term_of_prod :: "testRegr_test13b.prod ⇒ term"
+
+Output (line 34 of "Draft/testRegr_test13b.thy"):
+consts
+  partial_term_of_prod ::
+    "testRegr_test13b.prod itself
+     ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 34 of "Draft/testRegr_test13b.thy"):
+consts
+  equal_prod :: "testRegr_test13b.prod ⇒ testRegr_test13b.prod ⇒ bool"
+
+Output (line 34 of "Draft/testRegr_test13b.thy"):
+consts
+  random_aux_prod ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural
+         ⇒ (testRegr_test13b.prod × (unit ⇒ term)) × natural × natural"
+
+Output (line 34 of "Draft/testRegr_test13b.thy"):
+consts
+  random_prod ::
+    "natural
+     ⇒ natural × natural
+       ⇒ (testRegr_test13b.prod × (unit ⇒ term)) × natural × natural"
+
+Output (line 37 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_rule_IITN_rule :: "rule.rule_IITN_rule itself ⇒ typerep"
+
+Output (line 37 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_rule :: "rule itself ⇒ typerep"
+
+Output (line 37 of "Draft/testRegr_test13b.thy"):
+consts
+  term_of_rule :: "rule ⇒ term"
+
+Output (line 37 of "Draft/testRegr_test13b.thy"):
+consts
+  partial_term_of_rule ::
+    "rule itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 37 of "Draft/testRegr_test13b.thy"):
+consts
+  equal_rule :: "rule ⇒ rule ⇒ bool"
+
+Output (line 37 of "Draft/testRegr_test13b.thy"):
+consts
+  random_aux_rule ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural ⇒ (rule × (unit ⇒ term)) × natural × natural"
+
+Output (line 37 of "Draft/testRegr_test13b.thy"):
+consts
+  random_rule ::
+    "natural
+     ⇒ natural × natural ⇒ (rule × (unit ⇒ term)) × natural × natural"
+
+Output (line 40 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_auxfn_type_pre_auxfn_type ::
+    "auxfn_type_pre_auxfn_type itself ⇒ typerep"
+
+Output (line 40 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_auxfn_type_IITN_auxfn_type ::
+    "auxfn_type.auxfn_type_IITN_auxfn_type itself ⇒ typerep"
+
+Output (line 40 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_auxfn_type :: "auxfn_type itself ⇒ typerep"
+
+Output (line 40 of "Draft/testRegr_test13b.thy"):
+consts
+  term_of_auxfn_type :: "auxfn_type ⇒ term"
+
+Output (line 40 of "Draft/testRegr_test13b.thy"):
+consts
+  partial_term_of_auxfn_type ::
+    "auxfn_type itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 40 of "Draft/testRegr_test13b.thy"):
+consts
+  equal_auxfn_type :: "auxfn_type ⇒ auxfn_type ⇒ bool"
+
+Output (line 40 of "Draft/testRegr_test13b.thy"):
+consts
+  random_aux_auxfn_type ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural
+         ⇒ (auxfn_type × (unit ⇒ term)) × natural × natural"
+
+Output (line 40 of "Draft/testRegr_test13b.thy"):
+consts
+  random_auxfn_type ::
+    "natural
+     ⇒ natural × natural ⇒ (auxfn_type × (unit ⇒ term)) × natural × natural"
+
+Output (line 43 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_grammar_rules_IITN_grammar_rules ::
+    "grammar_rules.grammar_rules_IITN_grammar_rules itself ⇒ typerep"
+
+Output (line 43 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_grammar_rules :: "grammar_rules itself ⇒ typerep"
+
+Output (line 43 of "Draft/testRegr_test13b.thy"):
+consts
+  term_of_grammar_rules :: "grammar_rules ⇒ term"
+
+Output (line 43 of "Draft/testRegr_test13b.thy"):
+consts
+  partial_term_of_grammar_rules ::
+    "grammar_rules itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 43 of "Draft/testRegr_test13b.thy"):
+consts
+  equal_grammar_rules :: "grammar_rules ⇒ grammar_rules ⇒ bool"
+
+Output (line 43 of "Draft/testRegr_test13b.thy"):
+consts
+  random_aux_grammar_rules ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural
+         ⇒ (grammar_rules × (unit ⇒ term)) × natural × natural"
+
+Output (line 43 of "Draft/testRegr_test13b.thy"):
+consts
+  random_grammar_rules ::
+    "natural
+     ⇒ natural × natural
+       ⇒ (grammar_rules × (unit ⇒ term)) × natural × natural"
+
+Output (line 46 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_auxfn_type_env_pre_auxfn_type_env ::
+    "'a auxfn_type_env_pre_auxfn_type_env itself ⇒ typerep"
+
+Output (line 46 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_auxfn_type_env_IITN_auxfn_type_env ::
+    "auxfn_type_env.auxfn_type_env_IITN_auxfn_type_env itself ⇒ typerep"
+
+Output (line 46 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_auxfn_type_env :: "auxfn_type_env itself ⇒ typerep"
+
+Output (line 46 of "Draft/testRegr_test13b.thy"):
+consts
+  term_of_auxfn_type_env :: "auxfn_type_env ⇒ term"
+
+Output (line 46 of "Draft/testRegr_test13b.thy"):
+consts
+  partial_term_of_auxfn_type_env ::
+    "auxfn_type_env itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 46 of "Draft/testRegr_test13b.thy"):
+consts
+  equal_auxfn_type_env :: "auxfn_type_env ⇒ auxfn_type_env ⇒ bool"
+
+Output (line 46 of "Draft/testRegr_test13b.thy"):
+consts
+  random_aux_auxfn_type_env ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural
+         ⇒ (auxfn_type_env × (unit ⇒ term)) × natural × natural"
+
+Output (line 46 of "Draft/testRegr_test13b.thy"):
+consts
+  random_auxfn_type_env ::
+    "natural
+     ⇒ natural × natural
+       ⇒ (auxfn_type_env × (unit ⇒ term)) × natural × natural"
+
+Output (line 50 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_grammar_type_IITN_grammar_type ::
+    "grammar_type.grammar_type_IITN_grammar_type itself ⇒ typerep"
+
+Output (line 50 of "Draft/testRegr_test13b.thy"):
+consts
+  typerep_grammar_type :: "grammar_type itself ⇒ typerep"
+
+Output (line 50 of "Draft/testRegr_test13b.thy"):
+consts
+  term_of_grammar_type :: "grammar_type ⇒ term"
+
+Output (line 50 of "Draft/testRegr_test13b.thy"):
+consts
+  partial_term_of_grammar_type ::
+    "grammar_type itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 50 of "Draft/testRegr_test13b.thy"):
+consts
+  equal_grammar_type :: "grammar_type ⇒ grammar_type ⇒ bool"
+
+Output (line 50 of "Draft/testRegr_test13b.thy"):
+consts
+  random_aux_grammar_type ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural
+         ⇒ (grammar_type × (unit ⇒ term)) × natural × natural"
+
+Output (line 50 of "Draft/testRegr_test13b.thy"):
+consts
+  random_grammar_type ::
+    "natural
+     ⇒ natural × natural
+       ⇒ (grammar_type × (unit ⇒ term)) × natural × natural"
+Draft FAILED (see also "isabelle build_log -H Error Draft")
+*** Inner syntax error (line 98 of "/tmp/isabelle-pes20/private18379737977542493328/Draft/testRegr_test13b.thy")
+*** at "=> Bs ( Phi ) ( ( e_list ) ) ( ( ( % bs_XXX . bs_XXX ) ( List.nth
+***      bs_list ( i - 1 ) ) ) ) ) ; ( prodd = ( p_1 ( e_list ) prodname (
+***      bs_list ) ) ) ⟧ ⟹ ProdOK ( Phi ) ( prodd )"
+*** Failed to parse prop
+*** At command "inductive" (line 55 of "/tmp/isabelle-pes20/private18379737977542493328/Draft/testRegr_test13b.thy")
+*** Inner syntax error (line 110 of "/tmp/isabelle-pes20/private18379737977542493328/Draft/testRegr_test13b.thy")
+*** at "=> RuleOK ( Phi ) ( ( ( % ( rule_XXX , prodd_XXX ) . rule_XXX ) (
+***      List.nth rule_prodd_list ( i - 1 ) ) ) ) ) ; ( grammar_rules = ( g_1 (
+***      ( List.map ( % ( ( rule_XXX :: rule ) , ( prodd_XXX :: prodd ) ) .
+***      rule_XXX ) rule_prodd_list ) ) ) ) ; ( ! i . ( ( 1 :: nat ) <= i & i <=
+***      m ) => ( ! j . ( ( 1 :: nat ) <= j & i <= n ) => ( ( ( ( ( ( ( % (
+***      rule_XXX , prodd_XXX ) . rule_XXX ) ( List.nth rule_prodd_list ( i - 1
+***      ) ) ) = ( r_1 ntr ( ( List.map ( % ( ( rule_XXX :: rule ) , ( prodd_XXX
+***      :: prodd ) ) . prodd_XXX ) rule_prodd_list ) ) ) ) & ( ( ( % ( rule_XXX
+***      , prodd_XXX ) . rule_XXX ) ( List.nth rule_prodd_list ( j - 1 ) ) ) = (
+***      r_1 ntr ( prodd'_list ) ) ) ) ) ==> ( i = j ) ) ) ) ) ⟧ ⟹ GrammarOK (
+***      Phi ) ( grammar_rules )"
+*** Failed to parse prop
+*** At command "inductive" (line 55 of "/tmp/isabelle-pes20/private18379737977542493328/Draft/testRegr_test13b.thy")
+Unfinished session(s): Draft

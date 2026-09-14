@@ -1,0 +1,30 @@
+testRegr_test_lists_coq_defn_subrule_1.lean:40:37: warning: Variable name `tl_` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _tl_
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_lists_coq_defn_subrule_1.lean:62:33: warning: Variable name `foobar_` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _foobar_
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_lists_coq_defn_subrule_1.lean:78:13: error: Function expected at
+  make_list_foobar
+but this term has type
+  ?m.2
+
+Note: Expected a function because this term is being applied to the argument
+  (map_list_foobar_foobar (fun foo_ foobar_ => foo_) foo_foobar_list)
+
+Hint: The identifier `make_list_foobar` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_lists_coq_defn_subrule_1.lean:78:100: error: Function expected at
+  make_list_foobar
+but this term has type
+  ?m.2
+
+Note: Expected a function because this term is being applied to the argument
+  (map_list_foobar_foobar (fun foo_ foobar_ => foobar_) foo_foobar_list)
+
+Hint: The identifier `make_list_foobar` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.

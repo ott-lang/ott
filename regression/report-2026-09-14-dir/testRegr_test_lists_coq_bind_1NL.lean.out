@@ -1,0 +1,6 @@
+testRegr_test_lists_coq_bind_1NL.lean:27:28: warning: Variable name `pattern_matching5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _pattern_matching5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`

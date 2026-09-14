@@ -1,0 +1,502 @@
+DIGEST 286d6f73a8b9634c167d71a14bd184c4
+FtestRegr_sys_tyboolNL
+R412:416 Stdlib.Arith.Arith <> <> lib
+R446:449 Stdlib.Bool.Bool <> <> lib
+R479:482 Stdlib.Lists.List <> <> lib
+R500:516 Ott.ott_list_core <> <> lib
+def 621:627 <> termvar
+R638:640 Corelib.Init.Datatypes <> nat ind
+prf 649:658 <> eq_termvar
+R675:681 testRegr_sys_tyboolNL <> termvar def
+binder 669:669 <> x:1
+binder 671:671 <> y:2
+R685:685 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R691:695 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R702:702 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R687:689 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R686:686 testRegr_sys_tyboolNL <> x:1 var
+R690:690 testRegr_sys_tyboolNL <> y:2 var
+R697:700 Corelib.Init.Logic <> ::type_scope:x_'<>'_x not
+R696:696 testRegr_sys_tyboolNL <> x:1 var
+R701:701 testRegr_sys_tyboolNL <> y:2 var
+ind 839:839 <> T
+constr 867:872 <> TyBool
+constr 904:908 <> TyArr
+R876:876 testRegr_sys_tyboolNL <> T:3 ind
+R914:914 testRegr_sys_tyboolNL <> T:3 ind
+binder 911:912 <> T5:5
+R921:921 testRegr_sys_tyboolNL <> T:3 ind
+binder 918:919 <> T':6
+scheme 839:839 <> T_rect
+scheme 839:839 <> T_ind
+scheme 839:839 <> T_rec
+scheme 839:839 <> T_sind
+def 961:961 <> G
+R972:975 Corelib.Init.Datatypes <> list ind
+R985:985 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R978:984 testRegr_sys_tyboolNL <> termvar def
+R986:986 testRegr_sys_tyboolNL <> T ind
+ind 1001:1001 <> t
+constr 1029:1034 <> TmTrue
+constr 1063:1069 <> TmFalse
+constr 1099:1102 <> TmIf
+constr 1146:1150 <> TmVar
+constr 1182:1186 <> TmAbs
+constr 1235:1239 <> TmApp
+R1038:1038 testRegr_sys_tyboolNL <> t:7 ind
+R1073:1073 testRegr_sys_tyboolNL <> t:7 ind
+R1108:1108 testRegr_sys_tyboolNL <> t:7 ind
+binder 1105:1106 <> t1:9
+R1115:1115 testRegr_sys_tyboolNL <> t:7 ind
+binder 1112:1113 <> t2:10
+R1122:1122 testRegr_sys_tyboolNL <> t:7 ind
+binder 1119:1120 <> t3:11
+R1155:1161 testRegr_sys_tyboolNL <> termvar def
+binder 1153:1153 <> x:12
+R1191:1197 testRegr_sys_tyboolNL <> termvar def
+binder 1189:1189 <> x:13
+R1204:1204 testRegr_sys_tyboolNL <> T ind
+binder 1201:1202 <> T5:14
+R1211:1211 testRegr_sys_tyboolNL <> t:7 ind
+binder 1208:1209 <> t5:15
+R1245:1245 testRegr_sys_tyboolNL <> t:7 ind
+binder 1242:1243 <> t1:16
+R1252:1252 testRegr_sys_tyboolNL <> t:7 ind
+binder 1249:1250 <> t2:17
+scheme 1001:1001 <> t_rect
+scheme 1001:1001 <> t_ind
+scheme 1001:1001 <> t_rec
+scheme 1001:1001 <> t_sind
+def 1358:1365 <> list_mem
+binder 1367:1367 <> A:18
+R1384:1384 testRegr_sys_tyboolNL <> A:18 var
+binder 1380:1380 <> a:19
+binder 1382:1382 <> b:20
+R1386:1386 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1390:1392 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1397:1397 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1388:1388 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1387:1387 testRegr_sys_tyboolNL <> a:19 var
+R1389:1389 testRegr_sys_tyboolNL <> b:20 var
+R1394:1395 Corelib.Init.Logic <> ::type_scope:x_'<>'_x not
+R1393:1393 testRegr_sys_tyboolNL <> a:19 var
+R1396:1396 testRegr_sys_tyboolNL <> b:20 var
+binder 1370:1371 <> eq:21
+R1403:1403 testRegr_sys_tyboolNL <> A:18 var
+binder 1401:1401 <> x:22
+R1409:1412 Corelib.Init.Datatypes <> list ind
+R1414:1414 testRegr_sys_tyboolNL <> A:18 var
+binder 1407:1407 <> l:23
+R1430:1433 Corelib.Init.Datatypes <> bool ind
+R1446:1446 testRegr_sys_tyboolNL <> l:23 var
+R1457:1459 Corelib.Init.Datatypes <> nil constr
+R1464:1468 Corelib.Init.Datatypes <> false constr
+R1474:1477 Corelib.Init.Datatypes <> cons constr
+R1489:1490 testRegr_sys_tyboolNL <> eq:21 var
+R1494:1494 testRegr_sys_tyboolNL <> x:22 var
+R1511:1518 testRegr_sys_tyboolNL <> list_mem:24 def
+R1525:1525 testRegr_sys_tyboolNL <> x:22 var
+R1522:1523 testRegr_sys_tyboolNL <> eq:21 var
+R1520:1520 testRegr_sys_tyboolNL <> A:18 var
+R1501:1504 Corelib.Init.Datatypes <> true constr
+R1544:1551 testRegr_sys_tyboolNL <> list_mem def
+def 1574:1583 <> list_minus
+binder 1585:1585 <> A:26
+R1602:1602 testRegr_sys_tyboolNL <> A:26 var
+binder 1598:1598 <> a:27
+binder 1600:1600 <> b:28
+R1604:1604 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1608:1610 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1615:1615 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1606:1606 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1605:1605 testRegr_sys_tyboolNL <> a:27 var
+R1607:1607 testRegr_sys_tyboolNL <> b:28 var
+R1612:1613 Corelib.Init.Logic <> ::type_scope:x_'<>'_x not
+R1611:1611 testRegr_sys_tyboolNL <> a:27 var
+R1614:1614 testRegr_sys_tyboolNL <> b:28 var
+binder 1588:1589 <> eq:29
+R1622:1625 Corelib.Init.Datatypes <> list ind
+R1627:1627 testRegr_sys_tyboolNL <> A:26 var
+binder 1619:1620 <> l1:30
+R1634:1637 Corelib.Init.Datatypes <> list ind
+R1639:1639 testRegr_sys_tyboolNL <> A:26 var
+binder 1631:1632 <> l2:31
+R1656:1659 Corelib.Init.Datatypes <> list ind
+R1661:1661 testRegr_sys_tyboolNL <> A:26 var
+R1674:1675 testRegr_sys_tyboolNL <> l1:30 var
+R1686:1688 Corelib.Init.Datatypes <> nil constr
+R1693:1695 Corelib.Init.Datatypes <> nil constr
+R1701:1704 Corelib.Init.Datatypes <> cons constr
+R1717:1724 testRegr_sys_tyboolNL <> list_mem def
+R1738:1739 testRegr_sys_tyboolNL <> l2:31 var
+R1733:1734 testRegr_sys_tyboolNL <> eq:29 var
+R1730:1730 testRegr_sys_tyboolNL <> A:26 var
+R1773:1776 Corelib.Init.Datatypes <> cons constr
+R1781:1790 testRegr_sys_tyboolNL <> list_minus:32 def
+R1799:1800 testRegr_sys_tyboolNL <> l2:31 var
+R1794:1795 testRegr_sys_tyboolNL <> eq:29 var
+R1792:1792 testRegr_sys_tyboolNL <> A:26 var
+R1747:1756 testRegr_sys_tyboolNL <> list_minus:32 def
+R1765:1766 testRegr_sys_tyboolNL <> l2:31 var
+R1760:1761 testRegr_sys_tyboolNL <> eq:29 var
+R1758:1758 testRegr_sys_tyboolNL <> A:26 var
+R1818:1827 testRegr_sys_tyboolNL <> list_minus def
+def 1868:1876 <> is_v_of_t
+R1883:1883 testRegr_sys_tyboolNL <> t ind
+binder 1879:1881 <> t_6:34
+R1888:1891 Corelib.Init.Datatypes <> bool ind
+R1904:1906 testRegr_sys_tyboolNL <> t_6:34 var
+R1917:1922 testRegr_sys_tyboolNL <> TmTrue constr
+R1928:1931 Corelib.Init.Datatypes <> true constr
+R1938:1944 testRegr_sys_tyboolNL <> TmFalse constr
+R1950:1953 Corelib.Init.Datatypes <> true constr
+R1961:1964 testRegr_sys_tyboolNL <> TmIf constr
+R1979:1983 Corelib.Init.Datatypes <> false constr
+R1990:1994 testRegr_sys_tyboolNL <> TmVar constr
+R2002:2006 Corelib.Init.Datatypes <> false constr
+R2013:2017 testRegr_sys_tyboolNL <> TmAbs constr
+R2032:2035 Corelib.Init.Datatypes <> true constr
+R2043:2047 testRegr_sys_tyboolNL <> TmApp constr
+R2059:2063 Corelib.Init.Datatypes <> false constr
+def 2129:2132 <> fv_t
+R2139:2139 testRegr_sys_tyboolNL <> t ind
+binder 2135:2137 <> t_6:36
+R2144:2147 Corelib.Init.Datatypes <> list ind
+R2149:2155 testRegr_sys_tyboolNL <> termvar def
+R2168:2170 testRegr_sys_tyboolNL <> t_6:36 var
+R2181:2186 testRegr_sys_tyboolNL <> TmTrue constr
+R2191:2193 Corelib.Init.Datatypes <> nil constr
+R2199:2205 testRegr_sys_tyboolNL <> TmFalse constr
+R2210:2212 Corelib.Init.Datatypes <> nil constr
+R2219:2222 testRegr_sys_tyboolNL <> TmIf constr
+R2238:2240 Corelib.Init.Datatypes <> app def
+R2253:2255 Corelib.Init.Datatypes <> app def
+R2268:2271 testRegr_sys_tyboolNL <> fv_t:37 def
+R2258:2261 testRegr_sys_tyboolNL <> fv_t:37 def
+R2243:2246 testRegr_sys_tyboolNL <> fv_t:37 def
+R2284:2288 testRegr_sys_tyboolNL <> TmVar constr
+R2297:2300 Corelib.Init.Datatypes <> cons constr
+R2304:2306 Corelib.Init.Datatypes <> nil constr
+R2314:2318 testRegr_sys_tyboolNL <> TmAbs constr
+R2334:2343 testRegr_sys_tyboolNL <> list_minus def
+R2367:2370 Corelib.Init.Datatypes <> cons constr
+R2374:2376 Corelib.Init.Datatypes <> nil constr
+R2357:2360 testRegr_sys_tyboolNL <> fv_t:37 def
+R2345:2354 testRegr_sys_tyboolNL <> eq_termvar thm
+R2386:2390 testRegr_sys_tyboolNL <> TmApp constr
+R2403:2405 Corelib.Init.Datatypes <> app def
+R2418:2421 testRegr_sys_tyboolNL <> fv_t:37 def
+R2408:2411 testRegr_sys_tyboolNL <> fv_t:37 def
+def 2464:2470 <> subst_t
+R2477:2477 testRegr_sys_tyboolNL <> t ind
+binder 2473:2475 <> t_6:39
+R2484:2490 testRegr_sys_tyboolNL <> termvar def
+binder 2481:2482 <> x5:40
+R2499:2499 testRegr_sys_tyboolNL <> t ind
+binder 2494:2497 <> t__7:41
+R2518:2518 testRegr_sys_tyboolNL <> t ind
+R2531:2534 testRegr_sys_tyboolNL <> t__7:41 var
+R2545:2550 testRegr_sys_tyboolNL <> TmTrue constr
+R2555:2560 testRegr_sys_tyboolNL <> TmTrue constr
+R2567:2573 testRegr_sys_tyboolNL <> TmFalse constr
+R2578:2584 testRegr_sys_tyboolNL <> TmFalse constr
+R2592:2595 testRegr_sys_tyboolNL <> TmIf constr
+R2610:2613 testRegr_sys_tyboolNL <> TmIf constr
+R2616:2622 testRegr_sys_tyboolNL <> subst_t:42 def
+R2628:2629 testRegr_sys_tyboolNL <> x5:40 var
+R2624:2626 testRegr_sys_tyboolNL <> t_6:39 var
+R2636:2642 testRegr_sys_tyboolNL <> subst_t:42 def
+R2648:2649 testRegr_sys_tyboolNL <> x5:40 var
+R2644:2646 testRegr_sys_tyboolNL <> t_6:39 var
+R2656:2662 testRegr_sys_tyboolNL <> subst_t:42 def
+R2668:2669 testRegr_sys_tyboolNL <> x5:40 var
+R2664:2666 testRegr_sys_tyboolNL <> t_6:39 var
+R2680:2684 testRegr_sys_tyboolNL <> TmVar constr
+R2696:2705 testRegr_sys_tyboolNL <> eq_termvar thm
+R2709:2710 testRegr_sys_tyboolNL <> x5:40 var
+R2727:2731 testRegr_sys_tyboolNL <> TmVar constr
+R2717:2719 testRegr_sys_tyboolNL <> t_6:39 var
+R2742:2746 testRegr_sys_tyboolNL <> TmAbs constr
+R2760:2764 testRegr_sys_tyboolNL <> TmAbs constr
+R2775:2782 testRegr_sys_tyboolNL <> list_mem def
+R2799:2802 Corelib.Init.Datatypes <> cons constr
+R2806:2808 Corelib.Init.Datatypes <> nil constr
+R2795:2796 testRegr_sys_tyboolNL <> x5:40 var
+R2784:2793 testRegr_sys_tyboolNL <> eq_termvar thm
+R2825:2831 testRegr_sys_tyboolNL <> subst_t:42 def
+R2837:2838 testRegr_sys_tyboolNL <> x5:40 var
+R2833:2835 testRegr_sys_tyboolNL <> t_6:39 var
+R2850:2854 testRegr_sys_tyboolNL <> TmApp constr
+R2866:2870 testRegr_sys_tyboolNL <> TmApp constr
+R2873:2879 testRegr_sys_tyboolNL <> subst_t:42 def
+R2885:2886 testRegr_sys_tyboolNL <> x5:40 var
+R2881:2883 testRegr_sys_tyboolNL <> t_6:39 var
+R2893:2899 testRegr_sys_tyboolNL <> subst_t:42 def
+R2905:2906 testRegr_sys_tyboolNL <> x5:40 var
+R2901:2903 testRegr_sys_tyboolNL <> t_6:39 var
+R2960:2971 Ott.ott_list <> <> lib
+def 3011:3015 <> bound
+binder 3017:3017 <> x:44
+binder 3019:3020 <> T0:45
+binder 3022:3022 <> G:46
+R3029:3035 Corelib.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+R3038:3039 Corelib.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+binder 3036:3037 <> G1:47
+R3040:3046 Corelib.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+R3049:3054 Corelib.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+binder 3047:3048 <> G2:48
+R3082:3089 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R3057:3059 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R3056:3056 testRegr_sys_tyboolNL <> G:46 var
+R3062:3065 Corelib.Init.Datatypes <> ::list_scope:x_'++'_x not
+R3060:3061 testRegr_sys_tyboolNL <> G1:47 var
+R3072:3073 Corelib.Init.Datatypes <> ::list_scope:x_'::'_x not
+R3066:3066 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3068:3068 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3071:3071 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3067:3067 testRegr_sys_tyboolNL <> x:44 var
+R3069:3070 testRegr_sys_tyboolNL <> T0:45 var
+R3074:3075 testRegr_sys_tyboolNL <> G2:48 var
+R3090:3090 Corelib.Init.Logic <> ::type_scope:'~'_x not
+R3091:3092 Stdlib.Lists.List <> In def
+R3097:3104 Stdlib.Lists.List <> map abbrev
+R3123:3124 testRegr_sys_tyboolNL <> G1:47 var
+R3108:3110 Corelib.Init.Datatypes <> fst def
+R3112:3118 testRegr_sys_tyboolNL <> termvar def
+R3120:3120 testRegr_sys_tyboolNL <> T ind
+R3094:3094 testRegr_sys_tyboolNL <> x:44 var
+ind 3175:3177 <> red
+constr 3220:3227 <> E_IfTrue
+constr 3284:3292 <> E_IfFalse
+constr 3350:3353 <> E_If
+constr 3446:3451 <> E_App1
+constr 3537:3542 <> E_App2
+constr 3659:3666 <> E_AppAbs
+R3182:3185 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3181:3181 testRegr_sys_tyboolNL <> t ind
+R3187:3190 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3186:3186 testRegr_sys_tyboolNL <> t ind
+R3245:3245 testRegr_sys_tyboolNL <> t ind
+binder 3239:3240 <> t2:51
+binder 3242:3243 <> t3:52
+R3254:3256 testRegr_sys_tyboolNL <> red:49 ind
+R3278:3279 testRegr_sys_tyboolNL <> t2:51 var
+R3259:3262 testRegr_sys_tyboolNL <> TmIf constr
+R3264:3269 testRegr_sys_tyboolNL <> TmTrue constr
+R3271:3272 testRegr_sys_tyboolNL <> t2:51 var
+R3274:3275 testRegr_sys_tyboolNL <> t3:52 var
+R3310:3310 testRegr_sys_tyboolNL <> t ind
+binder 3304:3305 <> t2:53
+binder 3307:3308 <> t3:54
+R3319:3321 testRegr_sys_tyboolNL <> red:49 ind
+R3344:3345 testRegr_sys_tyboolNL <> t3:54 var
+R3324:3327 testRegr_sys_tyboolNL <> TmIf constr
+R3329:3335 testRegr_sys_tyboolNL <> TmFalse constr
+R3337:3338 testRegr_sys_tyboolNL <> t2:53 var
+R3340:3341 testRegr_sys_tyboolNL <> t3:54 var
+R3378:3378 testRegr_sys_tyboolNL <> t ind
+binder 3365:3366 <> t1:55
+binder 3368:3369 <> t2:56
+binder 3371:3372 <> t3:57
+binder 3374:3376 <> t1':58
+R3397:3405 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3387:3389 testRegr_sys_tyboolNL <> red:49 ind
+R3394:3396 testRegr_sys_tyboolNL <> t1':58 var
+R3391:3392 testRegr_sys_tyboolNL <> t1:55 var
+R3406:3408 testRegr_sys_tyboolNL <> red:49 ind
+R3427:3430 testRegr_sys_tyboolNL <> TmIf constr
+R3432:3434 testRegr_sys_tyboolNL <> t1':58 var
+R3436:3437 testRegr_sys_tyboolNL <> t2:56 var
+R3439:3440 testRegr_sys_tyboolNL <> t3:57 var
+R3411:3414 testRegr_sys_tyboolNL <> TmIf constr
+R3416:3417 testRegr_sys_tyboolNL <> t1:55 var
+R3419:3420 testRegr_sys_tyboolNL <> t2:56 var
+R3422:3423 testRegr_sys_tyboolNL <> t3:57 var
+R3473:3473 testRegr_sys_tyboolNL <> t ind
+binder 3463:3464 <> t1:59
+binder 3466:3467 <> t2:60
+binder 3469:3471 <> t1':61
+R3492:3500 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3482:3484 testRegr_sys_tyboolNL <> red:49 ind
+R3489:3491 testRegr_sys_tyboolNL <> t1':61 var
+R3486:3487 testRegr_sys_tyboolNL <> t1:59 var
+R3501:3503 testRegr_sys_tyboolNL <> red:49 ind
+R3520:3524 testRegr_sys_tyboolNL <> TmApp constr
+R3526:3528 testRegr_sys_tyboolNL <> t1':61 var
+R3530:3531 testRegr_sys_tyboolNL <> t2:60 var
+R3506:3510 testRegr_sys_tyboolNL <> TmApp constr
+R3512:3513 testRegr_sys_tyboolNL <> t1:59 var
+R3515:3516 testRegr_sys_tyboolNL <> t2:60 var
+R3564:3564 testRegr_sys_tyboolNL <> t ind
+binder 3554:3555 <> v1:62
+binder 3557:3558 <> t2:63
+binder 3560:3562 <> t2':64
+R3595:3603 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3573:3579 Stdlib.Bool.Bool <> Is_true def
+R3582:3590 testRegr_sys_tyboolNL <> is_v_of_t def
+R3592:3593 testRegr_sys_tyboolNL <> v1:62 var
+R3614:3622 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3604:3606 testRegr_sys_tyboolNL <> red:49 ind
+R3611:3613 testRegr_sys_tyboolNL <> t2':64 var
+R3608:3609 testRegr_sys_tyboolNL <> t2:63 var
+R3623:3625 testRegr_sys_tyboolNL <> red:49 ind
+R3642:3646 testRegr_sys_tyboolNL <> TmApp constr
+R3648:3649 testRegr_sys_tyboolNL <> v1:62 var
+R3651:3653 testRegr_sys_tyboolNL <> t2':64 var
+R3628:3632 testRegr_sys_tyboolNL <> TmApp constr
+R3634:3635 testRegr_sys_tyboolNL <> v1:62 var
+R3637:3638 testRegr_sys_tyboolNL <> t2:63 var
+R3680:3686 testRegr_sys_tyboolNL <> termvar def
+binder 3678:3678 <> x:65
+R3693:3693 testRegr_sys_tyboolNL <> T ind
+binder 3690:3691 <> T5:66
+R3704:3704 testRegr_sys_tyboolNL <> t ind
+binder 3697:3699 <> t12:67
+binder 3701:3702 <> v2:68
+R3735:3743 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3713:3719 Stdlib.Bool.Bool <> Is_true def
+R3722:3730 testRegr_sys_tyboolNL <> is_v_of_t def
+R3732:3733 testRegr_sys_tyboolNL <> v2:68 var
+R3744:3746 testRegr_sys_tyboolNL <> red:49 ind
+R3780:3786 testRegr_sys_tyboolNL <> subst_t def
+R3789:3790 testRegr_sys_tyboolNL <> v2:68 var
+R3794:3794 testRegr_sys_tyboolNL <> x:65 var
+R3798:3800 testRegr_sys_tyboolNL <> t12:67 var
+R3749:3753 testRegr_sys_tyboolNL <> TmApp constr
+R3757:3761 testRegr_sys_tyboolNL <> TmAbs constr
+R3763:3763 testRegr_sys_tyboolNL <> x:65 var
+R3765:3766 testRegr_sys_tyboolNL <> T5:66 var
+R3768:3770 testRegr_sys_tyboolNL <> t12:67 var
+R3774:3775 testRegr_sys_tyboolNL <> v2:68 var
+scheme 3175:3177 <> red_ind
+scheme 3175:3177 <> red_sind
+ind 3835:3840 <> typing
+constr 3891:3896 <> T_True
+constr 3947:3953 <> T_False
+constr 4005:4008 <> T_If
+constr 4160:4164 <> T_Var
+constr 4265:4269 <> T_Abs
+constr 4415:4419 <> T_App
+R3845:3848 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3844:3844 testRegr_sys_tyboolNL <> G def
+R3850:3853 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3849:3849 testRegr_sys_tyboolNL <> t ind
+R3855:3858 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3854:3854 testRegr_sys_tyboolNL <> T ind
+R3911:3911 testRegr_sys_tyboolNL <> G def
+binder 3908:3909 <> G5:71
+R3920:3925 testRegr_sys_tyboolNL <> typing:69 ind
+R3937:3942 testRegr_sys_tyboolNL <> TyBool constr
+R3930:3935 testRegr_sys_tyboolNL <> TmTrue constr
+R3927:3928 testRegr_sys_tyboolNL <> G5:71 var
+R3968:3968 testRegr_sys_tyboolNL <> G def
+binder 3965:3966 <> G5:72
+R3977:3982 testRegr_sys_tyboolNL <> typing:69 ind
+R3995:4000 testRegr_sys_tyboolNL <> TyBool constr
+R3987:3993 testRegr_sys_tyboolNL <> TmFalse constr
+R3984:3985 testRegr_sys_tyboolNL <> G5:72 var
+R4023:4023 testRegr_sys_tyboolNL <> G def
+binder 4020:4021 <> G5:73
+R4036:4036 testRegr_sys_tyboolNL <> t ind
+binder 4027:4028 <> t1:74
+binder 4030:4031 <> t2:75
+binder 4033:4034 <> t3:76
+R4043:4043 testRegr_sys_tyboolNL <> T ind
+binder 4040:4041 <> T5:77
+R4071:4079 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R4052:4057 testRegr_sys_tyboolNL <> typing:69 ind
+R4065:4070 testRegr_sys_tyboolNL <> TyBool constr
+R4062:4063 testRegr_sys_tyboolNL <> t1:74 var
+R4059:4060 testRegr_sys_tyboolNL <> G5:73 var
+R4095:4103 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R4080:4085 testRegr_sys_tyboolNL <> typing:69 ind
+R4093:4094 testRegr_sys_tyboolNL <> T5:77 var
+R4090:4091 testRegr_sys_tyboolNL <> t2:75 var
+R4087:4088 testRegr_sys_tyboolNL <> G5:73 var
+R4119:4127 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R4104:4109 testRegr_sys_tyboolNL <> typing:69 ind
+R4117:4118 testRegr_sys_tyboolNL <> T5:77 var
+R4114:4115 testRegr_sys_tyboolNL <> t3:76 var
+R4111:4112 testRegr_sys_tyboolNL <> G5:73 var
+R4128:4133 testRegr_sys_tyboolNL <> typing:69 ind
+R4154:4155 testRegr_sys_tyboolNL <> T5:77 var
+R4139:4142 testRegr_sys_tyboolNL <> TmIf constr
+R4144:4145 testRegr_sys_tyboolNL <> t1:74 var
+R4147:4148 testRegr_sys_tyboolNL <> t2:75 var
+R4150:4151 testRegr_sys_tyboolNL <> t3:76 var
+R4135:4136 testRegr_sys_tyboolNL <> G5:73 var
+R4179:4179 testRegr_sys_tyboolNL <> G def
+binder 4176:4177 <> G5:78
+R4185:4191 testRegr_sys_tyboolNL <> termvar def
+binder 4183:4183 <> x:79
+R4198:4198 testRegr_sys_tyboolNL <> T ind
+binder 4195:4196 <> T5:80
+R4208:4208 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R4227:4238 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R4209:4213 testRegr_sys_tyboolNL <> bound def
+R4216:4216 testRegr_sys_tyboolNL <> x:79 var
+R4220:4221 testRegr_sys_tyboolNL <> T5:80 var
+R4225:4226 testRegr_sys_tyboolNL <> G5:78 var
+R4239:4244 testRegr_sys_tyboolNL <> typing:69 ind
+R4259:4260 testRegr_sys_tyboolNL <> T5:80 var
+R4250:4254 testRegr_sys_tyboolNL <> TmVar constr
+R4256:4256 testRegr_sys_tyboolNL <> x:79 var
+R4246:4247 testRegr_sys_tyboolNL <> G5:78 var
+R4284:4284 testRegr_sys_tyboolNL <> G def
+binder 4281:4282 <> G5:81
+R4290:4296 testRegr_sys_tyboolNL <> termvar def
+binder 4288:4288 <> x:82
+R4303:4303 testRegr_sys_tyboolNL <> T ind
+binder 4300:4301 <> T1:83
+R4310:4310 testRegr_sys_tyboolNL <> t ind
+binder 4307:4308 <> t2:84
+R4317:4317 testRegr_sys_tyboolNL <> T ind
+binder 4314:4315 <> T2:85
+R4363:4371 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R4326:4331 testRegr_sys_tyboolNL <> typing:69 ind
+R4361:4362 testRegr_sys_tyboolNL <> T2:85 var
+R4358:4359 testRegr_sys_tyboolNL <> t2:84 var
+R4335:4338 Corelib.Init.Datatypes <> cons constr
+R4352:4353 testRegr_sys_tyboolNL <> G5:81 var
+R4340:4341 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4343:4345 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4348:4349 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R4342:4342 testRegr_sys_tyboolNL <> x:82 var
+R4346:4347 testRegr_sys_tyboolNL <> T1:83 var
+R4372:4377 testRegr_sys_tyboolNL <> typing:69 ind
+R4399:4403 testRegr_sys_tyboolNL <> TyArr constr
+R4405:4406 testRegr_sys_tyboolNL <> T1:83 var
+R4408:4409 testRegr_sys_tyboolNL <> T2:85 var
+R4383:4387 testRegr_sys_tyboolNL <> TmAbs constr
+R4389:4389 testRegr_sys_tyboolNL <> x:82 var
+R4391:4392 testRegr_sys_tyboolNL <> T1:83 var
+R4394:4395 testRegr_sys_tyboolNL <> t2:84 var
+R4379:4380 testRegr_sys_tyboolNL <> G5:81 var
+R4434:4434 testRegr_sys_tyboolNL <> G def
+binder 4431:4432 <> G5:86
+R4444:4444 testRegr_sys_tyboolNL <> t ind
+binder 4438:4439 <> t1:87
+binder 4441:4442 <> t2:88
+R4456:4456 testRegr_sys_tyboolNL <> T ind
+binder 4448:4450 <> T12:89
+binder 4452:4454 <> T11:90
+R4493:4501 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R4465:4470 testRegr_sys_tyboolNL <> typing:69 ind
+R4479:4483 testRegr_sys_tyboolNL <> TyArr constr
+R4485:4487 testRegr_sys_tyboolNL <> T11:90 var
+R4489:4491 testRegr_sys_tyboolNL <> T12:89 var
+R4475:4476 testRegr_sys_tyboolNL <> t1:87 var
+R4472:4473 testRegr_sys_tyboolNL <> G5:86 var
+R4518:4526 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R4502:4507 testRegr_sys_tyboolNL <> typing:69 ind
+R4515:4517 testRegr_sys_tyboolNL <> T11:90 var
+R4512:4513 testRegr_sys_tyboolNL <> t2:88 var
+R4509:4510 testRegr_sys_tyboolNL <> G5:86 var
+R4527:4532 testRegr_sys_tyboolNL <> typing:69 ind
+R4551:4553 testRegr_sys_tyboolNL <> T12:89 var
+R4538:4542 testRegr_sys_tyboolNL <> TmApp constr
+R4544:4545 testRegr_sys_tyboolNL <> t1:87 var
+R4547:4548 testRegr_sys_tyboolNL <> t2:88 var
+R4534:4535 testRegr_sys_tyboolNL <> G5:86 var
+scheme 3835:3840 <> typing_ind
+scheme 3835:3840 <> typing_sind

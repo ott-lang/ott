@@ -1,0 +1,122 @@
+DIGEST 638a34d95a99b1924ba681a3f2fcf824
+FtestRegr_test13NL
+R121:125 Stdlib.Arith.Arith <> <> lib
+R155:158 Stdlib.Bool.Bool <> <> lib
+R188:191 Stdlib.Lists.List <> <> lib
+R209:225 Ott.ott_list_core <> <> lib
+def 241:248 <> terminal
+R259:261 Corelib.Init.Datatypes <> nat ind
+def 275:285 <> metavarroot
+R296:298 Corelib.Init.Datatypes <> nat ind
+def 312:322 <> nontermroot
+R333:335 Corelib.Init.Datatypes <> nat ind
+def 349:354 <> suffix
+R365:367 Corelib.Init.Datatypes <> nat ind
+def 381:385 <> auxfn
+R396:398 Corelib.Init.Datatypes <> nat ind
+def 412:419 <> prodname
+R430:432 Corelib.Init.Datatypes <> nat ind
+def 446:450 <> index
+R461:463 Corelib.Init.Datatypes <> nat ind
+ind 477:483 <> metavar
+constr 498:501 <> mv_1
+R517:527 testRegr_test13NL <> metavarroot def
+binder 504:515 <> metavarroot5:3
+R539:544 testRegr_test13NL <> suffix def
+binder 531:537 <> suffix5:4
+scheme 477:483 <> metavar_rect
+scheme 477:483 <> metavar_ind
+scheme 477:483 <> metavar_rec
+scheme 477:483 <> metavar_sind
+ind 559:565 <> nonterm
+constr 580:583 <> nt_1
+R599:609 testRegr_test13NL <> nontermroot def
+binder 586:597 <> nontermroot5:7
+R621:626 testRegr_test13NL <> suffix def
+binder 613:619 <> suffix5:8
+scheme 559:565 <> nonterm_rect
+scheme 559:565 <> nonterm_ind
+scheme 559:565 <> nonterm_rec
+scheme 559:565 <> nonterm_sind
+ind 641:643 <> mse
+constr 658:663 <> mse_mv
+constr 687:692 <> mse_nt
+constr 716:720 <> mse_f
+constr 759:767 <> mse_union
+constr 794:802 <> mse_empty
+R675:681 testRegr_test13NL <> metavar ind
+binder 666:673 <> metavar5:11
+R704:710 testRegr_test13NL <> nonterm ind
+binder 695:702 <> nonterm5:12
+R730:734 testRegr_test13NL <> auxfn def
+binder 723:728 <> auxfn5:13
+R747:753 testRegr_test13NL <> nonterm ind
+binder 738:745 <> nonterm5:14
+R775:777 testRegr_test13NL <> mse:9 ind
+binder 770:773 <> mse5:15
+R786:788 testRegr_test13NL <> mse:9 ind
+binder 781:784 <> mse':16
+R806:808 testRegr_test13NL <> mse:9 ind
+scheme 641:643 <> mse_rect
+scheme 641:643 <> mse_ind
+scheme 641:643 <> mse_rec
+scheme 641:643 <> mse_sind
+ind 822:828 <> element
+constr 843:846 <> e_tm
+constr 872:875 <> e_mv
+constr 899:902 <> e_nt
+R859:866 testRegr_test13NL <> terminal def
+binder 849:857 <> terminal5:19
+R887:893 testRegr_test13NL <> metavar ind
+binder 878:885 <> metavar5:20
+R914:920 testRegr_test13NL <> nonterm ind
+binder 905:912 <> nonterm5:21
+scheme 822:828 <> element_rect
+scheme 822:828 <> element_ind
+scheme 822:828 <> element_rec
+scheme 822:828 <> element_sind
+ind 935:942 <> bindspec
+constr 957:963 <> bs_bind
+constr 998:1005 <> bs_auxfn
+R971:973 testRegr_test13NL <> mse ind
+binder 966:969 <> mse5:24
+R986:992 testRegr_test13NL <> nonterm ind
+binder 977:984 <> nonterm5:25
+R1015:1019 testRegr_test13NL <> auxfn def
+binder 1008:1013 <> auxfn5:26
+R1028:1030 testRegr_test13NL <> mse ind
+binder 1023:1026 <> mse5:27
+scheme 935:942 <> bindspec_rect
+scheme 935:942 <> bindspec_ind
+scheme 935:942 <> bindspec_rec
+scheme 935:942 <> bindspec_sind
+ind 1045:1048 <> prod
+constr 1063:1065 <> p_1
+R1070:1073 Corelib.Init.Datatypes <> list ind
+R1075:1081 testRegr_test13NL <> element ind
+R1095:1102 testRegr_test13NL <> prodname def
+binder 1085:1093 <> prodname5:30
+R1108:1111 Corelib.Init.Datatypes <> list ind
+R1113:1120 testRegr_test13NL <> bindspec ind
+scheme 1045:1048 <> prod_rect
+scheme 1045:1048 <> prod_ind
+scheme 1045:1048 <> prod_rec
+scheme 1045:1048 <> prod_sind
+ind 1135:1138 <> rule
+constr 1153:1155 <> r_1
+R1171:1181 testRegr_test13NL <> nontermroot def
+binder 1158:1169 <> nontermroot5:33
+R1187:1190 Corelib.Init.Datatypes <> list ind
+R1192:1195 testRegr_test13NL <> prod ind
+scheme 1135:1138 <> rule_rect
+scheme 1135:1138 <> rule_ind
+scheme 1135:1138 <> rule_rec
+scheme 1135:1138 <> rule_sind
+ind 1210:1222 <> grammar_rules
+constr 1237:1239 <> g_1
+R1244:1247 Corelib.Init.Datatypes <> list ind
+R1249:1252 testRegr_test13NL <> rule ind
+scheme 1210:1222 <> grammar_rules_rect
+scheme 1210:1222 <> grammar_rules_ind
+scheme 1210:1222 <> grammar_rules_rec
+scheme 1210:1222 <> grammar_rules_sind

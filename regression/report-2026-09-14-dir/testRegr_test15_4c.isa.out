@@ -1,0 +1,83 @@
+Running Draft ...
+
+Output (line 8 of "Draft/testRegr_test15_4c.thy"):
+consts
+  typerep_a_pre_a :: "'a a_pre_a itself ⇒ typerep"
+
+Output (line 8 of "Draft/testRegr_test15_4c.thy"):
+consts
+  typerep_a_IITN_a :: "a.a_IITN_a itself ⇒ typerep"
+
+Output (line 8 of "Draft/testRegr_test15_4c.thy"):
+consts
+  typerep_a :: "a itself ⇒ typerep"
+
+Output (line 8 of "Draft/testRegr_test15_4c.thy"):
+consts
+  term_of_a :: "a ⇒ term"
+
+Output (line 8 of "Draft/testRegr_test15_4c.thy"):
+consts
+  partial_term_of_a ::
+    "a itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 8 of "Draft/testRegr_test15_4c.thy"):
+consts
+  equal_a :: "a ⇒ a ⇒ bool"
+
+Output (line 17 of "Draft/testRegr_test15_4c.thy"):
+consts
+  typerep_n2m_a_is_av_of_a_pre_n2m_a ::
+    "('a, 'b, 'c) is_av_of_a.n2m_a_is_av_of_a_pre_n2m_a itself ⇒ typerep"
+
+Output (line 17 of "Draft/testRegr_test15_4c.thy"):
+consts
+  is_av_of_a_a_a_CC :: "a × a ⇒ bool"
+  is_av_of_a_a_a_a_CC :: "a × a × a ⇒ bool"
+  is_av_of_a_a_a_list_a_CC :: "(a × a × a) list ⇒ bool"
+  is_av_of_a_a_a_C :: "a × a ⇒ bool"
+  is_av_of_a_a_a_a_C :: "a × a × a ⇒ bool"
+  is_av_of_a_a_a_list_a_C :: "(a × a × a) list ⇒ bool"
+  is_av_of_a :: "a ⇒ bool"
+
+Output (line 42 of "Draft/testRegr_test15_4c.thy"):
+consts
+  fv_a_a_a_CC :: "a × a ⇒ nat list"
+  fv_a_a_a_a_CC :: "a × a × a ⇒ nat list"
+  fv_a_a_a_list_a_CC :: "(a × a × a) list ⇒ nat list"
+  fv_a_a_a_C :: "a × a ⇒ nat list"
+  fv_a_a_a_a_C :: "a × a × a ⇒ nat list"
+  fv_a_a_a_list_a_C :: "(a × a × a) list ⇒ nat list"
+  fv_a :: "a ⇒ nat list"
+
+Output (line 66 of "Draft/testRegr_test15_4c.thy"):
+consts
+  list_assoc :: "'a ⇒ ('a × 'b) list ⇒ 'b option"
+
+Output (line 74 of "Draft/testRegr_test15_4c.thy"):
+consts
+  su_a_a_a_CC :: "a ⇒ nat ⇒ a × a ⇒ a × a"
+  su_a_a_a_a_CC :: "a ⇒ nat ⇒ a × a × a ⇒ a × a × a"
+  su_a_a_a_list_a_CC :: "a ⇒ nat ⇒ (a × a × a) list ⇒ (a × a × a) list"
+  su_a_a_a_C :: "a ⇒ nat ⇒ a × a ⇒ a × a"
+  su_a_a_a_a_C :: "a ⇒ nat ⇒ a × a × a ⇒ a × a × a"
+  su_a_a_a_list_a_C :: "a ⇒ nat ⇒ (a × a × a) list ⇒ (a × a × a) list"
+  su_a :: "a ⇒ nat ⇒ a ⇒ a"
+
+Output (line 97 of "Draft/testRegr_test15_4c.thy"):
+consts
+  typerep_n2m_a_sum_a_pre_n2m_a ::
+    "('a, 'b, 'c) sum_a.n2m_a_sum_a_pre_n2m_a itself ⇒ typerep"
+
+Output (line 97 of "Draft/testRegr_test15_4c.thy"):
+consts
+  sum_a_a_a_list_a_C ::
+    "(nat × a) list ⇒ (a × a × a) list ⇒ (a × a × a) list"
+  sum_a :: "(nat × a) list ⇒ a ⇒ a"
+  sum_a_a_a_CC :: "(nat × a) list ⇒ a × a ⇒ a × a"
+  sum_a_a_a_a_CC :: "(nat × a) list ⇒ a × a × a ⇒ a × a × a"
+  sum_a_a_a_list_a_CC ::
+    "(nat × a) list ⇒ (a × a × a) list ⇒ (a × a × a) list"
+  sum_a_a_a_C :: "(nat × a) list ⇒ a × a ⇒ a × a"
+  sum_a_a_a_a_C :: "(nat × a) list ⇒ a × a × a ⇒ a × a × a"
+Finished Draft (0:00:52 elapsed time, 0:01:55 cpu time, factor 2.20)

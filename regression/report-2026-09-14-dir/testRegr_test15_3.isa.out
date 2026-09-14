@@ -1,0 +1,106 @@
+Running Draft ...
+
+Output (line 6 of "Draft/testRegr_test15_3.thy"):
+consts
+  typerep_a_pre_a :: "('a, 'b) a_pre_a itself ⇒ typerep"
+
+Output (line 6 of "Draft/testRegr_test15_3.thy"):
+consts
+  typerep_a_b_sbdT_a_b :: "a_b.a_b_sbdT_a_b itself ⇒ typerep"
+
+Output (line 6 of "Draft/testRegr_test15_3.thy"):
+consts
+  typerep_a_b_IITN_a_b :: "a_b.a_b_IITN_a_b itself ⇒ typerep"
+
+Output (line 6 of "Draft/testRegr_test15_3.thy"):
+consts
+  typerep_a :: "a itself ⇒ typerep"
+
+Output (line 6 of "Draft/testRegr_test15_3.thy"):
+consts
+  typerep_b :: "b itself ⇒ typerep"
+
+Output (line 6 of "Draft/testRegr_test15_3.thy"):
+consts
+  term_of_a :: "a ⇒ term"
+
+Output (line 6 of "Draft/testRegr_test15_3.thy"):
+consts
+  partial_term_of_a ::
+    "a itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 6 of "Draft/testRegr_test15_3.thy"):
+consts
+  equal_a :: "a ⇒ a ⇒ bool"
+
+Output (line 6 of "Draft/testRegr_test15_3.thy"):
+consts
+  term_of_b :: "b ⇒ term"
+
+Output (line 6 of "Draft/testRegr_test15_3.thy"):
+consts
+  partial_term_of_b ::
+    "b itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 6 of "Draft/testRegr_test15_3.thy"):
+consts
+  equal_b :: "b ⇒ b ⇒ bool"
+
+Output (line 6 of "Draft/testRegr_test15_3.thy"):
+consts
+  mutual_random_auxa_b ::
+    "natural
+     ⇒ (natural
+        ⇒ natural × natural ⇒ (a × (unit ⇒ term)) × natural × natural) ×
+       (natural
+        ⇒ natural × natural ⇒ (b × (unit ⇒ term)) × natural × natural)"
+
+Output (line 6 of "Draft/testRegr_test15_3.thy"):
+consts
+  random_a ::
+    "natural ⇒ natural × natural ⇒ (a × (unit ⇒ term)) × natural × natural"
+
+Output (line 6 of "Draft/testRegr_test15_3.thy"):
+consts
+  random_b ::
+    "natural ⇒ natural × natural ⇒ (b × (unit ⇒ term)) × natural × natural"
+
+Output (line 19 of "Draft/testRegr_test15_3.thy"):
+consts
+  is_bv_of_b_is_b_of_b :: "b ⇒ bool × bool"
+  is_av_of_a_is_a_of_a :: "a ⇒ bool × bool"
+
+Output (line 32 of "Draft/testRegr_test15_3.thy"):
+consts
+  is_bv_of_b :: "b ⇒ bool"
+
+Output (line 35 of "Draft/testRegr_test15_3.thy"):
+consts
+  is_b_of_b :: "b ⇒ bool"
+
+Output (line 38 of "Draft/testRegr_test15_3.thy"):
+consts
+  is_av_of_a :: "a ⇒ bool"
+
+Output (line 41 of "Draft/testRegr_test15_3.thy"):
+consts
+  is_a_of_a :: "a ⇒ bool"
+
+Output (line 44 of "Draft/testRegr_test15_3.thy"):
+theorem   is_bv_of_b b_BB = False
+          is_bv_of_b (b_a ?a) = is_a_of_a ?a
+          is_bv_of_b (b_b ?b) = is_b_of_b ?b
+          is_b_of_b b_BB = True
+          is_b_of_b (b_a ?a) = is_a_of_a ?a
+          is_b_of_b (b_b ?b) = is_b_of_b ?b
+          is_av_of_a a_AA = False
+          is_av_of_a (a_a ?a) = is_a_of_a ?a
+          is_av_of_a (a_b ?b) = is_b_of_b ?b
+          is_av_of_a (a_C ?av ?bv) = (is_av_of_a ?av ∧ is_bv_of_b ?bv)
+          is_av_of_a (a_D ?av ?bv) = False
+          is_a_of_a a_AA = True
+          is_a_of_a (a_a ?a) = is_a_of_a ?a
+          is_a_of_a (a_b ?b) = is_b_of_b ?b
+          is_a_of_a (a_C ?av ?bv) = (is_av_of_a ?av ∧ is_bv_of_b ?bv)
+          is_a_of_a (a_D ?av ?bv) = (is_av_of_a ?av ∧ is_bv_of_b ?bv)
+Finished Draft (0:00:02 elapsed time, 0:00:03 cpu time)

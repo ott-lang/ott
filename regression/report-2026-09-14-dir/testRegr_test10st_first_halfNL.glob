@@ -1,0 +1,193 @@
+DIGEST 7653736b861f67eb1385c2eef858ae83
+FtestRegr_test10st_first_halfNL
+R134:138 Stdlib.Arith.Arith <> <> lib
+R168:171 Stdlib.Bool.Bool <> <> lib
+R201:204 Stdlib.Lists.List <> <> lib
+R222:238 Ott.ott_list_core <> <> lib
+def 254:260 <> termvar
+R271:273 Corelib.Init.Datatypes <> nat ind
+prf 302:311 <> eq_termvar
+R328:334 testRegr_test10st_first_halfNL <> termvar def
+binder 322:322 <> x:1
+binder 324:324 <> y:2
+R338:338 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R344:348 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R355:355 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R340:342 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R339:339 testRegr_test10st_first_halfNL <> x:1 var
+R343:343 testRegr_test10st_first_halfNL <> y:2 var
+R350:353 Corelib.Init.Logic <> ::type_scope:x_'<>'_x not
+R349:349 testRegr_test10st_first_halfNL <> x:1 var
+R354:354 testRegr_test10st_first_halfNL <> y:2 var
+def 492:497 <> typvar
+R508:510 Corelib.Init.Datatypes <> nat ind
+prf 539:547 <> eq_typvar
+R564:569 testRegr_test10st_first_halfNL <> typvar def
+binder 558:558 <> x:3
+binder 560:560 <> y:4
+R573:573 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R579:583 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R590:590 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R575:577 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R574:574 testRegr_test10st_first_halfNL <> x:3 var
+R578:578 testRegr_test10st_first_halfNL <> y:4 var
+R585:588 Corelib.Init.Logic <> ::type_scope:x_'<>'_x not
+R584:584 testRegr_test10st_first_halfNL <> x:3 var
+R589:589 testRegr_test10st_first_halfNL <> y:4 var
+ind 726:726 <> t
+constr 752:756 <> t_Var
+constr 788:792 <> t_Lam
+constr 834:838 <> t_App
+R761:767 testRegr_test10st_first_halfNL <> termvar def
+binder 759:759 <> x:7
+R797:803 testRegr_test10st_first_halfNL <> termvar def
+binder 795:795 <> x:8
+R810:810 testRegr_test10st_first_halfNL <> t:5 ind
+binder 807:808 <> t5:9
+R844:844 testRegr_test10st_first_halfNL <> t:5 ind
+binder 841:842 <> t5:10
+R851:851 testRegr_test10st_first_halfNL <> t:5 ind
+binder 848:849 <> t':11
+scheme 726:726 <> t_rect
+scheme 726:726 <> t_ind
+scheme 726:726 <> t_rec
+scheme 726:726 <> t_sind
+def 901:909 <> is_v_of_t
+R916:916 testRegr_test10st_first_halfNL <> t ind
+binder 912:914 <> t_6:12
+R921:924 Corelib.Init.Datatypes <> bool ind
+R937:939 testRegr_test10st_first_halfNL <> t_6:12 var
+R951:955 testRegr_test10st_first_halfNL <> t_Var constr
+R963:967 Corelib.Init.Datatypes <> false constr
+R974:978 testRegr_test10st_first_halfNL <> t_Lam constr
+R990:993 Corelib.Init.Datatypes <> true constr
+R1001:1005 testRegr_test10st_first_halfNL <> t_App constr
+R1017:1021 Corelib.Init.Datatypes <> false constr
+def 1063:1070 <> list_mem
+binder 1072:1072 <> A:14
+R1089:1089 testRegr_test10st_first_halfNL <> A:14 var
+binder 1085:1085 <> a:15
+binder 1087:1087 <> b:16
+R1091:1091 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1095:1097 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1102:1102 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1093:1093 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1092:1092 testRegr_test10st_first_halfNL <> a:15 var
+R1094:1094 testRegr_test10st_first_halfNL <> b:16 var
+R1099:1100 Corelib.Init.Logic <> ::type_scope:x_'<>'_x not
+R1098:1098 testRegr_test10st_first_halfNL <> a:15 var
+R1101:1101 testRegr_test10st_first_halfNL <> b:16 var
+binder 1075:1076 <> eq:17
+R1108:1108 testRegr_test10st_first_halfNL <> A:14 var
+binder 1106:1106 <> x:18
+R1114:1117 Corelib.Init.Datatypes <> list ind
+R1119:1119 testRegr_test10st_first_halfNL <> A:14 var
+binder 1112:1112 <> l:19
+R1135:1138 Corelib.Init.Datatypes <> bool ind
+R1151:1151 testRegr_test10st_first_halfNL <> l:19 var
+R1162:1164 Corelib.Init.Datatypes <> nil constr
+R1169:1173 Corelib.Init.Datatypes <> false constr
+R1179:1182 Corelib.Init.Datatypes <> cons constr
+R1194:1195 testRegr_test10st_first_halfNL <> eq:17 var
+R1199:1199 testRegr_test10st_first_halfNL <> x:18 var
+R1216:1223 testRegr_test10st_first_halfNL <> list_mem:20 def
+R1230:1230 testRegr_test10st_first_halfNL <> x:18 var
+R1227:1228 testRegr_test10st_first_halfNL <> eq:17 var
+R1225:1225 testRegr_test10st_first_halfNL <> A:14 var
+R1206:1209 Corelib.Init.Datatypes <> true constr
+R1249:1256 testRegr_test10st_first_halfNL <> list_mem def
+def 1301:1308 <> tsubst_t
+R1315:1315 testRegr_test10st_first_halfNL <> t ind
+binder 1311:1313 <> t_6:22
+R1322:1328 testRegr_test10st_first_halfNL <> termvar def
+binder 1319:1320 <> x5:23
+R1337:1337 testRegr_test10st_first_halfNL <> t ind
+binder 1332:1335 <> t__7:24
+R1356:1356 testRegr_test10st_first_halfNL <> t ind
+R1369:1372 testRegr_test10st_first_halfNL <> t__7:24 var
+R1384:1388 testRegr_test10st_first_halfNL <> t_Var constr
+R1400:1409 testRegr_test10st_first_halfNL <> eq_termvar thm
+R1413:1414 testRegr_test10st_first_halfNL <> x5:23 var
+R1431:1435 testRegr_test10st_first_halfNL <> t_Var constr
+R1421:1423 testRegr_test10st_first_halfNL <> t_6:22 var
+R1446:1450 testRegr_test10st_first_halfNL <> t_Lam constr
+R1461:1465 testRegr_test10st_first_halfNL <> t_Lam constr
+R1473:1480 testRegr_test10st_first_halfNL <> list_mem def
+R1497:1500 Corelib.Init.Datatypes <> cons constr
+R1504:1506 Corelib.Init.Datatypes <> nil constr
+R1493:1494 testRegr_test10st_first_halfNL <> x5:23 var
+R1482:1491 testRegr_test10st_first_halfNL <> eq_termvar thm
+R1523:1530 testRegr_test10st_first_halfNL <> tsubst_t:25 def
+R1536:1537 testRegr_test10st_first_halfNL <> x5:23 var
+R1532:1534 testRegr_test10st_first_halfNL <> t_6:22 var
+R1549:1553 testRegr_test10st_first_halfNL <> t_App constr
+R1565:1569 testRegr_test10st_first_halfNL <> t_App constr
+R1572:1579 testRegr_test10st_first_halfNL <> tsubst_t:25 def
+R1585:1586 testRegr_test10st_first_halfNL <> x5:23 var
+R1581:1583 testRegr_test10st_first_halfNL <> t_6:22 var
+R1593:1600 testRegr_test10st_first_halfNL <> tsubst_t:25 def
+R1606:1607 testRegr_test10st_first_halfNL <> x5:23 var
+R1602:1604 testRegr_test10st_first_halfNL <> t_6:22 var
+ind 1664:1669 <> reduce
+constr 1715:1720 <> ax_app
+constr 1858:1868 <> ctx_app_fun
+constr 1963:1973 <> ctx_app_arg
+R1674:1677 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1673:1673 testRegr_test10st_first_halfNL <> t ind
+R1679:1682 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1678:1678 testRegr_test10st_first_halfNL <> t ind
+R1734:1740 testRegr_test10st_first_halfNL <> termvar def
+binder 1732:1732 <> x:29
+R1751:1751 testRegr_test10st_first_halfNL <> t ind
+binder 1744:1746 <> t12:30
+binder 1748:1749 <> v2:31
+R1782:1790 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1760:1766 Stdlib.Bool.Bool <> Is_true def
+R1769:1777 testRegr_test10st_first_halfNL <> is_v_of_t def
+R1779:1780 testRegr_test10st_first_halfNL <> v2:31 var
+R1791:1796 testRegr_test10st_first_halfNL <> reduce:27 ind
+R1828:1835 testRegr_test10st_first_halfNL <> tsubst_t def
+R1838:1839 testRegr_test10st_first_halfNL <> v2:31 var
+R1843:1843 testRegr_test10st_first_halfNL <> x:29 var
+R1847:1849 testRegr_test10st_first_halfNL <> t12:30 var
+R1799:1803 testRegr_test10st_first_halfNL <> t_App constr
+R1807:1811 testRegr_test10st_first_halfNL <> t_Lam constr
+R1813:1813 testRegr_test10st_first_halfNL <> x:29 var
+R1815:1817 testRegr_test10st_first_halfNL <> t12:30 var
+R1821:1822 testRegr_test10st_first_halfNL <> v2:31 var
+R1891:1891 testRegr_test10st_first_halfNL <> t ind
+binder 1880:1881 <> t1:32
+binder 1883:1885 <> t_5:33
+binder 1887:1889 <> t1':34
+R1913:1921 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1900:1905 testRegr_test10st_first_halfNL <> reduce:27 ind
+R1910:1912 testRegr_test10st_first_halfNL <> t1':34 var
+R1907:1908 testRegr_test10st_first_halfNL <> t1:32 var
+R1922:1927 testRegr_test10st_first_halfNL <> reduce:27 ind
+R1945:1949 testRegr_test10st_first_halfNL <> t_App constr
+R1951:1953 testRegr_test10st_first_halfNL <> t1':34 var
+R1955:1957 testRegr_test10st_first_halfNL <> t_5:33 var
+R1930:1934 testRegr_test10st_first_halfNL <> t_App constr
+R1936:1937 testRegr_test10st_first_halfNL <> t1:32 var
+R1939:1941 testRegr_test10st_first_halfNL <> t_5:33 var
+R1995:1995 testRegr_test10st_first_halfNL <> t ind
+binder 1985:1986 <> v5:35
+binder 1988:1989 <> t1:36
+binder 1991:1993 <> t1':37
+R2026:2034 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2004:2010 Stdlib.Bool.Bool <> Is_true def
+R2013:2021 testRegr_test10st_first_halfNL <> is_v_of_t def
+R2023:2024 testRegr_test10st_first_halfNL <> v5:35 var
+R2048:2056 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2035:2040 testRegr_test10st_first_halfNL <> reduce:27 ind
+R2045:2047 testRegr_test10st_first_halfNL <> t1':37 var
+R2042:2043 testRegr_test10st_first_halfNL <> t1:36 var
+R2057:2062 testRegr_test10st_first_halfNL <> reduce:27 ind
+R2079:2083 testRegr_test10st_first_halfNL <> t_App constr
+R2085:2086 testRegr_test10st_first_halfNL <> v5:35 var
+R2088:2090 testRegr_test10st_first_halfNL <> t1':37 var
+R2065:2069 testRegr_test10st_first_halfNL <> t_App constr
+R2071:2072 testRegr_test10st_first_halfNL <> v5:35 var
+R2074:2075 testRegr_test10st_first_halfNL <> t1:36 var
+scheme 1664:1669 <> reduce_ind
+scheme 1664:1669 <> reduce_sind

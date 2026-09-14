@@ -1,0 +1,108 @@
+DIGEST a5bb71b147b449bbde2f2f4146230f1c
+FtestRegr_test_lists_coq_defn_subrule_1NL
+R144:148 Stdlib.Arith.Arith <> <> lib
+R178:181 Stdlib.Bool.Bool <> <> lib
+R211:214 Stdlib.Lists.List <> <> lib
+R232:248 Ott.ott_list_core <> <> lib
+def 264:264 <> i
+R275:277 Corelib.Init.Datatypes <> nat ind
+def 291:291 <> x
+R302:304 Corelib.Init.Datatypes <> nat ind
+ind 318:323 <> foobar
+constr 338:347 <> foobar_foo
+constr 361:370 <> foobar_bar
+R351:356 testRegr_test_lists_coq_defn_subrule_1NL <> foobar:1 ind
+R374:379 testRegr_test_lists_coq_defn_subrule_1NL <> foobar:1 ind
+scheme 318:323 <> foobar_rect
+scheme 318:323 <> foobar_ind
+scheme 318:323 <> foobar_rec
+scheme 318:323 <> foobar_sind
+ind 393:395 <> seq
+constr 410:422 <> seq_foofoobar
+R427:430 Corelib.Init.Datatypes <> list ind
+R439:439 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R433:438 testRegr_test_lists_coq_defn_subrule_1NL <> foobar ind
+R440:445 testRegr_test_lists_coq_defn_subrule_1NL <> foobar ind
+scheme 393:395 <> seq_rect
+scheme 393:395 <> seq_ind
+scheme 393:395 <> seq_rec
+scheme 393:395 <> seq_sind
+def 478:493 <> is_foo_of_foobar
+R504:509 testRegr_test_lists_coq_defn_subrule_1NL <> foobar ind
+binder 496:502 <> foobar5:5
+R514:517 Corelib.Init.Datatypes <> bool ind
+R530:536 testRegr_test_lists_coq_defn_subrule_1NL <> foobar5:5 var
+R547:556 testRegr_test_lists_coq_defn_subrule_1NL <> foobar_foo constr
+R562:565 Corelib.Init.Datatypes <> true constr
+R572:581 testRegr_test_lists_coq_defn_subrule_1NL <> foobar_bar constr
+R586:590 Corelib.Init.Datatypes <> false constr
+def 609:621 <> is_seq_of_seq
+R629:631 testRegr_test_lists_coq_defn_subrule_1NL <> seq ind
+binder 624:627 <> seq5:7
+R636:639 Corelib.Init.Datatypes <> bool ind
+R652:655 testRegr_test_lists_coq_defn_subrule_1NL <> seq5:7 var
+R667:679 testRegr_test_lists_coq_defn_subrule_1NL <> seq_foofoobar constr
+R703:713 Ott.ott_list_core <> forall_list def
+R733:733 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R727:732 testRegr_test_lists_coq_defn_subrule_1NL <> foobar ind
+R734:739 testRegr_test_lists_coq_defn_subrule_1NL <> foobar ind
+binder 721:724 <> pat_:9
+R752:755 testRegr_test_lists_coq_defn_subrule_1NL <> pat_:9 var
+R762:762 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R767:767 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R775:775 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R781:796 testRegr_test_lists_coq_defn_subrule_1NL <> is_foo_of_foobar def
+ind 876:880 <> J_zip
+constr 950:958 <> J_zip_zap
+R895:898 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R884:887 Corelib.Init.Datatypes <> list ind
+R889:894 testRegr_test_lists_coq_defn_subrule_1NL <> foobar ind
+R910:913 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R899:902 Corelib.Init.Datatypes <> list ind
+R904:909 testRegr_test_lists_coq_defn_subrule_1NL <> foobar ind
+R917:920 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R914:916 testRegr_test_lists_coq_defn_subrule_1NL <> seq ind
+R986:989 Corelib.Init.Datatypes <> list ind
+R998:998 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R992:997 testRegr_test_lists_coq_defn_subrule_1NL <> foobar ind
+R999:1004 testRegr_test_lists_coq_defn_subrule_1NL <> foobar ind
+binder 970:984 <> foo_foobar_list:13
+R1014:1014 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1139:1148 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1015:1020 Corelib.Lists.ListDef <> Forall ind
+R1124:1138 testRegr_test_lists_coq_defn_subrule_1NL <> foo_foobar_list:13 var
+R1040:1040 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1034:1039 testRegr_test_lists_coq_defn_subrule_1NL <> foobar ind
+R1041:1046 testRegr_test_lists_coq_defn_subrule_1NL <> foobar ind
+binder 1028:1031 <> tmp_:14
+R1059:1062 testRegr_test_lists_coq_defn_subrule_1NL <> tmp_:14 var
+R1069:1069 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1074:1074 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1082:1082 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1087:1093 Stdlib.Bool.Bool <> Is_true def
+R1096:1111 testRegr_test_lists_coq_defn_subrule_1NL <> is_foo_of_foobar def
+R1149:1153 testRegr_test_lists_coq_defn_subrule_1NL <> J_zip:11 ind
+R1355:1367 testRegr_test_lists_coq_defn_subrule_1NL <> seq_foofoobar constr
+R1369:1383 testRegr_test_lists_coq_defn_subrule_1NL <> foo_foobar_list:13 var
+R1254:1256 Corelib.Lists.ListDef <> map def
+R1337:1351 testRegr_test_lists_coq_defn_subrule_1NL <> foo_foobar_list:13 var
+R1276:1276 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1270:1275 testRegr_test_lists_coq_defn_subrule_1NL <> foobar ind
+R1277:1282 testRegr_test_lists_coq_defn_subrule_1NL <> foobar ind
+binder 1264:1267 <> pat_:16
+R1295:1298 testRegr_test_lists_coq_defn_subrule_1NL <> pat_:16 var
+R1305:1305 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1310:1310 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1318:1318 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1156:1158 Corelib.Lists.ListDef <> map def
+R1236:1250 testRegr_test_lists_coq_defn_subrule_1NL <> foo_foobar_list:13 var
+R1178:1178 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1172:1177 testRegr_test_lists_coq_defn_subrule_1NL <> foobar ind
+R1179:1184 testRegr_test_lists_coq_defn_subrule_1NL <> foobar ind
+binder 1166:1169 <> pat_:18
+R1197:1200 testRegr_test_lists_coq_defn_subrule_1NL <> pat_:18 var
+R1207:1207 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1212:1212 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1220:1220 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+scheme 876:880 <> J_zip_ind
+scheme 876:880 <> J_zip_sind

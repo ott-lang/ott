@@ -1,0 +1,137 @@
+Running Draft ...
+
+Output (line 7 of "Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+consts
+  typerep_data_IITN_data :: "data.data_IITN_data itself ⇒ typerep"
+
+Output (line 7 of "Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+consts
+  typerep_data :: "data itself ⇒ typerep"
+
+Output (line 7 of "Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+consts
+  term_of_data :: "data ⇒ term"
+
+Output (line 7 of "Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+consts
+  partial_term_of_data ::
+    "data itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 7 of "Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+consts
+  equal_data :: "data ⇒ data ⇒ bool"
+
+Output (line 10 of "Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+consts
+  typerep_map_IITN_map :: "map.map_IITN_map itself ⇒ typerep"
+
+Output (line 10 of "Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+consts
+  typerep_map ::
+    "testRegr_test_lists_coq_list_functions_3.map itself ⇒ typerep"
+
+Output (line 10 of "Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+consts
+  term_of_map :: "testRegr_test_lists_coq_list_functions_3.map ⇒ term"
+
+Output (line 10 of "Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+consts
+  partial_term_of_map ::
+    "testRegr_test_lists_coq_list_functions_3.map itself
+     ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 10 of "Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+consts
+  equal_map ::
+    "testRegr_test_lists_coq_list_functions_3.map
+     ⇒ testRegr_test_lists_coq_list_functions_3.map ⇒ bool"
+
+Output (line 15 of "Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+Proofs for inductive predicate(s) "Data_data"
+
+Output (line 15 of "Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+  Proving monotonicity ...
+
+Output (line 15 of "Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+  Proving the introduction rules ...
+
+Output (line 15 of "Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+  Proving the elimination rules ...
+
+Output (line 15 of "Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+  Proving the induction rule ...
+
+Output (line 15 of "Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+  Proving the simplification rules ...
+
+Error (line 15 of "Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+*** Proof failed.
+***  1. ⋀x y xa data_list.
+***        x (?x9 x y xa data_list) ⟶ y (?x9 x y xa data_list) ⟹
+***        list_all (λb. b) (map x data_list) ⟶
+***        list_all (λb. b) (map y data_list)
+*** The error(s) above occurred for the goal statement (line 15 of "/tmp/isabelle-pes20/private14849842827356710286/Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+*** mono
+***  (λp x. ∃data_list.
+***            x = data_tuple data_list ∧ list_all (λb. b) (map p data_list))
+
+Output (line 23 of "Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+Proofs for inductive predicate(s) "Map_map"
+
+Output (line 23 of "Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+  Proving monotonicity ...
+
+Output (line 23 of "Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+  Proving the introduction rules ...
+
+Output (line 23 of "Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+  Proving the elimination rules ...
+
+Output (line 23 of "Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+  Proving the induction rule ...
+
+Output (line 23 of "Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+  Proving the simplification rules ...
+
+Error (line 23 of "Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+*** Proof failed.
+***  1. ⋀x y xa data_map_list.
+***        x (?x16 x y xa data_map_list) ⟶ y (?x16 x y xa data_map_list) ⟹
+***        list_all (λb. b)
+***         (map (λ(data_XXX, map_XXX). x map_XXX) data_map_list) ⟶
+***        list_all (λb. b)
+***         (map (λ(data_XXX, map_XXX). y map_XXX) data_map_list)
+*** The error(s) above occurred for the goal statement (line 23 of "/tmp/isabelle-pes20/private14849842827356710286/Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+*** mono
+***  (λp x. ∃data_map_list.
+***            x = map_finite data_map_list ∧
+***            list_all (λb. b)
+***             (map (λ(data_XXX, map_XXX). Data_data data_XXX) data_map_list) ∧
+***            list_all (λb. b)
+***             (map (λ(data_XXX, map_XXX). p map_XXX) data_map_list))
+Draft FAILED (see also "isabelle build_log -H Error Draft")
+*** Proof failed.
+***  1. ⋀x y xa data_list.
+***        x (?x9 x y xa data_list) ⟶ y (?x9 x y xa data_list) ⟹
+***        list_all (λb. b) (map x data_list) ⟶
+***        list_all (λb. b) (map y data_list)
+*** The error(s) above occurred for the goal statement (line 15 of "/tmp/isabelle-pes20/private14849842827356710286/Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+*** mono
+***  (λp x. ∃data_list.
+***            x = data_tuple data_list ∧ list_all (λb. b) (map p data_list))
+*** Proof failed.
+***  1. ⋀x y xa data_map_list.
+***        x (?x16 x y xa data_map_list) ⟶ y (?x16 x y xa data_map_list) ⟹
+***        list_all (λb. b)
+***         (map (λ(data_XXX, map_XXX). x map_XXX) data_map_list) ⟶
+***        list_all (λb. b)
+***         (map (λ(data_XXX, map_XXX). y map_XXX) data_map_list)
+*** The error(s) above occurred for the goal statement (line 23 of "/tmp/isabelle-pes20/private14849842827356710286/Draft/testRegr_test_lists_coq_list_functions_3.thy"):
+*** mono
+***  (λp x. ∃data_map_list.
+***            x = map_finite data_map_list ∧
+***            list_all (λb. b)
+***             (map (λ(data_XXX, map_XXX). Data_data data_XXX) data_map_list) ∧
+***            list_all (λb. b)
+***             (map (λ(data_XXX, map_XXX). p map_XXX) data_map_list))
+Unfinished session(s): Draft

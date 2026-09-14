@@ -1,0 +1,87 @@
+Running Draft ...
+
+Output (line 6 of "Draft/testRegr_test15_6.thy"):
+consts
+  typerep_a_pre_a :: "'a a_pre_a itself ⇒ typerep"
+
+Output (line 6 of "Draft/testRegr_test15_6.thy"):
+consts
+  typerep_a_IITN_a :: "a.a_IITN_a itself ⇒ typerep"
+
+Output (line 6 of "Draft/testRegr_test15_6.thy"):
+consts
+  typerep_a :: "a itself ⇒ typerep"
+
+Output (line 6 of "Draft/testRegr_test15_6.thy"):
+consts
+  term_of_a :: "a ⇒ term"
+
+Output (line 6 of "Draft/testRegr_test15_6.thy"):
+consts
+  partial_term_of_a ::
+    "a itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 6 of "Draft/testRegr_test15_6.thy"):
+consts
+  equal_a :: "a ⇒ a ⇒ bool"
+
+Output (line 6 of "Draft/testRegr_test15_6.thy"):
+consts
+  random_aux_a ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural ⇒ (a × (unit ⇒ term)) × natural × natural"
+
+Output (line 6 of "Draft/testRegr_test15_6.thy"):
+consts
+  random_a ::
+    "natural ⇒ natural × natural ⇒ (a × (unit ⇒ term)) × natural × natural"
+
+Output (line 14 of "Draft/testRegr_test15_6.thy"):
+consts
+  is_avA_of_a_is_avB_of_a_is_avv_of_a :: "a ⇒ bool × bool × bool"
+
+Output (line 22 of "Draft/testRegr_test15_6.thy"):
+consts
+  is_avA_of_a :: "a ⇒ bool"
+
+Output (line 25 of "Draft/testRegr_test15_6.thy"):
+consts
+  is_avB_of_a :: "a ⇒ bool"
+
+Output (line 28 of "Draft/testRegr_test15_6.thy"):
+consts
+  is_avv_of_a :: "a ⇒ bool"
+
+Output (line 31 of "Draft/testRegr_test15_6.thy"):
+theorem   is_avA_of_a a_AAA = True
+          is_avA_of_a a_BBB = False
+          is_avA_of_a a_CC = True
+          is_avA_of_a (a_a ?a) = True
+          is_avB_of_a a_AAA = False
+          is_avB_of_a a_BBB = True
+          is_avB_of_a a_CC = True
+          is_avB_of_a (a_a ?a) = True
+          is_avv_of_a a_AAA = False
+          is_avv_of_a a_BBB = False
+          is_avv_of_a a_CC = False
+          is_avv_of_a (a_a ?a) = True
+
+Output (line 48 of "Draft/testRegr_test15_6.thy"):
+Proofs for inductive predicate(s) "T"
+
+Output (line 48 of "Draft/testRegr_test15_6.thy"):
+  Proving monotonicity ...
+
+Output (line 48 of "Draft/testRegr_test15_6.thy"):
+  Proving the introduction rules ...
+
+Output (line 48 of "Draft/testRegr_test15_6.thy"):
+  Proving the elimination rules ...
+
+Output (line 48 of "Draft/testRegr_test15_6.thy"):
+  Proving the induction rule ...
+
+Output (line 48 of "Draft/testRegr_test15_6.thy"):
+  Proving the simplification rules ...
+Finished Draft (0:00:01 elapsed time)

@@ -1,0 +1,333 @@
+testRegr_test_mjp_trans.lean:72:11: warning: Variable name `A5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _A5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_mjp_trans.lean:75:14: warning: Variable name `B5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _B5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_mjp_trans.lean:75:17: warning: Variable name `t5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _t5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_mjp_trans.lean:75:20: warning: Variable name `P5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _P5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_mjp_trans.lean:76:13: warning: Variable name `B5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _B5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_mjp_trans.lean:82:11: warning: Variable name `A5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _A5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_mjp_trans.lean:85:14: warning: Variable name `B5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _B5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_mjp_trans.lean:85:20: warning: Variable name `P5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _P5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_mjp_trans.lean:86:13: warning: Variable name `B5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _B5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_mjp_trans.lean:118:8: error: Function expected at
+  hr
+but this term has type
+  ?m.1
+
+Note: Expected a function because this term is being applied to the argument
+  A5
+
+Hint: The identifier `hr` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:119:7: error: Function expected at
+  disjoint
+but this term has type
+  ?m.2
+
+Note: Expected a function because this term is being applied to the argument
+  (h1', h2, h3)
+
+Hint: The identifier `disjoint` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:123:8: error: Function expected at
+  predp
+but this term has type
+  ?m.15
+
+Note: Expected a function because this term is being applied to the argument
+  P1
+
+Hint: The identifier `predp` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:124:8: error: Function expected at
+  hp
+but this term has type
+  ?m.16
+
+Note: Expected a function because this term is being applied to the argument
+  B5
+
+Hint: The identifier `hp` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:124:23: error: Function expected at
+  Some
+but this term has type
+  ?m.17
+
+Note: Expected a function because this term is being applied to the argument
+  true
+
+Hint: The identifier `Some` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:125:7: error: Function expected at
+  star
+but this term has type
+  ?m.18
+
+Note: Expected a function because this term is being applied to the argument
+  h1'
+
+Hint: The identifier `star` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:125:22: error: Function expected at
+  Some
+but this term has type
+  ?m.17
+
+Note: Expected a function because this term is being applied to the argument
+  h'
+
+Hint: The identifier `Some` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:126:7: error: Function expected at
+  star
+but this term has type
+  ?m.18
+
+Note: Expected a function because this term is being applied to the argument
+  h1
+
+Hint: The identifier `star` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:126:20: error: Function expected at
+  Some
+but this term has type
+  ?m.17
+
+Note: Expected a function because this term is being applied to the argument
+  h_5
+
+Hint: The identifier `Some` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:131:8: error: Function expected at
+  hp
+but this term has type
+  ?m.59
+
+Note: Expected a function because this term is being applied to the argument
+  B5
+
+Hint: The identifier `hp` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:131:23: error: Function expected at
+  Some
+but this term has type
+  ?m.60
+
+Note: Expected a function because this term is being applied to the argument
+  true
+
+Hint: The identifier `Some` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:132:21: error: Function expected at
+  star
+but this term has type
+  ?m.61
+
+Note: Expected a function because this term is being applied to the argument
+  h1
+
+Hint: The identifier `star` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:132:34: error: Function expected at
+  Some
+but this term has type
+  ?m.60
+
+Note: Expected a function because this term is being applied to the argument
+  h'
+
+Hint: The identifier `Some` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:132:46: error: Function expected at
+  predp
+but this term has type
+  ?m.62
+
+Note: Expected a function because this term is being applied to the argument
+  P1
+
+Hint: The identifier `predp` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:133:7: error: Function expected at
+  star
+but this term has type
+  ?m.61
+
+Note: Expected a function because this term is being applied to the argument
+  h1
+
+Hint: The identifier `star` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:133:20: error: Function expected at
+  Some
+but this term has type
+  ?m.60
+
+Note: Expected a function because this term is being applied to the argument
+  h_5
+
+Hint: The identifier `Some` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:138:8: error: Function expected at
+  hp
+but this term has type
+  ?m.112
+
+Note: Expected a function because this term is being applied to the argument
+  B5
+
+Hint: The identifier `hp` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:138:23: error: Function expected at
+  Some
+but this term has type
+  ?m.113
+
+Note: Expected a function because this term is being applied to the argument
+  true
+
+Hint: The identifier `Some` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:139:7: error: Function expected at
+  star
+but this term has type
+  ?m.114
+
+Note: Expected a function because this term is being applied to the argument
+  h1
+
+Hint: The identifier `star` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:139:20: error: Function expected at
+  Some
+but this term has type
+  ?m.113
+
+Note: Expected a function because this term is being applied to the argument
+  h_5
+
+Hint: The identifier `Some` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:144:8: error: Function expected at
+  hp
+but this term has type
+  ?m.139
+
+Note: Expected a function because this term is being applied to the argument
+  B5
+
+Hint: The identifier `hp` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:145:7: error: Function expected at
+  star
+but this term has type
+  ?m.141
+
+Note: Expected a function because this term is being applied to the argument
+  h1
+
+Hint: The identifier `star` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:145:20: error: Function expected at
+  Some
+but this term has type
+  ?m.142
+
+Note: Expected a function because this term is being applied to the argument
+  h_5
+
+Hint: The identifier `Some` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:149:8: error: Function expected at
+  hp
+but this term has type
+  ?m.162
+
+Note: Expected a function because this term is being applied to the argument
+  B5
+
+Hint: The identifier `hp` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:149:22: error: Function expected at
+  Some
+but this term has type
+  ?m.163
+
+Note: Expected a function because this term is being applied to the argument
+  true
+
+Hint: The identifier `Some` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:153:8: error: Function expected at
+  hp
+but this term has type
+  ?m.176
+
+Note: Expected a function because this term is being applied to the argument
+  B5
+
+Hint: The identifier `hp` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:153:22: error: Function expected at
+  Some
+but this term has type
+  ?m.177
+
+Note: Expected a function because this term is being applied to the argument
+  false
+
+Hint: The identifier `Some` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:157:8: error: Function expected at
+  hp
+but this term has type
+  ?m.190
+
+Note: Expected a function because this term is being applied to the argument
+  B5
+
+Hint: The identifier `hp` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:161:19: error: Function expected at
+  hr
+but this term has type
+  ?m.201
+
+Note: Expected a function because this term is being applied to the argument
+  A5
+
+Hint: The identifier `hr` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:177:7: error: Function expected at
+  hrr
+but this term has type
+  ?m.213
+
+Note: Expected a function because this term is being applied to the argument
+  R5
+
+Hint: The identifier `hrr` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_mjp_trans.lean:178:7: error: Function expected at
+  disjoint
+but this term has type
+  ?m.214
+
+Note: Expected a function because this term is being applied to the argument
+  (h1, h2', h3')
+
+Hint: The identifier `disjoint` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.

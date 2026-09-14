@@ -1,0 +1,130 @@
+Running Draft ...
+
+Output (line 8 of "Draft/testRegr_test18_2.thy"):
+consts
+  typerep_a_pre_a :: "'a a_pre_a itself ⇒ typerep"
+
+Output (line 8 of "Draft/testRegr_test18_2.thy"):
+consts
+  typerep_a_IITN_a :: "a.a_IITN_a itself ⇒ typerep"
+
+Output (line 8 of "Draft/testRegr_test18_2.thy"):
+consts
+  typerep_a :: "a itself ⇒ typerep"
+
+Output (line 8 of "Draft/testRegr_test18_2.thy"):
+consts
+  term_of_a :: "a ⇒ term"
+
+Output (line 8 of "Draft/testRegr_test18_2.thy"):
+consts
+  partial_term_of_a ::
+    "a itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 8 of "Draft/testRegr_test18_2.thy"):
+consts
+  equal_a :: "a ⇒ a ⇒ bool"
+
+Output (line 13 of "Draft/testRegr_test18_2.thy"):
+consts
+  typerep_blong_pre_blong :: "'a blong_pre_blong itself ⇒ typerep"
+
+Output (line 13 of "Draft/testRegr_test18_2.thy"):
+consts
+  typerep_blong_IITN_blong :: "blong.blong_IITN_blong itself ⇒ typerep"
+
+Output (line 13 of "Draft/testRegr_test18_2.thy"):
+consts
+  typerep_blong :: "blong itself ⇒ typerep"
+
+Output (line 13 of "Draft/testRegr_test18_2.thy"):
+consts
+  term_of_blong :: "blong ⇒ term"
+
+Output (line 13 of "Draft/testRegr_test18_2.thy"):
+consts
+  partial_term_of_blong ::
+    "blong itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 13 of "Draft/testRegr_test18_2.thy"):
+consts
+  equal_blong :: "blong ⇒ blong ⇒ bool"
+
+Output (line 19 of "Draft/testRegr_test18_2.thy"):
+consts
+  typerep_c_IITN_c :: "c.c_IITN_c itself ⇒ typerep"
+
+Output (line 19 of "Draft/testRegr_test18_2.thy"):
+consts
+  typerep_c :: "c itself ⇒ typerep"
+
+Output (line 19 of "Draft/testRegr_test18_2.thy"):
+consts
+  term_of_c :: "c ⇒ term"
+
+Output (line 19 of "Draft/testRegr_test18_2.thy"):
+consts
+  partial_term_of_c ::
+    "c itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 19 of "Draft/testRegr_test18_2.thy"):
+consts
+  equal_c :: "c ⇒ c ⇒ bool"
+
+Output (line 22 of "Draft/testRegr_test18_2.thy"):
+consts
+  typerep_n2m_a_aux_b_a_of_a_pre_n2m_a ::
+    "'a aux_b_a_of_a.n2m_a_aux_b_a_of_a_pre_n2m_a itself ⇒ typerep"
+
+Output (line 22 of "Draft/testRegr_test18_2.thy"):
+consts
+  aux_b_a_of_a_list :: "a list ⇒ char list list"
+  aux_b_a_of_a :: "a ⇒ char list list"
+
+Output (line 33 of "Draft/testRegr_test18_2.thy"):
+consts
+  list_minus :: "'a list ⇒ 'a list ⇒ 'a list"
+
+Output (line 41 of "Draft/testRegr_test18_2.thy"):
+consts
+  fv_a_list :: "a list ⇒ char list list"
+  fv_a :: "a ⇒ char list list"
+
+Output (line 51 of "Draft/testRegr_test18_2.thy"):
+consts
+  fv_c :: "c ⇒ char list list"
+
+Output (line 56 of "Draft/testRegr_test18_2.thy"):
+consts
+  fv_blong :: "blong ⇒ char list list"
+
+Output (line 65 of "Draft/testRegr_test18_2.thy"):
+consts
+  list_assoc :: "'a ⇒ ('a × 'b) list ⇒ 'b option"
+
+Output (line 73 of "Draft/testRegr_test18_2.thy"):
+consts
+  msubst_a_list :: "(char list × a) list ⇒ a list ⇒ a list"
+  msubst_a :: "(char list × a) list ⇒ a ⇒ a"
+
+Output (line 83 of "Draft/testRegr_test18_2.thy"):
+consts
+  subst_a_list :: "a ⇒ char list ⇒ a list ⇒ a list"
+  subst_a :: "a ⇒ char list ⇒ a ⇒ a"
+
+Output (line 93 of "Draft/testRegr_test18_2.thy"):
+consts
+  msubst_c :: "(char list × a) list ⇒ c ⇒ c"
+
+Output (line 98 of "Draft/testRegr_test18_2.thy"):
+consts
+  msubst_blong :: "(char list × a) list ⇒ blong ⇒ blong"
+
+Output (line 106 of "Draft/testRegr_test18_2.thy"):
+consts
+  subst_c :: "a ⇒ char list ⇒ c ⇒ c"
+
+Output (line 111 of "Draft/testRegr_test18_2.thy"):
+consts
+  subst_blong :: "a ⇒ char list ⇒ blong ⇒ blong"
+Finished Draft (0:00:03 elapsed time, 0:00:04 cpu time, factor 1.49)

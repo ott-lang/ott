@@ -1,0 +1,78 @@
+Running Draft ...
+
+Output (line 7 of "Draft/testRegr_test_lists_coq_defn_tuple_2.thy"):
+consts
+  typerep_foo_IITN_foo :: "foo.foo_IITN_foo itself ⇒ typerep"
+
+Output (line 7 of "Draft/testRegr_test_lists_coq_defn_tuple_2.thy"):
+consts
+  typerep_foo :: "foo itself ⇒ typerep"
+
+Output (line 7 of "Draft/testRegr_test_lists_coq_defn_tuple_2.thy"):
+consts
+  term_of_foo :: "foo ⇒ term"
+
+Output (line 7 of "Draft/testRegr_test_lists_coq_defn_tuple_2.thy"):
+consts
+  partial_term_of_foo ::
+    "foo itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 7 of "Draft/testRegr_test_lists_coq_defn_tuple_2.thy"):
+consts
+  equal_foo :: "foo ⇒ foo ⇒ bool"
+
+Output (line 7 of "Draft/testRegr_test_lists_coq_defn_tuple_2.thy"):
+consts
+  random_aux_foo ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural ⇒ (foo × (unit ⇒ term)) × natural × natural"
+
+Output (line 7 of "Draft/testRegr_test_lists_coq_defn_tuple_2.thy"):
+consts
+  random_foo ::
+    "natural
+     ⇒ natural × natural ⇒ (foo × (unit ⇒ term)) × natural × natural"
+
+Output (line 10 of "Draft/testRegr_test_lists_coq_defn_tuple_2.thy"):
+consts
+  typerep_barbar_IITN_barbar :: "barbar.barbar_IITN_barbar itself ⇒ typerep"
+
+Output (line 10 of "Draft/testRegr_test_lists_coq_defn_tuple_2.thy"):
+consts
+  typerep_barbar :: "barbar itself ⇒ typerep"
+
+Output (line 10 of "Draft/testRegr_test_lists_coq_defn_tuple_2.thy"):
+consts
+  term_of_barbar :: "barbar ⇒ term"
+
+Output (line 10 of "Draft/testRegr_test_lists_coq_defn_tuple_2.thy"):
+consts
+  partial_term_of_barbar ::
+    "barbar itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 10 of "Draft/testRegr_test_lists_coq_defn_tuple_2.thy"):
+consts
+  equal_barbar :: "barbar ⇒ barbar ⇒ bool"
+
+Output (line 10 of "Draft/testRegr_test_lists_coq_defn_tuple_2.thy"):
+consts
+  random_aux_barbar ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural ⇒ (barbar × (unit ⇒ term)) × natural × natural"
+
+Output (line 10 of "Draft/testRegr_test_lists_coq_defn_tuple_2.thy"):
+consts
+  random_barbar ::
+    "natural
+     ⇒ natural × natural ⇒ (barbar × (unit ⇒ term)) × natural × natural"
+
+Output (line 16 of "Draft/testRegr_test_lists_coq_defn_tuple_2.thy"):
+consts
+  is_bar_of_barbar :: "barbar ⇒ bool"
+Draft FAILED (see also "isabelle build_log -H Error Draft")
+*** Outer syntax error (line 30 of "/tmp/isabelle-pes20/private11368559360212802462/Draft/testRegr_test_lists_coq_defn_tuple_2.thy"): proposition expected,
+*** but keyword | (line 30 of "/tmp/isabelle-pes20/private11368559360212802462/Draft/testRegr_test_lists_coq_defn_tuple_2.thy") was found
+*** At command "<malformed>" (line 24 of "/tmp/isabelle-pes20/private11368559360212802462/Draft/testRegr_test_lists_coq_defn_tuple_2.thy")
+Unfinished session(s): Draft

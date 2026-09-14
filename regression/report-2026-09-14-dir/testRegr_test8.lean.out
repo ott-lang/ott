@@ -1,0 +1,92 @@
+testRegr_test8.lean:75:26: warning: Variable name `tl_` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _tl_
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test8.lean:90:13: warning: Variable name `value_name5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _value_name5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test8.lean:91:16: warning: Variable name `constant5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _constant5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test8.lean:92:13: warning: Variable name `expr5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _expr5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test8.lean:92:19: warning: Variable name `expr'` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _expr'
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test8.lean:93:16: warning: Variable name `value_name5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _value_name5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test8.lean:93:28: warning: Variable name `expr5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _expr5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test8.lean:94:11: warning: Variable name `value_name5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _value_name5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test8.lean:94:23: warning: Variable name `expr5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _expr5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test8.lean:94:29: warning: Variable name `expr'` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _expr'
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test8.lean:107:31: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  DecidableEq typvar
+
+Hint: Adding the command `deriving instance DecidableEq for typvar` may allow Lean to derive the missing instance.
+testRegr_test8.lean:114:106: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  BEq typvar
+
+Hint: Adding the command `deriving instance BEq for typvar` may allow Lean to derive the missing instance.
+testRegr_test8.lean:144:16: warning: Variable name `typeconstr5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _typeconstr5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test8.lean:149:43: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  BEq typvar
+
+Hint: Adding the command `deriving instance BEq for typvar` may allow Lean to derive the missing instance.
+testRegr_test8.lean:155:13: warning: Variable name `value_name5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _value_name5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test8.lean:202:50: error: unexpected token '('; expected '|'
+testRegr_test8.lean:202:65: error: Invalid `end`: There is no current scope to end
+
+Note: Scopes are introduced using `namespace` and `section`
+testRegr_test8.lean:202:68: error: unexpected token ')'; expected command
+testRegr_test8.lean:227:0: error: Invalid `end`: There is no current scope to end
+
+Note: Scopes are introduced using `namespace` and `section`

@@ -1,0 +1,18 @@
+testRegr_l1.lean:51:18: error(lean.unknownIdentifier): Unknown identifier `Expr`
+testRegr_l1.lean:51:25: error(lean.unknownIdentifier): Unknown identifier `Store`
+testRegr_l1.lean:149:21: error: Application type mismatch: The argument
+  G5
+has type
+  List Type_assumption
+but is expected to have type
+  List (Location × ?m.109)
+in the application
+  List.lookup l G5
+testRegr_l1.lean:154:21: error: Application type mismatch: The argument
+  G5
+has type
+  List Type_assumption
+but is expected to have type
+  List (Location × ?m.117)
+in the application
+  List.lookup l G5

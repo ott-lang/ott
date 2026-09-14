@@ -1,0 +1,449 @@
+DIGEST 738341eaf8a2555c039d4339150e0d1a
+FtestRegr_sys_puresub
+R409:413 Stdlib.Arith.Arith <> <> lib
+R443:446 Stdlib.Bool.Bool <> <> lib
+R476:479 Stdlib.Lists.List <> <> lib
+def 584:590 <> termvar
+R601:603 Corelib.Init.Datatypes <> nat ind
+prf 612:621 <> eq_termvar
+R638:644 testRegr_sys_puresub <> termvar def
+binder 632:632 <> x:1
+binder 634:634 <> y:2
+R648:648 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R654:658 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R665:665 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R650:652 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R649:649 testRegr_sys_puresub <> x:1 var
+R653:653 testRegr_sys_puresub <> y:2 var
+R660:663 Corelib.Init.Logic <> ::type_scope:x_'<>'_x not
+R659:659 testRegr_sys_puresub <> x:1 var
+R664:664 testRegr_sys_puresub <> y:2 var
+ind 802:802 <> T
+constr 830:834 <> TyArr
+constr 877:881 <> TyTop
+R840:840 testRegr_sys_puresub <> T:3 ind
+binder 837:838 <> T5:5
+R847:847 testRegr_sys_puresub <> T:3 ind
+binder 844:845 <> T':6
+R885:885 testRegr_sys_puresub <> T:3 ind
+scheme 802:802 <> T_rect
+scheme 802:802 <> T_ind
+scheme 802:802 <> T_rec
+scheme 802:802 <> T_sind
+ind 918:918 <> t
+constr 946:950 <> TmVar
+constr 982:986 <> TmAbs
+constr 1035:1039 <> TmApp
+R955:961 testRegr_sys_puresub <> termvar def
+binder 953:953 <> x:9
+R991:997 testRegr_sys_puresub <> termvar def
+binder 989:989 <> x:10
+R1004:1004 testRegr_sys_puresub <> T ind
+binder 1001:1002 <> T5:11
+R1011:1011 testRegr_sys_puresub <> t:7 ind
+binder 1008:1009 <> t5:12
+R1045:1045 testRegr_sys_puresub <> t:7 ind
+binder 1042:1043 <> t1:13
+R1052:1052 testRegr_sys_puresub <> t:7 ind
+binder 1049:1050 <> t2:14
+scheme 918:918 <> t_rect
+scheme 918:918 <> t_ind
+scheme 918:918 <> t_rec
+scheme 918:918 <> t_sind
+def 1086:1086 <> G
+R1097:1100 Corelib.Init.Datatypes <> list ind
+R1110:1110 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1103:1109 testRegr_sys_puresub <> termvar def
+R1111:1111 testRegr_sys_puresub <> T ind
+def 1199:1206 <> list_mem
+binder 1208:1208 <> A:15
+R1225:1225 testRegr_sys_puresub <> A:15 var
+binder 1221:1221 <> a:16
+binder 1223:1223 <> b:17
+R1227:1227 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1231:1233 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1238:1238 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1229:1229 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1228:1228 testRegr_sys_puresub <> a:16 var
+R1230:1230 testRegr_sys_puresub <> b:17 var
+R1235:1236 Corelib.Init.Logic <> ::type_scope:x_'<>'_x not
+R1234:1234 testRegr_sys_puresub <> a:16 var
+R1237:1237 testRegr_sys_puresub <> b:17 var
+binder 1211:1212 <> eq:18
+R1244:1244 testRegr_sys_puresub <> A:15 var
+binder 1242:1242 <> x:19
+R1250:1253 Corelib.Init.Datatypes <> list ind
+R1255:1255 testRegr_sys_puresub <> A:15 var
+binder 1248:1248 <> l:20
+R1271:1274 Corelib.Init.Datatypes <> bool ind
+R1287:1287 testRegr_sys_puresub <> l:20 var
+R1298:1300 Corelib.Init.Datatypes <> nil constr
+R1305:1309 Corelib.Init.Datatypes <> false constr
+R1315:1318 Corelib.Init.Datatypes <> cons constr
+R1330:1331 testRegr_sys_puresub <> eq:18 var
+R1335:1335 testRegr_sys_puresub <> x:19 var
+R1352:1359 testRegr_sys_puresub <> list_mem:21 def
+R1366:1366 testRegr_sys_puresub <> x:19 var
+R1363:1364 testRegr_sys_puresub <> eq:18 var
+R1361:1361 testRegr_sys_puresub <> A:15 var
+R1342:1345 Corelib.Init.Datatypes <> true constr
+R1385:1392 testRegr_sys_puresub <> list_mem def
+def 1415:1424 <> list_minus
+binder 1426:1426 <> A:23
+R1443:1443 testRegr_sys_puresub <> A:23 var
+binder 1439:1439 <> a:24
+binder 1441:1441 <> b:25
+R1445:1445 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1449:1451 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1456:1456 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1447:1447 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1446:1446 testRegr_sys_puresub <> a:24 var
+R1448:1448 testRegr_sys_puresub <> b:25 var
+R1453:1454 Corelib.Init.Logic <> ::type_scope:x_'<>'_x not
+R1452:1452 testRegr_sys_puresub <> a:24 var
+R1455:1455 testRegr_sys_puresub <> b:25 var
+binder 1429:1430 <> eq:26
+R1463:1466 Corelib.Init.Datatypes <> list ind
+R1468:1468 testRegr_sys_puresub <> A:23 var
+binder 1460:1461 <> l1:27
+R1475:1478 Corelib.Init.Datatypes <> list ind
+R1480:1480 testRegr_sys_puresub <> A:23 var
+binder 1472:1473 <> l2:28
+R1497:1500 Corelib.Init.Datatypes <> list ind
+R1502:1502 testRegr_sys_puresub <> A:23 var
+R1515:1516 testRegr_sys_puresub <> l1:27 var
+R1527:1529 Corelib.Init.Datatypes <> nil constr
+R1534:1536 Corelib.Init.Datatypes <> nil constr
+R1542:1545 Corelib.Init.Datatypes <> cons constr
+R1558:1565 testRegr_sys_puresub <> list_mem def
+R1579:1580 testRegr_sys_puresub <> l2:28 var
+R1574:1575 testRegr_sys_puresub <> eq:26 var
+R1571:1571 testRegr_sys_puresub <> A:23 var
+R1614:1617 Corelib.Init.Datatypes <> cons constr
+R1622:1631 testRegr_sys_puresub <> list_minus:29 def
+R1640:1641 testRegr_sys_puresub <> l2:28 var
+R1635:1636 testRegr_sys_puresub <> eq:26 var
+R1633:1633 testRegr_sys_puresub <> A:23 var
+R1588:1597 testRegr_sys_puresub <> list_minus:29 def
+R1606:1607 testRegr_sys_puresub <> l2:28 var
+R1601:1602 testRegr_sys_puresub <> eq:26 var
+R1599:1599 testRegr_sys_puresub <> A:23 var
+R1659:1668 testRegr_sys_puresub <> list_minus def
+def 1709:1717 <> is_v_of_t
+R1724:1724 testRegr_sys_puresub <> t ind
+binder 1720:1722 <> t_6:31
+R1745:1747 testRegr_sys_puresub <> t_6:31 var
+R1759:1763 testRegr_sys_puresub <> TmVar constr
+R1771:1775 Corelib.Init.Logic <> False ind
+R1782:1786 testRegr_sys_puresub <> TmAbs constr
+R1801:1804 Corelib.Init.Logic <> True ind
+R1812:1816 testRegr_sys_puresub <> TmApp constr
+R1828:1832 Corelib.Init.Logic <> False ind
+def 1898:1901 <> fv_t
+R1908:1908 testRegr_sys_puresub <> t ind
+binder 1904:1906 <> t_6:33
+R1913:1916 Corelib.Init.Datatypes <> list ind
+R1918:1924 testRegr_sys_puresub <> termvar def
+R1937:1939 testRegr_sys_puresub <> t_6:33 var
+R1951:1955 testRegr_sys_puresub <> TmVar constr
+R1964:1967 Corelib.Init.Datatypes <> cons constr
+R1971:1973 Corelib.Init.Datatypes <> nil constr
+R1981:1985 testRegr_sys_puresub <> TmAbs constr
+R2001:2010 testRegr_sys_puresub <> list_minus def
+R2034:2037 Corelib.Init.Datatypes <> cons constr
+R2041:2043 Corelib.Init.Datatypes <> nil constr
+R2024:2027 testRegr_sys_puresub <> fv_t:34 def
+R2012:2021 testRegr_sys_puresub <> eq_termvar thm
+R2053:2057 testRegr_sys_puresub <> TmApp constr
+R2070:2072 Corelib.Init.Datatypes <> app def
+R2085:2088 testRegr_sys_puresub <> fv_t:34 def
+R2075:2078 testRegr_sys_puresub <> fv_t:34 def
+def 2131:2137 <> subst_t
+R2144:2144 testRegr_sys_puresub <> t ind
+binder 2140:2142 <> t_6:36
+R2151:2157 testRegr_sys_puresub <> termvar def
+binder 2148:2149 <> x5:37
+R2166:2166 testRegr_sys_puresub <> t ind
+binder 2161:2164 <> t__7:38
+R2185:2185 testRegr_sys_puresub <> t ind
+R2198:2201 testRegr_sys_puresub <> t__7:38 var
+R2213:2217 testRegr_sys_puresub <> TmVar constr
+R2229:2238 testRegr_sys_puresub <> eq_termvar thm
+R2242:2243 testRegr_sys_puresub <> x5:37 var
+R2260:2264 testRegr_sys_puresub <> TmVar constr
+R2250:2252 testRegr_sys_puresub <> t_6:36 var
+R2275:2279 testRegr_sys_puresub <> TmAbs constr
+R2293:2297 testRegr_sys_puresub <> TmAbs constr
+R2308:2315 testRegr_sys_puresub <> list_mem def
+R2332:2335 Corelib.Init.Datatypes <> cons constr
+R2339:2341 Corelib.Init.Datatypes <> nil constr
+R2328:2329 testRegr_sys_puresub <> x5:37 var
+R2317:2326 testRegr_sys_puresub <> eq_termvar thm
+R2358:2364 testRegr_sys_puresub <> subst_t:39 def
+R2370:2371 testRegr_sys_puresub <> x5:37 var
+R2366:2368 testRegr_sys_puresub <> t_6:36 var
+R2383:2387 testRegr_sys_puresub <> TmApp constr
+R2399:2403 testRegr_sys_puresub <> TmApp constr
+R2406:2412 testRegr_sys_puresub <> subst_t:39 def
+R2418:2419 testRegr_sys_puresub <> x5:37 var
+R2414:2416 testRegr_sys_puresub <> t_6:36 var
+R2426:2432 testRegr_sys_puresub <> subst_t:39 def
+R2438:2439 testRegr_sys_puresub <> x5:37 var
+R2434:2436 testRegr_sys_puresub <> t_6:36 var
+R2493:2504 Ott.ott_list <> <> lib
+def 2544:2548 <> bound
+binder 2550:2550 <> x:41
+binder 2552:2553 <> T0:42
+binder 2555:2555 <> G:43
+R2562:2568 Corelib.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+R2571:2572 Corelib.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+binder 2569:2570 <> G1:44
+R2573:2579 Corelib.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+R2582:2587 Corelib.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+binder 2580:2581 <> G2:45
+R2615:2622 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R2590:2592 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R2589:2589 testRegr_sys_puresub <> G:43 var
+R2595:2598 Corelib.Init.Datatypes <> ::list_scope:x_'++'_x not
+R2593:2594 testRegr_sys_puresub <> G1:44 var
+R2605:2606 Corelib.Init.Datatypes <> ::list_scope:x_'::'_x not
+R2599:2599 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2601:2601 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2604:2604 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2600:2600 testRegr_sys_puresub <> x:41 var
+R2602:2603 testRegr_sys_puresub <> T0:42 var
+R2607:2608 testRegr_sys_puresub <> G2:45 var
+R2623:2623 Corelib.Init.Logic <> ::type_scope:'~'_x not
+R2624:2625 Stdlib.Lists.List <> In def
+R2630:2637 Stdlib.Lists.List <> map abbrev
+R2656:2657 testRegr_sys_puresub <> G1:44 var
+R2641:2643 Corelib.Init.Datatypes <> fst def
+R2645:2651 testRegr_sys_puresub <> termvar def
+R2653:2653 testRegr_sys_puresub <> T ind
+R2627:2627 testRegr_sys_puresub <> x:41 var
+ind 2708:2710 <> red
+constr 2753:2758 <> E_App1
+constr 2844:2849 <> E_App2
+constr 2956:2963 <> E_AppAbs
+R2715:2718 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2714:2714 testRegr_sys_puresub <> t ind
+R2720:2723 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2719:2719 testRegr_sys_puresub <> t ind
+R2780:2780 testRegr_sys_puresub <> t ind
+binder 2770:2771 <> t1:48
+binder 2773:2774 <> t2:49
+binder 2776:2778 <> t1':50
+R2799:2807 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2789:2791 testRegr_sys_puresub <> red:46 ind
+R2796:2798 testRegr_sys_puresub <> t1':50 var
+R2793:2794 testRegr_sys_puresub <> t1:48 var
+R2808:2810 testRegr_sys_puresub <> red:46 ind
+R2827:2831 testRegr_sys_puresub <> TmApp constr
+R2833:2835 testRegr_sys_puresub <> t1':50 var
+R2837:2838 testRegr_sys_puresub <> t2:49 var
+R2813:2817 testRegr_sys_puresub <> TmApp constr
+R2819:2820 testRegr_sys_puresub <> t1:48 var
+R2822:2823 testRegr_sys_puresub <> t2:49 var
+R2871:2871 testRegr_sys_puresub <> t ind
+binder 2861:2862 <> v1:51
+binder 2864:2865 <> t2:52
+binder 2867:2869 <> t2':53
+R2892:2900 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2880:2888 testRegr_sys_puresub <> is_v_of_t def
+R2890:2891 testRegr_sys_puresub <> v1:51 var
+R2911:2919 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2901:2903 testRegr_sys_puresub <> red:46 ind
+R2908:2910 testRegr_sys_puresub <> t2':53 var
+R2905:2906 testRegr_sys_puresub <> t2:52 var
+R2920:2922 testRegr_sys_puresub <> red:46 ind
+R2939:2943 testRegr_sys_puresub <> TmApp constr
+R2945:2946 testRegr_sys_puresub <> v1:51 var
+R2948:2950 testRegr_sys_puresub <> t2':53 var
+R2925:2929 testRegr_sys_puresub <> TmApp constr
+R2931:2932 testRegr_sys_puresub <> v1:51 var
+R2934:2935 testRegr_sys_puresub <> t2:52 var
+R2977:2983 testRegr_sys_puresub <> termvar def
+binder 2975:2975 <> x:54
+R2990:2990 testRegr_sys_puresub <> T ind
+binder 2987:2988 <> T5:55
+R3001:3001 testRegr_sys_puresub <> t ind
+binder 2994:2996 <> t12:56
+binder 2998:2999 <> v2:57
+R3022:3030 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3010:3018 testRegr_sys_puresub <> is_v_of_t def
+R3020:3021 testRegr_sys_puresub <> v2:57 var
+R3031:3033 testRegr_sys_puresub <> red:46 ind
+R3067:3073 testRegr_sys_puresub <> subst_t def
+R3076:3077 testRegr_sys_puresub <> v2:57 var
+R3081:3081 testRegr_sys_puresub <> x:54 var
+R3085:3087 testRegr_sys_puresub <> t12:56 var
+R3036:3040 testRegr_sys_puresub <> TmApp constr
+R3044:3048 testRegr_sys_puresub <> TmAbs constr
+R3050:3050 testRegr_sys_puresub <> x:54 var
+R3052:3053 testRegr_sys_puresub <> T5:55 var
+R3055:3057 testRegr_sys_puresub <> t12:56 var
+R3061:3062 testRegr_sys_puresub <> v2:57 var
+scheme 2708:2710 <> red_ind
+scheme 2708:2710 <> red_sind
+ind 3122:3127 <> typing
+constr 3178:3182 <> T_Var
+constr 3283:3287 <> T_Abs
+constr 3433:3437 <> T_App
+constr 3576:3580 <> T_Sub
+ind 3687:3695 <> subtyping
+constr 3744:3749 <> S_Refl
+constr 3789:3795 <> S_Trans
+constr 3886:3892 <> S_Arrow
+constr 4014:4018 <> S_Top
+R3132:3135 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3131:3131 testRegr_sys_puresub <> G def
+R3137:3140 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3136:3136 testRegr_sys_puresub <> t ind
+R3142:3145 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3141:3141 testRegr_sys_puresub <> T ind
+R3700:3703 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3699:3699 testRegr_sys_puresub <> T ind
+R3705:3708 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3704:3704 testRegr_sys_puresub <> T ind
+R3197:3197 testRegr_sys_puresub <> G def
+binder 3194:3195 <> G5:62
+R3203:3209 testRegr_sys_puresub <> termvar def
+binder 3201:3201 <> x:63
+R3216:3216 testRegr_sys_puresub <> T ind
+binder 3213:3214 <> T5:64
+R3226:3226 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3245:3256 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3227:3231 testRegr_sys_puresub <> bound def
+R3234:3234 testRegr_sys_puresub <> x:63 var
+R3238:3239 testRegr_sys_puresub <> T5:64 var
+R3243:3244 testRegr_sys_puresub <> G5:62 var
+R3257:3262 testRegr_sys_puresub <> typing:58 ind
+R3277:3278 testRegr_sys_puresub <> T5:64 var
+R3268:3272 testRegr_sys_puresub <> TmVar constr
+R3274:3274 testRegr_sys_puresub <> x:63 var
+R3264:3265 testRegr_sys_puresub <> G5:62 var
+R3302:3302 testRegr_sys_puresub <> G def
+binder 3299:3300 <> G5:65
+R3308:3314 testRegr_sys_puresub <> termvar def
+binder 3306:3306 <> x:66
+R3321:3321 testRegr_sys_puresub <> T ind
+binder 3318:3319 <> T1:67
+R3328:3328 testRegr_sys_puresub <> t ind
+binder 3325:3326 <> t2:68
+R3335:3335 testRegr_sys_puresub <> T ind
+binder 3332:3333 <> T2:69
+R3381:3389 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3344:3349 testRegr_sys_puresub <> typing:58 ind
+R3379:3380 testRegr_sys_puresub <> T2:69 var
+R3376:3377 testRegr_sys_puresub <> t2:68 var
+R3353:3356 Corelib.Init.Datatypes <> cons constr
+R3370:3371 testRegr_sys_puresub <> G5:65 var
+R3358:3359 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3361:3363 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3366:3367 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3360:3360 testRegr_sys_puresub <> x:66 var
+R3364:3365 testRegr_sys_puresub <> T1:67 var
+R3390:3395 testRegr_sys_puresub <> typing:58 ind
+R3417:3421 testRegr_sys_puresub <> TyArr constr
+R3423:3424 testRegr_sys_puresub <> T1:67 var
+R3426:3427 testRegr_sys_puresub <> T2:69 var
+R3401:3405 testRegr_sys_puresub <> TmAbs constr
+R3407:3407 testRegr_sys_puresub <> x:66 var
+R3409:3410 testRegr_sys_puresub <> T1:67 var
+R3412:3413 testRegr_sys_puresub <> t2:68 var
+R3397:3398 testRegr_sys_puresub <> G5:65 var
+R3452:3452 testRegr_sys_puresub <> G def
+binder 3449:3450 <> G5:70
+R3462:3462 testRegr_sys_puresub <> t ind
+binder 3456:3457 <> t1:71
+binder 3459:3460 <> t2:72
+R3474:3474 testRegr_sys_puresub <> T ind
+binder 3466:3468 <> T12:73
+binder 3470:3472 <> T11:74
+R3511:3519 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3483:3488 testRegr_sys_puresub <> typing:58 ind
+R3497:3501 testRegr_sys_puresub <> TyArr constr
+R3503:3505 testRegr_sys_puresub <> T11:74 var
+R3507:3509 testRegr_sys_puresub <> T12:73 var
+R3493:3494 testRegr_sys_puresub <> t1:71 var
+R3490:3491 testRegr_sys_puresub <> G5:70 var
+R3536:3544 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3520:3525 testRegr_sys_puresub <> typing:58 ind
+R3533:3535 testRegr_sys_puresub <> T11:74 var
+R3530:3531 testRegr_sys_puresub <> t2:72 var
+R3527:3528 testRegr_sys_puresub <> G5:70 var
+R3545:3550 testRegr_sys_puresub <> typing:58 ind
+R3569:3571 testRegr_sys_puresub <> T12:73 var
+R3556:3560 testRegr_sys_puresub <> TmApp constr
+R3562:3563 testRegr_sys_puresub <> t1:71 var
+R3565:3566 testRegr_sys_puresub <> t2:72 var
+R3552:3553 testRegr_sys_puresub <> G5:70 var
+R3595:3595 testRegr_sys_puresub <> G def
+binder 3592:3593 <> G5:75
+R3602:3602 testRegr_sys_puresub <> t ind
+binder 3599:3600 <> t5:76
+R3611:3611 testRegr_sys_puresub <> T ind
+binder 3606:3607 <> T5:77
+binder 3609:3609 <> S:78
+R3634:3642 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3620:3625 testRegr_sys_puresub <> typing:58 ind
+R3633:3633 testRegr_sys_puresub <> S:78 var
+R3630:3631 testRegr_sys_puresub <> t5:76 var
+R3627:3628 testRegr_sys_puresub <> G5:75 var
+R3657:3665 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3643:3651 testRegr_sys_puresub <> subtyping:59 ind
+R3655:3656 testRegr_sys_puresub <> T5:77 var
+R3653:3653 testRegr_sys_puresub <> S:78 var
+R3666:3671 testRegr_sys_puresub <> typing:58 ind
+R3679:3680 testRegr_sys_puresub <> T5:77 var
+R3676:3677 testRegr_sys_puresub <> t5:76 var
+R3673:3674 testRegr_sys_puresub <> G5:75 var
+R3763:3763 testRegr_sys_puresub <> T ind
+binder 3761:3761 <> S:79
+R3772:3780 testRegr_sys_puresub <> subtyping:59 ind
+R3784:3784 testRegr_sys_puresub <> S:79 var
+R3782:3782 testRegr_sys_puresub <> S:79 var
+R3814:3814 testRegr_sys_puresub <> T ind
+binder 3807:3807 <> S:80
+binder 3809:3810 <> T5:81
+binder 3812:3812 <> U:82
+R3836:3844 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3823:3831 testRegr_sys_puresub <> subtyping:59 ind
+R3835:3835 testRegr_sys_puresub <> U:82 var
+R3833:3833 testRegr_sys_puresub <> S:80 var
+R3859:3867 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3845:3853 testRegr_sys_puresub <> subtyping:59 ind
+R3857:3858 testRegr_sys_puresub <> T5:81 var
+R3855:3855 testRegr_sys_puresub <> U:82 var
+R3868:3876 testRegr_sys_puresub <> subtyping:59 ind
+R3880:3881 testRegr_sys_puresub <> T5:81 var
+R3878:3878 testRegr_sys_puresub <> S:80 var
+R3916:3916 testRegr_sys_puresub <> T ind
+binder 3904:3905 <> S1:83
+binder 3907:3908 <> S2:84
+binder 3910:3911 <> T1:85
+binder 3913:3914 <> T2:86
+R3940:3948 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3925:3933 testRegr_sys_puresub <> subtyping:59 ind
+R3938:3939 testRegr_sys_puresub <> S1:83 var
+R3935:3936 testRegr_sys_puresub <> T1:85 var
+R3964:3972 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3949:3957 testRegr_sys_puresub <> subtyping:59 ind
+R3962:3963 testRegr_sys_puresub <> T2:86 var
+R3959:3960 testRegr_sys_puresub <> S2:84 var
+R3973:3981 testRegr_sys_puresub <> subtyping:59 ind
+R3998:4002 testRegr_sys_puresub <> TyArr constr
+R4004:4005 testRegr_sys_puresub <> T1:85 var
+R4007:4008 testRegr_sys_puresub <> T2:86 var
+R3984:3988 testRegr_sys_puresub <> TyArr constr
+R3990:3991 testRegr_sys_puresub <> S1:83 var
+R3993:3994 testRegr_sys_puresub <> S2:84 var
+R4032:4032 testRegr_sys_puresub <> T ind
+binder 4030:4030 <> S:87
+R4041:4049 testRegr_sys_puresub <> subtyping:59 ind
+R4053:4057 testRegr_sys_puresub <> TyTop constr
+R4051:4051 testRegr_sys_puresub <> S:87 var
+scheme 3122:3127 <> typing_ind
+scheme 3122:3127 <> typing_sind
+scheme 3687:3695 <> subtyping_ind
+scheme 3687:3695 <> subtyping_sind

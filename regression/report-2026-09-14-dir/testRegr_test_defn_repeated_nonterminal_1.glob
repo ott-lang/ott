@@ -1,0 +1,260 @@
+DIGEST 51b1cb37428c581c0627bbc9fcdab944
+FtestRegr_test_defn_repeated_nonterminal_1
+R147:151 Stdlib.Arith.Arith <> <> lib
+R181:184 Stdlib.Bool.Bool <> <> lib
+R214:217 Stdlib.Lists.List <> <> lib
+def 233:233 <> n
+R244:246 Corelib.Init.Datatypes <> nat ind
+ind 260:260 <> a
+constr 275:281 <> a_tuple
+ind 299:304 <> list_a
+constr 319:328 <> Nil_list_a
+constr 342:352 <> Cons_list_a
+R286:291 testRegr_test_defn_repeated_nonterminal_1 <> list_a:2 ind
+R332:337 testRegr_test_defn_repeated_nonterminal_1 <> list_a:2 ind
+R357:357 testRegr_test_defn_repeated_nonterminal_1 <> a:1 ind
+R363:368 testRegr_test_defn_repeated_nonterminal_1 <> list_a:2 ind
+scheme 260:260 <> a_rect
+scheme 260:260 <> a_ind
+scheme 260:260 <> a_rec
+scheme 260:260 <> a_sind
+scheme 299:304 <> list_a_rect
+scheme 299:304 <> list_a_ind
+scheme 299:304 <> list_a_rec
+scheme 299:304 <> list_a_sind
+def 381:390 <> map_list_a
+binder 393:393 <> A:5
+R405:406 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R404:404 testRegr_test_defn_repeated_nonterminal_1 <> a ind
+R407:407 testRegr_test_defn_repeated_nonterminal_1 <> A:5 var
+binder 402:402 <> f:6
+R413:418 testRegr_test_defn_repeated_nonterminal_1 <> list_a ind
+binder 411:411 <> l:7
+R423:426 Corelib.Init.Datatypes <> list ind
+R428:428 testRegr_test_defn_repeated_nonterminal_1 <> A:5 var
+R441:441 testRegr_test_defn_repeated_nonterminal_1 <> l:7 var
+R452:461 testRegr_test_defn_repeated_nonterminal_1 <> Nil_list_a constr
+R466:468 Corelib.Init.Datatypes <> nil constr
+R474:484 testRegr_test_defn_repeated_nonterminal_1 <> Cons_list_a constr
+R495:498 Corelib.Init.Datatypes <> cons constr
+R507:516 testRegr_test_defn_repeated_nonterminal_1 <> map_list_a:8 def
+R520:520 testRegr_test_defn_repeated_nonterminal_1 <> f:6 var
+R518:518 testRegr_test_defn_repeated_nonterminal_1 <> A:5 var
+R501:501 testRegr_test_defn_repeated_nonterminal_1 <> f:6 var
+R544:553 testRegr_test_defn_repeated_nonterminal_1 <> map_list_a def
+def 574:584 <> make_list_a
+R590:593 Corelib.Init.Datatypes <> list ind
+R595:595 testRegr_test_defn_repeated_nonterminal_1 <> a ind
+binder 587:587 <> l:10
+R599:604 testRegr_test_defn_repeated_nonterminal_1 <> list_a ind
+R617:617 testRegr_test_defn_repeated_nonterminal_1 <> l:10 var
+R628:630 Corelib.Init.Datatypes <> nil constr
+R636:645 testRegr_test_defn_repeated_nonterminal_1 <> Nil_list_a constr
+R651:654 Corelib.Init.Datatypes <> cons constr
+R665:675 testRegr_test_defn_repeated_nonterminal_1 <> Cons_list_a constr
+R680:690 testRegr_test_defn_repeated_nonterminal_1 <> make_list_a:11 def
+def 714:726 <> unmake_list_a
+R732:737 testRegr_test_defn_repeated_nonterminal_1 <> list_a ind
+binder 729:729 <> l:13
+R741:744 Corelib.Init.Datatypes <> list ind
+R746:746 testRegr_test_defn_repeated_nonterminal_1 <> a ind
+R759:759 testRegr_test_defn_repeated_nonterminal_1 <> l:13 var
+R770:779 testRegr_test_defn_repeated_nonterminal_1 <> Nil_list_a constr
+R784:786 Corelib.Init.Datatypes <> nil constr
+R792:802 testRegr_test_defn_repeated_nonterminal_1 <> Cons_list_a constr
+R813:816 Corelib.Init.Datatypes <> cons constr
+R821:833 testRegr_test_defn_repeated_nonterminal_1 <> unmake_list_a:14 def
+def 857:866 <> nth_list_a
+R871:873 Corelib.Init.Datatypes <> nat ind
+binder 869:869 <> n:16
+R880:885 testRegr_test_defn_repeated_nonterminal_1 <> list_a ind
+binder 877:877 <> l:17
+R901:906 Corelib.Init.Datatypes <> option ind
+R908:908 testRegr_test_defn_repeated_nonterminal_1 <> a ind
+R923:923 testRegr_test_defn_repeated_nonterminal_1 <> l:17 var
+R921:921 testRegr_test_defn_repeated_nonterminal_1 <> n:16 var
+R934:934 Corelib.Init.Datatypes <> O constr
+R937:947 testRegr_test_defn_repeated_nonterminal_1 <> Cons_list_a constr
+R958:961 Corelib.Init.Datatypes <> Some constr
+R969:969 Corelib.Init.Datatypes <> O constr
+R977:980 Corelib.Init.Datatypes <> None constr
+R986:986 Corelib.Init.Datatypes <> S constr
+R991:1000 testRegr_test_defn_repeated_nonterminal_1 <> Nil_list_a constr
+R1005:1008 Corelib.Init.Datatypes <> None constr
+R1014:1014 Corelib.Init.Datatypes <> S constr
+R1019:1029 testRegr_test_defn_repeated_nonterminal_1 <> Cons_list_a constr
+R1040:1049 testRegr_test_defn_repeated_nonterminal_1 <> nth_list_a:18 def
+def 1074:1083 <> app_list_a
+R1091:1096 testRegr_test_defn_repeated_nonterminal_1 <> list_a ind
+binder 1086:1086 <> l:21
+binder 1088:1088 <> m:22
+R1100:1105 testRegr_test_defn_repeated_nonterminal_1 <> list_a ind
+R1118:1118 testRegr_test_defn_repeated_nonterminal_1 <> l:21 var
+R1129:1138 testRegr_test_defn_repeated_nonterminal_1 <> Nil_list_a constr
+R1143:1143 testRegr_test_defn_repeated_nonterminal_1 <> m:22 var
+R1149:1159 testRegr_test_defn_repeated_nonterminal_1 <> Cons_list_a constr
+R1170:1180 testRegr_test_defn_repeated_nonterminal_1 <> Cons_list_a constr
+R1185:1194 testRegr_test_defn_repeated_nonterminal_1 <> app_list_a:23 def
+R1200:1200 testRegr_test_defn_repeated_nonterminal_1 <> m:22 var
+ind 1222:1229 <> list_a_a
+constr 1240:1251 <> Nil_list_a_a
+constr 1255:1267 <> Cons_list_a_a
+R1272:1272 testRegr_test_defn_repeated_nonterminal_1 <> a ind
+R1278:1278 testRegr_test_defn_repeated_nonterminal_1 <> a ind
+R1288:1295 testRegr_test_defn_repeated_nonterminal_1 <> list_a_a:25 ind
+binder 1282:1284 <> tl_:27
+scheme 1222:1229 <> list_a_a_rect
+scheme 1222:1229 <> list_a_a_ind
+scheme 1222:1229 <> list_a_a_rec
+scheme 1222:1229 <> list_a_a_sind
+def 1309:1320 <> map_list_a_a
+binder 1323:1323 <> A:28
+R1335:1336 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1334:1334 testRegr_test_defn_repeated_nonterminal_1 <> a ind
+R1338:1339 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1337:1337 testRegr_test_defn_repeated_nonterminal_1 <> a ind
+R1340:1340 testRegr_test_defn_repeated_nonterminal_1 <> A:28 var
+binder 1332:1332 <> f:29
+R1346:1353 testRegr_test_defn_repeated_nonterminal_1 <> list_a_a ind
+binder 1344:1344 <> l:30
+R1358:1361 Corelib.Init.Datatypes <> list ind
+R1363:1363 testRegr_test_defn_repeated_nonterminal_1 <> A:28 var
+R1376:1376 testRegr_test_defn_repeated_nonterminal_1 <> l:30 var
+R1387:1398 testRegr_test_defn_repeated_nonterminal_1 <> Nil_list_a_a constr
+R1403:1405 Corelib.Init.Datatypes <> nil constr
+R1411:1423 testRegr_test_defn_repeated_nonterminal_1 <> Cons_list_a_a constr
+R1438:1441 Corelib.Init.Datatypes <> cons constr
+R1454:1465 testRegr_test_defn_repeated_nonterminal_1 <> map_list_a_a:31 def
+R1469:1469 testRegr_test_defn_repeated_nonterminal_1 <> f:29 var
+R1467:1467 testRegr_test_defn_repeated_nonterminal_1 <> A:28 var
+R1444:1444 testRegr_test_defn_repeated_nonterminal_1 <> f:29 var
+R1493:1504 testRegr_test_defn_repeated_nonterminal_1 <> map_list_a_a def
+def 1525:1537 <> make_list_a_a
+R1543:1546 Corelib.Init.Datatypes <> list ind
+R1550:1552 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1549:1549 testRegr_test_defn_repeated_nonterminal_1 <> a ind
+R1553:1553 testRegr_test_defn_repeated_nonterminal_1 <> a ind
+binder 1540:1540 <> l:33
+R1558:1565 testRegr_test_defn_repeated_nonterminal_1 <> list_a_a ind
+R1578:1578 testRegr_test_defn_repeated_nonterminal_1 <> l:33 var
+R1589:1591 Corelib.Init.Datatypes <> nil constr
+R1597:1608 testRegr_test_defn_repeated_nonterminal_1 <> Nil_list_a_a constr
+R1614:1617 Corelib.Init.Datatypes <> cons constr
+R1619:1619 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1622:1622 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1625:1625 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1634:1646 testRegr_test_defn_repeated_nonterminal_1 <> Cons_list_a_a constr
+R1655:1667 testRegr_test_defn_repeated_nonterminal_1 <> make_list_a_a:34 def
+def 1691:1705 <> unmake_list_a_a
+R1711:1718 testRegr_test_defn_repeated_nonterminal_1 <> list_a_a ind
+binder 1708:1708 <> l:36
+R1722:1725 Corelib.Init.Datatypes <> list ind
+R1729:1731 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1728:1728 testRegr_test_defn_repeated_nonterminal_1 <> a ind
+R1732:1732 testRegr_test_defn_repeated_nonterminal_1 <> a ind
+R1746:1746 testRegr_test_defn_repeated_nonterminal_1 <> l:36 var
+R1757:1768 testRegr_test_defn_repeated_nonterminal_1 <> Nil_list_a_a constr
+R1773:1775 Corelib.Init.Datatypes <> nil constr
+R1781:1793 testRegr_test_defn_repeated_nonterminal_1 <> Cons_list_a_a constr
+R1808:1811 Corelib.Init.Datatypes <> cons constr
+R1822:1836 testRegr_test_defn_repeated_nonterminal_1 <> unmake_list_a_a:37 def
+R1813:1813 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1816:1816 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1819:1819 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+def 1860:1871 <> nth_list_a_a
+R1876:1878 Corelib.Init.Datatypes <> nat ind
+binder 1874:1874 <> n:39
+R1885:1892 testRegr_test_defn_repeated_nonterminal_1 <> list_a_a ind
+binder 1882:1882 <> l:40
+R1908:1913 Corelib.Init.Datatypes <> option ind
+R1917:1919 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1916:1916 testRegr_test_defn_repeated_nonterminal_1 <> a ind
+R1920:1920 testRegr_test_defn_repeated_nonterminal_1 <> a ind
+R1936:1936 testRegr_test_defn_repeated_nonterminal_1 <> l:40 var
+R1934:1934 testRegr_test_defn_repeated_nonterminal_1 <> n:39 var
+R1947:1947 Corelib.Init.Datatypes <> O constr
+R1950:1962 testRegr_test_defn_repeated_nonterminal_1 <> Cons_list_a_a constr
+R1977:1980 Corelib.Init.Datatypes <> Some constr
+R1982:1982 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1985:1985 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1988:1988 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1994:1994 Corelib.Init.Datatypes <> O constr
+R2002:2005 Corelib.Init.Datatypes <> None constr
+R2011:2011 Corelib.Init.Datatypes <> S constr
+R2016:2027 testRegr_test_defn_repeated_nonterminal_1 <> Nil_list_a_a constr
+R2032:2035 Corelib.Init.Datatypes <> None constr
+R2041:2041 Corelib.Init.Datatypes <> S constr
+R2046:2058 testRegr_test_defn_repeated_nonterminal_1 <> Cons_list_a_a constr
+R2073:2084 testRegr_test_defn_repeated_nonterminal_1 <> nth_list_a_a:41 def
+def 2109:2120 <> app_list_a_a
+R2128:2135 testRegr_test_defn_repeated_nonterminal_1 <> list_a_a ind
+binder 2123:2123 <> l:44
+binder 2125:2125 <> m:45
+R2139:2146 testRegr_test_defn_repeated_nonterminal_1 <> list_a_a ind
+R2159:2159 testRegr_test_defn_repeated_nonterminal_1 <> l:44 var
+R2170:2181 testRegr_test_defn_repeated_nonterminal_1 <> Nil_list_a_a constr
+R2186:2186 testRegr_test_defn_repeated_nonterminal_1 <> m:45 var
+R2192:2204 testRegr_test_defn_repeated_nonterminal_1 <> Cons_list_a_a constr
+R2219:2231 testRegr_test_defn_repeated_nonterminal_1 <> Cons_list_a_a constr
+R2240:2251 testRegr_test_defn_repeated_nonterminal_1 <> app_list_a_a:46 def
+R2257:2257 testRegr_test_defn_repeated_nonterminal_1 <> m:45 var
+ind 2311:2317 <> J_equal
+constr 2362:2373 <> J_equal_unit
+R2322:2325 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2321:2321 testRegr_test_defn_repeated_nonterminal_1 <> a ind
+R2327:2330 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2326:2326 testRegr_test_defn_repeated_nonterminal_1 <> a ind
+R2395:2402 testRegr_test_defn_repeated_nonterminal_1 <> list_a_a ind
+binder 2385:2393 <> a_a'_list:50
+R2411:2411 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2556:2565 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+binder 2419:2420 <> a_:51
+binder 2422:2424 <> a'_:52
+R2536:2540 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2555:2555 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2427:2428 Stdlib.Lists.List <> In def
+R2440:2442 Corelib.Lists.ListDef <> map def
+R2509:2523 testRegr_test_defn_repeated_nonterminal_1 <> unmake_list_a_a def
+R2525:2533 testRegr_test_defn_repeated_nonterminal_1 <> a_a'_list:50 var
+R2458:2458 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R2457:2457 testRegr_test_defn_repeated_nonterminal_1 <> a ind
+R2459:2459 testRegr_test_defn_repeated_nonterminal_1 <> a ind
+binder 2450:2453 <> pat_:53
+R2472:2475 testRegr_test_defn_repeated_nonterminal_1 <> pat_:53 var
+R2482:2482 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2485:2485 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2489:2489 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2494:2494 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2497:2497 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2501:2501 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2495:2496 testRegr_test_defn_repeated_nonterminal_1 <> a_:51 var
+R2498:2500 testRegr_test_defn_repeated_nonterminal_1 <> a'_:52 var
+R2430:2430 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2433:2433 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2437:2437 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2431:2432 testRegr_test_defn_repeated_nonterminal_1 <> a_:51 var
+R2434:2436 testRegr_test_defn_repeated_nonterminal_1 <> a'_:52 var
+R2541:2547 testRegr_test_defn_repeated_nonterminal_1 <> J_equal:48 ind
+R2552:2554 testRegr_test_defn_repeated_nonterminal_1 <> a'_:52 var
+R2549:2550 testRegr_test_defn_repeated_nonterminal_1 <> a_:51 var
+R2566:2572 testRegr_test_defn_repeated_nonterminal_1 <> J_equal:48 ind
+R2651:2657 testRegr_test_defn_repeated_nonterminal_1 <> a_tuple constr
+R2660:2670 testRegr_test_defn_repeated_nonterminal_1 <> make_list_a def
+R2673:2684 testRegr_test_defn_repeated_nonterminal_1 <> map_list_a_a def
+R2714:2722 testRegr_test_defn_repeated_nonterminal_1 <> a_a'_list:50 var
+R2695:2695 testRegr_test_defn_repeated_nonterminal_1 <> a ind
+binder 2692:2693 <> a_:55
+R2703:2703 testRegr_test_defn_repeated_nonterminal_1 <> a ind
+binder 2699:2701 <> a'_:56
+R2709:2711 testRegr_test_defn_repeated_nonterminal_1 <> a'_:56 var
+R2575:2581 testRegr_test_defn_repeated_nonterminal_1 <> a_tuple constr
+R2584:2594 testRegr_test_defn_repeated_nonterminal_1 <> make_list_a def
+R2597:2608 testRegr_test_defn_repeated_nonterminal_1 <> map_list_a_a def
+R2637:2645 testRegr_test_defn_repeated_nonterminal_1 <> a_a'_list:50 var
+R2619:2619 testRegr_test_defn_repeated_nonterminal_1 <> a ind
+binder 2616:2617 <> a_:57
+R2627:2627 testRegr_test_defn_repeated_nonterminal_1 <> a ind
+binder 2623:2625 <> a'_:58
+R2633:2634 testRegr_test_defn_repeated_nonterminal_1 <> a_:57 var
+scheme 2311:2317 <> J_equal_ind
+scheme 2311:2317 <> J_equal_sind

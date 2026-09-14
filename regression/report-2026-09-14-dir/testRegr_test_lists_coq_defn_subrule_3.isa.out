@@ -1,0 +1,191 @@
+Running Draft ...
+
+Output (line 8 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+consts
+  typerep_constant_IITN_constant ::
+    "constant.constant_IITN_constant itself ⇒ typerep"
+
+Output (line 8 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+consts
+  typerep_constant :: "constant itself ⇒ typerep"
+
+Output (line 8 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+consts
+  term_of_constant :: "constant ⇒ term"
+
+Output (line 8 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+consts
+  partial_term_of_constant ::
+    "constant itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 8 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+consts
+  equal_constant :: "constant ⇒ constant ⇒ bool"
+
+Output (line 8 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+consts
+  random_aux_constant ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural ⇒ (constant × (unit ⇒ term)) × natural × natural"
+
+Output (line 8 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+consts
+  random_constant ::
+    "natural
+     ⇒ natural × natural ⇒ (constant × (unit ⇒ term)) × natural × natural"
+
+Output (line 11 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+consts
+  typerep_expr_IITN_expr :: "expr.expr_IITN_expr itself ⇒ typerep"
+
+Output (line 11 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+consts
+  typerep_expr :: "expr itself ⇒ typerep"
+
+Output (line 11 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+consts
+  term_of_expr :: "expr ⇒ term"
+
+Output (line 11 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+consts
+  partial_term_of_expr ::
+    "expr itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 11 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+consts
+  equal_expr :: "expr ⇒ expr ⇒ bool"
+
+Output (line 11 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+consts
+  random_aux_expr ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural ⇒ (expr × (unit ⇒ term)) × natural × natural"
+
+Output (line 11 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+consts
+  random_expr ::
+    "natural
+     ⇒ natural × natural ⇒ (expr × (unit ⇒ term)) × natural × natural"
+
+Output (line 14 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+consts
+  typerep_substs_x_IITN_substs_x ::
+    "substs_x.substs_x_IITN_substs_x itself ⇒ typerep"
+
+Output (line 14 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+consts
+  typerep_substs_x :: "substs_x itself ⇒ typerep"
+
+Output (line 14 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+consts
+  term_of_substs_x :: "substs_x ⇒ term"
+
+Output (line 14 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+consts
+  partial_term_of_substs_x ::
+    "substs_x itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 14 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+consts
+  equal_substs_x :: "substs_x ⇒ substs_x ⇒ bool"
+
+Output (line 14 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+consts
+  random_aux_substs_x ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural ⇒ (substs_x × (unit ⇒ term)) × natural × natural"
+
+Output (line 14 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+consts
+  random_substs_x ::
+    "natural
+     ⇒ natural × natural ⇒ (substs_x × (unit ⇒ term)) × natural × natural"
+
+Output (line 19 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+consts
+  is_valu_of_expr :: "expr ⇒ bool"
+
+Output (line 26 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+Proofs for inductive predicate(s) "JR_match", "JR_matches"
+
+Output (line 26 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+  Proving monotonicity ...
+
+Output (line 26 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+  Proving the introduction rules ...
+
+Output (line 26 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+  Proving the elimination rules ...
+
+Output (line 26 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+  Proving the induction rule ...
+
+Output (line 26 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+  Proving the simplification rules ...
+
+Error (line 26 of "Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+*** Proof failed.
+***  1. ⋀x y xa xb xc xd substs_x v_list.
+***        x (?x54 x y xa xb xc xd substs_x v_list)
+***         (?x55 x y xa xb xc xd substs_x v_list)
+***         (?x56 x y xa xb xc xd substs_x v_list)
+***         (?x57 x y xa xb xc xd substs_x v_list) ⟶
+***        y (?x54 x y xa xb xc xd substs_x v_list)
+***         (?x55 x y xa xb xc xd substs_x v_list)
+***         (?x56 x y xa xb xc xd substs_x v_list)
+***         (?x57 x y xa xb xc xd substs_x v_list) ⟹
+***        list_all (λb. b)
+***         (map (λv_XXX. x False undefined v_XXX substs_x) v_list) ⟶
+***        list_all (λb. b)
+***         (map (λv_XXX. y False undefined v_XXX substs_x) v_list)
+*** The error(s) above occurred for the goal statement (line 26 of "/tmp/isabelle-pes20/private13371114146831000105/Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+*** mono
+***  (λp b x1 x2 x3.
+***      (∃v x_v_list x.
+***          ¬ b ∧
+***          x2 = v ∧
+***          x3 = substs_x_xs (x_v_list @ [(x, v)]) ∧
+***          is_valu_of_expr v ∧
+***          list_all (λ(x_XXX, v_XXX). is_valu_of_expr v_XXX) x_v_list ∧
+***          p False undefined v (substs_x_xs x_v_list)) ∨
+***      (∃substs_x v_list.
+***          b ∧
+***          x1 = v_list ∧
+***          x3 = substs_x ∧
+***          list_all (λb. b)
+***           (map (λv_XXX. p False undefined v_XXX substs_x) v_list)))
+Draft FAILED (see also "isabelle build_log -H Error Draft")
+*** Proof failed.
+***  1. ⋀x y xa xb xc xd substs_x v_list.
+***        x (?x54 x y xa xb xc xd substs_x v_list)
+***         (?x55 x y xa xb xc xd substs_x v_list)
+***         (?x56 x y xa xb xc xd substs_x v_list)
+***         (?x57 x y xa xb xc xd substs_x v_list) ⟶
+***        y (?x54 x y xa xb xc xd substs_x v_list)
+***         (?x55 x y xa xb xc xd substs_x v_list)
+***         (?x56 x y xa xb xc xd substs_x v_list)
+***         (?x57 x y xa xb xc xd substs_x v_list) ⟹
+***        list_all (λb. b)
+***         (map (λv_XXX. x False undefined v_XXX substs_x) v_list) ⟶
+***        list_all (λb. b)
+***         (map (λv_XXX. y False undefined v_XXX substs_x) v_list)
+*** The error(s) above occurred for the goal statement (line 26 of "/tmp/isabelle-pes20/private13371114146831000105/Draft/testRegr_test_lists_coq_defn_subrule_3.thy"):
+*** mono
+***  (λp b x1 x2 x3.
+***      (∃v x_v_list x.
+***          ¬ b ∧
+***          x2 = v ∧
+***          x3 = substs_x_xs (x_v_list @ [(x, v)]) ∧
+***          is_valu_of_expr v ∧
+***          list_all (λ(x_XXX, v_XXX). is_valu_of_expr v_XXX) x_v_list ∧
+***          p False undefined v (substs_x_xs x_v_list)) ∨
+***      (∃substs_x v_list.
+***          b ∧
+***          x1 = v_list ∧
+***          x3 = substs_x ∧
+***          list_all (λb. b)
+***           (map (λv_XXX. p False undefined v_XXX substs_x) v_list)))
+Unfinished session(s): Draft

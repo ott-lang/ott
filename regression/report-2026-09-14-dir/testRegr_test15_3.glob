@@ -1,0 +1,101 @@
+DIGEST bf8faf7e47e1f8b85db14c9e0fd44e9b
+FtestRegr_test15_3
+R123:127 Stdlib.Arith.Arith <> <> lib
+R157:160 Stdlib.Bool.Bool <> <> lib
+R190:193 Stdlib.Lists.List <> <> lib
+ind 209:209 <> a
+constr 224:227 <> a_AA
+constr 236:238 <> a_a
+constr 250:252 <> a_b
+constr 264:266 <> a_C
+constr 287:289 <> a_D
+ind 312:312 <> b
+constr 327:330 <> b_BB
+constr 339:341 <> b_a
+constr 353:355 <> b_b
+R231:231 testRegr_test15_3 <> a:1 ind
+R244:244 testRegr_test15_3 <> a:1 ind
+binder 241:242 <> a5:5
+R258:258 testRegr_test15_3 <> b:2 ind
+binder 255:256 <> b5:6
+R273:273 testRegr_test15_3 <> a:1 ind
+binder 269:271 <> av5:7
+R281:281 testRegr_test15_3 <> b:2 ind
+binder 277:279 <> bv5:8
+R296:296 testRegr_test15_3 <> a:1 ind
+binder 292:294 <> av5:9
+R304:304 testRegr_test15_3 <> b:2 ind
+binder 300:302 <> bv5:10
+R334:334 testRegr_test15_3 <> b:2 ind
+R347:347 testRegr_test15_3 <> a:1 ind
+binder 344:345 <> a5:11
+R361:361 testRegr_test15_3 <> b:2 ind
+binder 358:359 <> b5:12
+scheme 209:209 <> a_rect
+scheme 209:209 <> a_ind
+scheme 209:209 <> a_rec
+scheme 209:209 <> a_sind
+scheme 312:312 <> b_rect
+scheme 312:312 <> b_ind
+scheme 312:312 <> b_rec
+scheme 312:312 <> b_sind
+def 391:399 <> is_b_of_b
+def 530:538 <> is_a_of_a
+def 789:798 <> is_bv_of_b
+def 928:937 <> is_av_of_a
+R406:406 testRegr_test15_3 <> b ind
+binder 402:404 <> b_6:13
+R545:545 testRegr_test15_3 <> a ind
+binder 541:543 <> a_6:14
+R805:805 testRegr_test15_3 <> b ind
+binder 801:803 <> b_6:15
+R944:944 testRegr_test15_3 <> a ind
+binder 940:942 <> a_6:16
+R427:429 testRegr_test15_3 <> b_6:13 var
+R440:443 testRegr_test15_3 <> b_BB constr
+R449:452 Corelib.Init.Logic <> True ind
+R460:462 testRegr_test15_3 <> b_a constr
+R473:481 testRegr_test15_3 <> is_a_of_a:18 def
+R493:495 testRegr_test15_3 <> b_b constr
+R506:514 testRegr_test15_3 <> is_b_of_b:17 def
+R566:568 testRegr_test15_3 <> a_6:14 var
+R579:582 testRegr_test15_3 <> a_AA constr
+R588:591 Corelib.Init.Logic <> True ind
+R599:601 testRegr_test15_3 <> a_a constr
+R612:620 testRegr_test15_3 <> is_a_of_a:18 def
+R632:634 testRegr_test15_3 <> a_b constr
+R645:653 testRegr_test15_3 <> is_b_of_b:17 def
+R665:667 testRegr_test15_3 <> a_C constr
+R682:682 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R697:702 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R717:717 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R683:692 testRegr_test15_3 <> is_av_of_a:20 def
+R703:712 testRegr_test15_3 <> is_bv_of_b:19 def
+R725:727 testRegr_test15_3 <> a_D constr
+R742:742 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R757:762 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R777:777 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R743:752 testRegr_test15_3 <> is_av_of_a:20 def
+R763:772 testRegr_test15_3 <> is_bv_of_b:19 def
+R826:828 testRegr_test15_3 <> b_6:15 var
+R839:842 testRegr_test15_3 <> b_BB constr
+R847:851 Corelib.Init.Logic <> False ind
+R858:860 testRegr_test15_3 <> b_a constr
+R871:879 testRegr_test15_3 <> is_a_of_a:18 def
+R891:893 testRegr_test15_3 <> b_b constr
+R904:912 testRegr_test15_3 <> is_b_of_b:17 def
+R965:967 testRegr_test15_3 <> a_6:16 var
+R978:981 testRegr_test15_3 <> a_AA constr
+R986:990 Corelib.Init.Logic <> False ind
+R997:999 testRegr_test15_3 <> a_a constr
+R1010:1018 testRegr_test15_3 <> is_a_of_a:18 def
+R1030:1032 testRegr_test15_3 <> a_b constr
+R1043:1051 testRegr_test15_3 <> is_b_of_b:17 def
+R1063:1065 testRegr_test15_3 <> a_C constr
+R1080:1080 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R1095:1100 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R1115:1115 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R1081:1090 testRegr_test15_3 <> is_av_of_a:20 def
+R1101:1110 testRegr_test15_3 <> is_bv_of_b:19 def
+R1123:1125 testRegr_test15_3 <> a_D constr
+R1139:1143 Corelib.Init.Logic <> False ind

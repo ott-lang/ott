@@ -1,0 +1,86 @@
+DIGEST d5a95016454cbc7a27fed55346e9736b
+FtestRegr_test_lists_coq_list_functions_2NL
+R146:150 Stdlib.Arith.Arith <> <> lib
+R180:183 Stdlib.Bool.Bool <> <> lib
+R213:216 Stdlib.Lists.List <> <> lib
+R234:250 Ott.ott_list_core <> <> lib
+def 266:266 <> i
+R277:279 Corelib.Init.Datatypes <> nat ind
+ind 293:300 <> constant
+constr 315:324 <> CONST_unit
+R328:335 testRegr_test_lists_coq_list_functions_2NL <> constant:1 ind
+scheme 293:300 <> constant_rect
+scheme 293:300 <> constant_ind
+scheme 293:300 <> constant_rec
+scheme 293:300 <> constant_sind
+ind 349:349 <> p
+constr 364:373 <> P_constant
+R386:393 testRegr_test_lists_coq_list_functions_2NL <> constant ind
+binder 376:384 <> constant5:5
+scheme 349:349 <> p_rect
+scheme 349:349 <> p_ind
+scheme 349:349 <> p_rec
+scheme 349:349 <> p_sind
+ind 408:408 <> e
+constr 423:432 <> E_constant
+R445:452 testRegr_test_lists_coq_list_functions_2NL <> constant ind
+binder 435:443 <> constant5:8
+scheme 408:408 <> e_rect
+scheme 408:408 <> e_ind
+scheme 408:408 <> e_rec
+scheme 408:408 <> e_sind
+def 484:492 <> is_v_of_e
+R498:498 testRegr_test_lists_coq_list_functions_2NL <> e ind
+binder 495:496 <> e5:9
+R503:506 Corelib.Init.Datatypes <> bool ind
+R519:520 testRegr_test_lists_coq_list_functions_2NL <> e5:9 var
+R532:541 testRegr_test_lists_coq_list_functions_2NL <> E_constant constr
+R558:561 Corelib.Init.Datatypes <> true constr
+ind 616:623 <> JR_match
+constr 668:684 <> JR_match_constant
+R628:631 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R627:627 testRegr_test_lists_coq_list_functions_2NL <> e ind
+R633:636 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R632:632 testRegr_test_lists_coq_list_functions_2NL <> p ind
+R703:706 Corelib.Init.Datatypes <> list ind
+R708:708 testRegr_test_lists_coq_list_functions_2NL <> e ind
+binder 696:701 <> v_list:13
+R716:716 testRegr_test_lists_coq_list_functions_2NL <> e ind
+binder 712:714 <> v_5:14
+R730:737 testRegr_test_lists_coq_list_functions_2NL <> constant ind
+binder 720:728 <> constant5:15
+R769:777 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R746:752 Stdlib.Bool.Bool <> Is_true def
+R755:763 testRegr_test_lists_coq_list_functions_2NL <> is_v_of_e def
+R765:767 testRegr_test_lists_coq_list_functions_2NL <> v_5:14 var
+R778:778 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R831:840 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R779:784 Corelib.Lists.ListDef <> Forall ind
+R825:830 testRegr_test_lists_coq_list_functions_2NL <> v_list:13 var
+R795:795 testRegr_test_lists_coq_list_functions_2NL <> e ind
+binder 792:793 <> v_:16
+R801:807 Stdlib.Bool.Bool <> Is_true def
+R810:818 testRegr_test_lists_coq_list_functions_2NL <> is_v_of_e def
+R820:821 testRegr_test_lists_coq_list_functions_2NL <> v_:16 var
+R841:841 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R936:945 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+binder 849:850 <> v_:17
+R896:900 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R935:935 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R853:854 Stdlib.Lists.List <> In def
+R862:864 Corelib.Lists.ListDef <> map def
+R889:894 testRegr_test_lists_coq_list_functions_2NL <> v_list:13 var
+R877:877 testRegr_test_lists_coq_list_functions_2NL <> e ind
+binder 872:873 <> v_:18
+R884:885 testRegr_test_lists_coq_list_functions_2NL <> v_:18 var
+R857:858 testRegr_test_lists_coq_list_functions_2NL <> v_:17 var
+R901:908 testRegr_test_lists_coq_list_functions_2NL <> JR_match:11 ind
+R914:923 testRegr_test_lists_coq_list_functions_2NL <> P_constant constr
+R925:933 testRegr_test_lists_coq_list_functions_2NL <> constant5:15 var
+R910:911 testRegr_test_lists_coq_list_functions_2NL <> v_:17 var
+R946:953 testRegr_test_lists_coq_list_functions_2NL <> JR_match:11 ind
+R960:969 testRegr_test_lists_coq_list_functions_2NL <> P_constant constr
+R971:979 testRegr_test_lists_coq_list_functions_2NL <> constant5:15 var
+R955:957 testRegr_test_lists_coq_list_functions_2NL <> v_5:14 var
+scheme 616:623 <> JR_match_ind
+scheme 616:623 <> JR_match_sind

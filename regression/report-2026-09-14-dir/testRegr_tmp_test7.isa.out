@@ -1,0 +1,237 @@
+Running Draft ...
+
+Output (line 10 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  typerep_T_pre_T :: "'a T_pre_T itself ⇒ typerep"
+
+Output (line 10 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  typerep_T_IITN_T :: "T.T_IITN_T itself ⇒ typerep"
+
+Output (line 10 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  typerep_T :: "T itself ⇒ typerep"
+
+Output (line 10 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  term_of_T :: "T ⇒ term"
+
+Output (line 10 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  partial_term_of_T ::
+    "T itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 10 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  equal_T :: "T ⇒ T ⇒ bool"
+
+Output (line 17 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  typerep_p_pre_p :: "'a p_pre_p itself ⇒ typerep"
+
+Output (line 17 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  typerep_p_IITN_p :: "p.p_IITN_p itself ⇒ typerep"
+
+Output (line 17 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  typerep_p :: "p itself ⇒ typerep"
+
+Output (line 17 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  term_of_p :: "p ⇒ term"
+
+Output (line 17 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  partial_term_of_p ::
+    "p itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 17 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  equal_p :: "p ⇒ p ⇒ bool"
+
+Output (line 21 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  typerep_t_pre_t :: "'a t_pre_t itself ⇒ typerep"
+
+Output (line 21 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  typerep_t_IITN_t :: "t.t_IITN_t itself ⇒ typerep"
+
+Output (line 21 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  typerep_t :: "t itself ⇒ typerep"
+
+Output (line 21 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  term_of_t :: "t ⇒ term"
+
+Output (line 21 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  partial_term_of_t ::
+    "t itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 21 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  equal_t :: "t ⇒ t ⇒ bool"
+
+Output (line 32 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  typerep_G_pre_G :: "'a G_pre_G itself ⇒ typerep"
+
+Output (line 32 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  typerep_G_IITN_G :: "G.G_IITN_G itself ⇒ typerep"
+
+Output (line 32 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  typerep_G :: "G itself ⇒ typerep"
+
+Output (line 32 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  term_of_G :: "G ⇒ term"
+
+Output (line 32 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  partial_term_of_G ::
+    "G itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 32 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  equal_G :: "G ⇒ G ⇒ bool"
+
+Output (line 37 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  typerep_n2m_p_aux_b_p_of_p_pre_n2m_p ::
+    "'a aux_b_p_of_p.n2m_p_aux_b_p_of_p_pre_n2m_p itself ⇒ typerep"
+
+Output (line 37 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  aux_b_p_of_label_p :: "char list × p ⇒ char list list"
+  aux_b_p_of_label_p_list :: "(char list × p) list ⇒ char list list"
+  aux_b_p_of_p :: "p ⇒ char list list"
+
+Output (line 50 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  typerep_n2m_t_is_v_of_t_pre_n2m_t ::
+    "('a, 'b) is_v_of_t.n2m_t_is_v_of_t_pre_n2m_t itself ⇒ typerep"
+
+Output (line 50 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  is_v_of_label_t :: "char list × t ⇒ bool"
+  is_v_of_l_t_list :: "(char list × t) list ⇒ bool"
+  is_v_of_t :: "t ⇒ bool"
+
+Output (line 68 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  list_assoc :: "'a ⇒ ('a × 'b) list ⇒ 'b option"
+
+Output (line 76 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  typerep_n2m_T_m_T_subst_T_pre_n2m_T ::
+    "('a, 'b) m_T_subst_T.n2m_T_m_T_subst_T_pre_n2m_T itself ⇒ typerep"
+
+Output (line 76 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  m_T_subst_label_T ::
+    "(char list × T) list ⇒ char list × T ⇒ char list × T"
+  m_T_subst_label_T_list ::
+    "(char list × T) list ⇒ (char list × T) list ⇒ (char list × T) list"
+  m_T_subst_T :: "(char list × T) list ⇒ T ⇒ T"
+
+Output (line 90 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  Tsubst_label_T :: "T ⇒ char list ⇒ char list × T ⇒ char list × T"
+  Tsubst_label_T_list ::
+    "T ⇒ char list ⇒ (char list × T) list ⇒ (char list × T) list"
+  Tsubst_T :: "T ⇒ char list ⇒ T ⇒ T"
+
+Output (line 104 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  m_T_subst_label_p ::
+    "(char list × T) list ⇒ char list × p ⇒ char list × p"
+  m_T_subst_label_p_list ::
+    "(char list × T) list ⇒ (char list × p) list ⇒ (char list × p) list"
+  m_T_subst_p :: "(char list × T) list ⇒ p ⇒ p"
+
+Output (line 115 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  Tsubst_label_p :: "T ⇒ char list ⇒ char list × p ⇒ char list × p"
+  Tsubst_label_p_list ::
+    "T ⇒ char list ⇒ (char list × p) list ⇒ (char list × p) list"
+  Tsubst_p :: "T ⇒ char list ⇒ p ⇒ p"
+
+Output (line 126 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  m_T_subst_G :: "(char list × T) list ⇒ G ⇒ G"
+
+Output (line 133 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  m_T_subst_label_t ::
+    "(char list × T) list ⇒ char list × t ⇒ char list × t"
+  m_T_subst_label_t_list ::
+    "(char list × T) list ⇒ (char list × t) list ⇒ (char list × t) list"
+  m_T_subst_t :: "(char list × T) list ⇒ t ⇒ t"
+
+Output (line 150 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  m_t_subst_label_t ::
+    "(char list × t) list ⇒ char list × t ⇒ char list × t"
+  m_t_subst_label_t_list ::
+    "(char list × t) list ⇒ (char list × t) list ⇒ (char list × t) list"
+  m_t_subst_t :: "(char list × t) list ⇒ t ⇒ t"
+
+Output (line 167 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  Tsubst_G :: "T ⇒ char list ⇒ G ⇒ G"
+
+Output (line 174 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  Tsubst_label_t :: "T ⇒ char list ⇒ char list × t ⇒ char list × t"
+  Tsubst_label_t_list ::
+    "T ⇒ char list ⇒ (char list × t) list ⇒ (char list × t) list"
+  Tsubst_t :: "T ⇒ char list ⇒ t ⇒ t"
+
+Output (line 191 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  tsubst_label_t :: "t ⇒ char list ⇒ char list × t ⇒ char list × t"
+  tsubst_label_t_list ::
+    "t ⇒ char list ⇒ (char list × t) list ⇒ (char list × t) list"
+  tsubst_t :: "t ⇒ char list ⇒ t ⇒ t"
+
+Output (line 209 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  list_minus :: "'a list ⇒ 'a list ⇒ 'a list"
+
+Output (line 217 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  ftv_label_T :: "char list × T ⇒ char list list"
+  ftv_label_T_list :: "(char list × T) list ⇒ char list list"
+  ftv_T :: "T ⇒ char list list"
+
+Output (line 231 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  ftv_label_p :: "char list × p ⇒ char list list"
+  ftv_label_p_list :: "(char list × p) list ⇒ char list list"
+  ftv_p :: "p ⇒ char list list"
+
+Output (line 242 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  fv_label_t :: "char list × t ⇒ char list list"
+  fv_label_t_list :: "(char list × t) list ⇒ char list list"
+  fv_t :: "t ⇒ char list list"
+
+Output (line 259 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  ftv_G :: "G ⇒ char list list"
+
+Output (line 266 of "Draft/testRegr_tmp_test7.thy"):
+consts
+  ftv_label_t :: "char list × t ⇒ char list list"
+  ftv_label_t_list :: "(char list × t) list ⇒ char list list"
+  ftv_t :: "t ⇒ char list list"
+Draft FAILED (see also "isabelle build_log -H Error Draft")
+*** Outer syntax error (line 285 of "/tmp/isabelle-pes20/private14277487999380997791/Draft/testRegr_tmp_test7.thy"): keyword "where" expected,
+*** but end-of-input (line 288 of "/tmp/isabelle-pes20/private14277487999380997791/Draft/testRegr_tmp_test7.thy") was found
+*** At command "<malformed>" (line 285 of "/tmp/isabelle-pes20/private14277487999380997791/Draft/testRegr_tmp_test7.thy")
+Unfinished session(s): Draft

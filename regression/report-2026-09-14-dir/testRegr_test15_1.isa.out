@@ -1,0 +1,71 @@
+Running Draft ...
+
+Output (line 6 of "Draft/testRegr_test15_1.thy"):
+consts
+  typerep_a_b_sbdT_a_b :: "a_b.a_b_sbdT_a_b itself ⇒ typerep"
+
+Output (line 6 of "Draft/testRegr_test15_1.thy"):
+consts
+  typerep_a_b_IITN_a_b :: "a_b.a_b_IITN_a_b itself ⇒ typerep"
+
+Output (line 6 of "Draft/testRegr_test15_1.thy"):
+consts
+  typerep_a :: "a itself ⇒ typerep"
+
+Output (line 6 of "Draft/testRegr_test15_1.thy"):
+consts
+  typerep_b :: "b itself ⇒ typerep"
+
+Output (line 6 of "Draft/testRegr_test15_1.thy"):
+consts
+  term_of_a :: "a ⇒ term"
+
+Output (line 6 of "Draft/testRegr_test15_1.thy"):
+consts
+  partial_term_of_a ::
+    "a itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 6 of "Draft/testRegr_test15_1.thy"):
+consts
+  equal_a :: "a ⇒ a ⇒ bool"
+
+Output (line 6 of "Draft/testRegr_test15_1.thy"):
+consts
+  term_of_b :: "b ⇒ term"
+
+Output (line 6 of "Draft/testRegr_test15_1.thy"):
+consts
+  partial_term_of_b ::
+    "b itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 6 of "Draft/testRegr_test15_1.thy"):
+consts
+  equal_b :: "b ⇒ b ⇒ bool"
+
+Output (line 6 of "Draft/testRegr_test15_1.thy"):
+consts
+  mutual_random_auxa_b ::
+    "natural
+     ⇒ (natural
+        ⇒ natural × natural ⇒ (a × (unit ⇒ term)) × natural × natural) ×
+       (natural
+        ⇒ natural × natural ⇒ (b × (unit ⇒ term)) × natural × natural)"
+
+Output (line 6 of "Draft/testRegr_test15_1.thy"):
+consts
+  random_a ::
+    "natural ⇒ natural × natural ⇒ (a × (unit ⇒ term)) × natural × natural"
+
+Output (line 6 of "Draft/testRegr_test15_1.thy"):
+consts
+  random_b ::
+    "natural ⇒ natural × natural ⇒ (b × (unit ⇒ term)) × natural × natural"
+
+Output (line 17 of "Draft/testRegr_test15_1.thy"):
+consts
+  is_bv_of_b :: "b ⇒ bool"
+
+Output (line 24 of "Draft/testRegr_test15_1.thy"):
+consts
+  is_av_of_a :: "a ⇒ bool"
+Finished Draft (0:00:02 elapsed time, 0:00:03 cpu time)

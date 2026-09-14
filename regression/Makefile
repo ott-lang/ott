@@ -100,7 +100,8 @@ report-2026-09-14.txt: regression
 	-make -C ../coq 
 	$(MAKE) -C .. tests/tmp_test7.ott
 	PATH=$$HOME/.elan/bin:$$PATH; export PATH; \
-	time ./regression -run_ott_and_targets report-2026-09-14.txt -all -todo_list regression.otl -temp_dir report-2026-09-14-dir -keep_temp  2>&1 | tee report-2026-09-14-log.txt
+	time ./regression -run_ott_and_targets report-2026-09-14.txt -coq -isa -latex -lean -lem -ocaml  -todo_list regression.otl -temp_dir report-2026-09-14-dir -keep_temp  2>&1 | tee report-2026-09-14-log.txt
+#	time ./regression -run_ott_and_targets report-2026-09-14.txt -all -todo_list regression.otl -temp_dir report-2026-09-14-dir -keep_temp  2>&1 | tee report-2026-09-14-log.txt
 
 
 # the same but just for a test or two, for testing the regression machinery quickly

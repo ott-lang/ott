@@ -1,0 +1,25 @@
+testRegr_sys_tupleNL.lean:46:14: warning: Variable name `t5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _t5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_sys_tupleNL.lean:46:17: warning: Variable name `i` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _i
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_sys_tupleNL.lean:56:4: error: Invalid pattern: Too many arguments to `G_vn`; expected 2 explicit arguments
+testRegr_sys_tupleNL.lean:88:45: warning: Variable name `T_` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _T_
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_sys_tupleNL.lean:88:94: warning: Variable name `t_` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _t_
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`

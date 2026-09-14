@@ -1,0 +1,54 @@
+DIGEST 3333752febbef8087dcc96a3b2ef0a20
+FtestRegr_test15_1NL
+R123:127 Stdlib.Arith.Arith <> <> lib
+R157:160 Stdlib.Bool.Bool <> <> lib
+R190:193 Stdlib.Lists.List <> <> lib
+R211:227 Ott.ott_list_core <> <> lib
+ind 243:243 <> a
+constr 258:261 <> a_AA
+constr 270:272 <> a_a
+constr 284:286 <> a_b
+ind 300:300 <> b
+constr 315:318 <> b_BB
+constr 327:329 <> b_a
+constr 341:343 <> b_b
+R265:265 testRegr_test15_1NL <> a:1 ind
+R278:278 testRegr_test15_1NL <> a:1 ind
+binder 275:276 <> a5:5
+R292:292 testRegr_test15_1NL <> b:2 ind
+binder 289:290 <> b5:6
+R322:322 testRegr_test15_1NL <> b:2 ind
+R335:335 testRegr_test15_1NL <> a:1 ind
+binder 332:333 <> a5:7
+R349:349 testRegr_test15_1NL <> b:2 ind
+binder 346:347 <> b5:8
+scheme 243:243 <> a_rect
+scheme 243:243 <> a_ind
+scheme 243:243 <> a_rec
+scheme 243:243 <> a_sind
+scheme 300:300 <> b_rect
+scheme 300:300 <> b_ind
+scheme 300:300 <> b_rec
+scheme 300:300 <> b_sind
+def 381:390 <> is_bv_of_b
+R397:397 testRegr_test15_1NL <> b ind
+binder 393:395 <> b_6:9
+R402:405 Corelib.Init.Datatypes <> bool ind
+R418:420 testRegr_test15_1NL <> b_6:9 var
+R431:434 testRegr_test15_1NL <> b_BB constr
+R439:443 Corelib.Init.Datatypes <> false constr
+R450:452 testRegr_test15_1NL <> b_a constr
+R462:465 Corelib.Init.Datatypes <> true constr
+R473:475 testRegr_test15_1NL <> b_b constr
+R485:488 Corelib.Init.Datatypes <> true constr
+def 508:517 <> is_av_of_a
+R524:524 testRegr_test15_1NL <> a ind
+binder 520:522 <> a_6:11
+R529:532 Corelib.Init.Datatypes <> bool ind
+R545:547 testRegr_test15_1NL <> a_6:11 var
+R558:561 testRegr_test15_1NL <> a_AA constr
+R566:570 Corelib.Init.Datatypes <> false constr
+R577:579 testRegr_test15_1NL <> a_a constr
+R589:592 Corelib.Init.Datatypes <> true constr
+R600:602 testRegr_test15_1NL <> a_b constr
+R612:615 Corelib.Init.Datatypes <> true constr

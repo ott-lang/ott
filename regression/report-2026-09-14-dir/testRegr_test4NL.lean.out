@@ -1,0 +1,18 @@
+testRegr_test4NL.lean:38:20: warning: Variable name `x` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _x
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test4NL.lean:38:53: warning: Variable name `e_` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _e_
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test4NL.lean:135:59: warning: Variable name `t_` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _t_
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`

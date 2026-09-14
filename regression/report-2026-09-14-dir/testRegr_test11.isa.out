@@ -1,0 +1,79 @@
+Running Draft ...
+
+Output (line 7 of "Draft/testRegr_test11.thy"):
+consts
+  typerep_t_pre_t :: "'a t_pre_t itself ⇒ typerep"
+
+Output (line 7 of "Draft/testRegr_test11.thy"):
+consts
+  typerep_t_IITN_t :: "t.t_IITN_t itself ⇒ typerep"
+
+Output (line 7 of "Draft/testRegr_test11.thy"):
+consts
+  typerep_t :: "t itself ⇒ typerep"
+
+Output (line 7 of "Draft/testRegr_test11.thy"):
+consts
+  term_of_t :: "t ⇒ term"
+
+Output (line 7 of "Draft/testRegr_test11.thy"):
+consts
+  partial_term_of_t ::
+    "t itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 7 of "Draft/testRegr_test11.thy"):
+consts
+  equal_t :: "t ⇒ t ⇒ bool"
+
+Output (line 7 of "Draft/testRegr_test11.thy"):
+consts
+  random_aux_t ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural ⇒ (t × (unit ⇒ term)) × natural × natural"
+
+Output (line 7 of "Draft/testRegr_test11.thy"):
+consts
+  random_t ::
+    "natural ⇒ natural × natural ⇒ (t × (unit ⇒ term)) × natural × natural"
+
+Output (line 15 of "Draft/testRegr_test11.thy"):
+consts
+  is_v_of_t_is_t_of_t :: "t ⇒ bool × bool"
+
+Output (line 23 of "Draft/testRegr_test11.thy"):
+consts
+  is_v_of_t :: "t ⇒ bool"
+
+Output (line 26 of "Draft/testRegr_test11.thy"):
+consts
+  is_t_of_t :: "t ⇒ bool"
+
+Output (line 29 of "Draft/testRegr_test11.thy"):
+theorem   is_v_of_t (t_Var ?x) = False
+          is_v_of_t (t_Lam ?x ?t) = is_t_of_t ?t
+          is_v_of_t (t_App ?t ?t') = False
+          is_v_of_t (t_Foo ?v) = False
+          is_t_of_t (t_Var ?x) = True
+          is_t_of_t (t_Lam ?x ?t) = is_t_of_t ?t
+          is_t_of_t (t_App ?t ?t') = (is_t_of_t ?t ∧ is_t_of_t ?t')
+          is_t_of_t (t_Foo ?v) = is_v_of_t ?v
+
+Output (line 42 of "Draft/testRegr_test11.thy"):
+Proofs for inductive predicate(s) "Baz"
+
+Output (line 42 of "Draft/testRegr_test11.thy"):
+  Proving monotonicity ...
+
+Output (line 42 of "Draft/testRegr_test11.thy"):
+  Proving the introduction rules ...
+
+Output (line 42 of "Draft/testRegr_test11.thy"):
+  Proving the elimination rules ...
+
+Output (line 42 of "Draft/testRegr_test11.thy"):
+  Proving the induction rule ...
+
+Output (line 42 of "Draft/testRegr_test11.thy"):
+  Proving the simplification rules ...
+Finished Draft (0:00:02 elapsed time)
