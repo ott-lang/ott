@@ -14,7 +14,7 @@ types index = "nat"
 
 %% Hmm, seems I can't use ich here, I wonder why
 %%indexvar i ::= {{ich index}}
-indexvar i ::= {{coq index}} {{isa index}} {{hol index}}
+indexvar i ::= {{ lean Nat }} {{coq index}} {{isa index}} {{hol index}}
 
 embed
 {{ tex
@@ -24,7 +24,7 @@ embed
 grammar
 thing :: thing_ ::=
   | Normal  ::   :: normal
-  | meta    :: M :: meta {{ ich thing_meta }}
+  | meta    :: M :: meta {{ ich thing_meta }} {{ lean thing_meta }}
 
 embed
 {{ tex

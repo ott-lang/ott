@@ -1,10 +1,11 @@
-metavar terminal, t			::= {{ isa string }} {{ coq nat }} {{ hol string }} 
-metavar metavarroot, mvr  	::= {{ isa string }} {{ coq nat }} {{ hol string }} 
-metavar nontermroot, ntr  	::= {{ isa string }} {{ coq nat }} {{ hol string }} 
-metavar suffix, suff       ::= {{ isa string }} {{ coq nat }} {{ hol string }} 
-metavar auxfn, f          ::= {{ isa string }} {{ coq nat }} {{ hol string }} 
-metavar prodname, pn     ::= {{ isa string }} {{ coq nat }} {{ hol string }} 
-indexvar index, i, j, n, m  ::= {{ isa string }} {{ coq nat }} {{ hol string }} 
+% an ott grammar for ott bindspecs
+metavar terminal, t			::= {{ lean Nat }} {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar metavarroot, mvr  	::= {{ lean Nat }} {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar nontermroot, ntr  	::= {{ lean Nat }} {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar suffix, suff       ::= {{ lean Nat }} {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar auxfn, f          ::= {{ lean Nat }} {{ isa string }} {{ coq nat }} {{ hol string }} 
+metavar prodname, pn     ::= {{ lean Nat }} {{ isa string }} {{ coq nat }} {{ hol string }} 
+indexvar index, i, j, n, m  ::= {{ lean Nat }} {{ isa string }} {{ coq nat }} {{ hol string }} 
 
 grammar
 

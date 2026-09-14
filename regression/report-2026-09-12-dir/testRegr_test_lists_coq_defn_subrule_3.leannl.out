@@ -1,0 +1,9 @@
+testRegr_test_lists_coq_defn_subrule_3.lean:6:12: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test_lists_coq_defn_subrule_3.lean:7:16: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test_lists_coq_defn_subrule_3.lean:28:19: warning: Variable name `constant` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _constant
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_lists_coq_defn_subrule_3.lean:37:59: error(lean.unknownIdentifier): Unknown identifier `_root_.ident`

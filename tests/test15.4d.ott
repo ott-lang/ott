@@ -2,10 +2,10 @@
 % mtutual recursion between a single upper/lower type pair, with  
 %repeated dot forms
 
-indexvar index, m,  n ::= {{ isa nat }} {{ coq nat }} {{ coq-equality }}
+indexvar index, m,  n ::= {{ lean Nat }} {{ isa nat }} {{ coq nat }} {{ coq-equality }}
                         {{ hol num }} {{ ocaml int }}
 
-metavar x ::= {{ isa nat }} {{ coq nat }} {{ coq-equality }}
+metavar x ::= {{ lean Nat }} {{ isa nat }} {{ coq nat }} {{ coq-equality }}
                         {{ hol num }} {{ ocaml int }}
 
    grammar

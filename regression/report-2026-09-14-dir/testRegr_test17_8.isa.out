@@ -1,0 +1,121 @@
+Running Draft ...
+
+Output (line 7 of "Draft/testRegr_test17_8.thy"):
+consts
+  typerep_t_pre_t :: "'a t_pre_t itself ⇒ typerep"
+
+Output (line 7 of "Draft/testRegr_test17_8.thy"):
+consts
+  typerep_t_IITN_t :: "t.t_IITN_t itself ⇒ typerep"
+
+Output (line 7 of "Draft/testRegr_test17_8.thy"):
+consts
+  typerep_t :: "t itself ⇒ typerep"
+
+Output (line 7 of "Draft/testRegr_test17_8.thy"):
+consts
+  term_of_t :: "t ⇒ term"
+
+Output (line 7 of "Draft/testRegr_test17_8.thy"):
+consts
+  partial_term_of_t ::
+    "t itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 7 of "Draft/testRegr_test17_8.thy"):
+consts
+  equal_t :: "t ⇒ t ⇒ bool"
+
+Output (line 12 of "Draft/testRegr_test17_8.thy"):
+consts
+  typerep_a_pre_a :: "'a a_pre_a itself ⇒ typerep"
+
+Output (line 12 of "Draft/testRegr_test17_8.thy"):
+consts
+  typerep_a_IITN_a :: "a.a_IITN_a itself ⇒ typerep"
+
+Output (line 12 of "Draft/testRegr_test17_8.thy"):
+consts
+  typerep_a :: "a itself ⇒ typerep"
+
+Output (line 12 of "Draft/testRegr_test17_8.thy"):
+consts
+  term_of_a :: "a ⇒ term"
+
+Output (line 12 of "Draft/testRegr_test17_8.thy"):
+consts
+  partial_term_of_a ::
+    "a itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 12 of "Draft/testRegr_test17_8.thy"):
+consts
+  equal_a :: "a ⇒ a ⇒ bool"
+
+Output (line 20 of "Draft/testRegr_test17_8.thy"):
+Proofs for inductive predicate(s) "ati"
+
+Output (line 20 of "Draft/testRegr_test17_8.thy"):
+  Proving monotonicity ...
+
+Output (line 20 of "Draft/testRegr_test17_8.thy"):
+  Proving the introduction rules ...
+
+Output (line 20 of "Draft/testRegr_test17_8.thy"):
+  Proving the elimination rules ...
+
+Output (line 20 of "Draft/testRegr_test17_8.thy"):
+  Proving the induction rule ...
+
+Output (line 20 of "Draft/testRegr_test17_8.thy"):
+  Proving the simplification rules ...
+
+Error (line 20 of "Draft/testRegr_test17_8.thy"):
+*** Proof failed.
+***  1. ⋀x y xa xb a_t'_list.
+***        x (?x26 x y xa xb a_t'_list) (?x27 x y xa xb a_t'_list) ⟶
+***        y (?x26 x y xa xb a_t'_list) (?x27 x y xa xb a_t'_list) ⟹
+***        list_all (λb. b)
+***         (map (λ(a_XXX, t'_XXX). x a_XXX t'_XXX) a_t'_list) ⟶
+***        list_all (λb. b) (map (λ(a_XXX, t'_XXX). y a_XXX t'_XXX) a_t'_list)
+***  2. ⋀x y xa xb.
+***        x ≤ y ⟹
+***        (∃a t_list i.
+***            xa = a_proj a i ∧ xb = t_list ! i ∧ x a (t_tuple t_list)) ⟶
+***        (∃a t_list i.
+***            xa = a_proj a i ∧ xb = t_list ! i ∧ y a (t_tuple t_list))
+*** The error(s) above occurred for the goal statement (line 20 of "/tmp/isabelle-pes20/private532474100058916616/Draft/testRegr_test17_8.thy"):
+*** mono
+***  (λp x1 x2.
+***      x1 = a_unit ∧ x2 = t_unit ∨
+***      (∃a_t'_list.
+***          x1 = a_tuple (map (λ(a_XXX, t'_XXX). a_XXX) a_t'_list) ∧
+***          x2 = t_tuple (map (λ(a_XXX, t'_XXX). t'_XXX) a_t'_list) ∧
+***          list_all (λb. b)
+***           (map (λ(a_XXX, t'_XXX). p a_XXX t'_XXX) a_t'_list)) ∨
+***      (∃a t_list i.
+***          x1 = a_proj a i ∧ x2 = t_list ! i ∧ p a (t_tuple t_list)))
+Draft FAILED (see also "isabelle build_log -H Error Draft")
+*** Proof failed.
+***  1. ⋀x y xa xb a_t'_list.
+***        x (?x26 x y xa xb a_t'_list) (?x27 x y xa xb a_t'_list) ⟶
+***        y (?x26 x y xa xb a_t'_list) (?x27 x y xa xb a_t'_list) ⟹
+***        list_all (λb. b)
+***         (map (λ(a_XXX, t'_XXX). x a_XXX t'_XXX) a_t'_list) ⟶
+***        list_all (λb. b) (map (λ(a_XXX, t'_XXX). y a_XXX t'_XXX) a_t'_list)
+***  2. ⋀x y xa xb.
+***        x ≤ y ⟹
+***        (∃a t_list i.
+***            xa = a_proj a i ∧ xb = t_list ! i ∧ x a (t_tuple t_list)) ⟶
+***        (∃a t_list i.
+***            xa = a_proj a i ∧ xb = t_list ! i ∧ y a (t_tuple t_list))
+*** The error(s) above occurred for the goal statement (line 20 of "/tmp/isabelle-pes20/private532474100058916616/Draft/testRegr_test17_8.thy"):
+*** mono
+***  (λp x1 x2.
+***      x1 = a_unit ∧ x2 = t_unit ∨
+***      (∃a_t'_list.
+***          x1 = a_tuple (map (λ(a_XXX, t'_XXX). a_XXX) a_t'_list) ∧
+***          x2 = t_tuple (map (λ(a_XXX, t'_XXX). t'_XXX) a_t'_list) ∧
+***          list_all (λb. b)
+***           (map (λ(a_XXX, t'_XXX). p a_XXX t'_XXX) a_t'_list)) ∨
+***      (∃a t_list i.
+***          x1 = a_proj a i ∧ x2 = t_list ! i ∧ p a (t_tuple t_list)))
+Unfinished session(s): Draft

@@ -155,7 +155,7 @@ Definition disjoint  (hhh : prod (prod heap heap) heap) : Prop :=
 grammar 
 
   h :: '' ::= {{ coq heap }}
-    | emph			:: M :: EmpH  {{ coq empheap }}
+    | emph			:: M :: EmpH  {{ coq empheap }} {{ lean empheap }}
 
   t :: 't_' ::=                                         {{ com commands }}
     | skip                   ::   :: Skip                    {{ com skip }}         
@@ -164,7 +164,7 @@ grammar
     | t || t'                ::   :: Par                     {{ com parallel composition}}   
     | atomic( B ) { t } [ P ]          ::   :: Atomic                  {{ com atomic operation }}   
     | while( B ) { t }          ::   :: While                  {{ com while loop }}   
-    | ( t )               :: M :: paren   {{ ich [[t]] }} 
+    | ( t )               :: M :: paren   {{ ich [[t]] }} {{ lean [[t]] }} 
 
  wf_t :: 'wf_t_' ::=                                       {{ com commands }}
     | skip                   ::   :: Skip                    {{ com skip }}         
@@ -173,7 +173,7 @@ grammar
     | wf_t || wf_t'                ::   :: Par                     {{ com parallel composition}}   
     | atomic( B ) { no_atomic_t } [ P ]         ::   :: Atomic                  {{ com atomic operation }}   
     | while( B ) { wf_t }          ::   :: While                  {{ com while loop }}   
-    | ( wf_t )               :: M :: paren   {{ ich [[t]] }} 
+    | ( wf_t )               :: M :: paren   {{ ich [[t]] }} {{ lean [[t]] }} 
 
 
   no_atomic_t :: 'no_atomic_t_' ::=                        {{ com commands }}
@@ -182,7 +182,7 @@ grammar
     | no_atomic_t ; no_atomic_t'                 ::   :: Seq  		     {{ com sequencing }}      
     | no_atomic_t || no_atomic_t'                ::   :: Par                     {{ com parallel composition}}   
     | while( B ) { no_atomic_t }          ::   :: While                  {{ com while loop }}   
-    | ( no_atomic_t )               :: M :: paren   {{ ich [[t]] }} 
+    | ( no_atomic_t )               :: M :: paren   {{ ich [[t]] }} {{ lean [[t]] }} 
 
 
   l :: 'label_' ::= 
@@ -197,14 +197,14 @@ grammar
     | ( h1 , h2 , h3 )	::  :: state  {{ coq ([[h1]],[[h2]],[[h3]]) }} 
 
  A  :: '' ::= {{ com abstract command }} {{ coq localrel  }}
-    | s     	       	:: M :: foo {{ coq do not use}}
+    | s     	       	:: M :: foo {{ coq do not use}} {{ lean do not use }}
 
  B  :: '' ::= {{ com abstract boolean }} {{ coq localpred }}
 
  P  :: '' ::= {{ com abstract boolean }} {{ coq precisepred }}
 
  R, G :: '' ::= {{ com interference }} {{ coq reflrel  }}
-    | Emp    	    	:: M :: Emp {{ coq emprel }}
+    | Emp    	    	:: M :: Emp {{ coq emprel }} {{ lean emprel }}
  
   Config :: '' ::=                               {{ com  configuration }}
     | ( t , s )                 ::   :: config   
@@ -212,16 +212,16 @@ grammar
 
 
   formula :: formula_ ::= 
-    | A ( h1 , h2 )	  ::	:: Command    {{ coq (hr [[A]]) ([[h1]],[[h2]]) = true }}
-    | R ( h1 , h2 )  	  ::	:: Relation   {{ coq hrr [[R]] ([[h1]],[[h2]]) = true }}
-    | h1 * h2 = h3	  ::	:: HeapEq     {{ coq star [[h1]] [[h2]] = Some [[h3]] }}
-    | h1 notin A  	  ::	:: RelationNotIn    {{ coq (forall h2, (hr [[A]]) ([[h1]],h2) = false) }}
-    | disjoint ( h1 , h2 , h3 ) ::    :: Disjoint  {{ coq disjoint ([[h1]],[[h2]],[[h3]]) }}  
-    | B ( h ) 	 	  :: 	:: BooleanTrue    {{ coq (hp [[B]]) ([[h]]) = Some true }}
-    | P ( h ) 	 	  :: 	:: PredTrue    {{ coq (predp [[P]] [[h]]) = true }}
-    | ~ B ( h ) 	 	  :: 	:: BooleanFalse    {{ coq (hp [[B]]) ([[h]]) = Some false }}
-    | B fault on h 	 	  :: 	:: BooleanFault    {{ coq (hp [[B]]) ([[h]]) = None }}
-    | h |/= P1 * true		  :: 	:: PredNotSats  {{ coq (forall h1 h2, star h1 h2 = Some [[h]] -> (predp [[P1]] h1) = false) }}
+    | A ( h1 , h2 )	  ::	:: Command    {{ coq (hr [[A]]) ([[h1]],[[h2]]) = true }} {{ lean (hr [[A]]) ([[h1]],[[h2]]) = true }}
+    | R ( h1 , h2 )  	  ::	:: Relation   {{ coq hrr [[R]] ([[h1]],[[h2]]) = true }} {{ lean hrr [[R]] ([[h1]],[[h2]]) = true }}
+    | h1 * h2 = h3	  ::	:: HeapEq     {{ coq star [[h1]] [[h2]] = Some [[h3]] }} {{ lean star [[h1]] [[h2]] = Some [[h3]] }}
+    | h1 notin A  	  ::	:: RelationNotIn    {{ coq (forall h2, (hr [[A]]) ([[h1]],h2) = false) }} {{ lean (forall h2, (hr [[A]]) ([[h1]],h2) = false) }}
+    | disjoint ( h1 , h2 , h3 ) ::    :: Disjoint  {{ coq disjoint ([[h1]],[[h2]],[[h3]]) }} {{ lean disjoint ([[h1]],[[h2]],[[h3]]) }}  
+    | B ( h ) 	 	  :: 	:: BooleanTrue    {{ coq (hp [[B]]) ([[h]]) = Some true }} {{ lean (hp [[B]]) ([[h]]) = Some true }}
+    | P ( h ) 	 	  :: 	:: PredTrue    {{ coq (predp [[P]] [[h]]) = true }} {{ lean (predp [[P]] [[h]]) = true }}
+    | ~ B ( h ) 	 	  :: 	:: BooleanFalse    {{ coq (hp [[B]]) ([[h]]) = Some false }} {{ lean (hp [[B]]) ([[h]]) = Some false }}
+    | B fault on h 	 	  :: 	:: BooleanFault    {{ coq (hp [[B]]) ([[h]]) = None }} {{ lean (hp [[B]]) ([[h]]) = None }}
+    | h |/= P1 * true		  :: 	:: PredNotSats  {{ coq (forall h1 h2, star h1 h2 = Some [[h]] -> (predp [[P1]] h1) = false) }} {{ lean (forall h1 h2, star h1 h2 = Some [[h]] -> (predp [[P1]] h1) = false) }}
     | judgement	 	  :: 	:: judgement
 
 subrules

@@ -274,3 +274,25 @@ sys-purercdsub: $(SYS_PURERCDSUB)
 jenkins:
 	cd regression; \
           make run-jenkins
+
+
+# quick lean experiments
+
+test10st.lean: tests/test10st.ott
+	bin/ott  \
+	-i tests/test10st.ott \
+        -o tests/test10st.lean 
+	cp tests/test10st.lean test-lean-project
+
+test7.lean: tests/tmp_test7.ott
+	bin/ott  \
+	-i tests/tmp_test7.ott \
+        -o tests/test7.lean \
+        -o tests/test7.thy
+	cp tests/test7.lean test-lean-project
+
+tests/tmp_test7.ott: tests/test7.ott src/Makefile
+	rm -f tests/tmp_test7.ott
+	$(MAKE) -C src tmp_test7.ott
+	cp -a src/tmp_test7.ott tests/tmp_test7.ott
+	chmod ugo-w tests/tmp_test7.ott

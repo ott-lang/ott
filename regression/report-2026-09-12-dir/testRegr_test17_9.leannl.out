@@ -1,0 +1,14 @@
+testRegr_test17_9.lean:6:16: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test17_9.lean:7:16: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test17_9.lean:36:36: warning: Variable name `x_` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _x_
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test17_9.lean:38:32: warning: Variable name `K_` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _K_
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`

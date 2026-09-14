@@ -1,4 +1,4 @@
-indexvar index , i , j , k , l , m , n ::= {{ coq nat }} {{ coq-equality }} {{ hol num }} {{ isa num }}
+indexvar index , i , j , k , l , m , n ::= {{ lean Nat }} {{ coq nat }} {{ coq-equality }} {{ hol num }} {{ isa num }}
 grammar
   foos :: foos_ ::=
     | </ terminali           // i /> :: :: comprehension

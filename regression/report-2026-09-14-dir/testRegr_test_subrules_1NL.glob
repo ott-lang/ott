@@ -1,0 +1,53 @@
+DIGEST cbe8862e787b6b88ea1a7bd27051b71e
+FtestRegr_test_subrules_1NL
+R130:134 Stdlib.Arith.Arith <> <> lib
+R164:167 Stdlib.Bool.Bool <> <> lib
+R197:200 Stdlib.Lists.List <> <> lib
+R218:234 Ott.ott_list_core <> <> lib
+ind 250:252 <> big
+constr 267:273 <> big_foo
+constr 289:295 <> big_bar
+constr 311:317 <> big_qux
+R281:283 testRegr_test_subrules_1NL <> big:1 ind
+binder 276:279 <> big5:3
+R303:305 testRegr_test_subrules_1NL <> big:1 ind
+binder 298:301 <> big5:4
+R332:334 testRegr_test_subrules_1NL <> big:1 ind
+binder 320:330 <> tweedledum5:5
+scheme 250:252 <> big_rect
+scheme 250:252 <> big_ind
+scheme 250:252 <> big_rec
+scheme 250:252 <> big_sind
+def 364:383 <> is_tweedledum_of_big
+R392:394 testRegr_test_subrules_1NL <> big ind
+binder 386:390 <> big_6:6
+R399:402 Corelib.Init.Datatypes <> bool ind
+R415:419 testRegr_test_subrules_1NL <> big_6:6 var
+R431:437 testRegr_test_subrules_1NL <> big_foo constr
+R450:469 testRegr_test_subrules_1NL <> is_tweedledum_of_big:7 def
+R483:489 testRegr_test_subrules_1NL <> big_bar constr
+R500:504 Corelib.Init.Datatypes <> false constr
+R511:517 testRegr_test_subrules_1NL <> big_qux constr
+R535:539 Corelib.Init.Datatypes <> false constr
+def 556:568 <> is_big_of_big
+R577:579 testRegr_test_subrules_1NL <> big ind
+binder 571:575 <> big_6:9
+R584:587 Corelib.Init.Datatypes <> bool ind
+R600:604 testRegr_test_subrules_1NL <> big_6:9 var
+R616:622 testRegr_test_subrules_1NL <> big_foo constr
+R635:647 testRegr_test_subrules_1NL <> is_big_of_big:10 def
+R661:667 testRegr_test_subrules_1NL <> big_bar constr
+R680:692 testRegr_test_subrules_1NL <> is_big_of_big:10 def
+R706:712 testRegr_test_subrules_1NL <> big_qux constr
+R732:751 testRegr_test_subrules_1NL <> is_tweedledum_of_big def
+def 782:801 <> is_tweedledee_of_big
+R810:812 testRegr_test_subrules_1NL <> big ind
+binder 804:808 <> big_6:12
+R817:820 Corelib.Init.Datatypes <> bool ind
+R833:837 testRegr_test_subrules_1NL <> big_6:12 var
+R849:855 testRegr_test_subrules_1NL <> big_foo constr
+R868:887 testRegr_test_subrules_1NL <> is_tweedledee_of_big:13 def
+R901:907 testRegr_test_subrules_1NL <> big_bar constr
+R918:922 Corelib.Init.Datatypes <> false constr
+R929:935 testRegr_test_subrules_1NL <> big_qux constr
+R953:957 Corelib.Init.Datatypes <> false constr

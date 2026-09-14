@@ -1,0 +1,40 @@
+Running Draft ...
+
+Output (line 8 of "Draft/testRegr_test_lists_coq_bind_1.thy"):
+consts
+  typerep_pattern_IITN_pattern ::
+    "pattern.pattern_IITN_pattern itself ⇒ typerep"
+
+Output (line 8 of "Draft/testRegr_test_lists_coq_bind_1.thy"):
+consts
+  typerep_pattern :: "pattern itself ⇒ typerep"
+
+Output (line 8 of "Draft/testRegr_test_lists_coq_bind_1.thy"):
+consts
+  term_of_pattern :: "pattern ⇒ term"
+
+Output (line 8 of "Draft/testRegr_test_lists_coq_bind_1.thy"):
+consts
+  partial_term_of_pattern ::
+    "pattern itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 8 of "Draft/testRegr_test_lists_coq_bind_1.thy"):
+consts
+  equal_pattern :: "pattern ⇒ pattern ⇒ bool"
+
+Output (line 8 of "Draft/testRegr_test_lists_coq_bind_1.thy"):
+consts
+  random_aux_pattern ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural ⇒ (pattern × (unit ⇒ term)) × natural × natural"
+
+Output (line 8 of "Draft/testRegr_test_lists_coq_bind_1.thy"):
+consts
+  random_pattern ::
+    "natural
+     ⇒ natural × natural ⇒ (pattern × (unit ⇒ term)) × natural × natural"
+Draft FAILED (see also "isabelle build_log -H Error Draft")
+*** Cannot define empty datatype "expr"
+*** At command "datatype" (line 11 of "/tmp/isabelle-pes20/private17613968285430911073/Draft/testRegr_test_lists_coq_bind_1.thy")
+Unfinished session(s): Draft

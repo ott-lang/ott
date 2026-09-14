@@ -3,7 +3,7 @@
 % (As in TAPL, there are no types in this fragment.  Isabelle would therefore
 %  complain that it cannot define an empty type.)
 
-metavar termvar, x ::=
+metavar termvar, x ::= {{ lean Nat }}
   {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}
   {{ lex alphanum }} {{ tex \mathsf{[[termvar]]} }}
 
@@ -14,7 +14,7 @@ t :: Tm ::=                                       {{ com terms: }}
                                                     {{ com abstraction }}
   | t1 t2                        ::   :: App        {{ com application }}
   | [ x |-> t' ] t               :: M :: Subst     
-        {{ ich (subst_t [[t']] [[x]] [[t]]) }}
+        {{ ich (subst_t [[t']] [[x]] [[t]]) }} {{ lean (subst_t [[t']] [[x]] [[t]]) }}
 
 v :: Va ::=                                       {{ com values: }}
   | \ x : T . t                  ::   :: Abs        (+ bind x in t +)
@@ -22,7 +22,7 @@ v :: Va ::=                                       {{ com values: }}
 
 T {{ hol Typ }}, S, U :: Ty ::=                      {{ com types: }}
   | T -> T'                      ::   :: Arr        {{ com type of functions }}
-  | ( T )                        :: M :: Paren      {{ ich [[T]] }}
+  | ( T )                        :: M :: Paren      {{ ich [[T]] }} {{ lean [[T]] }}
 
 
 

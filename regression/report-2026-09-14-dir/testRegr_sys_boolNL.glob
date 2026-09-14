@@ -1,0 +1,80 @@
+DIGEST 5a35f2de401b8a9b7f3324470b2c541d
+FtestRegr_sys_boolNL
+R193:197 Stdlib.Arith.Arith <> <> lib
+R227:230 Stdlib.Bool.Bool <> <> lib
+R260:263 Stdlib.Lists.List <> <> lib
+R281:297 Ott.ott_list_core <> <> lib
+ind 402:402 <> t
+constr 430:435 <> TmTrue
+constr 464:470 <> TmFalse
+constr 500:503 <> TmIf
+R439:439 testRegr_sys_boolNL <> t:1 ind
+R474:474 testRegr_sys_boolNL <> t:1 ind
+R509:509 testRegr_sys_boolNL <> t:1 ind
+binder 506:507 <> t1:3
+R516:516 testRegr_sys_boolNL <> t:1 ind
+binder 513:514 <> t2:4
+R523:523 testRegr_sys_boolNL <> t:1 ind
+binder 520:521 <> t3:5
+scheme 402:402 <> t_rect
+scheme 402:402 <> t_ind
+scheme 402:402 <> t_rec
+scheme 402:402 <> t_sind
+def 647:655 <> is_v_of_t
+R662:662 testRegr_sys_boolNL <> t ind
+binder 658:660 <> t_6:6
+R667:670 Corelib.Init.Datatypes <> bool ind
+R683:685 testRegr_sys_boolNL <> t_6:6 var
+R696:701 testRegr_sys_boolNL <> TmTrue constr
+R707:710 Corelib.Init.Datatypes <> true constr
+R717:723 testRegr_sys_boolNL <> TmFalse constr
+R729:732 Corelib.Init.Datatypes <> true constr
+R740:743 testRegr_sys_boolNL <> TmIf constr
+R758:762 Corelib.Init.Datatypes <> false constr
+R882:893 Ott.ott_list <> <> lib
+ind 968:970 <> red
+constr 1013:1020 <> E_IfTrue
+constr 1077:1085 <> E_IfFalse
+constr 1143:1146 <> E_If
+R975:978 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R974:974 testRegr_sys_boolNL <> t ind
+R980:983 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R979:979 testRegr_sys_boolNL <> t ind
+R1038:1038 testRegr_sys_boolNL <> t ind
+binder 1032:1033 <> t2:10
+binder 1035:1036 <> t3:11
+R1047:1049 testRegr_sys_boolNL <> red:8 ind
+R1071:1072 testRegr_sys_boolNL <> t2:10 var
+R1052:1055 testRegr_sys_boolNL <> TmIf constr
+R1057:1062 testRegr_sys_boolNL <> TmTrue constr
+R1064:1065 testRegr_sys_boolNL <> t2:10 var
+R1067:1068 testRegr_sys_boolNL <> t3:11 var
+R1103:1103 testRegr_sys_boolNL <> t ind
+binder 1097:1098 <> t2:12
+binder 1100:1101 <> t3:13
+R1112:1114 testRegr_sys_boolNL <> red:8 ind
+R1137:1138 testRegr_sys_boolNL <> t3:13 var
+R1117:1120 testRegr_sys_boolNL <> TmIf constr
+R1122:1128 testRegr_sys_boolNL <> TmFalse constr
+R1130:1131 testRegr_sys_boolNL <> t2:12 var
+R1133:1134 testRegr_sys_boolNL <> t3:13 var
+R1171:1171 testRegr_sys_boolNL <> t ind
+binder 1158:1159 <> t1:14
+binder 1161:1162 <> t2:15
+binder 1164:1165 <> t3:16
+binder 1167:1169 <> t1':17
+R1190:1198 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1180:1182 testRegr_sys_boolNL <> red:8 ind
+R1187:1189 testRegr_sys_boolNL <> t1':17 var
+R1184:1185 testRegr_sys_boolNL <> t1:14 var
+R1199:1201 testRegr_sys_boolNL <> red:8 ind
+R1220:1223 testRegr_sys_boolNL <> TmIf constr
+R1225:1227 testRegr_sys_boolNL <> t1':17 var
+R1229:1230 testRegr_sys_boolNL <> t2:15 var
+R1232:1233 testRegr_sys_boolNL <> t3:16 var
+R1204:1207 testRegr_sys_boolNL <> TmIf constr
+R1209:1210 testRegr_sys_boolNL <> t1:14 var
+R1212:1213 testRegr_sys_boolNL <> t2:15 var
+R1215:1216 testRegr_sys_boolNL <> t3:16 var
+scheme 968:970 <> red_ind
+scheme 968:970 <> red_sind

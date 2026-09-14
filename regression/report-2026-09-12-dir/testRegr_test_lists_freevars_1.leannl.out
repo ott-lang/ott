@@ -1,0 +1,20 @@
+testRegr_test_lists_freevars_1.lean:6:12: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test_lists_freevars_1.lean:7:12: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test_lists_freevars_1.lean:10:4: error: Constructor field `x` of `p.p_x` contains universe level metavariables at the expression
+  Sort ?u.5
+in its type
+  Sort ?u.5
+testRegr_test_lists_freevars_1.lean:14:0: error: (kernel) invalid nested inductive datatype 'List', nested inductive datatypes parameters cannot contain local variables.
+testRegr_test_lists_freevars_1.lean:20:7: error: unknown namespace `p`
+testRegr_test_lists_freevars_1.lean:24:17: warning: Variable name `p_t_list` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _p_t_list
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_lists_freevars_1.lean:28:15: warning: Variable name `t_list` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _t_list
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`

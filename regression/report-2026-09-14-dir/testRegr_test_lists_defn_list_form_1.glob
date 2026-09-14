@@ -1,0 +1,125 @@
+DIGEST 9d528f9bd07ce60a9f38f3ff09d63479
+FtestRegr_test_lists_defn_list_form_1
+R142:146 Stdlib.Arith.Arith <> <> lib
+R176:179 Stdlib.Bool.Bool <> <> lib
+R209:212 Stdlib.Lists.List <> <> lib
+def 228:228 <> i
+R239:241 Corelib.Init.Datatypes <> nat ind
+def 255:255 <> x
+R266:268 Corelib.Init.Datatypes <> nat ind
+ind 282:287 <> list_x
+constr 302:311 <> Nil_list_x
+constr 325:335 <> Cons_list_x
+R315:320 testRegr_test_lists_defn_list_form_1 <> list_x:1 ind
+R340:340 testRegr_test_lists_defn_list_form_1 <> x def
+R346:351 testRegr_test_lists_defn_list_form_1 <> list_x:1 ind
+scheme 282:287 <> list_x_rect
+scheme 282:287 <> list_x_ind
+scheme 282:287 <> list_x_rec
+scheme 282:287 <> list_x_sind
+ind 366:366 <> e
+constr 381:387 <> e_tuple
+R392:397 testRegr_test_lists_defn_list_form_1 <> list_x ind
+scheme 366:366 <> e_rect
+scheme 366:366 <> e_ind
+scheme 366:366 <> e_rec
+scheme 366:366 <> e_sind
+def 410:419 <> map_list_x
+binder 422:422 <> A:5
+R434:435 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R433:433 testRegr_test_lists_defn_list_form_1 <> x def
+R436:436 testRegr_test_lists_defn_list_form_1 <> A:5 var
+binder 431:431 <> f:6
+R442:447 testRegr_test_lists_defn_list_form_1 <> list_x ind
+binder 440:440 <> l:7
+R452:455 Corelib.Init.Datatypes <> list ind
+R457:457 testRegr_test_lists_defn_list_form_1 <> A:5 var
+R470:470 testRegr_test_lists_defn_list_form_1 <> l:7 var
+R481:490 testRegr_test_lists_defn_list_form_1 <> Nil_list_x constr
+R495:497 Corelib.Init.Datatypes <> nil constr
+R503:513 testRegr_test_lists_defn_list_form_1 <> Cons_list_x constr
+R524:527 Corelib.Init.Datatypes <> cons constr
+R536:545 testRegr_test_lists_defn_list_form_1 <> map_list_x:8 def
+R549:549 testRegr_test_lists_defn_list_form_1 <> f:6 var
+R547:547 testRegr_test_lists_defn_list_form_1 <> A:5 var
+R530:530 testRegr_test_lists_defn_list_form_1 <> f:6 var
+R573:582 testRegr_test_lists_defn_list_form_1 <> map_list_x def
+def 603:613 <> make_list_x
+R619:622 Corelib.Init.Datatypes <> list ind
+R624:624 testRegr_test_lists_defn_list_form_1 <> x def
+binder 616:616 <> l:10
+R628:633 testRegr_test_lists_defn_list_form_1 <> list_x ind
+R646:646 testRegr_test_lists_defn_list_form_1 <> l:10 var
+R657:659 Corelib.Init.Datatypes <> nil constr
+R665:674 testRegr_test_lists_defn_list_form_1 <> Nil_list_x constr
+R680:683 Corelib.Init.Datatypes <> cons constr
+R694:704 testRegr_test_lists_defn_list_form_1 <> Cons_list_x constr
+R709:719 testRegr_test_lists_defn_list_form_1 <> make_list_x:11 def
+def 743:755 <> unmake_list_x
+R761:766 testRegr_test_lists_defn_list_form_1 <> list_x ind
+binder 758:758 <> l:13
+R770:773 Corelib.Init.Datatypes <> list ind
+R775:775 testRegr_test_lists_defn_list_form_1 <> x def
+R788:788 testRegr_test_lists_defn_list_form_1 <> l:13 var
+R799:808 testRegr_test_lists_defn_list_form_1 <> Nil_list_x constr
+R813:815 Corelib.Init.Datatypes <> nil constr
+R821:831 testRegr_test_lists_defn_list_form_1 <> Cons_list_x constr
+R842:845 Corelib.Init.Datatypes <> cons constr
+R850:862 testRegr_test_lists_defn_list_form_1 <> unmake_list_x:14 def
+def 886:895 <> nth_list_x
+R900:902 Corelib.Init.Datatypes <> nat ind
+binder 898:898 <> n:16
+R909:914 testRegr_test_lists_defn_list_form_1 <> list_x ind
+binder 906:906 <> l:17
+R930:935 Corelib.Init.Datatypes <> option ind
+R937:937 testRegr_test_lists_defn_list_form_1 <> x def
+R952:952 testRegr_test_lists_defn_list_form_1 <> l:17 var
+R950:950 testRegr_test_lists_defn_list_form_1 <> n:16 var
+R963:963 Corelib.Init.Datatypes <> O constr
+R966:976 testRegr_test_lists_defn_list_form_1 <> Cons_list_x constr
+R987:990 Corelib.Init.Datatypes <> Some constr
+R998:998 Corelib.Init.Datatypes <> O constr
+R1006:1009 Corelib.Init.Datatypes <> None constr
+R1015:1015 Corelib.Init.Datatypes <> S constr
+R1020:1029 testRegr_test_lists_defn_list_form_1 <> Nil_list_x constr
+R1034:1037 Corelib.Init.Datatypes <> None constr
+R1043:1043 Corelib.Init.Datatypes <> S constr
+R1048:1058 testRegr_test_lists_defn_list_form_1 <> Cons_list_x constr
+R1069:1078 testRegr_test_lists_defn_list_form_1 <> nth_list_x:18 def
+def 1103:1112 <> app_list_x
+R1120:1125 testRegr_test_lists_defn_list_form_1 <> list_x ind
+binder 1115:1115 <> l:21
+binder 1117:1117 <> m:22
+R1129:1134 testRegr_test_lists_defn_list_form_1 <> list_x ind
+R1147:1147 testRegr_test_lists_defn_list_form_1 <> l:21 var
+R1158:1167 testRegr_test_lists_defn_list_form_1 <> Nil_list_x constr
+R1172:1172 testRegr_test_lists_defn_list_form_1 <> m:22 var
+R1178:1188 testRegr_test_lists_defn_list_form_1 <> Cons_list_x constr
+R1199:1209 testRegr_test_lists_defn_list_form_1 <> Cons_list_x constr
+R1214:1223 testRegr_test_lists_defn_list_form_1 <> app_list_x:23 def
+R1229:1229 testRegr_test_lists_defn_list_form_1 <> m:22 var
+ind 1289:1297 <> Typing_ok
+constr 1334:1345 <> Typing_ok_ok
+ind 1387:1399 <> Typing_linear
+constr 1447:1463 <> Typing_linear_foo
+R1302:1305 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1301:1301 testRegr_test_lists_defn_list_form_1 <> e ind
+R1403:1403 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1410:1414 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1404:1409 testRegr_test_lists_defn_list_form_1 <> list_x ind
+R1360:1360 testRegr_test_lists_defn_list_form_1 <> e ind
+binder 1357:1358 <> e5:29
+R1369:1377 testRegr_test_lists_defn_list_form_1 <> Typing_ok:25 ind
+R1379:1380 testRegr_test_lists_defn_list_form_1 <> e5:29 var
+R1482:1487 testRegr_test_lists_defn_list_form_1 <> list_x ind
+binder 1475:1480 <> x_list:30
+R1522:1530 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1496:1504 testRegr_test_lists_defn_list_form_1 <> Typing_ok:25 ind
+R1507:1513 testRegr_test_lists_defn_list_form_1 <> e_tuple constr
+R1515:1520 testRegr_test_lists_defn_list_form_1 <> x_list:30 var
+R1531:1543 testRegr_test_lists_defn_list_form_1 <> Typing_linear:26 ind
+R1545:1550 testRegr_test_lists_defn_list_form_1 <> x_list:30 var
+scheme 1289:1297 <> Typing_ok_ind
+scheme 1289:1297 <> Typing_ok_sind
+scheme 1387:1399 <> Typing_linear_ind
+scheme 1387:1399 <> Typing_linear_sind

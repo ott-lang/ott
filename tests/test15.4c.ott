@@ -1,10 +1,10 @@
 % test15.4c.ott  is_v test
 % mutual recursion between a single upper/lower type pair, with dot forms involving tuples
 
-indexvar index , n ::= {{ isa nat }} {{ coq nat }} {{ coq-equality }}
+indexvar index , n ::= {{ lean Nat }} {{ isa nat }} {{ coq nat }} {{ coq-equality }}
                         {{ hol num }} {{ ocaml int }}
 
-metavar x ::= {{ isa nat }} {{ coq nat }} {{ coq-equality }}
+metavar x ::= {{ lean Nat }} {{ isa nat }} {{ coq nat }} {{ coq-equality }}
                         {{ hol num }} {{ ocaml int }}
 
    grammar

@@ -1,0 +1,81 @@
+Running Draft ...
+
+Output (line 8 of "Draft/testRegr_test10st_fe.thy"):
+consts
+  typerep_T_pre_T :: "'a T_pre_T itself ⇒ typerep"
+
+Output (line 8 of "Draft/testRegr_test10st_fe.thy"):
+consts
+  typerep_T_IITN_T :: "T.T_IITN_T itself ⇒ typerep"
+
+Output (line 8 of "Draft/testRegr_test10st_fe.thy"):
+consts
+  typerep_T :: "T itself ⇒ typerep"
+
+Output (line 8 of "Draft/testRegr_test10st_fe.thy"):
+consts
+  term_of_T :: "T ⇒ term"
+
+Output (line 8 of "Draft/testRegr_test10st_fe.thy"):
+consts
+  partial_term_of_T ::
+    "T itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 8 of "Draft/testRegr_test10st_fe.thy"):
+consts
+  equal_T :: "T ⇒ T ⇒ bool"
+
+Output (line 8 of "Draft/testRegr_test10st_fe.thy"):
+consts
+  random_aux_T ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural ⇒ (T × (unit ⇒ term)) × natural × natural"
+
+Output (line 8 of "Draft/testRegr_test10st_fe.thy"):
+consts
+  random_T ::
+    "natural ⇒ natural × natural ⇒ (T × (unit ⇒ term)) × natural × natural"
+
+Output (line 12 of "Draft/testRegr_test10st_fe.thy"):
+consts
+  typerep_t_pre_t :: "'a t_pre_t itself ⇒ typerep"
+
+Output (line 12 of "Draft/testRegr_test10st_fe.thy"):
+consts
+  typerep_t_IITN_t :: "t.t_IITN_t itself ⇒ typerep"
+
+Output (line 12 of "Draft/testRegr_test10st_fe.thy"):
+consts
+  typerep_t :: "t itself ⇒ typerep"
+
+Output (line 12 of "Draft/testRegr_test10st_fe.thy"):
+consts
+  term_of_t :: "t ⇒ term"
+
+Output (line 12 of "Draft/testRegr_test10st_fe.thy"):
+consts
+  partial_term_of_t ::
+    "t itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 12 of "Draft/testRegr_test10st_fe.thy"):
+consts
+  equal_t :: "t ⇒ t ⇒ bool"
+
+Output (line 12 of "Draft/testRegr_test10st_fe.thy"):
+consts
+  random_aux_t ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural ⇒ (t × (unit ⇒ term)) × natural × natural"
+
+Output (line 12 of "Draft/testRegr_test10st_fe.thy"):
+consts
+  random_t ::
+    "natural ⇒ natural × natural ⇒ (t × (unit ⇒ term)) × natural × natural"
+Draft FAILED (see also "isabelle build_log -H Error Draft")
+*** Inner syntax error (line 17 of "/tmp/isabelle-pes20/private10503637943741568094/Draft/testRegr_test10st_fe.thy")
+*** at "~= > T"
+*** Failed to parse type
+*** At command "type_synonym" (line 17 of "/tmp/isabelle-pes20/private10503637943741568094/Draft/testRegr_test10st_fe.thy")
+Unfinished session(s): Draft

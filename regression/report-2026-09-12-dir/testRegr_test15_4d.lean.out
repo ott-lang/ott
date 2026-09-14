@@ -1,0 +1,12 @@
+testRegr_test15_4d.lean:6:16: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test15_4d.lean:7:12: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test15_4d.lean:10:4: error: Constructor field `x` of `a.a_Ax` contains universe level metavariables at the expression
+  Sort ?u.5
+in its type
+  Sort ?u.5
+testRegr_test15_4d.lean:17:5: error: unknown namespace `a`
+testRegr_test15_4d.lean:20:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+testRegr_test15_4d.lean:32:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+testRegr_test15_4d.lean:56:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+testRegr_test15_4d.lean:78:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+testRegr_test15_4d.lean:92:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`

@@ -1,0 +1,10 @@
+testRegr_test17_4.lean:6:21: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test17_4.lean:7:16: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test17_4.lean:15:0: error: unexpected token 'where'; expected command
+testRegr_test17_4.lean:18:10: error: unexpected identifier; expected 'instance'
+testRegr_test17_4.lean:19:7: error: unknown namespace `c`
+testRegr_test17_4.lean:29:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+testRegr_test17_4.lean:36:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+
+Hint: Using `a.a_x` would be valid:
+  [apply] `a.a_x`

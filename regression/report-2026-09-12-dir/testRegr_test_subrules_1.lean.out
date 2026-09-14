@@ -1,0 +1,25 @@
+testRegr_test_subrules_1.lean:12:11: error: failed to generate `Inhabited` instance for `big`
+testRegr_test_subrules_1.lean:19:13: warning: Variable name `big` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _big
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_subrules_1.lean:20:13: warning: Variable name `tweedledum` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _tweedledum
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_subrules_1.lean:33:13: warning: Variable name `big` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _big
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_subrules_1.lean:34:13: warning: Variable name `tweedledum` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _tweedledum
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`

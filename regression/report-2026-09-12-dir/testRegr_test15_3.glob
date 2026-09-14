@@ -1,0 +1,106 @@
+DIGEST 3b0eaee259803896577a37953099d6e6
+FtestRegr_test15_3
+R111:115 Stdlib.Arith.Arith <> <> lib
+R133:136 Stdlib.Bool.Bool <> <> lib
+R154:157 Stdlib.Lists.List <> <> lib
+R175:191 Ott.ott_list_core <> <> lib
+ind 207:207 <> a
+constr 222:225 <> a_AA
+constr 234:236 <> a_a
+constr 248:250 <> a_b
+constr 262:264 <> a_C
+constr 285:287 <> a_D
+ind 310:310 <> b
+constr 325:328 <> b_BB
+constr 337:339 <> b_a
+constr 351:353 <> b_b
+R229:229 testRegr_test15_3 <> a:1 ind
+R242:242 testRegr_test15_3 <> a:1 ind
+binder 239:240 <> a5:5
+R256:256 testRegr_test15_3 <> b:2 ind
+binder 253:254 <> b5:6
+R271:271 testRegr_test15_3 <> a:1 ind
+binder 267:269 <> av5:7
+R279:279 testRegr_test15_3 <> b:2 ind
+binder 275:277 <> bv5:8
+R294:294 testRegr_test15_3 <> a:1 ind
+binder 290:292 <> av5:9
+R302:302 testRegr_test15_3 <> b:2 ind
+binder 298:300 <> bv5:10
+R332:332 testRegr_test15_3 <> b:2 ind
+R345:345 testRegr_test15_3 <> a:1 ind
+binder 342:343 <> a5:11
+R359:359 testRegr_test15_3 <> b:2 ind
+binder 356:357 <> b5:12
+scheme 207:207 <> a_rect
+scheme 207:207 <> a_ind
+scheme 207:207 <> a_rec
+scheme 207:207 <> a_sind
+scheme 310:310 <> b_rect
+scheme 310:310 <> b_ind
+scheme 310:310 <> b_rec
+scheme 310:310 <> b_sind
+def 389:397 <> is_b_of_b
+def 528:536 <> is_a_of_a
+def 787:796 <> is_bv_of_b
+def 926:935 <> is_av_of_a
+R404:404 testRegr_test15_3 <> b ind
+binder 400:402 <> b_6:13
+R543:543 testRegr_test15_3 <> a ind
+binder 539:541 <> a_6:14
+R803:803 testRegr_test15_3 <> b ind
+binder 799:801 <> b_6:15
+R942:942 testRegr_test15_3 <> a ind
+binder 938:940 <> a_6:16
+R409:412 Corelib.Init.Datatypes <> bool ind
+R548:551 Corelib.Init.Datatypes <> bool ind
+R808:811 Corelib.Init.Datatypes <> bool ind
+R947:950 Corelib.Init.Datatypes <> bool ind
+R425:427 testRegr_test15_3 <> b_6:13 var
+R438:441 testRegr_test15_3 <> b_BB constr
+R447:450 Corelib.Init.Datatypes <> true constr
+R458:460 testRegr_test15_3 <> b_a constr
+R471:479 testRegr_test15_3 <> is_a_of_a:18 def
+R491:493 testRegr_test15_3 <> b_b constr
+R504:512 testRegr_test15_3 <> is_b_of_b:17 def
+R564:566 testRegr_test15_3 <> a_6:14 var
+R577:580 testRegr_test15_3 <> a_AA constr
+R586:589 Corelib.Init.Datatypes <> true constr
+R597:599 testRegr_test15_3 <> a_a constr
+R610:618 testRegr_test15_3 <> is_a_of_a:18 def
+R630:632 testRegr_test15_3 <> a_b constr
+R643:651 testRegr_test15_3 <> is_b_of_b:17 def
+R663:665 testRegr_test15_3 <> a_C constr
+R680:680 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R695:700 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R715:715 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R681:690 testRegr_test15_3 <> is_av_of_a:20 def
+R701:710 testRegr_test15_3 <> is_bv_of_b:19 def
+R723:725 testRegr_test15_3 <> a_D constr
+R740:740 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R755:760 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R775:775 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R741:750 testRegr_test15_3 <> is_av_of_a:20 def
+R761:770 testRegr_test15_3 <> is_bv_of_b:19 def
+R824:826 testRegr_test15_3 <> b_6:15 var
+R837:840 testRegr_test15_3 <> b_BB constr
+R845:849 Corelib.Init.Datatypes <> false constr
+R856:858 testRegr_test15_3 <> b_a constr
+R869:877 testRegr_test15_3 <> is_a_of_a:18 def
+R889:891 testRegr_test15_3 <> b_b constr
+R902:910 testRegr_test15_3 <> is_b_of_b:17 def
+R963:965 testRegr_test15_3 <> a_6:16 var
+R976:979 testRegr_test15_3 <> a_AA constr
+R984:988 Corelib.Init.Datatypes <> false constr
+R995:997 testRegr_test15_3 <> a_a constr
+R1008:1016 testRegr_test15_3 <> is_a_of_a:18 def
+R1028:1030 testRegr_test15_3 <> a_b constr
+R1041:1049 testRegr_test15_3 <> is_b_of_b:17 def
+R1061:1063 testRegr_test15_3 <> a_C constr
+R1078:1078 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R1093:1098 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R1113:1113 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R1079:1088 testRegr_test15_3 <> is_av_of_a:20 def
+R1099:1108 testRegr_test15_3 <> is_bv_of_b:19 def
+R1121:1123 testRegr_test15_3 <> a_D constr
+R1137:1141 Corelib.Init.Datatypes <> false constr

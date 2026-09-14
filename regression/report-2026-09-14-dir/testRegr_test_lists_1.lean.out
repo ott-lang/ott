@@ -1,0 +1,33 @@
+testRegr_test_lists_1.lean:58:21: warning: Variable name `tl_` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _tl_
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_lists_1.lean:85:21: warning: Variable name `tl_` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _tl_
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_lists_1.lean:112:22: warning: Variable name `tl_` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _tl_
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_lists_1.lean:146:28: warning: Variable name `tl_` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _tl_
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_lists_1.lean:177:7: error: Function expected at
+  PARSE_ERROR
+but this term has type
+  ?m.4
+
+Note: Expected a function because this term is being applied to the argument
+  "File /home/pes20/claude-home/ott/regression/../tests/test_lists_1.ott on line 45 - 46"
+
+Hint: The identifier `PARSE_ERROR` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.

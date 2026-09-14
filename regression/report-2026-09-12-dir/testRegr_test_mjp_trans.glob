@@ -1,0 +1,1498 @@
+DIGEST 0cd402a4447066a4ebd0fbd140bad803
+FtestRegr_test_mjp_trans
+R117:121 Stdlib.Arith.Arith <> <> lib
+R139:142 Stdlib.Bool.Bool <> <> lib
+R160:163 Stdlib.Lists.List <> <> lib
+R181:197 Ott.ott_list_core <> <> lib
+ax 212:215 <> heap
+ax 234:237 <> star
+R245:248 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R241:244 testRegr_test_mjp_trans <> heap defax
+R253:256 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R249:252 testRegr_test_mjp_trans <> heap defax
+R257:262 Corelib.Init.Datatypes <> option ind
+R264:267 testRegr_test_mjp_trans <> heap defax
+ax 280:286 <> empheap
+R290:293 testRegr_test_mjp_trans <> heap defax
+ax 303:318 <> associative_star
+binder 338:339 <> h1:7
+binder 341:342 <> h2:8
+binder 344:345 <> h3:9
+binder 347:348 <> h4:10
+binder 350:351 <> h5:11
+R380:391 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R370:372 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R360:363 testRegr_test_mjp_trans <> star defax
+R365:366 testRegr_test_mjp_trans <> h1:7 var
+R368:369 testRegr_test_mjp_trans <> h2:8 var
+R373:376 Corelib.Init.Datatypes <> Some constr
+R378:379 testRegr_test_mjp_trans <> h3:9 var
+R412:421 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R402:404 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R392:395 testRegr_test_mjp_trans <> star defax
+R397:398 testRegr_test_mjp_trans <> h3:9 var
+R400:401 testRegr_test_mjp_trans <> h4:10 var
+R405:408 Corelib.Init.Datatypes <> Some constr
+R410:411 testRegr_test_mjp_trans <> h5:11 var
+R422:428 Corelib.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+R431:432 Corelib.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+binder 429:430 <> h6:12
+R453:456 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R443:445 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R433:436 testRegr_test_mjp_trans <> star defax
+R438:439 testRegr_test_mjp_trans <> h2:8 var
+R441:442 testRegr_test_mjp_trans <> h4:10 var
+R446:449 Corelib.Init.Datatypes <> Some constr
+R451:452 testRegr_test_mjp_trans <> h6:12 var
+R467:469 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R457:460 testRegr_test_mjp_trans <> star defax
+R462:463 testRegr_test_mjp_trans <> h1:7 var
+R465:466 testRegr_test_mjp_trans <> h6:12 var
+R470:473 Corelib.Init.Datatypes <> Some constr
+R475:476 testRegr_test_mjp_trans <> h5:11 var
+ax 486:501 <> commutative_star
+binder 518:519 <> h1:15
+binder 521:522 <> h2:16
+R544:546 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R534:537 testRegr_test_mjp_trans <> star defax
+R539:540 testRegr_test_mjp_trans <> h1:15 var
+R542:543 testRegr_test_mjp_trans <> h2:16 var
+R547:550 testRegr_test_mjp_trans <> star defax
+R552:553 testRegr_test_mjp_trans <> h2:16 var
+R555:556 testRegr_test_mjp_trans <> h1:15 var
+ax 566:579 <> injective_star
+binder 596:597 <> h1:19
+binder 599:600 <> h2:20
+binder 602:603 <> h3:21
+R638:641 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R625:627 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R615:618 testRegr_test_mjp_trans <> star defax
+R620:621 testRegr_test_mjp_trans <> h1:19 var
+R623:624 testRegr_test_mjp_trans <> h2:20 var
+R628:631 testRegr_test_mjp_trans <> star defax
+R633:634 testRegr_test_mjp_trans <> h1:19 var
+R636:637 testRegr_test_mjp_trans <> h3:21 var
+R644:646 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R642:643 testRegr_test_mjp_trans <> h2:20 var
+R647:648 testRegr_test_mjp_trans <> h3:21 var
+ax 658:669 <> empheap_unit
+binder 686:687 <> h1:24
+R706:708 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R691:694 testRegr_test_mjp_trans <> star defax
+R696:697 testRegr_test_mjp_trans <> h1:24 var
+R699:705 testRegr_test_mjp_trans <> empheap defax
+R709:712 Corelib.Init.Datatypes <> Some constr
+R714:715 testRegr_test_mjp_trans <> h1:24 var
+def 730:733 <> pred
+R748:751 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R744:747 testRegr_test_mjp_trans <> heap defax
+R752:755 Corelib.Init.Datatypes <> bool ind
+def 769:776 <> heappred
+R791:794 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R787:790 testRegr_test_mjp_trans <> heap defax
+R795:800 Corelib.Init.Datatypes <> option ind
+R802:805 Corelib.Init.Datatypes <> bool ind
+def 819:832 <> heappred_local
+R840:847 testRegr_test_mjp_trans <> heappred def
+binder 835:836 <> hp:27
+binder 871:872 <> h1:28
+binder 874:874 <> h:29
+binder 876:878 <> h1':30
+binder 880:880 <> t:31
+R909:918 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R898:900 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R889:892 testRegr_test_mjp_trans <> star defax
+R894:895 testRegr_test_mjp_trans <> h1:28 var
+R897:897 testRegr_test_mjp_trans <> h:29 var
+R901:904 Corelib.Init.Datatypes <> Some constr
+R906:908 testRegr_test_mjp_trans <> h1':30 var
+R933:942 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R924:926 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R919:920 testRegr_test_mjp_trans <> hp:27 var
+R922:923 testRegr_test_mjp_trans <> h1:28 var
+R927:930 Corelib.Init.Datatypes <> Some constr
+R932:932 testRegr_test_mjp_trans <> t:31 var
+R949:951 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R943:944 testRegr_test_mjp_trans <> hp:27 var
+R946:948 testRegr_test_mjp_trans <> h1':30 var
+R952:955 Corelib.Init.Datatypes <> Some constr
+R957:957 testRegr_test_mjp_trans <> t:31 var
+def 972:984 <> heappred_safe
+R992:999 testRegr_test_mjp_trans <> heappred def
+binder 987:988 <> hp:32
+binder 1023:1024 <> h1:33
+binder 1027:1028 <> h':34
+binder 1031:1033 <> h1':35
+R1063:1072 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1052:1054 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1042:1045 testRegr_test_mjp_trans <> star defax
+R1047:1048 testRegr_test_mjp_trans <> h1:33 var
+R1050:1051 testRegr_test_mjp_trans <> h':34 var
+R1055:1058 Corelib.Init.Datatypes <> Some constr
+R1060:1062 testRegr_test_mjp_trans <> h1':35 var
+R1086:1094 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1079:1081 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1073:1074 testRegr_test_mjp_trans <> hp:32 var
+R1076:1078 testRegr_test_mjp_trans <> h1':35 var
+R1082:1085 Corelib.Init.Datatypes <> None constr
+R1100:1102 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1095:1096 testRegr_test_mjp_trans <> hp:32 var
+R1098:1099 testRegr_test_mjp_trans <> h1:33 var
+R1103:1106 Corelib.Init.Datatypes <> None constr
+def 1121:1127 <> precise
+R1134:1137 testRegr_test_mjp_trans <> pred def
+binder 1130:1130 <> p:36
+binder 1161:1162 <> h1:37
+binder 1164:1165 <> h2:38
+binder 1167:1167 <> h:39
+binder 1169:1170 <> h':40
+binder 1172:1174 <> h'':41
+R1199:1209 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1195:1197 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1185:1188 testRegr_test_mjp_trans <> star defax
+R1190:1191 testRegr_test_mjp_trans <> h1:37 var
+R1193:1194 testRegr_test_mjp_trans <> h':40 var
+R1198:1198 testRegr_test_mjp_trans <> h:39 var
+R1225:1235 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1221:1223 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1210:1213 testRegr_test_mjp_trans <> star defax
+R1215:1216 testRegr_test_mjp_trans <> h2:38 var
+R1218:1220 testRegr_test_mjp_trans <> h'':41 var
+R1224:1224 testRegr_test_mjp_trans <> h:39 var
+R1247:1258 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1240:1242 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1236:1236 testRegr_test_mjp_trans <> p:36 var
+R1238:1239 testRegr_test_mjp_trans <> h1:37 var
+R1243:1246 Corelib.Init.Datatypes <> true constr
+R1270:1281 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1263:1265 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1259:1259 testRegr_test_mjp_trans <> p:36 var
+R1261:1262 testRegr_test_mjp_trans <> h2:38 var
+R1266:1269 Corelib.Init.Datatypes <> true constr
+R1284:1286 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1282:1283 testRegr_test_mjp_trans <> h1:37 var
+R1287:1288 testRegr_test_mjp_trans <> h2:38 var
+def 1304:1310 <> heaprel
+R1321:1321 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1333:1337 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1326:1328 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1322:1325 testRegr_test_mjp_trans <> heap defax
+R1329:1332 testRegr_test_mjp_trans <> heap defax
+R1338:1341 Corelib.Init.Datatypes <> bool ind
+def 1355:1367 <> heaprel_local
+R1375:1381 testRegr_test_mjp_trans <> heaprel def
+binder 1370:1371 <> hr:42
+binder 1405:1406 <> h1:43
+binder 1408:1409 <> h':44
+binder 1411:1413 <> h1':45
+binder 1415:1417 <> h2':46
+binder 1419:1420 <> hx:47
+R1445:1454 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1439:1440 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1429:1430 testRegr_test_mjp_trans <> hr:42 var
+R1432:1432 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1435:1435 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1438:1438 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1433:1434 testRegr_test_mjp_trans <> h1:43 var
+R1436:1437 testRegr_test_mjp_trans <> hx:47 var
+R1441:1444 Corelib.Init.Datatypes <> true constr
+R1476:1485 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1465:1467 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1455:1458 testRegr_test_mjp_trans <> star defax
+R1460:1461 testRegr_test_mjp_trans <> h1:43 var
+R1463:1464 testRegr_test_mjp_trans <> h':44 var
+R1468:1471 Corelib.Init.Datatypes <> Some constr
+R1473:1475 testRegr_test_mjp_trans <> h1':45 var
+R1505:1513 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1498:1500 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1486:1487 testRegr_test_mjp_trans <> hr:42 var
+R1489:1489 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1493:1493 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1497:1497 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1490:1492 testRegr_test_mjp_trans <> h1':45 var
+R1494:1496 testRegr_test_mjp_trans <> h2':46 var
+R1501:1504 Corelib.Init.Datatypes <> true constr
+R1514:1520 Corelib.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+R1523:1525 Corelib.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+R1568:1569 Corelib.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+binder 1521:1522 <> h2:48
+R1543:1546 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R1536:1538 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1526:1527 testRegr_test_mjp_trans <> hr:42 var
+R1529:1529 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1532:1532 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1535:1535 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1530:1531 testRegr_test_mjp_trans <> h1:43 var
+R1533:1534 testRegr_test_mjp_trans <> h2:48 var
+R1539:1542 Corelib.Init.Datatypes <> true constr
+R1557:1559 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1547:1550 testRegr_test_mjp_trans <> star defax
+R1552:1553 testRegr_test_mjp_trans <> h2:48 var
+R1555:1556 testRegr_test_mjp_trans <> h':44 var
+R1560:1563 Corelib.Init.Datatypes <> Some constr
+R1565:1567 testRegr_test_mjp_trans <> h2':46 var
+def 1784:1795 <> heaprel_safe
+R1803:1809 testRegr_test_mjp_trans <> heaprel def
+binder 1798:1799 <> hr:49
+binder 1833:1834 <> h1:50
+binder 1837:1838 <> h':51
+binder 1841:1843 <> h1':52
+R1873:1882 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1862:1864 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1852:1855 testRegr_test_mjp_trans <> star defax
+R1857:1858 testRegr_test_mjp_trans <> h1:50 var
+R1860:1861 testRegr_test_mjp_trans <> h':51 var
+R1865:1868 Corelib.Init.Datatypes <> Some constr
+R1870:1872 testRegr_test_mjp_trans <> h1':52 var
+R1883:1883 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1912:1922 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1950:1950 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+binder 1891:1891 <> h:53
+R1904:1906 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1894:1895 testRegr_test_mjp_trans <> hr:49 var
+R1897:1897 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1901:1901 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1903:1903 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1898:1900 testRegr_test_mjp_trans <> h1':52 var
+R1902:1902 testRegr_test_mjp_trans <> h:53 var
+R1907:1911 Corelib.Init.Datatypes <> false constr
+binder 1930:1930 <> h:54
+R1942:1944 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1933:1934 testRegr_test_mjp_trans <> hr:49 var
+R1936:1936 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1939:1939 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1941:1941 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1937:1938 testRegr_test_mjp_trans <> h1:50 var
+R1940:1940 testRegr_test_mjp_trans <> h:54 var
+R1945:1949 Corelib.Init.Datatypes <> false constr
+def 1967:1972 <> reflex
+R1980:1986 testRegr_test_mjp_trans <> heaprel def
+binder 1975:1976 <> hr:55
+binder 2010:2010 <> h:56
+R2022:2024 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R2013:2014 testRegr_test_mjp_trans <> hr:55 var
+R2016:2017 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2019:2019 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2021:2021 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2018:2018 testRegr_test_mjp_trans <> h:56 var
+R2020:2020 testRegr_test_mjp_trans <> h:56 var
+R2025:2028 Corelib.Init.Datatypes <> true constr
+rec 2166:2173 <> localrel
+proj 2194:2195 <> hr
+proj 2210:2220 <> proof_local
+proj 2244:2253 <> proof_safe
+R2199:2205 testRegr_test_mjp_trans <> heaprel def
+R2224:2236 testRegr_test_mjp_trans <> heaprel_local def
+R2238:2239 testRegr_test_mjp_trans <> hr:58 meth
+R2257:2268 testRegr_test_mjp_trans <> heaprel_safe def
+R2270:2271 testRegr_test_mjp_trans <> hr:58 meth
+rec 2283:2293 <> precisepred
+proj 2316:2320 <> predp
+proj 2332:2343 <> proofprecise
+R2324:2327 testRegr_test_mjp_trans <> pred def
+R2347:2353 testRegr_test_mjp_trans <> precise def
+R2355:2359 testRegr_test_mjp_trans <> predp:62 meth
+rec 2371:2377 <> reflrel
+proj 2402:2404 <> hrr
+proj 2419:2425 <> proofrr
+R2408:2414 testRegr_test_mjp_trans <> heaprel def
+R2429:2434 testRegr_test_mjp_trans <> reflex def
+R2436:2438 testRegr_test_mjp_trans <> hrr:65 meth
+ax 2454:2459 <> emprel
+R2463:2469 testRegr_test_mjp_trans <> reflrel rec
+rec 2481:2489 <> localpred
+proj 2511:2512 <> hp
+proj 2528:2533 <> proofp
+proj 2558:2566 <> proofsafe
+R2516:2523 testRegr_test_mjp_trans <> heappred def
+R2537:2550 testRegr_test_mjp_trans <> heappred_local def
+R2552:2553 testRegr_test_mjp_trans <> hp:70 meth
+R2570:2582 testRegr_test_mjp_trans <> heappred_safe def
+R2584:2585 testRegr_test_mjp_trans <> hp:70 meth
+def 2601:2606 <> union'
+R2614:2620 testRegr_test_mjp_trans <> heaprel def
+binder 2609:2611 <> hr1:73
+R2630:2636 testRegr_test_mjp_trans <> heaprel def
+binder 2624:2626 <> hr2:74
+R2641:2647 testRegr_test_mjp_trans <> heaprel def
+R2666:2669 Corelib.Init.Datatypes <> prod ind
+R2676:2679 testRegr_test_mjp_trans <> heap defax
+R2671:2674 testRegr_test_mjp_trans <> heap defax
+binder 2660:2661 <> hp:75
+R2690:2692 testRegr_test_mjp_trans <> hr1:73 var
+R2694:2695 testRegr_test_mjp_trans <> hp:75 var
+R2714:2716 testRegr_test_mjp_trans <> hr2:74 var
+R2718:2719 testRegr_test_mjp_trans <> hp:75 var
+R2703:2706 Corelib.Init.Datatypes <> true constr
+def 2735:2740 <> inter'
+R2748:2754 testRegr_test_mjp_trans <> heaprel def
+binder 2743:2745 <> hr1:76
+R2764:2770 testRegr_test_mjp_trans <> heaprel def
+binder 2758:2760 <> hr2:77
+R2775:2781 testRegr_test_mjp_trans <> heaprel def
+R2800:2803 Corelib.Init.Datatypes <> prod ind
+R2810:2813 testRegr_test_mjp_trans <> heap defax
+R2805:2808 testRegr_test_mjp_trans <> heap defax
+binder 2794:2795 <> hp:78
+R2824:2826 testRegr_test_mjp_trans <> hr1:76 var
+R2828:2829 testRegr_test_mjp_trans <> hp:78 var
+R2851:2855 Corelib.Init.Datatypes <> false constr
+R2838:2840 testRegr_test_mjp_trans <> hr2:77 var
+R2842:2843 testRegr_test_mjp_trans <> hp:78 var
+prf 2865:2882 <> union_refl_is_refl
+R2906:2912 testRegr_test_mjp_trans <> reflrel rec
+binder 2896:2898 <> hr1:79
+binder 2900:2902 <> hr2:80
+R2923:2928 testRegr_test_mjp_trans <> reflex def
+R2931:2936 testRegr_test_mjp_trans <> union' def
+R2939:2941 testRegr_test_mjp_trans <> hrr proj
+R2943:2945 testRegr_test_mjp_trans <> hr1:79 var
+R2949:2951 testRegr_test_mjp_trans <> hrr proj
+R2953:2955 testRegr_test_mjp_trans <> hr2:80 var
+R2982:2987 testRegr_test_mjp_trans <> reflex def
+R2997:3002 testRegr_test_mjp_trans <> union' def
+R3025:3031 testRegr_test_mjp_trans <> proofrr proj
+R3052:3054 testRegr_test_mjp_trans <> hrr proj
+R3060:3060 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3062:3062 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3064:3064 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+prf 3092:3109 <> inter_refl_is_refl
+R3133:3139 testRegr_test_mjp_trans <> reflrel rec
+binder 3123:3125 <> hr1:81
+binder 3127:3129 <> hr2:82
+R3150:3155 testRegr_test_mjp_trans <> reflex def
+R3158:3163 testRegr_test_mjp_trans <> inter' def
+R3166:3168 testRegr_test_mjp_trans <> hrr proj
+R3170:3172 testRegr_test_mjp_trans <> hr1:81 var
+R3176:3178 testRegr_test_mjp_trans <> hrr proj
+R3180:3182 testRegr_test_mjp_trans <> hr2:82 var
+R3209:3214 testRegr_test_mjp_trans <> reflex def
+R3224:3229 testRegr_test_mjp_trans <> inter' def
+R3252:3258 testRegr_test_mjp_trans <> proofrr proj
+R3281:3287 testRegr_test_mjp_trans <> proofrr proj
+R3308:3310 testRegr_test_mjp_trans <> hrr proj
+R3316:3316 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3318:3318 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3320:3320 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3334:3336 testRegr_test_mjp_trans <> hrr proj
+R3342:3342 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3344:3344 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3346:3346 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+def 3379:3383 <> union
+R3391:3397 testRegr_test_mjp_trans <> reflrel rec
+binder 3386:3388 <> hr1:83
+R3407:3413 testRegr_test_mjp_trans <> reflrel rec
+binder 3401:3403 <> hr2:84
+R3418:3424 testRegr_test_mjp_trans <> reflrel rec
+R3431:3439 testRegr_test_mjp_trans <> mkReflRel constr
+R3442:3447 testRegr_test_mjp_trans <> union' def
+R3450:3452 testRegr_test_mjp_trans <> hrr proj
+R3454:3456 testRegr_test_mjp_trans <> hr1:83 var
+R3460:3462 testRegr_test_mjp_trans <> hrr proj
+R3464:3466 testRegr_test_mjp_trans <> hr2:84 var
+R3483:3500 testRegr_test_mjp_trans <> union_refl_is_refl thm
+R3502:3504 testRegr_test_mjp_trans <> hr1:83 var
+R3506:3508 testRegr_test_mjp_trans <> hr2:84 var
+def 3528:3532 <> inter
+R3540:3546 testRegr_test_mjp_trans <> reflrel rec
+binder 3535:3537 <> hr1:85
+R3556:3562 testRegr_test_mjp_trans <> reflrel rec
+binder 3550:3552 <> hr2:86
+R3567:3573 testRegr_test_mjp_trans <> reflrel rec
+R3580:3588 testRegr_test_mjp_trans <> mkReflRel constr
+R3591:3596 testRegr_test_mjp_trans <> inter' def
+R3599:3601 testRegr_test_mjp_trans <> hrr proj
+R3603:3605 testRegr_test_mjp_trans <> hr1:85 var
+R3609:3611 testRegr_test_mjp_trans <> hrr proj
+R3613:3615 testRegr_test_mjp_trans <> hr2:86 var
+R3632:3649 testRegr_test_mjp_trans <> inter_refl_is_refl thm
+R3651:3653 testRegr_test_mjp_trans <> hr1:85 var
+R3655:3657 testRegr_test_mjp_trans <> hr2:86 var
+def 3678:3685 <> disjoint
+R3695:3698 Corelib.Init.Datatypes <> prod ind
+R3717:3720 testRegr_test_mjp_trans <> heap defax
+R3701:3704 Corelib.Init.Datatypes <> prod ind
+R3711:3714 testRegr_test_mjp_trans <> heap defax
+R3706:3709 testRegr_test_mjp_trans <> heap defax
+binder 3689:3691 <> hhh:87
+R3743:3745 testRegr_test_mjp_trans <> hhh:87 var
+R3758:3758 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3761:3761 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3764:3764 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3767:3767 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3778:3784 Corelib.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+R3787:3788 Corelib.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+binder 3785:3786 <> h':89
+R3789:3795 Corelib.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+R3799:3809 Corelib.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+binder 3796:3798 <> h'':90
+R3830:3833 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R3820:3822 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R3810:3813 testRegr_test_mjp_trans <> star defax
+R3823:3826 Corelib.Init.Datatypes <> Some constr
+R3828:3829 testRegr_test_mjp_trans <> h':89 var
+R3844:3846 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R3834:3837 testRegr_test_mjp_trans <> star defax
+R3839:3840 testRegr_test_mjp_trans <> h':89 var
+R3847:3850 Corelib.Init.Datatypes <> Some constr
+R3852:3854 testRegr_test_mjp_trans <> h'':90 var
+def 3878:3878 <> P
+R3889:3899 testRegr_test_mjp_trans <> precisepred rec
+def 3914:3914 <> B
+R3925:3933 testRegr_test_mjp_trans <> localpred rec
+def 3948:3948 <> A
+R3959:3966 testRegr_test_mjp_trans <> localrel rec
+def 3981:3981 <> h
+R3992:3995 testRegr_test_mjp_trans <> heap defax
+def 4010:4010 <> R
+R4021:4027 testRegr_test_mjp_trans <> reflrel rec
+ind 4041:4041 <> t
+constr 4071:4076 <> t_Skip
+constr 4096:4100 <> t_Abs
+constr 4135:4139 <> t_Seq
+constr 4175:4179 <> t_Par
+constr 4225:4232 <> t_Atomic
+constr 4281:4287 <> t_While
+R4080:4080 testRegr_test_mjp_trans <> t:91 ind
+R4106:4106 testRegr_test_mjp_trans <> A def
+binder 4103:4104 <> A5:93
+R4145:4145 testRegr_test_mjp_trans <> t:91 ind
+binder 4142:4143 <> t5:94
+R4152:4152 testRegr_test_mjp_trans <> t:91 ind
+binder 4149:4150 <> t':95
+R4185:4185 testRegr_test_mjp_trans <> t:91 ind
+binder 4182:4183 <> t5:96
+R4192:4192 testRegr_test_mjp_trans <> t:91 ind
+binder 4189:4190 <> t':97
+R4238:4238 testRegr_test_mjp_trans <> B def
+binder 4235:4236 <> B5:98
+R4245:4245 testRegr_test_mjp_trans <> t:91 ind
+binder 4242:4243 <> t5:99
+R4252:4252 testRegr_test_mjp_trans <> P def
+binder 4249:4250 <> P5:100
+R4293:4293 testRegr_test_mjp_trans <> B def
+binder 4290:4291 <> B5:101
+R4300:4300 testRegr_test_mjp_trans <> t:91 ind
+binder 4297:4298 <> t5:102
+scheme 4041:4041 <> t_rect
+scheme 4041:4041 <> t_ind
+scheme 4041:4041 <> t_rec
+scheme 4041:4041 <> t_sind
+def 4333:4333 <> s
+R4344:4347 Corelib.Init.Datatypes <> prod ind
+R4367:4370 testRegr_test_mjp_trans <> heap defax
+R4350:4353 Corelib.Init.Datatypes <> prod ind
+R4361:4364 testRegr_test_mjp_trans <> heap defax
+R4355:4358 testRegr_test_mjp_trans <> heap defax
+ind 4384:4384 <> l
+constr 4399:4408 <> label_Rely
+constr 4420:4429 <> label_Prog
+R4414:4414 testRegr_test_mjp_trans <> R def
+binder 4411:4412 <> R5:105
+R4433:4433 testRegr_test_mjp_trans <> l:103 ind
+scheme 4384:4384 <> l_rect
+scheme 4384:4384 <> l_ind
+scheme 4384:4384 <> l_rec
+scheme 4384:4384 <> l_sind
+def 4448:4448 <> n
+R4459:4461 Corelib.Init.Datatypes <> nat ind
+ind 4475:4480 <> Config
+constr 4515:4520 <> config
+constr 4539:4543 <> fault
+R4526:4526 testRegr_test_mjp_trans <> t ind
+binder 4523:4524 <> t5:108
+R4533:4533 testRegr_test_mjp_trans <> s def
+binder 4530:4531 <> s5:109
+R4547:4552 testRegr_test_mjp_trans <> Config:106 ind
+scheme 4475:4480 <> Config_rect
+scheme 4475:4480 <> Config_ind
+scheme 4475:4480 <> Config_rec
+scheme 4475:4480 <> Config_sind
+def 4581:4599 <> is_no_atomic_t_of_t
+R4606:4606 testRegr_test_mjp_trans <> t ind
+binder 4602:4604 <> t_6:110
+R4611:4614 Corelib.Init.Datatypes <> bool ind
+R4627:4629 testRegr_test_mjp_trans <> t_6:110 var
+R4640:4645 testRegr_test_mjp_trans <> t_Skip constr
+R4651:4654 Corelib.Init.Datatypes <> true constr
+R4662:4666 testRegr_test_mjp_trans <> t_Abs constr
+R4676:4679 Corelib.Init.Datatypes <> true constr
+R4687:4691 testRegr_test_mjp_trans <> t_Seq constr
+R4704:4704 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R4727:4732 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R4755:4755 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R4705:4723 testRegr_test_mjp_trans <> is_no_atomic_t_of_t:111 def
+R4733:4751 testRegr_test_mjp_trans <> is_no_atomic_t_of_t:111 def
+R4763:4767 testRegr_test_mjp_trans <> t_Par constr
+R4780:4780 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R4803:4808 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R4831:4831 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R4781:4799 testRegr_test_mjp_trans <> is_no_atomic_t_of_t:111 def
+R4809:4827 testRegr_test_mjp_trans <> is_no_atomic_t_of_t:111 def
+R4839:4846 testRegr_test_mjp_trans <> t_Atomic constr
+R4861:4865 Corelib.Init.Datatypes <> false constr
+R4872:4878 testRegr_test_mjp_trans <> t_While constr
+R4892:4910 testRegr_test_mjp_trans <> is_no_atomic_t_of_t:111 def
+def 4932:4943 <> is_wf_t_of_t
+R4950:4950 testRegr_test_mjp_trans <> t ind
+binder 4946:4948 <> t_6:113
+R4955:4958 Corelib.Init.Datatypes <> bool ind
+R4971:4973 testRegr_test_mjp_trans <> t_6:113 var
+R4984:4989 testRegr_test_mjp_trans <> t_Skip constr
+R4995:4998 Corelib.Init.Datatypes <> true constr
+R5006:5010 testRegr_test_mjp_trans <> t_Abs constr
+R5020:5023 Corelib.Init.Datatypes <> true constr
+R5031:5035 testRegr_test_mjp_trans <> t_Seq constr
+R5048:5048 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R5064:5069 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R5085:5085 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R5049:5060 testRegr_test_mjp_trans <> is_wf_t_of_t:114 def
+R5070:5081 testRegr_test_mjp_trans <> is_wf_t_of_t:114 def
+R5093:5097 testRegr_test_mjp_trans <> t_Par constr
+R5110:5110 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R5126:5131 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R5147:5147 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R5111:5122 testRegr_test_mjp_trans <> is_wf_t_of_t:114 def
+R5132:5143 testRegr_test_mjp_trans <> is_wf_t_of_t:114 def
+R5155:5162 testRegr_test_mjp_trans <> t_Atomic constr
+R5179:5197 testRegr_test_mjp_trans <> is_no_atomic_t_of_t def
+R5209:5215 testRegr_test_mjp_trans <> t_While constr
+R5229:5240 testRegr_test_mjp_trans <> is_wf_t_of_t:114 def
+ind 5298:5303 <> reduce
+constr 5364:5371 <> skip_seq
+constr 5468:5470 <> seq
+constr 5650:5659 <> skip_par_l
+constr 5756:5765 <> skip_par_r
+constr 5862:5866 <> par_l
+constr 6046:6050 <> par_r
+constr 6230:6243 <> program_action
+constr 6457:6462 <> atomic
+constr 6907:6923 <> fault_atomic_exit
+constr 7334:7350 <> fault_atomic_body
+constr 7637:7654 <> fault_atomic_guard
+constr 7856:7865 <> while_true
+constr 8068:8078 <> while_false
+constr 8262:8272 <> while_fault
+constr 8421:8430 <> fault_prim
+constr 8584:8592 <> fault_seq
+constr 8729:8739 <> fault_par_l
+constr 8876:8886 <> fault_par_r
+constr 9023:9040 <> environment_action
+ind 9265:9271 <> reduces
+constr 9338:9341 <> refl
+constr 9416:9418 <> env
+constr 9617:9620 <> prog
+R5313:5316 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R5307:5312 testRegr_test_mjp_trans <> Config ind
+R5318:5321 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R5317:5317 testRegr_test_mjp_trans <> l ind
+R5328:5331 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R5322:5327 testRegr_test_mjp_trans <> Config ind
+R9281:9284 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R9275:9280 testRegr_test_mjp_trans <> Config ind
+R9286:9289 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R9285:9285 testRegr_test_mjp_trans <> R def
+R9291:9294 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R9290:9290 testRegr_test_mjp_trans <> n def
+R9301:9304 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R9295:9300 testRegr_test_mjp_trans <> Config ind
+R5386:5386 testRegr_test_mjp_trans <> t ind
+binder 5383:5384 <> t5:120
+R5393:5393 testRegr_test_mjp_trans <> s def
+binder 5390:5391 <> s5:121
+R5402:5407 testRegr_test_mjp_trans <> reduce:116 ind
+R5451:5456 testRegr_test_mjp_trans <> config constr
+R5458:5459 testRegr_test_mjp_trans <> t5:120 var
+R5461:5462 testRegr_test_mjp_trans <> s5:121 var
+R5439:5448 testRegr_test_mjp_trans <> label_Prog constr
+R5410:5415 testRegr_test_mjp_trans <> config constr
+R5418:5422 testRegr_test_mjp_trans <> t_Seq constr
+R5424:5429 testRegr_test_mjp_trans <> t_Skip constr
+R5431:5432 testRegr_test_mjp_trans <> t5:120 var
+R5435:5436 testRegr_test_mjp_trans <> s5:121 var
+R5489:5489 testRegr_test_mjp_trans <> t ind
+binder 5482:5484 <> t_5:122
+binder 5486:5487 <> t':123
+R5496:5496 testRegr_test_mjp_trans <> s def
+binder 5493:5494 <> s5:124
+R5503:5503 testRegr_test_mjp_trans <> t ind
+binder 5500:5501 <> t1:125
+R5510:5510 testRegr_test_mjp_trans <> s def
+binder 5507:5508 <> s':126
+R5567:5575 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R5519:5524 testRegr_test_mjp_trans <> reduce:116 ind
+R5554:5559 testRegr_test_mjp_trans <> config constr
+R5561:5562 testRegr_test_mjp_trans <> t1:125 var
+R5564:5565 testRegr_test_mjp_trans <> s':126 var
+R5542:5551 testRegr_test_mjp_trans <> label_Prog constr
+R5527:5532 testRegr_test_mjp_trans <> config constr
+R5534:5536 testRegr_test_mjp_trans <> t_5:122 var
+R5538:5539 testRegr_test_mjp_trans <> s5:124 var
+R5576:5581 testRegr_test_mjp_trans <> reduce:116 ind
+R5622:5627 testRegr_test_mjp_trans <> config constr
+R5630:5634 testRegr_test_mjp_trans <> t_Seq constr
+R5636:5637 testRegr_test_mjp_trans <> t1:125 var
+R5639:5640 testRegr_test_mjp_trans <> t':123 var
+R5643:5644 testRegr_test_mjp_trans <> s':126 var
+R5610:5619 testRegr_test_mjp_trans <> label_Prog constr
+R5584:5589 testRegr_test_mjp_trans <> config constr
+R5592:5596 testRegr_test_mjp_trans <> t_Seq constr
+R5598:5600 testRegr_test_mjp_trans <> t_5:122 var
+R5602:5603 testRegr_test_mjp_trans <> t':123 var
+R5606:5607 testRegr_test_mjp_trans <> s5:124 var
+R5674:5674 testRegr_test_mjp_trans <> t ind
+binder 5671:5672 <> t5:127
+R5681:5681 testRegr_test_mjp_trans <> s def
+binder 5678:5679 <> s5:128
+R5690:5695 testRegr_test_mjp_trans <> reduce:116 ind
+R5739:5744 testRegr_test_mjp_trans <> config constr
+R5746:5747 testRegr_test_mjp_trans <> t5:127 var
+R5749:5750 testRegr_test_mjp_trans <> s5:128 var
+R5727:5736 testRegr_test_mjp_trans <> label_Prog constr
+R5698:5703 testRegr_test_mjp_trans <> config constr
+R5706:5710 testRegr_test_mjp_trans <> t_Par constr
+R5712:5717 testRegr_test_mjp_trans <> t_Skip constr
+R5719:5720 testRegr_test_mjp_trans <> t5:127 var
+R5723:5724 testRegr_test_mjp_trans <> s5:128 var
+R5780:5780 testRegr_test_mjp_trans <> t ind
+binder 5777:5778 <> t5:129
+R5787:5787 testRegr_test_mjp_trans <> s def
+binder 5784:5785 <> s5:130
+R5796:5801 testRegr_test_mjp_trans <> reduce:116 ind
+R5845:5850 testRegr_test_mjp_trans <> config constr
+R5852:5853 testRegr_test_mjp_trans <> t5:129 var
+R5855:5856 testRegr_test_mjp_trans <> s5:130 var
+R5833:5842 testRegr_test_mjp_trans <> label_Prog constr
+R5804:5809 testRegr_test_mjp_trans <> config constr
+R5812:5816 testRegr_test_mjp_trans <> t_Par constr
+R5818:5819 testRegr_test_mjp_trans <> t5:129 var
+R5821:5826 testRegr_test_mjp_trans <> t_Skip constr
+R5829:5830 testRegr_test_mjp_trans <> s5:130 var
+R5884:5884 testRegr_test_mjp_trans <> t ind
+binder 5878:5879 <> t1:131
+binder 5881:5882 <> t2:132
+R5891:5891 testRegr_test_mjp_trans <> s def
+binder 5888:5889 <> s5:133
+R5899:5899 testRegr_test_mjp_trans <> t ind
+binder 5895:5897 <> t1':134
+R5906:5906 testRegr_test_mjp_trans <> s def
+binder 5903:5904 <> s':135
+R5963:5971 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R5915:5920 testRegr_test_mjp_trans <> reduce:116 ind
+R5949:5954 testRegr_test_mjp_trans <> config constr
+R5956:5958 testRegr_test_mjp_trans <> t1':134 var
+R5960:5961 testRegr_test_mjp_trans <> s':135 var
+R5937:5946 testRegr_test_mjp_trans <> label_Prog constr
+R5923:5928 testRegr_test_mjp_trans <> config constr
+R5930:5931 testRegr_test_mjp_trans <> t1:131 var
+R5933:5934 testRegr_test_mjp_trans <> s5:133 var
+R5972:5977 testRegr_test_mjp_trans <> reduce:116 ind
+R6017:6022 testRegr_test_mjp_trans <> config constr
+R6025:6029 testRegr_test_mjp_trans <> t_Par constr
+R6031:6033 testRegr_test_mjp_trans <> t1':134 var
+R6035:6036 testRegr_test_mjp_trans <> t2:132 var
+R6039:6040 testRegr_test_mjp_trans <> s':135 var
+R6005:6014 testRegr_test_mjp_trans <> label_Prog constr
+R5980:5985 testRegr_test_mjp_trans <> config constr
+R5988:5992 testRegr_test_mjp_trans <> t_Par constr
+R5994:5995 testRegr_test_mjp_trans <> t1:131 var
+R5997:5998 testRegr_test_mjp_trans <> t2:132 var
+R6001:6002 testRegr_test_mjp_trans <> s5:133 var
+R6068:6068 testRegr_test_mjp_trans <> t ind
+binder 6062:6063 <> t1:136
+binder 6065:6066 <> t2:137
+R6075:6075 testRegr_test_mjp_trans <> s def
+binder 6072:6073 <> s5:138
+R6083:6083 testRegr_test_mjp_trans <> t ind
+binder 6079:6081 <> t2':139
+R6090:6090 testRegr_test_mjp_trans <> s def
+binder 6087:6088 <> s':140
+R6147:6155 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R6099:6104 testRegr_test_mjp_trans <> reduce:116 ind
+R6133:6138 testRegr_test_mjp_trans <> config constr
+R6140:6142 testRegr_test_mjp_trans <> t2':139 var
+R6144:6145 testRegr_test_mjp_trans <> s':140 var
+R6121:6130 testRegr_test_mjp_trans <> label_Prog constr
+R6107:6112 testRegr_test_mjp_trans <> config constr
+R6114:6115 testRegr_test_mjp_trans <> t2:137 var
+R6117:6118 testRegr_test_mjp_trans <> s5:138 var
+R6156:6161 testRegr_test_mjp_trans <> reduce:116 ind
+R6201:6206 testRegr_test_mjp_trans <> config constr
+R6209:6213 testRegr_test_mjp_trans <> t_Par constr
+R6215:6216 testRegr_test_mjp_trans <> t1:136 var
+R6218:6220 testRegr_test_mjp_trans <> t2':139 var
+R6223:6224 testRegr_test_mjp_trans <> s':140 var
+R6189:6198 testRegr_test_mjp_trans <> label_Prog constr
+R6164:6169 testRegr_test_mjp_trans <> config constr
+R6172:6176 testRegr_test_mjp_trans <> t_Par constr
+R6178:6179 testRegr_test_mjp_trans <> t1:136 var
+R6181:6182 testRegr_test_mjp_trans <> t2:137 var
+R6185:6186 testRegr_test_mjp_trans <> s5:138 var
+R6258:6258 testRegr_test_mjp_trans <> A def
+binder 6255:6256 <> A5:141
+R6275:6275 testRegr_test_mjp_trans <> h def
+binder 6262:6263 <> h1:142
+binder 6265:6266 <> h2:143
+binder 6268:6269 <> h3:144
+binder 6271:6273 <> h1':145
+R6314:6324 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R6307:6309 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R6286:6287 testRegr_test_mjp_trans <> hr proj
+R6290:6291 testRegr_test_mjp_trans <> A5:141 var
+R6295:6296 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6299:6301 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6305:6306 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6297:6298 testRegr_test_mjp_trans <> h1:142 var
+R6302:6304 testRegr_test_mjp_trans <> h1':145 var
+R6310:6313 Corelib.Init.Datatypes <> true constr
+R6351:6360 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R6325:6332 testRegr_test_mjp_trans <> disjoint def
+R6334:6335 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6339:6341 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6344:6346 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6349:6350 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6336:6338 testRegr_test_mjp_trans <> h1':145 var
+R6342:6343 testRegr_test_mjp_trans <> h2:143 var
+R6347:6348 testRegr_test_mjp_trans <> h3:144 var
+R6361:6366 testRegr_test_mjp_trans <> reduce:116 ind
+R6419:6424 testRegr_test_mjp_trans <> config constr
+R6426:6431 testRegr_test_mjp_trans <> t_Skip constr
+R6434:6435 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6439:6441 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6444:6446 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6449:6450 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6436:6438 testRegr_test_mjp_trans <> h1':145 var
+R6442:6443 testRegr_test_mjp_trans <> h2:143 var
+R6447:6448 testRegr_test_mjp_trans <> h3:144 var
+R6407:6416 testRegr_test_mjp_trans <> label_Prog constr
+R6369:6374 testRegr_test_mjp_trans <> config constr
+R6377:6381 testRegr_test_mjp_trans <> t_Abs constr
+R6383:6384 testRegr_test_mjp_trans <> A5:141 var
+R6388:6389 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6392:6394 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6397:6399 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6402:6403 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6390:6391 testRegr_test_mjp_trans <> h1:142 var
+R6395:6396 testRegr_test_mjp_trans <> h2:143 var
+R6400:6401 testRegr_test_mjp_trans <> h3:144 var
+R6477:6477 testRegr_test_mjp_trans <> B def
+binder 6474:6475 <> B5:146
+R6484:6484 testRegr_test_mjp_trans <> t ind
+binder 6481:6482 <> t5:147
+R6491:6491 testRegr_test_mjp_trans <> P def
+binder 6488:6489 <> P1:148
+R6523:6523 testRegr_test_mjp_trans <> h def
+binder 6495:6496 <> h1:149
+binder 6498:6499 <> h2:150
+binder 6501:6502 <> h3:151
+binder 6504:6506 <> h1':152
+binder 6508:6510 <> h2':153
+binder 6512:6514 <> h3':154
+binder 6516:6518 <> h_5:155
+binder 6520:6521 <> h':156
+R6530:6530 testRegr_test_mjp_trans <> n def
+binder 6527:6528 <> n5:157
+R6565:6575 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R6540:6540 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R6556:6560 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R6541:6545 testRegr_test_mjp_trans <> predp proj
+R6548:6549 testRegr_test_mjp_trans <> P1:148 var
+R6553:6555 testRegr_test_mjp_trans <> h2':153 var
+R6561:6564 Corelib.Init.Datatypes <> true constr
+R6605:6615 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R6593:6595 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R6577:6578 testRegr_test_mjp_trans <> hp proj
+R6581:6582 testRegr_test_mjp_trans <> B5:146 var
+R6588:6590 testRegr_test_mjp_trans <> h_5:155 var
+R6596:6599 Corelib.Init.Datatypes <> Some constr
+R6601:6604 Corelib.Init.Datatypes <> true constr
+R6643:6653 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R6631:6634 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R6616:6619 testRegr_test_mjp_trans <> star defax
+R6622:6624 testRegr_test_mjp_trans <> h1':152 var
+R6628:6630 testRegr_test_mjp_trans <> h2':153 var
+R6635:6638 Corelib.Init.Datatypes <> Some constr
+R6641:6642 testRegr_test_mjp_trans <> h':156 var
+R6680:6689 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R6667:6670 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R6654:6657 testRegr_test_mjp_trans <> star defax
+R6660:6661 testRegr_test_mjp_trans <> h1:149 var
+R6665:6666 testRegr_test_mjp_trans <> h2:150 var
+R6671:6674 Corelib.Init.Datatypes <> Some constr
+R6677:6679 testRegr_test_mjp_trans <> h_5:155 var
+R6791:6799 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R6690:6696 testRegr_test_mjp_trans <> reduces:117 ind
+R6750:6755 testRegr_test_mjp_trans <> config constr
+R6757:6762 testRegr_test_mjp_trans <> t_Skip constr
+R6765:6766 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6769:6772 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6780:6783 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6787:6788 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6767:6768 testRegr_test_mjp_trans <> h':156 var
+R6773:6779 testRegr_test_mjp_trans <> empheap defax
+R6784:6786 testRegr_test_mjp_trans <> h3':154 var
+R6746:6747 testRegr_test_mjp_trans <> n5:157 var
+R6738:6743 testRegr_test_mjp_trans <> emprel defax
+R6699:6704 testRegr_test_mjp_trans <> config constr
+R6706:6707 testRegr_test_mjp_trans <> t5:147 var
+R6710:6711 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6715:6718 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6726:6729 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6732:6733 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6712:6714 testRegr_test_mjp_trans <> h_5:155 var
+R6719:6725 testRegr_test_mjp_trans <> empheap defax
+R6730:6731 testRegr_test_mjp_trans <> h3:151 var
+R6800:6805 testRegr_test_mjp_trans <> reduce:116 ind
+R6867:6872 testRegr_test_mjp_trans <> config constr
+R6874:6879 testRegr_test_mjp_trans <> t_Skip constr
+R6882:6883 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6887:6889 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6893:6895 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6899:6900 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6884:6886 testRegr_test_mjp_trans <> h1':152 var
+R6890:6892 testRegr_test_mjp_trans <> h2':153 var
+R6896:6898 testRegr_test_mjp_trans <> h3':154 var
+R6855:6864 testRegr_test_mjp_trans <> label_Prog constr
+R6808:6813 testRegr_test_mjp_trans <> config constr
+R6816:6823 testRegr_test_mjp_trans <> t_Atomic constr
+R6825:6826 testRegr_test_mjp_trans <> B5:146 var
+R6828:6829 testRegr_test_mjp_trans <> t5:147 var
+R6831:6832 testRegr_test_mjp_trans <> P1:148 var
+R6836:6837 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6840:6842 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6845:6847 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6850:6851 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R6838:6839 testRegr_test_mjp_trans <> h1:149 var
+R6843:6844 testRegr_test_mjp_trans <> h2:150 var
+R6848:6849 testRegr_test_mjp_trans <> h3:151 var
+R6938:6938 testRegr_test_mjp_trans <> B def
+binder 6935:6936 <> B5:158
+R6945:6945 testRegr_test_mjp_trans <> t ind
+binder 6942:6943 <> t5:159
+R6952:6952 testRegr_test_mjp_trans <> P def
+binder 6949:6950 <> P1:160
+R6972:6972 testRegr_test_mjp_trans <> h def
+binder 6956:6957 <> h1:161
+binder 6959:6960 <> h2:162
+binder 6962:6963 <> h3:163
+binder 6965:6967 <> h_5:164
+binder 6969:6970 <> h':165
+R6979:6979 testRegr_test_mjp_trans <> n def
+binder 6976:6977 <> n5:166
+R6987:6987 testRegr_test_mjp_trans <> h def
+binder 6983:6985 <> h3':167
+R7026:7036 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R7014:7016 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R6998:6999 testRegr_test_mjp_trans <> hp proj
+R7002:7003 testRegr_test_mjp_trans <> B5:158 var
+R7009:7011 testRegr_test_mjp_trans <> h_5:164 var
+R7017:7020 Corelib.Init.Datatypes <> Some constr
+R7022:7025 Corelib.Init.Datatypes <> true constr
+R7037:7037 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R7101:7112 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+binder 7045:7046 <> h1:168
+binder 7048:7049 <> h2:169
+R7073:7077 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R7062:7064 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R7052:7055 testRegr_test_mjp_trans <> star defax
+R7057:7058 testRegr_test_mjp_trans <> h1:168 var
+R7060:7061 testRegr_test_mjp_trans <> h2:169 var
+R7065:7068 Corelib.Init.Datatypes <> Some constr
+R7071:7072 testRegr_test_mjp_trans <> h':165 var
+R7078:7078 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R7092:7095 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R7079:7083 testRegr_test_mjp_trans <> predp proj
+R7086:7087 testRegr_test_mjp_trans <> P1:160 var
+R7090:7091 testRegr_test_mjp_trans <> h1:168 var
+R7096:7100 Corelib.Init.Datatypes <> false constr
+R7139:7148 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R7126:7129 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R7113:7116 testRegr_test_mjp_trans <> star defax
+R7119:7120 testRegr_test_mjp_trans <> h1:161 var
+R7124:7125 testRegr_test_mjp_trans <> h2:162 var
+R7130:7133 Corelib.Init.Datatypes <> Some constr
+R7136:7138 testRegr_test_mjp_trans <> h_5:164 var
+R7250:7258 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R7149:7155 testRegr_test_mjp_trans <> reduces:117 ind
+R7209:7214 testRegr_test_mjp_trans <> config constr
+R7216:7221 testRegr_test_mjp_trans <> t_Skip constr
+R7224:7225 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7228:7231 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7239:7242 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7246:7247 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7226:7227 testRegr_test_mjp_trans <> h':165 var
+R7232:7238 testRegr_test_mjp_trans <> empheap defax
+R7243:7245 testRegr_test_mjp_trans <> h3':167 var
+R7205:7206 testRegr_test_mjp_trans <> n5:166 var
+R7197:7202 testRegr_test_mjp_trans <> emprel defax
+R7158:7163 testRegr_test_mjp_trans <> config constr
+R7165:7166 testRegr_test_mjp_trans <> t5:159 var
+R7169:7170 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7174:7177 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7185:7188 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7191:7192 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7171:7173 testRegr_test_mjp_trans <> h_5:164 var
+R7178:7184 testRegr_test_mjp_trans <> empheap defax
+R7189:7190 testRegr_test_mjp_trans <> h3:163 var
+R7259:7264 testRegr_test_mjp_trans <> reduce:116 ind
+R7325:7329 testRegr_test_mjp_trans <> fault constr
+R7314:7323 testRegr_test_mjp_trans <> label_Prog constr
+R7267:7272 testRegr_test_mjp_trans <> config constr
+R7275:7282 testRegr_test_mjp_trans <> t_Atomic constr
+R7284:7285 testRegr_test_mjp_trans <> B5:158 var
+R7287:7288 testRegr_test_mjp_trans <> t5:159 var
+R7290:7291 testRegr_test_mjp_trans <> P1:160 var
+R7295:7296 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7299:7301 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7304:7306 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7309:7310 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7297:7298 testRegr_test_mjp_trans <> h1:161 var
+R7302:7303 testRegr_test_mjp_trans <> h2:162 var
+R7307:7308 testRegr_test_mjp_trans <> h3:163 var
+R7365:7365 testRegr_test_mjp_trans <> B def
+binder 7362:7363 <> B5:170
+R7372:7372 testRegr_test_mjp_trans <> t ind
+binder 7369:7370 <> t5:171
+R7379:7379 testRegr_test_mjp_trans <> P def
+binder 7376:7377 <> P1:172
+R7396:7396 testRegr_test_mjp_trans <> h def
+binder 7383:7384 <> h1:173
+binder 7386:7387 <> h2:174
+binder 7389:7390 <> h3:175
+binder 7392:7394 <> h_5:176
+R7403:7403 testRegr_test_mjp_trans <> n def
+binder 7400:7401 <> n5:177
+R7442:7452 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R7430:7432 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R7414:7415 testRegr_test_mjp_trans <> hp proj
+R7418:7419 testRegr_test_mjp_trans <> B5:170 var
+R7425:7427 testRegr_test_mjp_trans <> h_5:176 var
+R7433:7436 Corelib.Init.Datatypes <> Some constr
+R7438:7441 Corelib.Init.Datatypes <> true constr
+R7479:7488 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R7466:7469 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R7453:7456 testRegr_test_mjp_trans <> star defax
+R7459:7460 testRegr_test_mjp_trans <> h1:173 var
+R7464:7465 testRegr_test_mjp_trans <> h2:174 var
+R7470:7473 Corelib.Init.Datatypes <> Some constr
+R7476:7478 testRegr_test_mjp_trans <> h_5:176 var
+R7553:7561 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R7489:7495 testRegr_test_mjp_trans <> reduces:117 ind
+R7548:7552 testRegr_test_mjp_trans <> fault constr
+R7545:7546 testRegr_test_mjp_trans <> n5:177 var
+R7537:7542 testRegr_test_mjp_trans <> emprel defax
+R7498:7503 testRegr_test_mjp_trans <> config constr
+R7505:7506 testRegr_test_mjp_trans <> t5:171 var
+R7509:7510 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7514:7517 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7525:7528 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7531:7532 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7511:7513 testRegr_test_mjp_trans <> h_5:176 var
+R7518:7524 testRegr_test_mjp_trans <> empheap defax
+R7529:7530 testRegr_test_mjp_trans <> h3:175 var
+R7562:7567 testRegr_test_mjp_trans <> reduce:116 ind
+R7628:7632 testRegr_test_mjp_trans <> fault constr
+R7617:7626 testRegr_test_mjp_trans <> label_Prog constr
+R7570:7575 testRegr_test_mjp_trans <> config constr
+R7578:7585 testRegr_test_mjp_trans <> t_Atomic constr
+R7587:7588 testRegr_test_mjp_trans <> B5:170 var
+R7590:7591 testRegr_test_mjp_trans <> t5:171 var
+R7593:7594 testRegr_test_mjp_trans <> P1:172 var
+R7598:7599 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7602:7604 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7607:7609 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7612:7613 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7600:7601 testRegr_test_mjp_trans <> h1:173 var
+R7605:7606 testRegr_test_mjp_trans <> h2:174 var
+R7610:7611 testRegr_test_mjp_trans <> h3:175 var
+R7669:7669 testRegr_test_mjp_trans <> B def
+binder 7666:7667 <> B5:178
+R7676:7676 testRegr_test_mjp_trans <> t ind
+binder 7673:7674 <> t5:179
+R7683:7683 testRegr_test_mjp_trans <> P def
+binder 7680:7681 <> P1:180
+R7700:7700 testRegr_test_mjp_trans <> h def
+binder 7687:7688 <> h1:181
+binder 7690:7691 <> h2:182
+binder 7693:7694 <> h3:183
+binder 7696:7698 <> h_5:184
+R7734:7744 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R7727:7729 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R7711:7712 testRegr_test_mjp_trans <> hp proj
+R7715:7716 testRegr_test_mjp_trans <> B5:178 var
+R7722:7724 testRegr_test_mjp_trans <> h_5:184 var
+R7730:7733 Corelib.Init.Datatypes <> None constr
+R7771:7780 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R7758:7761 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R7745:7748 testRegr_test_mjp_trans <> star defax
+R7751:7752 testRegr_test_mjp_trans <> h1:181 var
+R7756:7757 testRegr_test_mjp_trans <> h2:182 var
+R7762:7765 Corelib.Init.Datatypes <> Some constr
+R7768:7770 testRegr_test_mjp_trans <> h_5:184 var
+R7781:7786 testRegr_test_mjp_trans <> reduce:116 ind
+R7847:7851 testRegr_test_mjp_trans <> fault constr
+R7836:7845 testRegr_test_mjp_trans <> label_Prog constr
+R7789:7794 testRegr_test_mjp_trans <> config constr
+R7797:7804 testRegr_test_mjp_trans <> t_Atomic constr
+R7806:7807 testRegr_test_mjp_trans <> B5:178 var
+R7809:7810 testRegr_test_mjp_trans <> t5:179 var
+R7812:7813 testRegr_test_mjp_trans <> P1:180 var
+R7817:7818 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7821:7823 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7826:7828 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7831:7832 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7819:7820 testRegr_test_mjp_trans <> h1:181 var
+R7824:7825 testRegr_test_mjp_trans <> h2:182 var
+R7829:7830 testRegr_test_mjp_trans <> h3:183 var
+R7880:7880 testRegr_test_mjp_trans <> B def
+binder 7877:7878 <> B5:185
+R7887:7887 testRegr_test_mjp_trans <> t ind
+binder 7884:7885 <> t5:186
+R7900:7900 testRegr_test_mjp_trans <> h def
+binder 7891:7892 <> h1:187
+binder 7894:7895 <> h2:188
+binder 7897:7898 <> h3:189
+R7938:7947 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R7926:7928 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R7911:7912 testRegr_test_mjp_trans <> hp proj
+R7915:7916 testRegr_test_mjp_trans <> B5:185 var
+R7922:7923 testRegr_test_mjp_trans <> h1:187 var
+R7929:7932 Corelib.Init.Datatypes <> Some constr
+R7934:7937 Corelib.Init.Datatypes <> true constr
+R7948:7953 testRegr_test_mjp_trans <> reduce:116 ind
+R8011:8016 testRegr_test_mjp_trans <> config constr
+R8019:8023 testRegr_test_mjp_trans <> t_Seq constr
+R8025:8026 testRegr_test_mjp_trans <> t5:186 var
+R8029:8035 testRegr_test_mjp_trans <> t_While constr
+R8037:8038 testRegr_test_mjp_trans <> B5:185 var
+R8040:8041 testRegr_test_mjp_trans <> t5:186 var
+R8046:8047 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8050:8052 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8055:8057 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8060:8061 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8048:8049 testRegr_test_mjp_trans <> h1:187 var
+R8053:8054 testRegr_test_mjp_trans <> h2:188 var
+R8058:8059 testRegr_test_mjp_trans <> h3:189 var
+R7999:8008 testRegr_test_mjp_trans <> label_Prog constr
+R7956:7961 testRegr_test_mjp_trans <> config constr
+R7964:7970 testRegr_test_mjp_trans <> t_While constr
+R7972:7973 testRegr_test_mjp_trans <> B5:185 var
+R7975:7976 testRegr_test_mjp_trans <> t5:186 var
+R7980:7981 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7984:7986 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7989:7991 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7994:7995 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7982:7983 testRegr_test_mjp_trans <> h1:187 var
+R7987:7988 testRegr_test_mjp_trans <> h2:188 var
+R7992:7993 testRegr_test_mjp_trans <> h3:189 var
+R8093:8093 testRegr_test_mjp_trans <> B def
+binder 8090:8091 <> B5:190
+R8100:8100 testRegr_test_mjp_trans <> t ind
+binder 8097:8098 <> t5:191
+R8113:8113 testRegr_test_mjp_trans <> h def
+binder 8104:8105 <> h1:192
+binder 8107:8108 <> h2:193
+binder 8110:8111 <> h3:194
+R8152:8161 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R8139:8141 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R8124:8125 testRegr_test_mjp_trans <> hp proj
+R8128:8129 testRegr_test_mjp_trans <> B5:190 var
+R8135:8136 testRegr_test_mjp_trans <> h1:192 var
+R8142:8145 Corelib.Init.Datatypes <> Some constr
+R8147:8151 Corelib.Init.Datatypes <> false constr
+R8162:8167 testRegr_test_mjp_trans <> reduce:116 ind
+R8225:8230 testRegr_test_mjp_trans <> config constr
+R8232:8237 testRegr_test_mjp_trans <> t_Skip constr
+R8240:8241 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8244:8246 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8249:8251 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8254:8255 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8242:8243 testRegr_test_mjp_trans <> h1:192 var
+R8247:8248 testRegr_test_mjp_trans <> h2:193 var
+R8252:8253 testRegr_test_mjp_trans <> h3:194 var
+R8213:8222 testRegr_test_mjp_trans <> label_Prog constr
+R8170:8175 testRegr_test_mjp_trans <> config constr
+R8178:8184 testRegr_test_mjp_trans <> t_While constr
+R8186:8187 testRegr_test_mjp_trans <> B5:190 var
+R8189:8190 testRegr_test_mjp_trans <> t5:191 var
+R8194:8195 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8198:8200 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8203:8205 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8208:8209 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8196:8197 testRegr_test_mjp_trans <> h1:192 var
+R8201:8202 testRegr_test_mjp_trans <> h2:193 var
+R8206:8207 testRegr_test_mjp_trans <> h3:194 var
+R8287:8287 testRegr_test_mjp_trans <> B def
+binder 8284:8285 <> B5:195
+R8294:8294 testRegr_test_mjp_trans <> t ind
+binder 8291:8292 <> t5:196
+R8307:8307 testRegr_test_mjp_trans <> h def
+binder 8298:8299 <> h1:197
+binder 8301:8302 <> h2:198
+binder 8304:8305 <> h3:199
+R8340:8349 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R8333:8335 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R8318:8319 testRegr_test_mjp_trans <> hp proj
+R8322:8323 testRegr_test_mjp_trans <> B5:195 var
+R8329:8330 testRegr_test_mjp_trans <> h1:197 var
+R8336:8339 Corelib.Init.Datatypes <> None constr
+R8350:8355 testRegr_test_mjp_trans <> reduce:116 ind
+R8412:8416 testRegr_test_mjp_trans <> fault constr
+R8401:8410 testRegr_test_mjp_trans <> label_Prog constr
+R8358:8363 testRegr_test_mjp_trans <> config constr
+R8366:8372 testRegr_test_mjp_trans <> t_While constr
+R8374:8375 testRegr_test_mjp_trans <> B5:195 var
+R8377:8378 testRegr_test_mjp_trans <> t5:196 var
+R8382:8383 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8386:8388 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8391:8393 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8396:8397 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8384:8385 testRegr_test_mjp_trans <> h1:197 var
+R8389:8390 testRegr_test_mjp_trans <> h2:198 var
+R8394:8395 testRegr_test_mjp_trans <> h3:199 var
+R8445:8445 testRegr_test_mjp_trans <> A def
+binder 8442:8443 <> A5:200
+R8458:8458 testRegr_test_mjp_trans <> h def
+binder 8449:8450 <> h1:201
+binder 8452:8453 <> h2:202
+binder 8455:8456 <> h3:203
+R8468:8468 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R8507:8517 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+binder 8476:8477 <> h2:204
+R8499:8501 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R8481:8482 testRegr_test_mjp_trans <> hr proj
+R8485:8486 testRegr_test_mjp_trans <> A5:200 var
+R8490:8491 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8494:8495 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8498:8498 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8492:8493 testRegr_test_mjp_trans <> h1:201 var
+R8496:8497 testRegr_test_mjp_trans <> h2:204 var
+R8502:8506 Corelib.Init.Datatypes <> false constr
+R8518:8523 testRegr_test_mjp_trans <> reduce:116 ind
+R8575:8579 testRegr_test_mjp_trans <> fault constr
+R8564:8573 testRegr_test_mjp_trans <> label_Prog constr
+R8526:8531 testRegr_test_mjp_trans <> config constr
+R8534:8538 testRegr_test_mjp_trans <> t_Abs constr
+R8540:8541 testRegr_test_mjp_trans <> A5:200 var
+R8545:8546 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8549:8551 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8554:8556 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8559:8560 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R8547:8548 testRegr_test_mjp_trans <> h1:201 var
+R8552:8553 testRegr_test_mjp_trans <> h2:202 var
+R8557:8558 testRegr_test_mjp_trans <> h3:203 var
+R8611:8611 testRegr_test_mjp_trans <> t ind
+binder 8604:8606 <> t_5:205
+binder 8608:8609 <> t2:206
+R8618:8618 testRegr_test_mjp_trans <> s def
+binder 8615:8616 <> s5:207
+R8666:8674 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R8627:8632 testRegr_test_mjp_trans <> reduce:116 ind
+R8661:8665 testRegr_test_mjp_trans <> fault constr
+R8650:8659 testRegr_test_mjp_trans <> label_Prog constr
+R8635:8640 testRegr_test_mjp_trans <> config constr
+R8642:8644 testRegr_test_mjp_trans <> t_5:205 var
+R8646:8647 testRegr_test_mjp_trans <> s5:207 var
+R8675:8680 testRegr_test_mjp_trans <> reduce:116 ind
+R8720:8724 testRegr_test_mjp_trans <> fault constr
+R8709:8718 testRegr_test_mjp_trans <> label_Prog constr
+R8683:8688 testRegr_test_mjp_trans <> config constr
+R8691:8695 testRegr_test_mjp_trans <> t_Seq constr
+R8697:8699 testRegr_test_mjp_trans <> t_5:205 var
+R8701:8702 testRegr_test_mjp_trans <> t2:206 var
+R8705:8706 testRegr_test_mjp_trans <> s5:207 var
+R8758:8758 testRegr_test_mjp_trans <> t ind
+binder 8751:8753 <> t_5:208
+binder 8755:8756 <> t2:209
+R8765:8765 testRegr_test_mjp_trans <> s def
+binder 8762:8763 <> s5:210
+R8813:8821 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R8774:8779 testRegr_test_mjp_trans <> reduce:116 ind
+R8808:8812 testRegr_test_mjp_trans <> fault constr
+R8797:8806 testRegr_test_mjp_trans <> label_Prog constr
+R8782:8787 testRegr_test_mjp_trans <> config constr
+R8789:8791 testRegr_test_mjp_trans <> t_5:208 var
+R8793:8794 testRegr_test_mjp_trans <> s5:210 var
+R8822:8827 testRegr_test_mjp_trans <> reduce:116 ind
+R8867:8871 testRegr_test_mjp_trans <> fault constr
+R8856:8865 testRegr_test_mjp_trans <> label_Prog constr
+R8830:8835 testRegr_test_mjp_trans <> config constr
+R8838:8842 testRegr_test_mjp_trans <> t_Par constr
+R8844:8846 testRegr_test_mjp_trans <> t_5:208 var
+R8848:8849 testRegr_test_mjp_trans <> t2:209 var
+R8852:8853 testRegr_test_mjp_trans <> s5:210 var
+R8905:8905 testRegr_test_mjp_trans <> t ind
+binder 8898:8899 <> t2:211
+binder 8901:8903 <> t_5:212
+R8912:8912 testRegr_test_mjp_trans <> s def
+binder 8909:8910 <> s5:213
+R8960:8968 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R8921:8926 testRegr_test_mjp_trans <> reduce:116 ind
+R8955:8959 testRegr_test_mjp_trans <> fault constr
+R8944:8953 testRegr_test_mjp_trans <> label_Prog constr
+R8929:8934 testRegr_test_mjp_trans <> config constr
+R8936:8938 testRegr_test_mjp_trans <> t_5:212 var
+R8940:8941 testRegr_test_mjp_trans <> s5:213 var
+R8969:8974 testRegr_test_mjp_trans <> reduce:116 ind
+R9014:9018 testRegr_test_mjp_trans <> fault constr
+R9003:9012 testRegr_test_mjp_trans <> label_Prog constr
+R8977:8982 testRegr_test_mjp_trans <> config constr
+R8985:8989 testRegr_test_mjp_trans <> t_Par constr
+R8991:8992 testRegr_test_mjp_trans <> t2:211 var
+R8994:8996 testRegr_test_mjp_trans <> t_5:212 var
+R8999:9000 testRegr_test_mjp_trans <> s5:213 var
+R9055:9055 testRegr_test_mjp_trans <> t ind
+binder 9052:9053 <> t5:214
+R9068:9068 testRegr_test_mjp_trans <> h def
+binder 9059:9060 <> h1:215
+binder 9062:9063 <> h2:216
+binder 9065:9066 <> h3:217
+R9075:9075 testRegr_test_mjp_trans <> R def
+binder 9072:9073 <> R5:218
+R9087:9087 testRegr_test_mjp_trans <> h def
+binder 9079:9081 <> h2':219
+binder 9083:9085 <> h3':220
+R9125:9135 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R9118:9120 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R9097:9099 testRegr_test_mjp_trans <> hrr proj
+R9102:9103 testRegr_test_mjp_trans <> R5:218 var
+R9106:9107 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9110:9112 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9116:9117 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9108:9109 testRegr_test_mjp_trans <> h2:216 var
+R9113:9115 testRegr_test_mjp_trans <> h2':219 var
+R9121:9124 Corelib.Init.Datatypes <> true constr
+R9163:9172 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R9136:9143 testRegr_test_mjp_trans <> disjoint def
+R9145:9146 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9149:9151 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9155:9157 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9161:9162 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9147:9148 testRegr_test_mjp_trans <> h1:215 var
+R9152:9154 testRegr_test_mjp_trans <> h2':219 var
+R9158:9160 testRegr_test_mjp_trans <> h3':220 var
+R9173:9178 testRegr_test_mjp_trans <> reduce:116 ind
+R9228:9233 testRegr_test_mjp_trans <> config constr
+R9235:9236 testRegr_test_mjp_trans <> t5:214 var
+R9239:9240 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9243:9245 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9249:9251 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9255:9256 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9241:9242 testRegr_test_mjp_trans <> h1:215 var
+R9246:9248 testRegr_test_mjp_trans <> h2':219 var
+R9252:9254 testRegr_test_mjp_trans <> h3':220 var
+R9212:9221 testRegr_test_mjp_trans <> label_Rely constr
+R9223:9224 testRegr_test_mjp_trans <> R5:218 var
+R9181:9186 testRegr_test_mjp_trans <> config constr
+R9188:9189 testRegr_test_mjp_trans <> t5:214 var
+R9192:9193 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9196:9198 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9201:9203 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9206:9207 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9194:9195 testRegr_test_mjp_trans <> h1:215 var
+R9199:9200 testRegr_test_mjp_trans <> h2:216 var
+R9204:9205 testRegr_test_mjp_trans <> h3:217 var
+R9361:9366 testRegr_test_mjp_trans <> Config ind
+binder 9353:9359 <> Config1:221
+R9373:9373 testRegr_test_mjp_trans <> R def
+binder 9370:9371 <> R5:222
+R9382:9388 testRegr_test_mjp_trans <> reduces:117 ind
+R9405:9411 testRegr_test_mjp_trans <> Config1:221 var
+R9398:9399 testRegr_test_mjp_trans <> R5:222 var
+R9390:9396 testRegr_test_mjp_trans <> Config1:221 var
+R9438:9443 testRegr_test_mjp_trans <> Config ind
+binder 9430:9436 <> Config1:223
+R9450:9450 testRegr_test_mjp_trans <> R def
+binder 9447:9448 <> R5:224
+R9457:9457 testRegr_test_mjp_trans <> n def
+binder 9454:9455 <> n5:225
+R9477:9482 testRegr_test_mjp_trans <> Config ind
+binder 9461:9467 <> Config3:226
+binder 9469:9475 <> Config2:227
+R9529:9537 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R9491:9496 testRegr_test_mjp_trans <> reduce:116 ind
+R9522:9528 testRegr_test_mjp_trans <> Config2:227 var
+R9507:9516 testRegr_test_mjp_trans <> label_Rely constr
+R9518:9519 testRegr_test_mjp_trans <> R5:224 var
+R9498:9504 testRegr_test_mjp_trans <> Config1:223 var
+R9567:9575 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R9538:9544 testRegr_test_mjp_trans <> reduces:117 ind
+R9560:9566 testRegr_test_mjp_trans <> Config3:226 var
+R9557:9558 testRegr_test_mjp_trans <> n5:225 var
+R9554:9555 testRegr_test_mjp_trans <> R5:224 var
+R9546:9552 testRegr_test_mjp_trans <> Config2:227 var
+R9576:9582 testRegr_test_mjp_trans <> reduces:117 ind
+R9606:9612 testRegr_test_mjp_trans <> Config3:226 var
+R9597:9597 Corelib.Init.Datatypes <> S constr
+R9600:9601 testRegr_test_mjp_trans <> n5:225 var
+R9592:9593 testRegr_test_mjp_trans <> R5:224 var
+R9584:9590 testRegr_test_mjp_trans <> Config1:223 var
+R9640:9645 testRegr_test_mjp_trans <> Config ind
+binder 9632:9638 <> Config1:228
+R9652:9652 testRegr_test_mjp_trans <> R def
+binder 9649:9650 <> R5:229
+R9659:9659 testRegr_test_mjp_trans <> n def
+binder 9656:9657 <> n5:230
+R9679:9684 testRegr_test_mjp_trans <> Config ind
+binder 9663:9669 <> Config3:231
+binder 9671:9677 <> Config2:232
+R9726:9734 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R9693:9698 testRegr_test_mjp_trans <> reduce:116 ind
+R9719:9725 testRegr_test_mjp_trans <> Config2:232 var
+R9708:9717 testRegr_test_mjp_trans <> label_Prog constr
+R9700:9706 testRegr_test_mjp_trans <> Config1:228 var
+R9764:9772 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R9735:9741 testRegr_test_mjp_trans <> reduces:117 ind
+R9757:9763 testRegr_test_mjp_trans <> Config3:231 var
+R9754:9755 testRegr_test_mjp_trans <> n5:230 var
+R9751:9752 testRegr_test_mjp_trans <> R5:229 var
+R9743:9749 testRegr_test_mjp_trans <> Config2:232 var
+R9773:9779 testRegr_test_mjp_trans <> reduces:117 ind
+R9803:9809 testRegr_test_mjp_trans <> Config3:231 var
+R9794:9794 Corelib.Init.Datatypes <> S constr
+R9797:9798 testRegr_test_mjp_trans <> n5:230 var
+R9789:9790 testRegr_test_mjp_trans <> R5:229 var
+R9781:9787 testRegr_test_mjp_trans <> Config1:228 var
+scheme 5298:5303 <> reduce_ind
+scheme 5298:5303 <> reduce_sind
+scheme 9265:9271 <> reduces_ind
+scheme 9265:9271 <> reduces_sind
+def 9823:9831 <> guarantee
+R9837:9839 Corelib.Init.Datatypes <> nat ind
+binder 9835:9835 <> n:233
+R9848:9848 testRegr_test_mjp_trans <> t ind
+binder 9843:9844 <> t1:234
+R9856:9856 testRegr_test_mjp_trans <> s def
+binder 9853:9854 <> s1:235
+R9864:9864 testRegr_test_mjp_trans <> R def
+binder 9860:9861 <> R1:236
+R9871:9871 testRegr_test_mjp_trans <> R def
+binder 9868:9869 <> G1:237
+R9904:9904 testRegr_test_mjp_trans <> n:233 var
+R9923:9926 Corelib.Init.Logic <> True ind
+R9934:9934 Corelib.Init.Datatypes <> S constr
+R9944:9944 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R10132:10139 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+binder 9952:9953 <> h1:240
+binder 9955:9956 <> h2:241
+binder 9958:9959 <> h3:242
+binder 9961:9963 <> h1':243
+binder 9965:9967 <> h2':244
+binder 9969:9971 <> h3':245
+binder 9973:9974 <> t':246
+R9996:10012 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R9983:9985 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R9981:9982 testRegr_test_mjp_trans <> s1:235 var
+R9986:9986 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9989:9989 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9992:9992 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9995:9995 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9987:9988 testRegr_test_mjp_trans <> h1:240 var
+R9990:9991 testRegr_test_mjp_trans <> h2:241 var
+R9993:9994 testRegr_test_mjp_trans <> h3:242 var
+R10095:10103 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R10013:10018 testRegr_test_mjp_trans <> reduce ind
+R10021:10026 testRegr_test_mjp_trans <> config constr
+R10028:10029 testRegr_test_mjp_trans <> t1:234 var
+R10032:10033 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R10036:10038 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R10041:10043 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R10046:10047 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R10034:10035 testRegr_test_mjp_trans <> h1:240 var
+R10039:10040 testRegr_test_mjp_trans <> h2:241 var
+R10044:10045 testRegr_test_mjp_trans <> h3:242 var
+R10051:10060 testRegr_test_mjp_trans <> label_Prog constr
+R10063:10068 testRegr_test_mjp_trans <> config constr
+R10070:10071 testRegr_test_mjp_trans <> t':246 var
+R10074:10075 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R10079:10081 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R10085:10087 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R10091:10092 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R10076:10078 testRegr_test_mjp_trans <> h1':243 var
+R10082:10084 testRegr_test_mjp_trans <> h2':244 var
+R10088:10090 testRegr_test_mjp_trans <> h3':245 var
+R10125:10127 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R10104:10106 testRegr_test_mjp_trans <> hrr proj
+R10109:10110 testRegr_test_mjp_trans <> G1:237 var
+R10113:10114 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R10117:10119 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R10123:10124 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R10115:10116 testRegr_test_mjp_trans <> h2:241 var
+R10120:10122 testRegr_test_mjp_trans <> h2':244 var
+R10128:10131 Corelib.Init.Datatypes <> true constr
+R10140:10140 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R10228:10243 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R10319:10320 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+binder 10148:10149 <> s':247
+binder 10151:10152 <> t':248
+binder 10154:10154 <> l:249
+R10195:10204 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R10157:10162 testRegr_test_mjp_trans <> reduce ind
+R10165:10170 testRegr_test_mjp_trans <> config constr
+R10172:10173 testRegr_test_mjp_trans <> t1:234 var
+R10175:10176 testRegr_test_mjp_trans <> s1:235 var
+R10179:10179 testRegr_test_mjp_trans <> l:249 var
+R10182:10187 testRegr_test_mjp_trans <> config constr
+R10189:10190 testRegr_test_mjp_trans <> t':248 var
+R10192:10193 testRegr_test_mjp_trans <> s':247 var
+R10205:10213 testRegr_test_mjp_trans <> guarantee:238 def
+R10226:10227 testRegr_test_mjp_trans <> G1:237 var
+R10223:10224 testRegr_test_mjp_trans <> R1:236 var
+R10220:10221 testRegr_test_mjp_trans <> s':247 var
+R10217:10218 testRegr_test_mjp_trans <> t':248 var
+R10215:10215 testRegr_test_mjp_trans <> n:233 var
+binder 10251:10257 <> Config':250
+R10300:10303 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R10260:10265 testRegr_test_mjp_trans <> reduce ind
+R10268:10273 testRegr_test_mjp_trans <> config constr
+R10275:10276 testRegr_test_mjp_trans <> t1:234 var
+R10278:10279 testRegr_test_mjp_trans <> s1:235 var
+R10282:10291 testRegr_test_mjp_trans <> label_Prog constr
+R10293:10299 testRegr_test_mjp_trans <> Config':250 var
+R10304:10305 Corelib.Init.Logic <> ::type_scope:'~'_x not
+R10313:10313 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R10306:10312 testRegr_test_mjp_trans <> Config':250 var
+R10314:10318 testRegr_test_mjp_trans <> fault constr
+def 10349:10352 <> safe
+R10358:10360 Corelib.Init.Datatypes <> nat ind
+binder 10356:10356 <> n:251
+R10369:10369 testRegr_test_mjp_trans <> t ind
+binder 10364:10365 <> t1:252
+R10377:10377 testRegr_test_mjp_trans <> s def
+binder 10374:10375 <> s1:253
+R10385:10385 testRegr_test_mjp_trans <> R def
+binder 10381:10382 <> R1:254
+R10418:10418 testRegr_test_mjp_trans <> n:251 var
+R10437:10440 Corelib.Init.Logic <> True ind
+R10448:10448 Corelib.Init.Datatypes <> S constr
+R10459:10459 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R10540:10555 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R10631:10632 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+binder 10467:10468 <> s':257
+binder 10470:10471 <> t':258
+binder 10473:10473 <> l:259
+R10514:10523 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R10476:10481 testRegr_test_mjp_trans <> reduce ind
+R10484:10489 testRegr_test_mjp_trans <> config constr
+R10491:10492 testRegr_test_mjp_trans <> t1:252 var
+R10494:10495 testRegr_test_mjp_trans <> s1:253 var
+R10498:10498 testRegr_test_mjp_trans <> l:259 var
+R10501:10506 testRegr_test_mjp_trans <> config constr
+R10508:10509 testRegr_test_mjp_trans <> t':258 var
+R10511:10512 testRegr_test_mjp_trans <> s':257 var
+R10524:10527 testRegr_test_mjp_trans <> safe:255 def
+R10538:10539 testRegr_test_mjp_trans <> R1:254 var
+R10535:10536 testRegr_test_mjp_trans <> s':257 var
+R10532:10533 testRegr_test_mjp_trans <> t':258 var
+binder 10563:10569 <> Config':260
+R10612:10615 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R10572:10577 testRegr_test_mjp_trans <> reduce ind
+R10580:10585 testRegr_test_mjp_trans <> config constr
+R10587:10588 testRegr_test_mjp_trans <> t1:252 var
+R10590:10591 testRegr_test_mjp_trans <> s1:253 var
+R10594:10603 testRegr_test_mjp_trans <> label_Prog constr
+R10605:10611 testRegr_test_mjp_trans <> Config':260 var
+R10616:10617 Corelib.Init.Logic <> ::type_scope:'~'_x not
+R10625:10625 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R10618:10624 testRegr_test_mjp_trans <> Config':260 var
+R10626:10630 testRegr_test_mjp_trans <> fault constr

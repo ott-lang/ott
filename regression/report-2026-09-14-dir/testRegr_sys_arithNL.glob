@@ -1,0 +1,172 @@
+DIGEST b073131210e397a0c4c95088bc3ea9fe
+FtestRegr_sys_arithNL
+R257:261 Stdlib.Arith.Arith <> <> lib
+R291:294 Stdlib.Bool.Bool <> <> lib
+R324:327 Stdlib.Lists.List <> <> lib
+R345:361 Ott.ott_list_core <> <> lib
+ind 466:466 <> t
+constr 494:499 <> TmZero
+constr 528:533 <> TmSucc
+constr 561:566 <> TmPred
+constr 596:603 <> TmIszero
+constr 631:636 <> TmTrue
+constr 665:671 <> TmFalse
+constr 701:704 <> TmIf
+R503:503 testRegr_sys_arithNL <> t:1 ind
+R539:539 testRegr_sys_arithNL <> t:1 ind
+binder 536:537 <> t5:3
+R572:572 testRegr_sys_arithNL <> t:1 ind
+binder 569:570 <> t5:4
+R609:609 testRegr_sys_arithNL <> t:1 ind
+binder 606:607 <> t5:5
+R640:640 testRegr_sys_arithNL <> t:1 ind
+R675:675 testRegr_sys_arithNL <> t:1 ind
+R710:710 testRegr_sys_arithNL <> t:1 ind
+binder 707:708 <> t1:6
+R717:717 testRegr_sys_arithNL <> t:1 ind
+binder 714:715 <> t2:7
+R724:724 testRegr_sys_arithNL <> t:1 ind
+binder 721:722 <> t3:8
+scheme 466:466 <> t_rect
+scheme 466:466 <> t_ind
+scheme 466:466 <> t_rec
+scheme 466:466 <> t_sind
+def 846:854 <> is_v_of_t
+R861:861 testRegr_sys_arithNL <> t ind
+binder 857:859 <> t_6:9
+R866:869 Corelib.Init.Datatypes <> bool ind
+R882:884 testRegr_sys_arithNL <> t_6:9 var
+R895:900 testRegr_sys_arithNL <> TmZero constr
+R906:909 Corelib.Init.Datatypes <> true constr
+R917:922 testRegr_sys_arithNL <> TmSucc constr
+R933:941 testRegr_sys_arithNL <> is_v_of_t:10 def
+R953:958 testRegr_sys_arithNL <> TmPred constr
+R967:971 Corelib.Init.Datatypes <> false constr
+R978:985 testRegr_sys_arithNL <> TmIszero constr
+R994:998 Corelib.Init.Datatypes <> false constr
+R1004:1009 testRegr_sys_arithNL <> TmTrue constr
+R1015:1018 Corelib.Init.Datatypes <> true constr
+R1025:1031 testRegr_sys_arithNL <> TmFalse constr
+R1037:1040 Corelib.Init.Datatypes <> true constr
+R1048:1051 testRegr_sys_arithNL <> TmIf constr
+R1066:1070 Corelib.Init.Datatypes <> false constr
+R1190:1201 Ott.ott_list <> <> lib
+ind 1276:1278 <> red
+constr 1321:1326 <> E_Succ
+constr 1405:1414 <> E_PredZero
+constr 1454:1463 <> E_PredSucc
+constr 1551:1556 <> E_Pred
+constr 1635:1646 <> E_IsZeroZero
+constr 1688:1699 <> E_IsZeroSucc
+constr 1794:1801 <> E_IsZero
+constr 1884:1891 <> E_IfTrue
+constr 1948:1956 <> E_IfFalse
+constr 2014:2017 <> E_If
+R1283:1286 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1282:1282 testRegr_sys_arithNL <> t ind
+R1288:1291 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1287:1287 testRegr_sys_arithNL <> t ind
+R1345:1345 testRegr_sys_arithNL <> t ind
+binder 1338:1339 <> t1:14
+binder 1341:1343 <> t1':15
+R1364:1372 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1354:1356 testRegr_sys_arithNL <> red:12 ind
+R1361:1363 testRegr_sys_arithNL <> t1':15 var
+R1358:1359 testRegr_sys_arithNL <> t1:14 var
+R1373:1375 testRegr_sys_arithNL <> red:12 ind
+R1390:1395 testRegr_sys_arithNL <> TmSucc constr
+R1397:1399 testRegr_sys_arithNL <> t1':15 var
+R1378:1383 testRegr_sys_arithNL <> TmSucc constr
+R1385:1386 testRegr_sys_arithNL <> t1:14 var
+R1424:1426 testRegr_sys_arithNL <> red:12 ind
+R1444:1449 testRegr_sys_arithNL <> TmZero constr
+R1429:1434 testRegr_sys_arithNL <> TmPred constr
+R1436:1441 testRegr_sys_arithNL <> TmZero constr
+R1478:1478 testRegr_sys_arithNL <> t ind
+binder 1475:1476 <> v1:16
+R1509:1517 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1487:1493 Stdlib.Bool.Bool <> Is_true def
+R1496:1504 testRegr_sys_arithNL <> is_v_of_t def
+R1506:1507 testRegr_sys_arithNL <> v1:16 var
+R1518:1520 testRegr_sys_arithNL <> red:12 ind
+R1545:1546 testRegr_sys_arithNL <> v1:16 var
+R1523:1528 testRegr_sys_arithNL <> TmPred constr
+R1532:1537 testRegr_sys_arithNL <> TmSucc constr
+R1539:1540 testRegr_sys_arithNL <> v1:16 var
+R1575:1575 testRegr_sys_arithNL <> t ind
+binder 1568:1569 <> t1:17
+binder 1571:1573 <> t1':18
+R1594:1602 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1584:1586 testRegr_sys_arithNL <> red:12 ind
+R1591:1593 testRegr_sys_arithNL <> t1':18 var
+R1588:1589 testRegr_sys_arithNL <> t1:17 var
+R1603:1605 testRegr_sys_arithNL <> red:12 ind
+R1620:1625 testRegr_sys_arithNL <> TmPred constr
+R1627:1629 testRegr_sys_arithNL <> t1':18 var
+R1608:1613 testRegr_sys_arithNL <> TmPred constr
+R1615:1616 testRegr_sys_arithNL <> t1:17 var
+R1656:1658 testRegr_sys_arithNL <> red:12 ind
+R1678:1683 testRegr_sys_arithNL <> TmTrue constr
+R1661:1668 testRegr_sys_arithNL <> TmIszero constr
+R1670:1675 testRegr_sys_arithNL <> TmZero constr
+R1714:1714 testRegr_sys_arithNL <> t ind
+binder 1711:1712 <> v1:19
+R1745:1753 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1723:1729 Stdlib.Bool.Bool <> Is_true def
+R1732:1740 testRegr_sys_arithNL <> is_v_of_t def
+R1742:1743 testRegr_sys_arithNL <> v1:19 var
+R1754:1756 testRegr_sys_arithNL <> red:12 ind
+R1783:1789 testRegr_sys_arithNL <> TmFalse constr
+R1759:1766 testRegr_sys_arithNL <> TmIszero constr
+R1770:1775 testRegr_sys_arithNL <> TmSucc constr
+R1777:1778 testRegr_sys_arithNL <> v1:19 var
+R1820:1820 testRegr_sys_arithNL <> t ind
+binder 1813:1814 <> t1:20
+binder 1816:1818 <> t1':21
+R1839:1847 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1829:1831 testRegr_sys_arithNL <> red:12 ind
+R1836:1838 testRegr_sys_arithNL <> t1':21 var
+R1833:1834 testRegr_sys_arithNL <> t1:20 var
+R1848:1850 testRegr_sys_arithNL <> red:12 ind
+R1867:1874 testRegr_sys_arithNL <> TmIszero constr
+R1876:1878 testRegr_sys_arithNL <> t1':21 var
+R1853:1860 testRegr_sys_arithNL <> TmIszero constr
+R1862:1863 testRegr_sys_arithNL <> t1:20 var
+R1909:1909 testRegr_sys_arithNL <> t ind
+binder 1903:1904 <> t2:22
+binder 1906:1907 <> t3:23
+R1918:1920 testRegr_sys_arithNL <> red:12 ind
+R1942:1943 testRegr_sys_arithNL <> t2:22 var
+R1923:1926 testRegr_sys_arithNL <> TmIf constr
+R1928:1933 testRegr_sys_arithNL <> TmTrue constr
+R1935:1936 testRegr_sys_arithNL <> t2:22 var
+R1938:1939 testRegr_sys_arithNL <> t3:23 var
+R1974:1974 testRegr_sys_arithNL <> t ind
+binder 1968:1969 <> t2:24
+binder 1971:1972 <> t3:25
+R1983:1985 testRegr_sys_arithNL <> red:12 ind
+R2008:2009 testRegr_sys_arithNL <> t3:25 var
+R1988:1991 testRegr_sys_arithNL <> TmIf constr
+R1993:1999 testRegr_sys_arithNL <> TmFalse constr
+R2001:2002 testRegr_sys_arithNL <> t2:24 var
+R2004:2005 testRegr_sys_arithNL <> t3:25 var
+R2042:2042 testRegr_sys_arithNL <> t ind
+binder 2029:2030 <> t1:26
+binder 2032:2033 <> t2:27
+binder 2035:2036 <> t3:28
+binder 2038:2040 <> t1':29
+R2061:2069 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2051:2053 testRegr_sys_arithNL <> red:12 ind
+R2058:2060 testRegr_sys_arithNL <> t1':29 var
+R2055:2056 testRegr_sys_arithNL <> t1:26 var
+R2070:2072 testRegr_sys_arithNL <> red:12 ind
+R2091:2094 testRegr_sys_arithNL <> TmIf constr
+R2096:2098 testRegr_sys_arithNL <> t1':29 var
+R2100:2101 testRegr_sys_arithNL <> t2:27 var
+R2103:2104 testRegr_sys_arithNL <> t3:28 var
+R2075:2078 testRegr_sys_arithNL <> TmIf constr
+R2080:2081 testRegr_sys_arithNL <> t1:26 var
+R2083:2084 testRegr_sys_arithNL <> t2:27 var
+R2086:2087 testRegr_sys_arithNL <> t3:28 var
+scheme 1276:1278 <> red_ind
+scheme 1276:1278 <> red_sind

@@ -1,0 +1,42 @@
+### Starting build.
+# Target: ocamlfind ocamlc -config, tags: {  }
+ocamlfind ocamlc -config
+# Target: main.ml.depends, tags: { package(pprint), extension:ml, file:main.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package pprint -modules main.ml > main.ml.depends
+# Target: test10menhir_with_aux_ast.ml.depends, tags: { package(pprint), extension:ml, file:test10menhir_with_aux_ast.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package pprint -modules test10menhir_with_aux_ast.ml > test10menhir_with_aux_ast.ml.depends
+# Target: test10menhir_with_aux_lexer.mll, tags: { package(pprint), extension:mll, file:test10menhir_with_aux_lexer.mll, lexer, ocaml, ocamllex, quiet }
+/home/pes20/.opam/5.2.0/bin/ocamllex.opt -q test10menhir_with_aux_lexer.mll
+# Target: test10menhir_with_aux_lexer.ml.depends, tags: { package(pprint), extension:ml, file:test10menhir_with_aux_lexer.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package pprint -modules test10menhir_with_aux_lexer.ml > test10menhir_with_aux_lexer.ml.depends
+# Target: test10menhir_with_aux_parser.mly.depends, tags: { package(pprint), extension:mly, file:test10menhir_with_aux_parser.mly, infer, menhir_ocamldep, ocaml, ocamldep, quiet }
+menhir --infer --raw-depend --ocamldep 'ocamlfind ocamldep -modules' test10menhir_with_aux_parser.mly > test10menhir_with_aux_parser.mly.depends
++ menhir --infer --raw-depend --ocamldep 'ocamlfind ocamldep -modules' test10menhir_with_aux_parser.mly > test10menhir_with_aux_parser.mly.depends
+File "test10menhir_with_aux_parser.mly", line 23, characters 0-1:
+Warning: symbol l is unreachable from any of the start symbol(s).
+# Target: test10menhir_with_aux_ast.cmo, tags: { package(pprint), byte, compile, extension:cmo, extension:ml, file:test10menhir_with_aux_ast.cmo, file:test10menhir_with_aux_ast.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -package pprint -o test10menhir_with_aux_ast.cmo test10menhir_with_aux_ast.ml
+# Target: test10menhir_with_aux_parser.mly, tags: { package(pprint), byte, compile, extension:ml, extension:mly, file:test10menhir_with_aux_parser.ml, file:test10menhir_with_aux_parser.mly, infer, menhir, ocaml, parser, quiet }
+menhir --infer --ocamlc 'ocamlfind ocamlc -package pprint' --infer test10menhir_with_aux_parser.mly
++ menhir --infer --ocamlc 'ocamlfind ocamlc -package pprint' --infer test10menhir_with_aux_parser.mly
+File "test10menhir_with_aux_parser.mly", line 23, characters 0-1:
+Warning: symbol l is unreachable from any of the start symbol(s).
+# Target: test10menhir_with_aux_parser.mli.depends, tags: { package(pprint), extension:mli, file:test10menhir_with_aux_parser.mli, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package pprint -modules test10menhir_with_aux_parser.mli > test10menhir_with_aux_parser.mli.depends
+# Target: test10menhir_with_aux_parser.cmi, tags: { package(pprint), byte, compile, extension:mli, file:test10menhir_with_aux_parser.mli, interf, ocaml, quiet }
+ocamlfind ocamlc -c -package pprint -o test10menhir_with_aux_parser.cmi test10menhir_with_aux_parser.mli
+# Target: test10menhir_with_aux_parser_pp.ml.depends, tags: { package(pprint), extension:ml, file:test10menhir_with_aux_parser_pp.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package pprint -modules test10menhir_with_aux_parser_pp.ml > test10menhir_with_aux_parser_pp.ml.depends
+# Target: test10menhir_with_aux_lexer.cmo, tags: { package(pprint), byte, compile, extension:cmo, extension:ml, file:test10menhir_with_aux_lexer.cmo, file:test10menhir_with_aux_lexer.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -package pprint -o test10menhir_with_aux_lexer.cmo test10menhir_with_aux_lexer.ml
+# Target: test10menhir_with_aux_parser_pp.cmo, tags: { package(pprint), byte, compile, extension:cmo, extension:ml, file:test10menhir_with_aux_parser_pp.cmo, file:test10menhir_with_aux_parser_pp.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -package pprint -o test10menhir_with_aux_parser_pp.cmo test10menhir_with_aux_parser_pp.ml
+# Target: main.cmo, tags: { package(pprint), byte, compile, extension:cmo, extension:ml, file:main.cmo, file:main.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -package pprint -o main.cmo main.ml
+# Target: test10menhir_with_aux_parser.ml.depends, tags: { package(pprint), extension:ml, file:test10menhir_with_aux_parser.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package pprint -modules test10menhir_with_aux_parser.ml > test10menhir_with_aux_parser.ml.depends
+# Target: test10menhir_with_aux_parser.cmo, tags: { package(pprint), byte, compile, extension:cmo, extension:ml, file:test10menhir_with_aux_parser.cmo, file:test10menhir_with_aux_parser.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -package pprint -o test10menhir_with_aux_parser.cmo test10menhir_with_aux_parser.ml
+# Target: main.byte, tags: { package(pprint), byte, dont_link_with, extension:byte, file:main.byte, link, ocaml, program, quiet }
+ocamlfind ocamlc -linkpkg -package pprint test10menhir_with_aux_ast.cmo test10menhir_with_aux_parser.cmo test10menhir_with_aux_lexer.cmo test10menhir_with_aux_parser_pp.cmo main.cmo -o main.byte
+# Compilation successful.

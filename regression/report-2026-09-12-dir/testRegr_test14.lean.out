@@ -1,0 +1,10 @@
+testRegr_test14.lean:6:18: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test14.lean:7:16: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test14.lean:8:16: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test14.lean:10:0: error: (kernel) invalid nested inductive datatype 'List', nested inductive datatypes parameters cannot contain local variables.
+testRegr_test14.lean:22:22: warning: Variable name `l_t_list` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _l_t_list
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`

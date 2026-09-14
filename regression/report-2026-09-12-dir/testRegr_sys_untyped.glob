@@ -1,0 +1,80 @@
+DIGEST 9b398717a75aa78235c819d5e7296a5b
+FtestRegr_sys_untyped
+R181:185 Stdlib.Arith.Arith <> <> lib
+R203:206 Stdlib.Bool.Bool <> <> lib
+R224:227 Stdlib.Lists.List <> <> lib
+R245:261 Ott.ott_list_core <> <> lib
+ind 366:366 <> t
+constr 394:399 <> TmTrue
+constr 428:434 <> TmFalse
+constr 464:467 <> TmIf
+R403:403 testRegr_sys_untyped <> t:1 ind
+R438:438 testRegr_sys_untyped <> t:1 ind
+R473:473 testRegr_sys_untyped <> t:1 ind
+binder 470:471 <> t1:3
+R480:480 testRegr_sys_untyped <> t:1 ind
+binder 477:478 <> t2:4
+R487:487 testRegr_sys_untyped <> t:1 ind
+binder 484:485 <> t3:5
+scheme 366:366 <> t_rect
+scheme 366:366 <> t_ind
+scheme 366:366 <> t_rec
+scheme 366:366 <> t_sind
+def 611:619 <> is_v_of_t
+R626:626 testRegr_sys_untyped <> t ind
+binder 622:624 <> t_6:6
+R631:634 Corelib.Init.Datatypes <> bool ind
+R647:649 testRegr_sys_untyped <> t_6:6 var
+R660:665 testRegr_sys_untyped <> TmTrue constr
+R671:674 Corelib.Init.Datatypes <> true constr
+R681:687 testRegr_sys_untyped <> TmFalse constr
+R693:696 Corelib.Init.Datatypes <> true constr
+R704:707 testRegr_sys_untyped <> TmIf constr
+R722:726 Corelib.Init.Datatypes <> false constr
+R846:857 Ott.ott_list <> <> lib
+ind 932:934 <> red
+constr 977:984 <> E_IfTrue
+constr 1041:1049 <> E_IfFalse
+constr 1107:1110 <> E_If
+R939:942 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R938:938 testRegr_sys_untyped <> t ind
+R944:947 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R943:943 testRegr_sys_untyped <> t ind
+R1002:1002 testRegr_sys_untyped <> t ind
+binder 996:997 <> t2:10
+binder 999:1000 <> t3:11
+R1011:1013 testRegr_sys_untyped <> red:8 ind
+R1035:1036 testRegr_sys_untyped <> t2:10 var
+R1016:1019 testRegr_sys_untyped <> TmIf constr
+R1021:1026 testRegr_sys_untyped <> TmTrue constr
+R1028:1029 testRegr_sys_untyped <> t2:10 var
+R1031:1032 testRegr_sys_untyped <> t3:11 var
+R1067:1067 testRegr_sys_untyped <> t ind
+binder 1061:1062 <> t2:12
+binder 1064:1065 <> t3:13
+R1076:1078 testRegr_sys_untyped <> red:8 ind
+R1101:1102 testRegr_sys_untyped <> t3:13 var
+R1081:1084 testRegr_sys_untyped <> TmIf constr
+R1086:1092 testRegr_sys_untyped <> TmFalse constr
+R1094:1095 testRegr_sys_untyped <> t2:12 var
+R1097:1098 testRegr_sys_untyped <> t3:13 var
+R1135:1135 testRegr_sys_untyped <> t ind
+binder 1122:1123 <> t1:14
+binder 1125:1126 <> t2:15
+binder 1128:1129 <> t3:16
+binder 1131:1133 <> t1':17
+R1154:1162 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1144:1146 testRegr_sys_untyped <> red:8 ind
+R1151:1153 testRegr_sys_untyped <> t1':17 var
+R1148:1149 testRegr_sys_untyped <> t1:14 var
+R1163:1165 testRegr_sys_untyped <> red:8 ind
+R1184:1187 testRegr_sys_untyped <> TmIf constr
+R1189:1191 testRegr_sys_untyped <> t1':17 var
+R1193:1194 testRegr_sys_untyped <> t2:15 var
+R1196:1197 testRegr_sys_untyped <> t3:16 var
+R1168:1171 testRegr_sys_untyped <> TmIf constr
+R1173:1174 testRegr_sys_untyped <> t1:14 var
+R1176:1177 testRegr_sys_untyped <> t2:15 var
+R1179:1180 testRegr_sys_untyped <> t3:16 var
+scheme 932:934 <> red_ind
+scheme 932:934 <> red_sind

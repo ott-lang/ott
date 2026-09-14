@@ -1,14 +1,14 @@
-metavar ident  ::=
+metavar ident  ::= {{ lean Nat }}
   {{ isa string }} {{ coq nat }} {{ hol string }}
   {{ lex alphanum }} 
-metavar integer_literal ::=
+metavar integer_literal ::= {{ lean Nat }}
   {{ isa int }} {{ coq nat }} {{ lex numeral }}
-metavar infix_symbol ::=
+metavar infix_symbol ::= {{ lean Nat }}
   {{ isa string }} {{ coq nat }} {{ hol string }} 
-metavar lowercase_ident ::= 
+metavar lowercase_ident ::= {{ lean Nat }} 
   {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}
   {{ lex alphanum0 }}
-metavar capitalized_ident ::=
+metavar capitalized_ident ::= {{ lean Nat }}
   {{ isa string }} {{ coq nat }} {{ hol string }}
   {{ lex Alphanum }}
 
@@ -87,10 +87,10 @@ E :: E_ ::=
 formula :: formula_ ::=
   | judgement                                                  ::   :: judgement
   | not ( formula )                 :: :: not  {{ isa Not( [[formula]] ) }}
-                                               {{ coq not( [[formula]] ) }}
+                                               {{ coq not( [[formula]] ) }} {{ lean ¬ ( [[formula]] ) }}
                                                {{ hol ~( [[formula]] ) }}
 
-  | E = E'                          ::   :: eq {{ ich [[E]]=[[E']] }}
+  | E = E'                          ::   :: eq {{ ich [[E]]=[[E']] }} {{ lean [[E]]=[[E']] }}
 
 
 

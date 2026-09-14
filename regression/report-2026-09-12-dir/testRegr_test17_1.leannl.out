@@ -1,0 +1,28 @@
+testRegr_test17_1.lean:6:21: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test17_1.lean:7:16: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test17_1.lean:25:16: error: Application type mismatch: The argument
+  x
+has type
+  value_name✝
+but is expected to have type
+  value_name
+in the application
+  List.cons x
+testRegr_test17_1.lean:45:33: error: Application type mismatch: The argument
+  sub
+has type
+  List (value_name × a)
+but is expected to have type
+  List (a × ?m.24)
+in the application
+  list_assoc sub
+testRegr_test17_1.lean:45:22: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  DecidableEq a
+
+Hint: Adding the command `deriving instance DecidableEq for a` may allow Lean to derive the missing instance.
+testRegr_test17_1.lean:57:21: error: Type mismatch
+  x_5
+has type
+  value_name
+but is expected to have type
+  value_name✝

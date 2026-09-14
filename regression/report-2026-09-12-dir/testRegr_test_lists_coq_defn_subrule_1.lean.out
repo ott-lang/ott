@@ -1,0 +1,26 @@
+testRegr_test_lists_coq_defn_subrule_1.lean:6:12: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test_lists_coq_defn_subrule_1.lean:7:12: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test_lists_coq_defn_subrule_1.lean:31:10: warning: Variable name `foobar_` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _foobar_
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_lists_coq_defn_subrule_1.lean:45:37: warning: Variable name `foobar_` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _foobar_
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_lists_coq_defn_subrule_1.lean:47:28: warning: Variable name `foobar_` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _foobar_
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_lists_coq_defn_subrule_1.lean:47:81: warning: Variable name `foo_` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _foo_
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`

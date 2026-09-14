@@ -1,0 +1,55 @@
+DIGEST 81a84b154a824325ce6ef7a5e33e1b65
+FtestRegr_test12NL
+R121:125 Stdlib.Arith.Arith <> <> lib
+R155:158 Stdlib.Bool.Bool <> <> lib
+R188:191 Stdlib.Lists.List <> <> lib
+R209:225 Ott.ott_list_core <> <> lib
+ind 241:241 <> a
+constr 256:258 <> a_b
+constr 270:272 <> a_0
+ind 283:283 <> b
+constr 298:300 <> b_a
+R264:264 testRegr_test12NL <> b:2 ind
+binder 261:262 <> b5:5
+R276:276 testRegr_test12NL <> a:1 ind
+R306:306 testRegr_test12NL <> a:1 ind
+binder 303:304 <> a5:6
+scheme 241:241 <> a_rect
+scheme 241:241 <> a_ind
+scheme 241:241 <> a_rec
+scheme 241:241 <> a_sind
+scheme 283:283 <> b_rect
+scheme 283:283 <> b_ind
+scheme 283:283 <> b_rec
+scheme 283:283 <> b_sind
+ind 321:321 <> c
+constr 336:338 <> c_a
+R344:344 testRegr_test12NL <> a ind
+binder 341:342 <> a5:9
+scheme 321:321 <> c_rect
+scheme 321:321 <> c_ind
+scheme 321:321 <> c_rec
+scheme 321:321 <> c_sind
+ind 359:359 <> e
+constr 374:376 <> e_f
+constr 388:390 <> e_c
+ind 404:404 <> f
+constr 419:422 <> f_ea
+R382:382 testRegr_test12NL <> f:11 ind
+binder 379:380 <> f5:14
+R396:396 testRegr_test12NL <> c ind
+binder 393:394 <> c5:15
+R428:428 testRegr_test12NL <> e:10 ind
+binder 425:426 <> e5:16
+R435:435 testRegr_test12NL <> a ind
+binder 432:433 <> a5:17
+scheme 359:359 <> e_rect
+scheme 359:359 <> e_ind
+scheme 359:359 <> e_rec
+scheme 359:359 <> e_sind
+scheme 404:404 <> f_rect
+scheme 404:404 <> f_ind
+scheme 404:404 <> f_rec
+scheme 404:404 <> f_sind
+def 451:451 <> d
+R462:464 Corelib.Init.Datatypes <> nat ind

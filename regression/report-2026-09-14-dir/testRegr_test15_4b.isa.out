@@ -1,0 +1,67 @@
+Running Draft ...
+
+Output (line 8 of "Draft/testRegr_test15_4b.thy"):
+consts
+  typerep_a_pre_a :: "'a a_pre_a itself ⇒ typerep"
+
+Output (line 8 of "Draft/testRegr_test15_4b.thy"):
+consts
+  typerep_a_IITN_a :: "a.a_IITN_a itself ⇒ typerep"
+
+Output (line 8 of "Draft/testRegr_test15_4b.thy"):
+consts
+  typerep_a :: "a itself ⇒ typerep"
+
+Output (line 8 of "Draft/testRegr_test15_4b.thy"):
+consts
+  term_of_a :: "a ⇒ term"
+
+Output (line 8 of "Draft/testRegr_test15_4b.thy"):
+consts
+  partial_term_of_a ::
+    "a itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 8 of "Draft/testRegr_test15_4b.thy"):
+consts
+  equal_a :: "a ⇒ a ⇒ bool"
+
+Output (line 14 of "Draft/testRegr_test15_4b.thy"):
+consts
+  typerep_n2m_a_aux_b_a_of_a_pre_n2m_a ::
+    "('a, 'b, 'c) aux_b_a_of_a.n2m_a_aux_b_a_of_a_pre_n2m_a itself
+     ⇒ typerep"
+
+Output (line 14 of "Draft/testRegr_test15_4b.thy"):
+consts
+  aux_b_a_of_a_list_a_CC :: "a list ⇒ nat list"
+  aux_b_a_of_a_list :: "a list ⇒ nat list"
+  aux_b_a_of_a :: "a ⇒ nat list"
+
+Output (line 30 of "Draft/testRegr_test15_4b.thy"):
+consts
+  is_av_of_pluto_list_a_CC :: "a list ⇒ bool"
+  is_av_of_pluto_list_a_C :: "a list ⇒ bool"
+  is_av_of_a :: "a ⇒ bool"
+
+Output (line 46 of "Draft/testRegr_test15_4b.thy"):
+consts
+  ftv_pluto_list_a_CC :: "a list ⇒ nat list"
+  ftv_pluto_list_a_C :: "a list ⇒ nat list"
+  ftv_pluto :: "a ⇒ nat list"
+
+Output (line 61 of "Draft/testRegr_test15_4b.thy"):
+consts
+  list_assoc :: "'a ⇒ ('a × 'b) list ⇒ 'b option"
+
+Output (line 69 of "Draft/testRegr_test15_4b.thy"):
+consts
+  msubst_pluto_list_a_CC :: "(nat × a) list ⇒ a list ⇒ a list"
+  msubst_pluto_list_a_C :: "(nat × a) list ⇒ a list ⇒ a list"
+  msubst_pluto :: "(nat × a) list ⇒ a ⇒ a"
+
+Output (line 83 of "Draft/testRegr_test15_4b.thy"):
+consts
+  subst_pluto_list_a_CC :: "a ⇒ nat ⇒ a list ⇒ a list"
+  subst_pluto_list_a_C :: "a ⇒ nat ⇒ a list ⇒ a list"
+  subst_pluto :: "a ⇒ nat ⇒ a ⇒ a"
+Finished Draft (0:00:03 elapsed time, 0:00:04 cpu time, factor 1.55)

@@ -1,0 +1,21 @@
+DIGEST 5744872e2e074dd53017582d1bc9bc76
+FtestRegr_sys_tuple
+R394:398 Stdlib.Arith.Arith <> <> lib
+R416:419 Stdlib.Bool.Bool <> <> lib
+R437:440 Stdlib.Lists.List <> <> lib
+R458:474 Ott.ott_list_core <> <> lib
+def 579:583 <> index
+R594:596 Corelib.Init.Datatypes <> nat ind
+ind 624:624 <> T
+constr 652:657 <> TyUnit
+constr 682:688 <> TyTuple
+R661:661 testRegr_sys_tuple <> T:1 ind
+R693:696 Corelib.Init.Datatypes <> list ind
+R698:698 testRegr_sys_tuple <> T:1 ind
+scheme 624:624 <> T_rect
+scheme 624:624 <> T_ind
+scheme 624:624 <> T_rec
+scheme 624:624 <> T_sind
+def 731:731 <> G
+R742:745 Corelib.Init.Datatypes <> list ind
+R755:755 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not

@@ -1,0 +1,419 @@
+/- Claude: this file is written by Claude (Opus 5), 2026-09-14.  It states and
+   proves the usual syntactic type soundness results - canonical forms,
+   substitution, preservation, progress and safety - for the simply typed
+   lambda calculus that Ott generates from tests/test10st.ott.
+
+   It is the source that Ott's lean_filter turns into
+   test10st-metatheory.lean, replacing each piece of object syntax in double
+   square brackets with the Lean that the grammar of test10st.ott gives for it.
+   So the statements can be read in the notation of the language being
+   described, while the proofs are ordinary Lean.  (This paragraph cannot show
+   an example: the filter would try to parse it.)
+
+   Two of the statements are weaker than the ones a textbook would give,
+   because of how the definitions are generated; the remarks at the end of the
+   file say which, why, and what would have to change in the Ott source to
+   strengthen them.
+
+   "make" in this directory generates test10st.lean from
+   ../../tests/test10st.ott, filters this file against it, and checks both with
+   lean.  A successful run is silent. -/
+
+import test10st
+
+open Term Typ GtT
+
+/-! ## Lookup in the typing context
+
+    `bound` walks the context and stops at the first binding for the variable,
+    so a later binding of the same name is shadowed rather than excluded.  The
+    lemmas here are the facts about that lookup which the results below need. -/
+
+theorem bound_nil {x : termvar} {T : Typ} : ¬ bound x T [] := by simp [bound]
+
+theorem bound_cons_eq {x : termvar} {T A : Typ} {G : TypEnv} :
+    bound x T ((x,A) :: G) ↔ T = A := by simp [bound]
+
+theorem bound_cons_ne {x y : termvar} {T A : Typ} {G : TypEnv} (h : x ≠ y) :
+    bound x T ((y,A) :: G) ↔ bound x T G := by simp [bound, h]
+
+/-- `x` has no binding at all in `G`. -/
+def Unbound (x : termvar) (G : TypEnv) : Prop := ∀ A, ¬ bound x A G
+
+theorem unbound_nil {x : termvar} : Unbound x [] := fun _ h => bound_nil h
+
+theorem unbound_cons {x y : termvar} {A : Typ} {G : TypEnv} (hne : x ≠ y)
+    (h : Unbound x G) : Unbound x ((y,A) :: G) :=
+  fun B hb => h B ((bound_cons_ne hne).mp hb)
+
+theorem bound_append_left {x : termvar} {T : Typ} {G1 G2 : TypEnv} :
+    bound x T G1 → bound x T (G1 ++ G2) := by
+  induction G1 with
+  | nil => intro h; exact absurd h bound_nil
+  | cons p G1 ih =>
+    obtain ⟨y, A⟩ := p
+    by_cases hxy : x = y
+    · subst hxy; simp [bound]
+    · simp [bound, hxy]; exact ih
+
+theorem bound_append_right {x : termvar} {T : Typ} {G1 G2 : TypEnv} :
+    Unbound x G1 → bound x T G2 → bound x T (G1 ++ G2) := by
+  induction G1 with
+  | nil => intro _ h; exact h
+  | cons p G1 ih =>
+    obtain ⟨y, A⟩ := p
+    intro hu h
+    by_cases hxy : x = y
+    · subst hxy; exact absurd ((bound_cons_eq (A := A) (G := G1)).mpr rfl) (hu A)
+    · simp [bound, hxy]
+      exact ih (fun B hb => hu B ((bound_cons_ne hxy).mpr hb)) h
+
+theorem bound_append_cases {x : termvar} {T : Typ} {G1 G2 : TypEnv} :
+    bound x T (G1 ++ G2) → bound x T G1 ∨ (Unbound x G1 ∧ bound x T G2) := by
+  induction G1 with
+  | nil => intro h; exact Or.inr ⟨unbound_nil, h⟩
+  | cons p G1 ih =>
+    obtain ⟨y, A⟩ := p
+    intro h
+    by_cases hxy : x = y
+    · subst hxy
+      simp [bound] at h
+      exact Or.inl (by simp [bound, h])
+    · simp [bound, hxy] at h
+      rcases ih h with h1 | ⟨hu, h2⟩
+      · exact Or.inl ((bound_cons_ne hxy).mpr h1)
+      · exact Or.inr ⟨unbound_cons hxy hu, h2⟩
+
+/-! ## Weakening and shadowing -/
+
+/-- Bindings appended after the context are invisible: the first match is
+    unchanged. -/
+theorem weakening {G1 : TypEnv} {t : Term} {T : Typ} (h : GtT G1 t T) (G2 : TypEnv) :
+    GtT (G1 ++ G2) t T := by
+  induction h with
+  | GtT_value_name G x T hb => exact GtT_value_name _ _ _ (bound_append_left hb)
+  | GtT_apply G t1 t2 T2 T1 _ _ ih1 ih2 => exact GtT_apply _ _ _ _ _ ih1 ih2
+  | GtT_lambda G x body T1 T2 _ ih => exact GtT_lambda _ _ _ _ _ ih
+
+/-- A binding shadowed by an earlier one for the same variable can be dropped. -/
+theorem drop_shadowed {x : termvar} {B : Typ} {G2 : TypEnv} :
+    ∀ (t : Term) (G1 : TypEnv) (T : Typ), (∃ A, bound x A G1) →
+      GtT (G1 ++ (x,B) :: G2) t T → GtT (G1 ++ G2) t T := by
+  intro t
+  induction t with
+  | t_Var z =>
+    intro G1 T hx h
+    cases h with
+    | GtT_value_name _ _ _ hb =>
+      rcases bound_append_cases hb with h1 | ⟨hu, h2⟩
+      · exact GtT_value_name _ _ _ (bound_append_left h1)
+      · have hzx : z ≠ x := by
+          intro heq; subst heq
+          obtain ⟨A, hA⟩ := hx
+          exact hu A hA
+        exact GtT_value_name _ _ _ (bound_append_right hu ((bound_cons_ne hzx).mp h2))
+  | t_Lam y body ih =>
+    intro G1 T hx h
+    cases h with
+    | GtT_lambda _ _ _ A C hbody =>
+      refine GtT_lambda _ _ _ _ _ (ih ((y,A) :: G1) C ?_ hbody)
+      obtain ⟨A0, hA0⟩ := hx
+      by_cases hxy : x = y
+      · subst hxy; exact ⟨A, (bound_cons_eq).mpr rfl⟩
+      · exact ⟨A0, (bound_cons_ne hxy).mpr hA0⟩
+  | t_App t1 t2 ih1 ih2 =>
+    intro G1 T hx h
+    cases h with
+    | GtT_apply _ _ _ _ T1 h1 h2 =>
+      exact GtT_apply _ _ _ _ _ (ih1 G1 _ hx h1) (ih2 G1 _ hx h2)
+
+/-! ## Values -/
+
+/-- The subrule predicate `is_v_of_t` is `Bool`-valued, so a proposition about
+    values has to compare it with `true`.  (If the Lean backend is changed to
+    generate `Prop`-valued subrule predicates, as the Coq one does when lists
+    are expanded, this definition goes away and `IsValue` is `is_v_of_t`.) -/
+def IsValue (t : Term) : Prop := is_v_of_t t = true
+
+/-- A value is exactly an abstraction, by the definition of `is_v_of_t`. -/
+theorem isValue_iff_lam {t : Term} :
+    IsValue t ↔ ∃ x t', t = [[\x.t']] := by
+  cases t with
+  | t_Var x => simp [IsValue, is_v_of_t]
+  | t_Lam x t => simp [IsValue, is_v_of_t]
+  | t_App t1 t2 => simp [IsValue, is_v_of_t]
+
+/-! ## Canonical forms -/
+
+/-- A value of function type is an abstraction. -/
+theorem canonical_forms_arrow {G : TypEnv} {v : Term} {T1 T2 : Typ} :
+    [[ G |- v : T1->T2]] → IsValue v → ∃ x t, v = [[\x.t]] :=
+  fun _ hv => (isValue_iff_lam).mp hv
+
+/-! ## Closed terms
+
+    `tsubst_t` does not rename bound variables: its abstraction clause stops at
+    a binder of the same name but does nothing about the free variables of the
+    term being substituted.  So substitution captures, and the results below
+    are stated for closed terms, where capture cannot arise.  See the remark at
+    the end of this file. -/
+
+/-- A term is closed when it has no free term variables. -/
+def Closed (t : Term) : Prop := fv_t t = []
+
+theorem mem_list_minus {z y : termvar} {l : List termvar} :
+    z ∈ list_minus l [y] ↔ z ∈ l ∧ z ≠ y := by
+  induction l with
+  | nil => simp [list_minus]
+  | cons h t ih =>
+    by_cases hhy : h = y
+    · subst hhy
+      simp [list_minus, ih]
+      intro h1 h2
+      exact absurd h2 h1
+    · simp [list_minus, hhy, ih]
+      constructor
+      · rintro (rfl | ⟨hz, hzy⟩)
+        · exact ⟨Or.inl rfl, hhy⟩
+        · exact ⟨Or.inr hz, hzy⟩
+      · rintro ⟨rfl | hz, hzy⟩
+        · exact Or.inl rfl
+        · exact Or.inr ⟨hz, hzy⟩
+
+/-- Substitution can only introduce free variables of the term substituted, and
+    only removes the variable substituted for. -/
+theorem fv_tsubst {v : Term} {x : termvar} : ∀ (t : Term) (z : termvar),
+    z ∈ fv_t [[{v/x}t]] → z ∈ fv_t v ∨ (z ∈ fv_t t ∧ z ≠ x) := by
+  intro t
+  induction t with
+  | t_Var y =>
+    intro z hz
+    by_cases hyx : y = x
+    · subst hyx
+      simp [tsubst_t] at hz
+      exact Or.inl hz
+    · simp [tsubst_t, hyx, fv_t] at hz
+      subst hz
+      exact Or.inr ⟨by simp [fv_t], hyx⟩
+  | t_Lam y body ih =>
+    intro z hz
+    by_cases hxy : x = y
+    · subst hxy
+      simp [tsubst_t] at hz
+      exact Or.inr ⟨hz, ((mem_list_minus).mp (by simpa [fv_t] using hz)).2⟩
+    · simp [tsubst_t, hxy, fv_t] at hz
+      have hz' := (mem_list_minus).mp hz
+      rcases ih z hz'.1 with h | ⟨hb, hzx⟩
+      · exact Or.inl h
+      · refine Or.inr ⟨?_, hzx⟩
+        simp [fv_t]
+        exact (mem_list_minus).mpr ⟨hb, hz'.2⟩
+  | t_App t1 t2 ih1 ih2 =>
+    intro z hz
+    simp [tsubst_t, fv_t] at hz
+    rcases hz with h1 | h2
+    · rcases ih1 z h1 with h | ⟨hb, hzx⟩
+      · exact Or.inl h
+      · exact Or.inr ⟨by simp [fv_t]; exact Or.inl hb, hzx⟩
+    · rcases ih2 z h2 with h | ⟨hb, hzx⟩
+      · exact Or.inl h
+      · exact Or.inr ⟨by simp [fv_t]; exact Or.inr hb, hzx⟩
+
+/-! ## Substitution -/
+
+/-- The general form: the variable substituted for may be anywhere in the
+    context, provided nothing before it binds the same name - which is exactly
+    the condition under which `tsubst_t` descends to its occurrences. -/
+theorem subst_gen {x : termvar} {v : Term} {T1 : Typ} {G2 : TypEnv}
+    (hv : [[empty |- v : T1]]) :
+    ∀ (t : Term) (G1 : TypEnv) (T : Typ), Unbound x G1 →
+      GtT (G1 ++ (x,T1) :: G2) t T → GtT (G1 ++ G2) [[{v/x}t]] T := by
+  intro t
+  induction t with
+  | t_Var z =>
+    intro G1 T hu h
+    cases h with
+    | GtT_value_name _ _ _ hb =>
+      by_cases hzx : z = x
+      · subst hzx
+        have hb2 : bound z T ((z,T1) :: G2) := by
+          rcases bound_append_cases hb with h1 | ⟨_, h2⟩
+          · exact absurd h1 (hu T)
+          · exact h2
+        have hT : T = T1 := (bound_cons_eq).mp hb2
+        subst hT
+        simpa [tsubst_t] using (weakening hv (G1 ++ G2))
+      · rcases bound_append_cases hb with h1 | ⟨hu2, h2⟩
+        · simpa [tsubst_t, hzx] using GtT_value_name (G1 ++ G2) z T (bound_append_left h1)
+        · have hg2 : bound z T G2 := (bound_cons_ne hzx).mp h2
+          simpa [tsubst_t, hzx] using
+            GtT_value_name (G1 ++ G2) z T (bound_append_right hu2 hg2)
+  | t_Lam y body ih =>
+    intro G1 T hu h
+    cases h with
+    | GtT_lambda _ _ _ A C hbody =>
+      by_cases hxy : x = y
+      · subst hxy
+        have hdrop : GtT (((x,A) :: G1) ++ G2) body C :=
+          drop_shadowed body ((x,A) :: G1) C ⟨A, (bound_cons_eq).mpr rfl⟩ hbody
+        simpa [tsubst_t] using GtT_lambda (G1 ++ G2) x body A C hdrop
+      · have hih := ih ((y,A) :: G1) C (unbound_cons hxy hu) hbody
+        simpa [tsubst_t, hxy] using GtT_lambda (G1 ++ G2) y (tsubst_t v x body) A C hih
+  | t_App t1 t2 ih1 ih2 =>
+    intro G1 T hu h
+    cases h with
+    | GtT_apply _ _ _ _ T1' h1 h2 =>
+      simpa [tsubst_t] using
+        GtT_apply (G1 ++ G2) [[{v/x}t1]] [[{v/x}t2]] T T1'
+          (ih1 G1 _ hu h1) (ih2 G1 _ hu h2)
+
+/-- Substituting a closed term of the right type for the variable at the head
+    of the context preserves typing.  Typing in the empty context is what
+    stands in for capture-avoidance: a closed term has nothing to capture. -/
+theorem substitution {G : TypEnv} {x : termvar} {v t : Term} {T1 T : Typ} :
+    [[G,x:T1 |- t:T]] → [[empty |- v : T1]] →
+    [[G |- {v/x}t : T]] :=
+  fun ht hv => subst_gen hv t [] T unbound_nil ht
+
+/-! ## Preservation -/
+
+/-- Reduction preserves typing, for closed terms.  `reduce` substitutes only
+    values, and a value appearing in a closed term is closed, so the
+    substitution lemma above applies at every use. -/
+theorem preservation {t t' : Term} {T : Typ} :
+    [[ empty |- t:T ]] → [[t --> t']] → [[ empty |- t':T]] := by
+  intro ht hr
+  induction hr generalizing T with
+  | ax_app x t12 v2 hv =>
+    cases ht with
+    | GtT_apply _ _ _ _ T1 hfun harg =>
+      cases hfun with
+      | GtT_lambda _ _ _ A B hbody => exact substitution hbody harg
+  | ctx_app_fun t1 t2 t1' _ ih =>
+    cases ht with
+    | GtT_apply _ _ _ _ T1 h1 h2 => exact GtT_apply _ _ _ _ _ (ih h1) h2
+  | ctx_app_arg v5 t1 t1' _ _ ih =>
+    cases ht with
+    | GtT_apply _ _ _ _ T1 h1 h2 => exact GtT_apply _ _ _ _ _ h1 (ih h2)
+
+/-- Reduction preserves closedness. -/
+theorem reduce_closed {t t' : Term} : Closed t → [[t --> t']] → Closed t' := by
+  intro hc hr
+  revert hc
+  induction hr with
+  | ax_app x t12 v2 hv =>
+    intro hc
+    simp [Closed, fv_t] at hc
+    obtain ⟨hlam, hv2⟩ := hc
+    refine List.eq_nil_iff_forall_not_mem.mpr ?_
+    intro z hz
+    rcases fv_tsubst t12 z hz with h | ⟨hb, hzx⟩
+    · rw [hv2] at h; exact absurd h (by simp)
+    · have hm : z ∈ list_minus (fv_t t12) [x] := (mem_list_minus).mpr ⟨hb, hzx⟩
+      rw [hlam] at hm; exact absurd hm (by simp)
+  | ctx_app_fun t1 t2 t1' _ ih =>
+    intro hc
+    simp [Closed, fv_t] at hc ⊢
+    exact ⟨by have := ih (by simp [Closed, hc.1]); simpa [Closed] using this, hc.2⟩
+  | ctx_app_arg v5 t1 t1' _ _ ih =>
+    intro hc
+    simp [Closed, fv_t] at hc ⊢
+    exact ⟨hc.1, by have := ih (by simp [Closed, hc.2]); simpa [Closed] using this⟩
+
+/-! ## Progress -/
+
+/-- A closed well-typed term is either a value or reduces.  The empty context
+    is what rules out `t_Var`: `bound x T []` unfolds to `False`. -/
+theorem progress {t : Term} {T : Typ} :
+    [[ empty |- t:T]] → IsValue t ∨ ∃ t', [[t --> t']] := by
+  revert T
+  induction t with
+  | t_Var z =>
+    intro T h
+    cases h with
+    | GtT_value_name _ _ _ hb => exact absurd hb bound_nil
+  | t_Lam y body _ =>
+    intro T _
+    exact Or.inl (by simp [IsValue, is_v_of_t])
+  | t_App t1 t2 ih1 ih2 =>
+    intro T h
+    cases h with
+    | GtT_apply _ _ _ _ T1 h1 h2 =>
+      rcases ih1 h1 with hv1 | ⟨t1', hr1⟩
+      · rcases ih2 h2 with hv2 | ⟨t2', hr2⟩
+        · obtain ⟨x, body, rfl⟩ := (isValue_iff_lam).mp hv1
+          exact Or.inr ⟨tsubst_t t2 x body, reduce.ax_app x body t2 hv2⟩
+        · exact Or.inr ⟨[[t1 t2']], reduce.ctx_app_arg t1 t2 t2' hv1 hr2⟩
+      · exact Or.inr ⟨[[t1' t2]], reduce.ctx_app_fun t1 t2 t1' hr1⟩
+
+/-! ## Multi-step reduction -/
+
+/-- The reflexive transitive closure of `reduce`. -/
+inductive Reduces : Term → Term → Prop where
+  | refl (t : Term) : Reduces t t
+  | step {t t' t'' : Term} : [[ t --> t' ]] → Reduces t' t'' → Reduces t t''
+
+theorem preservation_multi {t t' : Term} {T : Typ} :
+    [[ empty |- t:T ]] → Reduces t t' → GtT [] t' T := by
+  intro ht hs
+  revert ht
+  induction hs with
+  | refl t => exact id
+  | step h1 _ ih => exact fun ht => ih (preservation ht h1)
+
+/-! ## Safety -/
+
+/-- Type safety: a closed well-typed term never reaches a stuck state - every
+    term it reduces to is either a value or can reduce again. -/
+theorem safety {t t' : Term} {T : Typ} :
+    [[ empty |- t:T ]] → Reduces t t' → IsValue t' ∨ ∃ t'', [[ t' --> t'']] :=
+  fun ht hs => progress (preservation_multi ht hs)
+
+/-- The same, spelled as "no closed well-typed term gets stuck". -/
+def Stuck (t : Term) : Prop := ¬ IsValue t ∧ ¬ ∃ t', reduce t t'
+
+theorem never_stuck {t t' : Term} {T : Typ} :
+    [[ empty |- t:T ]] → Reduces t t' → ¬ Stuck t' := by
+  intro ht hs hstuck
+  rcases safety ht hs with hv | hr
+  · exact hstuck.1 hv
+  · exact hstuck.2 hr
+
+/-! ## Two remarks on the generated definitions
+
+    **Preservation does not hold in a non-empty context.**  `tsubst_t` captures,
+    so with `G = [(y, T)]` the term `(λx. λy. x) y` is well typed and reduces to
+    `λy. y`, which has a different type.  Stating `preservation` for an
+    arbitrary `G` would therefore be false, not merely unproven.  Fixing that is
+    a question about the Ott source - a capture-avoiding substitution, or a
+    locally nameless representation - and not about these statements.  The two
+    examples below check that claim rather than asserting it.
+
+    This is also why `substitution` asks for `empty |- v : T1` rather than
+    `G |- v : T1` together with `Closed v`: what the proof needs is a term with
+    nothing to capture, and typing in the empty context gives that directly,
+    through `weakening`.  `Closed` is kept for `reduce_closed`, which is what
+    says the closedness the results assume is maintained by reduction.
+
+    **The context is a list with first-match lookup.**  `bound` is defined in
+    the `{{ lean }}` embed of tests/test10st.ott by walking the list and
+    stopping at the first matching variable, so `GtT_lambda`, which conses onto
+    the front, shadows rather than requiring freshness.  That is the usual
+    convention and the statements above are stated for it; a weakening lemma,
+    if one is wanted, has to respect the shadowing:
+
+      GtT G t T → GtT ((x, T') :: G) t T   requires x ∉ fv_t t -/
+
+/-! The two facts the remarks above rest on, checked.  They depend on `termvar`
+    being `String`, which is what the `{{ lean String }}` hom on the metavar
+    gives. -/
+
+/-- The empty context binds nothing: this is what rules out `t_Var` in
+    `progress`. -/
+example (x : termvar) (T : Typ) : ¬ bound x T [] := by simp [bound]
+
+/-- Substitution captures: the free `y` of the substituted term is caught by the
+    binder it is substituted under. -/
+example :
+    tsubst_t (t_Var "y") "x" (t_Lam "y" (t_Var "x")) = t_Lam "y" (t_Var "y") := by
+  rfl

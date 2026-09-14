@@ -1,5 +1,5 @@
 
-metavar ident , x ::= {{ isa string }} {{ coq nat }} {{ coq-equality }}  {{ lex alphanum }}
+metavar ident , x ::= {{ lean Nat }} {{ isa string }} {{ coq nat }} {{ coq-equality }}  {{ lex alphanum }}
 
 grammar
   exp , e :: Exp_ ::= 
@@ -11,8 +11,8 @@ grammar
 %       | exp0 exp1 exp1        ::   :: sdlfkj
 %       | Foo val               ::   :: foo
         | let pat = exp in exp' ::   :: let  (+ bind bo(pat) in exp' +)
-        | '{' exp / x '}' exp'  :: M :: subst  {{ isa subst [[exp]] [[x]] [[exp']] }}
-        | s exp                 :: M :: msubst {{ isa msubst [[s]] [[exp]] }}
+        | '{' exp / x '}' exp'  :: M :: subst  {{ isa subst [[exp]] [[x]] [[exp']] }} {{ lean subst [[exp]] [[x]] [[exp']] }}
+        | s exp                 :: M :: msubst {{ isa msubst [[s]] [[exp]] }} {{ lean msubst [[s]] [[exp]] }}
         | ( exp )               :: M :: paren
 %       | C . e                 :: M :: context
 

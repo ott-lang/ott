@@ -1,0 +1,436 @@
+Running Draft ...
+
+Output (line 12 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  typerep_T_pre_T :: "'a T_pre_T itself ⇒ typerep"
+
+Output (line 12 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  typerep_T_IITN_T :: "T.T_IITN_T itself ⇒ typerep"
+
+Output (line 12 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  typerep_T :: "T itself ⇒ typerep"
+
+Output (line 12 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  term_of_T :: "T ⇒ term"
+
+Output (line 12 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  partial_term_of_T ::
+    "T itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 12 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  equal_T :: "T ⇒ T ⇒ bool"
+
+Output (line 25 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  typerep_C_pre_C :: "'a C_pre_C itself ⇒ typerep"
+
+Output (line 25 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  typerep_t_pre_t :: "('a, 'b) t_pre_t itself ⇒ typerep"
+
+Output (line 25 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  typerep_C_t_sbdT_C_t :: "C_t.C_t_sbdT_C_t itself ⇒ typerep"
+
+Output (line 25 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  typerep_C_t_IITN_C_t :: "C_t.C_t_IITN_C_t itself ⇒ typerep"
+
+Output (line 25 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  typerep_C :: "C itself ⇒ typerep"
+
+Output (line 25 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  typerep_t :: "t itself ⇒ typerep"
+
+Output (line 25 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  term_of_C :: "C ⇒ term"
+
+Output (line 25 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  partial_term_of_C ::
+    "C itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 25 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  equal_C :: "C ⇒ C ⇒ bool"
+
+Output (line 25 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  term_of_t :: "t ⇒ term"
+
+Output (line 25 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  partial_term_of_t ::
+    "t itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 25 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  equal_t :: "t ⇒ t ⇒ bool"
+
+Output (line 57 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  typerep_labels_IITN_labels :: "labels.labels_IITN_labels itself ⇒ typerep"
+
+Output (line 57 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  typerep_labels :: "labels itself ⇒ typerep"
+
+Output (line 57 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  term_of_labels :: "labels ⇒ term"
+
+Output (line 57 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  partial_term_of_labels ::
+    "labels itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 57 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  equal_labels :: "labels ⇒ labels ⇒ bool"
+
+Output (line 57 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  random_aux_labels ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural ⇒ (labels × (unit ⇒ term)) × natural × natural"
+
+Output (line 57 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  random_labels ::
+    "natural
+     ⇒ natural × natural ⇒ (labels × (unit ⇒ term)) × natural × natural"
+
+Output (line 63 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  list_minus :: "'a list ⇒ 'a list ⇒ 'a list"
+
+Output (line 70 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  typerep_n2m_C_is_v_of_label_t_is_v_of_l_t_list_is_v_of_t_list_is_v_of_t_pre_n2m_C ::
+    "'a is_v_of_label_t_is_v_of_l_t_list_is_v_of_t_list_is_v_of_t.n2m_C_is_v_of_label_t_is_v_of_l_t_list_is_v_of_t_list_is_v_of_t_pre_n2m_C itself
+     ⇒ typerep"
+
+Output (line 70 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  typerep_n2m_t_is_v_of_t_pre_n2m_t ::
+    "('a, 'b, 'c, 'd) is_v_of_t.n2m_t_is_v_of_t_pre_n2m_t itself ⇒ typerep"
+
+Output (line 70 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  is_v_of_label_t :: "char list × t ⇒ bool"
+  is_v_of_l_t_list :: "(char list × t) list ⇒ bool"
+  is_v_of_t_list :: "t list ⇒ bool"
+  is_v_of_t :: "t ⇒ bool"
+
+Output (line 112 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  typerep_n2m_C_fv_C_pre_n2m_C ::
+    "'a fv_C.n2m_C_fv_C_pre_n2m_C itself ⇒ typerep"
+
+Output (line 112 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  typerep_n2m_t_fv_t_pre_n2m_t ::
+    "('a, 'b, 'c, 'd) fv_t.n2m_t_fv_t_pre_n2m_t itself ⇒ typerep"
+
+Output (line 112 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  fv_label_t :: "char list × t ⇒ char list list"
+  fv_label_t_list :: "(char list × t) list ⇒ char list list"
+  fv_t_list :: "t list ⇒ char list list"
+  fv_C_list :: "C list ⇒ char list list"
+  fv_t :: "t ⇒ char list list"
+  fv_C :: "C ⇒ char list list"
+
+Output (line 158 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+consts
+  subst_label_t :: "t ⇒ char list ⇒ char list × t ⇒ char list × t"
+  subst_label_t_list ::
+    "t ⇒ char list ⇒ (char list × t) list ⇒ (char list × t) list"
+  subst_t_list :: "t ⇒ char list ⇒ t list ⇒ t list"
+  subst_C_list :: "t ⇒ char list ⇒ C list ⇒ C list"
+  subst_t :: "t ⇒ char list ⇒ t ⇒ t"
+  subst_C :: "t ⇒ char list ⇒ C ⇒ C"
+
+Output (line 207 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+Proofs for inductive predicate(s) "red"
+
+Output (line 207 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+  Proving monotonicity ...
+
+Output (line 207 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+  Proving the introduction rules ...
+
+Output (line 207 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+  Proving the elimination rules ...
+
+Output (line 207 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+  Proving the induction rule ...
+
+Output (line 207 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+  Proving the simplification rules ...
+
+Output (line 336 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+Proofs for inductive predicate(s) "typing"
+
+Output (line 336 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+  Proving monotonicity ...
+
+Output (line 336 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+  Proving the introduction rules ...
+
+Output (line 336 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+  Proving the elimination rules ...
+
+Output (line 336 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+  Proving the induction rule ...
+
+Output (line 336 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+  Proving the simplification rules ...
+
+Error (line 336 of "Draft/testRegr_sys_sortoffullsimple.thy"):
+*** Proof failed.
+***  1. ⋀x y xa xb xc G t l_x_t_T_list T.
+***        x (?x494 x y xa xb xc G t l_x_t_T_list T)
+***         (?x495 x y xa xb xc G t l_x_t_T_list T)
+***         (?x496 x y xa xb xc G t l_x_t_T_list T) ⟶
+***        y (?x494 x y xa xb xc G t l_x_t_T_list T)
+***         (?x495 x y xa xb xc G t l_x_t_T_list T)
+***         (?x496 x y xa xb xc G t l_x_t_T_list T) ⟹
+***        list_all (λb. b)
+***         (map (λ(l_XXX, x_XXX, t_XXX, T_XXX). x ((x_XXX, T_XXX) # G) t_XXX T)
+***           l_x_t_T_list) ⟶
+***        list_all (λb. b)
+***         (map (λ(l_XXX, x_XXX, t_XXX, T_XXX). y ((x_XXX, T_XXX) # G) t_XXX T)
+***           l_x_t_T_list)
+***  2. ⋀x y xa xb xc G t l_x_t_T_list T.
+***        x ≤ y ⟹
+***        distinct (map (λ(l_XXX, x_XXX, t_XXX, T_XXX). l_XXX) l_x_t_T_list) ⟶
+***        distinct (map (λ(l_XXX, x_XXX, t_XXX, T_XXX). l_XXX) l_x_t_T_list)
+***  3. ⋀x y xa xb xc.
+***        x ≤ y ⟹
+***        (∃G t1 T1 t2 T2.
+***            xa = G ∧
+***            xb = TmPair t1 t2 ∧ xc = TyPair T1 T2 ∧ x G t1 T1 ∧ x G t2 T2) ∨
+***        (∃G t1 T1 T2.
+***            xa = G ∧ xb = TmProj1 t1 ∧ xc = T1 ∧ x G t1 (TyPair T1 T2)) ∨
+***        (∃G t1 T1 T2.
+***            xa = G ∧ xb = TmProj2 t1 ∧ xc = T2 ∧ x G t1 (TyPair T1 T2)) ∨
+***        (∃G t_T_list.
+***            xa = G ∧
+***            xb = TmTuple (map (λ(t_XXX, T_XXX). t_XXX) t_T_list) ∧
+***            xc = TyTuple (map (λ(t_XXX, T_XXX). T_XXX) t_T_list) ∧
+***            list_all (λb. b)
+***             (map (λ(t_XXX, T_XXX). x G t_XXX T_XXX) t_T_list)) ∨
+***        (∃G t1 T_list j.
+***            xa = G ∧
+***            xb = TmProjTp t1 j ∧
+***            xc = T_list ! (j - 1) ∧
+***            x G t1 (TyTuple T_list) ∧ 1 ≤ j ∧ j ≤ length T_list) ∨
+***        (∃G l_t_T_list.
+***            xa = G ∧
+***            xb =
+***            TmRecord
+***             (map (λ(l_XXX, t_XXX, T_XXX). (l_XXX, t_XXX)) l_t_T_list) ∧
+***            xc =
+***            TyRecord
+***             (map (λ(l_XXX, t_XXX, T_XXX). (l_XXX, T_XXX)) l_t_T_list) ∧
+***            list_all (λb. b)
+***             (map (λ(l_XXX, t_XXX, T_XXX). x G t_XXX T_XXX) l_t_T_list) ∧
+***            distinct (map (λ(l_XXX, t_XXX, T_XXX). l_XXX) l_t_T_list)) ∨
+***        (∃G t1 l_T_list j.
+***            xa = G ∧
+***            xb =
+***            TmProj t1 (case l_T_list ! (j - 1) of (l_XXX, T_XXX) ⇒ l_XXX) ∧
+***            xc = (case l_T_list ! (j - 1) of (l_XXX, T_XXX) ⇒ T_XXX) ∧
+***            x G t1 (TyRecord l_T_list)) ∨
+***        (∃G t1 T1.
+***            xa = G ∧ xb = TmFix t1 ∧ xc = T1 ∧ x G t1 (TyArr T1 T1)) ⟶
+***        (∃G t1 T1 t2 T2.
+***            xa = G ∧
+***            xb = TmPair t1 t2 ∧ xc = TyPair T1 T2 ∧ y G t1 T1 ∧ y G t2 T2) ∨
+***        (∃G t1 T1 T2.
+***            xa = G ∧ xb = TmProj1 t1 ∧ xc = T1 ∧ y G t1 (TyPair T1 T2)) ∨
+***        (∃G t1 T1 T2.
+***            xa = G ∧ xb = TmProj2 t1 ∧ xc = T2 ∧ y G t1 (TyPair T1 T2)) ∨
+***        (∃G t_T_list.
+***            xa = G ∧
+***            xb = TmTuple (map (λ(t_XXX, T_XXX). t_XXX) t_T_list) ∧
+***            xc = TyTuple (map (λ(t_XXX, T_XXX). T_XXX) t_T_list) ∧
+***            list_all (λb. b)
+***             (map (λ(t_XXX, T_XXX). y G t_XXX T_XXX) t_T_list)) ∨
+***        (∃G t1 T_list j.
+***            xa = G ∧
+***            xb = TmProjTp t1 j ∧
+***            xc = T_list ! (j - 1) ∧
+***            y G t1 (TyTuple T_list) ∧ 1 ≤ j ∧ j ≤ length T_list) ∨
+***        (∃G l_t_T_list.
+***            xa = G ∧
+***            xb =
+***            TmRecord
+***             (map (λ(l_XXX, t_XXX, T_XXX). (l_XXX, t_XXX)) l_t_T_list) ∧
+***            xc =
+***            TyRecord
+***             (map (λ(l_XXX, t_XXX, T_XXX). (l_XXX, T_XXX)) l_t_T_list) ∧
+***            list_all (λb. b)
+***             (map (λ(l_XXX, t_XXX, T_XXX). y G t_XXX T_XXX) l_t_T_list) ∧
+***            distinct (map (λ(l_XXX, t_XXX, T_XXX). l_XXX) l_t_T_list)) ∨
+***        (∃G t1 l_T_list j.
+***            xa = G ∧
+***            xb =
+***            TmProj t1 (case l_T_list ! (j - 1) of (l_XXX, T_XXX) ⇒ l_XXX) ∧
+***            xc = (case l_T_list ! (j - 1) of (l_XXX, T_XXX) ⇒ T_XXX) ∧
+***            y G t1 (TyRecord l_T_list)) ∨
+***        (∃G t1 T1. xa = G ∧ xb = TmFix t1 ∧ xc = T1 ∧ y G t1 (TyArr T1 T1))
+*** The error(s) above occurred for the goal statement (line 336 of "/tmp/isabelle-pes20/private12018894129024049022/Draft/testRegr_sys_sortoffullsimple.thy"):
+*** mono
+***  (λp x1 x2 x3.
+***      (∃G x T.
+***          x1 = G ∧
+***          x2 = TmVar x ∧
+***          x3 = T ∧ (∃G1 G2. G = G1 @ (x, T) # G2 ∧ x ∉ fst ` set G1)) ∨
+***      (∃x T1 G t2 T2.
+***          x1 = G ∧
+***          x2 = TmAbs x T1 t2 ∧ x3 = TyArr T1 T2 ∧ p ((x, T1) # G) t2 T2) ∨
+***      (∃G t1 T11 T12 t2.
+***          x1 = G ∧
+***          x2 = TmApp t1 t2 ∧
+***          x3 = T12 ∧ p G t1 (TyArr T11 T12) ∧ p G t2 T11) ∨
+***      (∃G. x1 = G ∧ x2 = TmTrue ∧ x3 = TyBool) ∨
+***      (∃G. x1 = G ∧ x2 = TmFalse ∧ x3 = TyBool) ∨
+***      (∃G t1 t2 T t3.
+***          x1 = G ∧
+***          x2 = TmIf t1 t2 t3 ∧
+***          x3 = T ∧ p G t1 TyBool ∧ p G t2 T ∧ p G t3 T) ∨
+***      (∃G. x1 = G ∧ x2 = TmZero ∧ x3 = TyNat) ∨
+***      (∃G t1. x1 = G ∧ x2 = TmSucc t1 ∧ x3 = TyNat ∧ p G t1 TyNat) ∨
+***      (∃G t1. x1 = G ∧ x2 = TmPred t1 ∧ x3 = TyNat ∧ p G t1 TyNat) ∨
+***      (∃G t1. x1 = G ∧ x2 = TmIszero t1 ∧ x3 = TyBool ∧ p G t1 TyNat) ∨
+***      (∃G. x1 = G ∧ x2 = TmUnit ∧ x3 = TyUnit) ∨
+***      (∃G t1 t2 T2.
+***          x1 = G ∧ x2 = TmSeq t1 t2 ∧ x3 = T2 ∧ p G t1 TyUnit ∧ p G t2 T2) ∨
+***      (∃G t1 T. x1 = G ∧ x2 = TmAscribe t1 T ∧ x3 = T ∧ p G t1 T) ∨
+***      (∃G T. x1 = G ∧ x2 = TmInert T ∧ x3 = T) ∨
+***      (∃G t1 T1 x t2 T2.
+***          x1 = G ∧
+***          x2 = TmLet x t1 t2 ∧ x3 = T2 ∧ p G t1 T1 ∧ p ((x, T1) # G) t2 T2) ∨
+***      (∃G t1 T1 T2. x1 = G ∧ x2 = TmInl t1 ∧ x3 = TySum T1 T2 ∧ p G t1 T1) ∨
+***      (∃G t1 T2 T1. x1 = G ∧ x2 = TmInr t1 ∧ x3 = TySum T1 T2 ∧ p G t1 T2) ∨
+***      (∃G t0 T1 T2 x1a t1 T x2a t2.
+***          x1 = G ∧
+***          x2 = TmCaseSm t0 x1a t1 x2a t2 ∧
+***          x3 = T ∧
+***          p G t0 (TySum T1 T2) ∧
+***          p ((x1a, T1) # G) t1 T ∧ p ((x2a, T2) # G) t2 T) ∨
+***      (∃G t l_T_list j.
+***          x1 = G ∧
+***          x2 =
+***          TmVariant (case l_T_list ! (j - 1) of (l_XXX, T_XXX) ⇒ l_XXX) t
+***           (TyVariant l_T_list) ∧
+***          x3 = TyVariant l_T_list ∧
+***          p G t (case l_T_list ! (j - 1) of (l_XXX, T_XXX) ⇒ T_XXX) ∧
+***          1 ≤ j ∧ j ≤ length (map (λ(l_XXX, T_XXX). T_XXX) l_T_list)) ∨
+***      (∃G t l_x_t_T_list T.
+***          x1 = G ∧
+***          x2 =
+***          TmCase t
+***           (map (λ(l_XXX, x_XXX, t_XXX, T_XXX). CCase l_XXX x_XXX t_XXX)
+***             l_x_t_T_list) ∧
+***          x3 = T ∧
+***          p G t
+***           (TyVariant
+***             (map (λ(l_XXX, x_XXX, t_XXX, T_XXX). (l_XXX, T_XXX))
+***               l_x_t_T_list)) ∧
+***          list_all (λb. b)
+***           (map (λ(l_XXX, x_XXX, t_XXX, T_XXX).
+***                    p ((x_XXX, T_XXX) # G) t_XXX T)
+***             l_x_t_T_list) ∧
+***          distinct
+***           (map (λ(l_XXX, x_XXX, t_XXX, T_XXX). l_XXX) l_x_t_T_list)) ∨
+***      (∃G t1 T1 t2 T2.
+***          x1 = G ∧
+***          x2 = TmPair t1 t2 ∧ x3 = TyPair T1 T2 ∧ p G t1 T1 ∧ p G t2 T2) ∨
+***      (∃G t1 T1 T2.
+***          x1 = G ∧ x2 = TmProj1 t1 ∧ x3 = T1 ∧ p G t1 (TyPair T1 T2)) ∨
+***      (∃G t1 T1 T2.
+***          x1 = G ∧ x2 = TmProj2 t1 ∧ x3 = T2 ∧ p G t1 (TyPair T1 T2)) ∨
+***      (∃G t_T_list.
+***          x1 = G ∧
+***          x2 = TmTuple (map (λ(t_XXX, T_XXX). t_XXX) t_T_list) ∧
+***          x3 = TyTuple (map (λ(t_XXX, T_XXX). T_XXX) t_T_list) ∧
+***          list_all (λb. b)
+***           (map (λ(t_XXX, T_XXX). p G t_XXX T_XXX) t_T_list)) ∨
+***      (∃G t1 T_list j.
+***          x1 = G ∧
+***          x2 = TmProjTp t1 j ∧
+***          x3 = T_list ! (j - 1) ∧
+***          p G t1 (TyTuple T_list) ∧ 1 ≤ j ∧ j ≤ length T_list) ∨
+***      (∃G l_t_T_list.
+***          x1 = G ∧
+***          x2 =
+***          TmRecord
+***           (map (λ(l_XXX, t_XXX, T_XXX). (l_XXX, t_XXX)) l_t_T_list) ∧
+***          x3 =
+***          TyRecord
+***           (map (λ(l_XXX, t_XXX, T_XXX). (l_XXX, T_XXX)) l_t_T_list) ∧
+***          list_all (λb. b)
+***           (map (λ(l_XXX, t_XXX, T_XXX). p G t_XXX T_XXX) l_t_T_list) ∧
+***          distinct (map (λ(l_XXX, t_XXX, T_XXX). l_XXX) l_t_T_list)) ∨
+***      (∃G t1 l_T_list j.
+***          x1 = G ∧
+***          x2 =
+***          TmProj t1 (case l_T_list ! (j - 1) of (l_XXX, T_XXX) ⇒ l_XXX) ∧
+***          x3 = (case l_T_list ! (j - 1) of (l_XXX, T_XXX) ⇒ T_XXX) ∧
+***          p G t1 (TyRecord l_T_list)) ∨
+***      (∃G t1 T1. x1 = G ∧ x2 = TmFix t1 ∧ x3 = T1 ∧ p G t1 (TyArr T1 T1)))
+Draft FAILED (see also "isabelle build_log -H Error Draft")
+...
+***                    p ((x_XXX, T_XXX) # G) t_XXX T)
+***             l_x_t_T_list) ∧
+***          distinct
+***           (map (λ(l_XXX, x_XXX, t_XXX, T_XXX). l_XXX) l_x_t_T_list)) ∨
+***      (∃G t1 T1 t2 T2.
+***          x1 = G ∧
+***          x2 = TmPair t1 t2 ∧ x3 = TyPair T1 T2 ∧ p G t1 T1 ∧ p G t2 T2) ∨
+***      (∃G t1 T1 T2.
+***          x1 = G ∧ x2 = TmProj1 t1 ∧ x3 = T1 ∧ p G t1 (TyPair T1 T2)) ∨
+***      (∃G t1 T1 T2.
+***          x1 = G ∧ x2 = TmProj2 t1 ∧ x3 = T2 ∧ p G t1 (TyPair T1 T2)) ∨
+***      (∃G t_T_list.
+***          x1 = G ∧
+***          x2 = TmTuple (map (λ(t_XXX, T_XXX). t_XXX) t_T_list) ∧
+***          x3 = TyTuple (map (λ(t_XXX, T_XXX). T_XXX) t_T_list) ∧
+***          list_all (λb. b)
+***           (map (λ(t_XXX, T_XXX). p G t_XXX T_XXX) t_T_list)) ∨
+***      (∃G t1 T_list j.
+***          x1 = G ∧
+***          x2 = TmProjTp t1 j ∧
+***          x3 = T_list ! (j - 1) ∧
+***          p G t1 (TyTuple T_list) ∧ 1 ≤ j ∧ j ≤ length T_list) ∨
+***      (∃G l_t_T_list.
+***          x1 = G ∧
+***          x2 =
+***          TmRecord
+***           (map (λ(l_XXX, t_XXX, T_XXX). (l_XXX, t_XXX)) l_t_T_list) ∧
+***          x3 =
+***          TyRecord
+***           (map (λ(l_XXX, t_XXX, T_XXX). (l_XXX, T_XXX)) l_t_T_list) ∧
+***          list_all (λb. b)
+***           (map (λ(l_XXX, t_XXX, T_XXX). p G t_XXX T_XXX) l_t_T_list) ∧
+***          distinct (map (λ(l_XXX, t_XXX, T_XXX). l_XXX) l_t_T_list)) ∨
+***      (∃G t1 l_T_list j.
+***          x1 = G ∧
+***          x2 =
+***          TmProj t1 (case l_T_list ! (j - 1) of (l_XXX, T_XXX) ⇒ l_XXX) ∧
+***          x3 = (case l_T_list ! (j - 1) of (l_XXX, T_XXX) ⇒ T_XXX) ∧
+***          p G t1 (TyRecord l_T_list)) ∨
+***      (∃G t1 T1. x1 = G ∧ x2 = TmFix t1 ∧ x3 = T1 ∧ p G t1 (TyArr T1 T1)))
+Unfinished session(s): Draft

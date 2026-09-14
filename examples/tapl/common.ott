@@ -13,7 +13,7 @@ Require Import Ott.ott_list. (* for [all_distinct] *)
 
 grammar
 t :: Tm ::=                                       {{ com terms: }}
-  | ( t )                         :: M :: Paren     {{ ich [[t]] }}
+  | ( t )                         :: M :: Paren     {{ ich [[t]] }} {{ lean [[t]] }}
 
 terminals :: terminals_ ::=
   | -->                        ::   :: longrightarrow {{ tex \longrightarrow }}

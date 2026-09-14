@@ -1,0 +1,664 @@
+testRegr_leroy_jfp96.lean:117:17: warning: Variable name `T5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _T5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:119:16: warning: Variable name `s5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _s5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:120:16: warning: Variable name `M5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _M5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:126:16: warning: Variable name `T5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _T5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:127:16: warning: Variable name `S5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _S5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:128:16: warning: Variable name `T5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _T5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:141:17: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  Decidable (xi = ti5)
+
+Hint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.
+testRegr_leroy_jfp96.lean:147:23: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  DecidableEq ident
+
+Hint: Adding the command `deriving instance DecidableEq for ident` may allow Lean to derive the missing instance.
+testRegr_leroy_jfp96.lean:175:53: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  BEq ident
+
+Hint: Adding the command `deriving instance BEq for ident` may allow Lean to derive the missing instance.
+testRegr_leroy_jfp96.lean:179:63: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  BEq ident
+
+Hint: Adding the command `deriving instance BEq for ident` may allow Lean to derive the missing instance.
+testRegr_leroy_jfp96.lean:186:102: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  BEq ident
+
+Hint: Adding the command `deriving instance BEq for ident` may allow Lean to derive the missing instance.
+testRegr_leroy_jfp96.lean:196:92: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  BEq ident
+
+Hint: Adding the command `deriving instance BEq for ident` may allow Lean to derive the missing instance.
+testRegr_leroy_jfp96.lean:204:55: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  BEq ident
+
+Hint: Adding the command `deriving instance BEq for ident` may allow Lean to derive the missing instance.
+testRegr_leroy_jfp96.lean:216:53: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  BEq ident
+
+Hint: Adding the command `deriving instance BEq for ident` may allow Lean to derive the missing instance.
+testRegr_leroy_jfp96.lean:221:63: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  BEq ident
+
+Hint: Adding the command `deriving instance BEq for ident` may allow Lean to derive the missing instance.
+testRegr_leroy_jfp96.lean:229:17: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  Decidable (vi = ti5)
+
+Hint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.
+testRegr_leroy_jfp96.lean:231:37: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  BEq ident
+
+Hint: Adding the command `deriving instance BEq for ident` may allow Lean to derive the missing instance.
+testRegr_leroy_jfp96.lean:243:53: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  BEq ident
+
+Hint: Adding the command `deriving instance BEq for ident` may allow Lean to derive the missing instance.
+testRegr_leroy_jfp96.lean:248:45: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  BEq ident
+
+Hint: Adding the command `deriving instance BEq for ident` may allow Lean to derive the missing instance.
+testRegr_leroy_jfp96.lean:263:92: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  BEq ident
+
+Hint: Adding the command `deriving instance BEq for ident` may allow Lean to derive the missing instance.
+testRegr_leroy_jfp96.lean:268:102: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  BEq ident
+
+Hint: Adding the command `deriving instance BEq for ident` may allow Lean to derive the missing instance.
+testRegr_leroy_jfp96.lean:275:94: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  BEq ident
+
+Hint: Adding the command `deriving instance BEq for ident` may allow Lean to derive the missing instance.
+testRegr_leroy_jfp96.lean:314:9: warning: Variable name `vi` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _vi
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:315:11: warning: Variable name `p5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _p5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:315:14: warning: Variable name `v` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _v
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:316:9: warning: Variable name `vi` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _vi
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:316:12: warning: Variable name `T5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _T5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:316:15: warning: Variable name `M5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _M5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:317:10: warning: Variable name `M1` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _M1
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:317:13: warning: Variable name `M2` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _M2
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:318:12: warning: Variable name `d5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _d5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:318:15: warning: Variable name `M5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _M5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:328:10: warning: Variable name `p5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _p5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:330:13: warning: Variable name `xi` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _xi
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:330:16: warning: Variable name `S5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _S5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:330:19: warning: Variable name `s5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _s5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:331:13: warning: Variable name `s5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _s5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:331:16: warning: Variable name `p5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _p5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:332:10: warning: Variable name `s5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _s5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:332:13: warning: Variable name `S5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _S5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:335:14: warning: Variable name `ti` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _ti
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:335:17: warning: Variable name `T5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _T5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:336:11: warning: Variable name `ti` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _ti
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:337:13: warning: Variable name `xi` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _xi
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:338:13: warning: Variable name `vi` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _vi
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_leroy_jfp96.lean:348:38: error: Application type mismatch: The argument
+  E1
+has type
+  E
+but is expected to have type
+  List C
+in the application
+  Modspec xi S5 :: E1
+testRegr_leroy_jfp96.lean:348:13: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  HAppend E (List C) ?m.5
+
+Hint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.
+testRegr_leroy_jfp96.lean:348:52: error: Function expected at
+  Sstrengthen
+but this term has type
+  ?m.1
+
+Note: Expected a function because this term is being applied to the argument
+  S5
+
+Hint: The identifier `Sstrengthen` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:351:28: error: Function expected at
+  D_append
+but this term has type
+  ?m.11
+
+Note: Expected a function because this term is being applied to the argument
+  D1
+
+Hint: The identifier `D_append` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:352:39: error: Function expected at
+  build_msubst_D
+but this term has type
+  ?m.12
+
+Note: Expected a function because this term is being applied to the argument
+  p5
+
+Hint: The identifier `build_msubst_D` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:361:36: error: Application type mismatch: The argument
+  E1
+has type
+  E
+but is expected to have type
+  List C
+in the application
+  Otyspec ti :: E1
+testRegr_leroy_jfp96.lean:361:14: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  HAppend E (List C) ?m.4
+
+Hint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.
+testRegr_leroy_jfp96.lean:364:39: error: Application type mismatch: The argument
+  E1
+has type
+  E
+but is expected to have type
+  List C
+in the application
+  Mtyspec ti T5 :: E1
+testRegr_leroy_jfp96.lean:364:14: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  HAppend E (List C) ?m.9
+
+Hint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.
+testRegr_leroy_jfp96.lean:367:7: error: Function expected at
+  pathE
+but this term has type
+  ?m.11
+
+Note: Expected a function because this term is being applied to the argument
+  E5
+
+Hint: The identifier `pathE` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:371:7: error: Function expected at
+  pathE
+but this term has type
+  ?m.16
+
+Note: Expected a function because this term is being applied to the argument
+  E5
+
+Hint: The identifier `pathE` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:390:7: error: Function expected at
+  WFtype
+but this term has type
+  ?m.1
+
+Note: Expected a function because this term is being applied to the argument
+  E5
+
+Hint: The identifier `WFtype` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:404:7: error: Function expected at
+  WFtype
+but this term has type
+  ?m.6
+
+Note: Expected a function because this term is being applied to the argument
+  E5
+
+Hint: The identifier `WFtype` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:429:36: error: Application type mismatch: The argument
+  E1
+has type
+  E
+but is expected to have type
+  List C
+in the application
+  Mtyspec ti T5 :: E1
+testRegr_leroy_jfp96.lean:429:11: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  HAppend E (List C) ?m.4
+
+Hint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.
+testRegr_leroy_jfp96.lean:432:7: error: Function expected at
+  pathE
+but this term has type
+  ?m.6
+
+Note: Expected a function because this term is being applied to the argument
+  E5
+
+Hint: The identifier `pathE` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:433:38: error: Function expected at
+  build_msubst_D
+but this term has type
+  ?m.7
+
+Note: Expected a function because this term is being applied to the argument
+  p5
+
+Hint: The identifier `build_msubst_D` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:493:7: error: Function expected at
+  eqT
+but this term has type
+  ?m.1
+
+Note: Expected a function because this term is being applied to the argument
+  E5
+
+Hint: The identifier `eqT` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:501:7: error: Function expected at
+  eqT
+but this term has type
+  ?m.6
+
+Note: Expected a function because this term is being applied to the argument
+  E5
+
+Hint: The identifier `eqT` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:514:7: error: Function expected at
+  pathE
+but this term has type
+  ?m.1
+
+Note: Expected a function because this term is being applied to the argument
+  E5
+
+Hint: The identifier `pathE` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:518:7: error: Function expected at
+  WFsig
+but this term has type
+  ?m.6
+
+Note: Expected a function because this term is being applied to the argument
+  E5
+
+Hint: The identifier `WFsig` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:519:7: error: Function expected at
+  formula_notinBV
+but this term has type
+  ?m.7
+
+Note: Expected a function because this term is being applied to the argument
+  xi
+
+Hint: The identifier `formula_notinBV` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:525:7: error: Function expected at
+  pathE
+but this term has type
+  ?m.16
+
+Note: Expected a function because this term is being applied to the argument
+  E5
+
+Hint: The identifier `pathE` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:526:7: error: Function expected at
+  subS
+but this term has type
+  ?m.17
+
+Note: Expected a function because this term is being applied to the argument
+  E5
+
+Hint: The identifier `subS` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:534:7: error: Function expected at
+  WFsig
+but this term has type
+  ?m.26
+
+Note: Expected a function because this term is being applied to the argument
+  E5
+
+Hint: The identifier `WFsig` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:536:7: error: Function expected at
+  subS
+but this term has type
+  ?m.27
+
+Note: Expected a function because this term is being applied to the argument
+  E5
+
+Hint: The identifier `subS` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:543:7: error: Function expected at
+  WFtype
+but this term has type
+  ?m.36
+
+Note: Expected a function because this term is being applied to the argument
+  E5
+
+Hint: The identifier `WFtype` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:544:7: error: Function expected at
+  formula_notinBV
+but this term has type
+  ?m.37
+
+Note: Expected a function because this term is being applied to the argument
+  ti
+
+Hint: The identifier `formula_notinBV` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:548:7: error: Function expected at
+  formula_notinBV
+but this term has type
+  ?m.46
+
+Note: Expected a function because this term is being applied to the argument
+  ti
+
+Hint: The identifier `formula_notinBV` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:553:7: error: Function expected at
+  formula_notinBV
+but this term has type
+  ?m.51
+
+Note: Expected a function because this term is being applied to the argument
+  xi
+
+Hint: The identifier `formula_notinBV` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:558:7: error: Function expected at
+  formula_notinBV
+but this term has type
+  ?m.56
+
+Note: Expected a function because this term is being applied to the argument
+  vi
+
+Hint: The identifier `formula_notinBV` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:576:38: error: Application type mismatch: The argument
+  E1
+has type
+  E
+but is expected to have type
+  List C
+in the application
+  Valspec vi T5 :: E1
+testRegr_leroy_jfp96.lean:576:13: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  HAppend E (List C) ?m.64
+
+Hint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.
+testRegr_leroy_jfp96.lean:579:7: error: Function expected at
+  pathE
+but this term has type
+  ?m.66
+
+Note: Expected a function because this term is being applied to the argument
+  E5
+
+Hint: The identifier `pathE` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:580:39: error: Function expected at
+  build_msubst_D
+but this term has type
+  ?m.67
+
+Note: Expected a function because this term is being applied to the argument
+  p5
+
+Hint: The identifier `build_msubst_D` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:583:7: error: Function expected at
+  formula_notinBV
+but this term has type
+  ?m.76
+
+Note: Expected a function because this term is being applied to the argument
+  vi
+
+Hint: The identifier `formula_notinBV` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:584:7: error: Function expected at
+  WFtype
+but this term has type
+  ?m.77
+
+Note: Expected a function because this term is being applied to the argument
+  E5
+
+Hint: The identifier `WFtype` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:595:14: error: Function expected at
+  REVERSE
+but this term has type
+  ?m.86
+
+Note: Expected a function because this term is being applied to the argument
+  (D_to_list D5)
+
+Hint: The identifier `REVERSE` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:596:7: error: Function expected at
+  eqT
+but this term has type
+  ?m.87
+
+Note: Expected a function because this term is being applied to the argument
+  (REVERSE (D_to_list D5) ++ E5)
+
+Hint: The identifier `eqT` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:597:7: error: Function expected at
+  WFtype
+but this term has type
+  ?m.88
+
+Note: Expected a function because this term is being applied to the argument
+  E5
+
+Hint: The identifier `WFtype` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:609:46: error: Application type mismatch: The argument
+  delta1
+has type
+  delta
+but is expected to have type
+  List c
+in the application
+  Strbind xi s5 :: delta1
+testRegr_leroy_jfp96.lean:609:17: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  HAppend delta (List c) ?m.5
+
+Hint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.
+testRegr_leroy_jfp96.lean:609:64: error: Function expected at
+  sstrengthen
+but this term has type
+  ?m.1
+
+Note: Expected a function because this term is being applied to the argument
+  s5
+
+Hint: The identifier `sstrengthen` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:612:36: error: Function expected at
+  d_append
+but this term has type
+  ?m.11
+
+Note: Expected a function because this term is being applied to the argument
+  d1
+
+Hint: The identifier `d_append` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:613:47: error: Function expected at
+  build_msubst_d
+but this term has type
+  ?m.12
+
+Note: Expected a function because this term is being applied to the argument
+  p5
+
+Hint: The identifier `build_msubst_d` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:624:41: error: Application type mismatch: The argument
+  delta1
+has type
+  delta
+but is expected to have type
+  List c
+in the application
+  Valbind vi V5 :: delta1
+testRegr_leroy_jfp96.lean:624:12: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  HAppend delta (List c) ?m.5
+
+Hint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.
+testRegr_leroy_jfp96.lean:630:7: error: Function expected at
+  pathDelta
+but this term has type
+  ?m.7
+
+Note: Expected a function because this term is being applied to the argument
+  delta5
+
+Hint: The identifier `pathDelta` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:631:42: error: Function expected at
+  build_msubst_d
+but this term has type
+  ?m.8
+
+Note: Expected a function because this term is being applied to the argument
+  p5
+
+Hint: The identifier `build_msubst_d` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:657:13: error: Function expected at
+  REVERSE
+but this term has type
+  ?m.24
+
+Note: Expected a function because this term is being applied to the argument
+  (d_to_list dV5)
+
+Hint: The identifier `REVERSE` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:688:7: error: Function expected at
+  pathDelta
+but this term has type
+  ?m.37
+
+Note: Expected a function because this term is being applied to the argument
+  delta5
+
+Hint: The identifier `pathDelta` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_leroy_jfp96.lean:718:7: error: Function expected at
+  type_c
+but this term has type
+  ?m.1
+
+Note: Expected a function because this term is being applied to the argument
+  E5
+
+Hint: The identifier `type_c` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.

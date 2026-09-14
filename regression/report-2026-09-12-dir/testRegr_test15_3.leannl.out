@@ -1,0 +1,11 @@
+testRegr_test15_3.lean:10:4: error: Constructor field `b` of `a.a_b` contains universe level metavariables at the expression
+  Sort ?u.9
+in its type
+  Sort ?u.9
+testRegr_test15_3.lean:14:0: error: unexpected token 'where'; expected command
+testRegr_test15_3.lean:19:10: error: unexpected identifier; expected 'instance'
+testRegr_test15_3.lean:20:5: error: unknown namespace `a`
+testRegr_test15_3.lean:27:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+testRegr_test15_3.lean:32:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+testRegr_test15_3.lean:39:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+testRegr_test15_3.lean:44:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`

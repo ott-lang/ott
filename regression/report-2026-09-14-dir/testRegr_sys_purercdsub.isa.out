@@ -1,0 +1,370 @@
+Running Draft ...
+
+Output (line 11 of "Draft/testRegr_sys_purercdsub.thy"):
+consts
+  typerep_T_pre_T :: "'a T_pre_T itself ⇒ typerep"
+
+Output (line 11 of "Draft/testRegr_sys_purercdsub.thy"):
+consts
+  typerep_T_IITN_T :: "T.T_IITN_T itself ⇒ typerep"
+
+Output (line 11 of "Draft/testRegr_sys_purercdsub.thy"):
+consts
+  typerep_T :: "T itself ⇒ typerep"
+
+Output (line 11 of "Draft/testRegr_sys_purercdsub.thy"):
+consts
+  term_of_T :: "T ⇒ term"
+
+Output (line 11 of "Draft/testRegr_sys_purercdsub.thy"):
+consts
+  partial_term_of_T ::
+    "T itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 11 of "Draft/testRegr_sys_purercdsub.thy"):
+consts
+  equal_T :: "T ⇒ T ⇒ bool"
+
+Output (line 17 of "Draft/testRegr_sys_purercdsub.thy"):
+consts
+  typerep_t_pre_t :: "'a t_pre_t itself ⇒ typerep"
+
+Output (line 17 of "Draft/testRegr_sys_purercdsub.thy"):
+consts
+  typerep_t_IITN_t :: "t.t_IITN_t itself ⇒ typerep"
+
+Output (line 17 of "Draft/testRegr_sys_purercdsub.thy"):
+consts
+  typerep_t :: "t itself ⇒ typerep"
+
+Output (line 17 of "Draft/testRegr_sys_purercdsub.thy"):
+consts
+  term_of_t :: "t ⇒ term"
+
+Output (line 17 of "Draft/testRegr_sys_purercdsub.thy"):
+consts
+  partial_term_of_t ::
+    "t itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 17 of "Draft/testRegr_sys_purercdsub.thy"):
+consts
+  equal_t :: "t ⇒ t ⇒ bool"
+
+Output (line 24 of "Draft/testRegr_sys_purercdsub.thy"):
+consts
+  typerep_labels_IITN_labels :: "labels.labels_IITN_labels itself ⇒ typerep"
+
+Output (line 24 of "Draft/testRegr_sys_purercdsub.thy"):
+consts
+  typerep_labels :: "labels itself ⇒ typerep"
+
+Output (line 24 of "Draft/testRegr_sys_purercdsub.thy"):
+consts
+  term_of_labels :: "labels ⇒ term"
+
+Output (line 24 of "Draft/testRegr_sys_purercdsub.thy"):
+consts
+  partial_term_of_labels ::
+    "labels itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 24 of "Draft/testRegr_sys_purercdsub.thy"):
+consts
+  equal_labels :: "labels ⇒ labels ⇒ bool"
+
+Output (line 24 of "Draft/testRegr_sys_purercdsub.thy"):
+consts
+  random_aux_labels ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural ⇒ (labels × (unit ⇒ term)) × natural × natural"
+
+Output (line 24 of "Draft/testRegr_sys_purercdsub.thy"):
+consts
+  random_labels ::
+    "natural
+     ⇒ natural × natural ⇒ (labels × (unit ⇒ term)) × natural × natural"
+
+Output (line 30 of "Draft/testRegr_sys_purercdsub.thy"):
+consts
+  list_minus :: "'a list ⇒ 'a list ⇒ 'a list"
+
+Output (line 37 of "Draft/testRegr_sys_purercdsub.thy"):
+consts
+  typerep_n2m_t_is_v_of_t_pre_n2m_t ::
+    "('a, 'b) is_v_of_t.n2m_t_is_v_of_t_pre_n2m_t itself ⇒ typerep"
+
+Output (line 37 of "Draft/testRegr_sys_purercdsub.thy"):
+consts
+  is_v_of_label_t :: "char list × t ⇒ bool"
+  is_v_of_l_t_list :: "(char list × t) list ⇒ bool"
+  is_v_of_t :: "t ⇒ bool"
+
+Output (line 53 of "Draft/testRegr_sys_purercdsub.thy"):
+consts
+  fv_label_t :: "char list × t ⇒ char list list"
+  fv_label_t_list :: "(char list × t) list ⇒ char list list"
+  fv_t :: "t ⇒ char list list"
+
+Output (line 68 of "Draft/testRegr_sys_purercdsub.thy"):
+consts
+  subst_label_t :: "t ⇒ char list ⇒ char list × t ⇒ char list × t"
+  subst_label_t_list ::
+    "t ⇒ char list ⇒ (char list × t) list ⇒ (char list × t) list"
+  subst_t :: "t ⇒ char list ⇒ t ⇒ t"
+
+Output (line 86 of "Draft/testRegr_sys_purercdsub.thy"):
+Proofs for inductive predicate(s) "red"
+
+Output (line 86 of "Draft/testRegr_sys_purercdsub.thy"):
+  Proving monotonicity ...
+
+Output (line 86 of "Draft/testRegr_sys_purercdsub.thy"):
+  Proving the introduction rules ...
+
+Output (line 86 of "Draft/testRegr_sys_purercdsub.thy"):
+  Proving the elimination rules ...
+
+Output (line 86 of "Draft/testRegr_sys_purercdsub.thy"):
+  Proving the induction rule ...
+
+Output (line 86 of "Draft/testRegr_sys_purercdsub.thy"):
+  Proving the simplification rules ...
+
+Output (line 110 of "Draft/testRegr_sys_purercdsub.thy"):
+Proofs for inductive predicate(s) "typing", "subtyping"
+
+Output (line 110 of "Draft/testRegr_sys_purercdsub.thy"):
+  Proving monotonicity ...
+
+Output (line 110 of "Draft/testRegr_sys_purercdsub.thy"):
+  Proving the introduction rules ...
+
+Output (line 110 of "Draft/testRegr_sys_purercdsub.thy"):
+  Proving the elimination rules ...
+
+Output (line 110 of "Draft/testRegr_sys_purercdsub.thy"):
+  Proving the induction rule ...
+
+Output (line 110 of "Draft/testRegr_sys_purercdsub.thy"):
+  Proving the simplification rules ...
+
+Error (line 110 of "Draft/testRegr_sys_purercdsub.thy"):
+*** Proof failed.
+***  1. ⋀x y xa xb xc xd xe G l_t_T_list.
+***        x (?x163 x y xa xb xc xd xe G l_t_T_list)
+***         (?x164 x y xa xb xc xd xe G l_t_T_list)
+***         (?x165 x y xa xb xc xd xe G l_t_T_list)
+***         (?x166 x y xa xb xc xd xe G l_t_T_list)
+***         (?x167 x y xa xb xc xd xe G l_t_T_list) ⟶
+***        y (?x163 x y xa xb xc xd xe G l_t_T_list)
+***         (?x164 x y xa xb xc xd xe G l_t_T_list)
+***         (?x165 x y xa xb xc xd xe G l_t_T_list)
+***         (?x166 x y xa xb xc xd xe G l_t_T_list)
+***         (?x167 x y xa xb xc xd xe G l_t_T_list) ⟹
+***        list_all (λb. b)
+***         (map (λ(l_XXX, t_XXX, T_XXX). x False T_XXX G t_XXX undefined)
+***           l_t_T_list) ⟶
+***        list_all (λb. b)
+***         (map (λ(l_XXX, t_XXX, T_XXX). y False T_XXX G t_XXX undefined)
+***           l_t_T_list)
+***  2. ⋀x y xa xb xc xd xe G l_t_T_list.
+***        x ≤ y ⟹
+***        distinct (map (λ(l_XXX, t_XXX, T_XXX). l_XXX) l_t_T_list) ⟶
+***        distinct (map (λ(l_XXX, t_XXX, T_XXX). l_XXX) l_t_T_list)
+***  3. ⋀x y xa xb xc xd xe.
+***        x ≤ y ⟹
+***        (∃G t1 l_T_list j.
+***            ¬ xa ∧
+***            xc = G ∧
+***            xd =
+***            TmProj t1 (case l_T_list ! (j - 1) of (l_XXX, T_XXX) ⇒ l_XXX) ∧
+***            xb = (case l_T_list ! (j - 1) of (l_XXX, T_XXX) ⇒ T_XXX) ∧
+***            x False (TyRecord l_T_list) G t1 undefined) ∨
+***        (∃S. xa ∧ xb = S ∧ xe = S) ∨
+***        (∃S U T.
+***            xa ∧
+***            xb = S ∧
+***            xe = T ∧
+***            x True S undefined undefined U ∧
+***            x True U undefined undefined T) ∨
+***        (∃T1 S1 S2 T2.
+***            xa ∧
+***            xb = TyArr S1 S2 ∧
+***            xe = TyArr T1 T2 ∧
+***            x True T1 undefined undefined S1 ∧
+***            x True S2 undefined undefined T2) ∨
+***        (∃S. xa ∧ xb = S ∧ xe = TyTop) ∨
+***        (∃l_T_list l'_T'_list.
+***            xa ∧
+***            xb = TyRecord (l_T_list @ l'_T'_list) ∧ xe = TyRecord l_T_list) ∨
+***        (∃l_S_T_list.
+***            xa ∧
+***            xb =
+***            TyRecord
+***             (map (λ(l_XXX, S_XXX, T_XXX). (l_XXX, S_XXX)) l_S_T_list) ∧
+***            xe =
+***            TyRecord
+***             (map (λ(l_XXX, S_XXX, T_XXX). (l_XXX, T_XXX)) l_S_T_list) ∧
+***            list_all (λb. b)
+***             (map (λ(l_XXX, S_XXX, T_XXX).
+***                      x True S_XXX undefined undefined T_XXX)
+***               l_S_T_list)) ∨
+***        (∃TODO k_S_list l_T_list.
+***            xa ∧ xb = TyRecord k_S_list ∧ xe = TyRecord l_T_list ∧ TODO) ⟶
+***        (∃G t1 l_T_list j.
+***            ¬ xa ∧
+***            xc = G ∧
+***            xd =
+***            TmProj t1 (case l_T_list ! (j - 1) of (l_XXX, T_XXX) ⇒ l_XXX) ∧
+***            xb = (case l_T_list ! (j - 1) of (l_XXX, T_XXX) ⇒ T_XXX) ∧
+***            y False (TyRecord l_T_list) G t1 undefined) ∨
+***        (∃S. xa ∧ xb = S ∧ xe = S) ∨
+***        (∃S U T.
+***            xa ∧
+***            xb = S ∧
+***            xe = T ∧
+***            y True S undefined undefined U ∧
+***            y True U undefined undefined T) ∨
+***        (∃T1 S1 S2 T2.
+***            xa ∧
+***            xb = TyArr S1 S2 ∧
+***            xe = TyArr T1 T2 ∧
+***            y True T1 undefined undefined S1 ∧
+***            y True S2 undefined undefined T2) ∨
+***        (∃S. xa ∧ xb = S ∧ xe = TyTop) ∨
+***        (∃l_T_list l'_T'_list.
+***            xa ∧
+***            xb = TyRecord (l_T_list @ l'_T'_list) ∧ xe = TyRecord l_T_list) ∨
+***        (∃l_S_T_list.
+***            xa ∧
+***            xb =
+***            TyRecord
+***             (map (λ(l_XXX, S_XXX, T_XXX). (l_XXX, S_XXX)) l_S_T_list) ∧
+***            xe =
+***            TyRecord
+***             (map (λ(l_XXX, S_XXX, T_XXX). (l_XXX, T_XXX)) l_S_T_list) ∧
+***            list_all (λb. b)
+***             (map (λ(l_XXX, S_XXX, T_XXX).
+***                      y True S_XXX undefined undefined T_XXX)
+***               l_S_T_list)) ∨
+***        (∃TODO k_S_list l_T_list.
+***            xa ∧ xb = TyRecord k_S_list ∧ xe = TyRecord l_T_list ∧ TODO)
+*** The error(s) above occurred for the goal statement (line 110 of "/tmp/isabelle-pes20/private14311777707679745076/Draft/testRegr_sys_purercdsub.thy"):
+*** mono
+***  (λp b x1 x2 x3 x4.
+***      (∃G x T.
+***          ¬ b ∧
+***          x2 = G ∧
+***          x3 = TmVar x ∧
+***          x1 = T ∧ (∃G1 G2. G = G1 @ (x, T) # G2 ∧ x ∉ fst ` set G1)) ∨
+***      (∃x T1 G t2 T2.
+***          ¬ b ∧
+***          x2 = G ∧
+***          x3 = TmAbs x T1 t2 ∧
+***          x1 = TyArr T1 T2 ∧ p False T2 ((x, T1) # G) t2 undefined) ∨
+***      (∃G t1 T11 T12 t2.
+***          ¬ b ∧
+***          x2 = G ∧
+***          x3 = TmApp t1 t2 ∧
+***          x1 = T12 ∧
+***          p False (TyArr T11 T12) G t1 undefined ∧
+***          p False T11 G t2 undefined) ∨
+***      (∃G t S T.
+***          ¬ b ∧
+***          x2 = G ∧
+***          x3 = t ∧
+***          x1 = T ∧
+***          p False S G t undefined ∧ p True S undefined undefined T) ∨
+***      (∃G l_t_T_list.
+***          ¬ b ∧
+***          x2 = G ∧
+***          x3 =
+***          TmRecord
+***           (map (λ(l_XXX, t_XXX, T_XXX). (l_XXX, t_XXX)) l_t_T_list) ∧
+***          x1 =
+***          TyRecord
+***           (map (λ(l_XXX, t_XXX, T_XXX). (l_XXX, T_XXX)) l_t_T_list) ∧
+***          list_all (λb. b)
+***           (map (λ(l_XXX, t_XXX, T_XXX). p False T_XXX G t_XXX undefined)
+***             l_t_T_list) ∧
+***          distinct (map (λ(l_XXX, t_XXX, T_XXX). l_XXX) l_t_T_list)) ∨
+***      (∃G t1 l_T_list j.
+***          ¬ b ∧
+***          x2 = G ∧
+***          x3 =
+***          TmProj t1 (case l_T_list ! (j - 1) of (l_XXX, T_XXX) ⇒ l_XXX) ∧
+***          x1 = (case l_T_list ! (j - 1) of (l_XXX, T_XXX) ⇒ T_XXX) ∧
+***          p False (TyRecord l_T_list) G t1 undefined) ∨
+***      (∃S. b ∧ x1 = S ∧ x4 = S) ∨
+***      (∃S U T.
+***          b ∧
+***          x1 = S ∧
+***          x4 = T ∧
+***          p True S undefined undefined U ∧ p True U undefined undefined T) ∨
+***      (∃T1 S1 S2 T2.
+***          b ∧
+***          x1 = TyArr S1 S2 ∧
+***          x4 = TyArr T1 T2 ∧
+***          p True T1 undefined undefined S1 ∧
+***          p True S2 undefined undefined T2) ∨
+***      (∃S. b ∧ x1 = S ∧ x4 = TyTop) ∨
+***      (∃l_T_list l'_T'_list.
+***          b ∧
+***          x1 = TyRecord (l_T_list @ l'_T'_list) ∧ x4 = TyRecord l_T_list) ∨
+***      (∃l_S_T_list.
+***          b ∧
+***          x1 =
+***          TyRecord
+***           (map (λ(l_XXX, S_XXX, T_XXX). (l_XXX, S_XXX)) l_S_T_list) ∧
+***          x4 =
+***          TyRecord
+***           (map (λ(l_XXX, S_XXX, T_XXX). (l_XXX, T_XXX)) l_S_T_list) ∧
+***          list_all (λb. b)
+***           (map (λ(l_XXX, S_XXX, T_XXX).
+***                    p True S_XXX undefined undefined T_XXX)
+***             l_S_T_list)) ∨
+***      (∃TODO k_S_list l_T_list.
+***          b ∧ x1 = TyRecord k_S_list ∧ x4 = TyRecord l_T_list ∧ TODO))
+Draft FAILED (see also "isabelle build_log -H Error Draft")
+...
+***           (map (λ(l_XXX, t_XXX, T_XXX). p False T_XXX G t_XXX undefined)
+***             l_t_T_list) ∧
+***          distinct (map (λ(l_XXX, t_XXX, T_XXX). l_XXX) l_t_T_list)) ∨
+***      (∃G t1 l_T_list j.
+***          ¬ b ∧
+***          x2 = G ∧
+***          x3 =
+***          TmProj t1 (case l_T_list ! (j - 1) of (l_XXX, T_XXX) ⇒ l_XXX) ∧
+***          x1 = (case l_T_list ! (j - 1) of (l_XXX, T_XXX) ⇒ T_XXX) ∧
+***          p False (TyRecord l_T_list) G t1 undefined) ∨
+***      (∃S. b ∧ x1 = S ∧ x4 = S) ∨
+***      (∃S U T.
+***          b ∧
+***          x1 = S ∧
+***          x4 = T ∧
+***          p True S undefined undefined U ∧ p True U undefined undefined T) ∨
+***      (∃T1 S1 S2 T2.
+***          b ∧
+***          x1 = TyArr S1 S2 ∧
+***          x4 = TyArr T1 T2 ∧
+***          p True T1 undefined undefined S1 ∧
+***          p True S2 undefined undefined T2) ∨
+***      (∃S. b ∧ x1 = S ∧ x4 = TyTop) ∨
+***      (∃l_T_list l'_T'_list.
+***          b ∧
+***          x1 = TyRecord (l_T_list @ l'_T'_list) ∧ x4 = TyRecord l_T_list) ∨
+***      (∃l_S_T_list.
+***          b ∧
+***          x1 =
+***          TyRecord
+***           (map (λ(l_XXX, S_XXX, T_XXX). (l_XXX, S_XXX)) l_S_T_list) ∧
+***          x4 =
+***          TyRecord
+***           (map (λ(l_XXX, S_XXX, T_XXX). (l_XXX, T_XXX)) l_S_T_list) ∧
+***          list_all (λb. b)
+***           (map (λ(l_XXX, S_XXX, T_XXX).
+***                    p True S_XXX undefined undefined T_XXX)
+***             l_S_T_list)) ∨
+***      (∃TODO k_S_list l_T_list.
+***          b ∧ x1 = TyRecord k_S_list ∧ x4 = TyRecord l_T_list ∧ TODO))
+Unfinished session(s): Draft

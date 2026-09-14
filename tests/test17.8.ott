@@ -2,7 +2,7 @@
 
 %metavar x ::= {{ isa string }} 
 
-indexvar index , n , i ::= {{ isa nat }} {{ coq nat }} {{ hol num }}
+indexvar index , n , i ::= {{ lean Nat }} {{ isa nat }} {{ coq nat }} {{ hol num }}
 
   grammar
 
@@ -15,14 +15,14 @@ indexvar index , n , i ::= {{ isa nat }} {{ coq nat }} {{ hol num }}
     t :: 't_' ::=
       | unit               ::   :: unit
       | t0 * .... * tn     ::   :: tuple 
-      | ( t )              :: M :: paren {{ ich [[t]] }} {{ ocaml [[t]] }}
+      | ( t )              :: M :: paren {{ ich [[t]] }} {{ lean [[t]] }} {{ ocaml [[t]] }}
       | t + t2             ::   :: sum
 
 formula :: formula_ ::=          
   | judgement              :: :: judgement
   | formula1 .. formulan   :: :: dots 
 %         {{ isa (List.list_all (\<lambda> b . b) ( [[ formula1 .. formulan ]] ) ) }}
-%         {{ coq (List.fold_left (fun (a b:Prop) => a /\ b) ([[ formula1 .. formulan ]]) True) }}
+%         {{ coq (List.fold_left (fun (a b:Prop) => a /\ b) ([[ formula1 .. formulan ]]) True) }} {{ lean (List.fold_left (fun (a b:Prop) => a /\ b) ([[ formula1 .. formulan ]]) True) }}
 
 terminals :: terminals_ ::=
   | |-                     ::   :: turnstile {{ tex \vdash }}

@@ -1,0 +1,76 @@
+DIGEST 069bd61fcebbe352b28fdee126884549
+FtestRegr_test15_6
+R111:115 Stdlib.Arith.Arith <> <> lib
+R133:136 Stdlib.Bool.Bool <> <> lib
+R154:157 Stdlib.Lists.List <> <> lib
+R175:191 Ott.ott_list_core <> <> lib
+ind 207:207 <> a
+constr 222:226 <> a_AAA
+constr 235:239 <> a_BBB
+constr 248:251 <> a_CC
+constr 260:262 <> a_a
+R230:230 testRegr_test15_6 <> a:1 ind
+R243:243 testRegr_test15_6 <> a:1 ind
+R255:255 testRegr_test15_6 <> a:1 ind
+R268:268 testRegr_test15_6 <> a:1 ind
+binder 265:266 <> a5:3
+scheme 207:207 <> a_rect
+scheme 207:207 <> a_ind
+scheme 207:207 <> a_rec
+scheme 207:207 <> a_sind
+def 300:310 <> is_avv_of_a
+R317:317 testRegr_test15_6 <> a ind
+binder 313:315 <> a_6:4
+R322:325 Corelib.Init.Datatypes <> bool ind
+R338:340 testRegr_test15_6 <> a_6:4 var
+R351:355 testRegr_test15_6 <> a_AAA constr
+R360:364 Corelib.Init.Datatypes <> false constr
+R370:374 testRegr_test15_6 <> a_BBB constr
+R379:383 Corelib.Init.Datatypes <> false constr
+R389:392 testRegr_test15_6 <> a_CC constr
+R397:401 Corelib.Init.Datatypes <> false constr
+R408:410 testRegr_test15_6 <> a_a constr
+R420:423 Corelib.Init.Datatypes <> true constr
+def 443:453 <> is_avB_of_a
+R460:460 testRegr_test15_6 <> a ind
+binder 456:458 <> a_6:6
+R465:468 Corelib.Init.Datatypes <> bool ind
+R481:483 testRegr_test15_6 <> a_6:6 var
+R494:498 testRegr_test15_6 <> a_AAA constr
+R503:507 Corelib.Init.Datatypes <> false constr
+R513:517 testRegr_test15_6 <> a_BBB constr
+R523:526 Corelib.Init.Datatypes <> true constr
+R533:536 testRegr_test15_6 <> a_CC constr
+R542:545 Corelib.Init.Datatypes <> true constr
+R553:555 testRegr_test15_6 <> a_a constr
+R565:568 Corelib.Init.Datatypes <> true constr
+def 588:598 <> is_avA_of_a
+R605:605 testRegr_test15_6 <> a ind
+binder 601:603 <> a_6:8
+R610:613 Corelib.Init.Datatypes <> bool ind
+R626:628 testRegr_test15_6 <> a_6:8 var
+R639:643 testRegr_test15_6 <> a_AAA constr
+R649:652 Corelib.Init.Datatypes <> true constr
+R659:663 testRegr_test15_6 <> a_BBB constr
+R668:672 Corelib.Init.Datatypes <> false constr
+R678:681 testRegr_test15_6 <> a_CC constr
+R687:690 Corelib.Init.Datatypes <> true constr
+R698:700 testRegr_test15_6 <> a_a constr
+R710:713 Corelib.Init.Datatypes <> true constr
+ind 769:769 <> T
+constr 810:812 <> T_1
+R774:777 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R773:773 testRegr_test15_6 <> a ind
+R779:782 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R778:778 testRegr_test15_6 <> a ind
+R829:829 testRegr_test15_6 <> a ind
+binder 824:827 <> avv5:12
+R864:872 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R838:844 Stdlib.Bool.Bool <> Is_true def
+R847:857 testRegr_test15_6 <> is_avv_of_a def
+R859:862 testRegr_test15_6 <> avv5:12 var
+R873:873 testRegr_test15_6 <> T:10 ind
+R880:883 testRegr_test15_6 <> avv5:12 var
+R875:878 testRegr_test15_6 <> avv5:12 var
+scheme 769:769 <> T_ind
+scheme 769:769 <> T_sind

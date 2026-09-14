@@ -1,0 +1,16 @@
+testRegr_test_lj_list_ambiguity.lean:37:21: warning: Variable name `tl_` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _tl_
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_lj_list_ambiguity.lean:71:21: warning: Variable name `tl_` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _tl_
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_lj_list_ambiguity.lean:87:21: error(lean.ctorResultingTypeMismatch): Unexpected resulting type for constructor `foo_bar.foo_t_ti`: Expected an application of
+  foo_bar
+but found
+  ?m.2

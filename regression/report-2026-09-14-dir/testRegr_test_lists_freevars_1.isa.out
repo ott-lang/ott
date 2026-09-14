@@ -1,0 +1,67 @@
+Running Draft ...
+
+Output (line 8 of "Draft/testRegr_test_lists_freevars_1.thy"):
+consts
+  typerep_p_IITN_p :: "p.p_IITN_p itself ⇒ typerep"
+
+Output (line 8 of "Draft/testRegr_test_lists_freevars_1.thy"):
+consts
+  typerep_p :: "p itself ⇒ typerep"
+
+Output (line 8 of "Draft/testRegr_test_lists_freevars_1.thy"):
+consts
+  term_of_p :: "p ⇒ term"
+
+Output (line 8 of "Draft/testRegr_test_lists_freevars_1.thy"):
+consts
+  partial_term_of_p ::
+    "p itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 8 of "Draft/testRegr_test_lists_freevars_1.thy"):
+consts
+  equal_p :: "p ⇒ p ⇒ bool"
+
+Output (line 8 of "Draft/testRegr_test_lists_freevars_1.thy"):
+consts
+  random_aux_p ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural ⇒ (p × (unit ⇒ term)) × natural × natural"
+
+Output (line 8 of "Draft/testRegr_test_lists_freevars_1.thy"):
+consts
+  random_p ::
+    "natural ⇒ natural × natural ⇒ (p × (unit ⇒ term)) × natural × natural"
+
+Output (line 11 of "Draft/testRegr_test_lists_freevars_1.thy"):
+consts
+  typerep_t_pre_t :: "'a t_pre_t itself ⇒ typerep"
+
+Output (line 11 of "Draft/testRegr_test_lists_freevars_1.thy"):
+consts
+  typerep_t_IITN_t :: "t.t_IITN_t itself ⇒ typerep"
+
+Output (line 11 of "Draft/testRegr_test_lists_freevars_1.thy"):
+consts
+  typerep_t :: "t itself ⇒ typerep"
+
+Output (line 11 of "Draft/testRegr_test_lists_freevars_1.thy"):
+consts
+  term_of_t :: "t ⇒ term"
+
+Output (line 11 of "Draft/testRegr_test_lists_freevars_1.thy"):
+consts
+  partial_term_of_t ::
+    "t itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 11 of "Draft/testRegr_test_lists_freevars_1.thy"):
+consts
+  equal_t :: "t ⇒ t ⇒ bool"
+
+Output (line 18 of "Draft/testRegr_test_lists_freevars_1.thy"):
+consts
+  fv_p_t :: "p × t ⇒ num list"
+  fv_p_t_list :: "(p × t) list ⇒ num list"
+  fv_t_list :: "t list ⇒ num list"
+  fv_t :: "t ⇒ num list"
+Finished Draft (0:00:03 elapsed time, 0:00:04 cpu time, factor 1.50)

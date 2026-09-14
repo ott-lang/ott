@@ -1,5 +1,5 @@
 %% Coq: test whether some list functions are generated
-indexvar i , j , k , l , m , n ::= {{ isa nat }} {{ coq nat }} {{ coq-equality }} {{ hol num }} {{ ocaml int }}
+indexvar i , j , k , l , m , n ::= {{ lean Nat }} {{ isa nat }} {{ coq nat }} {{ coq-equality }} {{ hol num }} {{ ocaml int }}
 grammar
 foo :: foo_ ::=
   | ( foo1 , .. , foon ) :: :: tuple

@@ -308,6 +308,67 @@ let pp_subrules m xd srs : int_funcs_collapsed =
             [ lemTODO "15" (" (List.all (fun "^de1i.de1_pattern^" -> "^conjuncted_conjuncts^") "
 	      ^ de1i.de1_compound_id
 	      ^ ")")], deps, []
+        | Lean lno when lno.lean_expand_lists ->
+	    (* Claude: as the Coq coq_expand_lists arm below, recurse over the
+	       generated list_... inductive; Bool-valued, as the Lean arm below *)
+	    let var_list = Str.split (Str.regexp "(\\|,\\|)") de1i.de1_pattern in
+	    let post_name =  (* promoted args *)
+	      String.concat "_"
+		(List.map (fun ((r,s),y) ->
+		  Grammar_pp.pp_nt_or_mv_with_sie m xd ((Si_punct "")::sie)
+		    ((Auxl.promote_ntmvr xd r), s))
+		 de1i.de1_ntmvsns) in
+	    let suf = "list_" ^ Grammar_pp.expanded_list_type_suffix_ntmvsns m xd de1i.de1_ntmvsns in
+	    let id = (Auxl.pp_is srl post_name) ^ "_list" in
+	    let header =
+	      ( id ^ " (l:" ^ suf ^ ")",
+		"",
+		" : Bool :=\n  match l with\n" ) in
+	    [ leanTODO "7" (id ^ " " ^ de1i.de1_compound_id) ],
+	    id :: deps,
+	    ( { r_fun_id = id;
+		r_fun_dep = id :: deps;
+		r_fun_type = suf;
+		r_fun_header = header;
+		r_fun_clauses =
+		[ ("", "Nil_"^suf, "true");
+		  ("", "Cons_"^suf^" "^(String.concat " " var_list)^" "^de1i.de1_compound_id^"_",
+		   "(" ^ conjuncted_conjuncts ^ ") && (" ^ id ^ " " ^ de1i.de1_compound_id ^ "_)") ] } :: funcs )
+        | Lean _ ->
+	    (* Claude: generate a mutually-recursive _list helper: Lean's structural
+	       recursion cannot follow a recursive call under a pair projection
+	       inside a List, nor through List.all *)
+	    let post_name =  (* promoted args *)
+	      String.concat "_"
+		(List.map (fun ((r,s),y) ->
+		  Grammar_pp.pp_nt_or_mv_with_sie m xd ((Si_punct "")::sie)
+		    ((Auxl.promote_ntmvr xd r), s))
+		 de1i.de1_ntmvsns) in
+	    let id = (Auxl.pp_is srl post_name) ^ "_list" in
+	    let elem_ty =
+	      let tys =
+		List.map (fun ((x,_),_) ->
+		  Grammar_pp.pp_nt_or_mv_root_ty m xd
+		    (Auxl.promote_ntmvr xd (Auxl.primary_nt_or_mv_of_nt_or_mv xd x)))
+		  de1i.de1_ntmvsns in
+	      ( match tys with
+	      | [t] -> t
+	      | _ -> "(" ^ String.concat " \195\151 " tys ^ ")" ) in
+	    let tl_id = de1i.de1_compound_id ^ "_" in
+	    let header =
+	      ( id ^ " (" ^ de1i.de1_compound_id ^ ":List " ^ elem_ty ^ ")",
+		"",
+		" : Bool :=\n  match " ^ de1i.de1_compound_id ^ " with\n" ) in
+	    [ leanTODO "7" (id ^ " " ^ de1i.de1_compound_id) ],
+	    id :: deps,
+	    ( { r_fun_id = id;
+		r_fun_dep = id :: deps;
+		r_fun_type = sru;
+		r_fun_header = header;
+		r_fun_clauses =
+		[ ("", "[]", "true");
+		  ("", de1i.de1_pattern ^ " :: " ^ tl_id,
+		   "(" ^ conjuncted_conjuncts ^ ") && (" ^ id ^ " " ^ tl_id ^ ")") ] } :: funcs )
 	| Coq co when not co.coq_expand_lists ->
 	    let e = 
 	      if List.length (Str.split (Str.regexp "(\\|,\\|)") de1i.de1_pattern) = 1
@@ -424,7 +485,7 @@ let pp_subrules m xd srs : int_funcs_collapsed =
 		   dep := deps @ !dep;
 		   funcs := !funcs @ new_funcs;
                    match m with 
-                   | Coq _ | Hol _ | Lem _| Isa _ | Caml _ -> 
+                   | Coq _ | Lean _ | Hol _ | Lem _| Isa _ | Caml _ -> 
 		       if conjuncts = [] 
                        then Auxl.pp_true m false
 		       else String.concat (Auxl.pp_and m false) conjuncts
@@ -434,7 +495,7 @@ let pp_subrules m xd srs : int_funcs_collapsed =
                  pls in
 
              match m with 
-             | Coq _ | Hol _ | Lem _ | Isa _ | Caml _ -> 
+             | Coq _ | Lean _ | Hol _ | Lem _ | Isa _ | Caml _ -> 
                  let rhs = 
                    if rhss = [] 
                    then Auxl.pp_false m false
@@ -483,6 +544,18 @@ let pp_subrules m xd srs : int_funcs_collapsed =
               "",
               " : " 
 	      ^ (if co.coq_expand_lists then "Prop :=\n" else "bool :=\n")
+	      ^ "  match " ^ Grammar_pp.pp_nonterm m xd fresh_var ^ " with\n" ) 
+	| Lean _ -> 
+            let nts_used = Context_pp.nts_used_in_lhss m xd ru in
+(*	    let nts_used = Auxl.nts_used_in_rule ru in *)
+            let fresh_var_ntr = Auxl.secondary_ntr xd sru in
+	    let fresh_var = Auxl.fresh_nt nts_used (fresh_var_ntr,[]) in (* FZ Substs_pp *)
+	    ( Auxl.pp_is srl sru 
+              ^ " (" ^ Grammar_pp.pp_nonterm m xd fresh_var 
+              ^ ":" ^ Grammar_pp.pp_nontermroot_ty m xd sru ^ ")",
+              "",
+              " : " 
+	      ^ ("Bool :=\n")
 	      ^ "  match " ^ Grammar_pp.pp_nonterm m xd fresh_var ^ " with\n" ) 
         | Twf _ -> 
 	    ( Auxl.pp_is srl sru ^ " : " 

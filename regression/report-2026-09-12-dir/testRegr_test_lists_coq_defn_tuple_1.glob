@@ -1,0 +1,27 @@
+DIGEST 6c756db4567c40324b87d059837158ee
+FtestRegr_test_lists_coq_defn_tuple_1
+R130:134 Stdlib.Arith.Arith <> <> lib
+R152:155 Stdlib.Bool.Bool <> <> lib
+R173:176 Stdlib.Lists.List <> <> lib
+R194:210 Ott.ott_list_core <> <> lib
+def 226:226 <> i
+R237:239 Corelib.Init.Datatypes <> nat ind
+def 253:253 <> x
+R264:266 Corelib.Init.Datatypes <> nat ind
+ind 280:282 <> foo
+constr 297:303 <> foo_foo
+R307:309 testRegr_test_lists_coq_defn_tuple_1 <> foo:1 ind
+scheme 280:282 <> foo_rect
+scheme 280:282 <> foo_ind
+scheme 280:282 <> foo_rec
+scheme 280:282 <> foo_sind
+ind 355:362 <> J_wibble
+R380:383 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R366:369 Corelib.Init.Datatypes <> list ind
+R375:375 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R372:374 testRegr_test_lists_coq_defn_tuple_1 <> foo ind
+R376:378 testRegr_test_lists_coq_defn_tuple_1 <> foo ind
+scheme 355:362 <> J_wibble_rect
+scheme 355:362 <> J_wibble_ind
+scheme 355:362 <> J_wibble_rec
+scheme 355:362 <> J_wibble_sind

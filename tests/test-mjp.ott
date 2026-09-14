@@ -3,7 +3,7 @@ embed
 Parameter heap : Set.
 }}
 
-metavar h ::= {{ coq heap }}
+metavar h ::= {{ lean String }} {{ coq heap }}
 
 grammar
   s :: '' ::= 		       {{ coq prod (prod heap  heap) heap }}

@@ -1,0 +1,57 @@
+testRegr_test_lists_1.lean:6:12: error(lean.unknownIdentifier): Unknown identifier `natish`
+testRegr_test_lists_1.lean:7:12: error(lean.unknownIdentifier): Unknown identifier `natish`
+testRegr_test_lists_1.lean:10:4: error: Constructor field `x` of `b.b_x` contains universe level metavariables at the expression
+  Sort ?u.5
+in its type
+  Sort ?u.5
+testRegr_test_lists_1.lean:18:0: error: unexpected token 'where'; expected command
+testRegr_test_lists_1.lean:21:10: error: unexpected identifier; expected 'instance'
+testRegr_test_lists_1.lean:27:7: error: unknown namespace `lb`
+testRegr_test_lists_1.lean:36:38: error(lean.unknownIdentifier): Unknown identifier `_root_.x`
+testRegr_test_lists_1.lean:43:41: error(lean.unknownIdentifier): Unknown identifier `_root_.x`
+testRegr_test_lists_1.lean:46:22: error: Function expected at
+  t_x
+but this term has type
+  ?m.5
+
+Note: Expected a function because this term is being applied to the argument
+  x
+
+Hint: The identifier `t_x` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_lists_1.lean:49:2: error: Function expected at
+  PARSE_ERROR
+but this term has type
+  ?m.11
+
+Note: Expected a function because this term is being applied to the argument
+  "File /home/pes20/claude-home/ott/regression/../tests/test_lists_1.ott on line 45 - 46"
+
+Hint: The identifier `PARSE_ERROR` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_lists_1.lean:52:15: error: Function expected at
+  t_letrec
+but this term has type
+  ?m.13
+
+Note: Expected a function because this term is being applied to the argument
+  ((List.map (fun (lb_, E_) => lb_) lb_E_list))
+
+Hint: The identifier `t_letrec` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_lists_1.lean:56:43: error(lean.unknownIdentifier): Unknown identifier `_root_.x`
+testRegr_test_lists_1.lean:59:13: error: Function expected at
+  lb_simple
+but this term has type
+  ?m.22
+
+Note: Expected a function because this term is being applied to the argument
+  x
+
+Hint: The identifier `lb_simple` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test_lists_1.lean:59:29: error: Function expected at
+  E_concrete
+but this term has type
+  ?m.23
+
+Note: Expected a function because this term is being applied to the argument
+  ([((b_x x))])
+
+Hint: The identifier `E_concrete` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.

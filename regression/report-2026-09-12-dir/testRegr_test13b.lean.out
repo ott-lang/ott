@@ -1,0 +1,226 @@
+testRegr_test13b.lean:6:19: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test13b.lean:7:22: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test13b.lean:8:22: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test13b.lean:9:17: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test13b.lean:10:16: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test13b.lean:11:19: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test13b.lean:12:16: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test13b.lean:15:4: error: Constructor field `metavarroot` of `metavar.mv_1` contains universe level metavariables at the expression
+  Sort ?u.6
+in its type
+  Sort ?u.6
+testRegr_test13b.lean:20:4: error: Constructor field `nontermroot` of `nonterm.nt_1` contains universe level metavariables at the expression
+  Sort ?u.6
+in its type
+  Sort ?u.6
+testRegr_test13b.lean:25:4: error: Constructor field `metavar` of `mse.mse_mv` contains universe level metavariables at the expression
+  Sort ?u.5
+in its type
+  Sort ?u.5
+testRegr_test13b.lean:33:4: error: Constructor field `terminal` of `element.e_tm` contains universe level metavariables at the expression
+  Sort ?u.5
+in its type
+  Sort ?u.5
+testRegr_test13b.lean:40:4: error: Constructor field `mse` of `bindspec.bs_bind` contains universe level metavariables at the expression
+  Sort ?u.6
+in its type
+  Sort ?u.6
+testRegr_test13b.lean:48:11: error: failed to generate `Inhabited` instance for `prod`
+testRegr_test13b.lean:53:11: error: failed to generate `Inhabited` instance for `rule`
+testRegr_test13b.lean:58:11: error: failed to generate `Inhabited` instance for `auxfn_type`
+testRegr_test13b.lean:75:5: error: unknown namespace `metavar`
+testRegr_test13b.lean:82:61: error: unexpected token 'at'; expected '_' or identifier
+testRegr_test13b.lean:93:71: error(lean.unknownIdentifier): Unknown identifier `_root_.metavarroot`
+testRegr_test13b.lean:96:41: error(lean.unknownIdentifier): Unknown identifier `_root_.index`
+testRegr_test13b.lean:96:88: error(lean.unknownIdentifier): Unknown identifier `_root_.metavarroot`
+testRegr_test13b.lean:96:114: error(lean.unknownIdentifier): Unknown identifier `_root_.suffix`
+testRegr_test13b.lean:97:2: error: Function expected at
+  formula_eeq
+but this term has type
+  ?m.10
+
+Note: Expected a function because this term is being applied to the argument
+  ((fun e_ => e_) (e_list[j - 1]!))
+
+Hint: The identifier `formula_eeq` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test13b.lean:99:18: error: Function expected at
+  mse_mv
+but this term has type
+  ?m.11
+
+Note: Expected a function because this term is being applied to the argument
+  (mv_1 mvr suff)
+
+Hint: The identifier `mse_mv` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test13b.lean:101:69: error(lean.unknownIdentifier): Unknown identifier `_root_.index`
+testRegr_test13b.lean:101:86: error(lean.unknownIdentifier): Unknown identifier `_root_.index`
+testRegr_test13b.lean:101:131: error(lean.unknownIdentifier): Unknown identifier `_root_.auxfn`
+testRegr_test13b.lean:101:149: error(lean.unknownIdentifier): Unknown identifier `_root_.nonterm`
+testRegr_test13b.lean:101:170: error(lean.unknownIdentifier): Unknown identifier `_root_.metavarroot`
+testRegr_test13b.lean:101:196: error(lean.unknownIdentifier): Unknown identifier `_root_.suffix`
+testRegr_test13b.lean:102:1: error: Function expected at
+  FF
+but this term has type
+  ?m.25
+
+Note: Expected a function because this term is being applied to the argument
+  Phi
+
+Hint: The identifier `FF` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test13b.lean:103:2: error: Function expected at
+  formula_eeq
+but this term has type
+  ?m.26
+
+Note: Expected a function because this term is being applied to the argument
+  ((fun e_ => e_) (e_list[j - 1]!))
+
+Hint: The identifier `formula_eeq` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test13b.lean:104:2: error: Function expected at
+  formula_nteq
+but this term has type
+  ?m.27
+
+Note: Expected a function because this term is being applied to the argument
+  nt
+
+Hint: The identifier `formula_nteq` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test13b.lean:106:18: error: Function expected at
+  mse_f
+but this term has type
+  ?m.28
+
+Note: Expected a function because this term is being applied to the argument
+  f
+
+Hint: The identifier `mse_f` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test13b.lean:108:71: error(lean.unknownIdentifier): Unknown identifier `_root_.mse`
+testRegr_test13b.lean:108:89: error(lean.unknownIdentifier): Unknown identifier `_root_.mse`
+testRegr_test13b.lean:108:106: error(lean.unknownIdentifier): Unknown identifier `_root_.metavarroot`
+testRegr_test13b.lean:112:18: error: Function expected at
+  mse_union
+but this term has type
+  ?m.49
+
+Note: Expected a function because this term is being applied to the argument
+  mse
+
+Hint: The identifier `mse_union` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test13b.lean:116:40: error(lean.unknownIdentifier): Unknown identifier `_root_.index`
+testRegr_test13b.lean:116:87: error(lean.unknownIdentifier): Unknown identifier `_root_.mse`
+testRegr_test13b.lean:116:103: error(lean.unknownIdentifier): Unknown identifier `_root_.nonterm`
+testRegr_test13b.lean:116:124: error(lean.unknownIdentifier): Unknown identifier `_root_.metavarroot`
+testRegr_test13b.lean:117:1: error: Function expected at
+  Mse
+but this term has type
+  ?m.4
+
+Note: Expected a function because this term is being applied to the argument
+  Phi
+
+Hint: The identifier `Mse` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test13b.lean:118:2: error: Function expected at
+  formula_eeq
+but this term has type
+  ?m.5
+
+Note: Expected a function because this term is being applied to the argument
+  ((fun e_ => e_) (e_list[j - 1]!))
+
+Hint: The identifier `formula_eeq` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test13b.lean:120:17: error: Function expected at
+  bs_bind
+but this term has type
+  ?m.6
+
+Note: Expected a function because this term is being applied to the argument
+  mse
+
+Hint: The identifier `bs_bind` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test13b.lean:122:88: error(lean.unknownIdentifier): Unknown identifier `_root_.auxfn`
+testRegr_test13b.lean:122:107: error(lean.unknownIdentifier): Unknown identifier `_root_.mse`
+testRegr_test13b.lean:122:124: error(lean.unknownIdentifier): Unknown identifier `_root_.metavarroot`
+testRegr_test13b.lean:123:1: error: Function expected at
+  Mse
+but this term has type
+  ?m.23
+
+Note: Expected a function because this term is being applied to the argument
+  Phi
+
+Hint: The identifier `Mse` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test13b.lean:124:1: error: Function expected at
+  FF
+but this term has type
+  ?m.24
+
+Note: Expected a function because this term is being applied to the argument
+  Phi
+
+Hint: The identifier `FF` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test13b.lean:126:54: error: Function expected at
+  bs_auxfn
+but this term has type
+  ?m.25
+
+Note: Expected a function because this term is being applied to the argument
+  f
+
+Hint: The identifier `bs_auxfn` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test13b.lean:129:10: error: `Prod` has already been declared
+testRegr_test13b.lean:138:89: error(lean.unknownIdentifier): Unknown identifier `_root_.index`
+testRegr_test13b.lean:138:106: error(lean.unknownIdentifier): Unknown identifier `_root_.index`
+testRegr_test13b.lean:138:125: error(lean.unknownIdentifier): Unknown identifier `_root_.nontermroot`
+testRegr_test13b.lean:139:2: error: Function expected at
+  formula_forall
+but this term has type
+  ?m.1
+
+Note: Expected a function because this term is being applied to the argument
+  i
+
+Hint: The identifier `formula_forall` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test13b.lean:140:2: error: Function expected at
+  formula_req
+but this term has type
+  ?m.2
+
+Note: Expected a function because this term is being applied to the argument
+  rule
+
+Hint: The identifier `formula_req` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test13b.lean:146:147: error(lean.unknownIdentifier): Unknown identifier `_root_.index`
+testRegr_test13b.lean:146:164: error(lean.unknownIdentifier): Unknown identifier `_root_.index`
+testRegr_test13b.lean:146:181: error(lean.unknownIdentifier): Unknown identifier `_root_.index`
+testRegr_test13b.lean:146:198: error(lean.unknownIdentifier): Unknown identifier `_root_.index`
+testRegr_test13b.lean:146:217: error(lean.unknownIdentifier): Unknown identifier `_root_.nontermroot`
+testRegr_test13b.lean:147:2: error: Function expected at
+  formula_forall
+but this term has type
+  ?m.1
+
+Note: Expected a function because this term is being applied to the argument
+  i
+
+Hint: The identifier `formula_forall` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test13b.lean:148:2: error: Function expected at
+  formula_geq
+but this term has type
+  ?m.2
+
+Note: Expected a function because this term is being applied to the argument
+  grammar_rules
+
+Hint: The identifier `formula_geq` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test13b.lean:149:2: error: Function expected at
+  formula_forall
+but this term has type
+  ?m.1
+
+Note: Expected a function because this term is being applied to the argument
+  i
+
+Hint: The identifier `formula_forall` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test13b.lean:154:0: error: Invalid `end`: There is no current scope to end
+
+Note: Scopes are introduced using `namespace` and `section`

@@ -1,0 +1,14 @@
+### Starting build.
+# Target: ocamlfind ocamlc -config, tags: {  }
+ocamlfind ocamlc -config
+# Target: main.ml.depends, tags: { package(pprint), extension:ml, file:main.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package pprint -modules main.ml > main.ml.depends
+# Target: test10menhir_with_aux_ast.ml.depends, tags: { package(pprint), extension:ml, file:test10menhir_with_aux_ast.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package pprint -modules test10menhir_with_aux_ast.ml > test10menhir_with_aux_ast.ml.depends
++ ocamlfind ocamldep -package pprint -modules test10menhir_with_aux_ast.ml > test10menhir_with_aux_ast.ml.depends
+File "test10menhir_with_aux_ast.ml", line 27, characters 9-11:
+27 | term_aux := 
+              ^^
+Error: Syntax error
+Command exited with code 2.
+# Compilation unsuccessful.

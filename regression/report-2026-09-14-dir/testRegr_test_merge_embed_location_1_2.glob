@@ -1,0 +1,30 @@
+DIGEST 88b478606c763d3a2ba223bb4ea9a10f
+FtestRegr_test_merge_embed_location_1_2
+R144:148 Stdlib.Arith.Arith <> <> lib
+R178:181 Stdlib.Bool.Bool <> <> lib
+R211:214 Stdlib.Lists.List <> <> lib
+def 230:234 <> index
+R239:241 Corelib.Init.Datatypes <> nat ind
+def 256:256 <> i
+R267:271 testRegr_test_merge_embed_location_1_2 <> index def
+ind 285:289 <> thing
+constr 304:315 <> thing_normal
+R319:323 testRegr_test_merge_embed_location_1_2 <> thing:1 ind
+scheme 285:289 <> thing_rect
+scheme 285:289 <> thing_ind
+scheme 285:289 <> thing_rec
+scheme 285:289 <> thing_sind
+def 337:346 <> thing_meta
+R351:362 testRegr_test_merge_embed_location_1_2 <> thing_normal constr
+ind 417:418 <> ok
+constr 459:467 <> ok_wibble
+R427:430 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R422:426 testRegr_test_merge_embed_location_1_2 <> thing ind
+R477:478 testRegr_test_merge_embed_location_1_2 <> ok:3 ind
+R481:490 testRegr_test_merge_embed_location_1_2 <> thing_meta def
+scheme 417:418 <> ok_rect
+scheme 417:418 <> ok_ind
+scheme 417:418 <> ok_rec
+scheme 417:418 <> ok_sind
+def 505:508 <> okay
+R513:514 testRegr_test_merge_embed_location_1_2 <> ok ind

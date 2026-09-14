@@ -1,0 +1,140 @@
+DIGEST 0d6fbf200b571f364c191b0d0238f76a
+FtestRegr_test16_0
+R123:127 Stdlib.Arith.Arith <> <> lib
+R157:160 Stdlib.Bool.Bool <> <> lib
+R190:193 Stdlib.Lists.List <> <> lib
+def 209:218 <> value_name
+R229:231 Corelib.Init.Datatypes <> nat ind
+prf 240:252 <> eq_value_name
+R269:278 testRegr_test16_0 <> value_name def
+binder 263:263 <> x:1
+binder 265:265 <> y:2
+R282:282 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R288:292 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R299:299 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R284:286 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R283:283 testRegr_test16_0 <> x:1 var
+R287:287 testRegr_test16_0 <> y:2 var
+R294:297 Corelib.Init.Logic <> ::type_scope:x_'<>'_x not
+R293:293 testRegr_test16_0 <> x:1 var
+R298:298 testRegr_test16_0 <> y:2 var
+ind 439:439 <> a
+constr 454:456 <> a_x
+constr 476:478 <> a_A
+constr 497:499 <> a_C
+R461:470 testRegr_test16_0 <> value_name def
+binder 459:459 <> x:5
+R484:484 testRegr_test16_0 <> a:3 ind
+binder 481:482 <> a1:6
+R491:491 testRegr_test16_0 <> a:3 ind
+binder 488:489 <> a2:7
+R503:503 testRegr_test16_0 <> a:3 ind
+scheme 439:439 <> a_rect
+scheme 439:439 <> a_ind
+scheme 439:439 <> a_rec
+scheme 439:439 <> a_sind
+def 515:526 <> aux_f_a_of_a
+R533:533 testRegr_test16_0 <> a ind
+binder 529:531 <> a_5:8
+R538:541 Corelib.Init.Datatypes <> list ind
+R543:552 testRegr_test16_0 <> value_name def
+R565:567 testRegr_test16_0 <> a_5:8 var
+R579:581 testRegr_test16_0 <> a_x constr
+R590:593 Corelib.Init.Datatypes <> cons constr
+R597:599 Corelib.Init.Datatypes <> nil constr
+R607:609 testRegr_test16_0 <> a_A constr
+R622:624 Corelib.Init.Datatypes <> app def
+R645:656 testRegr_test16_0 <> aux_f_a_of_a:9 def
+R627:638 testRegr_test16_0 <> aux_f_a_of_a:9 def
+R667:669 testRegr_test16_0 <> a_C constr
+R674:676 Corelib.Init.Datatypes <> nil constr
+def 718:727 <> list_assoc
+binder 729:729 <> A:11
+binder 731:731 <> B:12
+R748:748 testRegr_test16_0 <> A:11 var
+binder 744:744 <> a:13
+binder 746:746 <> b:14
+R750:750 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R754:756 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R761:761 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R752:752 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R751:751 testRegr_test16_0 <> a:13 var
+R753:753 testRegr_test16_0 <> b:14 var
+R758:759 Corelib.Init.Logic <> ::type_scope:x_'<>'_x not
+R757:757 testRegr_test16_0 <> a:13 var
+R760:760 testRegr_test16_0 <> b:14 var
+binder 734:735 <> eq:15
+R767:767 testRegr_test16_0 <> A:11 var
+binder 765:765 <> x:16
+R773:776 Corelib.Init.Datatypes <> list ind
+R780:780 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R779:779 testRegr_test16_0 <> A:11 var
+R781:781 testRegr_test16_0 <> B:12 var
+binder 771:771 <> l:17
+R798:803 Corelib.Init.Datatypes <> option ind
+R805:805 testRegr_test16_0 <> B:12 var
+R818:818 testRegr_test16_0 <> l:17 var
+R829:831 Corelib.Init.Datatypes <> nil constr
+R836:839 Corelib.Init.Datatypes <> None constr
+R845:848 Corelib.Init.Datatypes <> cons constr
+R850:850 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R852:852 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R854:854 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R865:866 testRegr_test16_0 <> eq:15 var
+R870:870 testRegr_test16_0 <> x:16 var
+R890:899 testRegr_test16_0 <> list_assoc:18 def
+R908:908 testRegr_test16_0 <> x:16 var
+R905:906 testRegr_test16_0 <> eq:15 var
+R903:903 testRegr_test16_0 <> B:12 var
+R901:901 testRegr_test16_0 <> A:11 var
+R878:881 Corelib.Init.Datatypes <> Some constr
+R927:936 testRegr_test16_0 <> list_assoc def
+def 983:990 <> msubst_a
+R997:1000 Corelib.Init.Datatypes <> list ind
+R1013:1013 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1003:1012 testRegr_test16_0 <> value_name def
+R1014:1014 testRegr_test16_0 <> a ind
+binder 993:995 <> sub:20
+R1024:1024 testRegr_test16_0 <> a ind
+binder 1019:1022 <> a__6:21
+R1043:1043 testRegr_test16_0 <> a ind
+R1056:1059 testRegr_test16_0 <> a__6:21 var
+R1071:1073 testRegr_test16_0 <> a_x constr
+R1088:1097 testRegr_test16_0 <> list_assoc def
+R1115:1117 testRegr_test16_0 <> sub:20 var
+R1099:1111 testRegr_test16_0 <> eq_value_name thm
+R1124:1127 Corelib.Init.Datatypes <> None constr
+R1133:1135 testRegr_test16_0 <> a_x constr
+R1142:1145 Corelib.Init.Datatypes <> Some constr
+R1168:1170 testRegr_test16_0 <> a_A constr
+R1182:1184 testRegr_test16_0 <> a_A constr
+R1187:1194 testRegr_test16_0 <> msubst_a:22 def
+R1196:1198 testRegr_test16_0 <> sub:20 var
+R1205:1212 testRegr_test16_0 <> msubst_a:22 def
+R1214:1216 testRegr_test16_0 <> sub:20 var
+R1226:1228 testRegr_test16_0 <> a_C constr
+R1233:1235 testRegr_test16_0 <> a_C constr
+def 1253:1259 <> subst_a
+R1266:1266 testRegr_test16_0 <> a ind
+binder 1262:1264 <> a_5:24
+R1273:1282 testRegr_test16_0 <> value_name def
+binder 1270:1271 <> x5:25
+R1291:1291 testRegr_test16_0 <> a ind
+binder 1286:1289 <> a__6:26
+R1310:1310 testRegr_test16_0 <> a ind
+R1323:1326 testRegr_test16_0 <> a__6:26 var
+R1338:1340 testRegr_test16_0 <> a_x constr
+R1352:1364 testRegr_test16_0 <> eq_value_name thm
+R1368:1369 testRegr_test16_0 <> x5:25 var
+R1386:1388 testRegr_test16_0 <> a_x constr
+R1376:1378 testRegr_test16_0 <> a_5:24 var
+R1399:1401 testRegr_test16_0 <> a_A constr
+R1413:1415 testRegr_test16_0 <> a_A constr
+R1418:1424 testRegr_test16_0 <> subst_a:27 def
+R1430:1431 testRegr_test16_0 <> x5:25 var
+R1426:1428 testRegr_test16_0 <> a_5:24 var
+R1438:1444 testRegr_test16_0 <> subst_a:27 def
+R1450:1451 testRegr_test16_0 <> x5:25 var
+R1446:1448 testRegr_test16_0 <> a_5:24 var
+R1461:1463 testRegr_test16_0 <> a_C constr
+R1468:1470 testRegr_test16_0 <> a_C constr

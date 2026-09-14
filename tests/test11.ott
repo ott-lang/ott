@@ -1,4 +1,5 @@
-  metavar termvar , x ::=
+% subrule test with simple lambda binding value
+metavar termvar , x ::= {{ lean Nat }}
     {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ ocaml int }}
 
   grammar

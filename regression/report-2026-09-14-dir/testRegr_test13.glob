@@ -1,0 +1,453 @@
+DIGEST 3a4fde9e20080909d1202083dd13b399
+FtestRegr_test13
+R121:125 Stdlib.Arith.Arith <> <> lib
+R155:158 Stdlib.Bool.Bool <> <> lib
+R188:191 Stdlib.Lists.List <> <> lib
+def 207:214 <> terminal
+R225:227 Corelib.Init.Datatypes <> nat ind
+def 241:251 <> metavarroot
+R262:264 Corelib.Init.Datatypes <> nat ind
+def 278:288 <> nontermroot
+R299:301 Corelib.Init.Datatypes <> nat ind
+def 315:320 <> suffix
+R331:333 Corelib.Init.Datatypes <> nat ind
+def 347:351 <> auxfn
+R362:364 Corelib.Init.Datatypes <> nat ind
+def 378:385 <> prodname
+R396:398 Corelib.Init.Datatypes <> nat ind
+def 412:416 <> index
+R427:429 Corelib.Init.Datatypes <> nat ind
+ind 443:449 <> metavar
+constr 464:467 <> mv_1
+R483:493 testRegr_test13 <> metavarroot def
+binder 470:481 <> metavarroot5:3
+R505:510 testRegr_test13 <> suffix def
+binder 497:503 <> suffix5:4
+scheme 443:449 <> metavar_rect
+scheme 443:449 <> metavar_ind
+scheme 443:449 <> metavar_rec
+scheme 443:449 <> metavar_sind
+ind 525:531 <> nonterm
+constr 546:549 <> nt_1
+R565:575 testRegr_test13 <> nontermroot def
+binder 552:563 <> nontermroot5:7
+R587:592 testRegr_test13 <> suffix def
+binder 579:585 <> suffix5:8
+scheme 525:531 <> nonterm_rect
+scheme 525:531 <> nonterm_ind
+scheme 525:531 <> nonterm_rec
+scheme 525:531 <> nonterm_sind
+ind 607:609 <> mse
+constr 624:629 <> mse_mv
+constr 653:658 <> mse_nt
+constr 682:686 <> mse_f
+constr 725:733 <> mse_union
+constr 760:768 <> mse_empty
+R641:647 testRegr_test13 <> metavar ind
+binder 632:639 <> metavar5:11
+R670:676 testRegr_test13 <> nonterm ind
+binder 661:668 <> nonterm5:12
+R696:700 testRegr_test13 <> auxfn def
+binder 689:694 <> auxfn5:13
+R713:719 testRegr_test13 <> nonterm ind
+binder 704:711 <> nonterm5:14
+R741:743 testRegr_test13 <> mse:9 ind
+binder 736:739 <> mse5:15
+R752:754 testRegr_test13 <> mse:9 ind
+binder 747:750 <> mse':16
+R772:774 testRegr_test13 <> mse:9 ind
+scheme 607:609 <> mse_rect
+scheme 607:609 <> mse_ind
+scheme 607:609 <> mse_rec
+scheme 607:609 <> mse_sind
+ind 788:795 <> bindspec
+constr 810:816 <> bs_bind
+constr 851:858 <> bs_auxfn
+R824:826 testRegr_test13 <> mse ind
+binder 819:822 <> mse5:19
+R839:845 testRegr_test13 <> nonterm ind
+binder 830:837 <> nonterm5:20
+R868:872 testRegr_test13 <> auxfn def
+binder 861:866 <> auxfn5:21
+R881:883 testRegr_test13 <> mse ind
+binder 876:879 <> mse5:22
+scheme 788:795 <> bindspec_rect
+scheme 788:795 <> bindspec_ind
+scheme 788:795 <> bindspec_rec
+scheme 788:795 <> bindspec_sind
+ind 898:904 <> element
+constr 919:922 <> e_tm
+constr 948:951 <> e_mv
+constr 975:978 <> e_nt
+R935:942 testRegr_test13 <> terminal def
+binder 925:933 <> terminal5:25
+R963:969 testRegr_test13 <> metavar ind
+binder 954:961 <> metavar5:26
+R990:996 testRegr_test13 <> nonterm ind
+binder 981:988 <> nonterm5:27
+scheme 898:904 <> element_rect
+scheme 898:904 <> element_ind
+scheme 898:904 <> element_rec
+scheme 898:904 <> element_sind
+ind 1011:1023 <> list_bindspec
+constr 1038:1054 <> Nil_list_bindspec
+constr 1075:1092 <> Cons_list_bindspec
+R1058:1070 testRegr_test13 <> list_bindspec:28 ind
+R1097:1104 testRegr_test13 <> bindspec ind
+R1110:1122 testRegr_test13 <> list_bindspec:28 ind
+scheme 1011:1023 <> list_bindspec_rect
+scheme 1011:1023 <> list_bindspec_ind
+scheme 1011:1023 <> list_bindspec_rec
+scheme 1011:1023 <> list_bindspec_sind
+ind 1137:1148 <> list_element
+constr 1163:1178 <> Nil_list_element
+constr 1198:1214 <> Cons_list_element
+R1182:1193 testRegr_test13 <> list_element:30 ind
+R1219:1225 testRegr_test13 <> element ind
+R1231:1242 testRegr_test13 <> list_element:30 ind
+scheme 1137:1148 <> list_element_rect
+scheme 1137:1148 <> list_element_ind
+scheme 1137:1148 <> list_element_rec
+scheme 1137:1148 <> list_element_sind
+ind 1257:1260 <> prod
+constr 1275:1277 <> p_1
+R1282:1293 testRegr_test13 <> list_element ind
+R1307:1314 testRegr_test13 <> prodname def
+binder 1297:1305 <> prodname5:34
+R1320:1332 testRegr_test13 <> list_bindspec ind
+scheme 1257:1260 <> prod_rect
+scheme 1257:1260 <> prod_ind
+scheme 1257:1260 <> prod_rec
+scheme 1257:1260 <> prod_sind
+ind 1347:1355 <> list_prod
+constr 1370:1382 <> Nil_list_prod
+constr 1399:1412 <> Cons_list_prod
+R1386:1394 testRegr_test13 <> list_prod:35 ind
+R1417:1420 testRegr_test13 <> prod ind
+R1426:1434 testRegr_test13 <> list_prod:35 ind
+scheme 1347:1355 <> list_prod_rect
+scheme 1347:1355 <> list_prod_ind
+scheme 1347:1355 <> list_prod_rec
+scheme 1347:1355 <> list_prod_sind
+ind 1449:1452 <> rule
+constr 1467:1469 <> r_1
+R1485:1495 testRegr_test13 <> nontermroot def
+binder 1472:1483 <> nontermroot5:39
+R1501:1509 testRegr_test13 <> list_prod ind
+scheme 1449:1452 <> rule_rect
+scheme 1449:1452 <> rule_ind
+scheme 1449:1452 <> rule_rec
+scheme 1449:1452 <> rule_sind
+ind 1524:1532 <> list_rule
+constr 1547:1559 <> Nil_list_rule
+constr 1576:1589 <> Cons_list_rule
+R1563:1571 testRegr_test13 <> list_rule:40 ind
+R1594:1597 testRegr_test13 <> rule ind
+R1603:1611 testRegr_test13 <> list_rule:40 ind
+scheme 1524:1532 <> list_rule_rect
+scheme 1524:1532 <> list_rule_ind
+scheme 1524:1532 <> list_rule_rec
+scheme 1524:1532 <> list_rule_sind
+ind 1626:1638 <> grammar_rules
+constr 1653:1655 <> g_1
+R1660:1668 testRegr_test13 <> list_rule ind
+scheme 1626:1638 <> grammar_rules_rect
+scheme 1626:1638 <> grammar_rules_ind
+scheme 1626:1638 <> grammar_rules_rec
+scheme 1626:1638 <> grammar_rules_sind
+def 1681:1693 <> map_list_rule
+binder 1696:1696 <> A:44
+R1711:1712 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1707:1710 testRegr_test13 <> rule ind
+R1713:1713 testRegr_test13 <> A:44 var
+binder 1705:1705 <> f:45
+R1719:1727 testRegr_test13 <> list_rule ind
+binder 1717:1717 <> l:46
+R1732:1735 Corelib.Init.Datatypes <> list ind
+R1737:1737 testRegr_test13 <> A:44 var
+R1750:1750 testRegr_test13 <> l:46 var
+R1761:1773 testRegr_test13 <> Nil_list_rule constr
+R1778:1780 Corelib.Init.Datatypes <> nil constr
+R1786:1799 testRegr_test13 <> Cons_list_rule constr
+R1810:1813 Corelib.Init.Datatypes <> cons constr
+R1822:1834 testRegr_test13 <> map_list_rule:47 def
+R1838:1838 testRegr_test13 <> f:45 var
+R1836:1836 testRegr_test13 <> A:44 var
+R1816:1816 testRegr_test13 <> f:45 var
+R1862:1874 testRegr_test13 <> map_list_rule def
+def 1895:1908 <> make_list_rule
+R1914:1917 Corelib.Init.Datatypes <> list ind
+R1919:1922 testRegr_test13 <> rule ind
+binder 1911:1911 <> l:49
+R1926:1934 testRegr_test13 <> list_rule ind
+R1947:1947 testRegr_test13 <> l:49 var
+R1958:1960 Corelib.Init.Datatypes <> nil constr
+R1966:1978 testRegr_test13 <> Nil_list_rule constr
+R1984:1987 Corelib.Init.Datatypes <> cons constr
+R1998:2011 testRegr_test13 <> Cons_list_rule constr
+R2016:2029 testRegr_test13 <> make_list_rule:50 def
+def 2053:2068 <> unmake_list_rule
+R2074:2082 testRegr_test13 <> list_rule ind
+binder 2071:2071 <> l:52
+R2086:2089 Corelib.Init.Datatypes <> list ind
+R2091:2094 testRegr_test13 <> rule ind
+R2107:2107 testRegr_test13 <> l:52 var
+R2118:2130 testRegr_test13 <> Nil_list_rule constr
+R2135:2137 Corelib.Init.Datatypes <> nil constr
+R2143:2156 testRegr_test13 <> Cons_list_rule constr
+R2167:2170 Corelib.Init.Datatypes <> cons constr
+R2175:2190 testRegr_test13 <> unmake_list_rule:53 def
+def 2214:2226 <> nth_list_rule
+R2231:2233 Corelib.Init.Datatypes <> nat ind
+binder 2229:2229 <> n:55
+R2240:2248 testRegr_test13 <> list_rule ind
+binder 2237:2237 <> l:56
+R2264:2269 Corelib.Init.Datatypes <> option ind
+R2271:2274 testRegr_test13 <> rule ind
+R2289:2289 testRegr_test13 <> l:56 var
+R2287:2287 testRegr_test13 <> n:55 var
+R2300:2300 Corelib.Init.Datatypes <> O constr
+R2303:2316 testRegr_test13 <> Cons_list_rule constr
+R2327:2330 Corelib.Init.Datatypes <> Some constr
+R2338:2338 Corelib.Init.Datatypes <> O constr
+R2346:2349 Corelib.Init.Datatypes <> None constr
+R2355:2355 Corelib.Init.Datatypes <> S constr
+R2360:2372 testRegr_test13 <> Nil_list_rule constr
+R2377:2380 Corelib.Init.Datatypes <> None constr
+R2386:2386 Corelib.Init.Datatypes <> S constr
+R2391:2404 testRegr_test13 <> Cons_list_rule constr
+R2415:2427 testRegr_test13 <> nth_list_rule:57 def
+def 2452:2464 <> app_list_rule
+R2472:2480 testRegr_test13 <> list_rule ind
+binder 2467:2467 <> l:60
+binder 2469:2469 <> m:61
+R2484:2492 testRegr_test13 <> list_rule ind
+R2505:2505 testRegr_test13 <> l:60 var
+R2516:2528 testRegr_test13 <> Nil_list_rule constr
+R2533:2533 testRegr_test13 <> m:61 var
+R2539:2552 testRegr_test13 <> Cons_list_rule constr
+R2563:2576 testRegr_test13 <> Cons_list_rule constr
+R2581:2593 testRegr_test13 <> app_list_rule:62 def
+R2599:2599 testRegr_test13 <> m:61 var
+def 2619:2631 <> map_list_prod
+binder 2634:2634 <> A:64
+R2649:2650 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2645:2648 testRegr_test13 <> prod ind
+R2651:2651 testRegr_test13 <> A:64 var
+binder 2643:2643 <> f:65
+R2657:2665 testRegr_test13 <> list_prod ind
+binder 2655:2655 <> l:66
+R2670:2673 Corelib.Init.Datatypes <> list ind
+R2675:2675 testRegr_test13 <> A:64 var
+R2688:2688 testRegr_test13 <> l:66 var
+R2699:2711 testRegr_test13 <> Nil_list_prod constr
+R2716:2718 Corelib.Init.Datatypes <> nil constr
+R2724:2737 testRegr_test13 <> Cons_list_prod constr
+R2748:2751 Corelib.Init.Datatypes <> cons constr
+R2760:2772 testRegr_test13 <> map_list_prod:67 def
+R2776:2776 testRegr_test13 <> f:65 var
+R2774:2774 testRegr_test13 <> A:64 var
+R2754:2754 testRegr_test13 <> f:65 var
+R2800:2812 testRegr_test13 <> map_list_prod def
+def 2833:2846 <> make_list_prod
+R2852:2855 Corelib.Init.Datatypes <> list ind
+R2857:2860 testRegr_test13 <> prod ind
+binder 2849:2849 <> l:69
+R2864:2872 testRegr_test13 <> list_prod ind
+R2885:2885 testRegr_test13 <> l:69 var
+R2896:2898 Corelib.Init.Datatypes <> nil constr
+R2904:2916 testRegr_test13 <> Nil_list_prod constr
+R2922:2925 Corelib.Init.Datatypes <> cons constr
+R2936:2949 testRegr_test13 <> Cons_list_prod constr
+R2954:2967 testRegr_test13 <> make_list_prod:70 def
+def 2991:3006 <> unmake_list_prod
+R3012:3020 testRegr_test13 <> list_prod ind
+binder 3009:3009 <> l:72
+R3024:3027 Corelib.Init.Datatypes <> list ind
+R3029:3032 testRegr_test13 <> prod ind
+R3045:3045 testRegr_test13 <> l:72 var
+R3056:3068 testRegr_test13 <> Nil_list_prod constr
+R3073:3075 Corelib.Init.Datatypes <> nil constr
+R3081:3094 testRegr_test13 <> Cons_list_prod constr
+R3105:3108 Corelib.Init.Datatypes <> cons constr
+R3113:3128 testRegr_test13 <> unmake_list_prod:73 def
+def 3152:3164 <> nth_list_prod
+R3169:3171 Corelib.Init.Datatypes <> nat ind
+binder 3167:3167 <> n:75
+R3178:3186 testRegr_test13 <> list_prod ind
+binder 3175:3175 <> l:76
+R3202:3207 Corelib.Init.Datatypes <> option ind
+R3209:3212 testRegr_test13 <> prod ind
+R3227:3227 testRegr_test13 <> l:76 var
+R3225:3225 testRegr_test13 <> n:75 var
+R3238:3238 Corelib.Init.Datatypes <> O constr
+R3241:3254 testRegr_test13 <> Cons_list_prod constr
+R3265:3268 Corelib.Init.Datatypes <> Some constr
+R3276:3276 Corelib.Init.Datatypes <> O constr
+R3284:3287 Corelib.Init.Datatypes <> None constr
+R3293:3293 Corelib.Init.Datatypes <> S constr
+R3298:3310 testRegr_test13 <> Nil_list_prod constr
+R3315:3318 Corelib.Init.Datatypes <> None constr
+R3324:3324 Corelib.Init.Datatypes <> S constr
+R3329:3342 testRegr_test13 <> Cons_list_prod constr
+R3353:3365 testRegr_test13 <> nth_list_prod:77 def
+def 3390:3402 <> app_list_prod
+R3410:3418 testRegr_test13 <> list_prod ind
+binder 3405:3405 <> l:80
+binder 3407:3407 <> m:81
+R3422:3430 testRegr_test13 <> list_prod ind
+R3443:3443 testRegr_test13 <> l:80 var
+R3454:3466 testRegr_test13 <> Nil_list_prod constr
+R3471:3471 testRegr_test13 <> m:81 var
+R3477:3490 testRegr_test13 <> Cons_list_prod constr
+R3501:3514 testRegr_test13 <> Cons_list_prod constr
+R3519:3531 testRegr_test13 <> app_list_prod:82 def
+R3537:3537 testRegr_test13 <> m:81 var
+def 3557:3572 <> map_list_element
+binder 3575:3575 <> A:84
+R3593:3594 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3586:3592 testRegr_test13 <> element ind
+R3595:3595 testRegr_test13 <> A:84 var
+binder 3584:3584 <> f:85
+R3601:3612 testRegr_test13 <> list_element ind
+binder 3599:3599 <> l:86
+R3617:3620 Corelib.Init.Datatypes <> list ind
+R3622:3622 testRegr_test13 <> A:84 var
+R3635:3635 testRegr_test13 <> l:86 var
+R3646:3661 testRegr_test13 <> Nil_list_element constr
+R3666:3668 Corelib.Init.Datatypes <> nil constr
+R3674:3690 testRegr_test13 <> Cons_list_element constr
+R3701:3704 Corelib.Init.Datatypes <> cons constr
+R3713:3728 testRegr_test13 <> map_list_element:87 def
+R3732:3732 testRegr_test13 <> f:85 var
+R3730:3730 testRegr_test13 <> A:84 var
+R3707:3707 testRegr_test13 <> f:85 var
+R3756:3771 testRegr_test13 <> map_list_element def
+def 3792:3808 <> make_list_element
+R3814:3817 Corelib.Init.Datatypes <> list ind
+R3819:3825 testRegr_test13 <> element ind
+binder 3811:3811 <> l:89
+R3829:3840 testRegr_test13 <> list_element ind
+R3853:3853 testRegr_test13 <> l:89 var
+R3864:3866 Corelib.Init.Datatypes <> nil constr
+R3872:3887 testRegr_test13 <> Nil_list_element constr
+R3893:3896 Corelib.Init.Datatypes <> cons constr
+R3907:3923 testRegr_test13 <> Cons_list_element constr
+R3928:3944 testRegr_test13 <> make_list_element:90 def
+def 3968:3986 <> unmake_list_element
+R3992:4003 testRegr_test13 <> list_element ind
+binder 3989:3989 <> l:92
+R4007:4010 Corelib.Init.Datatypes <> list ind
+R4012:4018 testRegr_test13 <> element ind
+R4031:4031 testRegr_test13 <> l:92 var
+R4042:4057 testRegr_test13 <> Nil_list_element constr
+R4062:4064 Corelib.Init.Datatypes <> nil constr
+R4070:4086 testRegr_test13 <> Cons_list_element constr
+R4097:4100 Corelib.Init.Datatypes <> cons constr
+R4105:4123 testRegr_test13 <> unmake_list_element:93 def
+def 4147:4162 <> nth_list_element
+R4167:4169 Corelib.Init.Datatypes <> nat ind
+binder 4165:4165 <> n:95
+R4176:4187 testRegr_test13 <> list_element ind
+binder 4173:4173 <> l:96
+R4203:4208 Corelib.Init.Datatypes <> option ind
+R4210:4216 testRegr_test13 <> element ind
+R4231:4231 testRegr_test13 <> l:96 var
+R4229:4229 testRegr_test13 <> n:95 var
+R4242:4242 Corelib.Init.Datatypes <> O constr
+R4245:4261 testRegr_test13 <> Cons_list_element constr
+R4272:4275 Corelib.Init.Datatypes <> Some constr
+R4283:4283 Corelib.Init.Datatypes <> O constr
+R4291:4294 Corelib.Init.Datatypes <> None constr
+R4300:4300 Corelib.Init.Datatypes <> S constr
+R4305:4320 testRegr_test13 <> Nil_list_element constr
+R4325:4328 Corelib.Init.Datatypes <> None constr
+R4334:4334 Corelib.Init.Datatypes <> S constr
+R4339:4355 testRegr_test13 <> Cons_list_element constr
+R4366:4381 testRegr_test13 <> nth_list_element:97 def
+def 4406:4421 <> app_list_element
+R4429:4440 testRegr_test13 <> list_element ind
+binder 4424:4424 <> l:100
+binder 4426:4426 <> m:101
+R4444:4455 testRegr_test13 <> list_element ind
+R4468:4468 testRegr_test13 <> l:100 var
+R4479:4494 testRegr_test13 <> Nil_list_element constr
+R4499:4499 testRegr_test13 <> m:101 var
+R4505:4521 testRegr_test13 <> Cons_list_element constr
+R4532:4548 testRegr_test13 <> Cons_list_element constr
+R4553:4568 testRegr_test13 <> app_list_element:102 def
+R4574:4574 testRegr_test13 <> m:101 var
+def 4594:4610 <> map_list_bindspec
+binder 4613:4613 <> A:104
+R4632:4633 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R4624:4631 testRegr_test13 <> bindspec ind
+R4634:4634 testRegr_test13 <> A:104 var
+binder 4622:4622 <> f:105
+R4640:4652 testRegr_test13 <> list_bindspec ind
+binder 4638:4638 <> l:106
+R4657:4660 Corelib.Init.Datatypes <> list ind
+R4662:4662 testRegr_test13 <> A:104 var
+R4675:4675 testRegr_test13 <> l:106 var
+R4686:4702 testRegr_test13 <> Nil_list_bindspec constr
+R4707:4709 Corelib.Init.Datatypes <> nil constr
+R4715:4732 testRegr_test13 <> Cons_list_bindspec constr
+R4743:4746 Corelib.Init.Datatypes <> cons constr
+R4755:4771 testRegr_test13 <> map_list_bindspec:107 def
+R4775:4775 testRegr_test13 <> f:105 var
+R4773:4773 testRegr_test13 <> A:104 var
+R4749:4749 testRegr_test13 <> f:105 var
+R4799:4815 testRegr_test13 <> map_list_bindspec def
+def 4836:4853 <> make_list_bindspec
+R4859:4862 Corelib.Init.Datatypes <> list ind
+R4864:4871 testRegr_test13 <> bindspec ind
+binder 4856:4856 <> l:109
+R4875:4887 testRegr_test13 <> list_bindspec ind
+R4900:4900 testRegr_test13 <> l:109 var
+R4911:4913 Corelib.Init.Datatypes <> nil constr
+R4919:4935 testRegr_test13 <> Nil_list_bindspec constr
+R4941:4944 Corelib.Init.Datatypes <> cons constr
+R4955:4972 testRegr_test13 <> Cons_list_bindspec constr
+R4977:4994 testRegr_test13 <> make_list_bindspec:110 def
+def 5018:5037 <> unmake_list_bindspec
+R5043:5055 testRegr_test13 <> list_bindspec ind
+binder 5040:5040 <> l:112
+R5059:5062 Corelib.Init.Datatypes <> list ind
+R5064:5071 testRegr_test13 <> bindspec ind
+R5084:5084 testRegr_test13 <> l:112 var
+R5095:5111 testRegr_test13 <> Nil_list_bindspec constr
+R5116:5118 Corelib.Init.Datatypes <> nil constr
+R5124:5141 testRegr_test13 <> Cons_list_bindspec constr
+R5152:5155 Corelib.Init.Datatypes <> cons constr
+R5160:5179 testRegr_test13 <> unmake_list_bindspec:113 def
+def 5203:5219 <> nth_list_bindspec
+R5224:5226 Corelib.Init.Datatypes <> nat ind
+binder 5222:5222 <> n:115
+R5233:5245 testRegr_test13 <> list_bindspec ind
+binder 5230:5230 <> l:116
+R5261:5266 Corelib.Init.Datatypes <> option ind
+R5268:5275 testRegr_test13 <> bindspec ind
+R5290:5290 testRegr_test13 <> l:116 var
+R5288:5288 testRegr_test13 <> n:115 var
+R5301:5301 Corelib.Init.Datatypes <> O constr
+R5304:5321 testRegr_test13 <> Cons_list_bindspec constr
+R5332:5335 Corelib.Init.Datatypes <> Some constr
+R5343:5343 Corelib.Init.Datatypes <> O constr
+R5351:5354 Corelib.Init.Datatypes <> None constr
+R5360:5360 Corelib.Init.Datatypes <> S constr
+R5365:5381 testRegr_test13 <> Nil_list_bindspec constr
+R5386:5389 Corelib.Init.Datatypes <> None constr
+R5395:5395 Corelib.Init.Datatypes <> S constr
+R5400:5417 testRegr_test13 <> Cons_list_bindspec constr
+R5428:5444 testRegr_test13 <> nth_list_bindspec:117 def
+def 5469:5485 <> app_list_bindspec
+R5493:5505 testRegr_test13 <> list_bindspec ind
+binder 5488:5488 <> l:120
+binder 5490:5490 <> m:121
+R5509:5521 testRegr_test13 <> list_bindspec ind
+R5534:5534 testRegr_test13 <> l:120 var
+R5545:5561 testRegr_test13 <> Nil_list_bindspec constr
+R5566:5566 testRegr_test13 <> m:121 var
+R5572:5589 testRegr_test13 <> Cons_list_bindspec constr
+R5600:5617 testRegr_test13 <> Cons_list_bindspec constr
+R5622:5638 testRegr_test13 <> app_list_bindspec:122 def
+R5644:5644 testRegr_test13 <> m:121 var

@@ -1,0 +1,215 @@
+/- Claude: this file is written by Claude (Opus 5), 2026-09-14.  It discharges
+   the claims stated in test7_statements.mng about the language Ott generates
+   from tests/test7.ott: it proves the ones that are true, refutes the three
+   that are false, and leaves the rest with sorry and a note on what proving
+   them would take.
+
+   The refutations are the point of the file.  Records subtype vacuously, the
+   empty record types in any context, and from those two a well-typed closed
+   term gets stuck - so progress is false, and typing and subtyping do not
+   maintain a well-formed context.  The section "Where these definitions go
+   wrong" has the counterexamples, and the one after it the root cause.
+
+   What is left as sorry is the POPLmark part: transitivity and narrowing for
+   subtyping, the inversion lemmas behind canonical forms, and the substitution
+   lemmas.  That is weeks of work rather than an afternoon - and, given the
+   refutations, not all of it can succeed as the definitions stand.
+
+   This is the source that Ott's lean_filter turns into test7_proofs.lean. -/
+
+import test7_statements
+
+open Typ t p TypEnv
+
+/-! ## Proved -/
+
+/-- True by computation on `is_v_of_t`.
+
+    The statement is in object syntax; the case labels of the proof cannot be.
+    Lean's "cases ... with | alt xs => tac" wants a constructor name followed by
+    binder names, and the filter necessarily produces a term: writing
+    "| [[ \ x : T11 . t12 ]] =>" filters to "| (t_Lam x T11 t12) =>", which is
+    rejected with "unexpected token '('; expected '_' or identifier", and
+    "| [[ x ]] =>" filters to "| x =>", which is rejected with "Invalid
+    alternative name `x`: Expected `t_Var`, `t_Lam`, ...".  A case label is not
+    a term, so there is nothing for the filter to produce there. -/
+theorem isValueIff : IsValueIff := by
+  intro t1
+  cases t1 with
+  | t_Var x => simp [IsValue, is_v_of_t]
+  | t_Lam x T11 t12 => simp [IsValue, is_v_of_t]
+  | t_App t1 t2 => simp [IsValue, is_v_of_t]
+  | t_TLam X T11 t12 => simp [IsValue, is_v_of_t]
+  | t_TApp t1 T2 => simp [IsValue, is_v_of_t]
+  | t_Rec l_t_list => simp [IsValue, is_v_of_t]
+  | t_Proj t1 l => simp [IsValue, is_v_of_t]
+  | t_Let p5 t1 t2 => simp [IsValue, is_v_of_t]
+
+/-! ## Proved from the statements of preservation and progress
+
+    These three do not depend on how preservation and progress are proved, only
+    on what they say, so they take them as hypotheses.  Progress is false, so
+    they are vacuous as they stand; they are here for when the definitions are
+    repaired. -/
+
+theorem preservationMulti (hp : Preservation) : PreservationMulti := by
+  intro t1 t2 T ht hs
+  revert ht
+  induction hs with
+  | refl t1 => exact id
+  | step h1 _ ih => exact fun ht => ih (hp _ _ _ ht h1)
+
+theorem safety (hp : Preservation) (hq : Progress) : Safety :=
+  fun t1 t2 T ht hs => hq t2 T (preservationMulti hp t1 t2 T ht hs)
+
+theorem neverStuck (hp : Preservation) (hq : Progress) : NeverStuck := by
+  intro t1 t2 T ht hs hstuck
+  rcases safety hp hq t1 t2 T ht hs with hv | hr
+  · exact hstuck.1 hv
+  · exact hstuck.2 hr
+
+/-! ## Where these definitions go wrong
+
+    Everything in this section is proved.  These statements are in Lean rather
+    than object syntax: they are about particular terms - the empty record, a
+    projection at a particular label - and object syntax describes schematic
+    ones, so a record dot form would filter to a variable rather than to the
+    empty list. -/
+
+/-- Record subtyping is vacuous.  `SA_Rcd` takes the upper bound `m` of the
+    index range as a constructor argument, unconnected to the length of the
+    record it is about, and its premise is "for every i between 1 and m ...".
+    Taking m = 0 makes that premise vacuous, so any record type is a subtype of
+    any other, in any context, well-formed or not. -/
+theorem sa_rcd_vacuous (G : TypEnv) (k_S_list l_T_list : List (label × Typ)) :
+    SA G (Ty_Rec k_S_list) (Ty_Rec l_T_list) := by
+  refine SA.SA_Rcd l_T_list k_S_list G 0 0 ?_
+  intro i hi
+  exact absurd (Nat.le_trans hi.1 hi.2) (by simp)
+
+/-- The empty record types in any context.  `TyCh_Rcd` with an empty list of
+    fields has no premises at all - not even that the context is well formed. -/
+theorem ty_empty_rec (G : TypEnv) : Ty G (t_Rec []) (Ty_Rec []) := by
+  have h := Ty.TyCh_Rcd [] G (by intro x hx; simp at hx)
+  simpa using h
+
+theorem not_ok_example : ¬ Gok (G_term G_empty "x" (Ty_Var "X")) := by
+  intro h
+  cases h with
+  | Gok_2 _ _ _ hgt _ => cases hgt with
+    | GT_Var _ _ _ _ htin => cases htin
+
+/-- So typing does not maintain a well-formed context. -/
+theorem typingOk_fails : ¬ TypingOk := by
+  intro h
+  exact not_ok_example (h _ _ _ (ty_empty_rec (G_term G_empty "x" (Ty_Var "X"))))
+
+/-- Nor does subtyping. -/
+theorem subOk_fails : ¬ SubOk := by
+  intro h
+  exact not_ok_example (h _ _ _ (sa_rcd_vacuous (G_term G_empty "x" (Ty_Var "X")) [] []))
+
+/-- A closed well-typed term that is not a value and takes no step: the empty
+    record, coerced by the vacuous subtyping to a record type that claims a
+    field, and then projected at that field. -/
+theorem ty_stuck : Ty G_empty (t_Proj (t_Rec []) "l") Ty_Top := by
+  have h1 : Ty G_empty (t_Rec []) (Ty_Rec [("l", Ty_Top)]) :=
+    Ty.TyCh_Sub G_empty (t_Rec []) (Ty_Rec [("l", Ty_Top)]) (Ty_Rec [])
+      (ty_empty_rec G_empty) (sa_rcd_vacuous G_empty [] [("l", Ty_Top)])
+  have h2 := Ty.TyCh_Proj [("l", Ty_Top)] 1 G_empty (t_Rec []) h1
+  simpa using h2
+
+theorem stuck_no_step : ¬ ∃ t2, reduce (t_Proj (t_Rec []) "l") t2 := by
+  rintro ⟨t2, h⟩
+  have key : ∀ (u v : t), reduce u v → u = t_Proj (t_Rec []) "l" → False := by
+    intro u v hu heq
+    cases hu <;> simp_all
+    obtain ⟨rfl, h2⟩ := heq
+    simp [default] at h2
+  exact key _ _ h rfl
+
+/-- Hence progress is false for these definitions. -/
+theorem progress_fails : ¬ Progress := by
+  intro h
+  rcases h _ _ ty_stuck with hv | hstep
+  · simp [IsValue, is_v_of_t] at hv
+  · exact stuck_no_step hstep
+
+/-! ## The root cause, and what to do about it
+
+    Both vacuities come from a dot form whose index bound is generated as an
+    unconstrained argument.  The rule in tests/test7.ott reads
+
+      G |- { k1 : S1 , .. , km : Sm } <: { l1 : T1 , .. , ln : Tn }
+
+    with the premise "forall i isin 1 -- m . ...".  In the source, m is the
+    length of the record on the left.  In the generated inductive it is a
+    constructor argument of its own, with nothing tying it to the list:
+
+      | SA_Rcd : forall (l_T_list k_S_list : List (label x Typ)) (G5 : TypEnv)
+                        (i m : index),
+          (forall i, 1 <= i /\ i <= m -> SAf ...) -> SA G5 (Ty_Rec k_S_list) ...
+
+    so m := 0 discharges the premise.  The same shape appears in the generated
+    Coq for this rule, and in TyCh_Rcd, whose premise is a dot form over the
+    fields and so is vacuous for the empty record.
+
+    Two things would fix it, and they are independent.  Generating the bound as
+    "m = List.length k_S_list" rather than as a free argument would tie the
+    quantifier to the record it is about.  Requiring a well-formedness premise
+    on the rules that can have no other premise - TyCh_Rcd and SA_Rcd with an
+    empty list - would stop the empty record typing in a broken context.  Both
+    are Ott-side changes rather than anything about these files. -/
+
+/-! ## Not proved
+
+    What each of these would take is in the section after them. -/
+
+theorem typingWf : TypingWf := by sorry
+theorem subRefl : SubRefl := by sorry
+theorem subTrans : SubTrans := by sorry
+theorem subNarrow : SubNarrow := by sorry
+theorem typingNarrow : TypingNarrow := by sorry
+theorem canonicalFormsArrow : CanonicalFormsArrow := by sorry
+theorem canonicalFormsForall : CanonicalFormsForall := by sorry
+theorem canonicalFormsRecord : CanonicalFormsRecord := by sorry
+theorem substTerm : SubstTerm := by sorry
+theorem substType : SubstType := by sorry
+theorem matchTyping : MatchTyping := by sorry
+theorem preservation : Preservation := by sorry
+
+/-! ## What the remaining proofs would take
+
+    **Subtyping transitivity and narrowing** are the POPLmark challenge proper:
+    they are proved simultaneously, by induction on the middle type, and every
+    later result depends on them.  The generated `SA` is the usual algorithmic
+    presentation - `SA_Trans_TVar` for variables, structural rules elsewhere -
+    so transitivity is not immediate.
+
+    **The inversion lemmas** behind canonical forms have to see through
+    `SA_Trans_TVar`, which is where narrowing is needed.  For records they also
+    have to contend with the vacuity above: as things stand a value of a record
+    type need have nothing to do with that type.
+
+    **Substitution** has the same problem the test10st file records: `tsubst_t`
+    and `Tsubst_t` do not rename bound variables, so the term substituted has to
+    be closed, which is what typing in the empty context gives here.  A
+    development that wanted the open statements would need capture-avoiding
+    substitution or a locally nameless representation in the Ott source.
+
+    **Records and patterns** bring their own work.  `SA_Rcd` and `M_Rcd` in
+    tests/test7.ott are stated through the auxiliary judgements `SAf` and `Mf`,
+    which search the other record field by field; the original rules, kept as
+    comments beside them, used an existential over field indices that Lean 4
+    rejects in a recursive position.  So an induction over a record subtyping
+    derivation is an induction over those searches rather than over a list.
+
+    **The projection rule** `reduce_ProjRcd` selects its field with the
+    panic-indexing `l'_v_list[j - 1]!`, whose problems are recorded in
+    notes02-2026-09-14: out of range it yields the `Inhabited` default rather
+    than failing to apply.  That is what makes the stuck term above stuck, and
+    it should be settled along with the bound.
+
+    **One small oddity**: `reduce_LetV` has the premise `is_v_of_t v1` twice,
+    from the subrule check being generated once per occurrence of `v1` in the
+    rule.  Harmless, but it will show up in any case analysis. -/

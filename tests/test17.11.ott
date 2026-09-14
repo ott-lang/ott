@@ -1,21 +1,21 @@
 % test17.11.ott  - a test of variant list forms, made by adapting tmp_test7_clean
 
 
-metavar typevar, X ::=
+metavar typevar, X ::= {{ lean Nat }}
  {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }} {{ lex Alphanum }}  
  {{ tex \mathit{[[typevar]]} }} {{ com  type variable  }}  
  {{ isavar ''[[typevar]]'' }} {{ holvar "[[typevar]]" }} {{ texvar \mathrm{[[typevar]]} }} 
 
-metavar termvar, x ::=
+metavar termvar, x ::= {{ lean Nat }}
  {{ isa string }} {{ coq nat }} {{ hol string }}  {{ coq-equality }} {{ lex alphanum }}  
  {{ tex \mathit{[[termvar]]} }} {{ com  term variable  }} 
  {{ isavar ''[[termvar]]'' }}  {{ holvar "[[termvar]]" }} {{ texvar \mathrm{[[termvar]]} }} 
 
-metavar label, l, k ::=
+metavar label, l, k ::= {{ lean Nat }}
  {{ isa string }} {{ coq nat }} {{ hol string }} {{ lex alphanum }}  {{ tex \mathit{[[label]]} }} 
  {{ com  field label  }} {{ isavar ''[[label]]'' }} {{ holvar "[[label]]" }}
 
-indexvar index, i, j, n, m  ::= {{ isa nat }} {{ coq nat }} {{ hol num }} {{ lex numeral }}
+indexvar index, i, j, n, m  ::= {{ lean Nat }} {{ isa nat }} {{ coq nat }} {{ hol num }} {{ lex numeral }}
   {{ com indices }}
 
  grammar
@@ -26,8 +26,8 @@ T {{ hol Typ }}, S, U :: 'T_' ::=                    {{ com type  }}
   | T -> T'                          :: :: Fun          {{ com type of functions }}
   | Forall X <: T . T'               :: :: Forall (+ bind X in T' +) {{ com universal type }} 
   | { </ li : Ti // , // i /> }      :: :: Rec           {{ com record }}           
-  | ( T )                            :: M :: paren {{ ich [[T]] }} {{ ocaml [[T]] }} 
-  | [ X |-> T ] T'                   :: M :: sub   {{ ich (Tsubst_T [[T]] [[X]] [[T']]) }} 
+  | ( T )                            :: M :: paren {{ ich [[T]] }} {{ lean [[T]] }} {{ ocaml [[T]] }} 
+  | [ X |-> T ] T'                   :: M :: sub   {{ ich (Tsubst_T [[T]] [[X]] [[T']]) }} {{ lean (Tsubst_T [[T]] [[X]] [[T']]) }} 
                                                    {{ ocaml (Tsubst_T [[T]] [[X]] [[T']]) }}
 
 t :: 't_' ::=                                                      {{ com  term  }}
@@ -40,13 +40,13 @@ t :: 't_' ::=                                                      {{ com  term 
   | { </ li = ti // , // i /> }      :: :: Rec                      {{ com record }}
   | t . l                            :: :: Proj                     {{ com projection }} 
   | let p = t in t'                  :: :: Let (+ bind b(p) in t' +){{ com pattern binding}}
-  | ( t )                            :: M :: paren {{ ich [[t]] }} 
+  | ( t )                            :: M :: paren {{ ich [[t]] }} {{ lean [[t]] }} 
                                                    {{ ocaml [[t]] }}
-  | [ x |-> t ] t'                   :: M :: tsub  {{ ich ( tsubst_t [[t]] [[x]] [[t']] ) }}
+  | [ x |-> t ] t'                   :: M :: tsub  {{ ich ( tsubst_t [[t]] [[x]] [[t']] ) }} {{ lean ( tsubst_t [[t]] [[x]] [[t']] ) }}
                                                    {{ ocaml ( tsubst_t [[t]] [[x]] [[t']] ) }}
-  | [ X |-> T ] t                    :: M :: Tsub  {{ ich ( Tsubst_t [[T]] [[X]] [[t]] ) }} 
+  | [ X |-> T ] t                    :: M :: Tsub  {{ ich ( Tsubst_t [[T]] [[X]] [[t]] ) }} {{ lean ( Tsubst_t [[T]] [[X]] [[t]] ) }} 
                                                    {{ ocaml ( Tsubst_t [[T]] [[X]] [[t]] ) }} 
-  | s t                              :: M :: tsubs {{ ich ( m_t_subst_t [[s]] [[t]] ) }}
+  | s t                              :: M :: tsubs {{ ich ( m_t_subst_t [[s]] [[t]] ) }} {{ lean ( m_t_subst_t [[s]] [[t]] ) }}
                                                    {{ ocaml ( m_t_subst_t [[s]] [[t]] ) }}
 
  p :: 'P_' ::=                                                {{ com  pattern }}
@@ -64,7 +64,7 @@ G {{ tex \Gamma }}, D {{ tex \Delta }} :: 'G_' ::= {{ com type environment }}
   | empty                            ::   :: empty       
   | G , X <: T                       ::   :: type        
   | G , x : T                        ::    :: term
-  | </ Gi // , // i />               :: M :: dots {{ ich (flatten_G [[ </ Gi // i /> ]]) }} {{ ocaml TODO }}
+  | </ Gi // , // i />               :: M :: dots {{ ich (flatten_G [[ </ Gi // i /> ]]) }} {{ lean (flatten_G [[ </ Gi // i /> ]]) }} {{ ocaml TODO }}
 
 s {{ tex \sigma }} :: 'S_' ::= {{ com multiple term substitution }} {{ isa (termvar*t) list }} {{ hol (termvar#t) list }} {{ coq list (termvar*t) }}
   | [ x |-> t ]                      ::   :: singleton {{ ih [ ([[x]],[[t]]) ] }} 
@@ -91,29 +91,29 @@ terminals :: terminals_ ::=
 formula :: formula_ ::=          
   | judgement              :: :: judgement
 %  | </ formulai // i />    :: :: dots    
-%{{ isa [[ </ formulai // i /> ]] }} 
+%{{ isa [[ </ formulai // i /> ]] }} {{ lean [[ </ formulai // i /> ]] }} 
   | formula1 ... formulan   :: :: dots
-  | x = x'                 :: :: xeq     {{ ich [[x]] = [[x']]  }}
-  | X = X'                 :: :: Xeq     {{ ich [[X]] = [[X']]  }}
-  | ( formula )            :: :: paren   {{ ich ( [[formula]] ) }}
+  | x = x'                 :: :: xeq     {{ ich [[x]] = [[x']]  }} {{ lean [[x]] = [[x']] }}
+  | X = X'                 :: :: Xeq     {{ ich [[X]] = [[X']]  }} {{ lean [[X]] = [[X']] }}
+  | ( formula )            :: :: paren   {{ ich ( [[formula]] ) }} {{ lean ( [[formula]] ) }}
   | not formula            :: :: not     {{ isa Not( [[formula]] ) }}
-                                         {{ coq not( [[formula]] ) }}
+                                         {{ coq not( [[formula]] ) }} {{ lean ¬ ( [[formula]] ) }}
                                          {{ hol ~( [[formula]] ) }}
                                          {{ tex \neg [[ formula]] }}
   | forall i isin 1 -- m . formula :: :: forall 
                                {{ tex \forall [[i]] \in 1 .. [[m]] . [[formula]] }} 
                                {{ isa ![[i]] . ((1::nat)<=[[i]] & [[i]]<=[[m]]) ==> [[formula]] }} 
                                {{ hol ![[i]] . (1<=[[i]] /\ [[i]]<=[[m]]) ==> [[formula]] }} 
-	                       {{ coq (forall [[i]], (1<=[[i]] /\ [[i]] <= m) -> [[formula]]) }}
+	                       {{ coq (forall [[i]], (1<=[[i]] /\ [[i]] <= m) -> [[formula]]) }} {{ lean (forall [[i]], (1<=[[i]] /\ [[i]] <= m) -> [[formula]]) }}
   | exists i isin 1 -- m . formula :: :: exists 
                                {{ tex \exists [[i]] \in 1 .. [[m]]. [[formula]] }}
                                {{ isa ?[[i]]. ((1::nat)<=[[i]] & [[i]]<=[[m]]) ==> [[formula]] }} 
                                {{ hol ?[[i]] . (1<=[[i]] /\ [[i]]<=[[m]]) ==> [[formula]] }} 
-                               {{ coq exists [[i]], (1<=[[i]] /\ [[i]] <= [[m]]) -> [[formula]] }}
+                               {{ coq exists [[i]], (1<=[[i]] /\ [[i]] <= [[m]]) -> [[formula]] }} {{ lean exists [[i]], (1<=[[i]] /\ [[i]] <= [[m]]) -> [[formula]] }}
   | formula /\ formula'   :: :: and  {{ isa ([[formula]] & [[formula']]) }}
                                      {{ hol ([[formula]] /\ [[formula']]) }}
-                                     {{ coq ([[formula]] /\ [[formula']]) }}
-  | l = l'                :: :: leq  {{ ich ([[l]]=[[l']]) }}
+                                     {{ coq ([[formula]] /\ [[formula']]) }} {{ lean ([[formula]] /\ [[formula']]) }}
+  | l = l'                :: :: leq  {{ ich ([[l]]=[[l']]) }} {{ lean ([[l]]=[[l']]) }}
  
 
 subrules

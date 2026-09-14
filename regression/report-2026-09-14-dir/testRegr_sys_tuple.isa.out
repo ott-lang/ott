@@ -1,0 +1,27 @@
+Running Draft ...
+
+Output (line 9 of "Draft/testRegr_sys_tuple.thy"):
+consts
+  typerep_T_IITN_T :: "T.T_IITN_T itself ⇒ typerep"
+
+Output (line 9 of "Draft/testRegr_sys_tuple.thy"):
+consts
+  typerep_T :: "T itself ⇒ typerep"
+
+Output (line 9 of "Draft/testRegr_sys_tuple.thy"):
+consts
+  term_of_T :: "T ⇒ term"
+
+Output (line 9 of "Draft/testRegr_sys_tuple.thy"):
+consts
+  partial_term_of_T ::
+    "T itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 9 of "Draft/testRegr_sys_tuple.thy"):
+consts
+  equal_T :: "T ⇒ T ⇒ bool"
+Draft FAILED (see also "isabelle build_log -H Error Draft")
+*** Undefined type name: "termvar" (line 13 of "/tmp/isabelle-pes20/private9577782769779900802/Draft/testRegr_sys_tuple.thy")
+*** Failed to parse type
+*** At command "type_synonym" (line 13 of "/tmp/isabelle-pes20/private9577782769779900802/Draft/testRegr_sys_tuple.thy")
+Unfinished session(s): Draft

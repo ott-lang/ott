@@ -1,0 +1,25 @@
+File "./testRegr_test17_13.v", line 3, characters 15-20:
+Warning: Loading Stdlib without prefix is deprecated.
+Use "From Stdlib Require Arith" or the deprecated "From Coq Require Arith"
+for compatibility with older Coq versions.
+[deprecated-missing-stdlib,deprecated-since-9.0,deprecated,default]
+File "./testRegr_test17_13.v", line 4, characters 15-19:
+Warning: Loading Stdlib without prefix is deprecated.
+Use "From Stdlib Require Bool" or the deprecated "From Coq Require Bool"
+for compatibility with older Coq versions.
+[deprecated-missing-stdlib,deprecated-since-9.0,deprecated,default]
+File "./testRegr_test17_13.v", line 5, characters 15-19:
+Warning: Loading Stdlib without prefix is deprecated.
+Use "From Stdlib Require List" or the deprecated "From Coq Require List"
+for compatibility with older Coq versions.
+[deprecated-missing-stdlib,deprecated-since-9.0,deprecated,default]
+File "./testRegr_test17_13.v", line 13, characters 0-56:
+Warning: Implicitly declaring hint databases is deprecated. Please explicitly
+create "ott_coq_equality"
+[implicit-create-hint-db,deprecated-since-9.2,deprecated,default]
+File "./testRegr_test17_13.v", line 173, characters 0-1272:
+Warning: Not a fully mutually defined fixpoint
+(e.g., is_c_of_c depends on is_c_of_a_list but not
+conversely).
+Well-foundedness check may fail unexpectedly.
+ [non-full-mutual,fixpoints,default]

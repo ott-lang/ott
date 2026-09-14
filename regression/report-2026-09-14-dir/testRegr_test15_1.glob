@@ -1,0 +1,51 @@
+DIGEST 514472b9537f0177dc0be76fc6c5d936
+FtestRegr_test15_1
+R123:127 Stdlib.Arith.Arith <> <> lib
+R157:160 Stdlib.Bool.Bool <> <> lib
+R190:193 Stdlib.Lists.List <> <> lib
+ind 209:209 <> a
+constr 224:227 <> a_AA
+constr 236:238 <> a_a
+constr 250:252 <> a_b
+ind 266:266 <> b
+constr 281:284 <> b_BB
+constr 293:295 <> b_a
+constr 307:309 <> b_b
+R231:231 testRegr_test15_1 <> a:1 ind
+R244:244 testRegr_test15_1 <> a:1 ind
+binder 241:242 <> a5:5
+R258:258 testRegr_test15_1 <> b:2 ind
+binder 255:256 <> b5:6
+R288:288 testRegr_test15_1 <> b:2 ind
+R301:301 testRegr_test15_1 <> a:1 ind
+binder 298:299 <> a5:7
+R315:315 testRegr_test15_1 <> b:2 ind
+binder 312:313 <> b5:8
+scheme 209:209 <> a_rect
+scheme 209:209 <> a_ind
+scheme 209:209 <> a_rec
+scheme 209:209 <> a_sind
+scheme 266:266 <> b_rect
+scheme 266:266 <> b_ind
+scheme 266:266 <> b_rec
+scheme 266:266 <> b_sind
+def 347:356 <> is_bv_of_b
+R363:363 testRegr_test15_1 <> b ind
+binder 359:361 <> b_6:9
+R384:386 testRegr_test15_1 <> b_6:9 var
+R397:400 testRegr_test15_1 <> b_BB constr
+R405:409 Corelib.Init.Logic <> False ind
+R416:418 testRegr_test15_1 <> b_a constr
+R428:431 Corelib.Init.Logic <> True ind
+R439:441 testRegr_test15_1 <> b_b constr
+R451:454 Corelib.Init.Logic <> True ind
+def 474:483 <> is_av_of_a
+R490:490 testRegr_test15_1 <> a ind
+binder 486:488 <> a_6:11
+R511:513 testRegr_test15_1 <> a_6:11 var
+R524:527 testRegr_test15_1 <> a_AA constr
+R532:536 Corelib.Init.Logic <> False ind
+R543:545 testRegr_test15_1 <> a_a constr
+R555:558 Corelib.Init.Logic <> True ind
+R566:568 testRegr_test15_1 <> a_b constr
+R578:581 Corelib.Init.Logic <> True ind

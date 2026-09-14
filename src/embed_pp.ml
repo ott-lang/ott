@@ -56,6 +56,7 @@ and pp_embedmorphism fd m xd lookup (l,hn,es) =
       output_string fd Grammar_pp.pp_DOUBLERIGHTBRACE;
       output_string fd "\n";
   | (Coq _, "coq") 
+  | (Lean _, "lean") 
   | (Isa _, "isa")                       
   | (Hol _, "hol") 
   | (Lem _, "lem") 
@@ -66,13 +67,30 @@ and pp_embedmorphism fd m xd lookup (l,hn,es) =
   | (Lex _,  "lex") -> 
       pp_embed_spec fd m xd lookup es;
       output_string fd "\n"
+  (* Claude: a <target>-expand-list-types-<bool> embed is emitted exactly as a
+     plain {{ coq ... }} / {{ lean ... }} embed would be, but only when the
+     -coq_expand_list_types / -lean_expand_list_types flag has that value, so
+     one source file can carry both versions of hand-written code that depends
+     on how lists are represented in the generated definitions. *)
+  | (Coq co, "coq-expand-list-types-true") when co.coq_expand_lists ->
+      pp_embed_spec fd m xd lookup es;
+      output_string fd "\n"
+  | (Coq co, "coq-expand-list-types-false") when not co.coq_expand_lists ->
+      pp_embed_spec fd m xd lookup es;
+      output_string fd "\n"
+  | (Lean lno, "lean-expand-list-types-true") when lno.lean_expand_lists ->
+      pp_embed_spec fd m xd lookup es;
+      output_string fd "\n"
+  | (Lean lno, "lean-expand-list-types-false") when not lno.lean_expand_lists ->
+      pp_embed_spec fd m xd lookup es;
+      output_string fd "\n"
   | (Coq co, "coq-lib") -> 
       let x = co.coq_library in
       x := (fst !x, embed_strings (snd !x) es)
   | (Isa io, "isa-lib") -> 
       let x = io.isa_library in
       x := (fst !x, embed_strings (snd !x) es)
-  | (Coq _, _) | (Isa _, _) | (Hol _,_) | (Lem _,_) | (Twf _,_) | (Tex _,_) | (Caml _,_) | (Lex _, _) | (Menhir _, _) -> ()
+  | (Coq _, _) | (Lean _, _) | (Isa _, _) | (Hol _,_) | (Lem _,_) | (Twf _,_) | (Tex _,_) | (Caml _,_) | (Lex _, _) | (Menhir _, _) -> ()
 
 and pp_embed_spec fd m xd lookup es = 
   List.iter (pp_embed_spec_el fd m xd lookup) es
@@ -88,7 +106,7 @@ and pp_embed_spec_el fd m xd lookup ese =
           output_string fd Grammar_pp.pp_DOUBLERIGHTBRACKET )
   | Tex xo when (match ese with Embed_inner (_,"TEX_NAME_PREFIX")->true | _->false) -> 
       output_string fd xo.ppt_name_prefix
-  | Tex _ | Coq _ | Isa _ | Hol _ | Lem _ | Twf _ | Caml _ | Lex _ | Menhir _ -> 
+  | Tex _ | Coq _ | Lean _ | Isa _ | Hol _ | Lem _ | Twf _ | Caml _ | Lex _ | Menhir _ -> 
       ( match ese with
       | Embed_string (l,s) -> output_string fd s
 

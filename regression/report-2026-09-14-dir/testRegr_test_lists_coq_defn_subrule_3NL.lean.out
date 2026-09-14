@@ -1,0 +1,12 @@
+testRegr_test_lists_coq_defn_subrule_3NL.lean:25:19: warning: Variable name `constant5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _constant5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test_lists_coq_defn_subrule_3NL.lean:37:31: warning: Variable name `x_` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _x_
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`

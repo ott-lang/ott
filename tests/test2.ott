@@ -4,7 +4,7 @@ embed
   {{ isa 
 (* isa preamble embed *) }}
 
-metavar ident , x  ::= {{ isa string }} {{ coq nat }} {{ lex [A-Z]+ }}
+metavar ident , x  ::= {{ lean Nat }} {{ isa string }} {{ coq nat }} {{ lex [A-Z]+ }}
 
 embed {{ coq (* after metavar embed *) }}
 

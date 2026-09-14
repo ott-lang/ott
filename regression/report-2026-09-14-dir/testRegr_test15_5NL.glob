@@ -1,0 +1,119 @@
+DIGEST 83fb8b9386a38623c7579390e82d4e4d
+FtestRegr_test15_5NL
+R123:127 Stdlib.Arith.Arith <> <> lib
+R157:160 Stdlib.Bool.Bool <> <> lib
+R190:193 Stdlib.Lists.List <> <> lib
+R211:227 Ott.ott_list_core <> <> lib
+ind 243:243 <> a
+constr 258:262 <> a_AAA
+constr 271:274 <> a_AA
+constr 283:285 <> a_a
+constr 297:299 <> a_B
+constr 326:328 <> a_C
+R266:266 testRegr_test15_5NL <> a:1 ind
+R278:278 testRegr_test15_5NL <> a:1 ind
+R291:291 testRegr_test15_5NL <> a:1 ind
+binder 288:289 <> a5:3
+R305:305 testRegr_test15_5NL <> a:1 ind
+binder 302:303 <> a5:4
+R312:312 testRegr_test15_5NL <> a:1 ind
+binder 309:310 <> a':5
+R320:320 testRegr_test15_5NL <> a:1 ind
+binder 316:318 <> av5:6
+R334:334 testRegr_test15_5NL <> a:1 ind
+binder 331:332 <> a5:7
+R341:341 testRegr_test15_5NL <> a:1 ind
+binder 338:339 <> a':8
+R349:349 testRegr_test15_5NL <> a:1 ind
+binder 345:347 <> av5:9
+scheme 243:243 <> a_rect
+scheme 243:243 <> a_ind
+scheme 243:243 <> a_rec
+scheme 243:243 <> a_sind
+def 379:387 <> is_a_of_a
+def 661:671 <> is_avv_of_a
+def 952:961 <> is_av_of_a
+R394:394 testRegr_test15_5NL <> a ind
+binder 390:392 <> a_6:10
+R678:678 testRegr_test15_5NL <> a ind
+binder 674:676 <> a_6:11
+R968:968 testRegr_test15_5NL <> a ind
+binder 964:966 <> a_6:12
+R399:402 Corelib.Init.Datatypes <> bool ind
+R683:686 Corelib.Init.Datatypes <> bool ind
+R973:976 Corelib.Init.Datatypes <> bool ind
+R415:417 testRegr_test15_5NL <> a_6:10 var
+R428:432 testRegr_test15_5NL <> a_AAA constr
+R438:441 Corelib.Init.Datatypes <> true constr
+R448:451 testRegr_test15_5NL <> a_AA constr
+R457:460 Corelib.Init.Datatypes <> true constr
+R468:470 testRegr_test15_5NL <> a_a constr
+R481:489 testRegr_test15_5NL <> is_a_of_a:13 def
+R501:503 testRegr_test15_5NL <> a_B constr
+R552:556 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R571:571 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R520:520 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R533:538 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R551:551 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R521:529 testRegr_test15_5NL <> is_a_of_a:13 def
+R539:547 testRegr_test15_5NL <> is_a_of_a:13 def
+R557:566 testRegr_test15_5NL <> is_av_of_a:15 def
+R579:581 testRegr_test15_5NL <> a_C constr
+R630:634 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R649:649 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R598:598 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R611:616 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R629:629 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R599:607 testRegr_test15_5NL <> is_a_of_a:13 def
+R617:625 testRegr_test15_5NL <> is_a_of_a:13 def
+R635:644 testRegr_test15_5NL <> is_av_of_a:15 def
+R699:701 testRegr_test15_5NL <> a_6:11 var
+R712:716 testRegr_test15_5NL <> a_AAA constr
+R721:725 Corelib.Init.Datatypes <> false constr
+R731:734 testRegr_test15_5NL <> a_AA constr
+R739:743 Corelib.Init.Datatypes <> false constr
+R750:752 testRegr_test15_5NL <> a_a constr
+R763:771 testRegr_test15_5NL <> is_a_of_a:13 def
+R783:785 testRegr_test15_5NL <> a_B constr
+R838:842 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R858:858 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R802:802 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R817:822 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R837:837 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R803:813 testRegr_test15_5NL <> is_avv_of_a:14 def
+R823:833 testRegr_test15_5NL <> is_avv_of_a:14 def
+R843:853 testRegr_test15_5NL <> is_avv_of_a:14 def
+R866:868 testRegr_test15_5NL <> a_C constr
+R920:924 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R940:940 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R885:885 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R899:904 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R919:919 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R886:895 testRegr_test15_5NL <> is_av_of_a:15 def
+R905:915 testRegr_test15_5NL <> is_avv_of_a:14 def
+R925:935 testRegr_test15_5NL <> is_avv_of_a:14 def
+R989:991 testRegr_test15_5NL <> a_6:12 var
+R1002:1006 testRegr_test15_5NL <> a_AAA constr
+R1011:1015 Corelib.Init.Datatypes <> false constr
+R1021:1024 testRegr_test15_5NL <> a_AA constr
+R1030:1033 Corelib.Init.Datatypes <> true constr
+R1041:1043 testRegr_test15_5NL <> a_a constr
+R1054:1062 testRegr_test15_5NL <> is_a_of_a:13 def
+R1074:1076 testRegr_test15_5NL <> a_B constr
+R1128:1132 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R1148:1148 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R1093:1093 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R1107:1112 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R1127:1127 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R1094:1103 testRegr_test15_5NL <> is_av_of_a:15 def
+R1113:1123 testRegr_test15_5NL <> is_avv_of_a:14 def
+R1133:1143 testRegr_test15_5NL <> is_avv_of_a:14 def
+R1156:1158 testRegr_test15_5NL <> a_C constr
+R1207:1211 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R1226:1226 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R1175:1175 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R1188:1193 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R1206:1206 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R1176:1184 testRegr_test15_5NL <> is_a_of_a:13 def
+R1194:1202 testRegr_test15_5NL <> is_a_of_a:13 def
+R1212:1221 testRegr_test15_5NL <> is_av_of_a:15 def

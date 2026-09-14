@@ -1,0 +1,50 @@
+testRegr_test4.lean:6:16: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test4.lean:7:16: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test4.lean:16:4: error: Constructor field `ident` of `expr.Expr_var` contains universe level metavariables at the expression
+  Sort ?u.5
+in its type
+  Sort ?u.5
+testRegr_test4.lean:27:11: error: failed to generate `Inhabited` instance for `foo1expr`
+testRegr_test4.lean:32:11: error: failed to generate `Inhabited` instance for `foo2expr`
+testRegr_test4.lean:37:11: error: failed to generate `Inhabited` instance for `foo3expr`
+testRegr_test4.lean:38:5: error: unknown namespace `expr`
+testRegr_test4.lean:41:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+
+Hint: Using `foo1expr.Foo1Expr_tuple` would be valid:
+  [apply] `foo1expr.Foo1Expr_tuple`
+testRegr_test4.lean:59:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+testRegr_test4.lean:73:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+testRegr_test4.lean:94:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+
+Hint: Using `foo3expr.Foo3Expr_tuple` would be valid:
+  [apply] `foo3expr.Foo3Expr_tuple`
+testRegr_test4.lean:99:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+
+Hint: Using `foo2expr.Foo2Expr_tuple` would be valid:
+  [apply] `foo2expr.Foo2Expr_tuple`
+testRegr_test4.lean:104:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+
+Hint: Using `foo1expr.Foo1Expr_tuple` would be valid:
+  [apply] `foo1expr.Foo1Expr_tuple`
+testRegr_test4.lean:109:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+
+Hint: Using `foo3expr.Foo3Expr_tuple` would be valid:
+  [apply] `foo3expr.Foo3Expr_tuple`
+testRegr_test4.lean:114:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+
+Hint: Using `foo2expr.Foo2Expr_tuple` would be valid:
+  [apply] `foo2expr.Foo2Expr_tuple`
+testRegr_test4.lean:119:5: error: Invalid pattern: Expected a constructor or constant marked with `[match_pattern]`
+
+Hint: Using `foo1expr.Foo1Expr_tuple` would be valid:
+  [apply] `foo1expr.Foo1Expr_tuple`
+testRegr_test4.lean:131:5: error: Function expected at
+  Expr_tuple
+but this term has type
+  ?m.6
+
+Note: Expected a function because this term is being applied to the argument
+  (e_t_list)
+
+Hint: The identifier `Expr_tuple` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.
+testRegr_test4.lean:135:53: error(lean.unknownIdentifier): Unknown identifier `_root_.index`

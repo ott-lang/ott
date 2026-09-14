@@ -1,0 +1,46 @@
+testRegr_test10st_feNL.lean:39:11: warning: Variable name `x` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _x
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test10st_feNL.lean:40:11: warning: Variable name `x` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _x
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test10st_feNL.lean:40:13: warning: Variable name `t5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _t5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test10st_feNL.lean:41:11: warning: Variable name `t5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _t5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test10st_feNL.lean:41:14: warning: Variable name `t'` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _t'
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+testRegr_test10st_feNL.lean:75:7: error: Function expected at
+  G5
+but this term has type
+  G
+
+Note: Expected a function because this term is being applied to the argument
+  x
+testRegr_test10st_feNL.lean:75:14: error: Function expected at
+  Some
+but this term has type
+  ?m.1
+
+Note: Expected a function because this term is being applied to the argument
+  T5
+
+Hint: The identifier `Some` is unknown, and Lean's `autoImplicit` option causes an unknown identifier to be treated as an implicitly bound variable with an unknown type. However, the unknown type cannot be a function, and a function is what Lean expects here. This is often the result of a typo or a missing `import` or `open` statement.

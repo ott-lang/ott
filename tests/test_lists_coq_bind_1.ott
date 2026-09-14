@@ -1,7 +1,7 @@
 %% At the time this example was checked in, ott did not generate all
 %% the auxiliary functions it needed in Coq.
-indexvar index , i , j , k , l , m , n ::= {{ coq nat }} {{ isa nat }} {{ hol num }}
-metavar value_name , x ::= {{ coq nat }} {{ isa nat }} {{ hol num }} {{ coq-equality }}
+indexvar index , i , j , k , l , m , n ::= {{ lean Nat }} {{ coq nat }} {{ isa nat }} {{ hol num }}
+metavar value_name , x ::= {{ lean Nat }} {{ coq nat }} {{ isa nat }} {{ hol num }} {{ coq-equality }}
 grammar
 pattern , pat :: P_ ::=
   | value_name                                        ::   :: var

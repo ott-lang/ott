@@ -1,6 +1,6 @@
 
 
-metavar ident , x  ::=   {{ isa string }} 
+metavar ident , x  ::= {{ lean Nat }}   {{ isa string }} 
 		      {{ coq nat }} {{ coq-equality }}
                       {{ lex alphanum }}  
                       {{ tex \mathit{[[ ident ]]} }} 
@@ -44,7 +44,7 @@ grammar
 
         | exp exp'                 ::   :: app      {{ tex [[exp]]\;[[exp']] }}
         | '{' exp / x '}' exp'     :: M :: subst    {{ tex \{[[exp]] / [[x]] \}[[exp']] }}
-                                                    {{ isa subst_exp [[exp]] [[x]] [[exp']] }}
+                                                    {{ isa subst_exp [[exp]] [[x]] [[exp']] }} {{ lean subst_exp [[exp]] [[x]] [[exp']] }}
 
 % above we choose to write in-line \{ / \} instead of using the terminals defn, just for variety
 
@@ -92,8 +92,8 @@ grammar
         | judgement             ::   :: judgement
         | not ( formula )       ::   :: not   {{ tex \neg([[formula]]) }}
                                               {{ isa not([[formula]]) }}
-					      {{ coq not([[formula]]) }}
-        | x in dom ( E )        :: M :: indom {{ isa list_ex (\<lambda>(x',y'). x=x') [[E]] }}
+					      {{ coq not([[formula]]) }} {{ lean ¬ ([[formula]]) }}
+        | x in dom ( E )        :: M :: indom {{ isa list_ex (\<lambda>(x',y'). x=x') [[E]] }} {{ lean list_ex (\<lambda>(x',y'). x=x') [[E]] }}
                                               {{ tex [[x]]\in\mathrm{dom([[E]])} }}
 
 

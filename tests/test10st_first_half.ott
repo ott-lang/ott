@@ -1,8 +1,8 @@
-metavar termvar, x ::=
+metavar termvar, x ::= {{ lean Nat }}
   {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}
   {{ tex \mathit{[[termvar]]} }} {{ com  term variable  }} 
 
-metavar typvar, X ::=
+metavar typvar, X ::= {{ lean Nat }}
   {{ isa string }} {{ coq nat }} {{ coq-equality }} {{ hol string }}
   {{ tex \mathit{[[typvar]]} }} {{ com  type variable  }} 
 
@@ -12,8 +12,8 @@ grammar
     | x                   ::   :: Var                     {{ com variable }}         
     | \ x . t             ::   :: Lam  (+ bind x in t +)  {{ com abstraction }}      
     | t t'                ::   :: App                     {{ com application }}      
-    | ( t )               :: M :: paren   {{ ich [[t]] }} 
-    | { t / x } t'        :: M :: tsub    {{ ich ( tsubst_t [[t]] [[x]] [[t']] ) }}
+    | ( t )               :: M :: paren   {{ ich [[t]] }} {{ lean [[t]] }} 
+    | { t / x } t'        :: M :: tsub    {{ ich ( tsubst_t [[t]] [[x]] [[t']] ) }} {{ lean ( tsubst_t [[t]] [[x]] [[t']] ) }}
 
   v :: 'v_' ::=                                         {{ com  value }}
     | \ x . t             ::   :: Lam                     {{ com abstraction }}
@@ -29,13 +29,13 @@ grammar
     | judgement           ::   :: judgement
     | not ( formula )     ::   :: not  
        {{ isa Not([[formula]]) }}
-       {{ coq not ([[formula]]) }}
+       {{ coq not ([[formula]]) }} {{ lean ¬ ([[formula]]) }}
        {{ hol ~([[formula]]) }}
     | x = x'              ::   :: eqv 
-       {{ ich [[x]]=[[x']] }}
+       {{ ich [[x]]=[[x']] }} {{ lean [[x]]=[[x']] }}
     | x : T in G          ::   :: xTG 
        {{ isa ? G1 G2. [[G]] = G1 @ ([[x]],[[T]])#[[G2]] & [[x]]~:fst ` set G1 }}
-       {{ coq (exists G1, exists G2, (([[G]] = (app G1 (cons ([[x]],[[T]]) [[G2]]))) /\ not (In [[x]] (List.map (fun (h:termvar_t*T_t) => match h with (h1,h2) => h1 end) G1))))  }}
+       {{ coq (exists G1, exists G2, (([[G]] = (app G1 (cons ([[x]],[[T]]) [[G2]]))) /\ not (In [[x]] (List.map (fun (h:termvar_t*T_t) => match h with (h1,h2) => h1 end) G1))))  }} {{ lean (exists G1, exists G2, (([[G]] = (app G1 (cons ([[x]],[[T]]) [[G2]]))) /\ not (In [[x]] (List.map (fun (h:termvar_t*T_t) => match h with (h1,h2) => h1 end) G1)))) }}
        {{ hol ? G1 G2. ([[G]] = G1 ++ ([[x]],[[T]])::[[G2]]) /\ ~(MEM [[x]] (MAP FST G1)) }}
 
 

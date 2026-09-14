@@ -1,0 +1,49 @@
+DIGEST 487954035a61991c2c5a4a5571265407
+FtestRegr_test_subrules_1
+R130:134 Stdlib.Arith.Arith <> <> lib
+R164:167 Stdlib.Bool.Bool <> <> lib
+R197:200 Stdlib.Lists.List <> <> lib
+ind 216:218 <> big
+constr 233:239 <> big_foo
+constr 255:261 <> big_bar
+constr 277:283 <> big_qux
+R247:249 testRegr_test_subrules_1 <> big:1 ind
+binder 242:245 <> big5:3
+R269:271 testRegr_test_subrules_1 <> big:1 ind
+binder 264:267 <> big5:4
+R298:300 testRegr_test_subrules_1 <> big:1 ind
+binder 286:296 <> tweedledum5:5
+scheme 216:218 <> big_rect
+scheme 216:218 <> big_ind
+scheme 216:218 <> big_rec
+scheme 216:218 <> big_sind
+def 330:349 <> is_tweedledum_of_big
+R358:360 testRegr_test_subrules_1 <> big ind
+binder 352:356 <> big_6:6
+R381:385 testRegr_test_subrules_1 <> big_6:6 var
+R397:403 testRegr_test_subrules_1 <> big_foo constr
+R416:435 testRegr_test_subrules_1 <> is_tweedledum_of_big:7 def
+R449:455 testRegr_test_subrules_1 <> big_bar constr
+R466:470 Corelib.Init.Logic <> False ind
+R477:483 testRegr_test_subrules_1 <> big_qux constr
+R501:505 Corelib.Init.Logic <> False ind
+def 522:534 <> is_big_of_big
+R543:545 testRegr_test_subrules_1 <> big ind
+binder 537:541 <> big_6:9
+R566:570 testRegr_test_subrules_1 <> big_6:9 var
+R582:588 testRegr_test_subrules_1 <> big_foo constr
+R601:613 testRegr_test_subrules_1 <> is_big_of_big:10 def
+R627:633 testRegr_test_subrules_1 <> big_bar constr
+R646:658 testRegr_test_subrules_1 <> is_big_of_big:10 def
+R672:678 testRegr_test_subrules_1 <> big_qux constr
+R698:717 testRegr_test_subrules_1 <> is_tweedledum_of_big def
+def 748:767 <> is_tweedledee_of_big
+R776:778 testRegr_test_subrules_1 <> big ind
+binder 770:774 <> big_6:12
+R799:803 testRegr_test_subrules_1 <> big_6:12 var
+R815:821 testRegr_test_subrules_1 <> big_foo constr
+R834:853 testRegr_test_subrules_1 <> is_tweedledee_of_big:13 def
+R867:873 testRegr_test_subrules_1 <> big_bar constr
+R884:888 Corelib.Init.Logic <> False ind
+R895:901 testRegr_test_subrules_1 <> big_qux constr
+R919:923 Corelib.Init.Logic <> False ind

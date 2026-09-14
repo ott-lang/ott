@@ -1,0 +1,92 @@
+Running Draft ...
+
+Output (line 8 of "Draft/testRegr_test17_6.thy"):
+consts
+  typerep_c_IITN_c :: "c.c_IITN_c itself ⇒ typerep"
+
+Output (line 8 of "Draft/testRegr_test17_6.thy"):
+consts
+  typerep_c :: "c itself ⇒ typerep"
+
+Output (line 8 of "Draft/testRegr_test17_6.thy"):
+consts
+  term_of_c :: "c ⇒ term"
+
+Output (line 8 of "Draft/testRegr_test17_6.thy"):
+consts
+  partial_term_of_c ::
+    "c itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 8 of "Draft/testRegr_test17_6.thy"):
+consts
+  equal_c :: "c ⇒ c ⇒ bool"
+
+Output (line 8 of "Draft/testRegr_test17_6.thy"):
+consts
+  random_aux_c ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural ⇒ (c × (unit ⇒ term)) × natural × natural"
+
+Output (line 8 of "Draft/testRegr_test17_6.thy"):
+consts
+  random_c ::
+    "natural ⇒ natural × natural ⇒ (c × (unit ⇒ term)) × natural × natural"
+
+Output (line 11 of "Draft/testRegr_test17_6.thy"):
+consts
+  typerep_a_pre_a :: "a_pre_a itself ⇒ typerep"
+
+Output (line 11 of "Draft/testRegr_test17_6.thy"):
+consts
+  typerep_a_IITN_a :: "a.a_IITN_a itself ⇒ typerep"
+
+Output (line 11 of "Draft/testRegr_test17_6.thy"):
+consts
+  typerep_a :: "a itself ⇒ typerep"
+
+Output (line 11 of "Draft/testRegr_test17_6.thy"):
+consts
+  term_of_a :: "a ⇒ term"
+
+Output (line 11 of "Draft/testRegr_test17_6.thy"):
+consts
+  partial_term_of_a ::
+    "a itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 11 of "Draft/testRegr_test17_6.thy"):
+consts
+  equal_a :: "a ⇒ a ⇒ bool"
+
+Output (line 11 of "Draft/testRegr_test17_6.thy"):
+consts
+  random_aux_a ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural ⇒ (a × (unit ⇒ term)) × natural × natural"
+
+Output (line 11 of "Draft/testRegr_test17_6.thy"):
+consts
+  random_a ::
+    "natural ⇒ natural × natural ⇒ (a × (unit ⇒ term)) × natural × natural"
+
+Output (line 15 of "Draft/testRegr_test17_6.thy"):
+consts
+  aux_b_c_of_c :: "c ⇒ char list list"
+
+Output (line 20 of "Draft/testRegr_test17_6.thy"):
+consts
+  aux_b_c_of_c_c :: "c × c ⇒ char list list"
+
+Output (line 25 of "Draft/testRegr_test17_6.thy"):
+consts
+  aux_b_c_of_c_c_c :: "c × c × c ⇒ char list list"
+
+Output (line 30 of "Draft/testRegr_test17_6.thy"):
+consts
+  aux_b_c_of_c_c_c_list :: "(c × c × c) list ⇒ char list list"
+
+Output (line 36 of "Draft/testRegr_test17_6.thy"):
+consts
+  aux_b_a_of_a :: "a ⇒ char list list"
+Finished Draft (0:00:02 elapsed time)

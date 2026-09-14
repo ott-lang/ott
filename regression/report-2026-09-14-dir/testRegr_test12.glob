@@ -1,0 +1,54 @@
+DIGEST 35e640fa1ec53febdbfcf5e6e93152fe
+FtestRegr_test12
+R121:125 Stdlib.Arith.Arith <> <> lib
+R155:158 Stdlib.Bool.Bool <> <> lib
+R188:191 Stdlib.Lists.List <> <> lib
+ind 207:207 <> a
+constr 222:224 <> a_b
+constr 236:238 <> a_0
+ind 249:249 <> b
+constr 264:266 <> b_a
+R230:230 testRegr_test12 <> b:2 ind
+binder 227:228 <> b5:5
+R242:242 testRegr_test12 <> a:1 ind
+R272:272 testRegr_test12 <> a:1 ind
+binder 269:270 <> a5:6
+scheme 207:207 <> a_rect
+scheme 207:207 <> a_ind
+scheme 207:207 <> a_rec
+scheme 207:207 <> a_sind
+scheme 249:249 <> b_rect
+scheme 249:249 <> b_ind
+scheme 249:249 <> b_rec
+scheme 249:249 <> b_sind
+ind 287:287 <> c
+constr 302:304 <> c_a
+R310:310 testRegr_test12 <> a ind
+binder 307:308 <> a5:9
+scheme 287:287 <> c_rect
+scheme 287:287 <> c_ind
+scheme 287:287 <> c_rec
+scheme 287:287 <> c_sind
+def 326:326 <> d
+R337:339 Corelib.Init.Datatypes <> nat ind
+ind 353:353 <> e
+constr 368:370 <> e_f
+constr 382:384 <> e_c
+ind 398:398 <> f
+constr 413:416 <> f_ea
+R376:376 testRegr_test12 <> f:11 ind
+binder 373:374 <> f5:14
+R390:390 testRegr_test12 <> c ind
+binder 387:388 <> c5:15
+R422:422 testRegr_test12 <> e:10 ind
+binder 419:420 <> e5:16
+R429:429 testRegr_test12 <> a ind
+binder 426:427 <> a5:17
+scheme 353:353 <> e_rect
+scheme 353:353 <> e_ind
+scheme 353:353 <> e_rec
+scheme 353:353 <> e_sind
+scheme 398:398 <> f_rect
+scheme 398:398 <> f_ind
+scheme 398:398 <> f_rec
+scheme 398:398 <> f_sind

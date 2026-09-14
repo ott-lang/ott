@@ -1,0 +1,105 @@
+DIGEST 3cbd096464e5b1515424540e486a7769
+FtestRegr_test_lists_coq_defn_subrule_2
+R132:136 Stdlib.Arith.Arith <> <> lib
+R154:157 Stdlib.Bool.Bool <> <> lib
+R175:178 Stdlib.Lists.List <> <> lib
+R196:212 Ott.ott_list_core <> <> lib
+def 228:228 <> i
+R239:241 Corelib.Init.Datatypes <> nat ind
+def 255:259 <> ident
+R270:272 Corelib.Init.Datatypes <> nat ind
+prf 281:288 <> eq_ident
+R305:309 testRegr_test_lists_coq_defn_subrule_2 <> ident def
+binder 299:299 <> x:1
+binder 301:301 <> y:2
+R313:313 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R319:323 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R330:330 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R315:317 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R314:314 testRegr_test_lists_coq_defn_subrule_2 <> x:1 var
+R318:318 testRegr_test_lists_coq_defn_subrule_2 <> y:2 var
+R325:328 Corelib.Init.Logic <> ::type_scope:x_'<>'_x not
+R324:324 testRegr_test_lists_coq_defn_subrule_2 <> x:1 var
+R329:329 testRegr_test_lists_coq_defn_subrule_2 <> y:2 var
+ind 465:472 <> constant
+constr 487:496 <> CONST_unit
+R500:507 testRegr_test_lists_coq_defn_subrule_2 <> constant:3 ind
+scheme 465:472 <> constant_rect
+scheme 465:472 <> constant_ind
+scheme 465:472 <> constant_rec
+scheme 465:472 <> constant_sind
+ind 521:524 <> expr
+constr 539:551 <> Expr_constant
+R564:571 testRegr_test_lists_coq_defn_subrule_2 <> constant ind
+binder 554:562 <> constant5:7
+scheme 521:524 <> expr_rect
+scheme 521:524 <> expr_ind
+scheme 521:524 <> expr_rec
+scheme 521:524 <> expr_sind
+ind 586:593 <> substs_x
+constr 608:618 <> substs_x_xs
+R623:626 Corelib.Init.Datatypes <> list ind
+R634:634 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R629:633 testRegr_test_lists_coq_defn_subrule_2 <> ident def
+R635:638 testRegr_test_lists_coq_defn_subrule_2 <> expr ind
+scheme 586:593 <> substs_x_rect
+scheme 586:593 <> substs_x_ind
+scheme 586:593 <> substs_x_rec
+scheme 586:593 <> substs_x_sind
+def 671:685 <> is_valu_of_expr
+R691:694 testRegr_test_lists_coq_defn_subrule_2 <> expr ind
+binder 688:689 <> e5:10
+R699:702 Corelib.Init.Datatypes <> bool ind
+R715:716 testRegr_test_lists_coq_defn_subrule_2 <> e5:10 var
+R728:740 testRegr_test_lists_coq_defn_subrule_2 <> Expr_constant constr
+R757:760 Corelib.Init.Datatypes <> true constr
+ind 815:822 <> JR_match
+constr 869:882 <> JR_match_alias
+R834:837 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R826:833 testRegr_test_lists_coq_defn_subrule_2 <> substs_x ind
+R903:906 Corelib.Init.Datatypes <> list ind
+R914:914 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R909:913 testRegr_test_lists_coq_defn_subrule_2 <> ident def
+R915:918 testRegr_test_lists_coq_defn_subrule_2 <> expr ind
+binder 894:901 <> x_v_list:14
+R925:929 testRegr_test_lists_coq_defn_subrule_2 <> ident def
+binder 923:923 <> x:15
+R935:938 testRegr_test_lists_coq_defn_subrule_2 <> expr ind
+binder 933:933 <> v:16
+R974:982 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R947:953 Stdlib.Bool.Bool <> Is_true def
+R956:970 testRegr_test_lists_coq_defn_subrule_2 <> is_valu_of_expr def
+R972:972 testRegr_test_lists_coq_defn_subrule_2 <> v:16 var
+R983:983 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1088:1097 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R984:989 Corelib.Lists.ListDef <> Forall ind
+R1080:1087 testRegr_test_lists_coq_defn_subrule_2 <> x_v_list:14 var
+R1008:1008 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1003:1007 testRegr_test_lists_coq_defn_subrule_2 <> ident def
+R1009:1012 testRegr_test_lists_coq_defn_subrule_2 <> expr ind
+binder 997:1000 <> tmp_:17
+R1025:1028 testRegr_test_lists_coq_defn_subrule_2 <> tmp_:17 var
+R1035:1035 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1038:1038 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1041:1041 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1046:1052 Stdlib.Bool.Bool <> Is_true def
+R1055:1069 testRegr_test_lists_coq_defn_subrule_2 <> is_valu_of_expr def
+R1129:1137 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1098:1105 testRegr_test_lists_coq_defn_subrule_2 <> JR_match:12 ind
+R1108:1118 testRegr_test_lists_coq_defn_subrule_2 <> substs_x_xs constr
+R1120:1127 testRegr_test_lists_coq_defn_subrule_2 <> x_v_list:14 var
+R1138:1145 testRegr_test_lists_coq_defn_subrule_2 <> JR_match:12 ind
+R1148:1158 testRegr_test_lists_coq_defn_subrule_2 <> substs_x_xs constr
+R1162:1164 Corelib.Init.Datatypes <> app def
+R1176:1178 Corelib.Init.Datatypes <> app def
+R1197:1199 Corelib.Init.Datatypes <> nil constr
+R1181:1184 Corelib.Init.Datatypes <> cons constr
+R1192:1194 Corelib.Init.Datatypes <> nil constr
+R1186:1186 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1188:1188 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1190:1190 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1187:1187 testRegr_test_lists_coq_defn_subrule_2 <> x:15 var
+R1189:1189 testRegr_test_lists_coq_defn_subrule_2 <> v:16 var
+R1166:1173 testRegr_test_lists_coq_defn_subrule_2 <> x_v_list:14 var
+scheme 815:822 <> JR_match_ind
+scheme 815:822 <> JR_match_sind

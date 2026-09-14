@@ -1,0 +1,72 @@
+DIGEST da0d277da2dccf77ac5f16d857cb0e2e
+FtestRegr_test_bind_isa_1
+R118:122 Stdlib.Arith.Arith <> <> lib
+R140:143 Stdlib.Bool.Bool <> <> lib
+R161:164 Stdlib.Lists.List <> <> lib
+R182:198 Ott.ott_list_core <> <> lib
+def 214:218 <> index
+R229:231 Corelib.Init.Datatypes <> nat ind
+ind 245:254 <> value_name
+scheme 245:254 <> value_name_rect
+scheme 245:254 <> value_name_ind
+scheme 245:254 <> value_name_rec
+scheme 245:254 <> value_name_sind
+ind 279:285 <> pattern
+constr 300:304 <> P_var
+R319:328 testRegr_test_bind_isa_1 <> value_name ind
+binder 307:317 <> value_name5:5
+scheme 279:285 <> pattern_rect
+scheme 279:285 <> pattern_ind
+scheme 279:285 <> pattern_rec
+scheme 279:285 <> pattern_sind
+ind 343:346 <> expr
+constr 361:370 <> Expr_ident
+constr 382:389 <> Expr_let
+ind 436:446 <> let_binding
+constr 461:469 <> LB_simple
+R374:377 testRegr_test_bind_isa_1 <> expr:6 ind
+R405:415 testRegr_test_bind_isa_1 <> let_binding:7 ind
+binder 392:403 <> let_binding5:10
+R425:428 testRegr_test_bind_isa_1 <> expr:6 ind
+binder 419:423 <> expr5:11
+R481:487 testRegr_test_bind_isa_1 <> pattern ind
+binder 472:479 <> pattern5:12
+R497:500 testRegr_test_bind_isa_1 <> expr:6 ind
+binder 491:495 <> expr5:13
+scheme 343:346 <> expr_rect
+scheme 343:346 <> expr_ind
+scheme 343:346 <> expr_rec
+scheme 343:346 <> expr_sind
+scheme 436:446 <> let_binding_rect
+scheme 436:446 <> let_binding_ind
+scheme 436:446 <> let_binding_rec
+scheme 436:446 <> let_binding_sind
+ind 515:530 <> pattern_matching
+constr 545:549 <> PM_pm
+R554:557 Corelib.Init.Datatypes <> list ind
+R567:567 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R560:566 testRegr_test_bind_isa_1 <> pattern ind
+R568:571 testRegr_test_bind_isa_1 <> expr ind
+scheme 515:530 <> pattern_matching_rect
+scheme 515:530 <> pattern_matching_ind
+scheme 515:530 <> pattern_matching_rec
+scheme 515:530 <> pattern_matching_sind
+ind 587:603 <> multiple_matching
+constr 618:628 <> MM_patterns
+R633:636 Corelib.Init.Datatypes <> list ind
+R638:644 testRegr_test_bind_isa_1 <> pattern ind
+R654:657 testRegr_test_bind_isa_1 <> expr ind
+binder 648:652 <> expr5:18
+scheme 587:603 <> multiple_matching_rect
+scheme 587:603 <> multiple_matching_ind
+scheme 587:603 <> multiple_matching_rec
+scheme 587:603 <> multiple_matching_sind
+def 672:699 <> aux_gives_pattern_of_pattern
+R707:713 testRegr_test_bind_isa_1 <> pattern ind
+binder 702:705 <> pat5:19
+R718:721 Corelib.Init.Datatypes <> list ind
+R723:732 testRegr_test_bind_isa_1 <> value_name ind
+R745:748 testRegr_test_bind_isa_1 <> pat5:19 var
+R760:764 testRegr_test_bind_isa_1 <> P_var constr
+R783:786 Corelib.Init.Datatypes <> cons constr
+R800:802 Corelib.Init.Datatypes <> nil constr

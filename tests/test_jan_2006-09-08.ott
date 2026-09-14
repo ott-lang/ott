@@ -1,17 +1,17 @@
 metavar ident , x   {{ tex \mathtt{[[x]]} }} ,
    y {{ tex \mathtt{[[y]]} }} , this {{ tex \mathtt{[[this]]} }} ::= 
   {{ lex \([a-z]\|[_]\)\([A-Z]\|[a-z]\|[0-9]\|[_]\|[']\)* }} 
-metavar location , l {{ tex \ell }} ::=
+metavar location , l {{ tex \ell }} ::= {{ lean String }}
   {{ lex \([a-z]\|[_]\)\([A-Z]\|[a-z]\|[0-9]\|[_]\|[']\)* }} 
-metavar class_name , C    {{ tex \mathtt{[[C]]} }}  , D   {{ tex \mathtt{[[D]]} }} , E   {{ tex \mathtt{[[E]]} }}   ::=
+metavar class_name , C    {{ tex \mathtt{[[C]]} }}  , D   {{ tex \mathtt{[[D]]} }} , E   {{ tex \mathtt{[[E]]} }}   ::= {{ lean String }}
   {{ lex \([a-z]\|[_]\)\([A-Z]\|[a-z]\|[0-9]\|[_]\|[']\)* }} 
-metavar field_name , f   {{ tex \mathtt{[[f]]} }} ::=
+metavar field_name , f   {{ tex \mathtt{[[f]]} }} ::= {{ lean String }}
   {{ lex \([a-z]\|[_]\)\([A-Z]\|[a-z]\|[0-9]\|[_]\|[']\)* }} 
-metavar method_name , m   {{ tex \mathtt{[[m]]} }} ::=
+metavar method_name , m   {{ tex \mathtt{[[m]]} }} ::= {{ lean String }}
   {{ lex \([a-z]\|[_]\)\([A-Z]\|[a-z]\|[0-9]\|[_]\|[']\)* }} 
-metavar constr_name , K   {{ tex \mathtt{[[K]]} }} ::=
+metavar constr_name , K   {{ tex \mathtt{[[K]]} }} ::= {{ lean String }}
   {{ lex \([a-z]\|[_]\)\([A-Z]\|[a-z]\|[0-9]\|[_]\|[']\)* }} 
-indexvar index , h , i , j , k , n ::=   {{ lex [0-9]+ }}
+indexvar index , h , i , j , k , n ::= {{ lean Nat }}   {{ lex [0-9]+ }}
   
 grammar
 
@@ -67,7 +67,7 @@ formula :: formula_ ::=
  | mbody ( m , C ) = ( x1 , .. , xn ,  e )  :: :: plain
  | 1 <= i <= n  :: :: forall 
                 {{ tex 1 \leq  [[i]] \leq [[n]] }}
-                {{ isa (1<=[[i]] & i<=[[n]])  }}
+                {{ isa (1<=[[i]] & i<=[[n]])  }} {{ lean (1<=[[i]] & i<=[[n]]) }}
 
 defns
 Jop :: '' ::=

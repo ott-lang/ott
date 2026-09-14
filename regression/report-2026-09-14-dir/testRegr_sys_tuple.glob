@@ -1,0 +1,54 @@
+DIGEST 1db9e35e064ee8ea0015d9a3c539f4d1
+FtestRegr_sys_tuple
+R406:410 Stdlib.Arith.Arith <> <> lib
+R440:443 Stdlib.Bool.Bool <> <> lib
+R473:476 Stdlib.Lists.List <> <> lib
+def 581:585 <> index
+R596:598 Corelib.Init.Datatypes <> nat ind
+ind 626:626 <> t
+constr 654:659 <> TmUnit
+constr 688:694 <> TmTuple
+constr 722:729 <> TmProjTp
+ind 770:775 <> list_t
+constr 790:799 <> Nil_list_t
+constr 813:823 <> Cons_list_t
+R663:663 testRegr_sys_tuple <> t:1 ind
+R699:704 testRegr_sys_tuple <> list_t:2 ind
+R735:735 testRegr_sys_tuple <> t:1 ind
+binder 732:733 <> t5:5
+R741:745 testRegr_sys_tuple <> index def
+binder 739:739 <> i:6
+R803:808 testRegr_sys_tuple <> list_t:2 ind
+R828:828 testRegr_sys_tuple <> t:1 ind
+binder 826:826 <> v:7
+R834:839 testRegr_sys_tuple <> list_t:2 ind
+scheme 626:626 <> t_rect
+scheme 626:626 <> t_ind
+scheme 626:626 <> t_rec
+scheme 626:626 <> t_sind
+scheme 770:775 <> list_t_rect
+scheme 770:775 <> list_t_ind
+scheme 770:775 <> list_t_rec
+scheme 770:775 <> list_t_sind
+ind 854:854 <> T
+constr 882:887 <> TyUnit
+constr 912:918 <> TyTuple
+ind 953:958 <> list_T
+constr 973:982 <> Nil_list_T
+constr 996:1006 <> Cons_list_T
+R891:891 testRegr_sys_tuple <> T:8 ind
+R923:928 testRegr_sys_tuple <> list_T:9 ind
+R986:991 testRegr_sys_tuple <> list_T:9 ind
+R1011:1011 testRegr_sys_tuple <> T:8 ind
+R1017:1022 testRegr_sys_tuple <> list_T:9 ind
+scheme 854:854 <> T_rect
+scheme 854:854 <> T_ind
+scheme 854:854 <> T_rec
+scheme 854:854 <> T_sind
+scheme 953:958 <> list_T_rect
+scheme 953:958 <> list_T_ind
+scheme 953:958 <> list_T_rec
+scheme 953:958 <> list_T_sind
+def 1038:1038 <> G
+R1049:1052 Corelib.Init.Datatypes <> list ind
+R1062:1062 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not

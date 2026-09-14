@@ -1,0 +1,6 @@
+testRegr_test15_2NL.lean:28:10: warning: Variable name `av5` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _av5
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`

@@ -31,7 +31,7 @@
 (*  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                         *)
 (**************************************************************************)
 
-val pp_list_rule : out_channel -> Types.syntaxdefn -> Types.nt_or_mv_root list -> unit
+val pp_list_rule : out_channel -> Types.pp_mode -> Types.syntaxdefn -> Types.nt_or_mv_root list -> unit
 val expand_lists_in_syntaxdefn :
   Types.pp_mode -> Types.syntaxdefn -> Types.structure -> Types.syntaxdefn * Types.structure
 

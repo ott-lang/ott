@@ -1,0 +1,242 @@
+DIGEST 46e4e958151ef918924af9e6125e7156
+FtestRegr_test_lists_coq_bind_1NL
+R136:140 Stdlib.Arith.Arith <> <> lib
+R170:173 Stdlib.Bool.Bool <> <> lib
+R203:206 Stdlib.Lists.List <> <> lib
+R224:240 Ott.ott_list_core <> <> lib
+def 256:260 <> index
+R271:273 Corelib.Init.Datatypes <> nat ind
+def 287:296 <> value_name
+R307:309 Corelib.Init.Datatypes <> nat ind
+prf 318:330 <> eq_value_name
+R347:356 testRegr_test_lists_coq_bind_1NL <> value_name def
+binder 341:341 <> x:1
+binder 343:343 <> y:2
+R360:360 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R366:370 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R377:377 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R362:364 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R361:361 testRegr_test_lists_coq_bind_1NL <> x:1 var
+R365:365 testRegr_test_lists_coq_bind_1NL <> y:2 var
+R372:375 Corelib.Init.Logic <> ::type_scope:x_'<>'_x not
+R371:371 testRegr_test_lists_coq_bind_1NL <> x:1 var
+R376:376 testRegr_test_lists_coq_bind_1NL <> y:2 var
+ind 517:523 <> pattern
+constr 538:542 <> P_var
+R557:566 testRegr_test_lists_coq_bind_1NL <> value_name def
+binder 545:555 <> value_name5:5
+scheme 517:523 <> pattern_rect
+scheme 517:523 <> pattern_ind
+scheme 517:523 <> pattern_rec
+scheme 517:523 <> pattern_sind
+ind 581:584 <> expr
+constr 599:609 <> Expr_letrec
+ind 653:668 <> pattern_matching
+constr 683:687 <> PM_pm
+ind 718:731 <> letrec_binding
+constr 746:755 <> LRB_simple
+R614:617 Corelib.Init.Datatypes <> list ind
+R619:632 testRegr_test_lists_coq_bind_1NL <> letrec_binding:8 ind
+R642:645 testRegr_test_lists_coq_bind_1NL <> expr:6 ind
+binder 636:640 <> expr5:12
+R692:695 Corelib.Init.Datatypes <> list ind
+R705:705 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R698:704 testRegr_test_lists_coq_bind_1NL <> pattern ind
+R706:709 testRegr_test_lists_coq_bind_1NL <> expr:6 ind
+R770:779 testRegr_test_lists_coq_bind_1NL <> value_name def
+binder 758:768 <> value_name5:13
+R801:816 testRegr_test_lists_coq_bind_1NL <> pattern_matching:7 ind
+binder 783:799 <> pattern_matching5:14
+scheme 581:584 <> expr_rect
+scheme 581:584 <> expr_ind
+scheme 581:584 <> expr_rec
+scheme 581:584 <> expr_sind
+scheme 653:668 <> pattern_matching_rect
+scheme 653:668 <> pattern_matching_ind
+scheme 653:668 <> pattern_matching_rec
+scheme 653:668 <> pattern_matching_sind
+scheme 718:731 <> letrec_binding_rect
+scheme 718:731 <> letrec_binding_ind
+scheme 718:731 <> letrec_binding_rec
+scheme 718:731 <> letrec_binding_sind
+sec 856:896 <> letrec_binding_pattern_matching_expr_rect
+var 913:928 letrec_binding_pattern_matching_expr_rect P_letrec_binding
+var 959:976 letrec_binding_pattern_matching_expr_rect P_pattern_matching
+var 1009:1027 letrec_binding_pattern_matching_expr_rect P_list_pattern_expr
+var 1063:1083 letrec_binding_pattern_matching_expr_rect P_list_letrec_binding
+var 1119:1124 letrec_binding_pattern_matching_expr_rect P_expr
+R946:949 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R932:945 testRegr_test_lists_coq_bind_1NL <> letrec_binding ind
+R996:999 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R980:995 testRegr_test_lists_coq_bind_1NL <> pattern_matching ind
+R1050:1053 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1031:1034 Corelib.Init.Datatypes <> list ind
+R1044:1044 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1037:1043 testRegr_test_lists_coq_bind_1NL <> pattern ind
+R1045:1048 testRegr_test_lists_coq_bind_1NL <> expr ind
+R1106:1109 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1087:1090 Corelib.Init.Datatypes <> list ind
+R1092:1105 testRegr_test_lists_coq_bind_1NL <> letrec_binding ind
+R1132:1135 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1128:1131 testRegr_test_lists_coq_bind_1NL <> expr ind
+var 1158:1169 letrec_binding_pattern_matching_expr_rect H_LRB_simple
+var 1355:1361 letrec_binding_pattern_matching_expr_rect H_PM_pm
+var 1503:1515 letrec_binding_pattern_matching_expr_rect H_Expr_letrec
+var 1702:1724 letrec_binding_pattern_matching_expr_rect H_list_pattern_expr_nil
+var 1756:1779 letrec_binding_pattern_matching_expr_rect H_list_pattern_expr_cons
+var 1993:2017 letrec_binding_pattern_matching_expr_rect H_list_letrec_binding_nil
+var 2051:2076 letrec_binding_pattern_matching_expr_rect H_list_letrec_binding_cons
+R1193:1202 testRegr_test_lists_coq_bind_1NL <> value_name def
+binder 1181:1191 <> value_name5:25
+R1232:1247 testRegr_test_lists_coq_bind_1NL <> pattern_matching ind
+binder 1214:1230 <> pattern_matching5:26
+R1287:1290 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1251:1268 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.P_pattern_matching var
+R1270:1286 testRegr_test_lists_coq_bind_1NL <> pattern_matching5:26 var
+R1291:1306 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.P_letrec_binding var
+R1309:1318 testRegr_test_lists_coq_bind_1NL <> LRB_simple constr
+R1320:1330 testRegr_test_lists_coq_bind_1NL <> value_name5:25 var
+R1332:1348 testRegr_test_lists_coq_bind_1NL <> pattern_matching5:26 var
+R1391:1394 Corelib.Init.Datatypes <> list ind
+R1404:1404 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1397:1403 testRegr_test_lists_coq_bind_1NL <> pattern ind
+R1405:1408 testRegr_test_lists_coq_bind_1NL <> expr ind
+binder 1373:1389 <> pattern_expr_list:29
+R1450:1453 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1413:1431 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.P_list_pattern_expr var
+R1433:1449 testRegr_test_lists_coq_bind_1NL <> pattern_expr_list:29 var
+R1454:1471 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.P_pattern_matching var
+R1474:1478 testRegr_test_lists_coq_bind_1NL <> PM_pm constr
+R1480:1496 testRegr_test_lists_coq_bind_1NL <> pattern_expr_list:29 var
+R1547:1550 Corelib.Init.Datatypes <> list ind
+R1552:1565 testRegr_test_lists_coq_bind_1NL <> letrec_binding ind
+binder 1527:1545 <> letrec_binding_list:32
+R1610:1613 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1569:1589 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.P_list_letrec_binding var
+R1591:1609 testRegr_test_lists_coq_bind_1NL <> letrec_binding_list:32 var
+R1628:1631 testRegr_test_lists_coq_bind_1NL <> expr ind
+binder 1622:1626 <> expr5:33
+R1647:1650 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1635:1640 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.P_expr var
+R1642:1646 testRegr_test_lists_coq_bind_1NL <> expr5:33 var
+R1651:1656 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.P_expr var
+R1659:1669 testRegr_test_lists_coq_bind_1NL <> Expr_letrec constr
+R1671:1689 testRegr_test_lists_coq_bind_1NL <> letrec_binding_list:32 var
+R1691:1695 testRegr_test_lists_coq_bind_1NL <> expr5:33 var
+R1728:1746 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.P_list_pattern_expr var
+R1748:1750 Corelib.Init.Datatypes <> nil constr
+R1800:1806 testRegr_test_lists_coq_bind_1NL <> pattern ind
+binder 1791:1798 <> pattern0:38
+R1824:1827 testRegr_test_lists_coq_bind_1NL <> expr ind
+binder 1818:1822 <> expr0:39
+R1843:1846 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1831:1836 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.P_expr var
+R1838:1842 testRegr_test_lists_coq_bind_1NL <> expr0:39 var
+R1870:1873 Corelib.Init.Datatypes <> list ind
+R1883:1883 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1876:1882 testRegr_test_lists_coq_bind_1NL <> pattern ind
+R1884:1887 testRegr_test_lists_coq_bind_1NL <> expr ind
+binder 1855:1868 <> pattern_expr_l:40
+R1926:1929 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1892:1910 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.P_list_pattern_expr var
+R1912:1925 testRegr_test_lists_coq_bind_1NL <> pattern_expr_l:40 var
+R1930:1948 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.P_list_pattern_expr var
+R1951:1954 Corelib.Init.Datatypes <> cons constr
+R1973:1986 testRegr_test_lists_coq_bind_1NL <> pattern_expr_l:40 var
+R1956:1956 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1965:1965 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1971:1971 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1957:1964 testRegr_test_lists_coq_bind_1NL <> pattern0:38 var
+R1966:1970 testRegr_test_lists_coq_bind_1NL <> expr0:39 var
+R2021:2041 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.P_list_letrec_binding var
+R2043:2045 Corelib.Init.Datatypes <> nil constr
+R2104:2117 testRegr_test_lists_coq_bind_1NL <> letrec_binding ind
+binder 2088:2102 <> letrec_binding0:45
+R2153:2156 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2121:2136 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.P_letrec_binding var
+R2138:2152 testRegr_test_lists_coq_bind_1NL <> letrec_binding0:45 var
+R2182:2185 Corelib.Init.Datatypes <> list ind
+R2187:2200 testRegr_test_lists_coq_bind_1NL <> letrec_binding ind
+binder 2165:2180 <> letrec_binding_l:46
+R2242:2245 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2204:2224 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.P_list_letrec_binding var
+R2226:2241 testRegr_test_lists_coq_bind_1NL <> letrec_binding_l:46 var
+R2246:2266 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.P_list_letrec_binding var
+R2269:2272 Corelib.Init.Datatypes <> cons constr
+R2290:2305 testRegr_test_lists_coq_bind_1NL <> letrec_binding_l:46 var
+R2274:2288 testRegr_test_lists_coq_bind_1NL <> letrec_binding0:45 var
+def 2320:2331 <> expr_ott_ind
+def 2898:2921 <> pattern_matching_ott_ind
+def 3436:3457 <> letrec_binding_ott_ind
+R2336:2339 testRegr_test_lists_coq_bind_1NL <> expr ind
+binder 2334:2334 <> n:49
+R2926:2941 testRegr_test_lists_coq_bind_1NL <> pattern_matching ind
+binder 2924:2924 <> n:50
+R3462:3475 testRegr_test_lists_coq_bind_1NL <> letrec_binding ind
+binder 3460:3460 <> n:51
+R2344:2349 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.P_expr var
+R2351:2351 testRegr_test_lists_coq_bind_1NL <> n:49 var
+R2946:2963 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.P_pattern_matching var
+R2965:2965 testRegr_test_lists_coq_bind_1NL <> n:50 var
+R3480:3495 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.P_letrec_binding var
+R3497:3497 testRegr_test_lists_coq_bind_1NL <> n:51 var
+R2364:2364 testRegr_test_lists_coq_bind_1NL <> n:49 var
+R2378:2383 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.P_expr var
+R2385:2385 testRegr_test_lists_coq_bind_1NL <> x:55 var
+R2397:2407 testRegr_test_lists_coq_bind_1NL <> Expr_letrec constr
+R2439:2451 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.H_Expr_letrec var
+R2526:2529 Corelib.Init.Datatypes <> list ind
+R2531:2544 testRegr_test_lists_coq_bind_1NL <> letrec_binding ind
+binder 2509:2524 <> letrec_binding_l:56
+R2549:2569 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.P_list_letrec_binding var
+R2571:2586 testRegr_test_lists_coq_bind_1NL <> letrec_binding_l:56 var
+R2597:2612 testRegr_test_lists_coq_bind_1NL <> letrec_binding_l:56 var
+R2626:2646 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.P_list_letrec_binding var
+R2648:2648 testRegr_test_lists_coq_bind_1NL <> x:58 var
+R2655:2657 Corelib.Init.Datatypes <> nil constr
+R2662:2686 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.H_list_letrec_binding_nil var
+R2690:2693 Corelib.Init.Datatypes <> cons constr
+R2717:2742 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.H_list_letrec_binding_cons var
+R2760:2781 testRegr_test_lists_coq_bind_1NL <> letrec_binding_ott_ind:54 def
+R2803:2829 testRegr_test_lists_coq_bind_1NL <> letrec_binding_list_ott_ind:57 var
+R2869:2880 testRegr_test_lists_coq_bind_1NL <> expr_ott_ind:52 def
+R2978:2978 testRegr_test_lists_coq_bind_1NL <> n:50 var
+R2992:3009 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.P_pattern_matching var
+R3011:3011 testRegr_test_lists_coq_bind_1NL <> x:59 var
+R3023:3027 testRegr_test_lists_coq_bind_1NL <> PM_pm constr
+R3051:3057 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.H_PM_pm var
+R3126:3129 Corelib.Init.Datatypes <> list ind
+R3139:3139 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R3132:3138 testRegr_test_lists_coq_bind_1NL <> pattern ind
+R3140:3143 testRegr_test_lists_coq_bind_1NL <> expr ind
+binder 3111:3124 <> pattern_expr_l:60
+R3149:3167 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.P_list_pattern_expr var
+R3169:3182 testRegr_test_lists_coq_bind_1NL <> pattern_expr_l:60 var
+R3193:3206 testRegr_test_lists_coq_bind_1NL <> pattern_expr_l:60 var
+R3220:3238 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.P_list_pattern_expr var
+R3240:3240 testRegr_test_lists_coq_bind_1NL <> x:62 var
+R3247:3249 Corelib.Init.Datatypes <> nil constr
+R3254:3276 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.H_list_pattern_expr_nil var
+R3280:3283 Corelib.Init.Datatypes <> cons constr
+R3285:3285 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3294:3294 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3300:3300 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3308:3331 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.H_list_pattern_expr_cons var
+R3349:3360 testRegr_test_lists_coq_bind_1NL <> expr_ott_ind:52 def
+R3372:3396 testRegr_test_lists_coq_bind_1NL <> pattern_expr_list_ott_ind:61 var
+R3510:3510 testRegr_test_lists_coq_bind_1NL <> n:51 var
+R3524:3539 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.P_letrec_binding var
+R3541:3541 testRegr_test_lists_coq_bind_1NL <> x:63 var
+R3553:3562 testRegr_test_lists_coq_bind_1NL <> LRB_simple constr
+R3598:3609 testRegr_test_lists_coq_bind_1NL <> letrec_binding_pattern_matching_expr_rect.H_LRB_simple var
+R3642:3665 testRegr_test_lists_coq_bind_1NL <> pattern_matching_ott_ind:53 def
+R3696:3736 testRegr_test_lists_coq_bind_1NL letrec_binding_pattern_matching_expr_rect <> sec
+def 3750:3791 <> aux_gives_letrec_binding_of_letrec_binding
+R3810:3823 testRegr_test_lists_coq_bind_1NL <> letrec_binding ind
+binder 3794:3808 <> letrec_binding5:64
+R3828:3831 Corelib.Init.Datatypes <> list ind
+R3833:3842 testRegr_test_lists_coq_bind_1NL <> value_name def
+R3855:3869 testRegr_test_lists_coq_bind_1NL <> letrec_binding5:64 var
+R3881:3890 testRegr_test_lists_coq_bind_1NL <> LRB_simple constr
+R3927:3930 Corelib.Init.Datatypes <> cons constr
+R3944:3946 Corelib.Init.Datatypes <> nil constr

@@ -1,5 +1,5 @@
 %% Use of a subrule in a list.
-indexvar i , j , k , l , m , n ::= {{ coq nat }} {{ isa nat }} {{ hol num }}
+indexvar i , j , k , l , m , n ::= {{ lean Nat }} {{ coq nat }} {{ isa nat }} {{ hol num }}
 grammar
   constant :: CONST_ ::=
     | ()                                                ::   :: unit

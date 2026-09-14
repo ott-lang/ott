@@ -1,0 +1,30 @@
+testRegr_test13.lean:6:19: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test13.lean:7:22: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test13.lean:8:22: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test13.lean:9:17: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test13.lean:10:16: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test13.lean:11:19: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test13.lean:12:16: error(lean.unknownIdentifier): Unknown identifier `UNDEFINED`
+testRegr_test13.lean:15:4: error: Constructor field `metavarroot` of `metavar.mv_1` contains universe level metavariables at the expression
+  Sort ?u.6
+in its type
+  Sort ?u.6
+testRegr_test13.lean:20:4: error: Constructor field `nontermroot` of `nonterm.nt_1` contains universe level metavariables at the expression
+  Sort ?u.6
+in its type
+  Sort ?u.6
+testRegr_test13.lean:25:4: error: Constructor field `metavar` of `mse.mse_mv` contains universe level metavariables at the expression
+  Sort ?u.5
+in its type
+  Sort ?u.5
+testRegr_test13.lean:34:4: error: Constructor field `terminal` of `element.e_tm` contains universe level metavariables at the expression
+  Sort ?u.5
+in its type
+  Sort ?u.5
+testRegr_test13.lean:41:4: error: Constructor field `mse` of `bindspec.bs_bind` contains universe level metavariables at the expression
+  Sort ?u.6
+in its type
+  Sort ?u.6
+testRegr_test13.lean:49:11: error: failed to generate `Inhabited` instance for `prod`
+testRegr_test13.lean:54:11: error: failed to generate `Inhabited` instance for `rule`
+testRegr_test13.lean:60:5: error: unknown namespace `metavar`

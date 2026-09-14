@@ -132,45 +132,45 @@ var_set :: 'var_set_' ::=  {{ isa (variable*metavarroot) set }}
 formula :: 'formula_' ::=          
   | judgement           ::   :: judgement
   | formula1 ... formulan ::  :: dots
-  | i = j              ::   :: ieq {{ ic [[i]] = [[j]] }}
-  | f = f'              ::   :: feq {{ ic [[f]] = [[f']] }}
-  | mvr = mvr'              ::   :: mvreq {{ ic [[mvr]] = [[mvr']] }}
-  | ntr = ntr'              ::   :: ntreq {{ ic [[ntr]] = [[ntr']] }}
-  | var = var'              ::   :: vareq {{ ic [[var]] = [[var']] }}
-  | mv = mv'              ::   :: mveq {{ ic [[mv]] = [[mv']] }}
-  | nt = nt'              ::   :: nteq {{ ic [[nt]] = [[nt']] }}
-  | ntmv = ntmv'              ::   :: ntmveq {{ ic [[ntmv]] = [[ntmv']] }}
-  | e = e'              ::   :: eeq {{ ic [[e]] = [[e']] }}
-  | mse = mse'              ::   :: mseeq {{ ic [[mse]] = [[mse']] }}
-  | bs = bs'              ::   :: bseq {{ ic [[bs]] = [[bs']] }}
-  | p = p'              ::   :: peq {{ ic [[p]] = [[p']] }}
-  | r = r'              ::   :: req {{ ic [[r]] = [[r']] }}
-  | g = g'              ::   :: geq {{ ic [[g]] = [[g']] }}
-  | var_set = var_set'              ::   :: var_seteq {{ ic [[var_set]] = [[var_set']] }}
-  | cast = cast'              ::   :: casteq {{ ic [[cast]] = [[cast']] }}
-  | s = s'              ::   :: seq {{ ic [[s]] = [[s']] }}
-  | ( formula )            :: :: paren   {{ ic ( [[formula]] ) }}
-  | not formula            :: :: not     {{ isa Not( [[formula]] ) }}
+  | i = j              ::   :: ieq {{ ic [[i]] = [[j]] }} {{ lean [[i]] = [[j]] }}
+  | f = f'              ::   :: feq {{ ic [[f]] = [[f']] }} {{ lean [[f]] = [[f']] }}
+  | mvr = mvr'              ::   :: mvreq {{ ic [[mvr]] = [[mvr']] }} {{ lean [[mvr]] = [[mvr']] }}
+  | ntr = ntr'              ::   :: ntreq {{ ic [[ntr]] = [[ntr']] }} {{ lean [[ntr]] = [[ntr']] }}
+  | var = var'              ::   :: vareq {{ ic [[var]] = [[var']] }} {{ lean [[var]] = [[var']] }}
+  | mv = mv'              ::   :: mveq {{ ic [[mv]] = [[mv']] }} {{ lean [[mv]] = [[mv']] }}
+  | nt = nt'              ::   :: nteq {{ ic [[nt]] = [[nt']] }} {{ lean [[nt]] = [[nt']] }}
+  | ntmv = ntmv'              ::   :: ntmveq {{ ic [[ntmv]] = [[ntmv']] }} {{ lean [[ntmv]] = [[ntmv']] }}
+  | e = e'              ::   :: eeq {{ ic [[e]] = [[e']] }} {{ lean [[e]] = [[e']] }}
+  | mse = mse'              ::   :: mseeq {{ ic [[mse]] = [[mse']] }} {{ lean [[mse]] = [[mse']] }}
+  | bs = bs'              ::   :: bseq {{ ic [[bs]] = [[bs']] }} {{ lean [[bs]] = [[bs']] }}
+  | p = p'              ::   :: peq {{ ic [[p]] = [[p']] }} {{ lean [[p]] = [[p']] }}
+  | r = r'              ::   :: req {{ ic [[r]] = [[r']] }} {{ lean [[r]] = [[r']] }}
+  | g = g'              ::   :: geq {{ ic [[g]] = [[g']] }} {{ lean [[g]] = [[g']] }}
+  | var_set = var_set'              ::   :: var_seteq {{ ic [[var_set]] = [[var_set']] }} {{ lean [[var_set]] = [[var_set']] }}
+  | cast = cast'              ::   :: casteq {{ ic [[cast]] = [[cast']] }} {{ lean [[cast]] = [[cast']] }}
+  | s = s'              ::   :: seq {{ ic [[s]] = [[s']] }} {{ lean [[s]] = [[s']] }}
+  | ( formula )            :: :: paren   {{ ic ( [[formula]] ) }} {{ lean ( [[formula]] ) }}
+  | not formula            :: :: not     {{ isa Not( [[formula]] ) }} {{ lean Not ( [[formula]] ) }}
   | forall i isin 1 -- m . formula :: :: forall 
                                {{ tex \forall [[i]] \in 1 .. [[m]]. [[formula]] }} 
-                               {{ isa (![[i]]. ((1::nat)<=[[i]] & [[i]]<=[[m]]) --> [[formula]]) }} 
+                               {{ isa (![[i]]. ((1::nat)<=[[i]] & [[i]]<=[[m]]) --> [[formula]]) }} {{ lean (![[i]]. ((1::nat)<=[[i]] & [[i]]<=[[m]]) --> [[formula]]) }} 
   | exists i isin 1 -- m . formula :: :: exists 
                                {{ tex \exists [[i]] \in 1 .. [[m]]. [[formula]] }}
-                               {{ isa (?[[i]]. ((1::nat)<=[[i]] & [[i]]<=[[m]]) --> [[formula]]) }} 
+                               {{ isa (?[[i]]. ((1::nat)<=[[i]] & [[i]]<=[[m]]) --> [[formula]]) }} {{ lean (?[[i]]. ((1::nat)<=[[i]] & [[i]]<=[[m]]) --> [[formula]]) }} 
   | existsuniq i isin 1 -- m . formula :: :: existsuni 
                                {{ tex \exists ! [[i]] \in 1 .. [[m]]. [[formula]] }}
-                               {{ isa (?[[i]]. ((1::nat)<=[[i]] & [[i]]<=[[m]]) --> [[formula]]) }} 
+                               {{ isa (?[[i]]. ((1::nat)<=[[i]] & [[i]]<=[[m]]) --> [[formula]]) }} {{ lean (?[[i]]. ((1::nat)<=[[i]] & [[i]]<=[[m]]) --> [[formula]]) }} 
   | exists nt . formula :: :: existsnt 
                                {{ tex \exists [[nt]]. [[formula]] }}
-                               {{ isa (?[[nt]]. [[formula]]) }} 
+                               {{ isa (?[[nt]]. [[formula]]) }} {{ lean (?[[nt]]. [[formula]]) }} 
   | exists var:mvr . formula :: :: existsvar 
                                {{ tex \exists [[var:mvr]]. [[formula]] }}
-                               {{ isa (?[[var]] [[mvr]]. [[formula]]) }} 
-  | formula /\ formula'   :: :: and  {{ isa ([[formula]] & [[formula']]) }}
-  | formula => formula'   :: :: implies  {{ isa ([[formula]] --> [[formula']]) }}
-  | true :: :: true {{ isa True }} 
+                               {{ isa (?[[var]] [[mvr]]. [[formula]]) }} {{ lean (?[[var]] [[mvr]]. [[formula]]) }} 
+  | formula /\ formula'   :: :: and  {{ isa ([[formula]] & [[formula']]) }} {{ lean ([[formula]] & [[formula']]) }}
+  | formula => formula'   :: :: implies  {{ isa ([[formula]] --> [[formula']]) }} {{ lean ([[formula]] --> [[formula']]) }}
+  | true :: :: true {{ isa True }} {{ lean True }} 
   | j INDEXES p1 .. pm                  ::   :: Indexesp
-        {{ coq (1 <= [[j]] /\ [[j]] <= length (unmake_list'p [[p1..pm]])) }}
+        {{ coq (1 <= [[j]] /\ [[j]] <= length (unmake_list'p [[p1..pm]])) }} {{ lean (1 <= [[j]] /\ [[j]] <= length (unmake_list'p [[p1..pm]])) }}
         {{ hol (1 <= [[j]] /\ [[j]] <= LENGTH [[p1..pm]]) }}
         {{ isa (1 <= [[j]] & [[j]] <= length [[p1..pm]]) }}
 

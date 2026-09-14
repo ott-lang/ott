@@ -1,0 +1,44 @@
+DIGEST 6de3382d66548335bd399c737357ea36
+FtestRegr_test_lists_defn_list_form_1NL
+R142:146 Stdlib.Arith.Arith <> <> lib
+R176:179 Stdlib.Bool.Bool <> <> lib
+R209:212 Stdlib.Lists.List <> <> lib
+R230:246 Ott.ott_list_core <> <> lib
+def 262:262 <> i
+R273:275 Corelib.Init.Datatypes <> nat ind
+def 289:289 <> x
+R300:302 Corelib.Init.Datatypes <> nat ind
+ind 316:316 <> e
+constr 331:337 <> e_tuple
+R342:345 Corelib.Init.Datatypes <> list ind
+R347:347 testRegr_test_lists_defn_list_form_1NL <> x def
+scheme 316:316 <> e_rect
+scheme 316:316 <> e_ind
+scheme 316:316 <> e_rec
+scheme 316:316 <> e_sind
+ind 399:407 <> Typing_ok
+constr 444:455 <> Typing_ok_ok
+ind 497:509 <> Typing_linear
+constr 555:571 <> Typing_linear_foo
+R412:415 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R411:411 testRegr_test_lists_defn_list_form_1NL <> e ind
+R519:522 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R513:516 Corelib.Init.Datatypes <> list ind
+R518:518 testRegr_test_lists_defn_list_form_1NL <> x def
+R470:470 testRegr_test_lists_defn_list_form_1NL <> e ind
+binder 467:468 <> e5:7
+R479:487 testRegr_test_lists_defn_list_form_1NL <> Typing_ok:3 ind
+R489:490 testRegr_test_lists_defn_list_form_1NL <> e5:7 var
+R590:593 Corelib.Init.Datatypes <> list ind
+R595:595 testRegr_test_lists_defn_list_form_1NL <> x def
+binder 583:588 <> x_list:8
+R630:638 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R604:612 testRegr_test_lists_defn_list_form_1NL <> Typing_ok:3 ind
+R615:621 testRegr_test_lists_defn_list_form_1NL <> e_tuple constr
+R623:628 testRegr_test_lists_defn_list_form_1NL <> x_list:8 var
+R639:651 testRegr_test_lists_defn_list_form_1NL <> Typing_linear:4 ind
+R653:658 testRegr_test_lists_defn_list_form_1NL <> x_list:8 var
+scheme 399:407 <> Typing_ok_ind
+scheme 399:407 <> Typing_ok_sind
+scheme 497:509 <> Typing_linear_ind
+scheme 497:509 <> Typing_linear_sind

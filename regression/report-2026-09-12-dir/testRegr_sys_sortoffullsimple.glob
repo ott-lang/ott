@@ -1,0 +1,3454 @@
+DIGEST ae1eec85fb4f0c0a46ccd42ad41799ad
+FtestRegr_sys_sortoffullsimple
+R1473:1477 Stdlib.Arith.Arith <> <> lib
+R1495:1498 Stdlib.Bool.Bool <> <> lib
+R1516:1519 Stdlib.Lists.List <> <> lib
+R1537:1553 Ott.ott_list_core <> <> lib
+def 1658:1662 <> label
+R1673:1675 Corelib.Init.Datatypes <> nat ind
+prf 1702:1709 <> eq_label
+R1726:1730 testRegr_sys_sortoffullsimple <> label def
+binder 1720:1720 <> x:1
+binder 1722:1722 <> y:2
+R1734:1734 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1740:1744 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1751:1751 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1736:1738 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1735:1735 testRegr_sys_sortoffullsimple <> x:1 var
+R1739:1739 testRegr_sys_sortoffullsimple <> y:2 var
+R1746:1749 Corelib.Init.Logic <> ::type_scope:x_'<>'_x not
+R1745:1745 testRegr_sys_sortoffullsimple <> x:1 var
+R1750:1750 testRegr_sys_sortoffullsimple <> y:2 var
+def 1886:1890 <> index
+R1901:1903 Corelib.Init.Datatypes <> nat ind
+def 1931:1937 <> termvar
+R1948:1950 Corelib.Init.Datatypes <> nat ind
+prf 1959:1968 <> eq_termvar
+R1985:1991 testRegr_sys_sortoffullsimple <> termvar def
+binder 1979:1979 <> x:3
+binder 1981:1981 <> y:4
+R1995:1995 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R2001:2005 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R2012:2012 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R1997:1999 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1996:1996 testRegr_sys_sortoffullsimple <> x:3 var
+R2000:2000 testRegr_sys_sortoffullsimple <> y:4 var
+R2007:2010 Corelib.Init.Logic <> ::type_scope:x_'<>'_x not
+R2006:2006 testRegr_sys_sortoffullsimple <> x:3 var
+R2011:2011 testRegr_sys_sortoffullsimple <> y:4 var
+def 2149:2156 <> basetype
+R2167:2169 Corelib.Init.Datatypes <> nat ind
+prf 2178:2188 <> eq_basetype
+R2205:2212 testRegr_sys_sortoffullsimple <> basetype def
+binder 2199:2199 <> x:5
+binder 2201:2201 <> y:6
+R2216:2216 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R2222:2226 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R2233:2233 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R2218:2220 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R2217:2217 testRegr_sys_sortoffullsimple <> x:5 var
+R2221:2221 testRegr_sys_sortoffullsimple <> y:6 var
+R2228:2231 Corelib.Init.Logic <> ::type_scope:x_'<>'_x not
+R2227:2227 testRegr_sys_sortoffullsimple <> x:5 var
+R2232:2232 testRegr_sys_sortoffullsimple <> y:6 var
+ind 2371:2371 <> T
+constr 2399:2403 <> TyArr
+constr 2446:2449 <> TyId
+constr 2483:2488 <> TyBool
+constr 2520:2524 <> TyNat
+constr 2563:2568 <> TyUnit
+constr 2593:2597 <> TySum
+constr 2631:2639 <> TyVariant
+constr 2686:2691 <> TyPair
+constr 2729:2735 <> TyTuple
+constr 2768:2775 <> TyRecord
+R2409:2409 testRegr_sys_sortoffullsimple <> T:7 ind
+binder 2406:2407 <> T5:9
+R2416:2416 testRegr_sys_sortoffullsimple <> T:7 ind
+binder 2413:2414 <> T':10
+R2454:2461 testRegr_sys_sortoffullsimple <> basetype def
+binder 2452:2452 <> A:11
+R2492:2492 testRegr_sys_sortoffullsimple <> T:7 ind
+R2528:2528 testRegr_sys_sortoffullsimple <> T:7 ind
+R2572:2572 testRegr_sys_sortoffullsimple <> T:7 ind
+R2603:2603 testRegr_sys_sortoffullsimple <> T:7 ind
+binder 2600:2601 <> T1:12
+R2610:2610 testRegr_sys_sortoffullsimple <> T:7 ind
+binder 2607:2608 <> T2:13
+R2644:2647 Corelib.Init.Datatypes <> list ind
+R2655:2655 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R2650:2654 testRegr_sys_sortoffullsimple <> label def
+R2656:2656 testRegr_sys_sortoffullsimple <> T:7 ind
+R2697:2697 testRegr_sys_sortoffullsimple <> T:7 ind
+binder 2694:2695 <> T1:14
+R2704:2704 testRegr_sys_sortoffullsimple <> T:7 ind
+binder 2701:2702 <> T2:15
+R2740:2743 Corelib.Init.Datatypes <> list ind
+R2745:2745 testRegr_sys_sortoffullsimple <> T:7 ind
+R2780:2783 Corelib.Init.Datatypes <> list ind
+R2791:2791 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R2786:2790 testRegr_sys_sortoffullsimple <> label def
+R2792:2792 testRegr_sys_sortoffullsimple <> T:7 ind
+scheme 2371:2371 <> T_rect
+scheme 2371:2371 <> T_ind
+scheme 2371:2371 <> T_rec
+scheme 2371:2371 <> T_sind
+def 2831:2831 <> G
+R2842:2845 Corelib.Init.Datatypes <> list ind
+R2855:2855 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R2848:2854 testRegr_sys_sortoffullsimple <> termvar def
+R2856:2856 testRegr_sys_sortoffullsimple <> T ind
+ind 2871:2871 <> C
+constr 2886:2890 <> CCase
+ind 2926:2926 <> t
+constr 2954:2958 <> TmVar
+constr 2990:2994 <> TmAbs
+constr 3043:3047 <> TmApp
+constr 3084:3089 <> TmTrue
+constr 3118:3124 <> TmFalse
+constr 3154:3157 <> TmIf
+constr 3201:3206 <> TmZero
+constr 3235:3240 <> TmSucc
+constr 3268:3273 <> TmPred
+constr 3303:3310 <> TmIszero
+constr 3338:3343 <> TmUnit
+constr 3372:3376 <> TmSeq
+constr 3412:3420 <> TmAscribe
+constr 3456:3462 <> TmInert
+constr 3509:3513 <> TmLet
+constr 3562:3566 <> TmInl
+constr 3599:3603 <> TmInr
+constr 3637:3644 <> TmCaseSm
+constr 3708:3716 <> TmVariant
+constr 3759:3764 <> TmCase
+constr 3798:3803 <> TmPair
+constr 3833:3839 <> TmProj1
+constr 3874:3880 <> TmProj2
+constr 3916:3922 <> TmTuple
+constr 3950:3957 <> TmProjTp
+constr 3996:4003 <> TmRecord
+constr 4040:4045 <> TmProj
+constr 4084:4088 <> TmFix
+R2895:2899 testRegr_sys_sortoffullsimple <> label def
+binder 2893:2893 <> l:20
+R2905:2911 testRegr_sys_sortoffullsimple <> termvar def
+binder 2903:2903 <> x:21
+R2918:2918 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 2915:2916 <> t5:22
+R2963:2969 testRegr_sys_sortoffullsimple <> termvar def
+binder 2961:2961 <> x:23
+R2999:3005 testRegr_sys_sortoffullsimple <> termvar def
+binder 2997:2997 <> x:24
+R3012:3012 testRegr_sys_sortoffullsimple <> T ind
+binder 3009:3010 <> T5:25
+R3019:3019 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3016:3017 <> t5:26
+R3053:3053 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3050:3051 <> t1:27
+R3060:3060 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3057:3058 <> t2:28
+R3093:3093 testRegr_sys_sortoffullsimple <> t:17 ind
+R3128:3128 testRegr_sys_sortoffullsimple <> t:17 ind
+R3163:3163 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3160:3161 <> t1:29
+R3170:3170 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3167:3168 <> t2:30
+R3177:3177 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3174:3175 <> t3:31
+R3210:3210 testRegr_sys_sortoffullsimple <> t:17 ind
+R3246:3246 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3243:3244 <> t5:32
+R3279:3279 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3276:3277 <> t5:33
+R3316:3316 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3313:3314 <> t5:34
+R3347:3347 testRegr_sys_sortoffullsimple <> t:17 ind
+R3382:3382 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3379:3380 <> t1:35
+R3389:3389 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3386:3387 <> t2:36
+R3426:3426 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3423:3424 <> t5:37
+R3433:3433 testRegr_sys_sortoffullsimple <> T ind
+binder 3430:3431 <> T5:38
+R3468:3468 testRegr_sys_sortoffullsimple <> T ind
+binder 3465:3466 <> T5:39
+R3518:3524 testRegr_sys_sortoffullsimple <> termvar def
+binder 3516:3516 <> x:40
+R3531:3531 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3528:3529 <> t5:41
+R3538:3538 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3535:3536 <> t':42
+R3572:3572 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3569:3570 <> t5:43
+R3609:3609 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3606:3607 <> t5:44
+R3651:3651 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3647:3649 <> t_5:45
+R3658:3664 testRegr_sys_sortoffullsimple <> termvar def
+binder 3655:3656 <> x1:46
+R3671:3671 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3668:3669 <> t1:47
+R3678:3684 testRegr_sys_sortoffullsimple <> termvar def
+binder 3675:3676 <> x2:48
+R3691:3691 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3688:3689 <> t2:49
+R3721:3725 testRegr_sys_sortoffullsimple <> label def
+binder 3719:3719 <> l:50
+R3732:3732 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3729:3730 <> t5:51
+R3739:3739 testRegr_sys_sortoffullsimple <> T ind
+binder 3736:3737 <> T5:52
+R3770:3770 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3767:3768 <> t5:53
+R3776:3779 Corelib.Init.Datatypes <> list ind
+R3781:3781 testRegr_sys_sortoffullsimple <> C:16 ind
+R3809:3809 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3806:3807 <> t1:54
+R3816:3816 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3813:3814 <> t2:55
+R3845:3845 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3842:3843 <> t5:56
+R3886:3886 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3883:3884 <> t5:57
+R3927:3930 Corelib.Init.Datatypes <> list ind
+R3932:3932 testRegr_sys_sortoffullsimple <> t:17 ind
+R3963:3963 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 3960:3961 <> t5:58
+R3969:3973 testRegr_sys_sortoffullsimple <> index def
+binder 3967:3967 <> i:59
+R4008:4011 Corelib.Init.Datatypes <> list ind
+R4019:4019 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R4014:4018 testRegr_sys_sortoffullsimple <> label def
+R4020:4020 testRegr_sys_sortoffullsimple <> t:17 ind
+R4051:4051 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 4048:4049 <> t5:60
+R4057:4061 testRegr_sys_sortoffullsimple <> label def
+binder 4055:4055 <> l:61
+R4094:4094 testRegr_sys_sortoffullsimple <> t:17 ind
+binder 4091:4092 <> t5:62
+scheme 2871:2871 <> C_rect
+scheme 2871:2871 <> C_ind
+scheme 2871:2871 <> C_rec
+scheme 2871:2871 <> C_sind
+scheme 2926:2926 <> t_rect
+scheme 2926:2926 <> t_ind
+scheme 2926:2926 <> t_rec
+scheme 2926:2926 <> t_sind
+ind 4137:4142 <> labels
+constr 4157:4166 <> labels_seq
+R4171:4174 Corelib.Init.Datatypes <> list ind
+R4176:4180 testRegr_sys_sortoffullsimple <> label def
+scheme 4137:4142 <> labels_rect
+scheme 4137:4142 <> labels_ind
+scheme 4137:4142 <> labels_rec
+scheme 4137:4142 <> labels_sind
+def 4268:4275 <> list_mem
+binder 4277:4277 <> A:65
+R4294:4294 testRegr_sys_sortoffullsimple <> A:65 var
+binder 4290:4290 <> a:66
+binder 4292:4292 <> b:67
+R4296:4296 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R4300:4302 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R4307:4307 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R4298:4298 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R4297:4297 testRegr_sys_sortoffullsimple <> a:66 var
+R4299:4299 testRegr_sys_sortoffullsimple <> b:67 var
+R4304:4305 Corelib.Init.Logic <> ::type_scope:x_'<>'_x not
+R4303:4303 testRegr_sys_sortoffullsimple <> a:66 var
+R4306:4306 testRegr_sys_sortoffullsimple <> b:67 var
+binder 4280:4281 <> eq:68
+R4313:4313 testRegr_sys_sortoffullsimple <> A:65 var
+binder 4311:4311 <> x:69
+R4319:4322 Corelib.Init.Datatypes <> list ind
+R4324:4324 testRegr_sys_sortoffullsimple <> A:65 var
+binder 4317:4317 <> l:70
+R4340:4343 Corelib.Init.Datatypes <> bool ind
+R4356:4356 testRegr_sys_sortoffullsimple <> l:70 var
+R4367:4369 Corelib.Init.Datatypes <> nil constr
+R4374:4378 Corelib.Init.Datatypes <> false constr
+R4384:4387 Corelib.Init.Datatypes <> cons constr
+R4399:4400 testRegr_sys_sortoffullsimple <> eq:68 var
+R4404:4404 testRegr_sys_sortoffullsimple <> x:69 var
+R4421:4428 testRegr_sys_sortoffullsimple <> list_mem:71 def
+R4435:4435 testRegr_sys_sortoffullsimple <> x:69 var
+R4432:4433 testRegr_sys_sortoffullsimple <> eq:68 var
+R4430:4430 testRegr_sys_sortoffullsimple <> A:65 var
+R4411:4414 Corelib.Init.Datatypes <> true constr
+R4454:4461 testRegr_sys_sortoffullsimple <> list_mem def
+def 4484:4493 <> list_minus
+binder 4495:4495 <> A:73
+R4512:4512 testRegr_sys_sortoffullsimple <> A:73 var
+binder 4508:4508 <> a:74
+binder 4510:4510 <> b:75
+R4514:4514 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R4518:4520 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R4525:4525 Corelib.Init.Specif <> ::type_scope:'{'_x_'}'_'+'_'{'_x_'}' not
+R4516:4516 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R4515:4515 testRegr_sys_sortoffullsimple <> a:74 var
+R4517:4517 testRegr_sys_sortoffullsimple <> b:75 var
+R4522:4523 Corelib.Init.Logic <> ::type_scope:x_'<>'_x not
+R4521:4521 testRegr_sys_sortoffullsimple <> a:74 var
+R4524:4524 testRegr_sys_sortoffullsimple <> b:75 var
+binder 4498:4499 <> eq:76
+R4532:4535 Corelib.Init.Datatypes <> list ind
+R4537:4537 testRegr_sys_sortoffullsimple <> A:73 var
+binder 4529:4530 <> l1:77
+R4544:4547 Corelib.Init.Datatypes <> list ind
+R4549:4549 testRegr_sys_sortoffullsimple <> A:73 var
+binder 4541:4542 <> l2:78
+R4566:4569 Corelib.Init.Datatypes <> list ind
+R4571:4571 testRegr_sys_sortoffullsimple <> A:73 var
+R4584:4585 testRegr_sys_sortoffullsimple <> l1:77 var
+R4596:4598 Corelib.Init.Datatypes <> nil constr
+R4603:4605 Corelib.Init.Datatypes <> nil constr
+R4611:4614 Corelib.Init.Datatypes <> cons constr
+R4627:4634 testRegr_sys_sortoffullsimple <> list_mem def
+R4648:4649 testRegr_sys_sortoffullsimple <> l2:78 var
+R4643:4644 testRegr_sys_sortoffullsimple <> eq:76 var
+R4640:4640 testRegr_sys_sortoffullsimple <> A:73 var
+R4683:4686 Corelib.Init.Datatypes <> cons constr
+R4691:4700 testRegr_sys_sortoffullsimple <> list_minus:79 def
+R4709:4710 testRegr_sys_sortoffullsimple <> l2:78 var
+R4704:4705 testRegr_sys_sortoffullsimple <> eq:76 var
+R4702:4702 testRegr_sys_sortoffullsimple <> A:73 var
+R4657:4666 testRegr_sys_sortoffullsimple <> list_minus:79 def
+R4675:4676 testRegr_sys_sortoffullsimple <> l2:78 var
+R4670:4671 testRegr_sys_sortoffullsimple <> eq:76 var
+R4668:4668 testRegr_sys_sortoffullsimple <> A:73 var
+R4728:4737 testRegr_sys_sortoffullsimple <> list_minus def
+def 4776:4784 <> is_v_of_t
+R4792:4792 testRegr_sys_sortoffullsimple <> t ind
+binder 4787:4790 <> t__6:81
+R4797:4800 Corelib.Init.Datatypes <> bool ind
+R4813:4816 testRegr_sys_sortoffullsimple <> t__6:81 var
+R4828:4832 testRegr_sys_sortoffullsimple <> TmVar constr
+R4840:4844 Corelib.Init.Datatypes <> false constr
+R4851:4855 testRegr_sys_sortoffullsimple <> TmAbs constr
+R4870:4873 Corelib.Init.Datatypes <> true constr
+R4881:4885 testRegr_sys_sortoffullsimple <> TmApp constr
+R4897:4901 Corelib.Init.Datatypes <> false constr
+R4907:4912 testRegr_sys_sortoffullsimple <> TmTrue constr
+R4918:4921 Corelib.Init.Datatypes <> true constr
+R4928:4934 testRegr_sys_sortoffullsimple <> TmFalse constr
+R4940:4943 Corelib.Init.Datatypes <> true constr
+R4951:4954 testRegr_sys_sortoffullsimple <> TmIf constr
+R4969:4973 Corelib.Init.Datatypes <> false constr
+R4979:4984 testRegr_sys_sortoffullsimple <> TmZero constr
+R4990:4993 Corelib.Init.Datatypes <> true constr
+R5001:5006 testRegr_sys_sortoffullsimple <> TmSucc constr
+R5017:5025 testRegr_sys_sortoffullsimple <> is_v_of_t:82 def
+R5037:5042 testRegr_sys_sortoffullsimple <> TmPred constr
+R5051:5055 Corelib.Init.Datatypes <> false constr
+R5062:5069 testRegr_sys_sortoffullsimple <> TmIszero constr
+R5078:5082 Corelib.Init.Datatypes <> false constr
+R5088:5093 testRegr_sys_sortoffullsimple <> TmUnit constr
+R5099:5102 Corelib.Init.Datatypes <> true constr
+R5110:5114 testRegr_sys_sortoffullsimple <> TmSeq constr
+R5126:5130 Corelib.Init.Datatypes <> false constr
+R5137:5145 testRegr_sys_sortoffullsimple <> TmAscribe constr
+R5157:5161 Corelib.Init.Datatypes <> false constr
+R5168:5174 testRegr_sys_sortoffullsimple <> TmInert constr
+R5183:5187 Corelib.Init.Datatypes <> false constr
+R5194:5198 testRegr_sys_sortoffullsimple <> TmLet constr
+R5212:5216 Corelib.Init.Datatypes <> false constr
+R5223:5227 testRegr_sys_sortoffullsimple <> TmInl constr
+R5238:5246 testRegr_sys_sortoffullsimple <> is_v_of_t:82 def
+R5258:5262 testRegr_sys_sortoffullsimple <> TmInr constr
+R5273:5281 testRegr_sys_sortoffullsimple <> is_v_of_t:82 def
+R5293:5300 testRegr_sys_sortoffullsimple <> TmCaseSm constr
+R5322:5326 Corelib.Init.Datatypes <> false constr
+R5333:5341 testRegr_sys_sortoffullsimple <> TmVariant constr
+R5357:5365 testRegr_sys_sortoffullsimple <> is_v_of_t:82 def
+R5377:5382 testRegr_sys_sortoffullsimple <> TmCase constr
+R5398:5402 Corelib.Init.Datatypes <> false constr
+R5409:5414 testRegr_sys_sortoffullsimple <> TmPair constr
+R5427:5427 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R5440:5445 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R5458:5458 Corelib.Init.Datatypes <> ::bool_scope:x_'&&'_x not
+R5428:5436 testRegr_sys_sortoffullsimple <> is_v_of_t:82 def
+R5446:5454 testRegr_sys_sortoffullsimple <> is_v_of_t:82 def
+R5466:5472 testRegr_sys_sortoffullsimple <> TmProj1 constr
+R5481:5485 Corelib.Init.Datatypes <> false constr
+R5492:5498 testRegr_sys_sortoffullsimple <> TmProj2 constr
+R5507:5511 Corelib.Init.Datatypes <> false constr
+R5518:5524 testRegr_sys_sortoffullsimple <> TmTuple constr
+R5539:5549 Ott.ott_list_core <> forall_list def
+R5560:5560 testRegr_sys_sortoffullsimple <> t ind
+binder 5557:5558 <> t_:84
+R5567:5575 testRegr_sys_sortoffullsimple <> is_v_of_t:82 def
+R5577:5578 testRegr_sys_sortoffullsimple <> t_:84 var
+R5596:5603 testRegr_sys_sortoffullsimple <> TmProjTp constr
+R5614:5618 Corelib.Init.Datatypes <> false constr
+R5625:5632 testRegr_sys_sortoffullsimple <> TmRecord constr
+R5649:5659 Ott.ott_list_core <> forall_list def
+R5678:5678 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R5673:5677 testRegr_sys_sortoffullsimple <> label def
+R5679:5679 testRegr_sys_sortoffullsimple <> t ind
+binder 5667:5670 <> pat_:85
+R5692:5695 testRegr_sys_sortoffullsimple <> pat_:85 var
+R5702:5702 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R5705:5705 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R5708:5708 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R5714:5722 testRegr_sys_sortoffullsimple <> is_v_of_t:82 def
+R5749:5754 testRegr_sys_sortoffullsimple <> TmProj constr
+R5765:5769 Corelib.Init.Datatypes <> false constr
+R5776:5780 testRegr_sys_sortoffullsimple <> TmFix constr
+R5789:5793 Corelib.Init.Datatypes <> false constr
+def 5859:5862 <> fv_t
+def 7228:7231 <> fv_C
+R5870:5870 testRegr_sys_sortoffullsimple <> t ind
+binder 5865:5868 <> t__6:87
+R7237:7237 testRegr_sys_sortoffullsimple <> C ind
+binder 7234:7235 <> C5:88
+R5875:5878 Corelib.Init.Datatypes <> list ind
+R5880:5886 testRegr_sys_sortoffullsimple <> termvar def
+R7242:7245 Corelib.Init.Datatypes <> list ind
+R7247:7253 testRegr_sys_sortoffullsimple <> termvar def
+R5899:5902 testRegr_sys_sortoffullsimple <> t__6:87 var
+R5914:5918 testRegr_sys_sortoffullsimple <> TmVar constr
+R5927:5930 Corelib.Init.Datatypes <> cons constr
+R5934:5936 Corelib.Init.Datatypes <> nil constr
+R5944:5948 testRegr_sys_sortoffullsimple <> TmAbs constr
+R5964:5973 testRegr_sys_sortoffullsimple <> list_minus def
+R5997:6000 Corelib.Init.Datatypes <> cons constr
+R6004:6006 Corelib.Init.Datatypes <> nil constr
+R5987:5990 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R5975:5984 testRegr_sys_sortoffullsimple <> eq_termvar thm
+R6016:6020 testRegr_sys_sortoffullsimple <> TmApp constr
+R6033:6035 Corelib.Init.Datatypes <> app def
+R6048:6051 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R6038:6041 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R6062:6067 testRegr_sys_sortoffullsimple <> TmTrue constr
+R6072:6074 Corelib.Init.Datatypes <> nil constr
+R6080:6086 testRegr_sys_sortoffullsimple <> TmFalse constr
+R6091:6093 Corelib.Init.Datatypes <> nil constr
+R6100:6103 testRegr_sys_sortoffullsimple <> TmIf constr
+R6119:6121 Corelib.Init.Datatypes <> app def
+R6134:6136 Corelib.Init.Datatypes <> app def
+R6149:6152 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R6139:6142 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R6124:6127 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R6164:6169 testRegr_sys_sortoffullsimple <> TmZero constr
+R6174:6176 Corelib.Init.Datatypes <> nil constr
+R6183:6188 testRegr_sys_sortoffullsimple <> TmSucc constr
+R6199:6202 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R6214:6219 testRegr_sys_sortoffullsimple <> TmPred constr
+R6230:6233 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R6245:6252 testRegr_sys_sortoffullsimple <> TmIszero constr
+R6263:6266 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R6277:6282 testRegr_sys_sortoffullsimple <> TmUnit constr
+R6287:6289 Corelib.Init.Datatypes <> nil constr
+R6296:6300 testRegr_sys_sortoffullsimple <> TmSeq constr
+R6313:6315 Corelib.Init.Datatypes <> app def
+R6328:6331 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R6318:6321 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R6343:6351 testRegr_sys_sortoffullsimple <> TmAscribe constr
+R6365:6368 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R6380:6386 testRegr_sys_sortoffullsimple <> TmInert constr
+R6395:6397 Corelib.Init.Datatypes <> nil constr
+R6404:6408 testRegr_sys_sortoffullsimple <> TmLet constr
+R6423:6425 Corelib.Init.Datatypes <> app def
+R6438:6447 testRegr_sys_sortoffullsimple <> list_minus def
+R6471:6474 Corelib.Init.Datatypes <> cons constr
+R6478:6480 Corelib.Init.Datatypes <> nil constr
+R6461:6464 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R6449:6458 testRegr_sys_sortoffullsimple <> eq_termvar thm
+R6428:6431 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R6490:6494 testRegr_sys_sortoffullsimple <> TmInl constr
+R6505:6508 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R6520:6524 testRegr_sys_sortoffullsimple <> TmInr constr
+R6535:6538 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R6550:6557 testRegr_sys_sortoffullsimple <> TmCaseSm constr
+R6580:6582 Corelib.Init.Datatypes <> app def
+R6596:6598 Corelib.Init.Datatypes <> app def
+R6649:6658 testRegr_sys_sortoffullsimple <> list_minus def
+R6682:6685 Corelib.Init.Datatypes <> cons constr
+R6690:6692 Corelib.Init.Datatypes <> nil constr
+R6672:6675 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R6660:6669 testRegr_sys_sortoffullsimple <> eq_termvar thm
+R6601:6610 testRegr_sys_sortoffullsimple <> list_minus def
+R6634:6637 Corelib.Init.Datatypes <> cons constr
+R6642:6644 Corelib.Init.Datatypes <> nil constr
+R6624:6627 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R6612:6621 testRegr_sys_sortoffullsimple <> eq_termvar thm
+R6585:6588 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R6703:6711 testRegr_sys_sortoffullsimple <> TmVariant constr
+R6727:6730 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R6742:6747 testRegr_sys_sortoffullsimple <> TmCase constr
+R6764:6766 Corelib.Init.Datatypes <> app def
+R6779:6786 Ott.ott_list_core <> flat_map def
+R6797:6797 testRegr_sys_sortoffullsimple <> C ind
+binder 6794:6795 <> C_:92
+R6804:6807 testRegr_sys_sortoffullsimple <> fv_C:90 def
+R6809:6810 testRegr_sys_sortoffullsimple <> C_:92 var
+R6769:6772 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R6828:6833 testRegr_sys_sortoffullsimple <> TmPair constr
+R6846:6848 Corelib.Init.Datatypes <> app def
+R6861:6864 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R6851:6854 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R6876:6882 testRegr_sys_sortoffullsimple <> TmProj1 constr
+R6893:6896 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R6908:6914 testRegr_sys_sortoffullsimple <> TmProj2 constr
+R6925:6928 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R6940:6946 testRegr_sys_sortoffullsimple <> TmTuple constr
+R6961:6968 Ott.ott_list_core <> flat_map def
+R6979:6979 testRegr_sys_sortoffullsimple <> t ind
+binder 6976:6977 <> t_:93
+R6986:6989 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R6991:6992 testRegr_sys_sortoffullsimple <> t_:93 var
+R7010:7017 testRegr_sys_sortoffullsimple <> TmProjTp constr
+R7030:7033 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R7045:7052 testRegr_sys_sortoffullsimple <> TmRecord constr
+R7069:7076 Ott.ott_list_core <> flat_map def
+R7095:7095 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R7090:7094 testRegr_sys_sortoffullsimple <> label def
+R7096:7096 testRegr_sys_sortoffullsimple <> t ind
+binder 7084:7087 <> pat_:94
+R7109:7112 testRegr_sys_sortoffullsimple <> pat_:94 var
+R7119:7119 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7122:7122 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7125:7125 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R7131:7134 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R7161:7166 testRegr_sys_sortoffullsimple <> TmProj constr
+R7179:7182 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R7194:7198 testRegr_sys_sortoffullsimple <> TmFix constr
+R7209:7212 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R7266:7267 testRegr_sys_sortoffullsimple <> C5:88 var
+R7279:7283 testRegr_sys_sortoffullsimple <> CCase constr
+R7298:7307 testRegr_sys_sortoffullsimple <> list_minus def
+R7331:7334 Corelib.Init.Datatypes <> cons constr
+R7338:7340 Corelib.Init.Datatypes <> nil constr
+R7321:7324 testRegr_sys_sortoffullsimple <> fv_t:89 def
+R7309:7318 testRegr_sys_sortoffullsimple <> eq_termvar thm
+def 7381:7387 <> subst_t
+def 9377:9383 <> subst_C
+R7395:7395 testRegr_sys_sortoffullsimple <> t ind
+binder 7390:7393 <> t__6:97
+R7403:7409 testRegr_sys_sortoffullsimple <> termvar def
+binder 7399:7401 <> x_5:98
+R7419:7419 testRegr_sys_sortoffullsimple <> t ind
+binder 7413:7417 <> t___7:99
+R9390:9390 testRegr_sys_sortoffullsimple <> t ind
+binder 9386:9388 <> t_6:100
+R9397:9403 testRegr_sys_sortoffullsimple <> termvar def
+binder 9394:9395 <> x5:101
+R9410:9410 testRegr_sys_sortoffullsimple <> C ind
+binder 9407:9408 <> C5:102
+R7439:7439 testRegr_sys_sortoffullsimple <> t ind
+R9427:9427 testRegr_sys_sortoffullsimple <> C ind
+R7452:7456 testRegr_sys_sortoffullsimple <> t___7:99 var
+R7468:7472 testRegr_sys_sortoffullsimple <> TmVar constr
+R7484:7493 testRegr_sys_sortoffullsimple <> eq_termvar thm
+R7497:7499 testRegr_sys_sortoffullsimple <> x_5:98 var
+R7517:7521 testRegr_sys_sortoffullsimple <> TmVar constr
+R7506:7509 testRegr_sys_sortoffullsimple <> t__6:97 var
+R7532:7536 testRegr_sys_sortoffullsimple <> TmAbs constr
+R7550:7554 testRegr_sys_sortoffullsimple <> TmAbs constr
+R7565:7572 testRegr_sys_sortoffullsimple <> list_mem def
+R7590:7593 Corelib.Init.Datatypes <> cons constr
+R7597:7599 Corelib.Init.Datatypes <> nil constr
+R7585:7587 testRegr_sys_sortoffullsimple <> x_5:98 var
+R7574:7583 testRegr_sys_sortoffullsimple <> eq_termvar thm
+R7616:7622 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R7629:7631 testRegr_sys_sortoffullsimple <> x_5:98 var
+R7624:7627 testRegr_sys_sortoffullsimple <> t__6:97 var
+R7643:7647 testRegr_sys_sortoffullsimple <> TmApp constr
+R7659:7663 testRegr_sys_sortoffullsimple <> TmApp constr
+R7666:7672 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R7679:7681 testRegr_sys_sortoffullsimple <> x_5:98 var
+R7674:7677 testRegr_sys_sortoffullsimple <> t__6:97 var
+R7688:7694 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R7701:7703 testRegr_sys_sortoffullsimple <> x_5:98 var
+R7696:7699 testRegr_sys_sortoffullsimple <> t__6:97 var
+R7713:7718 testRegr_sys_sortoffullsimple <> TmTrue constr
+R7723:7728 testRegr_sys_sortoffullsimple <> TmTrue constr
+R7735:7741 testRegr_sys_sortoffullsimple <> TmFalse constr
+R7746:7752 testRegr_sys_sortoffullsimple <> TmFalse constr
+R7760:7763 testRegr_sys_sortoffullsimple <> TmIf constr
+R7778:7781 testRegr_sys_sortoffullsimple <> TmIf constr
+R7784:7790 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R7797:7799 testRegr_sys_sortoffullsimple <> x_5:98 var
+R7792:7795 testRegr_sys_sortoffullsimple <> t__6:97 var
+R7806:7812 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R7819:7821 testRegr_sys_sortoffullsimple <> x_5:98 var
+R7814:7817 testRegr_sys_sortoffullsimple <> t__6:97 var
+R7828:7834 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R7841:7843 testRegr_sys_sortoffullsimple <> x_5:98 var
+R7836:7839 testRegr_sys_sortoffullsimple <> t__6:97 var
+R7853:7858 testRegr_sys_sortoffullsimple <> TmZero constr
+R7863:7868 testRegr_sys_sortoffullsimple <> TmZero constr
+R7876:7881 testRegr_sys_sortoffullsimple <> TmSucc constr
+R7890:7895 testRegr_sys_sortoffullsimple <> TmSucc constr
+R7898:7904 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R7911:7913 testRegr_sys_sortoffullsimple <> x_5:98 var
+R7906:7909 testRegr_sys_sortoffullsimple <> t__6:97 var
+R7924:7929 testRegr_sys_sortoffullsimple <> TmPred constr
+R7938:7943 testRegr_sys_sortoffullsimple <> TmPred constr
+R7946:7952 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R7959:7961 testRegr_sys_sortoffullsimple <> x_5:98 var
+R7954:7957 testRegr_sys_sortoffullsimple <> t__6:97 var
+R7972:7979 testRegr_sys_sortoffullsimple <> TmIszero constr
+R7988:7995 testRegr_sys_sortoffullsimple <> TmIszero constr
+R7998:8004 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R8011:8013 testRegr_sys_sortoffullsimple <> x_5:98 var
+R8006:8009 testRegr_sys_sortoffullsimple <> t__6:97 var
+R8023:8028 testRegr_sys_sortoffullsimple <> TmUnit constr
+R8033:8038 testRegr_sys_sortoffullsimple <> TmUnit constr
+R8046:8050 testRegr_sys_sortoffullsimple <> TmSeq constr
+R8062:8066 testRegr_sys_sortoffullsimple <> TmSeq constr
+R8069:8075 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R8082:8084 testRegr_sys_sortoffullsimple <> x_5:98 var
+R8077:8080 testRegr_sys_sortoffullsimple <> t__6:97 var
+R8091:8097 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R8104:8106 testRegr_sys_sortoffullsimple <> x_5:98 var
+R8099:8102 testRegr_sys_sortoffullsimple <> t__6:97 var
+R8117:8125 testRegr_sys_sortoffullsimple <> TmAscribe constr
+R8137:8145 testRegr_sys_sortoffullsimple <> TmAscribe constr
+R8148:8154 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R8161:8163 testRegr_sys_sortoffullsimple <> x_5:98 var
+R8156:8159 testRegr_sys_sortoffullsimple <> t__6:97 var
+R8177:8183 testRegr_sys_sortoffullsimple <> TmInert constr
+R8192:8198 testRegr_sys_sortoffullsimple <> TmInert constr
+R8208:8212 testRegr_sys_sortoffullsimple <> TmLet constr
+R8226:8230 testRegr_sys_sortoffullsimple <> TmLet constr
+R8235:8241 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R8248:8250 testRegr_sys_sortoffullsimple <> x_5:98 var
+R8243:8246 testRegr_sys_sortoffullsimple <> t__6:97 var
+R8260:8267 testRegr_sys_sortoffullsimple <> list_mem def
+R8285:8288 Corelib.Init.Datatypes <> cons constr
+R8292:8294 Corelib.Init.Datatypes <> nil constr
+R8280:8282 testRegr_sys_sortoffullsimple <> x_5:98 var
+R8269:8278 testRegr_sys_sortoffullsimple <> eq_termvar thm
+R8311:8317 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R8324:8326 testRegr_sys_sortoffullsimple <> x_5:98 var
+R8319:8322 testRegr_sys_sortoffullsimple <> t__6:97 var
+R8338:8342 testRegr_sys_sortoffullsimple <> TmInl constr
+R8351:8355 testRegr_sys_sortoffullsimple <> TmInl constr
+R8358:8364 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R8371:8373 testRegr_sys_sortoffullsimple <> x_5:98 var
+R8366:8369 testRegr_sys_sortoffullsimple <> t__6:97 var
+R8384:8388 testRegr_sys_sortoffullsimple <> TmInr constr
+R8397:8401 testRegr_sys_sortoffullsimple <> TmInr constr
+R8404:8410 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R8417:8419 testRegr_sys_sortoffullsimple <> x_5:98 var
+R8412:8415 testRegr_sys_sortoffullsimple <> t__6:97 var
+R8430:8437 testRegr_sys_sortoffullsimple <> TmCaseSm constr
+R8459:8466 testRegr_sys_sortoffullsimple <> TmCaseSm constr
+R8469:8475 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R8482:8484 testRegr_sys_sortoffullsimple <> x_5:98 var
+R8477:8480 testRegr_sys_sortoffullsimple <> t__6:97 var
+R8498:8505 testRegr_sys_sortoffullsimple <> list_mem def
+R8523:8526 Corelib.Init.Datatypes <> cons constr
+R8531:8533 Corelib.Init.Datatypes <> nil constr
+R8518:8520 testRegr_sys_sortoffullsimple <> x_5:98 var
+R8507:8516 testRegr_sys_sortoffullsimple <> eq_termvar thm
+R8550:8556 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R8563:8565 testRegr_sys_sortoffullsimple <> x_5:98 var
+R8558:8561 testRegr_sys_sortoffullsimple <> t__6:97 var
+R8579:8586 testRegr_sys_sortoffullsimple <> list_mem def
+R8604:8607 Corelib.Init.Datatypes <> cons constr
+R8612:8614 Corelib.Init.Datatypes <> nil constr
+R8599:8601 testRegr_sys_sortoffullsimple <> x_5:98 var
+R8588:8597 testRegr_sys_sortoffullsimple <> eq_termvar thm
+R8631:8637 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R8644:8646 testRegr_sys_sortoffullsimple <> x_5:98 var
+R8639:8642 testRegr_sys_sortoffullsimple <> t__6:97 var
+R8658:8666 testRegr_sys_sortoffullsimple <> TmVariant constr
+R8680:8688 testRegr_sys_sortoffullsimple <> TmVariant constr
+R8693:8699 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R8706:8708 testRegr_sys_sortoffullsimple <> x_5:98 var
+R8701:8704 testRegr_sys_sortoffullsimple <> t__6:97 var
+R8722:8727 testRegr_sys_sortoffullsimple <> TmCase constr
+R8743:8748 testRegr_sys_sortoffullsimple <> TmCase constr
+R8751:8757 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R8764:8766 testRegr_sys_sortoffullsimple <> x_5:98 var
+R8759:8762 testRegr_sys_sortoffullsimple <> t__6:97 var
+R8773:8775 Corelib.Lists.ListDef <> map def
+R8786:8786 testRegr_sys_sortoffullsimple <> C ind
+binder 8783:8784 <> C_:106
+R8793:8799 testRegr_sys_sortoffullsimple <> subst_C:104 def
+R8810:8811 testRegr_sys_sortoffullsimple <> C_:106 var
+R8806:8808 testRegr_sys_sortoffullsimple <> x_5:98 var
+R8801:8804 testRegr_sys_sortoffullsimple <> t__6:97 var
+R8828:8833 testRegr_sys_sortoffullsimple <> TmPair constr
+R8845:8850 testRegr_sys_sortoffullsimple <> TmPair constr
+R8853:8859 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R8866:8868 testRegr_sys_sortoffullsimple <> x_5:98 var
+R8861:8864 testRegr_sys_sortoffullsimple <> t__6:97 var
+R8875:8881 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R8888:8890 testRegr_sys_sortoffullsimple <> x_5:98 var
+R8883:8886 testRegr_sys_sortoffullsimple <> t__6:97 var
+R8901:8907 testRegr_sys_sortoffullsimple <> TmProj1 constr
+R8916:8922 testRegr_sys_sortoffullsimple <> TmProj1 constr
+R8925:8931 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R8938:8940 testRegr_sys_sortoffullsimple <> x_5:98 var
+R8933:8936 testRegr_sys_sortoffullsimple <> t__6:97 var
+R8951:8957 testRegr_sys_sortoffullsimple <> TmProj2 constr
+R8966:8972 testRegr_sys_sortoffullsimple <> TmProj2 constr
+R8975:8981 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R8988:8990 testRegr_sys_sortoffullsimple <> x_5:98 var
+R8983:8986 testRegr_sys_sortoffullsimple <> t__6:97 var
+R9001:9007 testRegr_sys_sortoffullsimple <> TmTuple constr
+R9020:9026 testRegr_sys_sortoffullsimple <> TmTuple constr
+R9029:9031 Corelib.Lists.ListDef <> map def
+R9042:9042 testRegr_sys_sortoffullsimple <> t ind
+binder 9039:9040 <> t_:107
+R9049:9055 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R9066:9067 testRegr_sys_sortoffullsimple <> t_:107 var
+R9062:9064 testRegr_sys_sortoffullsimple <> x_5:98 var
+R9057:9060 testRegr_sys_sortoffullsimple <> t__6:97 var
+R9084:9091 testRegr_sys_sortoffullsimple <> TmProjTp constr
+R9102:9109 testRegr_sys_sortoffullsimple <> TmProjTp constr
+R9112:9118 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R9125:9127 testRegr_sys_sortoffullsimple <> x_5:98 var
+R9120:9123 testRegr_sys_sortoffullsimple <> t__6:97 var
+R9140:9147 testRegr_sys_sortoffullsimple <> TmRecord constr
+R9162:9169 testRegr_sys_sortoffullsimple <> TmRecord constr
+R9172:9174 Corelib.Lists.ListDef <> map def
+R9193:9193 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R9188:9192 testRegr_sys_sortoffullsimple <> label def
+R9194:9194 testRegr_sys_sortoffullsimple <> t ind
+binder 9182:9185 <> pat_:108
+R9207:9210 testRegr_sys_sortoffullsimple <> pat_:108 var
+R9217:9217 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9220:9220 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9223:9223 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9228:9228 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9231:9232 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9252:9253 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9233:9239 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R9246:9248 testRegr_sys_sortoffullsimple <> x_5:98 var
+R9241:9244 testRegr_sys_sortoffullsimple <> t__6:97 var
+R9275:9280 testRegr_sys_sortoffullsimple <> TmProj constr
+R9291:9296 testRegr_sys_sortoffullsimple <> TmProj constr
+R9299:9305 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R9312:9314 testRegr_sys_sortoffullsimple <> x_5:98 var
+R9307:9310 testRegr_sys_sortoffullsimple <> t__6:97 var
+R9327:9331 testRegr_sys_sortoffullsimple <> TmFix constr
+R9340:9344 testRegr_sys_sortoffullsimple <> TmFix constr
+R9347:9353 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R9360:9362 testRegr_sys_sortoffullsimple <> x_5:98 var
+R9355:9358 testRegr_sys_sortoffullsimple <> t__6:97 var
+R9440:9441 testRegr_sys_sortoffullsimple <> C5:102 var
+R9453:9457 testRegr_sys_sortoffullsimple <> CCase constr
+R9470:9474 testRegr_sys_sortoffullsimple <> CCase constr
+R9484:9491 testRegr_sys_sortoffullsimple <> list_mem def
+R9508:9511 Corelib.Init.Datatypes <> cons constr
+R9515:9517 Corelib.Init.Datatypes <> nil constr
+R9504:9505 testRegr_sys_sortoffullsimple <> x5:101 var
+R9493:9502 testRegr_sys_sortoffullsimple <> eq_termvar thm
+R9534:9540 testRegr_sys_sortoffullsimple <> subst_t:103 def
+R9546:9547 testRegr_sys_sortoffullsimple <> x5:101 var
+R9542:9544 testRegr_sys_sortoffullsimple <> t_6:100 var
+R9602:9613 Ott.ott_list <> <> lib
+def 9653:9657 <> bound
+binder 9659:9659 <> x:111
+binder 9661:9662 <> T0:112
+binder 9664:9664 <> G:113
+R9671:9677 Corelib.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+R9680:9681 Corelib.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+binder 9678:9679 <> G1:114
+R9682:9688 Corelib.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+R9691:9696 Corelib.Init.Logic <> ::type_scope:'exists'_x_'..'_x_','_x not
+binder 9689:9690 <> G2:115
+R9724:9731 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R9699:9701 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R9698:9698 testRegr_sys_sortoffullsimple <> G:113 var
+R9704:9707 Corelib.Init.Datatypes <> ::list_scope:x_'++'_x not
+R9702:9703 testRegr_sys_sortoffullsimple <> G1:114 var
+R9714:9715 Corelib.Init.Datatypes <> ::list_scope:x_'::'_x not
+R9708:9708 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9710:9710 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9713:9713 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R9709:9709 testRegr_sys_sortoffullsimple <> x:111 var
+R9711:9712 testRegr_sys_sortoffullsimple <> T0:112 var
+R9716:9717 testRegr_sys_sortoffullsimple <> G2:115 var
+R9732:9732 Corelib.Init.Logic <> ::type_scope:'~'_x not
+R9733:9734 Stdlib.Lists.List <> In def
+R9739:9746 Stdlib.Lists.List <> map abbrev
+R9765:9766 testRegr_sys_sortoffullsimple <> G1:114 var
+R9750:9752 Corelib.Init.Datatypes <> fst def
+R9754:9760 testRegr_sys_sortoffullsimple <> termvar def
+R9762:9762 testRegr_sys_sortoffullsimple <> T ind
+R9736:9736 testRegr_sys_sortoffullsimple <> x:111 var
+def 9782:9791 <> list'label
+R9827:9830 Corelib.Init.Datatypes <> list ind
+R9832:9836 testRegr_sys_sortoffullsimple <> label def
+def 9860:9876 <> unmake_list'label
+R9890:9893 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R9880:9889 testRegr_sys_sortoffullsimple <> list'label def
+R9894:9897 Corelib.Init.Datatypes <> list ind
+R9899:9903 testRegr_sys_sortoffullsimple <> label def
+binder 9946:9946 <> x:116
+R9951:9951 testRegr_sys_sortoffullsimple <> x:116 var
+binder 9946:9946 <> x:117
+R9951:9951 testRegr_sys_sortoffullsimple <> x:117 var
+def 10378:10383 <> list'T
+R10415:10418 Corelib.Init.Datatypes <> list ind
+R10420:10420 testRegr_sys_sortoffullsimple <> T ind
+def 10444:10456 <> unmake_list'T
+R10466:10469 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R10460:10465 testRegr_sys_sortoffullsimple <> list'T def
+R10470:10473 Corelib.Init.Datatypes <> list ind
+R10475:10475 testRegr_sys_sortoffullsimple <> T ind
+binder 10514:10514 <> x:118
+R10519:10519 testRegr_sys_sortoffullsimple <> x:118 var
+binder 10514:10514 <> x:119
+R10519:10519 testRegr_sys_sortoffullsimple <> x:119 var
+def 10543:10548 <> list't
+R10580:10583 Corelib.Init.Datatypes <> list ind
+R10585:10585 testRegr_sys_sortoffullsimple <> t ind
+def 10609:10621 <> unmake_list't
+R10631:10634 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R10625:10630 testRegr_sys_sortoffullsimple <> list't def
+R10635:10638 Corelib.Init.Datatypes <> list ind
+R10640:10640 testRegr_sys_sortoffullsimple <> t ind
+binder 10679:10679 <> x:120
+R10684:10684 testRegr_sys_sortoffullsimple <> x:120 var
+binder 10679:10679 <> x:121
+R10684:10684 testRegr_sys_sortoffullsimple <> x:121 var
+ind 10744:10746 <> red
+constr 10789:10794 <> E_App1
+constr 10880:10885 <> E_App2
+constr 11002:11009 <> E_AppAbs
+constr 11151:11158 <> E_IfTrue
+constr 11215:11223 <> E_IfFalse
+constr 11281:11284 <> E_If
+constr 11377:11382 <> E_Succ
+constr 11461:11470 <> E_PredZero
+constr 11510:11519 <> E_PredSucc
+constr 11607:11612 <> E_Pred
+constr 11691:11702 <> E_IsZeroZero
+constr 11744:11755 <> E_IsZeroSucc
+constr 11850:11857 <> E_IsZero
+constr 11940:11944 <> E_Seq
+constr 12030:12038 <> E_SeqNext
+constr 12090:12098 <> E_Ascribe
+constr 12188:12197 <> E_Ascribe1
+constr 12299:12304 <> E_LetV
+constr 12423:12427 <> E_Let
+constr 12529:12537 <> E_CaseInl
+constr 12702:12710 <> E_CaseInr
+constr 12875:12882 <> E_CaseSm
+constr 13029:13033 <> E_Inl
+constr 13110:13114 <> E_Inr
+constr 13191:13203 <> E_CaseVariant
+constr 13915:13920 <> E_Case
+constr 14241:14249 <> E_Variant
+constr 14368:14378 <> E_PairBeta1
+constr 14502:14512 <> E_PairBeta2
+constr 14636:14642 <> E_Proj1
+constr 14723:14729 <> E_Proj2
+constr 14810:14816 <> E_Pair1
+constr 14904:14910 <> E_Pair2
+constr 15029:15039 <> E_ProjTuple
+constr 15304:15311 <> E_ProjTp
+constr 15412:15418 <> E_Tuple
+constr 15683:15691 <> E_ProjRcd
+constr 16074:16079 <> E_Proj
+constr 16176:16180 <> E_Rcd
+constr 16531:16539 <> E_FixBeta
+constr 16666:16670 <> E_Fix
+R10751:10754 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R10750:10750 testRegr_sys_sortoffullsimple <> t ind
+R10756:10759 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R10755:10755 testRegr_sys_sortoffullsimple <> t ind
+R10816:10816 testRegr_sys_sortoffullsimple <> t ind
+binder 10806:10807 <> t1:124
+binder 10809:10810 <> t2:125
+binder 10812:10814 <> t1':126
+R10835:10843 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R10825:10827 testRegr_sys_sortoffullsimple <> red:122 ind
+R10832:10834 testRegr_sys_sortoffullsimple <> t1':126 var
+R10829:10830 testRegr_sys_sortoffullsimple <> t1:124 var
+R10844:10846 testRegr_sys_sortoffullsimple <> red:122 ind
+R10863:10867 testRegr_sys_sortoffullsimple <> TmApp constr
+R10869:10871 testRegr_sys_sortoffullsimple <> t1':126 var
+R10873:10874 testRegr_sys_sortoffullsimple <> t2:125 var
+R10849:10853 testRegr_sys_sortoffullsimple <> TmApp constr
+R10855:10856 testRegr_sys_sortoffullsimple <> t1:124 var
+R10858:10859 testRegr_sys_sortoffullsimple <> t2:125 var
+R10907:10907 testRegr_sys_sortoffullsimple <> t ind
+binder 10897:10898 <> v1:127
+binder 10900:10901 <> t2:128
+binder 10903:10905 <> t2':129
+R10938:10946 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R10916:10922 Stdlib.Bool.Bool <> Is_true def
+R10925:10933 testRegr_sys_sortoffullsimple <> is_v_of_t def
+R10935:10936 testRegr_sys_sortoffullsimple <> v1:127 var
+R10957:10965 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R10947:10949 testRegr_sys_sortoffullsimple <> red:122 ind
+R10954:10956 testRegr_sys_sortoffullsimple <> t2':129 var
+R10951:10952 testRegr_sys_sortoffullsimple <> t2:128 var
+R10966:10968 testRegr_sys_sortoffullsimple <> red:122 ind
+R10985:10989 testRegr_sys_sortoffullsimple <> TmApp constr
+R10991:10992 testRegr_sys_sortoffullsimple <> v1:127 var
+R10994:10996 testRegr_sys_sortoffullsimple <> t2':129 var
+R10971:10975 testRegr_sys_sortoffullsimple <> TmApp constr
+R10977:10978 testRegr_sys_sortoffullsimple <> v1:127 var
+R10980:10981 testRegr_sys_sortoffullsimple <> t2:128 var
+R11023:11029 testRegr_sys_sortoffullsimple <> termvar def
+binder 11021:11021 <> x:130
+R11036:11036 testRegr_sys_sortoffullsimple <> T ind
+binder 11033:11034 <> T5:131
+R11047:11047 testRegr_sys_sortoffullsimple <> t ind
+binder 11040:11042 <> t12:132
+binder 11044:11045 <> v2:133
+R11078:11086 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R11056:11062 Stdlib.Bool.Bool <> Is_true def
+R11065:11073 testRegr_sys_sortoffullsimple <> is_v_of_t def
+R11075:11076 testRegr_sys_sortoffullsimple <> v2:133 var
+R11087:11089 testRegr_sys_sortoffullsimple <> red:122 ind
+R11123:11129 testRegr_sys_sortoffullsimple <> subst_t def
+R11132:11133 testRegr_sys_sortoffullsimple <> v2:133 var
+R11137:11137 testRegr_sys_sortoffullsimple <> x:130 var
+R11141:11143 testRegr_sys_sortoffullsimple <> t12:132 var
+R11092:11096 testRegr_sys_sortoffullsimple <> TmApp constr
+R11100:11104 testRegr_sys_sortoffullsimple <> TmAbs constr
+R11106:11106 testRegr_sys_sortoffullsimple <> x:130 var
+R11108:11109 testRegr_sys_sortoffullsimple <> T5:131 var
+R11111:11113 testRegr_sys_sortoffullsimple <> t12:132 var
+R11117:11118 testRegr_sys_sortoffullsimple <> v2:133 var
+R11176:11176 testRegr_sys_sortoffullsimple <> t ind
+binder 11170:11171 <> t2:134
+binder 11173:11174 <> t3:135
+R11185:11187 testRegr_sys_sortoffullsimple <> red:122 ind
+R11209:11210 testRegr_sys_sortoffullsimple <> t2:134 var
+R11190:11193 testRegr_sys_sortoffullsimple <> TmIf constr
+R11195:11200 testRegr_sys_sortoffullsimple <> TmTrue constr
+R11202:11203 testRegr_sys_sortoffullsimple <> t2:134 var
+R11205:11206 testRegr_sys_sortoffullsimple <> t3:135 var
+R11241:11241 testRegr_sys_sortoffullsimple <> t ind
+binder 11235:11236 <> t2:136
+binder 11238:11239 <> t3:137
+R11250:11252 testRegr_sys_sortoffullsimple <> red:122 ind
+R11275:11276 testRegr_sys_sortoffullsimple <> t3:137 var
+R11255:11258 testRegr_sys_sortoffullsimple <> TmIf constr
+R11260:11266 testRegr_sys_sortoffullsimple <> TmFalse constr
+R11268:11269 testRegr_sys_sortoffullsimple <> t2:136 var
+R11271:11272 testRegr_sys_sortoffullsimple <> t3:137 var
+R11309:11309 testRegr_sys_sortoffullsimple <> t ind
+binder 11296:11297 <> t1:138
+binder 11299:11300 <> t2:139
+binder 11302:11303 <> t3:140
+binder 11305:11307 <> t1':141
+R11328:11336 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R11318:11320 testRegr_sys_sortoffullsimple <> red:122 ind
+R11325:11327 testRegr_sys_sortoffullsimple <> t1':141 var
+R11322:11323 testRegr_sys_sortoffullsimple <> t1:138 var
+R11337:11339 testRegr_sys_sortoffullsimple <> red:122 ind
+R11358:11361 testRegr_sys_sortoffullsimple <> TmIf constr
+R11363:11365 testRegr_sys_sortoffullsimple <> t1':141 var
+R11367:11368 testRegr_sys_sortoffullsimple <> t2:139 var
+R11370:11371 testRegr_sys_sortoffullsimple <> t3:140 var
+R11342:11345 testRegr_sys_sortoffullsimple <> TmIf constr
+R11347:11348 testRegr_sys_sortoffullsimple <> t1:138 var
+R11350:11351 testRegr_sys_sortoffullsimple <> t2:139 var
+R11353:11354 testRegr_sys_sortoffullsimple <> t3:140 var
+R11401:11401 testRegr_sys_sortoffullsimple <> t ind
+binder 11394:11395 <> t1:142
+binder 11397:11399 <> t1':143
+R11420:11428 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R11410:11412 testRegr_sys_sortoffullsimple <> red:122 ind
+R11417:11419 testRegr_sys_sortoffullsimple <> t1':143 var
+R11414:11415 testRegr_sys_sortoffullsimple <> t1:142 var
+R11429:11431 testRegr_sys_sortoffullsimple <> red:122 ind
+R11446:11451 testRegr_sys_sortoffullsimple <> TmSucc constr
+R11453:11455 testRegr_sys_sortoffullsimple <> t1':143 var
+R11434:11439 testRegr_sys_sortoffullsimple <> TmSucc constr
+R11441:11442 testRegr_sys_sortoffullsimple <> t1:142 var
+R11480:11482 testRegr_sys_sortoffullsimple <> red:122 ind
+R11500:11505 testRegr_sys_sortoffullsimple <> TmZero constr
+R11485:11490 testRegr_sys_sortoffullsimple <> TmPred constr
+R11492:11497 testRegr_sys_sortoffullsimple <> TmZero constr
+R11534:11534 testRegr_sys_sortoffullsimple <> t ind
+binder 11531:11532 <> v1:144
+R11565:11573 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R11543:11549 Stdlib.Bool.Bool <> Is_true def
+R11552:11560 testRegr_sys_sortoffullsimple <> is_v_of_t def
+R11562:11563 testRegr_sys_sortoffullsimple <> v1:144 var
+R11574:11576 testRegr_sys_sortoffullsimple <> red:122 ind
+R11601:11602 testRegr_sys_sortoffullsimple <> v1:144 var
+R11579:11584 testRegr_sys_sortoffullsimple <> TmPred constr
+R11588:11593 testRegr_sys_sortoffullsimple <> TmSucc constr
+R11595:11596 testRegr_sys_sortoffullsimple <> v1:144 var
+R11631:11631 testRegr_sys_sortoffullsimple <> t ind
+binder 11624:11625 <> t1:145
+binder 11627:11629 <> t1':146
+R11650:11658 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R11640:11642 testRegr_sys_sortoffullsimple <> red:122 ind
+R11647:11649 testRegr_sys_sortoffullsimple <> t1':146 var
+R11644:11645 testRegr_sys_sortoffullsimple <> t1:145 var
+R11659:11661 testRegr_sys_sortoffullsimple <> red:122 ind
+R11676:11681 testRegr_sys_sortoffullsimple <> TmPred constr
+R11683:11685 testRegr_sys_sortoffullsimple <> t1':146 var
+R11664:11669 testRegr_sys_sortoffullsimple <> TmPred constr
+R11671:11672 testRegr_sys_sortoffullsimple <> t1:145 var
+R11712:11714 testRegr_sys_sortoffullsimple <> red:122 ind
+R11734:11739 testRegr_sys_sortoffullsimple <> TmTrue constr
+R11717:11724 testRegr_sys_sortoffullsimple <> TmIszero constr
+R11726:11731 testRegr_sys_sortoffullsimple <> TmZero constr
+R11770:11770 testRegr_sys_sortoffullsimple <> t ind
+binder 11767:11768 <> v1:147
+R11801:11809 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R11779:11785 Stdlib.Bool.Bool <> Is_true def
+R11788:11796 testRegr_sys_sortoffullsimple <> is_v_of_t def
+R11798:11799 testRegr_sys_sortoffullsimple <> v1:147 var
+R11810:11812 testRegr_sys_sortoffullsimple <> red:122 ind
+R11839:11845 testRegr_sys_sortoffullsimple <> TmFalse constr
+R11815:11822 testRegr_sys_sortoffullsimple <> TmIszero constr
+R11826:11831 testRegr_sys_sortoffullsimple <> TmSucc constr
+R11833:11834 testRegr_sys_sortoffullsimple <> v1:147 var
+R11876:11876 testRegr_sys_sortoffullsimple <> t ind
+binder 11869:11870 <> t1:148
+binder 11872:11874 <> t1':149
+R11895:11903 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R11885:11887 testRegr_sys_sortoffullsimple <> red:122 ind
+R11892:11894 testRegr_sys_sortoffullsimple <> t1':149 var
+R11889:11890 testRegr_sys_sortoffullsimple <> t1:148 var
+R11904:11906 testRegr_sys_sortoffullsimple <> red:122 ind
+R11923:11930 testRegr_sys_sortoffullsimple <> TmIszero constr
+R11932:11934 testRegr_sys_sortoffullsimple <> t1':149 var
+R11909:11916 testRegr_sys_sortoffullsimple <> TmIszero constr
+R11918:11919 testRegr_sys_sortoffullsimple <> t1:148 var
+R11966:11966 testRegr_sys_sortoffullsimple <> t ind
+binder 11956:11957 <> t1:150
+binder 11959:11960 <> t2:151
+binder 11962:11964 <> t1':152
+R11985:11993 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R11975:11977 testRegr_sys_sortoffullsimple <> red:122 ind
+R11982:11984 testRegr_sys_sortoffullsimple <> t1':152 var
+R11979:11980 testRegr_sys_sortoffullsimple <> t1:150 var
+R11994:11996 testRegr_sys_sortoffullsimple <> red:122 ind
+R12013:12017 testRegr_sys_sortoffullsimple <> TmSeq constr
+R12019:12021 testRegr_sys_sortoffullsimple <> t1':152 var
+R12023:12024 testRegr_sys_sortoffullsimple <> t2:151 var
+R11999:12003 testRegr_sys_sortoffullsimple <> TmSeq constr
+R12005:12006 testRegr_sys_sortoffullsimple <> t1:150 var
+R12008:12009 testRegr_sys_sortoffullsimple <> t2:151 var
+R12053:12053 testRegr_sys_sortoffullsimple <> t ind
+binder 12050:12051 <> t2:153
+R12062:12064 testRegr_sys_sortoffullsimple <> red:122 ind
+R12084:12085 testRegr_sys_sortoffullsimple <> t2:153 var
+R12067:12071 testRegr_sys_sortoffullsimple <> TmSeq constr
+R12073:12078 testRegr_sys_sortoffullsimple <> TmUnit constr
+R12080:12081 testRegr_sys_sortoffullsimple <> t2:153 var
+R12113:12113 testRegr_sys_sortoffullsimple <> t ind
+binder 12110:12111 <> v1:154
+R12120:12120 testRegr_sys_sortoffullsimple <> T ind
+binder 12117:12118 <> T5:155
+R12151:12159 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R12129:12135 Stdlib.Bool.Bool <> Is_true def
+R12138:12146 testRegr_sys_sortoffullsimple <> is_v_of_t def
+R12148:12149 testRegr_sys_sortoffullsimple <> v1:154 var
+R12160:12162 testRegr_sys_sortoffullsimple <> red:122 ind
+R12182:12183 testRegr_sys_sortoffullsimple <> v1:154 var
+R12165:12173 testRegr_sys_sortoffullsimple <> TmAscribe constr
+R12175:12176 testRegr_sys_sortoffullsimple <> v1:154 var
+R12178:12179 testRegr_sys_sortoffullsimple <> T5:155 var
+R12212:12212 testRegr_sys_sortoffullsimple <> t ind
+binder 12209:12210 <> t1:156
+R12219:12219 testRegr_sys_sortoffullsimple <> T ind
+binder 12216:12217 <> T5:157
+R12227:12227 testRegr_sys_sortoffullsimple <> t ind
+binder 12223:12225 <> t1':158
+R12246:12254 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R12236:12238 testRegr_sys_sortoffullsimple <> red:122 ind
+R12243:12245 testRegr_sys_sortoffullsimple <> t1':158 var
+R12240:12241 testRegr_sys_sortoffullsimple <> t1:156 var
+R12255:12257 testRegr_sys_sortoffullsimple <> red:122 ind
+R12278:12286 testRegr_sys_sortoffullsimple <> TmAscribe constr
+R12288:12290 testRegr_sys_sortoffullsimple <> t1':158 var
+R12292:12293 testRegr_sys_sortoffullsimple <> T5:157 var
+R12260:12268 testRegr_sys_sortoffullsimple <> TmAscribe constr
+R12270:12271 testRegr_sys_sortoffullsimple <> t1:156 var
+R12273:12274 testRegr_sys_sortoffullsimple <> T5:157 var
+R12318:12324 testRegr_sys_sortoffullsimple <> termvar def
+binder 12316:12316 <> x:159
+R12334:12334 testRegr_sys_sortoffullsimple <> t ind
+binder 12328:12329 <> v1:160
+binder 12331:12332 <> t2:161
+R12365:12373 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R12343:12349 Stdlib.Bool.Bool <> Is_true def
+R12352:12360 testRegr_sys_sortoffullsimple <> is_v_of_t def
+R12362:12363 testRegr_sys_sortoffullsimple <> v1:160 var
+R12374:12376 testRegr_sys_sortoffullsimple <> red:122 ind
+R12396:12402 testRegr_sys_sortoffullsimple <> subst_t def
+R12405:12406 testRegr_sys_sortoffullsimple <> v1:160 var
+R12410:12410 testRegr_sys_sortoffullsimple <> x:159 var
+R12414:12415 testRegr_sys_sortoffullsimple <> t2:161 var
+R12379:12383 testRegr_sys_sortoffullsimple <> TmLet constr
+R12385:12385 testRegr_sys_sortoffullsimple <> x:159 var
+R12387:12388 testRegr_sys_sortoffullsimple <> v1:160 var
+R12390:12391 testRegr_sys_sortoffullsimple <> t2:161 var
+R12441:12447 testRegr_sys_sortoffullsimple <> termvar def
+binder 12439:12439 <> x:162
+R12461:12461 testRegr_sys_sortoffullsimple <> t ind
+binder 12451:12452 <> t1:163
+binder 12454:12455 <> t2:164
+binder 12457:12459 <> t1':165
+R12480:12488 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R12470:12472 testRegr_sys_sortoffullsimple <> red:122 ind
+R12477:12479 testRegr_sys_sortoffullsimple <> t1':165 var
+R12474:12475 testRegr_sys_sortoffullsimple <> t1:163 var
+R12489:12491 testRegr_sys_sortoffullsimple <> red:122 ind
+R12510:12514 testRegr_sys_sortoffullsimple <> TmLet constr
+R12516:12516 testRegr_sys_sortoffullsimple <> x:162 var
+R12518:12520 testRegr_sys_sortoffullsimple <> t1':165 var
+R12522:12523 testRegr_sys_sortoffullsimple <> t2:164 var
+R12494:12498 testRegr_sys_sortoffullsimple <> TmLet constr
+R12500:12500 testRegr_sys_sortoffullsimple <> x:162 var
+R12502:12503 testRegr_sys_sortoffullsimple <> t1:163 var
+R12505:12506 testRegr_sys_sortoffullsimple <> t2:164 var
+R12552:12552 testRegr_sys_sortoffullsimple <> t ind
+binder 12549:12550 <> v0:166
+R12559:12565 testRegr_sys_sortoffullsimple <> termvar def
+binder 12556:12557 <> x1:167
+R12572:12572 testRegr_sys_sortoffullsimple <> t ind
+binder 12569:12570 <> t1:168
+R12579:12585 testRegr_sys_sortoffullsimple <> termvar def
+binder 12576:12577 <> x2:169
+R12592:12592 testRegr_sys_sortoffullsimple <> t ind
+binder 12589:12590 <> t2:170
+R12623:12631 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R12601:12607 Stdlib.Bool.Bool <> Is_true def
+R12610:12618 testRegr_sys_sortoffullsimple <> is_v_of_t def
+R12620:12621 testRegr_sys_sortoffullsimple <> v0:166 var
+R12632:12634 testRegr_sys_sortoffullsimple <> red:122 ind
+R12674:12680 testRegr_sys_sortoffullsimple <> subst_t def
+R12683:12684 testRegr_sys_sortoffullsimple <> v0:166 var
+R12688:12689 testRegr_sys_sortoffullsimple <> x1:167 var
+R12693:12694 testRegr_sys_sortoffullsimple <> t1:168 var
+R12637:12644 testRegr_sys_sortoffullsimple <> TmCaseSm constr
+R12648:12652 testRegr_sys_sortoffullsimple <> TmInl constr
+R12654:12655 testRegr_sys_sortoffullsimple <> v0:166 var
+R12659:12660 testRegr_sys_sortoffullsimple <> x1:167 var
+R12662:12663 testRegr_sys_sortoffullsimple <> t1:168 var
+R12665:12666 testRegr_sys_sortoffullsimple <> x2:169 var
+R12668:12669 testRegr_sys_sortoffullsimple <> t2:170 var
+R12725:12725 testRegr_sys_sortoffullsimple <> t ind
+binder 12722:12723 <> v0:171
+R12732:12738 testRegr_sys_sortoffullsimple <> termvar def
+binder 12729:12730 <> x1:172
+R12745:12745 testRegr_sys_sortoffullsimple <> t ind
+binder 12742:12743 <> t1:173
+R12752:12758 testRegr_sys_sortoffullsimple <> termvar def
+binder 12749:12750 <> x2:174
+R12765:12765 testRegr_sys_sortoffullsimple <> t ind
+binder 12762:12763 <> t2:175
+R12796:12804 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R12774:12780 Stdlib.Bool.Bool <> Is_true def
+R12783:12791 testRegr_sys_sortoffullsimple <> is_v_of_t def
+R12793:12794 testRegr_sys_sortoffullsimple <> v0:171 var
+R12805:12807 testRegr_sys_sortoffullsimple <> red:122 ind
+R12847:12853 testRegr_sys_sortoffullsimple <> subst_t def
+R12856:12857 testRegr_sys_sortoffullsimple <> v0:171 var
+R12861:12862 testRegr_sys_sortoffullsimple <> x2:174 var
+R12866:12867 testRegr_sys_sortoffullsimple <> t2:175 var
+R12810:12817 testRegr_sys_sortoffullsimple <> TmCaseSm constr
+R12821:12825 testRegr_sys_sortoffullsimple <> TmInr constr
+R12827:12828 testRegr_sys_sortoffullsimple <> v0:171 var
+R12832:12833 testRegr_sys_sortoffullsimple <> x1:172 var
+R12835:12836 testRegr_sys_sortoffullsimple <> t1:173 var
+R12838:12839 testRegr_sys_sortoffullsimple <> x2:174 var
+R12841:12842 testRegr_sys_sortoffullsimple <> t2:175 var
+R12897:12897 testRegr_sys_sortoffullsimple <> t ind
+binder 12894:12895 <> t0:176
+R12904:12910 testRegr_sys_sortoffullsimple <> termvar def
+binder 12901:12902 <> x1:177
+R12917:12917 testRegr_sys_sortoffullsimple <> t ind
+binder 12914:12915 <> t1:178
+R12924:12930 testRegr_sys_sortoffullsimple <> termvar def
+binder 12921:12922 <> x2:179
+R12941:12941 testRegr_sys_sortoffullsimple <> t ind
+binder 12934:12935 <> t2:180
+binder 12937:12939 <> t0':181
+R12960:12968 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R12950:12952 testRegr_sys_sortoffullsimple <> red:122 ind
+R12957:12959 testRegr_sys_sortoffullsimple <> t0':181 var
+R12954:12955 testRegr_sys_sortoffullsimple <> t0:176 var
+R12969:12971 testRegr_sys_sortoffullsimple <> red:122 ind
+R13000:13007 testRegr_sys_sortoffullsimple <> TmCaseSm constr
+R13009:13011 testRegr_sys_sortoffullsimple <> t0':181 var
+R13013:13014 testRegr_sys_sortoffullsimple <> x1:177 var
+R13016:13017 testRegr_sys_sortoffullsimple <> t1:178 var
+R13019:13020 testRegr_sys_sortoffullsimple <> x2:179 var
+R13022:13023 testRegr_sys_sortoffullsimple <> t2:180 var
+R12974:12981 testRegr_sys_sortoffullsimple <> TmCaseSm constr
+R12983:12984 testRegr_sys_sortoffullsimple <> t0:176 var
+R12986:12987 testRegr_sys_sortoffullsimple <> x1:177 var
+R12989:12990 testRegr_sys_sortoffullsimple <> t1:178 var
+R12992:12993 testRegr_sys_sortoffullsimple <> x2:179 var
+R12995:12996 testRegr_sys_sortoffullsimple <> t2:180 var
+R13052:13052 testRegr_sys_sortoffullsimple <> t ind
+binder 13045:13046 <> t1:182
+binder 13048:13050 <> t1':183
+R13071:13079 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R13061:13063 testRegr_sys_sortoffullsimple <> red:122 ind
+R13068:13070 testRegr_sys_sortoffullsimple <> t1':183 var
+R13065:13066 testRegr_sys_sortoffullsimple <> t1:182 var
+R13080:13082 testRegr_sys_sortoffullsimple <> red:122 ind
+R13096:13100 testRegr_sys_sortoffullsimple <> TmInl constr
+R13102:13104 testRegr_sys_sortoffullsimple <> t1':183 var
+R13085:13089 testRegr_sys_sortoffullsimple <> TmInl constr
+R13091:13092 testRegr_sys_sortoffullsimple <> t1:182 var
+R13133:13133 testRegr_sys_sortoffullsimple <> t ind
+binder 13126:13127 <> t1:184
+binder 13129:13131 <> t1':185
+R13152:13160 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R13142:13144 testRegr_sys_sortoffullsimple <> red:122 ind
+R13149:13151 testRegr_sys_sortoffullsimple <> t1':185 var
+R13146:13147 testRegr_sys_sortoffullsimple <> t1:184 var
+R13161:13163 testRegr_sys_sortoffullsimple <> red:122 ind
+R13177:13181 testRegr_sys_sortoffullsimple <> TmInr constr
+R13183:13185 testRegr_sys_sortoffullsimple <> t1':185 var
+R13166:13170 testRegr_sys_sortoffullsimple <> TmInr constr
+R13172:13173 testRegr_sys_sortoffullsimple <> t1:184 var
+R13226:13229 Corelib.Init.Datatypes <> list ind
+R13245:13245 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R13237:13237 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R13232:13236 testRegr_sys_sortoffullsimple <> label def
+R13238:13244 testRegr_sys_sortoffullsimple <> termvar def
+R13246:13246 testRegr_sys_sortoffullsimple <> t ind
+binder 13215:13224 <> l_x_t_list:186
+R13254:13254 testRegr_sys_sortoffullsimple <> t ind
+binder 13251:13252 <> v5:187
+R13261:13261 testRegr_sys_sortoffullsimple <> T ind
+binder 13258:13259 <> T5:188
+R13267:13271 testRegr_sys_sortoffullsimple <> index def
+binder 13265:13265 <> j:189
+R13304:13304 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R13296:13296 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R13291:13295 testRegr_sys_sortoffullsimple <> label def
+R13297:13303 testRegr_sys_sortoffullsimple <> termvar def
+R13305:13305 testRegr_sys_sortoffullsimple <> t ind
+binder 13275:13278 <> t101:190
+binder 13280:13283 <> t102:191
+binder 13285:13288 <> t103:192
+R13360:13368 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R13348:13350 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R13320:13328 Stdlib.Lists.List <> nth_error def
+R13343:13345 Corelib.Init.Peano <> ::nat_scope:x_'-'_x not
+R13342:13342 testRegr_sys_sortoffullsimple <> j:189 var
+R13330:13339 testRegr_sys_sortoffullsimple <> l_x_t_list:186 var
+R13351:13354 Corelib.Init.Datatypes <> Some constr
+R13356:13359 testRegr_sys_sortoffullsimple <> t101:190 var
+R13409:13417 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R13397:13399 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R13369:13377 Stdlib.Lists.List <> nth_error def
+R13392:13394 Corelib.Init.Peano <> ::nat_scope:x_'-'_x not
+R13391:13391 testRegr_sys_sortoffullsimple <> j:189 var
+R13379:13388 testRegr_sys_sortoffullsimple <> l_x_t_list:186 var
+R13400:13403 Corelib.Init.Datatypes <> Some constr
+R13405:13408 testRegr_sys_sortoffullsimple <> t102:191 var
+R13458:13461 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R13446:13448 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R13418:13426 Stdlib.Lists.List <> nth_error def
+R13441:13443 Corelib.Init.Peano <> ::nat_scope:x_'-'_x not
+R13440:13440 testRegr_sys_sortoffullsimple <> j:189 var
+R13428:13437 testRegr_sys_sortoffullsimple <> l_x_t_list:186 var
+R13449:13452 Corelib.Init.Datatypes <> Some constr
+R13454:13457 testRegr_sys_sortoffullsimple <> t103:192 var
+R13484:13493 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R13462:13468 Stdlib.Bool.Bool <> Is_true def
+R13471:13479 testRegr_sys_sortoffullsimple <> is_v_of_t def
+R13481:13482 testRegr_sys_sortoffullsimple <> v5:187 var
+R13494:13494 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R13627:13637 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R13502:13507 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R13496:13500 Corelib.Init.Peano <> ::nat_scope:x_'<='_x not
+R13501:13501 testRegr_sys_sortoffullsimple <> j:189 var
+R13509:13513 Corelib.Init.Peano <> ::nat_scope:x_'<='_x not
+R13508:13508 testRegr_sys_sortoffullsimple <> j:189 var
+R13514:13519 Corelib.Init.Datatypes <> length def
+R13522:13534 testRegr_sys_sortoffullsimple <> unmake_list't def
+R13538:13540 Corelib.Lists.ListDef <> map def
+R13614:13623 testRegr_sys_sortoffullsimple <> l_x_t_list:186 var
+R13567:13567 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R13559:13559 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R13554:13558 testRegr_sys_sortoffullsimple <> label def
+R13560:13566 testRegr_sys_sortoffullsimple <> termvar def
+R13568:13568 testRegr_sys_sortoffullsimple <> t ind
+binder 13548:13551 <> pat_:193
+R13581:13584 testRegr_sys_sortoffullsimple <> pat_:193 var
+R13591:13591 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R13594:13594 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R13597:13597 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R13600:13600 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R13638:13640 testRegr_sys_sortoffullsimple <> red:122 ind
+R13815:13821 testRegr_sys_sortoffullsimple <> subst_t def
+R13824:13825 testRegr_sys_sortoffullsimple <> v5:187 var
+R13836:13839 testRegr_sys_sortoffullsimple <> t102:191 var
+R13846:13846 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R13849:13849 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R13852:13852 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R13855:13855 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R13877:13880 testRegr_sys_sortoffullsimple <> t101:190 var
+R13887:13887 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R13890:13890 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R13893:13893 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R13896:13896 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R13643:13648 testRegr_sys_sortoffullsimple <> TmCase constr
+R13652:13660 testRegr_sys_sortoffullsimple <> TmVariant constr
+R13669:13672 testRegr_sys_sortoffullsimple <> t103:192 var
+R13679:13679 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R13682:13682 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R13685:13685 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R13688:13688 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R13701:13702 testRegr_sys_sortoffullsimple <> v5:187 var
+R13704:13705 testRegr_sys_sortoffullsimple <> T5:188 var
+R13710:13712 Corelib.Lists.ListDef <> map def
+R13800:13809 testRegr_sys_sortoffullsimple <> l_x_t_list:186 var
+R13739:13739 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R13731:13731 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R13726:13730 testRegr_sys_sortoffullsimple <> label def
+R13732:13738 testRegr_sys_sortoffullsimple <> termvar def
+R13740:13740 testRegr_sys_sortoffullsimple <> t ind
+binder 13720:13723 <> pat_:198
+R13753:13756 testRegr_sys_sortoffullsimple <> pat_:198 var
+R13763:13763 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R13766:13766 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R13769:13769 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R13772:13772 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R13778:13782 testRegr_sys_sortoffullsimple <> CCase constr
+R13943:13946 Corelib.Init.Datatypes <> list ind
+R13962:13962 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R13954:13954 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R13949:13953 testRegr_sys_sortoffullsimple <> label def
+R13955:13961 testRegr_sys_sortoffullsimple <> termvar def
+R13963:13963 testRegr_sys_sortoffullsimple <> t ind
+binder 13932:13941 <> l_x_t_list:200
+R13975:13975 testRegr_sys_sortoffullsimple <> t ind
+binder 13968:13970 <> t_5:201
+binder 13972:13973 <> t':202
+R13994:14002 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R13984:13986 testRegr_sys_sortoffullsimple <> red:122 ind
+R13992:13993 testRegr_sys_sortoffullsimple <> t':202 var
+R13988:13990 testRegr_sys_sortoffullsimple <> t_5:201 var
+R14003:14005 testRegr_sys_sortoffullsimple <> red:122 ind
+R14124:14129 testRegr_sys_sortoffullsimple <> TmCase constr
+R14131:14132 testRegr_sys_sortoffullsimple <> t':202 var
+R14135:14137 Corelib.Lists.ListDef <> map def
+R14225:14234 testRegr_sys_sortoffullsimple <> l_x_t_list:200 var
+R14164:14164 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R14156:14156 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R14151:14155 testRegr_sys_sortoffullsimple <> label def
+R14157:14163 testRegr_sys_sortoffullsimple <> termvar def
+R14165:14165 testRegr_sys_sortoffullsimple <> t ind
+binder 14145:14148 <> pat_:203
+R14178:14181 testRegr_sys_sortoffullsimple <> pat_:203 var
+R14188:14188 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R14191:14191 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R14194:14194 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R14197:14197 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R14203:14207 testRegr_sys_sortoffullsimple <> CCase constr
+R14008:14013 testRegr_sys_sortoffullsimple <> TmCase constr
+R14015:14017 testRegr_sys_sortoffullsimple <> t_5:201 var
+R14020:14022 Corelib.Lists.ListDef <> map def
+R14110:14119 testRegr_sys_sortoffullsimple <> l_x_t_list:200 var
+R14049:14049 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R14041:14041 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R14036:14040 testRegr_sys_sortoffullsimple <> label def
+R14042:14048 testRegr_sys_sortoffullsimple <> termvar def
+R14050:14050 testRegr_sys_sortoffullsimple <> t ind
+binder 14030:14033 <> pat_:205
+R14063:14066 testRegr_sys_sortoffullsimple <> pat_:205 var
+R14073:14073 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R14076:14076 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R14079:14079 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R14082:14082 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R14088:14092 testRegr_sys_sortoffullsimple <> CCase constr
+R14264:14268 testRegr_sys_sortoffullsimple <> label def
+binder 14261:14262 <> li:207
+R14275:14275 testRegr_sys_sortoffullsimple <> t ind
+binder 14272:14273 <> ti:208
+R14282:14282 testRegr_sys_sortoffullsimple <> T ind
+binder 14279:14280 <> T5:209
+R14290:14290 testRegr_sys_sortoffullsimple <> t ind
+binder 14286:14288 <> ti':210
+R14309:14317 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R14299:14301 testRegr_sys_sortoffullsimple <> red:122 ind
+R14306:14308 testRegr_sys_sortoffullsimple <> ti':210 var
+R14303:14304 testRegr_sys_sortoffullsimple <> ti:208 var
+R14318:14320 testRegr_sys_sortoffullsimple <> red:122 ind
+R14344:14352 testRegr_sys_sortoffullsimple <> TmVariant constr
+R14354:14355 testRegr_sys_sortoffullsimple <> li:207 var
+R14357:14359 testRegr_sys_sortoffullsimple <> ti':210 var
+R14361:14362 testRegr_sys_sortoffullsimple <> T5:209 var
+R14323:14331 testRegr_sys_sortoffullsimple <> TmVariant constr
+R14333:14334 testRegr_sys_sortoffullsimple <> li:207 var
+R14336:14337 testRegr_sys_sortoffullsimple <> ti:208 var
+R14339:14340 testRegr_sys_sortoffullsimple <> T5:209 var
+R14396:14396 testRegr_sys_sortoffullsimple <> t ind
+binder 14390:14391 <> v1:211
+binder 14393:14394 <> v2:212
+R14427:14435 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R14405:14411 Stdlib.Bool.Bool <> Is_true def
+R14414:14422 testRegr_sys_sortoffullsimple <> is_v_of_t def
+R14424:14425 testRegr_sys_sortoffullsimple <> v1:211 var
+R14458:14466 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R14436:14442 Stdlib.Bool.Bool <> Is_true def
+R14445:14453 testRegr_sys_sortoffullsimple <> is_v_of_t def
+R14455:14456 testRegr_sys_sortoffullsimple <> v2:212 var
+R14467:14469 testRegr_sys_sortoffullsimple <> red:122 ind
+R14496:14497 testRegr_sys_sortoffullsimple <> v1:211 var
+R14472:14478 testRegr_sys_sortoffullsimple <> TmProj1 constr
+R14481:14486 testRegr_sys_sortoffullsimple <> TmPair constr
+R14488:14489 testRegr_sys_sortoffullsimple <> v1:211 var
+R14491:14492 testRegr_sys_sortoffullsimple <> v2:212 var
+R14530:14530 testRegr_sys_sortoffullsimple <> t ind
+binder 14524:14525 <> v1:213
+binder 14527:14528 <> v2:214
+R14561:14569 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R14539:14545 Stdlib.Bool.Bool <> Is_true def
+R14548:14556 testRegr_sys_sortoffullsimple <> is_v_of_t def
+R14558:14559 testRegr_sys_sortoffullsimple <> v1:213 var
+R14592:14600 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R14570:14576 Stdlib.Bool.Bool <> Is_true def
+R14579:14587 testRegr_sys_sortoffullsimple <> is_v_of_t def
+R14589:14590 testRegr_sys_sortoffullsimple <> v2:214 var
+R14601:14603 testRegr_sys_sortoffullsimple <> red:122 ind
+R14630:14631 testRegr_sys_sortoffullsimple <> v2:214 var
+R14606:14612 testRegr_sys_sortoffullsimple <> TmProj2 constr
+R14615:14620 testRegr_sys_sortoffullsimple <> TmPair constr
+R14622:14623 testRegr_sys_sortoffullsimple <> v1:213 var
+R14625:14626 testRegr_sys_sortoffullsimple <> v2:214 var
+R14661:14661 testRegr_sys_sortoffullsimple <> t ind
+binder 14654:14655 <> t1:215
+binder 14657:14659 <> t1':216
+R14680:14688 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R14670:14672 testRegr_sys_sortoffullsimple <> red:122 ind
+R14677:14679 testRegr_sys_sortoffullsimple <> t1':216 var
+R14674:14675 testRegr_sys_sortoffullsimple <> t1:215 var
+R14689:14691 testRegr_sys_sortoffullsimple <> red:122 ind
+R14707:14713 testRegr_sys_sortoffullsimple <> TmProj1 constr
+R14715:14717 testRegr_sys_sortoffullsimple <> t1':216 var
+R14694:14700 testRegr_sys_sortoffullsimple <> TmProj1 constr
+R14702:14703 testRegr_sys_sortoffullsimple <> t1:215 var
+R14748:14748 testRegr_sys_sortoffullsimple <> t ind
+binder 14741:14742 <> t1:217
+binder 14744:14746 <> t1':218
+R14767:14775 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R14757:14759 testRegr_sys_sortoffullsimple <> red:122 ind
+R14764:14766 testRegr_sys_sortoffullsimple <> t1':218 var
+R14761:14762 testRegr_sys_sortoffullsimple <> t1:217 var
+R14776:14778 testRegr_sys_sortoffullsimple <> red:122 ind
+R14794:14800 testRegr_sys_sortoffullsimple <> TmProj2 constr
+R14802:14804 testRegr_sys_sortoffullsimple <> t1':218 var
+R14781:14787 testRegr_sys_sortoffullsimple <> TmProj2 constr
+R14789:14790 testRegr_sys_sortoffullsimple <> t1:217 var
+R14838:14838 testRegr_sys_sortoffullsimple <> t ind
+binder 14828:14829 <> t1:219
+binder 14831:14832 <> t2:220
+binder 14834:14836 <> t1':221
+R14857:14865 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R14847:14849 testRegr_sys_sortoffullsimple <> red:122 ind
+R14854:14856 testRegr_sys_sortoffullsimple <> t1':221 var
+R14851:14852 testRegr_sys_sortoffullsimple <> t1:219 var
+R14866:14868 testRegr_sys_sortoffullsimple <> red:122 ind
+R14886:14891 testRegr_sys_sortoffullsimple <> TmPair constr
+R14893:14895 testRegr_sys_sortoffullsimple <> t1':221 var
+R14897:14898 testRegr_sys_sortoffullsimple <> t2:220 var
+R14871:14876 testRegr_sys_sortoffullsimple <> TmPair constr
+R14878:14879 testRegr_sys_sortoffullsimple <> t1:219 var
+R14881:14882 testRegr_sys_sortoffullsimple <> t2:220 var
+R14932:14932 testRegr_sys_sortoffullsimple <> t ind
+binder 14922:14923 <> v1:222
+binder 14925:14926 <> t2:223
+binder 14928:14930 <> t2':224
+R14963:14971 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R14941:14947 Stdlib.Bool.Bool <> Is_true def
+R14950:14958 testRegr_sys_sortoffullsimple <> is_v_of_t def
+R14960:14961 testRegr_sys_sortoffullsimple <> v1:222 var
+R14982:14990 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R14972:14974 testRegr_sys_sortoffullsimple <> red:122 ind
+R14979:14981 testRegr_sys_sortoffullsimple <> t2':224 var
+R14976:14977 testRegr_sys_sortoffullsimple <> t2:223 var
+R14991:14993 testRegr_sys_sortoffullsimple <> red:122 ind
+R15011:15016 testRegr_sys_sortoffullsimple <> TmPair constr
+R15018:15019 testRegr_sys_sortoffullsimple <> v1:222 var
+R15021:15023 testRegr_sys_sortoffullsimple <> t2':224 var
+R14996:15001 testRegr_sys_sortoffullsimple <> TmPair constr
+R15003:15004 testRegr_sys_sortoffullsimple <> v1:222 var
+R15006:15007 testRegr_sys_sortoffullsimple <> t2:223 var
+R15058:15061 Corelib.Init.Datatypes <> list ind
+R15063:15063 testRegr_sys_sortoffullsimple <> t ind
+binder 15051:15056 <> v_list:225
+R15069:15073 testRegr_sys_sortoffullsimple <> index def
+binder 15067:15067 <> j:226
+R15082:15082 testRegr_sys_sortoffullsimple <> t ind
+binder 15077:15080 <> t104:227
+R15132:15135 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R15120:15122 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R15096:15104 Stdlib.Lists.List <> nth_error def
+R15115:15117 Corelib.Init.Peano <> ::nat_scope:x_'-'_x not
+R15114:15114 testRegr_sys_sortoffullsimple <> j:226 var
+R15106:15111 testRegr_sys_sortoffullsimple <> v_list:225 var
+R15123:15126 Corelib.Init.Datatypes <> Some constr
+R15128:15131 testRegr_sys_sortoffullsimple <> t104:227 var
+R15136:15136 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R15189:15199 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R15137:15142 Corelib.Lists.ListDef <> Forall ind
+R15183:15188 testRegr_sys_sortoffullsimple <> v_list:225 var
+R15153:15153 testRegr_sys_sortoffullsimple <> t ind
+binder 15150:15151 <> v_:228
+R15159:15165 Stdlib.Bool.Bool <> Is_true def
+R15168:15176 testRegr_sys_sortoffullsimple <> is_v_of_t def
+R15178:15179 testRegr_sys_sortoffullsimple <> v_:228 var
+R15200:15200 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R15251:15261 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R15208:15213 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R15202:15206 Corelib.Init.Peano <> ::nat_scope:x_'<='_x not
+R15207:15207 testRegr_sys_sortoffullsimple <> j:226 var
+R15215:15219 Corelib.Init.Peano <> ::nat_scope:x_'<='_x not
+R15214:15214 testRegr_sys_sortoffullsimple <> j:226 var
+R15220:15225 Corelib.Init.Datatypes <> length def
+R15228:15240 testRegr_sys_sortoffullsimple <> unmake_list't def
+R15243:15248 testRegr_sys_sortoffullsimple <> v_list:225 var
+R15262:15264 testRegr_sys_sortoffullsimple <> red:122 ind
+R15296:15299 testRegr_sys_sortoffullsimple <> t104:227 var
+R15267:15274 testRegr_sys_sortoffullsimple <> TmProjTp constr
+R15277:15283 testRegr_sys_sortoffullsimple <> TmTuple constr
+R15285:15290 testRegr_sys_sortoffullsimple <> v_list:225 var
+R15293:15293 testRegr_sys_sortoffullsimple <> j:226 var
+R15326:15326 testRegr_sys_sortoffullsimple <> t ind
+binder 15323:15324 <> t1:229
+R15332:15336 testRegr_sys_sortoffullsimple <> index def
+binder 15330:15330 <> i:230
+R15344:15344 testRegr_sys_sortoffullsimple <> t ind
+binder 15340:15342 <> t1':231
+R15363:15371 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R15353:15355 testRegr_sys_sortoffullsimple <> red:122 ind
+R15360:15362 testRegr_sys_sortoffullsimple <> t1':231 var
+R15357:15358 testRegr_sys_sortoffullsimple <> t1:229 var
+R15372:15374 testRegr_sys_sortoffullsimple <> red:122 ind
+R15393:15400 testRegr_sys_sortoffullsimple <> TmProjTp constr
+R15402:15404 testRegr_sys_sortoffullsimple <> t1':231 var
+R15406:15406 testRegr_sys_sortoffullsimple <> i:230 var
+R15377:15384 testRegr_sys_sortoffullsimple <> TmProjTp constr
+R15386:15387 testRegr_sys_sortoffullsimple <> t1:229 var
+R15389:15389 testRegr_sys_sortoffullsimple <> i:230 var
+R15444:15447 Corelib.Init.Datatypes <> list ind
+R15449:15449 testRegr_sys_sortoffullsimple <> t ind
+binder 15430:15435 <> t_list:232
+binder 15437:15442 <> v_list:233
+R15460:15460 testRegr_sys_sortoffullsimple <> t ind
+binder 15453:15455 <> t_5:234
+binder 15457:15458 <> t':235
+R15469:15469 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R15522:15531 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R15470:15475 Corelib.Lists.ListDef <> Forall ind
+R15516:15521 testRegr_sys_sortoffullsimple <> v_list:233 var
+R15486:15486 testRegr_sys_sortoffullsimple <> t ind
+binder 15483:15484 <> v_:236
+R15492:15498 Stdlib.Bool.Bool <> Is_true def
+R15501:15509 testRegr_sys_sortoffullsimple <> is_v_of_t def
+R15511:15512 testRegr_sys_sortoffullsimple <> v_:236 var
+R15542:15550 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R15532:15534 testRegr_sys_sortoffullsimple <> red:122 ind
+R15540:15541 testRegr_sys_sortoffullsimple <> t':235 var
+R15536:15538 testRegr_sys_sortoffullsimple <> t_5:234 var
+R15551:15553 testRegr_sys_sortoffullsimple <> red:122 ind
+R15619:15625 testRegr_sys_sortoffullsimple <> TmTuple constr
+R15629:15631 Corelib.Init.Datatypes <> app def
+R15641:15643 Corelib.Init.Datatypes <> app def
+R15660:15662 Corelib.Init.Datatypes <> app def
+R15671:15673 Corelib.Init.Datatypes <> nil constr
+R15664:15669 testRegr_sys_sortoffullsimple <> t_list:232 var
+R15646:15649 Corelib.Init.Datatypes <> cons constr
+R15654:15656 Corelib.Init.Datatypes <> nil constr
+R15651:15652 testRegr_sys_sortoffullsimple <> t':235 var
+R15633:15638 testRegr_sys_sortoffullsimple <> v_list:233 var
+R15556:15562 testRegr_sys_sortoffullsimple <> TmTuple constr
+R15566:15568 Corelib.Init.Datatypes <> app def
+R15578:15580 Corelib.Init.Datatypes <> app def
+R15598:15600 Corelib.Init.Datatypes <> app def
+R15609:15611 Corelib.Init.Datatypes <> nil constr
+R15602:15607 testRegr_sys_sortoffullsimple <> t_list:232 var
+R15583:15586 Corelib.Init.Datatypes <> cons constr
+R15592:15594 Corelib.Init.Datatypes <> nil constr
+R15588:15590 testRegr_sys_sortoffullsimple <> t_5:234 var
+R15570:15575 testRegr_sys_sortoffullsimple <> v_list:233 var
+R15712:15715 Corelib.Init.Datatypes <> list ind
+R15723:15723 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R15718:15722 testRegr_sys_sortoffullsimple <> label def
+R15724:15724 testRegr_sys_sortoffullsimple <> t ind
+binder 15703:15710 <> l_v_list:237
+R15731:15735 testRegr_sys_sortoffullsimple <> index def
+binder 15729:15729 <> j:238
+R15755:15755 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R15750:15754 testRegr_sys_sortoffullsimple <> label def
+R15756:15756 testRegr_sys_sortoffullsimple <> t ind
+binder 15739:15742 <> t105:239
+binder 15744:15747 <> t106:240
+R15809:15817 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R15797:15799 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R15771:15779 Stdlib.Lists.List <> nth_error def
+R15792:15794 Corelib.Init.Peano <> ::nat_scope:x_'-'_x not
+R15791:15791 testRegr_sys_sortoffullsimple <> j:238 var
+R15781:15788 testRegr_sys_sortoffullsimple <> l_v_list:237 var
+R15800:15803 Corelib.Init.Datatypes <> Some constr
+R15805:15808 testRegr_sys_sortoffullsimple <> t105:239 var
+R15856:15859 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R15844:15846 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R15818:15826 Stdlib.Lists.List <> nth_error def
+R15839:15841 Corelib.Init.Peano <> ::nat_scope:x_'-'_x not
+R15838:15838 testRegr_sys_sortoffullsimple <> j:238 var
+R15828:15835 testRegr_sys_sortoffullsimple <> l_v_list:237 var
+R15847:15850 Corelib.Init.Datatypes <> Some constr
+R15852:15855 testRegr_sys_sortoffullsimple <> t106:240 var
+R15860:15860 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R15956:15965 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R15861:15866 Corelib.Lists.ListDef <> Forall ind
+R15948:15955 testRegr_sys_sortoffullsimple <> l_v_list:237 var
+R15885:15885 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R15880:15884 testRegr_sys_sortoffullsimple <> label def
+R15886:15886 testRegr_sys_sortoffullsimple <> t ind
+binder 15874:15877 <> tmp_:241
+R15899:15902 testRegr_sys_sortoffullsimple <> tmp_:241 var
+R15909:15909 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R15912:15912 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R15915:15915 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R15920:15926 Stdlib.Bool.Bool <> Is_true def
+R15929:15937 testRegr_sys_sortoffullsimple <> is_v_of_t def
+R15966:15968 testRegr_sys_sortoffullsimple <> red:122 ind
+R16042:16045 testRegr_sys_sortoffullsimple <> t105:239 var
+R16052:16052 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R16055:16055 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R16058:16058 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R15971:15976 testRegr_sys_sortoffullsimple <> TmProj constr
+R15979:15986 testRegr_sys_sortoffullsimple <> TmRecord constr
+R15988:15995 testRegr_sys_sortoffullsimple <> l_v_list:237 var
+R16005:16008 testRegr_sys_sortoffullsimple <> t106:240 var
+R16015:16015 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R16018:16018 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R16021:16021 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R16094:16094 testRegr_sys_sortoffullsimple <> t ind
+binder 16091:16092 <> t1:245
+R16100:16104 testRegr_sys_sortoffullsimple <> label def
+binder 16098:16098 <> l:246
+R16112:16112 testRegr_sys_sortoffullsimple <> t ind
+binder 16108:16110 <> t1':247
+R16131:16139 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R16121:16123 testRegr_sys_sortoffullsimple <> red:122 ind
+R16128:16130 testRegr_sys_sortoffullsimple <> t1':247 var
+R16125:16126 testRegr_sys_sortoffullsimple <> t1:245 var
+R16140:16142 testRegr_sys_sortoffullsimple <> red:122 ind
+R16159:16164 testRegr_sys_sortoffullsimple <> TmProj constr
+R16166:16168 testRegr_sys_sortoffullsimple <> t1':247 var
+R16170:16170 testRegr_sys_sortoffullsimple <> l:246 var
+R16145:16150 testRegr_sys_sortoffullsimple <> TmProj constr
+R16152:16153 testRegr_sys_sortoffullsimple <> t1:245 var
+R16155:16155 testRegr_sys_sortoffullsimple <> l:246 var
+R16211:16214 Corelib.Init.Datatypes <> list ind
+R16222:16222 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R16217:16221 testRegr_sys_sortoffullsimple <> label def
+R16223:16223 testRegr_sys_sortoffullsimple <> t ind
+binder 16192:16200 <> l'_t_list:248
+binder 16202:16209 <> l_v_list:249
+R16230:16234 testRegr_sys_sortoffullsimple <> label def
+binder 16228:16228 <> l:250
+R16245:16245 testRegr_sys_sortoffullsimple <> t ind
+binder 16238:16240 <> t_5:251
+binder 16242:16243 <> t':252
+R16254:16254 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R16350:16359 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R16255:16260 Corelib.Lists.ListDef <> Forall ind
+R16342:16349 testRegr_sys_sortoffullsimple <> l_v_list:249 var
+R16279:16279 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R16274:16278 testRegr_sys_sortoffullsimple <> label def
+R16280:16280 testRegr_sys_sortoffullsimple <> t ind
+binder 16268:16271 <> tmp_:253
+R16293:16296 testRegr_sys_sortoffullsimple <> tmp_:253 var
+R16303:16303 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R16306:16306 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R16309:16309 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R16314:16320 Stdlib.Bool.Bool <> Is_true def
+R16323:16331 testRegr_sys_sortoffullsimple <> is_v_of_t def
+R16370:16378 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R16360:16362 testRegr_sys_sortoffullsimple <> red:122 ind
+R16368:16369 testRegr_sys_sortoffullsimple <> t':252 var
+R16364:16366 testRegr_sys_sortoffullsimple <> t_5:251 var
+R16379:16381 testRegr_sys_sortoffullsimple <> red:122 ind
+R16457:16464 testRegr_sys_sortoffullsimple <> TmRecord constr
+R16468:16470 Corelib.Init.Datatypes <> app def
+R16482:16484 Corelib.Init.Datatypes <> app def
+R16505:16507 Corelib.Init.Datatypes <> app def
+R16519:16521 Corelib.Init.Datatypes <> nil constr
+R16509:16517 testRegr_sys_sortoffullsimple <> l'_t_list:248 var
+R16487:16490 Corelib.Init.Datatypes <> cons constr
+R16499:16501 Corelib.Init.Datatypes <> nil constr
+R16492:16492 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R16494:16494 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R16497:16497 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R16493:16493 testRegr_sys_sortoffullsimple <> l:250 var
+R16495:16496 testRegr_sys_sortoffullsimple <> t':252 var
+R16472:16479 testRegr_sys_sortoffullsimple <> l_v_list:249 var
+R16384:16391 testRegr_sys_sortoffullsimple <> TmRecord constr
+R16395:16397 Corelib.Init.Datatypes <> app def
+R16409:16411 Corelib.Init.Datatypes <> app def
+R16433:16435 Corelib.Init.Datatypes <> app def
+R16447:16449 Corelib.Init.Datatypes <> nil constr
+R16437:16445 testRegr_sys_sortoffullsimple <> l'_t_list:248 var
+R16414:16417 Corelib.Init.Datatypes <> cons constr
+R16427:16429 Corelib.Init.Datatypes <> nil constr
+R16419:16419 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R16421:16421 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R16425:16425 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R16420:16420 testRegr_sys_sortoffullsimple <> l:250 var
+R16422:16424 testRegr_sys_sortoffullsimple <> t_5:251 var
+R16399:16406 testRegr_sys_sortoffullsimple <> l_v_list:249 var
+R16553:16559 testRegr_sys_sortoffullsimple <> termvar def
+binder 16551:16551 <> x:255
+R16566:16566 testRegr_sys_sortoffullsimple <> T ind
+binder 16563:16564 <> T1:256
+R16573:16573 testRegr_sys_sortoffullsimple <> t ind
+binder 16570:16571 <> t2:257
+R16582:16584 testRegr_sys_sortoffullsimple <> red:122 ind
+R16614:16620 testRegr_sys_sortoffullsimple <> subst_t def
+R16625:16629 testRegr_sys_sortoffullsimple <> TmFix constr
+R16633:16637 testRegr_sys_sortoffullsimple <> TmAbs constr
+R16639:16639 testRegr_sys_sortoffullsimple <> x:255 var
+R16641:16642 testRegr_sys_sortoffullsimple <> T1:256 var
+R16644:16645 testRegr_sys_sortoffullsimple <> t2:257 var
+R16653:16653 testRegr_sys_sortoffullsimple <> x:255 var
+R16657:16658 testRegr_sys_sortoffullsimple <> t2:257 var
+R16587:16591 testRegr_sys_sortoffullsimple <> TmFix constr
+R16595:16599 testRegr_sys_sortoffullsimple <> TmAbs constr
+R16601:16601 testRegr_sys_sortoffullsimple <> x:255 var
+R16603:16604 testRegr_sys_sortoffullsimple <> T1:256 var
+R16606:16607 testRegr_sys_sortoffullsimple <> t2:257 var
+R16689:16689 testRegr_sys_sortoffullsimple <> t ind
+binder 16682:16683 <> t1:258
+binder 16685:16687 <> t1':259
+R16708:16716 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R16698:16700 testRegr_sys_sortoffullsimple <> red:122 ind
+R16705:16707 testRegr_sys_sortoffullsimple <> t1':259 var
+R16702:16703 testRegr_sys_sortoffullsimple <> t1:258 var
+R16717:16719 testRegr_sys_sortoffullsimple <> red:122 ind
+R16733:16737 testRegr_sys_sortoffullsimple <> TmFix constr
+R16739:16741 testRegr_sys_sortoffullsimple <> t1':259 var
+R16722:16726 testRegr_sys_sortoffullsimple <> TmFix constr
+R16728:16729 testRegr_sys_sortoffullsimple <> t1:258 var
+scheme 10744:10746 <> red_ind
+scheme 10744:10746 <> red_sind
+ind 16774:16779 <> typing
+constr 16830:16834 <> T_Var
+constr 16935:16939 <> T_Abs
+constr 17085:17089 <> T_App
+constr 17228:17233 <> T_True
+constr 17284:17290 <> T_False
+constr 17342:17345 <> T_If
+constr 17497:17502 <> T_Zero
+constr 17552:17557 <> T_Succ
+constr 17646:17651 <> T_Pred
+constr 17740:17747 <> T_IsZero
+constr 17839:17844 <> T_Unit
+constr 17895:17899 <> T_Seq
+constr 18022:18030 <> T_Ascribe
+constr 18126:18132 <> T_Inert
+constr 18192:18196 <> T_Let
+constr 18354:18358 <> T_Inl
+constr 18461:18465 <> T_Inr
+constr 18568:18575 <> T_CaseSm
+constr 18834:18842 <> T_Variant
+constr 19320:19325 <> T_Case
+constr 20032:20037 <> T_Pair
+constr 20172:20178 <> T_Proj1
+constr 20284:20290 <> T_Proj2
+constr 20396:20402 <> T_Tuple
+constr 20758:20765 <> T_ProjTp
+constr 21011:21015 <> T_Rcd
+constr 21573:21578 <> T_Proj
+constr 21899:21903 <> T_Fix
+R16784:16787 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R16783:16783 testRegr_sys_sortoffullsimple <> G def
+R16789:16792 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R16788:16788 testRegr_sys_sortoffullsimple <> t ind
+R16794:16797 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R16793:16793 testRegr_sys_sortoffullsimple <> T ind
+R16849:16849 testRegr_sys_sortoffullsimple <> G def
+binder 16846:16847 <> G5:262
+R16855:16861 testRegr_sys_sortoffullsimple <> termvar def
+binder 16853:16853 <> x:263
+R16868:16868 testRegr_sys_sortoffullsimple <> T ind
+binder 16865:16866 <> T5:264
+R16878:16878 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R16897:16908 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R16879:16883 testRegr_sys_sortoffullsimple <> bound def
+R16886:16886 testRegr_sys_sortoffullsimple <> x:263 var
+R16890:16891 testRegr_sys_sortoffullsimple <> T5:264 var
+R16895:16896 testRegr_sys_sortoffullsimple <> G5:262 var
+R16909:16914 testRegr_sys_sortoffullsimple <> typing:260 ind
+R16929:16930 testRegr_sys_sortoffullsimple <> T5:264 var
+R16920:16924 testRegr_sys_sortoffullsimple <> TmVar constr
+R16926:16926 testRegr_sys_sortoffullsimple <> x:263 var
+R16916:16917 testRegr_sys_sortoffullsimple <> G5:262 var
+R16954:16954 testRegr_sys_sortoffullsimple <> G def
+binder 16951:16952 <> G5:265
+R16960:16966 testRegr_sys_sortoffullsimple <> termvar def
+binder 16958:16958 <> x:266
+R16973:16973 testRegr_sys_sortoffullsimple <> T ind
+binder 16970:16971 <> T1:267
+R16980:16980 testRegr_sys_sortoffullsimple <> t ind
+binder 16977:16978 <> t2:268
+R16987:16987 testRegr_sys_sortoffullsimple <> T ind
+binder 16984:16985 <> T2:269
+R17033:17041 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R16996:17001 testRegr_sys_sortoffullsimple <> typing:260 ind
+R17031:17032 testRegr_sys_sortoffullsimple <> T2:269 var
+R17028:17029 testRegr_sys_sortoffullsimple <> t2:268 var
+R17005:17008 Corelib.Init.Datatypes <> cons constr
+R17022:17023 testRegr_sys_sortoffullsimple <> G5:265 var
+R17010:17011 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R17013:17015 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R17018:17019 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R17012:17012 testRegr_sys_sortoffullsimple <> x:266 var
+R17016:17017 testRegr_sys_sortoffullsimple <> T1:267 var
+R17042:17047 testRegr_sys_sortoffullsimple <> typing:260 ind
+R17069:17073 testRegr_sys_sortoffullsimple <> TyArr constr
+R17075:17076 testRegr_sys_sortoffullsimple <> T1:267 var
+R17078:17079 testRegr_sys_sortoffullsimple <> T2:269 var
+R17053:17057 testRegr_sys_sortoffullsimple <> TmAbs constr
+R17059:17059 testRegr_sys_sortoffullsimple <> x:266 var
+R17061:17062 testRegr_sys_sortoffullsimple <> T1:267 var
+R17064:17065 testRegr_sys_sortoffullsimple <> t2:268 var
+R17049:17050 testRegr_sys_sortoffullsimple <> G5:265 var
+R17104:17104 testRegr_sys_sortoffullsimple <> G def
+binder 17101:17102 <> G5:270
+R17114:17114 testRegr_sys_sortoffullsimple <> t ind
+binder 17108:17109 <> t1:271
+binder 17111:17112 <> t2:272
+R17126:17126 testRegr_sys_sortoffullsimple <> T ind
+binder 17118:17120 <> T12:273
+binder 17122:17124 <> T11:274
+R17163:17171 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R17135:17140 testRegr_sys_sortoffullsimple <> typing:260 ind
+R17149:17153 testRegr_sys_sortoffullsimple <> TyArr constr
+R17155:17157 testRegr_sys_sortoffullsimple <> T11:274 var
+R17159:17161 testRegr_sys_sortoffullsimple <> T12:273 var
+R17145:17146 testRegr_sys_sortoffullsimple <> t1:271 var
+R17142:17143 testRegr_sys_sortoffullsimple <> G5:270 var
+R17188:17196 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R17172:17177 testRegr_sys_sortoffullsimple <> typing:260 ind
+R17185:17187 testRegr_sys_sortoffullsimple <> T11:274 var
+R17182:17183 testRegr_sys_sortoffullsimple <> t2:272 var
+R17179:17180 testRegr_sys_sortoffullsimple <> G5:270 var
+R17197:17202 testRegr_sys_sortoffullsimple <> typing:260 ind
+R17221:17223 testRegr_sys_sortoffullsimple <> T12:273 var
+R17208:17212 testRegr_sys_sortoffullsimple <> TmApp constr
+R17214:17215 testRegr_sys_sortoffullsimple <> t1:271 var
+R17217:17218 testRegr_sys_sortoffullsimple <> t2:272 var
+R17204:17205 testRegr_sys_sortoffullsimple <> G5:270 var
+R17248:17248 testRegr_sys_sortoffullsimple <> G def
+binder 17245:17246 <> G5:275
+R17257:17262 testRegr_sys_sortoffullsimple <> typing:260 ind
+R17274:17279 testRegr_sys_sortoffullsimple <> TyBool constr
+R17267:17272 testRegr_sys_sortoffullsimple <> TmTrue constr
+R17264:17265 testRegr_sys_sortoffullsimple <> G5:275 var
+R17305:17305 testRegr_sys_sortoffullsimple <> G def
+binder 17302:17303 <> G5:276
+R17314:17319 testRegr_sys_sortoffullsimple <> typing:260 ind
+R17332:17337 testRegr_sys_sortoffullsimple <> TyBool constr
+R17324:17330 testRegr_sys_sortoffullsimple <> TmFalse constr
+R17321:17322 testRegr_sys_sortoffullsimple <> G5:276 var
+R17360:17360 testRegr_sys_sortoffullsimple <> G def
+binder 17357:17358 <> G5:277
+R17373:17373 testRegr_sys_sortoffullsimple <> t ind
+binder 17364:17365 <> t1:278
+binder 17367:17368 <> t2:279
+binder 17370:17371 <> t3:280
+R17380:17380 testRegr_sys_sortoffullsimple <> T ind
+binder 17377:17378 <> T5:281
+R17408:17416 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R17389:17394 testRegr_sys_sortoffullsimple <> typing:260 ind
+R17402:17407 testRegr_sys_sortoffullsimple <> TyBool constr
+R17399:17400 testRegr_sys_sortoffullsimple <> t1:278 var
+R17396:17397 testRegr_sys_sortoffullsimple <> G5:277 var
+R17432:17440 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R17417:17422 testRegr_sys_sortoffullsimple <> typing:260 ind
+R17430:17431 testRegr_sys_sortoffullsimple <> T5:281 var
+R17427:17428 testRegr_sys_sortoffullsimple <> t2:279 var
+R17424:17425 testRegr_sys_sortoffullsimple <> G5:277 var
+R17456:17464 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R17441:17446 testRegr_sys_sortoffullsimple <> typing:260 ind
+R17454:17455 testRegr_sys_sortoffullsimple <> T5:281 var
+R17451:17452 testRegr_sys_sortoffullsimple <> t3:280 var
+R17448:17449 testRegr_sys_sortoffullsimple <> G5:277 var
+R17465:17470 testRegr_sys_sortoffullsimple <> typing:260 ind
+R17491:17492 testRegr_sys_sortoffullsimple <> T5:281 var
+R17476:17479 testRegr_sys_sortoffullsimple <> TmIf constr
+R17481:17482 testRegr_sys_sortoffullsimple <> t1:278 var
+R17484:17485 testRegr_sys_sortoffullsimple <> t2:279 var
+R17487:17488 testRegr_sys_sortoffullsimple <> t3:280 var
+R17472:17473 testRegr_sys_sortoffullsimple <> G5:277 var
+R17517:17517 testRegr_sys_sortoffullsimple <> G def
+binder 17514:17515 <> G5:282
+R17526:17531 testRegr_sys_sortoffullsimple <> typing:260 ind
+R17543:17547 testRegr_sys_sortoffullsimple <> TyNat constr
+R17536:17541 testRegr_sys_sortoffullsimple <> TmZero constr
+R17533:17534 testRegr_sys_sortoffullsimple <> G5:282 var
+R17572:17572 testRegr_sys_sortoffullsimple <> G def
+binder 17569:17570 <> G5:283
+R17579:17579 testRegr_sys_sortoffullsimple <> t ind
+binder 17576:17577 <> t1:284
+R17606:17614 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R17588:17593 testRegr_sys_sortoffullsimple <> typing:260 ind
+R17601:17605 testRegr_sys_sortoffullsimple <> TyNat constr
+R17598:17599 testRegr_sys_sortoffullsimple <> t1:284 var
+R17595:17596 testRegr_sys_sortoffullsimple <> G5:283 var
+R17615:17620 testRegr_sys_sortoffullsimple <> typing:260 ind
+R17637:17641 testRegr_sys_sortoffullsimple <> TyNat constr
+R17626:17631 testRegr_sys_sortoffullsimple <> TmSucc constr
+R17633:17634 testRegr_sys_sortoffullsimple <> t1:284 var
+R17622:17623 testRegr_sys_sortoffullsimple <> G5:283 var
+R17666:17666 testRegr_sys_sortoffullsimple <> G def
+binder 17663:17664 <> G5:285
+R17673:17673 testRegr_sys_sortoffullsimple <> t ind
+binder 17670:17671 <> t1:286
+R17700:17708 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R17682:17687 testRegr_sys_sortoffullsimple <> typing:260 ind
+R17695:17699 testRegr_sys_sortoffullsimple <> TyNat constr
+R17692:17693 testRegr_sys_sortoffullsimple <> t1:286 var
+R17689:17690 testRegr_sys_sortoffullsimple <> G5:285 var
+R17709:17714 testRegr_sys_sortoffullsimple <> typing:260 ind
+R17731:17735 testRegr_sys_sortoffullsimple <> TyNat constr
+R17720:17725 testRegr_sys_sortoffullsimple <> TmPred constr
+R17727:17728 testRegr_sys_sortoffullsimple <> t1:286 var
+R17716:17717 testRegr_sys_sortoffullsimple <> G5:285 var
+R17762:17762 testRegr_sys_sortoffullsimple <> G def
+binder 17759:17760 <> G5:287
+R17769:17769 testRegr_sys_sortoffullsimple <> t ind
+binder 17766:17767 <> t1:288
+R17796:17804 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R17778:17783 testRegr_sys_sortoffullsimple <> typing:260 ind
+R17791:17795 testRegr_sys_sortoffullsimple <> TyNat constr
+R17788:17789 testRegr_sys_sortoffullsimple <> t1:288 var
+R17785:17786 testRegr_sys_sortoffullsimple <> G5:287 var
+R17805:17810 testRegr_sys_sortoffullsimple <> typing:260 ind
+R17829:17834 testRegr_sys_sortoffullsimple <> TyBool constr
+R17816:17823 testRegr_sys_sortoffullsimple <> TmIszero constr
+R17825:17826 testRegr_sys_sortoffullsimple <> t1:288 var
+R17812:17813 testRegr_sys_sortoffullsimple <> G5:287 var
+R17859:17859 testRegr_sys_sortoffullsimple <> G def
+binder 17856:17857 <> G5:289
+R17868:17873 testRegr_sys_sortoffullsimple <> typing:260 ind
+R17885:17890 testRegr_sys_sortoffullsimple <> TyUnit constr
+R17878:17883 testRegr_sys_sortoffullsimple <> TmUnit constr
+R17875:17876 testRegr_sys_sortoffullsimple <> G5:289 var
+R17914:17914 testRegr_sys_sortoffullsimple <> G def
+binder 17911:17912 <> G5:290
+R17924:17924 testRegr_sys_sortoffullsimple <> t ind
+binder 17918:17919 <> t1:291
+binder 17921:17922 <> t2:292
+R17931:17931 testRegr_sys_sortoffullsimple <> T ind
+binder 17928:17929 <> T2:293
+R17959:17967 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R17940:17945 testRegr_sys_sortoffullsimple <> typing:260 ind
+R17953:17958 testRegr_sys_sortoffullsimple <> TyUnit constr
+R17950:17951 testRegr_sys_sortoffullsimple <> t1:291 var
+R17947:17948 testRegr_sys_sortoffullsimple <> G5:290 var
+R17983:17991 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R17968:17973 testRegr_sys_sortoffullsimple <> typing:260 ind
+R17981:17982 testRegr_sys_sortoffullsimple <> T2:293 var
+R17978:17979 testRegr_sys_sortoffullsimple <> t2:292 var
+R17975:17976 testRegr_sys_sortoffullsimple <> G5:290 var
+R17992:17997 testRegr_sys_sortoffullsimple <> typing:260 ind
+R18016:18017 testRegr_sys_sortoffullsimple <> T2:293 var
+R18003:18007 testRegr_sys_sortoffullsimple <> TmSeq constr
+R18009:18010 testRegr_sys_sortoffullsimple <> t1:291 var
+R18012:18013 testRegr_sys_sortoffullsimple <> t2:292 var
+R17999:18000 testRegr_sys_sortoffullsimple <> G5:290 var
+R18045:18045 testRegr_sys_sortoffullsimple <> G def
+binder 18042:18043 <> G5:294
+R18052:18052 testRegr_sys_sortoffullsimple <> t ind
+binder 18049:18050 <> t1:295
+R18059:18059 testRegr_sys_sortoffullsimple <> T ind
+binder 18056:18057 <> T5:296
+R18083:18091 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R18068:18073 testRegr_sys_sortoffullsimple <> typing:260 ind
+R18081:18082 testRegr_sys_sortoffullsimple <> T5:296 var
+R18078:18079 testRegr_sys_sortoffullsimple <> t1:295 var
+R18075:18076 testRegr_sys_sortoffullsimple <> G5:294 var
+R18092:18097 testRegr_sys_sortoffullsimple <> typing:260 ind
+R18120:18121 testRegr_sys_sortoffullsimple <> T5:296 var
+R18103:18111 testRegr_sys_sortoffullsimple <> TmAscribe constr
+R18113:18114 testRegr_sys_sortoffullsimple <> t1:295 var
+R18116:18117 testRegr_sys_sortoffullsimple <> T5:296 var
+R18099:18100 testRegr_sys_sortoffullsimple <> G5:294 var
+R18147:18147 testRegr_sys_sortoffullsimple <> G def
+binder 18144:18145 <> G5:297
+R18154:18154 testRegr_sys_sortoffullsimple <> T ind
+binder 18151:18152 <> T5:298
+R18163:18168 testRegr_sys_sortoffullsimple <> typing:260 ind
+R18186:18187 testRegr_sys_sortoffullsimple <> T5:298 var
+R18174:18180 testRegr_sys_sortoffullsimple <> TmInert constr
+R18182:18183 testRegr_sys_sortoffullsimple <> T5:298 var
+R18170:18171 testRegr_sys_sortoffullsimple <> G5:297 var
+R18211:18211 testRegr_sys_sortoffullsimple <> G def
+binder 18208:18209 <> G5:299
+R18217:18223 testRegr_sys_sortoffullsimple <> termvar def
+binder 18215:18215 <> x:300
+R18233:18233 testRegr_sys_sortoffullsimple <> t ind
+binder 18227:18228 <> t1:301
+binder 18230:18231 <> t2:302
+R18243:18243 testRegr_sys_sortoffullsimple <> T ind
+binder 18237:18238 <> T2:303
+binder 18240:18241 <> T1:304
+R18267:18275 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R18252:18257 testRegr_sys_sortoffullsimple <> typing:260 ind
+R18265:18266 testRegr_sys_sortoffullsimple <> T1:304 var
+R18262:18263 testRegr_sys_sortoffullsimple <> t1:301 var
+R18259:18260 testRegr_sys_sortoffullsimple <> G5:299 var
+R18313:18321 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R18276:18281 testRegr_sys_sortoffullsimple <> typing:260 ind
+R18311:18312 testRegr_sys_sortoffullsimple <> T2:303 var
+R18308:18309 testRegr_sys_sortoffullsimple <> t2:302 var
+R18285:18288 Corelib.Init.Datatypes <> cons constr
+R18302:18303 testRegr_sys_sortoffullsimple <> G5:299 var
+R18290:18291 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R18293:18295 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R18298:18299 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R18292:18292 testRegr_sys_sortoffullsimple <> x:300 var
+R18296:18297 testRegr_sys_sortoffullsimple <> T1:304 var
+R18322:18327 testRegr_sys_sortoffullsimple <> typing:260 ind
+R18348:18349 testRegr_sys_sortoffullsimple <> T2:303 var
+R18333:18337 testRegr_sys_sortoffullsimple <> TmLet constr
+R18339:18339 testRegr_sys_sortoffullsimple <> x:300 var
+R18341:18342 testRegr_sys_sortoffullsimple <> t1:301 var
+R18344:18345 testRegr_sys_sortoffullsimple <> t2:302 var
+R18329:18330 testRegr_sys_sortoffullsimple <> G5:299 var
+R18373:18373 testRegr_sys_sortoffullsimple <> G def
+binder 18370:18371 <> G5:305
+R18380:18380 testRegr_sys_sortoffullsimple <> t ind
+binder 18377:18378 <> t1:306
+R18390:18390 testRegr_sys_sortoffullsimple <> T ind
+binder 18384:18385 <> T1:307
+binder 18387:18388 <> T2:308
+R18414:18422 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R18399:18404 testRegr_sys_sortoffullsimple <> typing:260 ind
+R18412:18413 testRegr_sys_sortoffullsimple <> T1:307 var
+R18409:18410 testRegr_sys_sortoffullsimple <> t1:306 var
+R18406:18407 testRegr_sys_sortoffullsimple <> G5:305 var
+R18423:18428 testRegr_sys_sortoffullsimple <> typing:260 ind
+R18445:18449 testRegr_sys_sortoffullsimple <> TySum constr
+R18451:18452 testRegr_sys_sortoffullsimple <> T1:307 var
+R18454:18455 testRegr_sys_sortoffullsimple <> T2:308 var
+R18434:18438 testRegr_sys_sortoffullsimple <> TmInl constr
+R18440:18441 testRegr_sys_sortoffullsimple <> t1:306 var
+R18430:18431 testRegr_sys_sortoffullsimple <> G5:305 var
+R18480:18480 testRegr_sys_sortoffullsimple <> G def
+binder 18477:18478 <> G5:309
+R18487:18487 testRegr_sys_sortoffullsimple <> t ind
+binder 18484:18485 <> t1:310
+R18497:18497 testRegr_sys_sortoffullsimple <> T ind
+binder 18491:18492 <> T1:311
+binder 18494:18495 <> T2:312
+R18521:18529 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R18506:18511 testRegr_sys_sortoffullsimple <> typing:260 ind
+R18519:18520 testRegr_sys_sortoffullsimple <> T2:312 var
+R18516:18517 testRegr_sys_sortoffullsimple <> t1:310 var
+R18513:18514 testRegr_sys_sortoffullsimple <> G5:309 var
+R18530:18535 testRegr_sys_sortoffullsimple <> typing:260 ind
+R18552:18556 testRegr_sys_sortoffullsimple <> TySum constr
+R18558:18559 testRegr_sys_sortoffullsimple <> T1:311 var
+R18561:18562 testRegr_sys_sortoffullsimple <> T2:312 var
+R18541:18545 testRegr_sys_sortoffullsimple <> TmInr constr
+R18547:18548 testRegr_sys_sortoffullsimple <> t1:310 var
+R18537:18538 testRegr_sys_sortoffullsimple <> G5:309 var
+R18590:18590 testRegr_sys_sortoffullsimple <> G def
+binder 18587:18588 <> G5:313
+R18597:18597 testRegr_sys_sortoffullsimple <> t ind
+binder 18594:18595 <> t0:314
+R18604:18610 testRegr_sys_sortoffullsimple <> termvar def
+binder 18601:18602 <> x1:315
+R18617:18617 testRegr_sys_sortoffullsimple <> t ind
+binder 18614:18615 <> t1:316
+R18624:18630 testRegr_sys_sortoffullsimple <> termvar def
+binder 18621:18622 <> x2:317
+R18637:18637 testRegr_sys_sortoffullsimple <> t ind
+binder 18634:18635 <> t2:318
+R18651:18651 testRegr_sys_sortoffullsimple <> T ind
+binder 18641:18643 <> T_5:319
+binder 18645:18646 <> T1:320
+binder 18648:18649 <> T2:321
+R18686:18694 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R18660:18665 testRegr_sys_sortoffullsimple <> typing:260 ind
+R18674:18678 testRegr_sys_sortoffullsimple <> TySum constr
+R18680:18681 testRegr_sys_sortoffullsimple <> T1:320 var
+R18683:18684 testRegr_sys_sortoffullsimple <> T2:321 var
+R18670:18671 testRegr_sys_sortoffullsimple <> t0:314 var
+R18667:18668 testRegr_sys_sortoffullsimple <> G5:313 var
+R18734:18742 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R18695:18700 testRegr_sys_sortoffullsimple <> typing:260 ind
+R18731:18733 testRegr_sys_sortoffullsimple <> T_5:319 var
+R18728:18729 testRegr_sys_sortoffullsimple <> t1:316 var
+R18704:18707 Corelib.Init.Datatypes <> cons constr
+R18722:18723 testRegr_sys_sortoffullsimple <> G5:313 var
+R18709:18710 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R18713:18715 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R18718:18719 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R18711:18712 testRegr_sys_sortoffullsimple <> x1:315 var
+R18716:18717 testRegr_sys_sortoffullsimple <> T1:320 var
+R18782:18790 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R18743:18748 testRegr_sys_sortoffullsimple <> typing:260 ind
+R18779:18781 testRegr_sys_sortoffullsimple <> T_5:319 var
+R18776:18777 testRegr_sys_sortoffullsimple <> t2:318 var
+R18752:18755 Corelib.Init.Datatypes <> cons constr
+R18770:18771 testRegr_sys_sortoffullsimple <> G5:313 var
+R18757:18758 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R18761:18763 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R18766:18767 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R18759:18760 testRegr_sys_sortoffullsimple <> x2:317 var
+R18764:18765 testRegr_sys_sortoffullsimple <> T2:321 var
+R18791:18796 testRegr_sys_sortoffullsimple <> typing:260 ind
+R18827:18829 testRegr_sys_sortoffullsimple <> T_5:319 var
+R18802:18809 testRegr_sys_sortoffullsimple <> TmCaseSm constr
+R18811:18812 testRegr_sys_sortoffullsimple <> t0:314 var
+R18814:18815 testRegr_sys_sortoffullsimple <> x1:315 var
+R18817:18818 testRegr_sys_sortoffullsimple <> t1:316 var
+R18820:18821 testRegr_sys_sortoffullsimple <> x2:317 var
+R18823:18824 testRegr_sys_sortoffullsimple <> t2:318 var
+R18798:18799 testRegr_sys_sortoffullsimple <> G5:313 var
+R18863:18866 Corelib.Init.Datatypes <> list ind
+R18874:18874 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R18869:18873 testRegr_sys_sortoffullsimple <> label def
+R18875:18875 testRegr_sys_sortoffullsimple <> T ind
+binder 18854:18861 <> l_T_list:322
+R18883:18883 testRegr_sys_sortoffullsimple <> G def
+binder 18880:18881 <> G5:323
+R18890:18890 testRegr_sys_sortoffullsimple <> t ind
+binder 18887:18888 <> t5:324
+R18896:18900 testRegr_sys_sortoffullsimple <> index def
+binder 18894:18894 <> j:325
+R18920:18920 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R18915:18919 testRegr_sys_sortoffullsimple <> label def
+R18921:18921 testRegr_sys_sortoffullsimple <> T ind
+binder 18904:18907 <> t107:326
+binder 18909:18912 <> t108:327
+R18974:18982 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R18962:18964 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R18936:18944 Stdlib.Lists.List <> nth_error def
+R18957:18959 Corelib.Init.Peano <> ::nat_scope:x_'-'_x not
+R18956:18956 testRegr_sys_sortoffullsimple <> j:325 var
+R18946:18953 testRegr_sys_sortoffullsimple <> l_T_list:322 var
+R18965:18968 Corelib.Init.Datatypes <> Some constr
+R18970:18973 testRegr_sys_sortoffullsimple <> t107:326 var
+R19021:19024 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R19009:19011 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R18983:18991 Stdlib.Lists.List <> nth_error def
+R19004:19006 Corelib.Init.Peano <> ::nat_scope:x_'-'_x not
+R19003:19003 testRegr_sys_sortoffullsimple <> j:325 var
+R18993:19000 testRegr_sys_sortoffullsimple <> l_T_list:322 var
+R19012:19015 Corelib.Init.Datatypes <> Some constr
+R19017:19020 testRegr_sys_sortoffullsimple <> t108:327 var
+R19073:19082 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R19025:19030 testRegr_sys_sortoffullsimple <> typing:260 ind
+R19045:19048 testRegr_sys_sortoffullsimple <> t107:326 var
+R19055:19055 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19058:19058 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19061:19061 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19035:19036 testRegr_sys_sortoffullsimple <> t5:324 var
+R19032:19033 testRegr_sys_sortoffullsimple <> G5:323 var
+R19083:19083 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R19203:19213 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R19091:19096 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R19085:19089 Corelib.Init.Peano <> ::nat_scope:x_'<='_x not
+R19090:19090 testRegr_sys_sortoffullsimple <> j:325 var
+R19098:19102 Corelib.Init.Peano <> ::nat_scope:x_'<='_x not
+R19097:19097 testRegr_sys_sortoffullsimple <> j:325 var
+R19103:19108 Corelib.Init.Datatypes <> length def
+R19111:19123 testRegr_sys_sortoffullsimple <> unmake_list'T def
+R19127:19129 Corelib.Lists.ListDef <> map def
+R19192:19199 testRegr_sys_sortoffullsimple <> l_T_list:322 var
+R19148:19148 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R19143:19147 testRegr_sys_sortoffullsimple <> label def
+R19149:19149 testRegr_sys_sortoffullsimple <> T ind
+binder 19137:19140 <> pat_:329
+R19162:19165 testRegr_sys_sortoffullsimple <> pat_:329 var
+R19172:19172 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19175:19175 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19178:19178 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19214:19219 testRegr_sys_sortoffullsimple <> typing:260 ind
+R19297:19305 testRegr_sys_sortoffullsimple <> TyVariant constr
+R19307:19314 testRegr_sys_sortoffullsimple <> l_T_list:322 var
+R19225:19233 testRegr_sys_sortoffullsimple <> TmVariant constr
+R19242:19245 testRegr_sys_sortoffullsimple <> t108:327 var
+R19252:19252 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19255:19255 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19258:19258 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19271:19272 testRegr_sys_sortoffullsimple <> t5:324 var
+R19275:19283 testRegr_sys_sortoffullsimple <> TyVariant constr
+R19285:19292 testRegr_sys_sortoffullsimple <> l_T_list:322 var
+R19221:19222 testRegr_sys_sortoffullsimple <> G5:323 var
+R19350:19353 Corelib.Init.Datatypes <> list ind
+R19371:19371 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R19369:19369 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R19361:19361 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R19356:19360 testRegr_sys_sortoffullsimple <> label def
+R19362:19368 testRegr_sys_sortoffullsimple <> termvar def
+R19370:19370 testRegr_sys_sortoffullsimple <> t ind
+R19372:19372 testRegr_sys_sortoffullsimple <> T ind
+binder 19337:19348 <> l_x_t_T_list:332
+R19380:19380 testRegr_sys_sortoffullsimple <> G def
+binder 19377:19378 <> G5:333
+R19388:19388 testRegr_sys_sortoffullsimple <> t ind
+binder 19384:19386 <> t_5:334
+R19396:19396 testRegr_sys_sortoffullsimple <> T ind
+binder 19392:19394 <> T_5:335
+R19531:19539 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R19405:19410 testRegr_sys_sortoffullsimple <> typing:260 ind
+R19420:19428 testRegr_sys_sortoffullsimple <> TyVariant constr
+R19431:19433 Corelib.Lists.ListDef <> map def
+R19517:19528 testRegr_sys_sortoffullsimple <> l_x_t_T_list:332 var
+R19462:19462 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R19460:19460 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R19452:19452 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R19447:19451 testRegr_sys_sortoffullsimple <> label def
+R19453:19459 testRegr_sys_sortoffullsimple <> termvar def
+R19461:19461 testRegr_sys_sortoffullsimple <> t ind
+R19463:19463 testRegr_sys_sortoffullsimple <> T ind
+binder 19441:19444 <> pat_:336
+R19476:19479 testRegr_sys_sortoffullsimple <> pat_:336 var
+R19486:19486 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19489:19489 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19492:19492 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19495:19495 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19498:19498 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19503:19503 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19506:19506 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19509:19509 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19415:19417 testRegr_sys_sortoffullsimple <> t_5:334 var
+R19412:19413 testRegr_sys_sortoffullsimple <> G5:333 var
+R19540:19540 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R19720:19730 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+binder 19548:19549 <> x_:338
+binder 19551:19552 <> T_:339
+binder 19554:19555 <> t_:340
+R19675:19679 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R19719:19719 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R19558:19559 Stdlib.Lists.List <> In def
+R19573:19575 Corelib.Lists.ListDef <> map def
+R19662:19673 testRegr_sys_sortoffullsimple <> l_x_t_T_list:332 var
+R19605:19605 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R19603:19603 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R19595:19595 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R19590:19594 testRegr_sys_sortoffullsimple <> label def
+R19596:19602 testRegr_sys_sortoffullsimple <> termvar def
+R19604:19604 testRegr_sys_sortoffullsimple <> t ind
+R19606:19606 testRegr_sys_sortoffullsimple <> T ind
+binder 19583:19586 <> pat_:341
+R19619:19622 testRegr_sys_sortoffullsimple <> pat_:341 var
+R19629:19629 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19632:19632 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19635:19635 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19638:19638 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19641:19641 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19646:19646 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19649:19649 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19652:19652 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19655:19655 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19647:19648 testRegr_sys_sortoffullsimple <> x_:338 var
+R19650:19651 testRegr_sys_sortoffullsimple <> T_:339 var
+R19653:19654 testRegr_sys_sortoffullsimple <> t_:340 var
+R19561:19561 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19564:19564 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19567:19567 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19570:19570 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19562:19563 testRegr_sys_sortoffullsimple <> x_:338 var
+R19565:19566 testRegr_sys_sortoffullsimple <> T_:339 var
+R19568:19569 testRegr_sys_sortoffullsimple <> t_:340 var
+R19680:19685 testRegr_sys_sortoffullsimple <> typing:260 ind
+R19716:19718 testRegr_sys_sortoffullsimple <> T_5:335 var
+R19713:19714 testRegr_sys_sortoffullsimple <> t_:340 var
+R19689:19692 Corelib.Init.Datatypes <> cons constr
+R19707:19708 testRegr_sys_sortoffullsimple <> G5:333 var
+R19694:19695 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19698:19700 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19703:19704 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19696:19697 testRegr_sys_sortoffullsimple <> x_:338 var
+R19701:19702 testRegr_sys_sortoffullsimple <> T_:339 var
+R19731:19731 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R19881:19891 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R19732:19738 Stdlib.Bool.Bool <> Is_true def
+R19741:19752 Ott.ott_list_distinct <> all_distinct def
+R19764:19780 testRegr_sys_sortoffullsimple <> unmake_list'label def
+R19784:19786 Corelib.Lists.ListDef <> map def
+R19865:19876 testRegr_sys_sortoffullsimple <> l_x_t_T_list:332 var
+R19815:19815 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R19813:19813 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R19805:19805 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R19800:19804 testRegr_sys_sortoffullsimple <> label def
+R19806:19812 testRegr_sys_sortoffullsimple <> termvar def
+R19814:19814 testRegr_sys_sortoffullsimple <> t ind
+R19816:19816 testRegr_sys_sortoffullsimple <> T ind
+binder 19794:19797 <> pat_:343
+R19829:19832 testRegr_sys_sortoffullsimple <> pat_:343 var
+R19839:19839 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19842:19842 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19845:19845 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19848:19848 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19851:19851 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19754:19761 testRegr_sys_sortoffullsimple <> eq_label thm
+R19892:19897 testRegr_sys_sortoffullsimple <> typing:260 ind
+R20025:20027 testRegr_sys_sortoffullsimple <> T_5:335 var
+R19903:19908 testRegr_sys_sortoffullsimple <> TmCase constr
+R19910:19912 testRegr_sys_sortoffullsimple <> t_5:334 var
+R19915:19917 Corelib.Lists.ListDef <> map def
+R20010:20021 testRegr_sys_sortoffullsimple <> l_x_t_T_list:332 var
+R19946:19946 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R19944:19944 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R19936:19936 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R19931:19935 testRegr_sys_sortoffullsimple <> label def
+R19937:19943 testRegr_sys_sortoffullsimple <> termvar def
+R19945:19945 testRegr_sys_sortoffullsimple <> t ind
+R19947:19947 testRegr_sys_sortoffullsimple <> T ind
+binder 19925:19928 <> pat_:345
+R19960:19963 testRegr_sys_sortoffullsimple <> pat_:345 var
+R19970:19970 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19973:19973 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19976:19976 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19979:19979 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19982:19982 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R19988:19992 testRegr_sys_sortoffullsimple <> CCase constr
+R19899:19900 testRegr_sys_sortoffullsimple <> G5:333 var
+R20052:20052 testRegr_sys_sortoffullsimple <> G def
+binder 20049:20050 <> G5:347
+R20062:20062 testRegr_sys_sortoffullsimple <> t ind
+binder 20056:20057 <> t1:348
+binder 20059:20060 <> t2:349
+R20072:20072 testRegr_sys_sortoffullsimple <> T ind
+binder 20066:20067 <> T1:350
+binder 20069:20070 <> T2:351
+R20096:20104 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R20081:20086 testRegr_sys_sortoffullsimple <> typing:260 ind
+R20094:20095 testRegr_sys_sortoffullsimple <> T1:350 var
+R20091:20092 testRegr_sys_sortoffullsimple <> t1:348 var
+R20088:20089 testRegr_sys_sortoffullsimple <> G5:347 var
+R20120:20128 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R20105:20110 testRegr_sys_sortoffullsimple <> typing:260 ind
+R20118:20119 testRegr_sys_sortoffullsimple <> T2:351 var
+R20115:20116 testRegr_sys_sortoffullsimple <> t2:349 var
+R20112:20113 testRegr_sys_sortoffullsimple <> G5:347 var
+R20129:20134 testRegr_sys_sortoffullsimple <> typing:260 ind
+R20155:20160 testRegr_sys_sortoffullsimple <> TyPair constr
+R20162:20163 testRegr_sys_sortoffullsimple <> T1:350 var
+R20165:20166 testRegr_sys_sortoffullsimple <> T2:351 var
+R20140:20145 testRegr_sys_sortoffullsimple <> TmPair constr
+R20147:20148 testRegr_sys_sortoffullsimple <> t1:348 var
+R20150:20151 testRegr_sys_sortoffullsimple <> t2:349 var
+R20136:20137 testRegr_sys_sortoffullsimple <> G5:347 var
+R20193:20193 testRegr_sys_sortoffullsimple <> G def
+binder 20190:20191 <> G5:352
+R20200:20200 testRegr_sys_sortoffullsimple <> t ind
+binder 20197:20198 <> t1:353
+R20210:20210 testRegr_sys_sortoffullsimple <> T ind
+binder 20204:20205 <> T1:354
+binder 20207:20208 <> T2:355
+R20246:20254 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R20219:20224 testRegr_sys_sortoffullsimple <> typing:260 ind
+R20233:20238 testRegr_sys_sortoffullsimple <> TyPair constr
+R20240:20241 testRegr_sys_sortoffullsimple <> T1:354 var
+R20243:20244 testRegr_sys_sortoffullsimple <> T2:355 var
+R20229:20230 testRegr_sys_sortoffullsimple <> t1:353 var
+R20226:20227 testRegr_sys_sortoffullsimple <> G5:352 var
+R20255:20260 testRegr_sys_sortoffullsimple <> typing:260 ind
+R20278:20279 testRegr_sys_sortoffullsimple <> T1:354 var
+R20266:20272 testRegr_sys_sortoffullsimple <> TmProj1 constr
+R20274:20275 testRegr_sys_sortoffullsimple <> t1:353 var
+R20262:20263 testRegr_sys_sortoffullsimple <> G5:352 var
+R20305:20305 testRegr_sys_sortoffullsimple <> G def
+binder 20302:20303 <> G5:356
+R20312:20312 testRegr_sys_sortoffullsimple <> t ind
+binder 20309:20310 <> t1:357
+R20322:20322 testRegr_sys_sortoffullsimple <> T ind
+binder 20316:20317 <> T2:358
+binder 20319:20320 <> T1:359
+R20358:20366 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R20331:20336 testRegr_sys_sortoffullsimple <> typing:260 ind
+R20345:20350 testRegr_sys_sortoffullsimple <> TyPair constr
+R20352:20353 testRegr_sys_sortoffullsimple <> T1:359 var
+R20355:20356 testRegr_sys_sortoffullsimple <> T2:358 var
+R20341:20342 testRegr_sys_sortoffullsimple <> t1:357 var
+R20338:20339 testRegr_sys_sortoffullsimple <> G5:356 var
+R20367:20372 testRegr_sys_sortoffullsimple <> typing:260 ind
+R20390:20391 testRegr_sys_sortoffullsimple <> T2:358 var
+R20378:20384 testRegr_sys_sortoffullsimple <> TmProj2 constr
+R20386:20387 testRegr_sys_sortoffullsimple <> t1:357 var
+R20374:20375 testRegr_sys_sortoffullsimple <> G5:356 var
+R20423:20426 Corelib.Init.Datatypes <> list ind
+R20430:20430 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R20429:20429 testRegr_sys_sortoffullsimple <> t ind
+R20431:20431 testRegr_sys_sortoffullsimple <> T ind
+binder 20414:20421 <> t_T_list:360
+R20439:20439 testRegr_sys_sortoffullsimple <> G def
+binder 20436:20437 <> G5:361
+R20448:20448 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R20571:20580 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+binder 20456:20457 <> t_:362
+binder 20459:20460 <> T_:363
+R20550:20554 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R20570:20570 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R20463:20464 Stdlib.Lists.List <> In def
+R20475:20477 Corelib.Lists.ListDef <> map def
+R20541:20548 testRegr_sys_sortoffullsimple <> t_T_list:360 var
+R20493:20493 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R20492:20492 testRegr_sys_sortoffullsimple <> t ind
+R20494:20494 testRegr_sys_sortoffullsimple <> T ind
+binder 20485:20488 <> pat_:364
+R20507:20510 testRegr_sys_sortoffullsimple <> pat_:364 var
+R20517:20517 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R20520:20520 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R20523:20523 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R20528:20528 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R20531:20531 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R20534:20534 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R20529:20530 testRegr_sys_sortoffullsimple <> t_:362 var
+R20532:20533 testRegr_sys_sortoffullsimple <> T_:363 var
+R20466:20466 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R20469:20469 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R20472:20472 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R20467:20468 testRegr_sys_sortoffullsimple <> t_:362 var
+R20470:20471 testRegr_sys_sortoffullsimple <> T_:363 var
+R20555:20560 testRegr_sys_sortoffullsimple <> typing:260 ind
+R20568:20569 testRegr_sys_sortoffullsimple <> T_:363 var
+R20565:20566 testRegr_sys_sortoffullsimple <> t_:362 var
+R20562:20563 testRegr_sys_sortoffullsimple <> G5:361 var
+R20581:20586 testRegr_sys_sortoffullsimple <> typing:260 ind
+R20674:20680 testRegr_sys_sortoffullsimple <> TyTuple constr
+R20683:20685 Corelib.Lists.ListDef <> map def
+R20744:20751 testRegr_sys_sortoffullsimple <> t_T_list:360 var
+R20700:20700 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R20699:20699 testRegr_sys_sortoffullsimple <> t ind
+R20701:20701 testRegr_sys_sortoffullsimple <> T ind
+binder 20693:20696 <> pat_:366
+R20714:20717 testRegr_sys_sortoffullsimple <> pat_:366 var
+R20724:20724 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R20727:20727 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R20730:20730 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R20592:20598 testRegr_sys_sortoffullsimple <> TmTuple constr
+R20601:20603 Corelib.Lists.ListDef <> map def
+R20662:20669 testRegr_sys_sortoffullsimple <> t_T_list:360 var
+R20618:20618 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R20617:20617 testRegr_sys_sortoffullsimple <> t ind
+R20619:20619 testRegr_sys_sortoffullsimple <> T ind
+binder 20611:20614 <> pat_:368
+R20632:20635 testRegr_sys_sortoffullsimple <> pat_:368 var
+R20642:20642 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R20645:20645 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R20648:20648 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R20588:20589 testRegr_sys_sortoffullsimple <> G5:361 var
+R20784:20787 Corelib.Init.Datatypes <> list ind
+R20789:20789 testRegr_sys_sortoffullsimple <> T ind
+binder 20777:20782 <> T_list:370
+R20796:20796 testRegr_sys_sortoffullsimple <> G def
+binder 20793:20794 <> G5:371
+R20803:20803 testRegr_sys_sortoffullsimple <> t ind
+binder 20800:20801 <> t1:372
+R20809:20813 testRegr_sys_sortoffullsimple <> index def
+binder 20807:20807 <> j:373
+R20822:20822 testRegr_sys_sortoffullsimple <> T ind
+binder 20817:20820 <> t109:374
+R20872:20875 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R20860:20862 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R20836:20844 Stdlib.Lists.List <> nth_error def
+R20855:20857 Corelib.Init.Peano <> ::nat_scope:x_'-'_x not
+R20854:20854 testRegr_sys_sortoffullsimple <> j:373 var
+R20846:20851 testRegr_sys_sortoffullsimple <> T_list:370 var
+R20863:20866 Corelib.Init.Datatypes <> Some constr
+R20868:20871 testRegr_sys_sortoffullsimple <> t109:374 var
+R20905:20914 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R20876:20881 testRegr_sys_sortoffullsimple <> typing:260 ind
+R20890:20896 testRegr_sys_sortoffullsimple <> TyTuple constr
+R20898:20903 testRegr_sys_sortoffullsimple <> T_list:370 var
+R20886:20887 testRegr_sys_sortoffullsimple <> t1:372 var
+R20883:20884 testRegr_sys_sortoffullsimple <> G5:371 var
+R20915:20915 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R20966:20976 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R20923:20928 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R20917:20921 Corelib.Init.Peano <> ::nat_scope:x_'<='_x not
+R20922:20922 testRegr_sys_sortoffullsimple <> j:373 var
+R20930:20934 Corelib.Init.Peano <> ::nat_scope:x_'<='_x not
+R20929:20929 testRegr_sys_sortoffullsimple <> j:373 var
+R20935:20940 Corelib.Init.Datatypes <> length def
+R20943:20955 testRegr_sys_sortoffullsimple <> unmake_list'T def
+R20958:20963 testRegr_sys_sortoffullsimple <> T_list:370 var
+R20977:20982 testRegr_sys_sortoffullsimple <> typing:260 ind
+R21003:21006 testRegr_sys_sortoffullsimple <> t109:374 var
+R20988:20995 testRegr_sys_sortoffullsimple <> TmProjTp constr
+R20997:20998 testRegr_sys_sortoffullsimple <> t1:372 var
+R21000:21000 testRegr_sys_sortoffullsimple <> j:373 var
+R20984:20985 testRegr_sys_sortoffullsimple <> G5:371 var
+R21038:21041 Corelib.Init.Datatypes <> list ind
+R21051:21051 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R21049:21049 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R21044:21048 testRegr_sys_sortoffullsimple <> label def
+R21050:21050 testRegr_sys_sortoffullsimple <> t ind
+R21052:21052 testRegr_sys_sortoffullsimple <> T ind
+binder 21027:21036 <> l_t_T_list:375
+R21060:21060 testRegr_sys_sortoffullsimple <> G def
+binder 21057:21058 <> G5:376
+R21069:21069 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R21203:21213 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+binder 21077:21078 <> t_:377
+binder 21080:21081 <> T_:378
+R21182:21186 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R21202:21202 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R21084:21085 Stdlib.Lists.List <> In def
+R21096:21098 Corelib.Lists.ListDef <> map def
+R21171:21180 testRegr_sys_sortoffullsimple <> l_t_T_list:375 var
+R21120:21120 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R21118:21118 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R21113:21117 testRegr_sys_sortoffullsimple <> label def
+R21119:21119 testRegr_sys_sortoffullsimple <> t ind
+R21121:21121 testRegr_sys_sortoffullsimple <> T ind
+binder 21106:21109 <> pat_:379
+R21134:21137 testRegr_sys_sortoffullsimple <> pat_:379 var
+R21144:21144 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21147:21147 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21150:21150 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21153:21153 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21158:21158 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21161:21161 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21164:21164 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21159:21160 testRegr_sys_sortoffullsimple <> t_:377 var
+R21162:21163 testRegr_sys_sortoffullsimple <> T_:378 var
+R21087:21087 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21090:21090 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21093:21093 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21088:21089 testRegr_sys_sortoffullsimple <> t_:377 var
+R21091:21092 testRegr_sys_sortoffullsimple <> T_:378 var
+R21187:21192 testRegr_sys_sortoffullsimple <> typing:260 ind
+R21200:21201 testRegr_sys_sortoffullsimple <> T_:378 var
+R21197:21198 testRegr_sys_sortoffullsimple <> t_:377 var
+R21194:21195 testRegr_sys_sortoffullsimple <> G5:376 var
+R21214:21214 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R21351:21361 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R21215:21221 Stdlib.Bool.Bool <> Is_true def
+R21224:21235 Ott.ott_list_distinct <> all_distinct def
+R21247:21263 testRegr_sys_sortoffullsimple <> unmake_list'label def
+R21267:21269 Corelib.Lists.ListDef <> map def
+R21337:21346 testRegr_sys_sortoffullsimple <> l_t_T_list:375 var
+R21290:21290 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R21288:21288 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R21283:21287 testRegr_sys_sortoffullsimple <> label def
+R21289:21289 testRegr_sys_sortoffullsimple <> t ind
+R21291:21291 testRegr_sys_sortoffullsimple <> T ind
+binder 21277:21280 <> pat_:381
+R21304:21307 testRegr_sys_sortoffullsimple <> pat_:381 var
+R21314:21314 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21317:21317 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21320:21320 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21323:21323 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21237:21244 testRegr_sys_sortoffullsimple <> eq_label thm
+R21362:21367 testRegr_sys_sortoffullsimple <> typing:260 ind
+R21472:21479 testRegr_sys_sortoffullsimple <> TyRecord constr
+R21482:21484 Corelib.Lists.ListDef <> map def
+R21557:21566 testRegr_sys_sortoffullsimple <> l_t_T_list:375 var
+R21505:21505 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R21503:21503 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R21498:21502 testRegr_sys_sortoffullsimple <> label def
+R21504:21504 testRegr_sys_sortoffullsimple <> t ind
+R21506:21506 testRegr_sys_sortoffullsimple <> T ind
+binder 21492:21495 <> pat_:383
+R21519:21522 testRegr_sys_sortoffullsimple <> pat_:383 var
+R21529:21529 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21532:21532 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21535:21535 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21538:21538 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21543:21543 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21546:21546 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21549:21549 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21373:21380 testRegr_sys_sortoffullsimple <> TmRecord constr
+R21383:21385 Corelib.Lists.ListDef <> map def
+R21458:21467 testRegr_sys_sortoffullsimple <> l_t_T_list:375 var
+R21406:21406 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R21404:21404 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R21399:21403 testRegr_sys_sortoffullsimple <> label def
+R21405:21405 testRegr_sys_sortoffullsimple <> t ind
+R21407:21407 testRegr_sys_sortoffullsimple <> T ind
+binder 21393:21396 <> pat_:385
+R21420:21423 testRegr_sys_sortoffullsimple <> pat_:385 var
+R21430:21430 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21433:21433 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21436:21436 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21439:21439 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21444:21444 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21447:21447 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21450:21450 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21369:21370 testRegr_sys_sortoffullsimple <> G5:376 var
+R21599:21602 Corelib.Init.Datatypes <> list ind
+R21610:21610 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R21605:21609 testRegr_sys_sortoffullsimple <> label def
+R21611:21611 testRegr_sys_sortoffullsimple <> T ind
+binder 21590:21597 <> l_T_list:387
+R21618:21622 testRegr_sys_sortoffullsimple <> index def
+binder 21616:21616 <> j:388
+R21629:21629 testRegr_sys_sortoffullsimple <> G def
+binder 21626:21627 <> G5:389
+R21636:21636 testRegr_sys_sortoffullsimple <> t ind
+binder 21633:21634 <> t1:390
+R21656:21656 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R21651:21655 testRegr_sys_sortoffullsimple <> label def
+R21657:21657 testRegr_sys_sortoffullsimple <> T ind
+binder 21640:21643 <> t110:391
+binder 21645:21648 <> t111:392
+R21710:21718 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R21698:21700 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R21672:21680 Stdlib.Lists.List <> nth_error def
+R21693:21695 Corelib.Init.Peano <> ::nat_scope:x_'-'_x not
+R21692:21692 testRegr_sys_sortoffullsimple <> j:388 var
+R21682:21689 testRegr_sys_sortoffullsimple <> l_T_list:387 var
+R21701:21704 Corelib.Init.Datatypes <> Some constr
+R21706:21709 testRegr_sys_sortoffullsimple <> t110:391 var
+R21757:21760 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R21745:21747 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R21719:21727 Stdlib.Lists.List <> nth_error def
+R21740:21742 Corelib.Init.Peano <> ::nat_scope:x_'-'_x not
+R21739:21739 testRegr_sys_sortoffullsimple <> j:388 var
+R21729:21736 testRegr_sys_sortoffullsimple <> l_T_list:387 var
+R21748:21751 Corelib.Init.Datatypes <> Some constr
+R21753:21756 testRegr_sys_sortoffullsimple <> t111:392 var
+R21793:21801 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R21761:21766 testRegr_sys_sortoffullsimple <> typing:260 ind
+R21775:21782 testRegr_sys_sortoffullsimple <> TyRecord constr
+R21784:21791 testRegr_sys_sortoffullsimple <> l_T_list:387 var
+R21771:21772 testRegr_sys_sortoffullsimple <> t1:390 var
+R21768:21769 testRegr_sys_sortoffullsimple <> G5:389 var
+R21802:21807 testRegr_sys_sortoffullsimple <> typing:260 ind
+R21867:21870 testRegr_sys_sortoffullsimple <> t110:391 var
+R21877:21877 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21880:21880 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21883:21883 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21813:21818 testRegr_sys_sortoffullsimple <> TmProj constr
+R21820:21821 testRegr_sys_sortoffullsimple <> t1:390 var
+R21830:21833 testRegr_sys_sortoffullsimple <> t111:392 var
+R21840:21840 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21843:21843 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21846:21846 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R21809:21810 testRegr_sys_sortoffullsimple <> G5:389 var
+R21918:21918 testRegr_sys_sortoffullsimple <> G def
+binder 21915:21916 <> G5:395
+R21925:21925 testRegr_sys_sortoffullsimple <> t ind
+binder 21922:21923 <> t1:396
+R21932:21932 testRegr_sys_sortoffullsimple <> T ind
+binder 21929:21930 <> T1:397
+R21967:21975 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R21941:21946 testRegr_sys_sortoffullsimple <> typing:260 ind
+R21955:21959 testRegr_sys_sortoffullsimple <> TyArr constr
+R21961:21962 testRegr_sys_sortoffullsimple <> T1:397 var
+R21964:21965 testRegr_sys_sortoffullsimple <> T1:397 var
+R21951:21952 testRegr_sys_sortoffullsimple <> t1:396 var
+R21948:21949 testRegr_sys_sortoffullsimple <> G5:395 var
+R21976:21981 testRegr_sys_sortoffullsimple <> typing:260 ind
+R21997:21998 testRegr_sys_sortoffullsimple <> T1:397 var
+R21987:21991 testRegr_sys_sortoffullsimple <> TmFix constr
+R21993:21994 testRegr_sys_sortoffullsimple <> t1:396 var
+R21983:21984 testRegr_sys_sortoffullsimple <> G5:395 var
+scheme 16774:16779 <> typing_ind
+scheme 16774:16779 <> typing_sind
+sec 22039:22044 <> T_rect
+var 22061:22063 T_rect P_T
+var 22081:22088 T_rect P_list_T
+var 22111:22124 T_rect P_list_label_T
+R22068:22071 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R22067:22067 testRegr_sys_sortoffullsimple <> T ind
+R22098:22101 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R22092:22095 Corelib.Init.Datatypes <> list ind
+R22097:22097 testRegr_sys_sortoffullsimple <> T ind
+R22142:22145 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R22128:22131 Corelib.Init.Datatypes <> list ind
+R22139:22139 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R22134:22138 testRegr_sys_sortoffullsimple <> label def
+R22140:22140 testRegr_sys_sortoffullsimple <> T ind
+var 22168:22174 T_rect H_TyArr
+var 22250:22255 T_rect H_TyId
+var 22297:22304 T_rect H_TyBool
+var 22323:22329 T_rect H_TyNat
+var 22347:22354 T_rect H_TyUnit
+var 22373:22379 T_rect H_TySum
+var 22455:22465 T_rect H_TyVariant
+var 22559:22566 T_rect H_TyPair
+var 22643:22651 T_rect H_TyTuple
+var 22723:22732 T_rect H_TyRecord
+var 22825:22836 T_rect H_list_T_nil
+var 22857:22869 T_rect H_list_T_cons
+var 22962:22979 T_rect H_list_label_T_nil
+var 23006:23024 T_rect H_list_label_T_cons
+R22189:22189 testRegr_sys_sortoffullsimple <> T ind
+binder 22186:22187 <> T5:404
+R22199:22202 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R22193:22195 testRegr_sys_sortoffullsimple <> T_rect.P_T var
+R22197:22198 testRegr_sys_sortoffullsimple <> T5:404 var
+R22214:22214 testRegr_sys_sortoffullsimple <> T ind
+binder 22211:22212 <> T':405
+R22224:22227 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R22218:22220 testRegr_sys_sortoffullsimple <> T_rect.P_T var
+R22222:22223 testRegr_sys_sortoffullsimple <> T':405 var
+R22228:22230 testRegr_sys_sortoffullsimple <> T_rect.P_T var
+R22233:22237 testRegr_sys_sortoffullsimple <> TyArr constr
+R22239:22240 testRegr_sys_sortoffullsimple <> T5:404 var
+R22242:22243 testRegr_sys_sortoffullsimple <> T':405 var
+R22269:22276 testRegr_sys_sortoffullsimple <> basetype def
+binder 22267:22267 <> A:408
+R22280:22282 testRegr_sys_sortoffullsimple <> T_rect.P_T var
+R22285:22288 testRegr_sys_sortoffullsimple <> TyId constr
+R22290:22290 testRegr_sys_sortoffullsimple <> A:408 var
+R22308:22310 testRegr_sys_sortoffullsimple <> T_rect.P_T var
+R22312:22317 testRegr_sys_sortoffullsimple <> TyBool constr
+R22333:22335 testRegr_sys_sortoffullsimple <> T_rect.P_T var
+R22337:22341 testRegr_sys_sortoffullsimple <> TyNat constr
+R22358:22360 testRegr_sys_sortoffullsimple <> T_rect.P_T var
+R22362:22367 testRegr_sys_sortoffullsimple <> TyUnit constr
+R22394:22394 testRegr_sys_sortoffullsimple <> T ind
+binder 22391:22392 <> T1:417
+R22404:22407 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R22398:22400 testRegr_sys_sortoffullsimple <> T_rect.P_T var
+R22402:22403 testRegr_sys_sortoffullsimple <> T1:417 var
+R22419:22419 testRegr_sys_sortoffullsimple <> T ind
+binder 22416:22417 <> T2:418
+R22429:22432 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R22423:22425 testRegr_sys_sortoffullsimple <> T_rect.P_T var
+R22427:22428 testRegr_sys_sortoffullsimple <> T2:418 var
+R22433:22435 testRegr_sys_sortoffullsimple <> T_rect.P_T var
+R22438:22442 testRegr_sys_sortoffullsimple <> TySum constr
+R22444:22445 testRegr_sys_sortoffullsimple <> T1:417 var
+R22447:22448 testRegr_sys_sortoffullsimple <> T2:418 var
+R22486:22489 Corelib.Init.Datatypes <> list ind
+R22497:22497 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R22492:22496 testRegr_sys_sortoffullsimple <> label def
+R22498:22498 testRegr_sys_sortoffullsimple <> T ind
+binder 22477:22484 <> l_T_list:421
+R22526:22529 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R22503:22516 testRegr_sys_sortoffullsimple <> T_rect.P_list_label_T var
+R22518:22525 testRegr_sys_sortoffullsimple <> l_T_list:421 var
+R22530:22532 testRegr_sys_sortoffullsimple <> T_rect.P_T var
+R22535:22543 testRegr_sys_sortoffullsimple <> TyVariant constr
+R22545:22552 testRegr_sys_sortoffullsimple <> l_T_list:421 var
+R22581:22581 testRegr_sys_sortoffullsimple <> T ind
+binder 22578:22579 <> T1:424
+R22591:22594 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R22585:22587 testRegr_sys_sortoffullsimple <> T_rect.P_T var
+R22589:22590 testRegr_sys_sortoffullsimple <> T1:424 var
+R22606:22606 testRegr_sys_sortoffullsimple <> T ind
+binder 22603:22604 <> T2:425
+R22616:22619 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R22610:22612 testRegr_sys_sortoffullsimple <> T_rect.P_T var
+R22614:22615 testRegr_sys_sortoffullsimple <> T2:425 var
+R22620:22622 testRegr_sys_sortoffullsimple <> T_rect.P_T var
+R22625:22630 testRegr_sys_sortoffullsimple <> TyPair constr
+R22632:22633 testRegr_sys_sortoffullsimple <> T1:424 var
+R22635:22636 testRegr_sys_sortoffullsimple <> T2:425 var
+R22670:22673 Corelib.Init.Datatypes <> list ind
+R22675:22675 testRegr_sys_sortoffullsimple <> T ind
+binder 22663:22668 <> T_list:428
+R22694:22697 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R22679:22686 testRegr_sys_sortoffullsimple <> T_rect.P_list_T var
+R22688:22693 testRegr_sys_sortoffullsimple <> T_list:428 var
+R22698:22700 testRegr_sys_sortoffullsimple <> T_rect.P_T var
+R22703:22709 testRegr_sys_sortoffullsimple <> TyTuple constr
+R22711:22716 testRegr_sys_sortoffullsimple <> T_list:428 var
+R22753:22756 Corelib.Init.Datatypes <> list ind
+R22764:22764 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R22759:22763 testRegr_sys_sortoffullsimple <> label def
+R22765:22765 testRegr_sys_sortoffullsimple <> T ind
+binder 22744:22751 <> l_T_list:431
+R22793:22796 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R22770:22783 testRegr_sys_sortoffullsimple <> T_rect.P_list_label_T var
+R22785:22792 testRegr_sys_sortoffullsimple <> l_T_list:431 var
+R22797:22799 testRegr_sys_sortoffullsimple <> T_rect.P_T var
+R22802:22809 testRegr_sys_sortoffullsimple <> TyRecord constr
+R22811:22818 testRegr_sys_sortoffullsimple <> l_T_list:431 var
+R22840:22847 testRegr_sys_sortoffullsimple <> T_rect.P_list_T var
+R22849:22851 Corelib.Init.Datatypes <> nil constr
+R22884:22884 testRegr_sys_sortoffullsimple <> T ind
+binder 22881:22882 <> T0:436
+R22894:22897 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R22888:22890 testRegr_sys_sortoffullsimple <> T_rect.P_T var
+R22892:22893 testRegr_sys_sortoffullsimple <> T0:436 var
+R22910:22913 Corelib.Init.Datatypes <> list ind
+R22915:22915 testRegr_sys_sortoffullsimple <> T ind
+binder 22906:22908 <> T_l:437
+R22931:22934 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R22919:22926 testRegr_sys_sortoffullsimple <> T_rect.P_list_T var
+R22928:22930 testRegr_sys_sortoffullsimple <> T_l:437 var
+R22935:22942 testRegr_sys_sortoffullsimple <> T_rect.P_list_T var
+R22945:22948 Corelib.Init.Datatypes <> cons constr
+R22953:22955 testRegr_sys_sortoffullsimple <> T_l:437 var
+R22950:22951 testRegr_sys_sortoffullsimple <> T0:436 var
+R22983:22996 testRegr_sys_sortoffullsimple <> T_rect.P_list_label_T var
+R22998:23000 Corelib.Init.Datatypes <> nil constr
+R23043:23047 testRegr_sys_sortoffullsimple <> label def
+binder 23036:23041 <> label0:442
+R23062:23062 testRegr_sys_sortoffullsimple <> T ind
+binder 23059:23060 <> T1:443
+R23072:23075 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R23066:23068 testRegr_sys_sortoffullsimple <> T_rect.P_T var
+R23070:23071 testRegr_sys_sortoffullsimple <> T1:443 var
+R23094:23097 Corelib.Init.Datatypes <> list ind
+R23105:23105 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R23100:23104 testRegr_sys_sortoffullsimple <> label def
+R23106:23106 testRegr_sys_sortoffullsimple <> T ind
+binder 23084:23092 <> label_T_l:444
+R23135:23138 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R23111:23124 testRegr_sys_sortoffullsimple <> T_rect.P_list_label_T var
+R23126:23134 testRegr_sys_sortoffullsimple <> label_T_l:444 var
+R23139:23152 testRegr_sys_sortoffullsimple <> T_rect.P_list_label_T var
+R23155:23158 Corelib.Init.Datatypes <> cons constr
+R23172:23180 testRegr_sys_sortoffullsimple <> label_T_l:444 var
+R23160:23160 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R23167:23167 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R23170:23170 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R23161:23166 testRegr_sys_sortoffullsimple <> label0:442 var
+R23168:23169 testRegr_sys_sortoffullsimple <> T1:443 var
+def 23195:23203 <> T_ott_ind
+R23208:23208 testRegr_sys_sortoffullsimple <> T ind
+binder 23206:23206 <> n:447
+R23213:23215 testRegr_sys_sortoffullsimple <> T_rect.P_T var
+R23217:23217 testRegr_sys_sortoffullsimple <> n:447 var
+R23230:23230 testRegr_sys_sortoffullsimple <> n:447 var
+R23244:23246 testRegr_sys_sortoffullsimple <> T_rect.P_T var
+R23248:23248 testRegr_sys_sortoffullsimple <> x:449 var
+R23260:23264 testRegr_sys_sortoffullsimple <> TyArr constr
+R23276:23282 testRegr_sys_sortoffullsimple <> T_rect.H_TyArr var
+R23288:23296 testRegr_sys_sortoffullsimple <> T_ott_ind:448 def
+R23306:23314 testRegr_sys_sortoffullsimple <> T_ott_ind:448 def
+R23325:23328 testRegr_sys_sortoffullsimple <> TyId constr
+R23336:23341 testRegr_sys_sortoffullsimple <> T_rect.H_TyId var
+R23349:23354 testRegr_sys_sortoffullsimple <> TyBool constr
+R23359:23366 testRegr_sys_sortoffullsimple <> T_rect.H_TyBool var
+R23373:23377 testRegr_sys_sortoffullsimple <> TyNat constr
+R23382:23388 testRegr_sys_sortoffullsimple <> T_rect.H_TyNat var
+R23395:23400 testRegr_sys_sortoffullsimple <> TyUnit constr
+R23405:23412 testRegr_sys_sortoffullsimple <> T_rect.H_TyUnit var
+R23420:23424 testRegr_sys_sortoffullsimple <> TySum constr
+R23436:23442 testRegr_sys_sortoffullsimple <> T_rect.H_TySum var
+R23448:23456 testRegr_sys_sortoffullsimple <> T_ott_ind:448 def
+R23466:23474 testRegr_sys_sortoffullsimple <> T_ott_ind:448 def
+R23485:23493 testRegr_sys_sortoffullsimple <> TyVariant constr
+R23508:23518 testRegr_sys_sortoffullsimple <> T_rect.H_TyVariant var
+R23564:23567 Corelib.Init.Datatypes <> list ind
+R23575:23575 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R23570:23574 testRegr_sys_sortoffullsimple <> label def
+R23576:23576 testRegr_sys_sortoffullsimple <> T ind
+binder 23554:23562 <> label_T_l:450
+R23582:23595 testRegr_sys_sortoffullsimple <> T_rect.P_list_label_T var
+R23597:23605 testRegr_sys_sortoffullsimple <> label_T_l:450 var
+R23616:23624 testRegr_sys_sortoffullsimple <> label_T_l:450 var
+R23638:23651 testRegr_sys_sortoffullsimple <> T_rect.P_list_label_T var
+R23653:23653 testRegr_sys_sortoffullsimple <> x:452 var
+R23660:23662 Corelib.Init.Datatypes <> nil constr
+R23667:23684 testRegr_sys_sortoffullsimple <> T_rect.H_list_label_T_nil var
+R23688:23691 Corelib.Init.Datatypes <> cons constr
+R23693:23693 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R23700:23700 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R23703:23703 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R23711:23729 testRegr_sys_sortoffullsimple <> T_rect.H_list_label_T_cons var
+R23742:23750 testRegr_sys_sortoffullsimple <> T_ott_ind:448 def
+R23759:23774 testRegr_sys_sortoffullsimple <> l_T_list_ott_ind:451 var
+R23801:23806 testRegr_sys_sortoffullsimple <> TyPair constr
+R23818:23825 testRegr_sys_sortoffullsimple <> T_rect.H_TyPair var
+R23831:23839 testRegr_sys_sortoffullsimple <> T_ott_ind:448 def
+R23849:23857 testRegr_sys_sortoffullsimple <> T_ott_ind:448 def
+R23868:23874 testRegr_sys_sortoffullsimple <> TyTuple constr
+R23887:23895 testRegr_sys_sortoffullsimple <> T_rect.H_TyTuple var
+R23931:23934 Corelib.Init.Datatypes <> list ind
+R23936:23936 testRegr_sys_sortoffullsimple <> T ind
+binder 23927:23929 <> T_l:453
+R23941:23948 testRegr_sys_sortoffullsimple <> T_rect.P_list_T var
+R23950:23952 testRegr_sys_sortoffullsimple <> T_l:453 var
+R23963:23965 testRegr_sys_sortoffullsimple <> T_l:453 var
+R23979:23986 testRegr_sys_sortoffullsimple <> T_rect.P_list_T var
+R23988:23988 testRegr_sys_sortoffullsimple <> x:455 var
+R23995:23997 Corelib.Init.Datatypes <> nil constr
+R24002:24013 testRegr_sys_sortoffullsimple <> T_rect.H_list_T_nil var
+R24017:24020 Corelib.Init.Datatypes <> cons constr
+R24031:24043 testRegr_sys_sortoffullsimple <> T_rect.H_list_T_cons var
+R24048:24056 testRegr_sys_sortoffullsimple <> T_ott_ind:448 def
+R24065:24078 testRegr_sys_sortoffullsimple <> T_list_ott_ind:454 var
+R24103:24110 testRegr_sys_sortoffullsimple <> TyRecord constr
+R24125:24134 testRegr_sys_sortoffullsimple <> T_rect.H_TyRecord var
+R24180:24183 Corelib.Init.Datatypes <> list ind
+R24191:24191 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R24186:24190 testRegr_sys_sortoffullsimple <> label def
+R24192:24192 testRegr_sys_sortoffullsimple <> T ind
+binder 24170:24178 <> label_T_l:456
+R24198:24211 testRegr_sys_sortoffullsimple <> T_rect.P_list_label_T var
+R24213:24221 testRegr_sys_sortoffullsimple <> label_T_l:456 var
+R24232:24240 testRegr_sys_sortoffullsimple <> label_T_l:456 var
+R24254:24267 testRegr_sys_sortoffullsimple <> T_rect.P_list_label_T var
+R24269:24269 testRegr_sys_sortoffullsimple <> x:458 var
+R24276:24278 Corelib.Init.Datatypes <> nil constr
+R24283:24300 testRegr_sys_sortoffullsimple <> T_rect.H_list_label_T_nil var
+R24304:24307 Corelib.Init.Datatypes <> cons constr
+R24309:24309 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R24316:24316 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R24319:24319 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R24327:24345 testRegr_sys_sortoffullsimple <> T_rect.H_list_label_T_cons var
+R24358:24366 testRegr_sys_sortoffullsimple <> T_ott_ind:448 def
+R24375:24390 testRegr_sys_sortoffullsimple <> l_T_list_ott_ind:457 var
+R24422:24427 testRegr_sys_sortoffullsimple T_rect <> sec
+sec 24440:24447 <> t_C_rect
+var 24464:24466 t_C_rect P_C
+var 24484:24491 t_C_rect P_list_C
+var 24514:24521 t_C_rect P_list_t
+var 24544:24557 t_C_rect P_list_label_t
+var 24588:24590 t_C_rect P_t
+R24471:24474 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R24470:24470 testRegr_sys_sortoffullsimple <> C ind
+R24501:24504 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R24495:24498 Corelib.Init.Datatypes <> list ind
+R24500:24500 testRegr_sys_sortoffullsimple <> C ind
+R24531:24534 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R24525:24528 Corelib.Init.Datatypes <> list ind
+R24530:24530 testRegr_sys_sortoffullsimple <> t ind
+R24575:24578 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R24561:24564 Corelib.Init.Datatypes <> list ind
+R24572:24572 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R24567:24571 testRegr_sys_sortoffullsimple <> label def
+R24573:24573 testRegr_sys_sortoffullsimple <> t ind
+R24595:24598 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R24594:24594 testRegr_sys_sortoffullsimple <> t ind
+var 24621:24627 t_C_rect H_TmVar
+var 24669:24675 t_C_rect H_TmAbs
+var 24763:24769 t_C_rect H_TmApp
+var 24845:24852 t_C_rect H_TmTrue
+var 24871:24879 t_C_rect H_TmFalse
+var 24899:24904 t_C_rect H_TmIf
+var 25007:25014 t_C_rect H_TmZero
+var 25033:25040 t_C_rect H_TmSucc
+var 25089:25096 t_C_rect H_TmPred
+var 25145:25154 t_C_rect H_TmIszero
+var 25205:25212 t_C_rect H_TmUnit
+var 25231:25237 t_C_rect H_TmSeq
+var 25313:25323 t_C_rect H_TmAscribe
+var 25393:25401 t_C_rect H_TmInert
+var 25441:25447 t_C_rect H_TmLet
+var 25545:25551 t_C_rect H_TmInl
+var 25599:25605 t_C_rect H_TmInr
+var 25653:25662 t_C_rect H_TmCaseSm
+var 25820:25830 t_C_rect H_TmVariant
+var 25920:25927 t_C_rect H_TmCase
+var 26026:26033 t_C_rect H_TmPair
+var 26110:26118 t_C_rect H_TmProj1
+var 26168:26176 t_C_rect H_TmProj2
+var 26226:26234 t_C_rect H_TmTuple
+var 26306:26315 t_C_rect H_TmProjTp
+var 26386:26395 t_C_rect H_TmRecord
+var 26488:26495 t_C_rect H_TmProj
+var 26564:26570 t_C_rect H_TmFix
+var 26618:26624 t_C_rect H_CCase
+var 26714:26725 t_C_rect H_list_C_nil
+var 26746:26758 t_C_rect H_list_C_cons
+var 26851:26862 t_C_rect H_list_t_nil
+var 26883:26895 t_C_rect H_list_t_cons
+var 26988:27005 t_C_rect H_list_label_t_nil
+var 27032:27050 t_C_rect H_list_label_t_cons
+R24641:24647 testRegr_sys_sortoffullsimple <> termvar def
+binder 24639:24639 <> x:469
+R24651:24653 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R24656:24660 testRegr_sys_sortoffullsimple <> TmVar constr
+R24662:24662 testRegr_sys_sortoffullsimple <> x:469 var
+R24689:24695 testRegr_sys_sortoffullsimple <> termvar def
+binder 24687:24687 <> x:472
+R24710:24710 testRegr_sys_sortoffullsimple <> T ind
+binder 24707:24708 <> T5:473
+R24725:24725 testRegr_sys_sortoffullsimple <> t ind
+binder 24722:24723 <> t5:474
+R24735:24738 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R24729:24731 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R24733:24734 testRegr_sys_sortoffullsimple <> t5:474 var
+R24739:24741 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R24744:24748 testRegr_sys_sortoffullsimple <> TmAbs constr
+R24750:24750 testRegr_sys_sortoffullsimple <> x:472 var
+R24752:24753 testRegr_sys_sortoffullsimple <> T5:473 var
+R24755:24756 testRegr_sys_sortoffullsimple <> t5:474 var
+R24784:24784 testRegr_sys_sortoffullsimple <> t ind
+binder 24781:24782 <> t1:477
+R24794:24797 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R24788:24790 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R24792:24793 testRegr_sys_sortoffullsimple <> t1:477 var
+R24809:24809 testRegr_sys_sortoffullsimple <> t ind
+binder 24806:24807 <> t2:478
+R24819:24822 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R24813:24815 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R24817:24818 testRegr_sys_sortoffullsimple <> t2:478 var
+R24823:24825 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R24828:24832 testRegr_sys_sortoffullsimple <> TmApp constr
+R24834:24835 testRegr_sys_sortoffullsimple <> t1:477 var
+R24837:24838 testRegr_sys_sortoffullsimple <> t2:478 var
+R24856:24858 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R24860:24865 testRegr_sys_sortoffullsimple <> TmTrue constr
+R24883:24885 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R24887:24893 testRegr_sys_sortoffullsimple <> TmFalse constr
+R24919:24919 testRegr_sys_sortoffullsimple <> t ind
+binder 24916:24917 <> t1:485
+R24929:24932 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R24923:24925 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R24927:24928 testRegr_sys_sortoffullsimple <> t1:485 var
+R24944:24944 testRegr_sys_sortoffullsimple <> t ind
+binder 24941:24942 <> t2:486
+R24954:24957 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R24948:24950 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R24952:24953 testRegr_sys_sortoffullsimple <> t2:486 var
+R24969:24969 testRegr_sys_sortoffullsimple <> t ind
+binder 24966:24967 <> t3:487
+R24979:24982 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R24973:24975 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R24977:24978 testRegr_sys_sortoffullsimple <> t3:487 var
+R24983:24985 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R24988:24991 testRegr_sys_sortoffullsimple <> TmIf constr
+R24993:24994 testRegr_sys_sortoffullsimple <> t1:485 var
+R24996:24997 testRegr_sys_sortoffullsimple <> t2:486 var
+R24999:25000 testRegr_sys_sortoffullsimple <> t3:487 var
+R25018:25020 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25022:25027 testRegr_sys_sortoffullsimple <> TmZero constr
+R25055:25055 testRegr_sys_sortoffullsimple <> t ind
+binder 25052:25053 <> t5:492
+R25065:25068 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R25059:25061 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25063:25064 testRegr_sys_sortoffullsimple <> t5:492 var
+R25069:25071 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25074:25079 testRegr_sys_sortoffullsimple <> TmSucc constr
+R25081:25082 testRegr_sys_sortoffullsimple <> t5:492 var
+R25111:25111 testRegr_sys_sortoffullsimple <> t ind
+binder 25108:25109 <> t5:495
+R25121:25124 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R25115:25117 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25119:25120 testRegr_sys_sortoffullsimple <> t5:495 var
+R25125:25127 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25130:25135 testRegr_sys_sortoffullsimple <> TmPred constr
+R25137:25138 testRegr_sys_sortoffullsimple <> t5:495 var
+R25169:25169 testRegr_sys_sortoffullsimple <> t ind
+binder 25166:25167 <> t5:498
+R25179:25182 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R25173:25175 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25177:25178 testRegr_sys_sortoffullsimple <> t5:498 var
+R25183:25185 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25188:25195 testRegr_sys_sortoffullsimple <> TmIszero constr
+R25197:25198 testRegr_sys_sortoffullsimple <> t5:498 var
+R25216:25218 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25220:25225 testRegr_sys_sortoffullsimple <> TmUnit constr
+R25252:25252 testRegr_sys_sortoffullsimple <> t ind
+binder 25249:25250 <> t1:503
+R25262:25265 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R25256:25258 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25260:25261 testRegr_sys_sortoffullsimple <> t1:503 var
+R25277:25277 testRegr_sys_sortoffullsimple <> t ind
+binder 25274:25275 <> t2:504
+R25287:25290 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R25281:25283 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25285:25286 testRegr_sys_sortoffullsimple <> t2:504 var
+R25291:25293 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25296:25300 testRegr_sys_sortoffullsimple <> TmSeq constr
+R25302:25303 testRegr_sys_sortoffullsimple <> t1:503 var
+R25305:25306 testRegr_sys_sortoffullsimple <> t2:504 var
+R25338:25338 testRegr_sys_sortoffullsimple <> t ind
+binder 25335:25336 <> t5:507
+R25348:25351 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R25342:25344 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25346:25347 testRegr_sys_sortoffullsimple <> t5:507 var
+R25363:25363 testRegr_sys_sortoffullsimple <> T ind
+binder 25360:25361 <> T5:508
+R25367:25369 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25372:25380 testRegr_sys_sortoffullsimple <> TmAscribe constr
+R25382:25383 testRegr_sys_sortoffullsimple <> t5:507 var
+R25385:25386 testRegr_sys_sortoffullsimple <> T5:508 var
+R25416:25416 testRegr_sys_sortoffullsimple <> T ind
+binder 25413:25414 <> T5:511
+R25420:25422 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25425:25431 testRegr_sys_sortoffullsimple <> TmInert constr
+R25433:25434 testRegr_sys_sortoffullsimple <> T5:511 var
+R25461:25467 testRegr_sys_sortoffullsimple <> termvar def
+binder 25459:25459 <> x:514
+R25482:25482 testRegr_sys_sortoffullsimple <> t ind
+binder 25479:25480 <> t5:515
+R25492:25495 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R25486:25488 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25490:25491 testRegr_sys_sortoffullsimple <> t5:515 var
+R25507:25507 testRegr_sys_sortoffullsimple <> t ind
+binder 25504:25505 <> t':516
+R25517:25520 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R25511:25513 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25515:25516 testRegr_sys_sortoffullsimple <> t':516 var
+R25521:25523 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25526:25530 testRegr_sys_sortoffullsimple <> TmLet constr
+R25532:25532 testRegr_sys_sortoffullsimple <> x:514 var
+R25534:25535 testRegr_sys_sortoffullsimple <> t5:515 var
+R25537:25538 testRegr_sys_sortoffullsimple <> t':516 var
+R25566:25566 testRegr_sys_sortoffullsimple <> t ind
+binder 25563:25564 <> t5:519
+R25576:25579 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R25570:25572 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25574:25575 testRegr_sys_sortoffullsimple <> t5:519 var
+R25580:25582 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25585:25589 testRegr_sys_sortoffullsimple <> TmInl constr
+R25591:25592 testRegr_sys_sortoffullsimple <> t5:519 var
+R25620:25620 testRegr_sys_sortoffullsimple <> t ind
+binder 25617:25618 <> t5:522
+R25630:25633 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R25624:25626 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25628:25629 testRegr_sys_sortoffullsimple <> t5:522 var
+R25634:25636 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25639:25643 testRegr_sys_sortoffullsimple <> TmInr constr
+R25645:25646 testRegr_sys_sortoffullsimple <> t5:522 var
+R25678:25678 testRegr_sys_sortoffullsimple <> t ind
+binder 25674:25676 <> t_5:525
+R25689:25692 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R25682:25684 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25686:25688 testRegr_sys_sortoffullsimple <> t_5:525 var
+R25704:25710 testRegr_sys_sortoffullsimple <> termvar def
+binder 25701:25702 <> x1:526
+R25725:25725 testRegr_sys_sortoffullsimple <> t ind
+binder 25722:25723 <> t1:527
+R25735:25738 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R25729:25731 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25733:25734 testRegr_sys_sortoffullsimple <> t1:527 var
+R25750:25756 testRegr_sys_sortoffullsimple <> termvar def
+binder 25747:25748 <> x2:528
+R25771:25771 testRegr_sys_sortoffullsimple <> t ind
+binder 25768:25769 <> t2:529
+R25781:25784 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R25775:25777 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25779:25780 testRegr_sys_sortoffullsimple <> t2:529 var
+R25785:25787 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25790:25797 testRegr_sys_sortoffullsimple <> TmCaseSm constr
+R25799:25801 testRegr_sys_sortoffullsimple <> t_5:525 var
+R25803:25804 testRegr_sys_sortoffullsimple <> x1:526 var
+R25806:25807 testRegr_sys_sortoffullsimple <> t1:527 var
+R25809:25810 testRegr_sys_sortoffullsimple <> x2:528 var
+R25812:25813 testRegr_sys_sortoffullsimple <> t2:529 var
+R25844:25848 testRegr_sys_sortoffullsimple <> label def
+binder 25842:25842 <> l:532
+R25863:25863 testRegr_sys_sortoffullsimple <> t ind
+binder 25860:25861 <> t5:533
+R25873:25876 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R25867:25869 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25871:25872 testRegr_sys_sortoffullsimple <> t5:533 var
+R25888:25888 testRegr_sys_sortoffullsimple <> T ind
+binder 25885:25886 <> T5:534
+R25892:25894 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25897:25905 testRegr_sys_sortoffullsimple <> TmVariant constr
+R25907:25907 testRegr_sys_sortoffullsimple <> l:532 var
+R25909:25910 testRegr_sys_sortoffullsimple <> t5:533 var
+R25912:25913 testRegr_sys_sortoffullsimple <> T5:534 var
+R25946:25949 Corelib.Init.Datatypes <> list ind
+R25951:25951 testRegr_sys_sortoffullsimple <> C ind
+binder 25939:25944 <> C_list:537
+R25970:25973 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R25955:25962 testRegr_sys_sortoffullsimple <> t_C_rect.P_list_C var
+R25964:25969 testRegr_sys_sortoffullsimple <> C_list:537 var
+R25985:25985 testRegr_sys_sortoffullsimple <> t ind
+binder 25982:25983 <> t5:538
+R25995:25998 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R25989:25991 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R25993:25994 testRegr_sys_sortoffullsimple <> t5:538 var
+R25999:26001 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R26004:26009 testRegr_sys_sortoffullsimple <> TmCase constr
+R26011:26012 testRegr_sys_sortoffullsimple <> t5:538 var
+R26014:26019 testRegr_sys_sortoffullsimple <> C_list:537 var
+R26048:26048 testRegr_sys_sortoffullsimple <> t ind
+binder 26045:26046 <> t1:541
+R26058:26061 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R26052:26054 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R26056:26057 testRegr_sys_sortoffullsimple <> t1:541 var
+R26073:26073 testRegr_sys_sortoffullsimple <> t ind
+binder 26070:26071 <> t2:542
+R26083:26086 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R26077:26079 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R26081:26082 testRegr_sys_sortoffullsimple <> t2:542 var
+R26087:26089 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R26092:26097 testRegr_sys_sortoffullsimple <> TmPair constr
+R26099:26100 testRegr_sys_sortoffullsimple <> t1:541 var
+R26102:26103 testRegr_sys_sortoffullsimple <> t2:542 var
+R26133:26133 testRegr_sys_sortoffullsimple <> t ind
+binder 26130:26131 <> t5:545
+R26143:26146 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R26137:26139 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R26141:26142 testRegr_sys_sortoffullsimple <> t5:545 var
+R26147:26149 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R26152:26158 testRegr_sys_sortoffullsimple <> TmProj1 constr
+R26160:26161 testRegr_sys_sortoffullsimple <> t5:545 var
+R26191:26191 testRegr_sys_sortoffullsimple <> t ind
+binder 26188:26189 <> t5:548
+R26201:26204 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R26195:26197 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R26199:26200 testRegr_sys_sortoffullsimple <> t5:548 var
+R26205:26207 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R26210:26216 testRegr_sys_sortoffullsimple <> TmProj2 constr
+R26218:26219 testRegr_sys_sortoffullsimple <> t5:548 var
+R26253:26256 Corelib.Init.Datatypes <> list ind
+R26258:26258 testRegr_sys_sortoffullsimple <> t ind
+binder 26246:26251 <> t_list:551
+R26277:26280 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R26262:26269 testRegr_sys_sortoffullsimple <> t_C_rect.P_list_t var
+R26271:26276 testRegr_sys_sortoffullsimple <> t_list:551 var
+R26281:26283 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R26286:26292 testRegr_sys_sortoffullsimple <> TmTuple constr
+R26294:26299 testRegr_sys_sortoffullsimple <> t_list:551 var
+R26330:26330 testRegr_sys_sortoffullsimple <> t ind
+binder 26327:26328 <> t5:554
+R26340:26343 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R26334:26336 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R26338:26339 testRegr_sys_sortoffullsimple <> t5:554 var
+R26354:26358 testRegr_sys_sortoffullsimple <> index def
+binder 26352:26352 <> i:555
+R26362:26364 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R26367:26374 testRegr_sys_sortoffullsimple <> TmProjTp constr
+R26376:26377 testRegr_sys_sortoffullsimple <> t5:554 var
+R26379:26379 testRegr_sys_sortoffullsimple <> i:555 var
+R26416:26419 Corelib.Init.Datatypes <> list ind
+R26427:26427 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R26422:26426 testRegr_sys_sortoffullsimple <> label def
+R26428:26428 testRegr_sys_sortoffullsimple <> t ind
+binder 26407:26414 <> l_t_list:558
+R26456:26459 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R26433:26446 testRegr_sys_sortoffullsimple <> t_C_rect.P_list_label_t var
+R26448:26455 testRegr_sys_sortoffullsimple <> l_t_list:558 var
+R26460:26462 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R26465:26472 testRegr_sys_sortoffullsimple <> TmRecord constr
+R26474:26481 testRegr_sys_sortoffullsimple <> l_t_list:558 var
+R26510:26510 testRegr_sys_sortoffullsimple <> t ind
+binder 26507:26508 <> t5:561
+R26520:26523 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R26514:26516 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R26518:26519 testRegr_sys_sortoffullsimple <> t5:561 var
+R26534:26538 testRegr_sys_sortoffullsimple <> label def
+binder 26532:26532 <> l:562
+R26542:26544 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R26547:26552 testRegr_sys_sortoffullsimple <> TmProj constr
+R26554:26555 testRegr_sys_sortoffullsimple <> t5:561 var
+R26557:26557 testRegr_sys_sortoffullsimple <> l:562 var
+R26585:26585 testRegr_sys_sortoffullsimple <> t ind
+binder 26582:26583 <> t5:565
+R26595:26598 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R26589:26591 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R26593:26594 testRegr_sys_sortoffullsimple <> t5:565 var
+R26599:26601 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R26604:26608 testRegr_sys_sortoffullsimple <> TmFix constr
+R26610:26611 testRegr_sys_sortoffullsimple <> t5:565 var
+R26638:26642 testRegr_sys_sortoffullsimple <> label def
+binder 26636:26636 <> l:568
+R26656:26662 testRegr_sys_sortoffullsimple <> termvar def
+binder 26654:26654 <> x:569
+R26677:26677 testRegr_sys_sortoffullsimple <> t ind
+binder 26674:26675 <> t5:570
+R26687:26690 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R26681:26683 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R26685:26686 testRegr_sys_sortoffullsimple <> t5:570 var
+R26691:26693 testRegr_sys_sortoffullsimple <> t_C_rect.P_C var
+R26696:26700 testRegr_sys_sortoffullsimple <> CCase constr
+R26702:26702 testRegr_sys_sortoffullsimple <> l:568 var
+R26704:26704 testRegr_sys_sortoffullsimple <> x:569 var
+R26706:26707 testRegr_sys_sortoffullsimple <> t5:570 var
+R26729:26736 testRegr_sys_sortoffullsimple <> t_C_rect.P_list_C var
+R26738:26740 Corelib.Init.Datatypes <> nil constr
+R26773:26773 testRegr_sys_sortoffullsimple <> C ind
+binder 26770:26771 <> C0:575
+R26783:26786 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R26777:26779 testRegr_sys_sortoffullsimple <> t_C_rect.P_C var
+R26781:26782 testRegr_sys_sortoffullsimple <> C0:575 var
+R26799:26802 Corelib.Init.Datatypes <> list ind
+R26804:26804 testRegr_sys_sortoffullsimple <> C ind
+binder 26795:26797 <> C_l:576
+R26820:26823 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R26808:26815 testRegr_sys_sortoffullsimple <> t_C_rect.P_list_C var
+R26817:26819 testRegr_sys_sortoffullsimple <> C_l:576 var
+R26824:26831 testRegr_sys_sortoffullsimple <> t_C_rect.P_list_C var
+R26834:26837 Corelib.Init.Datatypes <> cons constr
+R26842:26844 testRegr_sys_sortoffullsimple <> C_l:576 var
+R26839:26840 testRegr_sys_sortoffullsimple <> C0:575 var
+R26866:26873 testRegr_sys_sortoffullsimple <> t_C_rect.P_list_t var
+R26875:26877 Corelib.Init.Datatypes <> nil constr
+R26910:26910 testRegr_sys_sortoffullsimple <> t ind
+binder 26907:26908 <> t0:581
+R26920:26923 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R26914:26916 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R26918:26919 testRegr_sys_sortoffullsimple <> t0:581 var
+R26936:26939 Corelib.Init.Datatypes <> list ind
+R26941:26941 testRegr_sys_sortoffullsimple <> t ind
+binder 26932:26934 <> t_l:582
+R26957:26960 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R26945:26952 testRegr_sys_sortoffullsimple <> t_C_rect.P_list_t var
+R26954:26956 testRegr_sys_sortoffullsimple <> t_l:582 var
+R26961:26968 testRegr_sys_sortoffullsimple <> t_C_rect.P_list_t var
+R26971:26974 Corelib.Init.Datatypes <> cons constr
+R26979:26981 testRegr_sys_sortoffullsimple <> t_l:582 var
+R26976:26977 testRegr_sys_sortoffullsimple <> t0:581 var
+R27009:27022 testRegr_sys_sortoffullsimple <> t_C_rect.P_list_label_t var
+R27024:27026 Corelib.Init.Datatypes <> nil constr
+R27069:27073 testRegr_sys_sortoffullsimple <> label def
+binder 27062:27067 <> label0:587
+R27088:27088 testRegr_sys_sortoffullsimple <> t ind
+binder 27085:27086 <> t1:588
+R27098:27101 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R27092:27094 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R27096:27097 testRegr_sys_sortoffullsimple <> t1:588 var
+R27120:27123 Corelib.Init.Datatypes <> list ind
+R27131:27131 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R27126:27130 testRegr_sys_sortoffullsimple <> label def
+R27132:27132 testRegr_sys_sortoffullsimple <> t ind
+binder 27110:27118 <> label_t_l:589
+R27161:27164 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R27137:27150 testRegr_sys_sortoffullsimple <> t_C_rect.P_list_label_t var
+R27152:27160 testRegr_sys_sortoffullsimple <> label_t_l:589 var
+R27165:27178 testRegr_sys_sortoffullsimple <> t_C_rect.P_list_label_t var
+R27181:27184 Corelib.Init.Datatypes <> cons constr
+R27198:27206 testRegr_sys_sortoffullsimple <> label_t_l:589 var
+R27186:27186 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R27193:27193 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R27196:27196 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R27187:27192 testRegr_sys_sortoffullsimple <> label0:587 var
+R27194:27195 testRegr_sys_sortoffullsimple <> t1:588 var
+def 27221:27229 <> C_ott_ind
+def 27342:27350 <> t_ott_ind
+R27234:27234 testRegr_sys_sortoffullsimple <> C ind
+binder 27232:27232 <> n:592
+R27355:27355 testRegr_sys_sortoffullsimple <> t ind
+binder 27353:27353 <> n:593
+R27239:27241 testRegr_sys_sortoffullsimple <> t_C_rect.P_C var
+R27243:27243 testRegr_sys_sortoffullsimple <> n:592 var
+R27360:27362 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R27364:27364 testRegr_sys_sortoffullsimple <> n:593 var
+R27256:27256 testRegr_sys_sortoffullsimple <> n:592 var
+R27270:27272 testRegr_sys_sortoffullsimple <> t_C_rect.P_C var
+R27274:27274 testRegr_sys_sortoffullsimple <> x:596 var
+R27286:27290 testRegr_sys_sortoffullsimple <> CCase constr
+R27303:27309 testRegr_sys_sortoffullsimple <> t_C_rect.H_CCase var
+R27319:27327 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R27377:27377 testRegr_sys_sortoffullsimple <> n:593 var
+R27391:27393 testRegr_sys_sortoffullsimple <> t_C_rect.P_t var
+R27395:27395 testRegr_sys_sortoffullsimple <> x:597 var
+R27407:27411 testRegr_sys_sortoffullsimple <> TmVar constr
+R27419:27425 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmVar var
+R27434:27438 testRegr_sys_sortoffullsimple <> TmAbs constr
+R27452:27458 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmAbs var
+R27469:27477 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R27488:27492 testRegr_sys_sortoffullsimple <> TmApp constr
+R27504:27510 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmApp var
+R27516:27524 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R27534:27542 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R27552:27557 testRegr_sys_sortoffullsimple <> TmTrue constr
+R27562:27569 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmTrue var
+R27576:27582 testRegr_sys_sortoffullsimple <> TmFalse constr
+R27587:27595 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmFalse var
+R27603:27606 testRegr_sys_sortoffullsimple <> TmIf constr
+R27621:27626 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmIf var
+R27632:27640 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R27650:27658 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R27668:27676 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R27686:27691 testRegr_sys_sortoffullsimple <> TmZero constr
+R27696:27703 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmZero var
+R27711:27716 testRegr_sys_sortoffullsimple <> TmSucc constr
+R27725:27732 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmSucc var
+R27738:27746 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R27757:27762 testRegr_sys_sortoffullsimple <> TmPred constr
+R27771:27778 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmPred var
+R27784:27792 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R27803:27810 testRegr_sys_sortoffullsimple <> TmIszero constr
+R27819:27828 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmIszero var
+R27834:27842 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R27852:27857 testRegr_sys_sortoffullsimple <> TmUnit constr
+R27862:27869 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmUnit var
+R27877:27881 testRegr_sys_sortoffullsimple <> TmSeq constr
+R27893:27899 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmSeq var
+R27905:27913 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R27923:27931 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R27942:27950 testRegr_sys_sortoffullsimple <> TmAscribe constr
+R27962:27972 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmAscribe var
+R27978:27986 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R28000:28006 testRegr_sys_sortoffullsimple <> TmInert constr
+R28015:28023 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmInert var
+R28033:28037 testRegr_sys_sortoffullsimple <> TmLet constr
+R28051:28057 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmLet var
+R28065:28073 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R28083:28091 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R28102:28106 testRegr_sys_sortoffullsimple <> TmInl constr
+R28115:28121 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmInl var
+R28127:28135 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R28146:28150 testRegr_sys_sortoffullsimple <> TmInr constr
+R28159:28165 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmInr var
+R28171:28179 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R28190:28197 testRegr_sys_sortoffullsimple <> TmCaseSm constr
+R28219:28228 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmCaseSm var
+R28235:28243 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R28257:28265 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R28278:28286 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R28297:28305 testRegr_sys_sortoffullsimple <> TmVariant constr
+R28319:28329 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmVariant var
+R28337:28345 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R28359:28364 testRegr_sys_sortoffullsimple <> TmCase constr
+R28380:28387 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmCase var
+R28423:28426 Corelib.Init.Datatypes <> list ind
+R28428:28428 testRegr_sys_sortoffullsimple <> C ind
+binder 28419:28421 <> C_l:598
+R28433:28440 testRegr_sys_sortoffullsimple <> t_C_rect.P_list_C var
+R28442:28444 testRegr_sys_sortoffullsimple <> C_l:598 var
+R28455:28457 testRegr_sys_sortoffullsimple <> C_l:598 var
+R28471:28478 testRegr_sys_sortoffullsimple <> t_C_rect.P_list_C var
+R28480:28480 testRegr_sys_sortoffullsimple <> x:600 var
+R28487:28489 Corelib.Init.Datatypes <> nil constr
+R28494:28505 testRegr_sys_sortoffullsimple <> t_C_rect.H_list_C_nil var
+R28509:28512 Corelib.Init.Datatypes <> cons constr
+R28523:28535 testRegr_sys_sortoffullsimple <> t_C_rect.H_list_C_cons var
+R28540:28548 testRegr_sys_sortoffullsimple <> C_ott_ind:594 def
+R28557:28570 testRegr_sys_sortoffullsimple <> C_list_ott_ind:599 var
+R28594:28602 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R28613:28618 testRegr_sys_sortoffullsimple <> TmPair constr
+R28630:28637 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmPair var
+R28643:28651 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R28661:28669 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R28680:28686 testRegr_sys_sortoffullsimple <> TmProj1 constr
+R28695:28703 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmProj1 var
+R28709:28717 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R28728:28734 testRegr_sys_sortoffullsimple <> TmProj2 constr
+R28743:28751 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmProj2 var
+R28757:28765 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R28776:28782 testRegr_sys_sortoffullsimple <> TmTuple constr
+R28795:28803 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmTuple var
+R28839:28842 Corelib.Init.Datatypes <> list ind
+R28844:28844 testRegr_sys_sortoffullsimple <> t ind
+binder 28835:28837 <> t_l:601
+R28849:28856 testRegr_sys_sortoffullsimple <> t_C_rect.P_list_t var
+R28858:28860 testRegr_sys_sortoffullsimple <> t_l:601 var
+R28871:28873 testRegr_sys_sortoffullsimple <> t_l:601 var
+R28887:28894 testRegr_sys_sortoffullsimple <> t_C_rect.P_list_t var
+R28896:28896 testRegr_sys_sortoffullsimple <> x:603 var
+R28903:28905 Corelib.Init.Datatypes <> nil constr
+R28910:28921 testRegr_sys_sortoffullsimple <> t_C_rect.H_list_t_nil var
+R28925:28928 Corelib.Init.Datatypes <> cons constr
+R28939:28951 testRegr_sys_sortoffullsimple <> t_C_rect.H_list_t_cons var
+R28956:28964 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R28973:28986 testRegr_sys_sortoffullsimple <> t_list_ott_ind:602 var
+R29011:29018 testRegr_sys_sortoffullsimple <> TmProjTp constr
+R29029:29038 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmProjTp var
+R29044:29052 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R29065:29072 testRegr_sys_sortoffullsimple <> TmRecord constr
+R29087:29096 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmRecord var
+R29142:29145 Corelib.Init.Datatypes <> list ind
+R29153:29153 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R29148:29152 testRegr_sys_sortoffullsimple <> label def
+R29154:29154 testRegr_sys_sortoffullsimple <> t ind
+binder 29132:29140 <> label_t_l:604
+R29160:29173 testRegr_sys_sortoffullsimple <> t_C_rect.P_list_label_t var
+R29175:29183 testRegr_sys_sortoffullsimple <> label_t_l:604 var
+R29194:29202 testRegr_sys_sortoffullsimple <> label_t_l:604 var
+R29216:29229 testRegr_sys_sortoffullsimple <> t_C_rect.P_list_label_t var
+R29231:29231 testRegr_sys_sortoffullsimple <> x:606 var
+R29238:29240 Corelib.Init.Datatypes <> nil constr
+R29245:29262 testRegr_sys_sortoffullsimple <> t_C_rect.H_list_label_t_nil var
+R29266:29269 Corelib.Init.Datatypes <> cons constr
+R29271:29271 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R29278:29278 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R29281:29281 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R29289:29307 testRegr_sys_sortoffullsimple <> t_C_rect.H_list_label_t_cons var
+R29320:29328 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R29337:29352 testRegr_sys_sortoffullsimple <> l_t_list_ott_ind:605 var
+R29379:29384 testRegr_sys_sortoffullsimple <> TmProj constr
+R29395:29402 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmProj var
+R29408:29416 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R29429:29433 testRegr_sys_sortoffullsimple <> TmFix constr
+R29442:29448 testRegr_sys_sortoffullsimple <> t_C_rect.H_TmFix var
+R29454:29462 testRegr_sys_sortoffullsimple <> t_ott_ind:595 def
+R29478:29485 testRegr_sys_sortoffullsimple t_C_rect <> sec

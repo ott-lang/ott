@@ -1,5 +1,5 @@
 
-metavar ident , x ::=    {{ isa string }} 
+metavar ident , x ::= {{ lean Nat }}    {{ isa string }} 
                       {{ coq nat }} {{ coq-equality }}  
                       {{ lex alphanum }}
 
@@ -11,8 +11,8 @@ grammar
         | function x : type -> exp      ::   :: 'fun' (+ bind x in exp +)
         | exp exp'              ::   :: app
         | '{' exp / x '}' exp'  :: M :: subst  {{ isa subst_exp ( [[ exp ]] , [[ x ]] , [[ exp' ]] ) }}
-                                               {{ coq (subst_exp [[ exp ]] [[ x ]] [[ exp' ]] ) }}
-        | ( exp )               :: M :: paren  {{ ich [[exp]] }}
+                                               {{ coq (subst_exp [[ exp ]] [[ x ]] [[ exp' ]] ) }} {{ lean (subst_exp [[ exp ]] [[ x ]] [[ exp' ]] ) }}
+        | ( exp )               :: M :: paren  {{ ich [[exp]] }} {{ lean [[exp]] }}
 %       | Foo val               ::   :: foo
 %       | C . e                 :: M :: context
 
@@ -42,8 +42,8 @@ grammar
   formula :: formula_ ::=          
         | judgement             ::   :: judgement
         | not ( formula )       ::   :: not  {{ isa not( [[formula]] ) }}
-                                             {{ coq not( [[formula]] ) }}
-        | x in dom ( E )        :: M :: indom {{ isa list_ex ( \<lambda>(x',y'). x=x') [[ E ]] }}
+                                             {{ coq not( [[formula]] ) }} {{ lean ¬ ( [[formula]] ) }}
+        | x in dom ( E )        :: M :: indom {{ isa list_ex ( \<lambda>(x',y'). x=x') [[ E ]] }} {{ lean list_ex ( \<lambda>(x',y'). x=x') [[ E ]] }}
 
   terminals :: terminals_ ::=
 %        | *                      ::   :: star  {{ tex  \star }}

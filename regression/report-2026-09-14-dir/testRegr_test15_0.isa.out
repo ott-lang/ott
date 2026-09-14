@@ -1,0 +1,39 @@
+Running Draft ...
+
+Output (line 6 of "Draft/testRegr_test15_0.thy"):
+consts
+  typerep_a_IITN_a :: "a.a_IITN_a itself ⇒ typerep"
+
+Output (line 6 of "Draft/testRegr_test15_0.thy"):
+consts
+  typerep_a :: "a itself ⇒ typerep"
+
+Output (line 6 of "Draft/testRegr_test15_0.thy"):
+consts
+  term_of_a :: "a ⇒ term"
+
+Output (line 6 of "Draft/testRegr_test15_0.thy"):
+consts
+  partial_term_of_a ::
+    "a itself ⇒ ??.Quickcheck_Narrowing.narrowing_term ⇒ term"
+
+Output (line 6 of "Draft/testRegr_test15_0.thy"):
+consts
+  equal_a :: "a ⇒ a ⇒ bool"
+
+Output (line 6 of "Draft/testRegr_test15_0.thy"):
+consts
+  random_aux_a ::
+    "natural
+     ⇒ natural
+       ⇒ natural × natural ⇒ (a × (unit ⇒ term)) × natural × natural"
+
+Output (line 6 of "Draft/testRegr_test15_0.thy"):
+consts
+  random_a ::
+    "natural ⇒ natural × natural ⇒ (a × (unit ⇒ term)) × natural × natural"
+
+Output (line 12 of "Draft/testRegr_test15_0.thy"):
+consts
+  is_av_of_a :: "a ⇒ bool"
+Finished Draft (0:00:02 elapsed time)

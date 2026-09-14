@@ -1,0 +1,142 @@
+/- Claude: this file is written by Claude (Opus 5), 2026-09-14.  It states the
+   usual syntactic type soundness results for the language Ott generates from
+   tests/test7.ott - System F<: with records and pattern-matching let - in the
+   notation of the language itself.  It states them and nothing more: each is a
+   named proposition, and the companion file test7_proofs.mng proves it,
+   refutes it, or says what proving it would take.
+
+   Three of them are false of the definitions as generated; which three, and
+   why, is in that file.
+
+   This is the source that Ott's lean_filter turns into test7_statements.lean,
+   replacing each piece of object syntax in double square brackets with the
+   Lean that the grammar of test7.ott gives for it.
+
+   "make" in this directory generates test7.lean from ../../tests/tmp_test7.ott,
+   filters this file and test7_proofs.mng against it, and checks all three with
+   lean. -/
+
+import test7
+
+open Typ t p TypEnv
+
+/-! ## Values, multi-step reduction, stuckness
+
+    The three auxiliary definitions the statements are phrased in terms of. -/
+
+/-- The subrule predicate is `Bool`-valued, so a proposition about values has to
+    compare it with `true`. -/
+def IsValue (t1 : t) : Prop := is_v_of_t t1 = true
+
+/-- The reflexive transitive closure of reduction. -/
+inductive Reduces : t → t → Prop where
+  | refl (t1 : t) : Reduces t1 t1
+  | step {t1 t2 t3 : t} : [[ t1 --> t2 ]] → Reduces t2 t3 → Reduces t1 t3
+
+/-- Neither a value nor able to step. -/
+def Stuck (t1 : t) : Prop := ¬ IsValue t1 ∧ ¬ ∃ t2, [[ t1 --> t2 ]]
+
+/-! ## Values -/
+
+/-- The values are the two abstractions and the records all of whose fields are
+    values. -/
+def IsValueIff : Prop :=
+  ∀ (t1 : t), IsValue t1 ↔
+      (∃ x T11 t12, t1 = [[ \ x : T11 . t12 ]])
+      ∨ (∃ X T11 t12, t1 = [[ \ X <: T11 . t12 ]])
+      ∨ (∃ l_t_list, t1 = [[ { l1 = t1 , .. , ln = tn } ]] ∧ is_v_of_l_t_list l_t_list = true)
+
+/-! ## Well-formedness
+
+    Typing and subtyping both carry a context, and one would expect the rules
+    to maintain its well-formedness. -/
+
+def TypingOk : Prop := ∀ (G : TypEnv) (t1 : t) (T : Typ), [[ G |- t1 : T ]] → [[ G |- ok ]]
+
+def TypingWf : Prop := ∀ (G : TypEnv) (t1 : t) (T : Typ), [[ G |- t1 : T ]] → [[ G |- T ]]
+
+def SubOk : Prop := ∀ (G : TypEnv) (S T : Typ), [[ G |- S <: T ]] → [[ G |- ok ]]
+
+/-! ## Subtyping -/
+
+/-- Reflexivity.  `SA_Refl_TVar` gives it only for type variables. -/
+def SubRefl : Prop :=
+  ∀ (G : TypEnv) (T : Typ), [[ G |- ok ]] → [[ G |- T ]] → [[ G |- T <: T ]]
+
+/-- Transitivity.  `SA_Trans_TVar` gives the variable case only. -/
+def SubTrans : Prop :=
+  ∀ (G : TypEnv) (S T U : Typ), [[ G |- S <: T ]] → [[ G |- T <: U ]] → [[ G |- S <: U ]]
+
+/-- Narrowing: a bound in the context may be replaced by a subtype.  The bound
+    and its replacement are named U and S1 rather than Q and P: inside object
+    syntax only the grammar's own names for a type - T, S and U, with suffixes -
+    are read as variables of the statement, and anything else is read as a
+    concrete type variable of the language. -/
+def SubNarrow : Prop :=
+  ∀ (D : TypEnv) (X : typevar) (S1 U : Typ) (S T : Typ),
+    [[ D , X <: U |- S <: T ]] → [[ D |- S1 <: U ]] → [[ D , X <: S1 |- S <: T ]]
+
+def TypingNarrow : Prop :=
+  ∀ (D : TypEnv) (X : typevar) (S1 U : Typ) (t1 : t) (T : Typ),
+    [[ D , X <: U |- t1 : T ]] → [[ D |- S1 <: U ]] → [[ D , X <: S1 |- t1 : T ]]
+
+/-! ## Inversion and canonical forms
+
+    Subtyping has to be inverted before the shape of a value of a given type is
+    known, because `SA_Trans_TVar` can stand between a value's type and the type
+    it is being used at. -/
+
+def CanonicalFormsArrow : Prop :=
+  ∀ (G : TypEnv) (v1 : t) (T1 T2 : Typ),
+    [[ G |- v1 : T1 -> T2 ]] → IsValue v1 → ∃ x T11 t12, v1 = [[ \ x : T11 . t12 ]]
+
+def CanonicalFormsForall : Prop :=
+  ∀ (G : TypEnv) (v1 : t) (X : typevar) (T1 T2 : Typ),
+    [[ G |- v1 : Forall X <: T1 . T2 ]] → IsValue v1 →
+    ∃ X' T11 t12, v1 = [[ \ X' <: T11 . t12 ]]
+
+def CanonicalFormsRecord : Prop :=
+  ∀ (G : TypEnv) (v1 : t) (l_T_list : List (label × Typ)),
+    [[ G |- v1 : { l1 : T1 , .. , ln : Tn } ]] → IsValue v1 →
+    ∃ l_t_list, v1 = [[ { l1 = t1 , .. , ln = tn } ]]
+
+/-! ## Substitution -/
+
+/-- Substituting a term for a term variable.  The conclusion is in Lean rather
+    than object syntax: "[ x |-> v1 ] t1" is ambiguous in this grammar, since it
+    is both the substitution production of t and the singleton production of s
+    applied through "s t". -/
+def SubstTerm : Prop :=
+  ∀ (G : TypEnv) (x : termvar) (v1 t1 : t) (T1 T : Typ),
+    [[ G , x : T1 |- t1 : T ]] → [[ empty |- v1 : T1 ]] → Ty G (tsubst_t v1 x t1) T
+
+/-- Substituting a type for a type variable, in a term and in the context. -/
+def SubstType : Prop :=
+  ∀ (G : TypEnv) (X : typevar) (T2 : Typ) (t1 : t) (T T11 : Typ),
+    [[ G , X <: T11 |- t1 : T ]] → [[ G |- T2 <: T11 ]] →
+    [[ [ X |-> T2 ] G |- [ X |-> T2 ] t1 : [ X |-> T2 ] T ]]
+
+/-- A matching substitution built by `M` from a pattern and a value types the
+    bindings the pattern's typing gives. -/
+def MatchTyping : Prop :=
+  ∀ (p5 : p) (v1 : t) (s5 : s) (D : TypEnv) (T : Typ) (G : TypEnv),
+    [[ |- p5 : T => D ]] → [[ match ( p5 , v1 ) = s5 ]] → [[ G |- v1 : T ]] →
+    ∀ (t2 : t) (T2 : Typ), [[ G |- t2 : T2 ]] → [[ G |- s5 t2 : T2 ]]
+
+/-! ## Preservation, progress, safety -/
+
+def Preservation : Prop :=
+  ∀ (t1 t2 : t) (T : Typ), [[ empty |- t1 : T ]] → [[ t1 --> t2 ]] → [[ empty |- t2 : T ]]
+
+def Progress : Prop :=
+  ∀ (t1 : t) (T : Typ), [[ empty |- t1 : T ]] → IsValue t1 ∨ ∃ t2, [[ t1 --> t2 ]]
+
+def PreservationMulti : Prop :=
+  ∀ (t1 t2 : t) (T : Typ), [[ empty |- t1 : T ]] → Reduces t1 t2 → [[ empty |- t2 : T ]]
+
+def Safety : Prop :=
+  ∀ (t1 t2 : t) (T : Typ),
+    [[ empty |- t1 : T ]] → Reduces t1 t2 → IsValue t2 ∨ ∃ t3, [[ t2 --> t3 ]]
+
+def NeverStuck : Prop :=
+  ∀ (t1 t2 : t) (T : Typ), [[ empty |- t1 : T ]] → Reduces t1 t2 → ¬ Stuck t2

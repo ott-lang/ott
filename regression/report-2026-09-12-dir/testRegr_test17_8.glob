@@ -1,0 +1,374 @@
+DIGEST 638a52408425eff23ef06d36e82dfd75
+FtestRegr_test17_8
+R111:115 Stdlib.Arith.Arith <> <> lib
+R133:136 Stdlib.Bool.Bool <> <> lib
+R154:157 Stdlib.Lists.List <> <> lib
+R175:191 Ott.ott_list_core <> <> lib
+def 207:211 <> index
+R222:224 Corelib.Init.Datatypes <> nat ind
+ind 238:238 <> t
+constr 253:258 <> t_unit
+constr 267:273 <> t_tuple
+constr 289:293 <> t_sum
+R262:262 testRegr_test17_8 <> t:1 ind
+R278:281 Corelib.Init.Datatypes <> list ind
+R283:283 testRegr_test17_8 <> t:1 ind
+R300:300 testRegr_test17_8 <> t:1 ind
+binder 296:298 <> t_5:3
+R307:307 testRegr_test17_8 <> t:1 ind
+binder 304:305 <> t2:4
+scheme 238:238 <> t_rect
+scheme 238:238 <> t_ind
+scheme 238:238 <> t_rec
+scheme 238:238 <> t_sind
+ind 322:322 <> a
+constr 337:342 <> a_unit
+constr 351:357 <> a_tuple
+constr 373:384 <> a_typedtuple
+constr 404:409 <> a_proj
+R346:346 testRegr_test17_8 <> a:5 ind
+R362:365 Corelib.Init.Datatypes <> list ind
+R367:367 testRegr_test17_8 <> a:5 ind
+R389:392 Corelib.Init.Datatypes <> list ind
+R396:396 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R395:395 testRegr_test17_8 <> a:5 ind
+R397:397 testRegr_test17_8 <> t ind
+R415:415 testRegr_test17_8 <> a:5 ind
+binder 412:413 <> a5:7
+R421:425 testRegr_test17_8 <> index def
+binder 419:419 <> i:8
+scheme 322:322 <> a_rect
+scheme 322:322 <> a_ind
+scheme 322:322 <> a_rec
+scheme 322:322 <> a_sind
+sec 465:470 <> a_rect
+var 487:494 a_rect P_list_a
+var 517:526 a_rect P_list_a_t
+var 553:555 a_rect P_a
+R504:507 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R498:501 Corelib.Init.Datatypes <> list ind
+R503:503 testRegr_test17_8 <> a ind
+R540:543 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R530:533 Corelib.Init.Datatypes <> list ind
+R537:537 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R536:536 testRegr_test17_8 <> a ind
+R538:538 testRegr_test17_8 <> t ind
+R560:563 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R559:559 testRegr_test17_8 <> a ind
+var 586:593 a_rect H_a_unit
+var 612:620 a_rect H_a_tuple
+var 692:705 a_rect H_a_typedtuple
+var 794:801 a_rect H_a_proj
+var 870:881 a_rect H_list_a_nil
+var 902:914 a_rect H_list_a_cons
+var 1007:1020 a_rect H_list_a_t_nil
+var 1043:1057 a_rect H_list_a_t_cons
+R597:599 testRegr_test17_8 <> a_rect.P_a var
+R601:606 testRegr_test17_8 <> a_unit constr
+R639:642 Corelib.Init.Datatypes <> list ind
+R644:644 testRegr_test17_8 <> a ind
+binder 632:637 <> a_list:17
+R663:666 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R648:655 testRegr_test17_8 <> a_rect.P_list_a var
+R657:662 testRegr_test17_8 <> a_list:17 var
+R667:669 testRegr_test17_8 <> a_rect.P_a var
+R672:678 testRegr_test17_8 <> a_tuple constr
+R680:685 testRegr_test17_8 <> a_list:17 var
+R726:729 Corelib.Init.Datatypes <> list ind
+R733:733 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R732:732 testRegr_test17_8 <> a ind
+R734:734 testRegr_test17_8 <> t ind
+binder 717:724 <> a_t_list:20
+R758:761 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R739:748 testRegr_test17_8 <> a_rect.P_list_a_t var
+R750:757 testRegr_test17_8 <> a_t_list:20 var
+R762:764 testRegr_test17_8 <> a_rect.P_a var
+R767:778 testRegr_test17_8 <> a_typedtuple constr
+R780:787 testRegr_test17_8 <> a_t_list:20 var
+R816:816 testRegr_test17_8 <> a ind
+binder 813:814 <> a5:23
+R826:829 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R820:822 testRegr_test17_8 <> a_rect.P_a var
+R824:825 testRegr_test17_8 <> a5:23 var
+R840:844 testRegr_test17_8 <> index def
+binder 838:838 <> i:24
+R848:850 testRegr_test17_8 <> a_rect.P_a var
+R853:858 testRegr_test17_8 <> a_proj constr
+R860:861 testRegr_test17_8 <> a5:23 var
+R863:863 testRegr_test17_8 <> i:24 var
+R885:892 testRegr_test17_8 <> a_rect.P_list_a var
+R894:896 Corelib.Init.Datatypes <> nil constr
+R929:929 testRegr_test17_8 <> a ind
+binder 926:927 <> a0:29
+R939:942 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R933:935 testRegr_test17_8 <> a_rect.P_a var
+R937:938 testRegr_test17_8 <> a0:29 var
+R955:958 Corelib.Init.Datatypes <> list ind
+R960:960 testRegr_test17_8 <> a ind
+binder 951:953 <> a_l:30
+R976:979 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R964:971 testRegr_test17_8 <> a_rect.P_list_a var
+R973:975 testRegr_test17_8 <> a_l:30 var
+R980:987 testRegr_test17_8 <> a_rect.P_list_a var
+R990:993 Corelib.Init.Datatypes <> cons constr
+R998:1000 testRegr_test17_8 <> a_l:30 var
+R995:996 testRegr_test17_8 <> a0:29 var
+R1024:1033 testRegr_test17_8 <> a_rect.P_list_a_t var
+R1035:1037 Corelib.Init.Datatypes <> nil constr
+R1072:1072 testRegr_test17_8 <> a ind
+binder 1069:1070 <> a1:35
+R1082:1085 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1076:1078 testRegr_test17_8 <> a_rect.P_a var
+R1080:1081 testRegr_test17_8 <> a1:35 var
+R1097:1097 testRegr_test17_8 <> t ind
+binder 1094:1095 <> t0:36
+R1115:1118 Corelib.Init.Datatypes <> list ind
+R1122:1122 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1121:1121 testRegr_test17_8 <> a ind
+R1123:1123 testRegr_test17_8 <> t ind
+binder 1109:1113 <> a_t_l:37
+R1144:1147 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1128:1137 testRegr_test17_8 <> a_rect.P_list_a_t var
+R1139:1143 testRegr_test17_8 <> a_t_l:37 var
+R1148:1157 testRegr_test17_8 <> a_rect.P_list_a_t var
+R1160:1163 Corelib.Init.Datatypes <> cons constr
+R1173:1177 testRegr_test17_8 <> a_t_l:37 var
+R1165:1165 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1168:1168 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1171:1171 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1166:1167 testRegr_test17_8 <> a1:35 var
+R1169:1170 testRegr_test17_8 <> t0:36 var
+def 1192:1200 <> a_ott_ind
+R1205:1205 testRegr_test17_8 <> a ind
+binder 1203:1203 <> n:40
+R1210:1212 testRegr_test17_8 <> a_rect.P_a var
+R1214:1214 testRegr_test17_8 <> n:40 var
+R1227:1227 testRegr_test17_8 <> n:40 var
+R1241:1243 testRegr_test17_8 <> a_rect.P_a var
+R1245:1245 testRegr_test17_8 <> x:42 var
+R1256:1261 testRegr_test17_8 <> a_unit constr
+R1266:1273 testRegr_test17_8 <> a_rect.H_a_unit var
+R1281:1287 testRegr_test17_8 <> a_tuple constr
+R1300:1308 testRegr_test17_8 <> a_rect.H_a_tuple var
+R1344:1347 Corelib.Init.Datatypes <> list ind
+R1349:1349 testRegr_test17_8 <> a ind
+binder 1340:1342 <> a_l:43
+R1354:1361 testRegr_test17_8 <> a_rect.P_list_a var
+R1363:1365 testRegr_test17_8 <> a_l:43 var
+R1376:1378 testRegr_test17_8 <> a_l:43 var
+R1392:1399 testRegr_test17_8 <> a_rect.P_list_a var
+R1401:1401 testRegr_test17_8 <> x:45 var
+R1408:1410 Corelib.Init.Datatypes <> nil constr
+R1415:1426 testRegr_test17_8 <> a_rect.H_list_a_nil var
+R1430:1433 Corelib.Init.Datatypes <> cons constr
+R1444:1456 testRegr_test17_8 <> a_rect.H_list_a_cons var
+R1461:1469 testRegr_test17_8 <> a_ott_ind:41 def
+R1478:1491 testRegr_test17_8 <> a_list_ott_ind:44 var
+R1516:1527 testRegr_test17_8 <> a_typedtuple constr
+R1542:1555 testRegr_test17_8 <> a_rect.H_a_typedtuple var
+R1597:1600 Corelib.Init.Datatypes <> list ind
+R1604:1604 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R1603:1603 testRegr_test17_8 <> a ind
+R1605:1605 testRegr_test17_8 <> t ind
+binder 1591:1595 <> a_t_l:46
+R1611:1620 testRegr_test17_8 <> a_rect.P_list_a_t var
+R1622:1626 testRegr_test17_8 <> a_t_l:46 var
+R1637:1641 testRegr_test17_8 <> a_t_l:46 var
+R1655:1664 testRegr_test17_8 <> a_rect.P_list_a_t var
+R1666:1666 testRegr_test17_8 <> x:48 var
+R1673:1675 Corelib.Init.Datatypes <> nil constr
+R1680:1693 testRegr_test17_8 <> a_rect.H_list_a_t_nil var
+R1697:1700 Corelib.Init.Datatypes <> cons constr
+R1702:1702 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1705:1705 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1708:1708 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R1716:1730 testRegr_test17_8 <> a_rect.H_list_a_t_cons var
+R1735:1743 testRegr_test17_8 <> a_ott_ind:41 def
+R1756:1771 testRegr_test17_8 <> a_t_list_ott_ind:47 var
+R1798:1803 testRegr_test17_8 <> a_proj constr
+R1814:1821 testRegr_test17_8 <> a_rect.H_a_proj var
+R1827:1835 testRegr_test17_8 <> a_ott_ind:41 def
+R1853:1858 testRegr_test17_8 a_rect <> sec
+sec 1871:1876 <> t_rect
+var 1893:1900 t_rect P_list_t
+var 1923:1925 t_rect P_t
+R1910:1913 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1904:1907 Corelib.Init.Datatypes <> list ind
+R1909:1909 testRegr_test17_8 <> t ind
+R1930:1933 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R1929:1929 testRegr_test17_8 <> t ind
+var 1956:1963 t_rect H_t_unit
+var 1982:1990 t_rect H_t_tuple
+var 2062:2068 t_rect H_t_sum
+var 2147:2158 t_rect H_list_t_nil
+var 2179:2191 t_rect H_list_t_cons
+R1967:1969 testRegr_test17_8 <> t_rect.P_t var
+R1971:1976 testRegr_test17_8 <> t_unit constr
+R2009:2012 Corelib.Init.Datatypes <> list ind
+R2014:2014 testRegr_test17_8 <> t ind
+binder 2002:2007 <> t_list:55
+R2033:2036 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2018:2025 testRegr_test17_8 <> t_rect.P_list_t var
+R2027:2032 testRegr_test17_8 <> t_list:55 var
+R2037:2039 testRegr_test17_8 <> t_rect.P_t var
+R2042:2048 testRegr_test17_8 <> t_tuple constr
+R2050:2055 testRegr_test17_8 <> t_list:55 var
+R2084:2084 testRegr_test17_8 <> t ind
+binder 2080:2082 <> t_5:58
+R2095:2098 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2088:2090 testRegr_test17_8 <> t_rect.P_t var
+R2092:2094 testRegr_test17_8 <> t_5:58 var
+R2110:2110 testRegr_test17_8 <> t ind
+binder 2107:2108 <> t2:59
+R2120:2123 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2114:2116 testRegr_test17_8 <> t_rect.P_t var
+R2118:2119 testRegr_test17_8 <> t2:59 var
+R2124:2126 testRegr_test17_8 <> t_rect.P_t var
+R2129:2133 testRegr_test17_8 <> t_sum constr
+R2135:2137 testRegr_test17_8 <> t_5:58 var
+R2139:2140 testRegr_test17_8 <> t2:59 var
+R2162:2169 testRegr_test17_8 <> t_rect.P_list_t var
+R2171:2173 Corelib.Init.Datatypes <> nil constr
+R2206:2206 testRegr_test17_8 <> t ind
+binder 2203:2204 <> t0:64
+R2216:2219 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2210:2212 testRegr_test17_8 <> t_rect.P_t var
+R2214:2215 testRegr_test17_8 <> t0:64 var
+R2232:2235 Corelib.Init.Datatypes <> list ind
+R2237:2237 testRegr_test17_8 <> t ind
+binder 2228:2230 <> t_l:65
+R2253:2256 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2241:2248 testRegr_test17_8 <> t_rect.P_list_t var
+R2250:2252 testRegr_test17_8 <> t_l:65 var
+R2257:2264 testRegr_test17_8 <> t_rect.P_list_t var
+R2267:2270 Corelib.Init.Datatypes <> cons constr
+R2275:2277 testRegr_test17_8 <> t_l:65 var
+R2272:2273 testRegr_test17_8 <> t0:64 var
+def 2292:2300 <> t_ott_ind
+R2305:2305 testRegr_test17_8 <> t ind
+binder 2303:2303 <> n:68
+R2310:2312 testRegr_test17_8 <> t_rect.P_t var
+R2314:2314 testRegr_test17_8 <> n:68 var
+R2327:2327 testRegr_test17_8 <> n:68 var
+R2341:2343 testRegr_test17_8 <> t_rect.P_t var
+R2345:2345 testRegr_test17_8 <> x:70 var
+R2356:2361 testRegr_test17_8 <> t_unit constr
+R2366:2373 testRegr_test17_8 <> t_rect.H_t_unit var
+R2381:2387 testRegr_test17_8 <> t_tuple constr
+R2400:2408 testRegr_test17_8 <> t_rect.H_t_tuple var
+R2444:2447 Corelib.Init.Datatypes <> list ind
+R2449:2449 testRegr_test17_8 <> t ind
+binder 2440:2442 <> t_l:71
+R2454:2461 testRegr_test17_8 <> t_rect.P_list_t var
+R2463:2465 testRegr_test17_8 <> t_l:71 var
+R2476:2478 testRegr_test17_8 <> t_l:71 var
+R2492:2499 testRegr_test17_8 <> t_rect.P_list_t var
+R2501:2501 testRegr_test17_8 <> x:73 var
+R2508:2510 Corelib.Init.Datatypes <> nil constr
+R2515:2526 testRegr_test17_8 <> t_rect.H_list_t_nil var
+R2530:2533 Corelib.Init.Datatypes <> cons constr
+R2544:2556 testRegr_test17_8 <> t_rect.H_list_t_cons var
+R2561:2569 testRegr_test17_8 <> t_ott_ind:69 def
+R2578:2591 testRegr_test17_8 <> t_list_ott_ind:72 var
+R2616:2620 testRegr_test17_8 <> t_sum constr
+R2633:2639 testRegr_test17_8 <> t_rect.H_t_sum var
+R2646:2654 testRegr_test17_8 <> t_ott_ind:69 def
+R2665:2673 testRegr_test17_8 <> t_ott_ind:69 def
+R2689:2694 testRegr_test17_8 t_rect <> sec
+ind 2744:2746 <> ati
+constr 2789:2792 <> at_1
+constr 2823:2826 <> at_2
+constr 3175:3178 <> at_3
+R2751:2754 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2750:2750 testRegr_test17_8 <> a ind
+R2756:2759 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2755:2755 testRegr_test17_8 <> t ind
+R2802:2804 testRegr_test17_8 <> ati:74 ind
+R2813:2818 testRegr_test17_8 <> t_unit constr
+R2806:2811 testRegr_test17_8 <> a_unit constr
+R2848:2851 Corelib.Init.Datatypes <> list ind
+R2855:2855 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R2854:2854 testRegr_test17_8 <> a ind
+R2856:2856 testRegr_test17_8 <> t ind
+binder 2838:2846 <> a_t'_list:76
+R2866:2866 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2989:2998 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+binder 2874:2875 <> a_:77
+binder 2877:2879 <> t'_:78
+R2973:2977 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2988:2988 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R2882:2883 Stdlib.Lists.List <> In def
+R2895:2897 Corelib.Lists.ListDef <> map def
+R2963:2971 testRegr_test17_8 <> a_t'_list:76 var
+R2913:2913 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R2912:2912 testRegr_test17_8 <> a ind
+R2914:2914 testRegr_test17_8 <> t ind
+binder 2905:2908 <> pat_:79
+R2927:2930 testRegr_test17_8 <> pat_:79 var
+R2937:2937 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2940:2940 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2944:2944 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2949:2949 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2952:2952 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2956:2956 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2950:2951 testRegr_test17_8 <> a_:77 var
+R2953:2955 testRegr_test17_8 <> t'_:78 var
+R2885:2885 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2888:2888 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2892:2892 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2886:2887 testRegr_test17_8 <> a_:77 var
+R2889:2891 testRegr_test17_8 <> t'_:78 var
+R2978:2980 testRegr_test17_8 <> ati:74 ind
+R2985:2987 testRegr_test17_8 <> t'_:78 var
+R2982:2983 testRegr_test17_8 <> a_:77 var
+R2999:3001 testRegr_test17_8 <> ati:74 ind
+R3088:3094 testRegr_test17_8 <> t_tuple constr
+R3097:3099 Corelib.Lists.ListDef <> map def
+R3160:3168 testRegr_test17_8 <> a_t'_list:76 var
+R3114:3114 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R3113:3113 testRegr_test17_8 <> a ind
+R3115:3115 testRegr_test17_8 <> t ind
+binder 3107:3110 <> pat_:81
+R3128:3131 testRegr_test17_8 <> pat_:81 var
+R3138:3138 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3141:3141 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3145:3145 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3004:3010 testRegr_test17_8 <> a_tuple constr
+R3013:3015 Corelib.Lists.ListDef <> map def
+R3075:3083 testRegr_test17_8 <> a_t'_list:76 var
+R3030:3030 Corelib.Init.Datatypes <> ::type_scope:x_'*'_x not
+R3029:3029 testRegr_test17_8 <> a ind
+R3031:3031 testRegr_test17_8 <> t ind
+binder 3023:3026 <> pat_:83
+R3044:3047 testRegr_test17_8 <> pat_:83 var
+R3054:3054 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3057:3057 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3061:3061 Corelib.Init.Datatypes <> ::core_scope:'('_x_','_x_','_'..'_','_x_')' not
+R3197:3200 Corelib.Init.Datatypes <> list ind
+R3202:3202 testRegr_test17_8 <> t ind
+binder 3190:3195 <> t_list:85
+R3209:3209 testRegr_test17_8 <> a ind
+binder 3206:3207 <> a5:86
+R3215:3219 testRegr_test17_8 <> index def
+binder 3213:3213 <> i:87
+R3228:3228 testRegr_test17_8 <> t ind
+binder 3223:3226 <> t101:88
+R3272:3275 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3260:3262 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R3242:3250 Stdlib.Lists.List <> nth_error def
+R3259:3259 testRegr_test17_8 <> i:87 var
+R3252:3257 testRegr_test17_8 <> t_list:85 var
+R3263:3266 Corelib.Init.Datatypes <> Some constr
+R3268:3271 testRegr_test17_8 <> t101:88 var
+R3299:3307 Corelib.Init.Notations <> ::type_scope:x_'->'_x not
+R3276:3278 testRegr_test17_8 <> ati:74 ind
+R3284:3290 testRegr_test17_8 <> t_tuple constr
+R3292:3297 testRegr_test17_8 <> t_list:85 var
+R3280:3281 testRegr_test17_8 <> a5:86 var
+R3308:3310 testRegr_test17_8 <> ati:74 ind
+R3326:3329 testRegr_test17_8 <> t101:88 var
+R3313:3318 testRegr_test17_8 <> a_proj constr
+R3320:3321 testRegr_test17_8 <> a5:86 var
+R3323:3323 testRegr_test17_8 <> i:87 var
+scheme 2744:2746 <> ati_ind
+scheme 2744:2746 <> ati_sind
