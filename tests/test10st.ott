@@ -26,7 +26,7 @@ grammar
     | T -> T'             ::   :: arrow                   {{ com function }}
     | ( T )               :: S :: paren {{ ichlLo [[T]] }}
 
-  G {{ tex \Gamma }} :: G_ ::= {{ isa (termvar*T) list }} {{ coq list (termvar*T) }} {{ ocaml (termvar*T) list }} {{ lem list (termvar*T) }} {{ lean List (termvar×Typ) }}
+  G {{ tex \Gamma }} {{ lean-type TypEnv }} :: G_ ::= {{ isa (termvar*T) list }} {{ coq list (termvar*T) }} {{ ocaml (termvar*T) list }} {{ lem list (termvar*T) }} {{ lean List (termvar×Typ) }}
                                {{ hol (termvar#T) list }} {{ com type environment }}
     | empty               ::   :: em 
         {{ isa Nil }}
@@ -82,7 +82,7 @@ let rec bound x t0 g =
   end
 }}
 {{ lean
-def bound (x:termvar) (t0:Typ) (g:G) :=
+def bound (x:termvar) (t0:Typ) (g:TypEnv) :=
   match g with
   | (x',t')::g' => if x=x' then t0=t' else bound x t0 g'
   | [] => false
