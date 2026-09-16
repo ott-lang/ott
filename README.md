@@ -1,9 +1,6 @@
 # Ott
 
-[![Docker CI][docker-action-shield]][docker-action-link]
-
-[docker-action-shield]: https://github.com/ott-lang/ott/actions/workflows/docker-action.yml/badge.svg?branch=master
-[docker-action-link]: https://github.com/ott-lang/ott/actions/workflows/docker-action.yml
+[![Build Status](https://github.com/ott-lang/ott/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/ott-lang/ott/actions/workflows/build.yml)
 
 Ott is a tool for writing definitions of programming languages and
 calculi.  It takes as input a definition of a language syntax and
