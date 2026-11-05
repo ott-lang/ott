@@ -245,9 +245,6 @@ module Nt = Nonterminal;;
 module GramTypes = Parse_table.MakeTypes (Gtp);;
 open GramTypes;;
 
-exception Reject_parse
-exception Reject_all_parses
-
 let rec split l n = 
   if n = 0 then
     ([], l)
