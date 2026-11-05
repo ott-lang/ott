@@ -475,7 +475,7 @@ let string_of_hom_spec_el hse =
   | Hom_string s -> s
   | Hom_index i -> raise (Failure "string_of_hom_spec")
   | Hom_terminal t -> t
-  | Hom_ln_free_index _ -> raise (Failure "string_of_hom_spec")
+  | Hom_ln_free_index _ | Hom_list _ -> raise (Failure "string_of_hom_spec")
 
 let string_of_hom_spec hs =
   String.concat "" (List.map string_of_hom_spec_el hs)
@@ -717,7 +717,8 @@ let menhir_prec_spec homs =
         | Hom_string s ->  s
         | Hom_index i -> raise (Failure ("pp_menhir_prec_spec Hom_index"))
         | Hom_terminal s -> s
-        | Hom_ln_free_index (mvs,s) -> raise (Failure "pp_menhir_prec_spec Hom_ln_free_index")  in
+        | Hom_ln_free_index (mvs,s) -> raise (Failure "pp_menhir_prec_spec Hom_ln_free_index")
+        | Hom_list _ -> raise (Failure "pp_menhir_prec_spec Hom_list")  in
       "%prec " ^ String.concat "" (List.map pp_hse hs) ^ "\n"
 
 
@@ -766,7 +767,8 @@ let pp_menhir_prod yo generate_aux_info_here xd ts r p =
           (* TODO, arbitrary failure? *)
           | Hom_index i -> let e = List.nth es'' (*or es? *) i  in let d=element_data_of_element xd ts true false false e in (match d.semantic_action with Some s -> s | None -> raise (Failure ("pp_menhir_hse Hom_index " ^ string_of_int i ^ " at " ^ Location.pp_loc p.prod_loc)))
           | Hom_terminal s -> s
-          | Hom_ln_free_index (mvs,s) -> raise (Failure "Hom_ln_free_index not implemented")  in
+          | Hom_ln_free_index (mvs,s) -> raise (Failure "Hom_ln_free_index not implemented")
+          | Hom_list _ -> raise (Failure "Hom_list not implemented")  in
         String.concat "" (List.map pp_menhir_hse hs)
 
        (*  let m' = Caml { Types.ppo_include_terminals=false; Types.caml_library = ref ("",[]) } in *)
@@ -866,7 +868,8 @@ let pp_menhir_start_rules yo xd ts =
                      | Hom_string s ->  s
                      | Hom_index i -> raise (Failure ("menhir-start-type Hom_index"))
                      | Hom_terminal s -> s
-                     | Hom_ln_free_index (mvs,s) -> raise (Failure "menhir-start-type Hom_ln_free_index")  in
+                     | Hom_ln_free_index (mvs,s) -> raise (Failure "menhir-start-type Hom_ln_free_index")
+                     | Hom_list _ -> raise (Failure "menhir-start-type Hom_list")  in
                    String.concat "" (List.map pp_hse hs)
                | None ->
                    let (ty1, ty_arg) = 

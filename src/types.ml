@@ -101,6 +101,22 @@ and hom_spec_el =  (* hse *)
   | Hom_index of int (* i *)
   | Hom_terminal of terminal
   | Hom_ln_free_index of (int list) * int      (* FZ keeping this separate from the main thing for now *)
+  | Hom_list of hom_list_body
+
+(* a template for the repeated unit of one of the production's list forms,   *)
+(* from a </ body // sep // i /> in the hom.  The list form is rendered by   *)
+(* instantiating the template in place of the elements of the repeated unit, *)
+(* keeping the style (dot form or comprehension) and the bounds of the term  *)
+(* being printed *)
+and hom_list_body =  (* hlb *)
+    { hl_index : int;          (* which element of the production, in the   *)
+                               (* same numbering as Hom_index               *)
+      hl_body : hom_spec;      (* the template; its Hom_indexes number into *)
+                               (* the elb_es of that list form, not into    *)
+                               (* the elements of the production            *)
+      hl_sep : terminal option;(* separator, if given; there is none by     *)
+                               (* default, as the template is meant to      *)
+                               (* replace the production's notation entirely *) }
 
 and embedmorphism = loc * hom_name * embed_spec
 and embed_spec = embed_spec_el list (* es *)
@@ -580,6 +596,11 @@ and raw_hom_spec_el =
   | Raw_hom_ident of raw_ident list
   | Raw_hom_ident_dots of loc * raw_ident list * int * raw_ident list
   | Raw_hom_ident_comp of loc * raw_ident list * raw_comp_bound
+  (* </ body // sep // i /> : a template for the repeated unit of a list form *)
+  (* of the production.  Unlike the two above, which name a whole list form   *)
+  (* from within [[..]], this is at the top level of the hom spec, and its    *)
+  (* body is itself a hom spec, with its own [[..]] parts *)
+  | Raw_hom_list of loc * raw_hom_spec * raw_ident option * raw_comp_bound
 
 
 and raw_bindspec = 

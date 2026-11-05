@@ -2045,12 +2045,10 @@ of nonterminals (e.g.~the
 $\textrm{b}(\mathit{p_{\mathrm{1}}}..\mathit{p_{\mathit{n}}})$ above).
 Dot forms on the right of a \mykw{bind} are not currently supported.
 
-\myLaTeX{} homomorphisms should not refer to dot forms, as either an error
-or bad output will be generated. (For \myLaTeX, there should really be
-some means to specify
-a homomorphism for the repeated expression, and also data on how any
-list separators should be typeset.  This would require more
-special-case treatment, which is not currently supported.)
+\myLaTeX{} homomorphisms cannot refer to a dot form in the \verb+[[+\ldots\verb+]]+
+form above.  Instead they can give a homomorphism for the repeated
+expression, together with how any list separator should be typeset, as
+described in \S\mref{a44b}.
 
 
 
@@ -2199,6 +2197,56 @@ versions out of step.
 
 List comprehension forms can also be used in bindspecs and in
 homomorphisms. 
+
+\subsection{List forms in \myLaTeX{} homomorphisms}\mlabel{a44b}%
+%
+A \mykw{tex} homomorphism cannot refer to a list form as a whole, as the
+proof assistant homomorphisms of \S\mref{a65b} do.  Instead it can contain a
+comprehension form giving a template for the repeated unit of one of the
+list forms of the production:
+\begin{alltt}
+  \mysym{\mysym{|}} Phi1 /\mybackslash{} \mysym{..} /\mybackslash{} Phin \mysym{::} \mysym{::} conj \mylb{}\mylb{} \mykw{tex} \mybackslash{}bigwedge \mysym{</} \mysym{[[}Phii\mysym{]]} \mysym{//} i \mysym{/>} \myrb{}\myrb{}
+\end{alltt}
+The list form it is a template for is the one whose repeated unit has all
+the metavariables and nonterminals that the template mentions.  Within the
+template, \verb+[[+\ldots\verb+]]+ refers to the elements of that repeated
+unit, not to the elements of the production, and each such element must be
+indexed by the index variable of the template (here \verb+i+).
+
+The template is instantiated in place of the repeated unit, keeping the
+style --- dot form or comprehension --- and the bounds of the term being
+typeset, not those written in the homomorphism, whose only role is to name
+the index.  This matters because a symbolic term need not use the same list
+form as the production it is a term of (c.f.~\S\mref{a44}): the one
+homomorphism above typesets both
+\texttt{Phi1 /\mybackslash{} \mysym{..} /\mybackslash{} Phin} and
+\texttt{\mysym{</} Phij \mysym{//} j \mysym{IN} m \mysym{/>}}, as
+$\bigwedge$ applied to a dot form and to a comprehension respectively, and
+it would do so equally if the production had been written in the
+comprehension style.  Note that this is unlike the
+\verb+[[+\ldots\verb+]]+ list forms of \S\mref{a65b}, which must match the
+style and the bounds of the production.
+
+The template is therefore identified by its elements alone, not by its
+bound.  A production can have two list forms over the same nonterminals,
+differing only in their bounds, and then the elements do not say which
+template is for which; an upper bound in the template, as in
+\texttt{\mysym{</} \mysym{[[}Phii\mysym{]]} \mysym{//} i \mysym{IN} n
+\mysym{/>}}, is consulted to break the tie.  It is an error if no list form
+has all the template's elements, or if more than one does and the upper
+bounds do not resolve it.
+
+Note that the separating terminal of the production is \emph{not}
+inherited: the point of the template is to replace the notation of the
+production, the separator included.  A separator can be given explicitly,
+between two \verb+//+, as in the element comprehension forms:
+\begin{alltt}
+  \mysym{\mysym{|}} \mylb{} x1 |-> Phi1 \mysym{,} \mysym{..} \mysym{,} xn |-> Phin \myrb{} \mysym{::} \mysym{::} rec
+      \mylb{}\mylb{} \mykw{tex} \mybackslash{}left\mybackslash{}\mylb{} \mysym{</} \mysym{[[}xi\mysym{]]} \mybackslash{}colon \mysym{[[}Phii\mysym{]]} \mysym{//} \mysym{,} \mysym{//} i \mysym{/>} \mybackslash{}right\mybackslash{}\myrb{} \myrb{}\myrb{}
+\end{alltt}
+As list forms do not nest in productions, a template cannot contain another
+list form.  See \verb+tests/test_lists_tex_hom_1.ott+ for further examples.
+
 
 
 \subsection{Proof assistant code for list forms}\mlabel{a65}%
@@ -2485,7 +2533,7 @@ does not always build without change, in particular if tuples of size
 3 or more are required in patterns.
 
 
-\subsubsection{List forms in homomorphisms}
+\subsubsection{List forms in homomorphisms}\mlabel{a65b}%
 
 Proof assistant homomorphisms in productions can refer to dot-form
 metavariables and nonterminals.  For example, the second production

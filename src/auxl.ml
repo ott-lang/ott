@@ -398,19 +398,17 @@ let primary_ntrs_used_in_hom xd m promote homs =
   try
     let hom = List.assoc m homs in 
     let defined_ntrs = all_ntrs_defined_by_syntaxdefn xd in
-    ntrsetoflist
-      (List.concat
-	 (List.map 
-	    (fun hse ->
-	      ( match hse with
-	      | Hom_index _ | Hom_terminal _ -> []
-	      | Hom_string s -> 
-		  let strs = Str.split (Str.regexp "[ \t]+") s in
-		  let ntrs_hom = List.filter (fun st -> List.mem st defined_ntrs) strs in
-		  if promote 
-		  then List.map (promote_ntr xd) ntrs_hom
-		  else ntrs_hom ))
-	    hom ))
+    let rec in_hse hse =
+      ( match hse with
+      | Hom_index _ | Hom_terminal _ -> []
+      | Hom_list hlb -> List.concat (List.map in_hse hlb.hl_body)
+      | Hom_string s ->
+	  let strs = Str.split (Str.regexp "[ \t]+") s in
+	  let ntrs_hom = List.filter (fun st -> List.mem st defined_ntrs) strs in
+	  if promote
+	  then List.map (promote_ntr xd) ntrs_hom
+	  else ntrs_hom ) in
+    ntrsetoflist (List.concat (List.map in_hse hom))
   with Not_found -> NtrSet.empty
 
 let primary_ntrs_used_in_prod xd promote p = 
@@ -460,16 +458,14 @@ let primary_mvrs_used_in_hom xd m homs =
   try
     let hom = List.assoc m homs in 
     let defined_mvrs = all_mvrs_defined_by_syntaxdefn xd in
-    mvrsetoflist
-      (List.concat
-	 (List.map 
-	    (fun hse ->
-	      ( match hse with
-	      | Hom_index _ | Hom_terminal _ -> []
-	      | Hom_string s -> 
-		  let strs = Str.split (Str.regexp "[ \t]+") s in
-		  List.filter (fun st -> List.mem st defined_mvrs) strs ))
-	    hom ))
+    let rec in_hse hse =
+      ( match hse with
+      | Hom_index _ | Hom_terminal _ -> []
+      | Hom_list hlb -> List.concat (List.map in_hse hlb.hl_body)
+      | Hom_string s ->
+	  let strs = Str.split (Str.regexp "[ \t]+") s in
+	  List.filter (fun st -> List.mem st defined_mvrs) strs ) in
+    mvrsetoflist (List.concat (List.map in_hse hom))
   with Not_found -> MvrSet.empty
 
 let primary_mvrs_used_in_prod p = 
